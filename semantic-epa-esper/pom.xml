@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>semantic-epa-esper</artifactId>
+	<name>Semantic Event Processing Esper Runtime</name>
+	<description>Event processing runtime behavior implemented with esper.</description>
+	<parent>
+		<groupId>de.fzi.cep.sepa</groupId>
+		<artifactId>semantic-epa-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<repositories>
+		<repository>
+			<id>OSGEO GeoTools repo</id>
+			<url>http://download.osgeo.org/webdav/geotools</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>de.fzi.cep</groupId>
+			<artifactId>semantic-epa</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.espertech</groupId>
+			<artifactId>esper</artifactId>
+			<version>4.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geometry</artifactId>
+			<version>11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-hsql</artifactId>
+			<version>11.0</version>
+		</dependency>
+	</dependencies>
+</project>
