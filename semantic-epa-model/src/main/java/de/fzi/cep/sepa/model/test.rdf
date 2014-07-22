@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:ex="http://sepa.event-processing.org/">
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/myAccelerometer">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventProducer"/>
+	<ex:hasGrounding rdf:resource="http://sepa.event-processing.org/EventGrounding"/>
+	<ex:produces rdf:resource="http://sepa.event-processing.org/accStream"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/accStream">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventStream"/>
+	<ex:consistsOf rdf:resource="http://sepa.event-processing.org/accEvent"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/accEvent">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/Event"/>
+	<ex:hasName>AccelerationEvent</ex:hasName>
+	<ex:hasSchema rdf:resource="http://sepa.event-processing.org/mySchema"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/mySchema">
+	<ex:hasProperty rdf:resource="http://sepa.event-processing.org/xProperty"/>
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventSchema"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/xProperty">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventProperty"/>
+	<ex:hasUnit rdf:resource="http://purl.oclc.org/NET/muo/muo#accelerationX"/>
+	<ex:hasName>accX</ex:hasName>
+	<ex:hasType rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/yProperty">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventProperty"/>
+	<ex:hasUnit rdf:resource="http://purl.oclc.org/NET/muo/muo#accelerationY"/>
+	<ex:hasName>accY</ex:hasName>
+	<ex:hasType rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sepa.event-processing.org/zProperty">
+	<rdf:type rdf:resource="http://sepa.event-processing.org/EventProperty"/>
+	<ex:hasUnit rdf:resource="http://purl.oclc.org/NET/muo/muo#accelerationZ"/>
+	<ex:hasName>accZ</ex:hasName>
+	<ex:hasType rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</rdf:Description>
+
+</rdf:RDF>
