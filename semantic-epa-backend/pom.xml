@@ -17,7 +17,7 @@
 	<module>semantic-epa-discovery</module>
 	<module>semantic-epa-storage</module>
 	<module>semantic-epa-validation</module>
-	<module>semantic-epa-mock</module>
+	<module>semantic-epa-model-client</module>
 	</modules>
 	
 	
