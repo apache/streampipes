@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.webapp.config;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import de.fzi.cep.sepa.webapp.examples.DemoDataGenerator;
+import de.fzi.cep.sepa.model.client.examples.DemoDataGenerator;
 
 
 

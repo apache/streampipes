@@ -3,63 +3,63 @@ package de.fzi.cep.sepa.webapp.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.mock.Domain;
-import de.fzi.cep.sepa.mock.SEPAMock;
-import de.fzi.cep.sepa.mock.SEPMock;
-import de.fzi.cep.sepa.mock.SourceMock;
+import de.fzi.cep.sepa.model.client.Domain;
+import de.fzi.cep.sepa.model.client.SEPAClient;
+import de.fzi.cep.sepa.model.client.SourceClient;
+import de.fzi.cep.sepa.model.client.StreamClient;
 
 
 public enum SEPAManager {
 	
 	INSTANCE;
 
-	List<SEPAMock> storedSEPAs;
-	List<SEPMock> storedSEPs;
-	List<SourceMock> storedSources;
+	List<SEPAClient> storedSEPAs;
+	List<StreamClient> storedSEPs;
+	List<SourceClient> storedSources;
 	
 	
 	SEPAManager()
 	{
-		this.storedSEPAs = new ArrayList<SEPAMock>();
-		this.storedSEPs = new ArrayList<SEPMock>();
-		this.storedSources = new ArrayList<SourceMock>();
+		this.storedSEPAs = new ArrayList<SEPAClient>();
+		this.storedSEPs = new ArrayList<StreamClient>();
+		this.storedSources = new ArrayList<SourceClient>();
 	}
 	
-	public List<SEPAMock> getStoredSEPAs() {
+	public List<SEPAClient> getStoredSEPAs() {
 		return storedSEPAs;
 	}
-	public void setStoredSEPAs(List<SEPAMock> storedSEPAs) {
+	public void setStoredSEPAs(List<SEPAClient> storedSEPAs) {
 		this.storedSEPAs = storedSEPAs;
 	}
-	public List<SEPMock> getStoredSEPs() {
+	public List<StreamClient> getStoredSEPs() {
 		return storedSEPs;
 	}
-	public void setStoredSEPs(List<SEPMock> storedSEPs) {
+	public void setStoredSEPs(List<StreamClient> storedSEPs) {
 		this.storedSEPs = storedSEPs;
 	}
 	
-	public boolean addSEPA(SEPAMock sepaMock)
+	public boolean addSEPA(SEPAClient sepaMock)
 	{
 		return storedSEPAs.add(sepaMock);
 	}
 	
-	public boolean addSEP(SEPMock sepMock)
+	public boolean addSEP(StreamClient sepMock)
 	{
 		return storedSEPs.add(sepMock);
 	}
 
-	public List<SourceMock> getStoredSources() {
+	public List<SourceClient> getStoredSources() {
 		return storedSources;
 	}
 
-	public void setStoredSources(List<SourceMock> storedSources) {
+	public void setStoredSources(List<SourceClient> storedSources) {
 		this.storedSources = storedSources;
 	}
 	
-	public List<SEPMock> getSEPById(String id)
+	public List<StreamClient> getSEPById(String id)
 	{
-		List<SEPMock> result = new ArrayList<SEPMock>();
-		for(SEPMock s : storedSEPs)
+		List<StreamClient> result = new ArrayList<StreamClient>();
+		for(StreamClient s : storedSEPs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);
@@ -67,10 +67,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SEPAMock> getSEPAById(String id)
+	public List<SEPAClient> getSEPAById(String id)
 	{
-		List<SEPAMock> result = new ArrayList<SEPAMock>();
-		for(SEPAMock s : storedSEPAs)
+		List<SEPAClient> result = new ArrayList<SEPAClient>();
+		for(SEPAClient s : storedSEPAs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);
@@ -78,10 +78,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SourceMock> getSourceById(String id)
+	public List<SourceClient> getSourceById(String id)
 	{
-		List<SourceMock> result = new ArrayList<SourceMock>();
-		for(SourceMock s : storedSources)
+		List<SourceClient> result = new ArrayList<SourceClient>();
+		for(SourceClient s : storedSources)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);
@@ -89,10 +89,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SEPMock> getSEPsBySource(String id)
+	public List<StreamClient> getSEPsBySource(String id)
 	{
-		List<SEPMock> result = new ArrayList<SEPMock>();
-		for(SEPMock s : storedSEPs)
+		List<StreamClient> result = new ArrayList<StreamClient>();
+		for(StreamClient s : storedSEPs)
 		{
 			if (s.getSourceId().equals(id))
 				result.add(s);
@@ -100,10 +100,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SourceMock> getSourcesByDomain(String domain)
+	public List<SourceClient> getSourcesByDomain(String domain)
 	{
-		List<SourceMock> result = new ArrayList<SourceMock>();
-		for(SourceMock s : storedSources)
+		List<SourceClient> result = new ArrayList<SourceClient>();
+		for(SourceClient s : storedSources)
 		{
 			for(Domain d : s.getDomain())
 			if (d.toString().equals(domain))
