@@ -1,0 +1,87 @@
+package de.fzi.cep.sepa.storage.controller;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.http.HTTPRepository;
+
+
+import com.clarkparsia.empire.Empire;
+import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
+
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
+
+public enum StorageManager {
+
+	INSTANCE;
+
+	private String SERVER = "http://localhost:8080/openrdf-sesame";
+	private String REPOSITORY_ID = "test-3";
+	
+	private EntityManager storageManager;
+
+	private RepositoryConnection conn;
+
+	StorageManager() {
+		initStorage();
+		initEmpire();
+	}
+
+	private boolean initStorage() {
+
+		try {
+			/*
+			 * CassandraRdfHectorTriple crdf = new
+			 * CassandraRdfHectorTriple("127.0.0.1:9160", "SEPAKEYSPACE");
+			 * 
+			 * Sail sail = new CumulusRDFSail(crdf); sail.initialize();
+			 * 
+			 * SailRepository repo = new SailRepository(sail);
+			 */
+			Repository repository = new HTTPRepository(SERVER, REPOSITORY_ID);
+
+			conn = repository.getConnection();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private boolean initEmpire() {
+		
+		try {
+		System.setProperty(
+				"empire.configuration.file",
+				"c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties");
+
+		// loads Sesame bindings for Empire
+		Empire.init(new OpenRdfEmpireModule());
+
+		// create an EntityManager for the specified persistence context
+		storageManager = Persistence.createEntityManagerFactory(
+				"sepa-server").createEntityManager();
+		
+		return true;
+		} catch (Exception e)
+		{
+			return false;
+		}
+		
+	}
+
+	public RepositoryConnection getConnection() {
+		return conn;
+	}
+
+	public StorageRequests getStorageAPI() {
+		return new StorageRequestsImpl();
+	}
+	
+	public EntityManager getEntityManager()
+	{
+		return storageManager;
+	}
+}

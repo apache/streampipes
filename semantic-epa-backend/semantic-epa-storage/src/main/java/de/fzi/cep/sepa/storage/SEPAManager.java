@@ -76,7 +76,7 @@ public enum SEPAManager {
 		}
 		return result;
 	}
-	
+	/*
 	public List<EventStream> getEventStreamById(String id)
 	{
 		List<EventStream> result = new ArrayList<EventStream>();
@@ -110,4 +110,5 @@ public enum SEPAManager {
 		}
 		return result;
 	}
+	*/
 }
