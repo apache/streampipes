@@ -12,6 +12,11 @@ Context: semantic-enabled complex event processing</description>
 	<name>Semantic Event Processing Agents</name>
 	<dependencies>
 		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.1</version>
@@ -40,6 +45,11 @@ Context: semantic-enabled complex event processing</description>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-gson</artifactId>
 			<version>2.12.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.restlet.jee</groupId>
+			<artifactId>org.restlet</artifactId>
+			<version>2.2.1</version>
 		</dependency>
 	</dependencies>
 </project>
