@@ -8,6 +8,10 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.http.HTTPRepository;
 
 
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.sail.NotifyingSailConnection;
+import org.openrdf.sail.memory.MemoryStore;
+
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 
@@ -20,10 +24,13 @@ public enum StorageManager {
 
 	private String SERVER = "http://localhost:8080/openrdf-sesame";
 	private String REPOSITORY_ID = "test-3";
+	private String TEMP_REPOSITORY_ID = "temp-db";
 	
 	private EntityManager storageManager;
+	private EntityManager tempStorageManager;
 
 	private RepositoryConnection conn;
+	private RepositoryConnection tempConn;
 
 	StorageManager() {
 		initStorage();
@@ -42,8 +49,12 @@ public enum StorageManager {
 			 * SailRepository repo = new SailRepository(sail);
 			 */
 			Repository repository = new HTTPRepository(SERVER, REPOSITORY_ID);
-
+			Repository tempRepository = new HTTPRepository(SERVER, TEMP_REPOSITORY_ID);
+					
+					
 			conn = repository.getConnection();
+			tempConn = tempRepository.getConnection();
+			
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -64,6 +75,8 @@ public enum StorageManager {
 		storageManager = Persistence.createEntityManagerFactory(
 				"sepa-server").createEntityManager();
 		
+		tempStorageManager = Persistence.createEntityManagerFactory("temp-db").createEntityManager();
+		
 		return true;
 		} catch (Exception e)
 		{
@@ -75,6 +88,10 @@ public enum StorageManager {
 	public RepositoryConnection getConnection() {
 		return conn;
 	}
+	
+	public RepositoryConnection getTempConnection() {
+		return tempConn;
+	}
 
 	public StorageRequests getStorageAPI() {
 		return new StorageRequestsImpl();
@@ -84,4 +101,11 @@ public enum StorageManager {
 	{
 		return storageManager;
 	}
+	
+	public EntityManager getTempEntityManager()
+	{
+		return tempStorageManager;
+	}
+	
+	
 }

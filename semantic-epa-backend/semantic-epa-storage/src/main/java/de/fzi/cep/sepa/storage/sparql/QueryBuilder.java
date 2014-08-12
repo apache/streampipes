@@ -28,4 +28,13 @@ public class QueryBuilder {
 		return builder.toString();
 	}
 	
+	public static String getAllStatements()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix())
+			.append("select ?a where { ?a ?b ?c }");
+		
+		return builder.toString();
+	}
+	
 }
