@@ -4,7 +4,7 @@ import de.fzi.cep.sepa.model.impl.SEP;
 
 public interface SemanticEventProducerDeclarer {
 
-	public SEP declareSemanticEventProducer();
+	public SEP declareModel();
 	
 	public int declarePort();
 	
