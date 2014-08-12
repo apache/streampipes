@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.esper.movement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +10,13 @@ import static java.util.stream.Collectors.toList;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.GeodeticCalculator;
+import org.ontoware.rdf2go.vocabulary.XSD;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import antlr.debug.SemanticPredicateListener;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPServiceProvider;
@@ -35,6 +39,13 @@ import com.espertech.esper.client.soda.SelectClause;
 import com.espertech.esper.client.soda.SelectClauseExpression;
 
 import static com.espertech.esper.client.soda.Expressions.*;
+import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.SEPA;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
@@ -203,4 +214,6 @@ public class MovementAnalysis implements EPEngine<MovementParameter> {
 	public void discard() {
 		epService.destroy();
 	}
+
+	
 }

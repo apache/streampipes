@@ -17,9 +17,9 @@
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep</groupId>
+			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.espertech</groupId>
