@@ -7,6 +7,7 @@ import org.ontoware.rdf2go.vocabulary.XSD;
 
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventSource;
@@ -23,7 +24,7 @@ public class TwitterStream implements EventStreamDeclarer {
 	
 	
 	@Override
-	public EventStream declareStream(SEP sep) {
+	public EventStream declareModel(SEP sep) {
 		
 		EventStream stream = new EventStream();
 		
@@ -35,9 +36,17 @@ public class TwitterStream implements EventStreamDeclarer {
 		eventProperties.add(new EventProperty(XSD._double.toString(), "longitude", ""));
 		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", ""));
 		
+		EventGrounding grounding = new EventGrounding();
+		grounding.setPort(61616);
+		grounding.setUri("tcp://localhost:61616");
+		grounding.setTopicName("SEPA.SEP.Twitter");
+		
+		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
-		//stream.setName(name);
+		stream.setName("Twitter Sample Stream");
+		stream.setDescription("Twitter Sample Stream Description");
+		stream.setUri(sep.getUri() + "t");
 		
 		return stream;
 	}

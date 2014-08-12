@@ -11,7 +11,7 @@ import de.fzi.cep.sepa.model.impl.SEP;
 public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
-	public SEP declareSemanticEventProducer() {
+	public SEP declareModel() {
 		SEP sep = new SEP("http://fzi.de/", "Twitter", "Twitter Event Producer", createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
 		
 		return sep;
