@@ -4,17 +4,17 @@ import java.util.List;
 
 public class SEPAFactory {
 
-	public static SEPA createSEPA(String name, String description, String pathName, List<Domain> domains)
+	public static SEPA createSEPA(String uri, String name, String description, String pathName, List<Domain> domains)
 	{
-		return new SEPA(name, description, pathName, domains);
+		return new SEPA(uri, name, description, pathName, domains);
 	}
 	
 	
-	public static EventStream createEventStream(List<EventProperty> eventProperties)
+	public static EventStream createEventStream(String uri, String name, String description, List<EventProperty> eventProperties)
 	{
 		EventSchema schema = new EventSchema();
 		schema.setEventProperties(eventProperties);
-		EventStream stream = new EventStream(schema);
+		EventStream stream = new EventStream(uri, name, description, schema);
 		
 		return stream;
 	}

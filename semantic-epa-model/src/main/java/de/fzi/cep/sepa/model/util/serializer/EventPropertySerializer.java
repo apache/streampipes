@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.util;
+package de.fzi.cep.sepa.model.util.serializer;
 
 import java.lang.reflect.Type;
 

@@ -1,11 +1,30 @@
 package de.fzi.cep.sepa.model.impl;
 
+import javax.persistence.Entity;
 
-public class EventProperty {
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
 
+@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
+	 "dc",   "http://purl.org/dc/terms/"})
+@RdfsClass("sepa:EventProperty")
+@Entity
+public class EventProperty extends UnnamedSEPAElement {
+
+	@RdfProperty("sepa:hasPropertyType")
 	String propertyType;
+	
+	@RdfProperty("sepa:hasPropertyName")
 	String propertyName;
+	
+	@RdfProperty("sepa:hasMeasurementUnit")
 	String measurementUnit;
+	
+	public EventProperty()
+	{
+		super();
+	}
 	
 	public EventProperty(String propertyType, String propertyName,
 			String measurementUnit) {

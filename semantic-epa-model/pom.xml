@@ -10,12 +10,11 @@
 	</parent>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>apache-jena-libs</artifactId>
-			<type>pom</type>
-			<version>2.11.2</version>
-		</dependency>
+<dependency>
+         <groupId>org.reflections</groupId>
+         <artifactId>reflections</artifactId>
+         <version>0.9.9-RC1</version>
+     </dependency>
 		<dependency>
 			<groupId>com.github.jsonld-java</groupId>
 			<artifactId>jsonld-java</artifactId>
@@ -32,36 +31,17 @@
 			<version>2.2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.semweb4j</groupId>
-			<artifactId>rdf2go.impl.sesame</artifactId>
-			<version>4.8.3</version>
-		</dependency>
-		<dependency>
 			<groupId>edu.kit.aifb</groupId>
 			<artifactId>cumulusrdf</artifactId>
 			<version>1.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.fortytwo.sesametools</groupId>
-			<artifactId>linked-data-server</artifactId>
-			<version>1.8</version>
-		</dependency>
-		<dependency>
 			<groupId>org.semweb4j</groupId>
 			<artifactId>rdf2go.api</artifactId>
 			<version>4.8.3</version>
 		</dependency>
-		<dependency>
-			<groupId>org.semweb4j</groupId>
-			<artifactId>rdfreactor.runtime</artifactId>
-			<version>4.8.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.semweb4j</groupId>
-			<artifactId>rdfreactor.generator</artifactId>
-			<version>4.8.3</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-sail</artifactId>
@@ -78,13 +58,46 @@
 			<version>1.0.13</version>
 		</dependency>
 		<dependency>
-			<groupId>org.openrdf</groupId>
-			<artifactId>elmo</artifactId>
-			<version>0.3</version>
+			<groupId>com.clarkparsia.empire</groupId>
+			<artifactId>empire</artifactId>
+			<version>0.8.4</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>tools</artifactId>
+					<groupId>com.sun</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.clarkparsia.empire</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.8.4</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>tools</artifactId>
+					<groupId>com.sun</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.clarkparsia.empire</groupId>
+			<artifactId>sesame</artifactId>
+			<version>0.8.4</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>tools</artifactId>
+					<groupId>com.sun</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.complexible.common</groupId>
+			<artifactId>core</artifactId>
+			<version>3.1.1</version>
 			<scope>compile</scope>
 		</dependency>
-
-
 	</dependencies>
 
 </project>

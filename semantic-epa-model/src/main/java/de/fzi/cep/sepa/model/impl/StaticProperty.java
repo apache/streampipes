@@ -1,11 +1,30 @@
 package de.fzi.cep.sepa.model.impl;
 
-public class StaticProperty {
+import javax.persistence.Entity;
+
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+
+@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
+	 "dc",   "http://purl.org/dc/terms/"})
+@RdfsClass("sepa:StaticProperty")
+@Entity
+public class StaticProperty extends UnnamedSEPAElement {
 
 	String name;
 	String description;
+	
+	@RdfProperty("sepa:hasValue")
 	String value;
+	
+	@RdfProperty("sepa:hasType")
 	String type;
+	
+	public StaticProperty()
+	{
+		super();
+	}
 	
 	public StaticProperty(String name, String description, String type)
 	{
