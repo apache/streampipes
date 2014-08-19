@@ -8,4 +8,6 @@ public interface EventStreamDeclarer {
 	public de.fzi.cep.sepa.model.impl.EventStream declareModel(SEP sep);
 	
 	public void executeStream();
+	
+	public boolean isExecutable();
 }

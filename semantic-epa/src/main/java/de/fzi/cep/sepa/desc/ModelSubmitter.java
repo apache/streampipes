@@ -23,53 +23,47 @@ import org.restlet.resource.Get;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.clarkparsia.empire.annotation.RdfGenerator;
 
-import de.fzi.cep.sepa.commons.Transformer;
 import de.fzi.cep.sepa.model.impl.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.SEP;
 import de.fzi.cep.sepa.model.impl.SEPA;
+import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class ModelSubmitter {
 
-	public static <T extends EventStreamDeclarer, B extends SemanticEventProducerDeclarer> boolean submitProducer(B producer, T...declarers) throws Exception
+	public static boolean submitProducer(List<SemanticEventProducerDeclarer> producers, String baseUri, int port) throws Exception
 	{
-		List<EventStream> allStreams = new ArrayList<EventStream>();
-		String defaultPath = "/" +producer.declareURIPath();
-		Component component = new Component();
-				    
-		component.getServers().add(Protocol.HTTP, producer.declarePort());	
-		SEP sep = producer.declareModel();
-		
-		
-		for(T declarer : declarers)
-		{
-			SEP tempSEP = producer.declareModel();
-			EventStream stream = declarer.declareModel(sep);
-			tempSEP.setEventStreams(Arrays.asList(stream));
-			allStreams.add(stream);
-			String currentPath = defaultPath + "/" +stream.getName();
-			
-			component.getDefaultHost().attach(currentPath, generateSEPRestlet(tempSEP));
-			
-		}
-		
-		sep.setEventStreams(allStreams);
-		component.getDefaultHost().attach(defaultPath, generateSEPRestlet(sep));
-		
-		component.start();
-		
-		// Start runtime
-		return true;
-		
-	}
-	
-	public static <T extends SemanticEventProcessingAgentDeclarer> boolean submitAgent(int port, T...declarers) throws Exception
-	{
-		Component component = new Component();
-	    
+		Component component = new Component();    
 		component.getServers().add(Protocol.HTTP, port);	
 		
-		for(T declarer : declarers)
+		for (SemanticEventProducerDeclarer producer : producers)
+		{		
+			SEP sep = producer.declareModel();
+			String currentPath = sep.getUri();
+			sep.setUri(baseUri + sep.getUri());
+			
+			for(EventStreamDeclarer declarer : producer.getEventStreams())
+			{
+				EventStream stream = declarer.declareModel(sep);
+				stream.setUri(baseUri + stream.getUri());
+				sep.addEventStream(stream);	
+				if (declarer.isExecutable()) declarer.executeStream();
+			}
+			component.getDefaultHost().attach(currentPath, generateSEPRestlet(sep));
+		}
+						
+			component.start();
+			
+			// Start runtime
+			return true;
+	}
+	
+	public static boolean submitAgent(List<SemanticEventProcessingAgentDeclarer> declarers, String baseUri, int port) throws Exception
+	{
+		Component component = new Component();
+		component.getServers().add(Protocol.HTTP, port);	
+		
+		for(SemanticEventProcessingAgentDeclarer declarer : declarers)
 		{
 			SEPA sepa = declarer.declareModel();
 			component.getDefaultHost().attach(sepa.getPathName(), generateSEPARestlet(sepa));
@@ -113,6 +107,7 @@ public class ModelSubmitter {
 				{
 					try {
 						Graph rdfGraph = Transformer.generateCompleteGraph(new GraphImpl(), sepaElement);
+						Rio.write(rdfGraph, System.out, RDFFormat.JSONLD);
 						response.setEntity(asString(rdfGraph), MediaType.APPLICATION_JSON);
 					} catch (RDFHandlerException e) {
 						// TODO Auto-generated catch block
