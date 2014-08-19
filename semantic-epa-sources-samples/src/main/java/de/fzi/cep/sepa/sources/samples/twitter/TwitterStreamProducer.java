@@ -3,37 +3,38 @@ package de.fzi.cep.sepa.sources.samples.twitter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jms.JMSException;
+
+import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSource;
 import de.fzi.cep.sepa.model.impl.SEP;
+import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SEP declareModel() {
-		SEP sep = new SEP("http://fzi.de/", "Twitter", "Twitter Event Producer", createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
+		SEP sep = new SEP("/twitter", "Twitter", "Twitter Event Producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
 		
 		return sep;
 	}
 
-	@Override
-	public int declarePort() {
-		return 8089;
-	}
-
-	@Override
-	public String declareURIPath() {
-		return "twitter";
-	}
 	
-	private List<Domain> createDomain(Domain...domains)
-	{
-		ArrayList<Domain> domainList = new ArrayList<Domain>();
-		for(Domain d : domains)
-			domainList.add(d);
-			
-		return domainList;
+	@Override
+	public List<EventStreamDeclarer> getEventStreams() {
+		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
+		
+		try {
+			streams.add(new TwitterSampleStream());
+			streams.add(new TwitterGeoStream());
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	return streams;
 	}
-
 }
