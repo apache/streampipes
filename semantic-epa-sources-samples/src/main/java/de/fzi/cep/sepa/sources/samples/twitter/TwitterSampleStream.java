@@ -13,7 +13,7 @@ import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import twitter4j.StallWarning;
@@ -57,7 +57,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		stream.setName("Twitter Sample Stream");
 		stream.setDescription("Twitter Sample Stream Description");
 		stream.setUri(sep.getUri() + "/sample");
-		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Twitter_Icon" +"_HQ.png");
+		System.out.println(stream.getUri());
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Tweet_Icon" +"_HQ.png");
 		
 		return stream;
 	}
@@ -105,7 +106,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 				}
 				@Override
 				public void onStallWarning(StallWarning arg0) {
-					// TODO Auto-generated method stub
+					System.out.println(arg0.getMessage());
+					System.out.println(arg0.getPercentFull());
 					
 				}
 		    };
@@ -126,6 +128,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			json.put("timestamp", status.getCreatedAt().getTime());
 			json.put("userName", status.getUser().getName());
 			json.put("text", status.getText());
+			json.put("name", "TwitterEvent");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -144,6 +147,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			json.put("timestamp", status.getCreatedAt().getTime());
 			json.put("userName", status.getUser().getName());
 			json.put("text", status.getText());
+			json.put("name", "TwitterGeoEvent");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();

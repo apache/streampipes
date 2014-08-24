@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class TwitterGeoStream implements EventStreamDeclarer{
@@ -39,7 +39,7 @@ public class TwitterGeoStream implements EventStreamDeclarer{
 		stream.setName("Twitter Geo Stream");
 		stream.setDescription("Twitter Geo Stream Description");
 		stream.setUri(sep.getUri() + "/geo");
-		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Twitter_Icon" +"_HQ.png");
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Tweet_Icon" +"_HQ.png");
 		
 		return stream;
 	}

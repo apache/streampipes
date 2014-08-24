@@ -6,7 +6,7 @@ public class SourcesConfig {
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = "http://fzi.de";
-		iconBaseUrl = "http://anemone06.fzi.de/semantic-epa-backend/img";
+		serverUrl = "http://localhost:8089";
+		iconBaseUrl = "http://localhost:8080/semantic-epa-backend/img";
 	}
 }
