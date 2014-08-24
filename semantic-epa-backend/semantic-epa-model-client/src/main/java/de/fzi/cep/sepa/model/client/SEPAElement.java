@@ -64,4 +64,9 @@ public abstract class SEPAElement {
 		this.iconName = iconName;
 	}
 
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+
+	
 }

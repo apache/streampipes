@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class SEPAClient extends SEPAElement {
 	
-	private List<Domain> domains;
+	private List<String> domains;
 	private List<StaticProperty> staticProperties;
 	private int inputNodes;
 	
@@ -13,25 +13,25 @@ public class SEPAClient extends SEPAElement {
 	
 	private List<OutputStrategy<? extends OutputStrategyParameters>> outputStragegy;
 	
-	public SEPAClient(String name, String description, List<Domain> domains)
+	public SEPAClient(String name, String description, List<String> domains)
 	{
 		super(name, description);
 		this.domains = domains;
 	}
 	
-	public SEPAClient(String name, String description, List<Domain> domains, String iconName)
+	public SEPAClient(String name, String description, List<String> domains, String iconName)
 	{
 		super(name, description, iconName);
 		this.domains = domains;
 	}
 
 
-	public List<Domain> getDomains() {
+	public List<String> getDomains() {
 		return domains;
 	}
 
 
-	public void setDomains(List<Domain> domains) {
+	public void setDomains(List<String> domains) {
 		this.domains = domains;
 	}
 

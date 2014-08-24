@@ -89,22 +89,22 @@ public class DemoDataGenerator {
 		//generate epas
 		List<SEPAClient> sepas = new ArrayList<SEPAClient>();
 		
-		SEPAClient drillingStart = SEPAFactory.generateSEPAMock("Drilling Start", "Detects start of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE));
+		SEPAClient drillingStart = SEPAFactory.generateSEPAMock("Drilling Start", "Detects start of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE), "Drilling_Start");
 		drillingStart.setInputNodes(1);
 		
 		
-		SEPAClient drillingStop = SEPAFactory.generateSEPAMock("Drilling Stop", "Detects stop of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE));
+		SEPAClient drillingStop = SEPAFactory.generateSEPAMock("Drilling Stop", "Detects stop of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE), "Drilling_Stop");
 		drillingStop.setInputNodes(1);
 		
-		SEPAClient coolingDownStart = SEPAFactory.generateSEPAMock("Cooling Down Start", "Detects start of cooling down process", createDomainList(Domain.DOMAIN_PROASENSE));
+		SEPAClient coolingDownStart = SEPAFactory.generateSEPAMock("Cooling Down Start", "Detects start of cooling down process", createDomainList(Domain.DOMAIN_PROASENSE), "Cooling_Down_Start");
 		coolingDownStart.setInputNodes(1);
 		
 		
-		SEPAClient coolingDownStop = SEPAFactory.generateSEPAMock("Cooling Down Stop", "Detects stop of a cooling down process", createDomainList(Domain.DOMAIN_PROASENSE));
+		SEPAClient coolingDownStop = SEPAFactory.generateSEPAMock("Cooling Down Stop", "Detects stop of a cooling down process", createDomainList(Domain.DOMAIN_PROASENSE), "Cooling_Down_Stop");
 		coolingDownStop.setInputNodes(1);
 		
 		
-		SEPAClient suddenIncreaseDecrease = SEPAFactory.generateSEPAMock("Sudden Increase/Decrease", "Detects increasing/decreasing numerical values", createDomainList(Domain.DOMAIN_PROASENSE));
+		SEPAClient suddenIncreaseDecrease = SEPAFactory.generateSEPAMock("Sudden Increase/Decrease", "Detects increasing/decreasing numerical values", createDomainList(Domain.DOMAIN_PROASENSE), "Sudden_Increase_Decrease");
 		suddenIncreaseDecrease.setInputNodes(1);
 		
 		List<Option> tempOptions = new ArrayList<Option>();
@@ -120,7 +120,7 @@ public class DemoDataGenerator {
 		suddenIncreaseDecrease.setStaticProperties(properties);
 		
 		
-		SEPAClient simpleTextFilter = SEPAFactory.generateSEPAMock("Textual Filter", "Filter (operates on textual data)", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT));
+		SEPAClient simpleTextFilter = SEPAFactory.generateSEPAMock("Textual Filter", "Filter (operates on textual data)", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT), "Textual_Filter_Icon");
 		simpleTextFilter.setInputNodes(1);
 		List<Option> textOptions = new ArrayList<Option>();
 		textOptions.add(new Option("contains"));
@@ -135,13 +135,13 @@ public class DemoDataGenerator {
 		simpleTextFilter.setStaticProperties(textFilterProperties);
 		
 		
-		SEPAClient proximity = SEPAFactory.generateSEPAMock("Proximity", "Detects proximity between two location-based objects", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT));
-		SEPAClient sentiment = SEPAFactory.generateSEPAMock("Sentiment Detection", "calculates sentiment of textual data", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT));
-		SEPAClient language = SEPAFactory.generateSEPAMock("Language Detection", "language detection on textual data properties", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT));
+		SEPAClient proximity = SEPAFactory.generateSEPAMock("Proximity", "Detects proximity between two location-based objects", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT), "Proximity_Icon");
+		SEPAClient sentiment = SEPAFactory.generateSEPAMock("Sentiment Detection", "calculates sentiment of textual data", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT), "Sentiment_Detection_Icon");
+		SEPAClient language = SEPAFactory.generateSEPAMock("Language Detection", "language detection on textual data properties", createDomainList(Domain.DOMAIN_PERSONAL_ASSISTANT), "Language_Detection_Icon");
 		
 		
 		// basic epas
-		SEPAClient and = SEPAFactory.generateSEPAMock("AND", "description", createDomainList(Domain.DOMAIN_INDEPENDENT));
+		SEPAClient and = SEPAFactory.generateSEPAMock("AND", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "And_Icon");
 		and.setInputNodes(2);
 		
 		StaticProperty sid5 = new StaticProperty("Time Window", "", new TextInput("Time", ""));
@@ -159,12 +159,12 @@ public class DemoDataGenerator {
 		
 		and.setStaticProperties(andProperties);
 		
-		SEPAClient or = SEPAFactory.generateSEPAMock("OR", "description", createDomainList(Domain.DOMAIN_INDEPENDENT));
-		SEPAClient seq = SEPAFactory.generateSEPAMock("SEQUENCE", "description", createDomainList(Domain.DOMAIN_INDEPENDENT));
-		SEPAClient timer = SEPAFactory.generateSEPAMock("Timer", "(time difference between two single events)", createDomainList(Domain.DOMAIN_INDEPENDENT));
-		SEPAClient counter = SEPAFactory.generateSEPAMock("Counter", "(counts occurrences / event level", createDomainList(Domain.DOMAIN_INDEPENDENT));
-		SEPAClient simpleNumericalFilter = SEPAFactory.generateSEPAMock("Numerical Filter", "description", createDomainList(Domain.DOMAIN_INDEPENDENT));
-		SEPAClient aggregate = SEPAFactory.generateSEPAMock("Aggregation", "description", createDomainList(Domain.DOMAIN_INDEPENDENT));
+		SEPAClient or = SEPAFactory.generateSEPAMock("OR", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "Or_Icon");
+		SEPAClient seq = SEPAFactory.generateSEPAMock("SEQUENCE", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "Sequence_Icon");
+		SEPAClient timer = SEPAFactory.generateSEPAMock("Timer", "(time difference between two single events)", createDomainList(Domain.DOMAIN_INDEPENDENT), "Timer_Icon");
+		SEPAClient counter = SEPAFactory.generateSEPAMock("Counter", "(counts occurrences / event level", createDomainList(Domain.DOMAIN_INDEPENDENT), "Counter_Icon");
+		SEPAClient simpleNumericalFilter = SEPAFactory.generateSEPAMock("Numerical Filter", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "Numerical_Filter_Icon");
+		SEPAClient aggregate = SEPAFactory.generateSEPAMock("Aggregation", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "Aggregation_Icon");
 		
 		sepas.add(drillingStart);
 		sepas.add(drillingStop);
@@ -188,12 +188,12 @@ public class DemoDataGenerator {
 	
 	}
 	
-	private static List<Domain> createDomainList(Domain...domains)
+	private static List<String> createDomainList(Domain...domains)
 	{
-		List<Domain> result = new ArrayList<Domain>();
+		List<String> result = new ArrayList<String>();
 		for(Domain domain : domains)
 		{
-			result.add(domain);
+			result.add(domain.toString());
 		}
 		return result;
 	}
