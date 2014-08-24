@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -60,6 +62,17 @@ public class EventSchema extends UnnamedSEPAElement{
 		}
 		
 		return propertyMap;
+	}
+	
+	public List<String> toPropertyList()
+	{
+		List<String> properties = new ArrayList<String>();
+		
+		for(EventProperty p : this.getEventProperties())
+		{
+			properties.add(p.getPropertyName());
+		}
+		return properties;
 	}
 	
 	

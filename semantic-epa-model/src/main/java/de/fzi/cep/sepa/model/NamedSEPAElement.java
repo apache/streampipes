@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.model.impl;
+package de.fzi.cep.sepa.model;
 
 
 import com.clarkparsia.empire.annotation.RdfId;
@@ -28,12 +28,13 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		super();
 	}
 	
-	public NamedSEPAElement(String uri, String name, String description)
+	public NamedSEPAElement(String uri, String name, String description, String iconUrl)
 	{
 		super();
 		this.uri = uri;
 		this.name = name;
 		this.description = description;
+		this.iconUrl = iconUrl;
 	}
 
 	public String getName() {

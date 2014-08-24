@@ -1,13 +1,27 @@
 package de.fzi.cep.sepa.model.util;
 
-import de.fzi.cep.sepa.model.impl.SEPA;
+import java.util.List;
+
 import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 public class SEPAUtils {
 
 	public static StaticProperty getStaticPropertyByName(SEPA sepa, String name)
 	{
-		for(StaticProperty p : sepa.getStaticProperties())
+		return getStaticPropertyByName(sepa.getStaticProperties(), name);
+	}
+	
+	public static StaticProperty getStaticPropertyByName(SEPAInvocationGraph seg, String name)
+	{
+		return getStaticPropertyByName(seg.getStaticProperties(), name);
+	}
+	
+	
+	private static StaticProperty getStaticPropertyByName(List<StaticProperty> properties, String name)
+	{
+		for(StaticProperty p : properties)
 		{
 			if (p.getName().equals(name)) return p;
 		}

@@ -2,11 +2,13 @@ package de.fzi.cep.sepa.model.impl;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+
 public class SEPAFactory {
 
-	public static SEPA createSEPA(String uri, String name, String description, String pathName, List<Domain> domains)
+	public static SEPA createSEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
 	{
-		return new SEPA(uri, name, description, pathName, domains);
+		return new SEPA(uri, name, description, iconUrl, pathName, domains);
 	}
 	
 	

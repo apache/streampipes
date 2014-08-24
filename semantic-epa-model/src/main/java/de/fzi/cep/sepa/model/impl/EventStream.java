@@ -10,6 +10,8 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:EventStream")
@@ -29,10 +31,10 @@ public class EventStream extends NamedSEPAElement {
 	EventSchema eventSchema;
 	
 	
-	public EventStream(String uri, String name, String description, List<EventQuality> eventQuality,
+	public EventStream(String uri, String name, String description, String iconUrl, List<EventQuality> eventQuality,
 			EventGrounding eventGrounding, 
 			EventSchema eventSchema) {
-		super(uri, name, description);
+		super(uri, name, description, iconUrl);
 		this.eventQuality = eventQuality;
 		this.eventGrounding = eventGrounding;
 		this.eventSchema = eventSchema;

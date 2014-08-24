@@ -30,18 +30,7 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
-		<dependency>
-			<groupId>edu.kit.aifb</groupId>
-			<artifactId>cumulusrdf</artifactId>
-			<version>1.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.semweb4j</groupId>
-			<artifactId>rdf2go.api</artifactId>
-			<version>4.8.3</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-sail</artifactId>
@@ -52,11 +41,7 @@
 			<artifactId>sesame-runtime</artifactId>
 			<version>2.7.11</version>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.13</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>com.clarkparsia.empire</groupId>
 			<artifactId>empire</artifactId>
