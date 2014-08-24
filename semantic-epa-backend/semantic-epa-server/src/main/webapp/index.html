@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+	
+	<!-- <link rel="stylesheet" type="text/css" href="jqueryuistyle.css" /> -->
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>User-Interface CEP</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="jquery.jsPlumb-1.6.4.js"></script>
+		<script type="text/javascript" src="ModalBuilder.js"></script>
+		<script type="text/javascript" src="script.js"></script>
+		<script type="text/javascript" src="assembly.js"></script>
+		
+		<link rel="stylesheet" href="jsplumb.css"/>
+		<link rel="stylesheet" href="toastr.css"/><!-- Toastr -->
+		<script type="text/javascript" src="toastr.js"></script><!-- Toastr -->
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> <!-- Bootstrap -->
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> <!-- Bootstrap -->
+		<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script> <!-- IdentIcon -->
+		<link rel="stylesheet" type="text/css" href="uistyle.css" />
+		<script type="text/javascript">
+			var domain = "";
+			var standardUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
+			
+			var $currentElement;
+			$(init("Proa"));
+			
+			
+		</script>
+	</head>
+	
+	<body>
+		<!-- NAVBAR  -->
+		
+		<nav class="navbar navbar-default" role="navigation">
+		  	<div class="container-fluid">
+		    	<!-- Brand and toggle get grouped for better mobile display -->
+		    	<div class="navbar-header">
+		      		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        		<span class="sr-only">Toggle navigation</span>
+		        		<span class="icon-bar"></span>
+		        		<span class="icon-bar"></span>
+		        		<span class="icon-bar"></span>
+		      		</button>
+		      		<a class="navbar-brand" href="#">EPA - Creator</a>
+		    	</div>
+		
+			    <!-- Collect the nav links, forms, and other content for toggling -->
+			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      	<ul class="nav navbar-nav">
+			        	<li class="dropdown">
+			          		<a href="#" id="typeChange" class="dropdown-toggle" data-toggle="dropdown">Proasense <b class="caret"></b></a>
+			          		<ul class="dropdown-menu">
+			            		<li><a href="#home" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
+			            		<li><a href="#home" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
+			            		<li class="divider"></li>
+			            		<li><a href="#" onclick=showAdd()>Add...</a></li>
+			         		</ul>
+			        	</li>
+			      	</ul>
+			    </div><!-- /.navbar-collapse -->
+			  </div><!-- /.container-fluid -->
+		</nav>
+		<!-- END NAVBAR  -->
+		
+		
+		<div class="tab-content">
+			<div class="tab-pane active" id="home">	
+				
+				
+				<div id ="sources" align="center" class="alpha">
+				</div>
+				<div class="panel-group" id="accordion">
+					
+					  <div class="panel panel-default">
+					    <div class="panel-heading">
+					      <h4 class="panel-title">
+					        <a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne">
+					          Streams
+					        </a>
+					      </h4>
+					    </div>
+					    <div id="collapseOne" class="panel-collapse collapse">
+					      <div class="panel-body">
+					        <div id="streams" align="center" class="icon-stands alpha">
+	
+							</div>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="panel panel-default">
+					    <div class="panel-heading">
+					      <h4 class="panel-title">
+					        <a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo">
+					          Sepas
+					        </a>
+					      </h4>
+					    </div>
+					    <div id="collapseTwo" class="panel-collapse collapse">
+					      <div class="panel-body">
+							<div id="sepas" align="center" class="icon-stands alpha">
+			
+							</div>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="panel panel-default">
+					    <div class="panel-heading">
+					      <h4 class="panel-title">
+					        <a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree">
+					          Actions
+					        </a>
+					      </h4>
+					    </div>
+					    <div id="collapseThree" class="panel-collapse collapse ">
+					      <div class="panel-body">
+					        <div id="actions" align="center" class="icon-stands alpha">
+			
+							</div>
+					      </div>
+					    </div>
+					  </div>
+					 
+				</div>
+				
+	
+				
+				<div id="assembly" >
+					
+					<span id="clear" class="glyphicon glyphicon-remove"></span>
+					<button type="button" id="submit" class="btn btn-default btn-sm" onclick=submit()>
+				  		<span class="glyphicon glyphicon-ok"></span> Submit
+					</button>
+					<!-- <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none">TESTTESTTESTTESTTEST</div> -->
+					
+				</div>
+				
+				
+				
+				
+
+							
+					
+				<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
+					<li><a id="customize" tabindex="-1" href="#">Anpassen</a></li>
+					<li id='division' class="divider"></li>
+					<li><a id="delete" tabindex="-1" href="#">Entfernen</a></li>
+				</ul>
+				<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
+					<li><a id="sdescription" tabindex="-1" href="#">Beschreibung</a> </li>
+				</ul>
+				
+				
+				<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+						    <div id="modal-content" class="modal-content">
+							      <div class="modal-header">
+								        <button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">&times;</button>
+								        <h4 class="modal-title" id="myModalLabel">Customize</h4>
+							      </div>
+							      <div class="modal-body">
+							        
+										<form id="modalForm" class="form-horizontal">
+											<fieldset id ="customize-content">
+													
+											</fieldset>
+											<div id="savedOptions"><strong>Saved options: </strong>
+												
+												
+											</div>
+										</form>
+							
+							      </div>
+							      <div class="modal-footer">
+								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Close</button>
+								        <button type="button" class="btn btn-primary" onclick=save()>Save changes</button>
+							      </div>
+						    </div>
+					  </div>
+				</div>
+				
+				<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+			  		<div class="modal-dialog">
+						<div class="modal-content">
+					      	<div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						        <h4 class="modal-title" id="description-title"></h4>
+				      		</div>
+				      		<div class="modal-body">
+					        	<p id ="modal-description"></p>
+				      		</div>
+				      		<div class="modal-footer">
+					        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        	</div>
+			        	</div>
+			        </div>
+		        </div>
+				
+				<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">Add...</h4>
+							</div>
+							<div class="modal-body">
+								<div id="wrapper">
+									<div style="text-align: center"><p><strong>Please input Url of new Element</strong></p>
+										<div id="addTextInput"  class="input-group">
+											<input id ="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="button" onclick=add()>Add</button>
+											</span>
+										</div><!-- /input-group -->
+									</div><!-- /.col-lg-6 -->
+									<div id="sses" style="text-align: center">
+										
+									</div>
+
+								</div>
+								<div class="modal-footer">
+									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

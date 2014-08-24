@@ -105,15 +105,10 @@ public enum SEPAManager {
 		List<SourceClient> result = new ArrayList<SourceClient>();
 		for(SourceClient s : storedSources)
 		{
-			for(Domain d : s.getDomain())
+			for(String d : s.getDomain())
 			if (d.toString().equals(domain))
 				result.add(s);
 		}
 		return result;
 	}
-	
-	
-	
-	
-	
 }

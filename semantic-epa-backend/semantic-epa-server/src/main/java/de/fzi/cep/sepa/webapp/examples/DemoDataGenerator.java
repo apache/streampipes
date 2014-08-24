@@ -109,12 +109,12 @@ public class DemoDataGenerator {
 	
 	}
 	
-	private static List<Domain> createDomainList(Domain...domains)
+	private static List<String> createDomainList(Domain...domains)
 	{
-		List<Domain> result = new ArrayList<Domain>();
+		List<String> result = new ArrayList<String>();
 		for(Domain domain : domains)
 		{
-			result.add(domain);
+			result.add(domain.toString());
 		}
 		return result;
 	}

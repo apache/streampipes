@@ -3,14 +3,9 @@ package de.fzi.cep.sepa.webapp.examples;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-import de.fzi.cep.sepa.model.SEPObjectFactory;
 import de.fzi.cep.sepa.model.client.examples.SourceFactory;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.storage.SEPAManager;
 
 
