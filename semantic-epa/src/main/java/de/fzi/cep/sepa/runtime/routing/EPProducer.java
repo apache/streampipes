@@ -20,9 +20,10 @@ public class EPProducer extends DefaultProducer {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void process(Exchange exchange) throws Exception { // incoming messages
-		Object body = exchange.getIn().getBody();
+		Object body = exchange.getIn().getBody(); 
 		if (body instanceof Map) {
-			engine.onEvent((Map<String, Object>) body);
+			String sourceInfo = String.valueOf(exchange.getIn().getHeaders().get("jmsdestination"));
+			engine.onEvent((Map<String, Object>) body, sourceInfo);
 		} else {
 			throw new RuntimeException("Incoming event is not of type Map (" + body + ")");
 		}

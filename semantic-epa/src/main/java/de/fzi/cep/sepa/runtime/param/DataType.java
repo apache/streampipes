@@ -36,7 +36,7 @@ public enum DataType {
 
 	private static DataFormatDefinition jsonToMapFormat() {
 		JsonDataFormat format = new JsonDataFormat(JsonLibrary.Gson);
-		format.setUnmarshalType(Map.class);
+		format.setUnmarshalType(Map.class); 
 		return format;
 	}
 

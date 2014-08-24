@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.desc;
 
-import de.fzi.cep.sepa.model.impl.SEPA;
-import de.fzi.cep.sepa.model.impl.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 public interface SemanticEventProcessingAgentDeclarer {
 

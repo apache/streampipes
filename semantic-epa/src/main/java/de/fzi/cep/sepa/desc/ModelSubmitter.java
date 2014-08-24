@@ -2,15 +2,16 @@ package de.fzi.cep.sepa.desc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.JSONLDMode;
+import org.openrdf.rio.helpers.JSONLDSettings;
 import org.restlet.Component;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -18,17 +19,14 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
-import org.restlet.resource.Get;
 
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-import com.clarkparsia.empire.annotation.RdfGenerator;
-
-import de.fzi.cep.sepa.model.impl.AbstractSEPAElement;
+import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.SEP;
-import de.fzi.cep.sepa.model.impl.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
+@SuppressWarnings("deprecation")
 public class ModelSubmitter {
 
 	public static boolean submitProducer(List<SemanticEventProducerDeclarer> producers, String baseUri, int port) throws Exception
@@ -40,12 +38,12 @@ public class ModelSubmitter {
 		{		
 			SEP sep = producer.declareModel();
 			String currentPath = sep.getUri();
-			sep.setUri(baseUri + sep.getUri());
+			sep.setUri(baseUri + currentPath);
 			
 			for(EventStreamDeclarer declarer : producer.getEventStreams())
 			{
 				EventStream stream = declarer.declareModel(sep);
-				stream.setUri(baseUri + stream.getUri());
+				//stream.setUri(baseUri + stream.getUri());
 				sep.addEventStream(stream);	
 				if (declarer.isExecutable()) declarer.executeStream();
 			}
@@ -66,6 +64,7 @@ public class ModelSubmitter {
 		for(SemanticEventProcessingAgentDeclarer declarer : declarers)
 		{
 			SEPA sepa = declarer.declareModel();
+			sepa.setUri(baseUri + sepa.getPathName());
 			component.getDefaultHost().attach(sepa.getPathName(), generateSEPARestlet(sepa));
 		}
 		
@@ -129,7 +128,11 @@ public class ModelSubmitter {
 	public static String asString(Graph graph) throws RDFHandlerException
 	{
 		OutputStream stream = new ByteArrayOutputStream();
-		Rio.write(graph, stream, RDFFormat.JSONLD);
+		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		//Rio.write(graph, stream, RDFFormat.JSONLD);
+		Rio.write(graph, writer);
 		return stream.toString();
 	}
 	
