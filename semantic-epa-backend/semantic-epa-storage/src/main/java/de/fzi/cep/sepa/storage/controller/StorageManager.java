@@ -17,6 +17,7 @@ import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
+import de.fzi.cep.sepa.storage.util.StorageUtils;
 
 public enum StorageManager {
 
@@ -55,6 +56,8 @@ public enum StorageManager {
 			conn = repository.getConnection();
 			tempConn = tempRepository.getConnection();
 			
+			
+			
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -77,6 +80,8 @@ public enum StorageManager {
 		
 		tempStorageManager = Persistence.createEntityManagerFactory("temp-db").createEntityManager();
 		
+		
+		
 		return true;
 		} catch (Exception e)
 		{
@@ -94,6 +99,7 @@ public enum StorageManager {
 	}
 
 	public StorageRequests getStorageAPI() {
+		StorageUtils.fixEmpire();
 		return new StorageRequestsImpl();
 	}
 	

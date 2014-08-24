@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.SEP;
-import de.fzi.cep.sepa.model.impl.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
 
 
 public enum SEPAManager {

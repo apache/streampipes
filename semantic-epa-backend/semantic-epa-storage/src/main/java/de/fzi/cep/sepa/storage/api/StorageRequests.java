@@ -4,8 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.SEP;
-import de.fzi.cep.sepa.model.impl.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
 
 public interface StorageRequests {
 
@@ -25,6 +25,10 @@ public interface StorageRequests {
 	
 	public List<SEPA> getAllSEPAs();
 	
+	public List<SEP> getSEPsByDomain(String domain);
+	
+	public List<SEPA> getSEPAsByDomain(String domain);
+	
 	public boolean deleteSEP(SEP sep);
 	
 	public boolean deleteSEP(String rdfId);
@@ -32,4 +36,14 @@ public interface StorageRequests {
 	public boolean deleteSEPA(SEPA sepa);
 	
 	public boolean deleteSEPA(String rdfId);
+	
+	public boolean exists(SEP sep);
+	
+	public boolean exists(SEPA sepa);
+	
+	public boolean update(SEP sep);
+	
+	public boolean update(SEPA sepa);
+
+	
 }
