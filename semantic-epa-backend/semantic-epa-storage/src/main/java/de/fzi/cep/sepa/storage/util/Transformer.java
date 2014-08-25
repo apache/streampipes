@@ -38,7 +38,16 @@ import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.input.CheckboxInput;
+import de.fzi.cep.sepa.model.client.input.FormInput;
+import de.fzi.cep.sepa.model.client.input.Option;
+import de.fzi.cep.sepa.model.client.input.RadioInput;
+import de.fzi.cep.sepa.model.client.input.TextInput;
+import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.storage.SEPAManager;
@@ -73,12 +82,15 @@ public class Transformer {
 							System.out.println(genericClassName);
 							if(!(genericClassName.startsWith("java.lang.")))
 							{
-								@SuppressWarnings("unchecked")
-								List<? extends AbstractSEPAElement> listElements = (List<? extends AbstractSEPAElement>) m
-										.invoke(element);
-								if (listElements != null) {
-									for (AbstractSEPAElement e : listElements) {
-										generateCompleteGraph(graph, e);
+								if(!(genericClassName.startsWith("java.net")))
+								{
+									@SuppressWarnings("unchecked")
+									List<? extends AbstractSEPAElement> listElements = (List<? extends AbstractSEPAElement>) m
+											.invoke(element);
+									if (listElements != null) {
+										for (AbstractSEPAElement e : listElements) {
+											generateCompleteGraph(graph, e);
+										}
 									}
 								}
 							}
@@ -86,6 +98,7 @@ public class Transformer {
 							if (!m.getReturnType().isPrimitive()
 									&& !m.getReturnType().getCanonicalName()
 											.startsWith("java.lang.")
+									&& !m.getReturnType().getCanonicalName().startsWith("java.net")
 									&& !m.getReturnType()
 											.getCanonicalName()
 											.startsWith(
@@ -183,7 +196,6 @@ public class Transformer {
 
 			Iterator<Statement> st = statements.iterator();
 
-			Class<? extends AbstractSEPAElement> toParse;
 			while (st.hasNext()) {
 				Statement s = st.next();
 				if ((s.getPredicate().equals(RDF.TYPE))) {
@@ -198,9 +210,8 @@ public class Transformer {
 							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEMANTICEVENTPRODUCER
 									.toSesameURI().toString())) {
 						uri = s.getSubject().toString();
-					}
+					} 
 				}
-
 				StorageManager.INSTANCE.getTempConnection().add(s);
 			}
 		} catch (RDFParseException e1) {
@@ -216,10 +227,9 @@ public class Transformer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		T result = manager.find(destination, java.net.URI.create(uri));
 		StorageUtils.emptyRepository(StorageManager.INSTANCE.getTempConnection());
-		
+	
 		
 		return result;
 	}
@@ -232,10 +242,54 @@ public class Transformer {
 		client.setIconUrl(sepa.getIconUrl());
 		client.setInputNodes(sepa.getEventStreams().size());
 		
-		
+		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
+		for(StaticProperty p : sepa.getStaticProperties())
+		{
+			clientStaticProperties.add(convertStaticProperty(p));
+		}
+			
+		client.setStaticProperties(clientStaticProperties);	
 		return client;
 	}
 	
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
+			StaticProperty p) {
+		if (p instanceof FreeTextStaticProperty) return convertFreeTextStaticProperty((FreeTextStaticProperty) p);
+		else if (p instanceof OneOfStaticProperty) return convertOneOfStaticProperty((OneOfStaticProperty) p);
+		else if (p instanceof AnyStaticProperty) return convertAnyStaticProperty((AnyStaticProperty) p);
+		return null;
+		//exceptions
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
+			AnyStaticProperty p) {
+		List<Option> options = new ArrayList<Option>();
+		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		{
+			options.add(new Option(option.getName()));
+		}
+		CheckboxInput input = new CheckboxInput(options);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
+			OneOfStaticProperty p) {
+		List<Option> options = new ArrayList<Option>();
+		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		{
+			options.add(new Option(option.getName()));
+		}
+		RadioInput input = new RadioInput(options);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertFreeTextStaticProperty(
+			FreeTextStaticProperty p) {
+		TextInput input = new TextInput();
+		input.setValue("");
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
 	public static List<SEPAClient> toSEPAClientModel(List<SEPA> sepas)
 	{
 		List<SEPAClient> result = new ArrayList<SEPAClient>();
@@ -288,7 +342,6 @@ public class Transformer {
 	{
 		return StorageManager.INSTANCE.getEntityManager().find(SEP.class, client.getElementId());
 	}
-	
 	
 	public static List<StreamClient> toStreamClientModel(List<SEP> seps)
 	{
