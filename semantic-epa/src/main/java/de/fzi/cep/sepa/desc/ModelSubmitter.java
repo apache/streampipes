@@ -24,6 +24,7 @@ import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 @SuppressWarnings("deprecation")
@@ -65,14 +66,14 @@ public class ModelSubmitter {
 		{
 			SEPA sepa = declarer.declareModel();
 			sepa.setUri(baseUri + sepa.getPathName());
-			component.getDefaultHost().attach(sepa.getPathName(), generateSEPARestlet(sepa));
+			component.getDefaultHost().attach(sepa.getPathName(), generateSEPARestlet(sepa, declarer));
 		}
 		
 		component.start();
 		return true;
 	}
 	
-	private static Restlet generateSEPARestlet(SEPA sepa)
+	private static Restlet generateSEPARestlet(SEPA sepa, SemanticEventProcessingAgentDeclarer declarer)
 	{
 		return new Restlet() {
 			public void handle(Request request, Response response)
@@ -82,11 +83,16 @@ public class ModelSubmitter {
 					if (request.getMethod().equals(Method.GET))
 					{				
 						Graph rdfGraph = Transformer.generateCompleteGraph(new GraphImpl(), sepa);
-						response.setEntity(asString(rdfGraph), MediaType.APPLICATION_JSON);		
+						response.setEntity(asString(rdfGraph), MediaType.APPLICATION_JSON);	
 					}
 					else if (request.getMethod().equals(Method.POST))
 					{
-						// TODO: invoke EPA
+						//TODO: extract HTTP parameters
+						declarer.invokeRuntime(Transformer.fromJsonLd(SEPAInvocationGraph.class, request.getEntity().getText()));
+					}
+					else if (request.getMethod().equals(Method.DELETE))
+					{
+						declarer.detachRuntime(Transformer.fromJsonLd(SEPAInvocationGraph.class, request.getEntity().getText()));
 					}
 					
 				} catch(Exception e)

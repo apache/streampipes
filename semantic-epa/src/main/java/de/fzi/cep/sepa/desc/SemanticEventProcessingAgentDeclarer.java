@@ -9,6 +9,6 @@ public interface SemanticEventProcessingAgentDeclarer {
 	
 	public boolean invokeRuntime(SEPAInvocationGraph sepa);
 	
-	public boolean detachRuntime(SEPA sepa);
+	public boolean detachRuntime(SEPAInvocationGraph sepa);
 	
 }
