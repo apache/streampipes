@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.sources.samples.twitter;
+package de.fzi.cep.sepa.sources.samples.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,9 @@ import java.util.List;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 
-public class Test {
+public class Init {
 
 	public static void  main(String[] args) throws Exception
 	{
