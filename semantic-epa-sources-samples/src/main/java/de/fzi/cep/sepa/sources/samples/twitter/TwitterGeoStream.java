@@ -22,11 +22,12 @@ public class TwitterGeoStream implements EventStreamDeclarer{
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._string.toString(), "text", ""));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", ""));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "latitude", ""));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "longitude", ""));
-		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", ""));
+		eventProperties.add(new EventProperty(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "latitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/latitude")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "longitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/longitude")));
+		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name")));
+		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
