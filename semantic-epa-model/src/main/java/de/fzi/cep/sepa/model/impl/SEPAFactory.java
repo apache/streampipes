@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl;
 
+import java.net.URI;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
@@ -21,14 +22,16 @@ public class SEPAFactory {
 		return stream;
 	}
 	
-	public static EventProperty createEventProperty(String name, String measurementUnit, String propertyType)
+	public static EventProperty createEventProperty(String name, String measurementUnit, String propertyType, List<URI> subClassOf)
 	{
-		return new EventProperty(propertyType, name, measurementUnit);
+		return new EventProperty(propertyType, name, measurementUnit, subClassOf);
 	}
 	
-	public static StaticProperty createStaticProperty(String name, String description, String type)
+	public static StaticProperty createStaticProperty(String name, String description, StaticPropertytype type)
 	{
-		return new StaticProperty(name, description, type);
+		if (type.equals(StaticPropertytype.Any)) return new AnyStaticProperty(name, description);
+		else if (type.equals(StaticPropertytype.FreeText)) return new FreeTextStaticProperty(name, description);
+		else return new OneOfStaticProperty(name, description);
 	}
 	
 }

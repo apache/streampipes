@@ -1,6 +1,9 @@
 package de.fzi.cep.sepa.model.impl.output;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
@@ -15,10 +18,13 @@ public class RenameOutputStrategy extends OutputStrategy {
 	@RdfProperty("sepa:eventName")
 	String eventName;
 
-	
-	
-	public RenameOutputStrategy(String eventName) {
+	public RenameOutputStrategy()
+	{
 		super();
+	}
+	
+	public RenameOutputStrategy(String name, String eventName) {
+		super(name);
 		this.eventName = eventName;
 	}
 

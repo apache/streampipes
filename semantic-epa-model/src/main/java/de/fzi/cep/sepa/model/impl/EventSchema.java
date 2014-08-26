@@ -36,6 +36,7 @@ public class EventSchema extends UnnamedSEPAElement{
 	public EventSchema()
 	{
 		super();
+		this.eventProperties = new ArrayList<EventProperty>();
 	}
 
 	public List<EventProperty> getEventProperties() {

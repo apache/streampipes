@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
@@ -34,6 +35,10 @@ public class SEPA extends NamedSEPAElement {
 	@RdfProperty("sepa:hasStaticProperty")
 	List<StaticProperty> staticProperties;
 	
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:hasOutputStrategy")
+	List<OutputStrategy> outputStrategies;
 	
 	String pathName;
 	
@@ -42,21 +47,20 @@ public class SEPA extends NamedSEPAElement {
 	@RdfProperty("sepa:hasDomain")
 	List<String> domains;
 	
-	@RdfProperty("sepa:hasOutputStrategy")
-	OutputStrategy outputStrategy;
-	
 	public SEPA()
 	{
 		super();
+		this.outputStrategies = new ArrayList<>();
 	}
 	
-	public SEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties)
+	public SEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
 		this.eventStreams = eventStreams;
 		this.staticProperties = staticProperties;
 		this.domains = domains;
+		this.outputStrategies = outputStrategies;
 	}
 	
 	public SEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
@@ -112,14 +116,14 @@ public class SEPA extends NamedSEPAElement {
 		this.domains = domains;
 	}
 
-	public OutputStrategy getOutputStrategy() {
-		return outputStrategy;
+	public List<OutputStrategy> getOutputStrategies() {
+		return outputStrategies;
 	}
 
-	public void setOutputStrategy(OutputStrategy outputStrategy) {
-		this.outputStrategy = outputStrategy;
+	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
+		this.outputStrategies = outputStrategies;
 	}
+
 	
-	
-	
+		
 }

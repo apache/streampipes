@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.model.impl;
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
@@ -11,28 +10,32 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
-@RdfsClass("sepa:StaticProperty")
-@MappedSuperclass
+@RdfsClass("sepa:Option")
 @Entity
-public abstract class StaticProperty extends UnnamedSEPAElement {
+public class Option extends UnnamedSEPAElement {
 
 	@RdfProperty("sepa:hasName")
 	String name;
 	
-	@RdfProperty("sepa:hasDescription")
-	String description;
+	@RdfProperty("sepa:isSelected")
+	boolean selected;
 	
-	
-	public StaticProperty()
+	public Option()
 	{
 		super();
 	}
 	
-	public StaticProperty(String name, String description)
+	public Option(String name)
 	{
 		super();
 		this.name = name;
-		this.description = description;
+	}
+	
+	public Option(String name, boolean selected)
+	{
+		super();
+		this.name = name;
+		this.selected = selected;
 	}
 
 	public String getName() {
@@ -43,12 +46,13 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 		this.name = name;
 	}
 
-	public String getDescription() {
-		return description;
+	public boolean isSelected() {
+		return selected;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
-
+	
+	
 }
