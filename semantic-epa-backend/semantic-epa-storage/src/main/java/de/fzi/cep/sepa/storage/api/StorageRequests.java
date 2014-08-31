@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 
@@ -20,6 +22,14 @@ public interface StorageRequests {
 	public SEP getSEPById(URI rdfId);
 	
 	public SEP getSEPById(String rdfId) throws URISyntaxException;
+	
+	public SEPA getSEPAById(String rdfId) throws URISyntaxException;
+	
+	public SEPA getSEPAById(URI rdfId);
+	
+	public SEC getSECById(String rdfId) throws URISyntaxException;
+	
+	public SEC getSECById(URI rdfId);
 	
 	public List<SEP> getAllSEPs();
 	
@@ -45,5 +55,16 @@ public interface StorageRequests {
 	
 	public boolean update(SEPA sepa);
 
+	public boolean exists(SEC sec);
+
+	public boolean update(SEC sec);
+
+	public boolean deleteSEC(SEC sec);
+	
+	public boolean storeSEC(SEC sec);
+
+	public List<SEC> getAllSECs();
+	
+	public StaticProperty getStaticPropertyById(String rdfId);
 	
 }

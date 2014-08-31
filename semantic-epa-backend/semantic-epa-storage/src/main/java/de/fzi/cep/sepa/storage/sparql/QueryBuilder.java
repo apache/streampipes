@@ -54,4 +54,11 @@ public class QueryBuilder {
 		return builder.toString();
 	}
 
+	public static String buildListSECQuery() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("where { ?result rdf:type sepa:SemanticEventConsumer }");
+
+		return builder.toString();
+	}
+
 }

@@ -11,6 +11,8 @@ import javax.persistence.Query;
 import com.clarkparsia.empire.impl.RdfQuery;
 import com.clarkparsia.empire.util.EmpireUtil;
 
+import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
@@ -143,5 +145,63 @@ public class StorageRequestsImpl implements StorageRequests {
 		System.out.println(query.toString());
 		return query.getResultList();
 	}
+
+	@Override
+	public SEPA getSEPAById(String rdfId) throws URISyntaxException {
+		return getSEPAById(new URI(rdfId));
+	}
+
+	@Override
+	public SEPA getSEPAById(URI rdfId) {
+		return entityManager.find(SEPA.class, rdfId);
+	}
+
+	@Override
+	public SEC getSECById(String rdfId) throws URISyntaxException {
+		return getSECById(new URI(rdfId));
+	}
+
+	@Override
+	public SEC getSECById(URI rdfId) {
+		return entityManager.find(SEC.class, rdfId);
+	}
+
+	@Override
+	public boolean exists(SEC sec) {
+		SEC storedSEC = entityManager.find(SEC.class, sec.getRdfId());
+		return storedSEC != null ? true : false;
+	}
+
+	@Override
+	public boolean update(SEC sec) {
+		return deleteSEC(sec) && storeSEC(sec);
+		
+	}
+
+	@Override
+	public boolean deleteSEC(SEC sec) {
+		entityManager.remove(sec);
+		return true;
+	}
+
+	@Override
+	public boolean storeSEC(SEC sec) {
+		entityManager.persist(sec);
+		return true;
+	}
+
+	@Override
+	public List<SEC> getAllSECs() {
+		Query query = entityManager.createQuery(QueryBuilder.buildListSECQuery());
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEC.class);
+		return query.getResultList();
+	}
+
+	@Override
+	public StaticProperty getStaticPropertyById(String rdfId) {
+		return entityManager.find(StaticProperty.class, URI.create(rdfId));
+	}
+
+	
 
 }

@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.storage.util;
 
 import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -20,11 +19,9 @@ import javax.persistence.EntityManager;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Model;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
@@ -33,31 +30,12 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.clarkparsia.empire.annotation.RdfGenerator;
 
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.SourceClient;
-import de.fzi.cep.sepa.model.client.StreamClient;
-import de.fzi.cep.sepa.model.client.input.CheckboxInput;
-import de.fzi.cep.sepa.model.client.input.FormInput;
-import de.fzi.cep.sepa.model.client.input.Option;
-import de.fzi.cep.sepa.model.client.input.RadioInput;
-import de.fzi.cep.sepa.model.client.input.TextInput;
-import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.storage.SEPAManager;
-import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class Transformer {
 
-	private StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
-	
+
 	public static <T> Graph generateCompleteGraph(Graph graph, T element)
 			throws IllegalArgumentException, IllegalAccessException,
 			SecurityException {
@@ -66,12 +44,11 @@ public class Transformer {
 				Graph temp = RdfGenerator.asRdf(element);
 				graph = appendGraph(graph, temp);
 
-				final String packageName = getPackageName(element.getClass().getSimpleName());
+				final String packageName = getPackageName(element.getClass().getSimpleName().replace("Impl", ""));
 				final String className = element.getClass().getSimpleName()
 						.replace("Impl", "");
 
 				Method[] ms;
-
 				ms = Class.forName(packageName + className).getMethods();
 
 				for (Method m : ms) {
@@ -79,7 +56,6 @@ public class Transformer {
 						if (Collection.class
 								.isAssignableFrom(m.getReturnType())) {
 							String genericClassName = ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0].getTypeName();
-							System.out.println(genericClassName);
 							if(!(genericClassName.startsWith("java.lang.")))
 							{
 								if(!(genericClassName.startsWith("java.net")))
@@ -119,6 +95,7 @@ public class Transformer {
 			} catch (InvalidRdfException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				System.out.println(element.getClass().getCanonicalName());
 			}
 
 		}
@@ -131,13 +108,30 @@ public class Transformer {
 	{
 		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement"};
 		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph"};
-		String[] modelClasses = {"Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol"};
-		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy"};
+		String[] modelClasses = {"Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol", "OneOfStaticProperty", "FreeTextStaticProperty", "AnyStaticProperty", "Option", "MappingProperty"};
+		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
-		if (contains(className, abstractClasses)) return "de.fzi.cep.sepa.model.";
-		else if (contains(className, graphClasses)) return "de.fzi.cep.sepa.model.impl.graph.";
-		else if (contains(className, outputClasses)) return "de.fzi.cep.sepa.model.impl.output.";
-		else return "de.fzi.cep.sepa.model.impl.";
+		if (contains(className, abstractClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.";
+			}
+		else if (contains(className, graphClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.graph.";
+			}
+		else if (contains(className, outputClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.output.";
+			}
+		else if (contains(className, modelClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.";
+			}
+		else 
+			{
+				System.out.println("MISSING: " +className);
+				throw new IllegalArgumentException();
+			}
 	}
 	
 	private static boolean contains(String value, String[] list)
@@ -199,6 +193,7 @@ public class Transformer {
 			while (st.hasNext()) {
 				Statement s = st.next();
 				if ((s.getPredicate().equals(RDF.TYPE))) {
+					
 					if (s.getObject()
 							.stringValue()
 							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEMANTICEVENTPROCESSINGAGENT
@@ -210,7 +205,19 @@ public class Transformer {
 							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEMANTICEVENTPRODUCER
 									.toSesameURI().toString())) {
 						uri = s.getSubject().toString();
-					} 
+					} else if (s
+							.getObject()
+							.stringValue()
+							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEMANTICEVENTCONSUMER
+									.toSesameURI().toString())) {
+						uri = s.getSubject().toString(); 
+					} else if (s
+							.getObject()
+							.stringValue()
+							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEPAINVOCATIONGRAPH
+									.toSesameURI().toString())) {
+						uri = s.getSubject().toString(); 
+					}
 				}
 				StorageManager.INSTANCE.getTempConnection().add(s);
 			}
@@ -231,133 +238,6 @@ public class Transformer {
 		StorageUtils.emptyRepository(StorageManager.INSTANCE.getTempConnection());
 	
 		
-		return result;
-	}
-	
-	public static SEPAClient toSEPAClientModel(SEPA sepa)
-	{
-		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getDomains());
-		client.setInputNodes(sepa.getEventStreams().size());
-		client.setElementId(sepa.getRdfId().toString());
-		client.setIconUrl(sepa.getIconUrl());
-		client.setInputNodes(sepa.getEventStreams().size());
-		
-		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
-		for(StaticProperty p : sepa.getStaticProperties())
-		{
-			clientStaticProperties.add(convertStaticProperty(p));
-		}
-			
-		client.setStaticProperties(clientStaticProperties);	
-		return client;
-	}
-	
-	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
-			StaticProperty p) {
-		if (p instanceof FreeTextStaticProperty) return convertFreeTextStaticProperty((FreeTextStaticProperty) p);
-		else if (p instanceof OneOfStaticProperty) return convertOneOfStaticProperty((OneOfStaticProperty) p);
-		else if (p instanceof AnyStaticProperty) return convertAnyStaticProperty((AnyStaticProperty) p);
-		return null;
-		//exceptions
-	}
-
-	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
-			AnyStaticProperty p) {
-		List<Option> options = new ArrayList<Option>();
-		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
-		{
-			options.add(new Option(option.getName()));
-		}
-		CheckboxInput input = new CheckboxInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
-	}
-
-	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
-			OneOfStaticProperty p) {
-		List<Option> options = new ArrayList<Option>();
-		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
-		{
-			options.add(new Option(option.getName()));
-		}
-		RadioInput input = new RadioInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
-	}
-
-	private static de.fzi.cep.sepa.model.client.StaticProperty convertFreeTextStaticProperty(
-			FreeTextStaticProperty p) {
-		TextInput input = new TextInput();
-		input.setValue("");
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
-	}
-
-	public static List<SEPAClient> toSEPAClientModel(List<SEPA> sepas)
-	{
-		List<SEPAClient> result = new ArrayList<SEPAClient>();
-		for(SEPA sepa : sepas) result.add(toSEPAClientModel(sepa));
-		return result;
-	}
-	
-	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
-	{
-		//return StorageManager.INSTANCE.getStorageAPI().getSEPAById(sepaClient.getElementId());
-		return null;
-	}
-	
-	public static SourceClient toSEPClientModel(SEP sep)
-	{
-		return null;
-	}
-	
-	public static StreamClient toStreamClientModel(SEP sep, EventStream stream)
-	{
-		StreamClient client = new StreamClient(stream.getName(), stream.getDescription(), sep.getRdfId().toString());
-		client.setIconUrl(stream.getIconUrl());
-		client.setElementId(stream.getRdfId().toString());
-		return client;
-	}
-	
-	public static EventStream fromStreamClientModel(StreamClient client)
-	{
-		return StorageManager.INSTANCE.getEntityManager().find(EventStream.class, client.getElementId());
-	}
-	
-	public static SourceClient toSourceClientModel(SEP sep)
-	{
-		SourceClient client = new SourceClient(sep.getName(), sep.getDescription(), sep.getDomains());
-		client.setIconUrl(sep.getIconUrl());
-		client.setElementId(sep.getRdfId().toString());
-		return client;
-	}
-	
-	public static List<SourceClient> toSourceClientModel(List<SEP> seps)
-	{
-		List<SourceClient> result = new ArrayList<SourceClient>();
-		for(SEP sep : seps)
-			result.add(toSourceClientModel(sep));
-		return result;
-			
-	}
-	
-	public static SEP fromSourceClientModel(SourceClient client)
-	{
-		return StorageManager.INSTANCE.getEntityManager().find(SEP.class, client.getElementId());
-	}
-	
-	public static List<StreamClient> toStreamClientModel(List<SEP> seps)
-	{
-		List<StreamClient> result = new ArrayList<StreamClient>();
-		for(SEP sep : seps)
-		{
-			result.addAll(toStreamClientModel(sep));
-		}
-		return result;
-	}
-	
-	public static List<StreamClient> toStreamClientModel(SEP sep)
-	{
-		List<StreamClient> result = new ArrayList<StreamClient>();
-		for(EventStream stream : sep.getEventStreams())
-			result.add(toStreamClientModel(sep, stream));
 		return result;
 	}
 

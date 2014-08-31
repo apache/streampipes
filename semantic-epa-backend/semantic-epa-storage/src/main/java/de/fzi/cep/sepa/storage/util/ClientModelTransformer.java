@@ -1,0 +1,256 @@
+package de.fzi.cep.sepa.storage.util;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonElement;
+
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.SEPAClient;
+import de.fzi.cep.sepa.model.client.SourceClient;
+import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.input.CheckboxInput;
+import de.fzi.cep.sepa.model.client.input.Option;
+import de.fzi.cep.sepa.model.client.input.RadioInput;
+import de.fzi.cep.sepa.model.client.input.TextInput;
+import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+
+public class ClientModelTransformer {
+
+	private static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
+	
+	public static List<StreamClient> toStreamClientModel(SEP sep)
+	{
+		List<StreamClient> result = new ArrayList<StreamClient>();
+		for(EventStream stream : sep.getEventStreams())
+			result.add(ClientModelTransformer.toStreamClientModel(sep, stream));
+		return result;
+	}
+
+	public static List<StreamClient> toStreamClientModel(List<SEP> seps)
+	{
+		List<StreamClient> result = new ArrayList<StreamClient>();
+		for(SEP sep : seps)
+		{
+			result.addAll(toStreamClientModel(sep));
+		}
+		return result;
+	}
+
+	public static SEP fromSourceClientModel(SourceClient client)
+	{
+		return StorageManager.INSTANCE.getEntityManager().find(SEP.class, client.getElementId());
+	}
+
+	public static SourceClient toSourceClientModel(SEP sep)
+	{
+		SourceClient client = new SourceClient(sep.getName(), sep.getDescription(), sep.getDomains());
+		client.setIconUrl(sep.getIconUrl());
+		client.setElementId(sep.getRdfId().toString());
+		return client;
+	}
+
+	public static List<SourceClient> toSourceClientModel(List<SEP> seps)
+	{
+		List<SourceClient> result = new ArrayList<SourceClient>();
+		for(SEP sep : seps)
+			result.add(toSourceClientModel(sep));
+		return result;
+			
+	}
+
+	public static EventStream fromStreamClientModel(StreamClient client)
+	{
+		return StorageManager.INSTANCE.getEntityManager().find(EventStream.class, client.getElementId());
+	}
+
+	public static StreamClient toStreamClientModel(SEP sep, EventStream stream)
+	{
+		StreamClient client = new StreamClient(stream.getName(), stream.getDescription(), sep.getRdfId().toString());
+		client.setIconUrl(stream.getIconUrl());
+		client.setElementId(stream.getRdfId().toString());
+		return client;
+	}
+
+	public static SourceClient toSEPClientModel(SEP sep)
+	{
+		return null;
+	}
+
+	public static SEPAClient toSEPAClientModel(SEPA sepa)
+	{
+		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getDomains());
+		client.setInputNodes(sepa.getEventStreams().size());
+		client.setElementId(sepa.getRdfId().toString());
+		client.setIconUrl(sepa.getIconUrl());
+		client.setInputNodes(sepa.getEventStreams().size());
+		
+		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
+		for(StaticProperty p : sepa.getStaticProperties())
+		{
+			clientStaticProperties.add(ClientModelTransformer.convertStaticProperty(p));
+		}
+			
+		client.setStaticProperties(clientStaticProperties);	
+		return client;
+	}
+
+	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
+	{
+		SEPA sepa = StorageManager.INSTANCE.getEntityManager().find(SEPA.class, sepaClient.getElementId());
+		List<StaticProperty> resultProperties = new ArrayList<StaticProperty>();
+		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
+		for(StaticProperty p : sepa.getStaticProperties())
+		{
+			String id = p.getRdfId().toString();
+			if (p instanceof FreeTextStaticProperty) 
+				{
+					resultProperties.add(convertFreeTextStaticProperty((FreeTextStaticProperty) p, ((TextInput) Utils.getClientPropertyById(clientProperties, id).getInput())));
+				}
+			else if (p instanceof AnyStaticProperty)
+			{
+				CheckboxInput input = (CheckboxInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				resultProperties.add(convertAnyStaticProperty((AnyStaticProperty) p, input));
+			} else if (p instanceof OneOfStaticProperty)
+			{
+				RadioInput input = (RadioInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				resultProperties.add(convertOneOfStaticProperty((OneOfStaticProperty) p, input));
+			} else if (p instanceof MappingProperty)
+			{
+				TextInput input = (TextInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				resultProperties.add(convertMappingProperty((MappingProperty) p, input));
+			}
+		}
+		
+		return sepa;
+	}
+	
+	private static StaticProperty convertAnyStaticProperty(AnyStaticProperty p,
+			CheckboxInput input) {
+		for(de.fzi.cep.sepa.model.impl.Option sepaOption : p.getOptions())
+		{
+			Option clientOption = Utils.getOptionById(input.getOptions(), sepaOption.getRdfId().toString());
+				if (clientOption.isSelected())
+					sepaOption.setSelected(true);
+		}
+		return p;
+	}
+	
+	private static StaticProperty convertOneOfStaticProperty(OneOfStaticProperty p,
+			RadioInput input) {
+		for(de.fzi.cep.sepa.model.impl.Option sepaOption : p.getOptions())
+		{
+			Option clientOption = Utils.getOptionById(input.getOptions(), sepaOption.getRdfId().toString());
+				if (clientOption.isSelected())
+					sepaOption.setSelected(true);
+		}
+		return p;
+	}
+
+	public static FreeTextStaticProperty convertFreeTextStaticProperty(FreeTextStaticProperty p, TextInput input)
+	{
+		p.setValue(input.getValue());
+		return p;
+	}
+	
+	public static MappingProperty convertMappingProperty(MappingProperty p, TextInput input)
+	{
+		p.setMapsTo(URI.create(input.getValue()));
+		return p;
+	}
+
+	public static List<SEPAClient> toSEPAClientModel(List<SEPA> sepas)
+	{
+		List<SEPAClient> result = new ArrayList<SEPAClient>();
+		for(SEPA sepa : sepas) result.add(toSEPAClientModel(sepa));
+		return result;
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertFreeTextStaticProperty(
+			FreeTextStaticProperty p) {
+		TextInput input = new TextInput();
+		input.setValue("");
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
+			OneOfStaticProperty p) {
+		List<Option> options = new ArrayList<Option>();
+		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		{
+			Option thisOption = new Option(option.getRdfId().toString(), option.getName());
+			options.add(thisOption);
+		}
+		RadioInput input = new RadioInput(options);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
+			AnyStaticProperty p) {
+		List<Option> options = new ArrayList<Option>();
+		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		{
+			options.add(new Option(option.getElementId(), option.getName()));
+		}
+		CheckboxInput input = new CheckboxInput(options);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
+			StaticProperty p) {
+		
+		de.fzi.cep.sepa.model.client.StaticProperty property = new de.fzi.cep.sepa.model.client.StaticProperty();
+		
+		if (p instanceof FreeTextStaticProperty) property = convertFreeTextStaticProperty((FreeTextStaticProperty) p);
+		else if (p instanceof OneOfStaticProperty) property = convertOneOfStaticProperty((OneOfStaticProperty) p);
+		else if (p instanceof AnyStaticProperty) property = convertAnyStaticProperty((AnyStaticProperty) p);
+		else if (p instanceof MappingProperty) property = convertMappingProperty((MappingProperty) p);
+		
+		property.setElementId(p.getRdfId().toString());
+		return property;
+		//exceptions
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertMappingProperty(
+			MappingProperty p) {
+		TextInput input = new TextInput();
+		input.setValue("");
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+		clientProperty.setElementId(p.getRdfId().toString());
+		return clientProperty;
+	}
+
+	public static SEC fromSECClientModel(ActionClient element) {
+		return StorageManager.INSTANCE.getEntityManager().find(SEC.class, element.getElementId());
+	}
+	
+	public static ActionClient toSECClientModel(SEC sec)
+	{
+		ActionClient client = new ActionClient(sec.getName(), sec.getDescription());
+		client.setElementId(sec.getRdfId().toString());
+		return client;
+	}
+
+	public static List<ActionClient> toActionClientModel(List<SEC> secs) {
+		List<ActionClient> result = new ArrayList<ActionClient>();
+		for(SEC sec : secs)
+		{
+			result.add(toSECClientModel(sec));
+		}
+		return result;
+	}
+	
+	
+}
