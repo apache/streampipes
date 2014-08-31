@@ -16,12 +16,14 @@ import org.restlet.Component;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
@@ -73,6 +75,54 @@ public class ModelSubmitter {
 		return true;
 	}
 	
+	public static boolean submitConsumer(List<SemanticEventConsumerDeclarer> declarers, String baseUri, int port) throws Exception
+	{
+		Component component = new Component();
+		component.getServers().add(Protocol.HTTP, port);	
+		
+		for(SemanticEventConsumerDeclarer declarer : declarers)
+		{
+			
+			SEC sec = declarer.declareModel();
+			String pathName = sec.getUri();
+			sec.setUri(baseUri + sec.getUri());
+			component.getDefaultHost().attach(pathName, generateSECRestlet(sec, declarer));
+		}
+		
+		component.start();
+		return true;
+	}
+	
+	private static Restlet generateSECRestlet(SEC sec, SemanticEventConsumerDeclarer declarer)
+	{
+		return new Restlet() {
+			public void handle(Request request, Response response)
+			{
+				
+				try {
+					if (request.getMethod().equals(Method.GET))
+					{				
+						Graph rdfGraph = Transformer.generateCompleteGraph(new GraphImpl(), sec);
+						response.setEntity(asString(rdfGraph), MediaType.APPLICATION_JSON);	
+					}
+					else if (request.getMethod().equals(Method.POST))
+					{
+						//TODO: extract HTTP parameters
+						declarer.invokeRuntime();
+					}
+					else if (request.getMethod().equals(Method.DELETE))
+					{
+						declarer.detachRuntime();
+					}
+					
+				} catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		};
+	}
+	
 	private static Restlet generateSEPARestlet(SEPA sepa, SemanticEventProcessingAgentDeclarer declarer)
 	{
 		return new Restlet() {
@@ -87,8 +137,9 @@ public class ModelSubmitter {
 					}
 					else if (request.getMethod().equals(Method.POST))
 					{
+						Form form = new Form(request.getEntity());
 						//TODO: extract HTTP parameters
-						declarer.invokeRuntime(Transformer.fromJsonLd(SEPAInvocationGraph.class, request.getEntity().getText()));
+						declarer.invokeRuntime(Transformer.fromJsonLd(SEPAInvocationGraph.class, form.getFirstValue("json")));
 					}
 					else if (request.getMethod().equals(Method.DELETE))
 					{
