@@ -19,7 +19,6 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class InvocationGraphBuilder {
 
@@ -97,8 +96,7 @@ public class InvocationGraphBuilder {
 				grounding.setTopicName(outputTopic);
 				
 				if (thisGraph.getInputStreams().size() == 1) 
-				{
-				
+				{		
 					outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
 				}
 				else outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
