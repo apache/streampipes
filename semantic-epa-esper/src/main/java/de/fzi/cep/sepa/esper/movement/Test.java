@@ -32,15 +32,16 @@ public class Test {
 	private static final String BROKER_ALIAS = "test-jms";
 
 	public static void main(String[] args) throws Exception {
+	
 		CamelConfig config = new CamelConfig.ActiveMQ(BROKER_ALIAS, "vm://localhost?broker.persistent=false");
 		EndpointInfo source = EndpointInfo.of(BROKER_ALIAS + ":topic:PositionTopic", DataType.JSON);
 		EndpointInfo destination = EndpointInfo.of(BROKER_ALIAS + ":topic:MovementTopic", DataType.JSON);
 
-		MovementParameter staticParam = new MovementParameter("PositionEvent", "MovementEvent", "EPSG:4326",
+		MovementParameter staticParam = new MovementParameter("TwitterEvent", "MovementEvent", "EPSG:4326",
 			Arrays.asList("userId", "timestamp", "latitude", "longitude"),
 			Arrays.asList("userId"), "timestamp", "latitude", "longitude", 8000L); // TODO reduce param overhead
 
-		String inEventName = "PositionEvent";
+		String inEventName = "TwitterEvent";
 		HashMap<String, Class<?>> inEventType = new HashMap<>();
 		inEventType.put("userId", Integer.class);
 		inEventType.put("timestamp", Long.class); // double ?
@@ -56,7 +57,6 @@ public class Test {
 			MovementAnalysis::new, engineParams, Arrays.asList(config), destination, Arrays.asList(source));
 
 		EPRuntime runtime = new EPRuntime(context, params);
-
 		context.addRoutes(new RouteBuilder() {
 			@Override
 			public void configure() throws Exception {
@@ -77,7 +77,7 @@ public class Test {
 
 		runtime.discard();
 		System.exit(1);
-
+	
 	}
 
 	private static String sampleEvent(int userId, long timestamp, double lat, double lng) {
@@ -86,7 +86,7 @@ public class Test {
 		event.put("timestamp", timestamp); // TODO Problem: will be deserialized to double
 		event.put("latitude", lat);
 		event.put("longitude", lng);
-		event.put("name", "PositionEvent");
+		event.put("name", "TwitterEvent");
 		return parser.toJson(event);
 	}
 }

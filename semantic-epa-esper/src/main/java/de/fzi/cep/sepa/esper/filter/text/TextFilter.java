@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.esper.filter.text;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -30,13 +31,17 @@ public class TextFilter implements EPEngine<TextFilterParameter>{
 
 	private static final Logger logger = LoggerFactory.getLogger(TextFilter.class.getSimpleName());
 
-	private static final String EVENT_NAME_PARAM = "name";
+	private String EVENT_NAME_PARAM = "name";
 
 	@Override
 	public void bind(EngineParameters<TextFilterParameter> parameters,
 			OutputCollector collector) {
 		if (parameters.getInEventTypes().size() != 1)
 			throw new IllegalArgumentException("Text Filter only possible on one event type.");
+		
+		parameters.getInEventTypes().keySet().forEach(e -> {
+			EVENT_NAME_PARAM = e;
+		});
 		
 		Configuration config = new Configuration();
 		parameters.getInEventTypes().entrySet().forEach(e -> {
@@ -48,8 +53,12 @@ public class TextFilter implements EPEngine<TextFilterParameter>{
 
 		EPStatementObjectModel model = statement(parameters.getStaticProperty());
 		EPStatement statement = epService.getEPAdministrator().create(model);
+		
+	
 		statement.addListener(listenerSendingTo(collector));
 		statement.start();
+		
+
 	}
 	
 	private static UpdateListener listenerSendingTo(OutputCollector collector) {
@@ -79,15 +88,15 @@ public class TextFilter implements EPEngine<TextFilterParameter>{
 			stringFilter = Expressions.like(params.getFilterProperty(), "%" +params.getKeyword() +"%");
 	
 		model.whereClause(stringFilter);
-			
+		logger.info("Generated EPL: " +model.toEPL());
 		return model;
 		
 	}
 
 	@Override
-	public void onEvent(Map<String, Object> event) {
+	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		logger.info("New event: {}", event);
-		epService.getEPRuntime().sendEvent(event, (String) event.get(EVENT_NAME_PARAM));
+		epService.getEPRuntime().sendEvent(event, sourceInfo);
 		
 	}
 

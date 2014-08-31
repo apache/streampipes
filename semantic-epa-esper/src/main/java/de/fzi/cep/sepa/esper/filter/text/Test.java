@@ -1,20 +1,47 @@
 package de.fzi.cep.sepa.esper.filter.text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.ontoware.rdf2go.vocabulary.XSD;
+import org.openrdf.model.Graph;
+import org.openrdf.model.impl.GraphImpl;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.JSONLDMode;
+import org.openrdf.rio.helpers.JSONLDSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.esper.util.StringOperator;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.Option;
+import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.rest.http.HttpJsonParser;
+import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.param.CamelConfig;
 import de.fzi.cep.sepa.runtime.param.DataType;
@@ -22,74 +49,57 @@ import de.fzi.cep.sepa.runtime.param.EndpointInfo;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
 import de.fzi.cep.sepa.runtime.param.OutputStrategy;
 import de.fzi.cep.sepa.runtime.param.RuntimeParameters;
+import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class Test {
-	private static final Logger logger = LoggerFactory.getLogger("FilterTextTest");
-
-	private static final Gson parser = new Gson();
-
-	private static final CamelContext context = new DefaultCamelContext(); // routing context
-
-	private static final String BROKER_ALIAS = "test-jms";
 
 	public static void main(String[] args) throws Exception {
-		CamelConfig config = new CamelConfig.ActiveMQ(BROKER_ALIAS, "vm://localhost?broker.persistent=false");
-		EndpointInfo source = EndpointInfo.of(BROKER_ALIAS + ":topic:TextTopic", DataType.JSON);
-		EndpointInfo destination = EndpointInfo.of(BROKER_ALIAS + ":topic:FilteredTextTopic", DataType.JSON);
-
-		TextFilterParameter staticParam = new TextFilterParameter("TwitterEvent", "ObamaEvent", Arrays.asList("userId", "timestamp", "latitude", "longitude", "text"), Collections.<String> emptyList(), "obama", StringOperator.CONTAINS, "text");
+	
+		SEP sep = Transformer.fromJsonLd(SEP.class, HttpJsonParser.getContentFromUrl("http://localhost:8089/twitter/t"));
 		
-		String inEventName = "TwitterEvent";
-		HashMap<String, Class<?>> inEventType = new HashMap<>();
-		inEventType.put("userId", Integer.class);
-		inEventType.put("timestamp", Long.class); // double ?
-		inEventType.put("latitude", Double.class);
-		inEventType.put("longitude", Double.class);
-		inEventType.put("text", String.class);
-		inEventType.put("name", String.class);
-
-		EngineParameters<TextFilterParameter> engineParams = new EngineParameters<>(
-			Collections.singletonMap(inEventName, inEventType),
-			new OutputStrategy.Rename("FilteredTextEvent", inEventName), staticParam);
-
-		RuntimeParameters<TextFilterParameter> params = new RuntimeParameters<>("filtertext-test",
-			TextFilter::new, engineParams, Arrays.asList(config), destination, Arrays.asList(source));
-
-		EPRuntime runtime = new EPRuntime(context, params);
-
-		context.addRoutes(new RouteBuilder() {
-			@Override
-			public void configure() throws Exception {
-				from("test-jms:topic:FilteredTextTopic") // .to("file://test")
-				
-				.process(ex -> logger.info("Receiving Event: {}", new String((byte[]) ex.getIn().getBody())));
-			}
-		});
-
-		ProducerTemplate template = context.createProducerTemplate();
-		template.setDefaultEndpointUri(BROKER_ALIAS + ":topic:TextTopic");
-
-		context.start();
-
-		template.sendBody(sampleEvent(1, System.currentTimeMillis(), 49.009304, 8.410172, "hallo")); // TODO use themepark gen
-		template.sendBody(sampleEvent(1, System.currentTimeMillis() + 1000L, 49.011071, 8.410168, "hallo obama"));
-		template.sendBody(sampleEvent(1, System.currentTimeMillis() + 1000L, 49.011071, 8.410168, "obama"));
-
-		System.in.read(); // block til <ENTER>
-
-		runtime.discard();
-		System.exit(1);
-
-	}
-
-	private static String sampleEvent(int userId, long timestamp, double lat, double lng, String text) {
-		Map<String, Object> event = new HashMap<>();
-		event.put("userId", userId);
-		event.put("timestamp", timestamp); // TODO Problem: will be deserialized to double
-		event.put("latitude", lat);
-		event.put("longitude", lng);
-		event.put("name", "TwitterEvent");
-		event.put("text", text);
-		return parser.toJson(event);
+		SEPA textfilter = Transformer.fromJsonLd(SEPA.class, HttpJsonParser.getContentFromUrl("http://localhost:8090/sepa/textfilter"));
+		
+		SEPAInvocationGraph graph = new SEPAInvocationGraph(textfilter);
+		graph.setName("Test TextFilter");
+		graph.setDescription("Test");
+		sep.getEventStreams().get(0).setName("TwitterEvent");
+		List<EventStream> inputStreams = new ArrayList<EventStream>();
+		inputStreams.add(sep.getEventStreams().get(0));
+		//graph.addInputStream(sep.getEventStreams().get(0));
+		graph.setInputStreams(inputStreams);
+		EventStream outputStream = new EventStream();
+		
+		EventSchema originalSchema = sep.getEventStreams().get(0).getEventSchema();
+		outputStream.setEventSchema(originalSchema);
+		
+		outputStream.setEventSchema(originalSchema);
+		
+		EventGrounding targetEventGrounding = new EventGrounding();
+		targetEventGrounding.setPort(61616);
+		targetEventGrounding.setUri("tcp://localhost");
+		targetEventGrounding.setTopicName("FZI.SEPA.Test2");
+		
+		outputStream.setEventGrounding(targetEventGrounding);
+		outputStream.setName("ObamaEvent");
+		outputStream.setUri("http://test");
+		
+		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		FreeTextStaticProperty epsg = new FreeTextStaticProperty("keyword", "Example");
+		epsg.setValue("RT");
+		staticProperties.add(epsg);
+		OneOfStaticProperty xProp = new OneOfStaticProperty("operation", "operator");
+		xProp.addOption(new Option("MATCHES"));
+		xProp.addOption(new Option("CONTAINS", true));
+		staticProperties.add(xProp);
+		
+		MappingProperty yProp = new MappingProperty("text", "Select Text Property");
+		yProp.setMapsTo(SEPAUtils.getURIbyPropertyName(sep.getEventStreams().get(0), "text"));
+		staticProperties.add(yProp);
+		
+		graph.setStaticProperties(staticProperties);
+		graph.setOutputStream(outputStream);
+	
+		new TextFilterController().invokeRuntime(graph);
+	
 	}
 }

@@ -16,7 +16,7 @@ public class ProximityDetection implements EPEngine<ProximityParameters>{
 	}
 
 	@Override
-	public void onEvent(Map<String, Object> event) {
+	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		// TODO Auto-generated method stub
 		
 	}
