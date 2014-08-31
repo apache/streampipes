@@ -9,6 +9,7 @@ import org.openrdf.model.vocabulary.RDFS;
 
 public enum SEPA {
 	
+	SEMANTICEVENTCONSUMER("SemanticEventConsumer", RDFS.CLASS),
 	SEMANTICEVENTPRODUCER("SemanticEventProducer", RDFS.CLASS),
 	SEMANTICEVENTPROCESSINGAGENT("SemanticEventProcessingAgent", RDFS.CLASS),
 	EVENT_GROUNDING("EventGrounding", RDFS.CLASS),
@@ -29,7 +30,8 @@ public enum SEPA {
 	HAS_UNIT("hasMeasurementUnit", OWL.OBJECTPROPERTY),
 	HAS_NAME("hasName", OWL.DATATYPEPROPERTY),
 	HAS_DESCRIPTION("hasDescription", OWL.DATATYPEPROPERTY),
-	HAS_SCHEMA("hasSchema", OWL.OBJECTPROPERTY);
+	HAS_SCHEMA("hasSchema", OWL.OBJECTPROPERTY), 
+	SEPAINVOCATIONGRAPH("SEPAInvocationGraph", RDFS.CLASS);
 
 	public static final String NAMESPACE = "http://sepa.event-processing.org/sepa#";
 	

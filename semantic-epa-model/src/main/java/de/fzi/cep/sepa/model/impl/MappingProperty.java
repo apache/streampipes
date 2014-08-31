@@ -17,6 +17,11 @@ public class MappingProperty extends StaticProperty {
 	@RdfProperty("sepa:mapsTo")
 	URI mapsTo;
 	
+	public MappingProperty()
+	{
+		super();
+	}
+	
 	public MappingProperty(String name, String description)
 	{
 		super(name, description);

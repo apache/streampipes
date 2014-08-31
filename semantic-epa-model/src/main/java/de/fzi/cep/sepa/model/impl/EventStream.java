@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
@@ -18,11 +20,13 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 @Entity
 public class EventStream extends NamedSEPAElement {
 
-	//@OneToMany(fetch = FetchType.EAGER,
-	//		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	//@RdfProperty("sepa:hasQuality")
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@RdfProperty("sepa:hasQuality")
 	List<EventQuality> eventQuality;
 	
+	@OneToOne(fetch = FetchType.EAGER,
+		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasGrounding")
 	EventGrounding eventGrounding;
 	
@@ -43,6 +47,7 @@ public class EventStream extends NamedSEPAElement {
 	
 	public EventStream(String uri, String name, String description, EventSchema eventSchema)
 	{
+		//super(uri, name, description);
 		this.eventSchema = eventSchema;
 	}
 
