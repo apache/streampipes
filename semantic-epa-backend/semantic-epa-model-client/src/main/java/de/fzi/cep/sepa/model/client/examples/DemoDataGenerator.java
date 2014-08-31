@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.model.client.examples;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.client.Domain;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
@@ -89,22 +90,22 @@ public class DemoDataGenerator {
 		//generate epas
 		List<SEPAClient> sepas = new ArrayList<SEPAClient>();
 		
-		SEPAClient drillingStart = SEPAFactory.generateSEPAMock("Drilling Start", "Detects start of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE), "Drilling_Start");
+		SEPAClient drillingStart = SEPAFactory.generateSEPAMock("Drilling Start", "Detects start of a drilling process", Utils.createList(Domain.DOMAIN_PROASENSE.toString()), "Drilling_Start");
 		drillingStart.setInputNodes(1);
 		
 		
-		SEPAClient drillingStop = SEPAFactory.generateSEPAMock("Drilling Stop", "Detects stop of a drilling process", createDomainList(Domain.DOMAIN_PROASENSE), "Drilling_Stop");
+		SEPAClient drillingStop = SEPAFactory.generateSEPAMock("Drilling Stop", "Detects stop of a drilling process", Utils.createList(Domain.DOMAIN_PROASENSE.toString()), "Drilling_Stop");
 		drillingStop.setInputNodes(1);
 		
-		SEPAClient coolingDownStart = SEPAFactory.generateSEPAMock("Cooling Down Start", "Detects start of cooling down process", createDomainList(Domain.DOMAIN_PROASENSE), "Cooling_Down_Start");
+		SEPAClient coolingDownStart = SEPAFactory.generateSEPAMock("Cooling Down Start", "Detects start of cooling down process", Utils.createList(Domain.DOMAIN_PROASENSE.toString()), "Cooling_Down_Start");
 		coolingDownStart.setInputNodes(1);
 		
 		
-		SEPAClient coolingDownStop = SEPAFactory.generateSEPAMock("Cooling Down Stop", "Detects stop of a cooling down process", createDomainList(Domain.DOMAIN_PROASENSE), "Cooling_Down_Stop");
+		SEPAClient coolingDownStop = SEPAFactory.generateSEPAMock("Cooling Down Stop", "Detects stop of a cooling down process", Utils.createList(Domain.DOMAIN_PROASENSE.toString()), "Cooling_Down_Stop");
 		coolingDownStop.setInputNodes(1);
 		
 		
-		SEPAClient suddenIncreaseDecrease = SEPAFactory.generateSEPAMock("Sudden Increase/Decrease", "Detects increasing/decreasing numerical values", createDomainList(Domain.DOMAIN_PROASENSE), "Sudden_Increase_Decrease");
+		SEPAClient suddenIncreaseDecrease = SEPAFactory.generateSEPAMock("Sudden Increase/Decrease", "Detects increasing/decreasing numerical values", Utils.createList(Domain.DOMAIN_PROASENSE.toString()), "Sudden_Increase_Decrease");
 		suddenIncreaseDecrease.setInputNodes(1);
 		
 		List<Option> tempOptions = new ArrayList<Option>();

@@ -5,20 +5,33 @@ import java.util.UUID;
 
 public class Option {
 
-	private UUID uuid;
+	private String elementId;
 	private String humanDescription;
 	private boolean selected;
 	
-	public Option(String humanDescription)
+	public Option(String elementId, String humanDescription)
 	{
-		this.uuid = UUID.randomUUID();
+		this.elementId = elementId;
 		this.humanDescription = humanDescription;
 	}
-
 	
-	public UUID getUuid() {
-		return uuid;
+	public Option(String humanDescription)
+	{
+		this.humanDescription = humanDescription;
 	}
+	
+	
+	public String getElementId() {
+		return elementId;
+	}
+
+
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
+
 
 	public String getHumanDescription() {
 		return humanDescription;

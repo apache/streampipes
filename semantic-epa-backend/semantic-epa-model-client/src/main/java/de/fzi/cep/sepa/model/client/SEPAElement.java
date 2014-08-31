@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.client;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.fzi.cep.sepa.commons.Utils;
@@ -13,6 +14,12 @@ public abstract class SEPAElement {
 
 	
 	protected String elementId;
+	List<String> connectedTo;
+	
+	public SEPAElement()
+	{
+		// gson
+	}
 	
 	public SEPAElement(String name, String description)
 	{
@@ -67,6 +74,16 @@ public abstract class SEPAElement {
 	public void setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
 	}
+
+	public List<String> getConnectedTo() {
+		return connectedTo;
+	}
+
+	public void setConnectedTo(List<String> connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+	
+	
 
 	
 }

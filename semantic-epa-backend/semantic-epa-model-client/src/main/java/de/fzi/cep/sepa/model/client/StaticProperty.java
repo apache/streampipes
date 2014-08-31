@@ -11,6 +11,10 @@ public class StaticProperty extends SEPAElement {
 		this.input = input;
 	}
 
+	public StaticProperty() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public FormInput getInput() {
 		return input;
 	}
