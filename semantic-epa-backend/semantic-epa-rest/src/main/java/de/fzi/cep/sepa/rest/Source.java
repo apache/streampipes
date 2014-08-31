@@ -13,8 +13,7 @@ import javax.ws.rs.core.MediaType;
 import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.Transformer;
-import de.fzi.sepa.model.client.manager.SEPAManager;
+import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 
 @Path("/sources")
@@ -29,8 +28,8 @@ public class Source {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getSources(@DefaultValue("1") @QueryParam("domain") String domain)
 	{
-		if (domain.equals("1")) return Utils.getGson().toJson(Transformer.toSourceClientModel(requestor.getAllSEPs()));
-		else return Utils.getGson().toJson(Transformer.toSourceClientModel(requestor.getSEPsByDomain(domain)));
+		if (domain.equals("1")) return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getAllSEPs()));
+		else return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPsByDomain(domain)));
 	}
 	
 	/**
@@ -43,7 +42,7 @@ public class Source {
 	public String getSource(@PathParam("sourceId") String sourceId)
 	{
 		try {
-			return Utils.getGson().toJson(Transformer.toSourceClientModel(requestor.getSEPById(sourceId)));
+			return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,9 +57,8 @@ public class Source {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getSEPsBySource(@PathParam("sourceId") String sourceId)
 	{
-		System.out.println(sourceId);
 		try {
-			return Utils.getGson().toJson(Transformer.toStreamClientModel(requestor.getSEPById(sourceId)));
+			return Utils.getGson().toJson(ClientModelTransformer.toStreamClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -12,11 +12,17 @@ import org.apache.http.client.ClientProtocolException;
 
 
 
+
+
+
+import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.rest.Action;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 
@@ -24,15 +30,18 @@ public class TestHttpParser {
 
 	public static void main(String[] args) throws ClientProtocolException, URISyntaxException, IOException
 	{
-		
+		new Action().addSEP(null,"http://localhost:8091/jms");
 		//System.out.println(new SEP().getSEPs());
 		
-		String result = HttpJsonParser.getContentFromUrl("http://localhost:8090/sepa/movement");
+		//String result = HttpJsonParser.getContentFromUrl("http://localhost:8091/jms");
 		
+		//System.out.println(result);
+		//SEC sec = Transformer.fromJsonLd(SEC.class, result);
+		//System.out.println(sec.getName());
 		
-		SEPA sepa = Transformer.fromJsonLd(SEPA.class, result);
-		String x = Utils.getGson().toJson(Transformer.toSEPAClientModel(sepa));
-		System.out.println(x);
+		//SEPA sepa = Transformer.fromJsonLd(SEPA.class, result);
+		//String x = Utils.getGson().toJson(ClientModelTransformer.toSEPAClientModel(sepa));
+		//System.out.println(x);
 		/*
 		if (StorageManager.INSTANCE.getStorageAPI().exists(sep))
 		{

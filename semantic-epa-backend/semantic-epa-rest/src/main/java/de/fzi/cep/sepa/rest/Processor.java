@@ -21,6 +21,7 @@ import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.manager.SEPAManager;
 
@@ -40,7 +41,7 @@ public class Processor {
 		
 		System.out.println(sepas.size());
 		
-		return Utils.getGson().toJson(Transformer.toSEPAClientModel(sepas));
+		return Utils.getGson().toJson(ClientModelTransformer.toSEPAClientModel(sepas));
 	}
 	
 	@Path("{sepaId}")
