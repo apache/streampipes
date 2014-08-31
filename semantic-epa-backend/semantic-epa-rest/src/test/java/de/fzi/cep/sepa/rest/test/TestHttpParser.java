@@ -18,7 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.rest.Action;
+import de.fzi.cep.sepa.rest.ActionImpl;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -30,7 +30,7 @@ public class TestHttpParser {
 
 	public static void main(String[] args) throws ClientProtocolException, URISyntaxException, IOException
 	{
-		new Action().addSEP(null,"http://localhost:8091/jms");
+		//new ActionImpl().addSEP(null,"http://localhost:8091/jms");
 		//System.out.println(new SEP().getSEPs());
 		
 		//String result = HttpJsonParser.getContentFromUrl("http://localhost:8091/jms");

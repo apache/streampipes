@@ -44,5 +44,4 @@ public class Icon {
 		    byte[] imageData = baos.toByteArray();
 		    return imageData;
 	}
-	
 }

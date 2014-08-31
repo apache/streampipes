@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.rest.http;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -13,9 +12,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class HttpJsonParser {
 
-	public static String getContentFromUrl(String uri) throws URISyntaxException, ClientProtocolException, IOException
+	public static String getContentFromUrl(URI uri) throws ClientProtocolException, IOException
 	{
-		HttpGet request = new HttpGet(new URI(uri));
+		HttpGet request = new HttpGet(uri);
 		
 		HttpClient client = new DefaultHttpClient();
 		HttpResponse response = client.execute(request);

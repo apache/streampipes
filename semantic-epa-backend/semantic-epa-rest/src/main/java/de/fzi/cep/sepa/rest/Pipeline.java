@@ -12,7 +12,6 @@ public class Pipeline {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipelines(String pipeline)
 	{
-	
 		System.out.println(pipeline);
 		return "success";
 	}
