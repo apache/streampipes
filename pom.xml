@@ -29,6 +29,8 @@
 		<module>semantic-epa-commons</module>
 		<module>semantic-epa</module>
 		<module>semantic-epa-esper</module>
+		<module>semantic-epa-manager</module>
+		<module>semantic-epa-actions-samples</module>
 	</modules>
 
 	<!-- Build Settings -->
