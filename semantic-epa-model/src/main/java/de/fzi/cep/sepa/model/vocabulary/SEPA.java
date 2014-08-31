@@ -57,6 +57,9 @@ public enum SEPA {
 	{
 		return f.createURI(NAMESPACE, name);
 	}
-	
+
+	public URI getType() {
+		return type;
+	}
 	
 }

@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;

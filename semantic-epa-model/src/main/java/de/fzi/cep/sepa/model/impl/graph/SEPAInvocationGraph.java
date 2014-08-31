@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
