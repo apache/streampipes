@@ -86,6 +86,7 @@ public class StorageRequestsImpl implements StorageRequests {
 	@Override
 	public boolean deleteSEP(SEP sep) {
 		entityManager.remove(sep);
+		
 		return true;
 	}
 

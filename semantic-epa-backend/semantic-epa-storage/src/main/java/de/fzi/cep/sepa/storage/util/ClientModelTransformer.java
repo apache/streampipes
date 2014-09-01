@@ -12,13 +12,16 @@ import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
+import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.Option;
+import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
@@ -100,7 +103,7 @@ public class ClientModelTransformer {
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
-			clientStaticProperties.add(ClientModelTransformer.convertStaticProperty(p));
+			clientStaticProperties.add(convertStaticProperty(p));
 		}
 			
 		client.setStaticProperties(clientStaticProperties);	
@@ -115,28 +118,47 @@ public class ClientModelTransformer {
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
 			String id = p.getRdfId().toString();
+			FormInput formInput = Utils.getClientPropertyById(clientProperties, id).getInput();
 			if (p instanceof FreeTextStaticProperty) 
 				{
-					resultProperties.add(convertFreeTextStaticProperty((FreeTextStaticProperty) p, ((TextInput) Utils.getClientPropertyById(clientProperties, id).getInput())));
+					resultProperties.add(convertFreeTextStaticProperty((FreeTextStaticProperty) p, ((TextInput) formInput)));
 				}
 			else if (p instanceof AnyStaticProperty)
 			{
-				CheckboxInput input = (CheckboxInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				CheckboxInput input = (CheckboxInput) formInput;
 				resultProperties.add(convertAnyStaticProperty((AnyStaticProperty) p, input));
 			} else if (p instanceof OneOfStaticProperty)
 			{
-				RadioInput input = (RadioInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				RadioInput input = (RadioInput) formInput;
 				resultProperties.add(convertOneOfStaticProperty((OneOfStaticProperty) p, input));
 			} else if (p instanceof MappingProperty)
 			{
-				TextInput input = (TextInput) Utils.getClientPropertyById(clientProperties, id).getInput();
+				TextInput input = (TextInput) formInput;
 				resultProperties.add(convertMappingProperty((MappingProperty) p, input));
+			} else if (p instanceof MatchingStaticProperty)
+			{
+				MatchingStaticProperty matchingProperty = (MatchingStaticProperty) p;
+				RadioGroupInput input = (RadioGroupInput) formInput;
+				resultProperties.add(convertMatchingStaticProperty(matchingProperty, input));
 			}
 		}
 		
 		return sepa;
 	}
 	
+	private static StaticProperty convertMatchingStaticProperty(
+			MatchingStaticProperty matchingProperty, RadioGroupInput input) {
+		for(Option option : input.getOptionLeft()) 
+		{
+			if (option.isSelected()) matchingProperty.setMatchLeft(URI.create(option.getElementId()));
+		}
+		for(Option option : input.getOptionRight()) 
+		{
+			if (option.isSelected()) matchingProperty.setMatchRight(URI.create(option.getElementId()));
+		}
+		return matchingProperty;
+	}
+
 	private static StaticProperty convertAnyStaticProperty(AnyStaticProperty p,
 			CheckboxInput input) {
 		for(de.fzi.cep.sepa.model.impl.Option sepaOption : p.getOptions())
@@ -217,10 +239,19 @@ public class ClientModelTransformer {
 		else if (p instanceof OneOfStaticProperty) property = convertOneOfStaticProperty((OneOfStaticProperty) p);
 		else if (p instanceof AnyStaticProperty) property = convertAnyStaticProperty((AnyStaticProperty) p);
 		else if (p instanceof MappingProperty) property = convertMappingProperty((MappingProperty) p);
+		else if (p instanceof MatchingStaticProperty) property = convertMatchingProperty((MatchingStaticProperty) p);
 		
 		property.setElementId(p.getRdfId().toString());
 		return property;
 		//exceptions
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertMatchingProperty(
+			MatchingStaticProperty p) {
+		RadioGroupInput radioGroupInput = new RadioGroupInput();
+		
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), radioGroupInput);
+		return clientProperty;
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertMappingProperty(

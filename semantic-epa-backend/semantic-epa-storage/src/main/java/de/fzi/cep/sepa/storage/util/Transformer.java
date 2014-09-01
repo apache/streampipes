@@ -108,7 +108,7 @@ public class Transformer {
 	{
 		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement"};
 		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph"};
-		String[] modelClasses = {"Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol", "OneOfStaticProperty", "FreeTextStaticProperty", "AnyStaticProperty", "Option", "MappingProperty"};
+		String[] modelClasses = {"MatchingStaticProperty", "Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol", "OneOfStaticProperty", "FreeTextStaticProperty", "AnyStaticProperty", "Option", "MappingProperty"};
 		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
 		if (contains(className, abstractClasses)) 
