@@ -1,33 +1,12 @@
 package de.fzi.cep.sepa.esper.filter.text;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.ontoware.rdf2go.vocabulary.XSD;
-import org.openrdf.model.Graph;
-import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
-
-import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -55,9 +34,9 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 	
-		SEP sep = Transformer.fromJsonLd(SEP.class, HttpJsonParser.getContentFromUrl("http://localhost:8089/twitter/t"));
+		SEP sep = Transformer.fromJsonLd(SEP.class, HttpJsonParser.getContentFromUrl(new URI("http://localhost:8089/twitter/t")));
 		
-		SEPA textfilter = Transformer.fromJsonLd(SEPA.class, HttpJsonParser.getContentFromUrl("http://localhost:8090/sepa/textfilter"));
+		SEPA textfilter = Transformer.fromJsonLd(SEPA.class, HttpJsonParser.getContentFromUrl(new URI("http://localhost:8090/sepa/textfilter")));
 		
 		SEPAInvocationGraph graph = new SEPAInvocationGraph(textfilter);
 		graph.setName("Test TextFilter");
