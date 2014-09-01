@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 public class Utils {
 
 	public static final String SERVER_URL;
@@ -41,6 +43,11 @@ public class Utils {
 			result.add(object);
 		}
 		return result;
+	}
+	
+	public static String getRandomString()
+	{
+		return RandomStringUtils.randomAlphabetic(10);
 	}
 
 }
