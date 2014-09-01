@@ -11,7 +11,7 @@ public class SEPAClient extends SEPAElement {
 	
 	private Map<String, String> mappingProperties;
 	
-	private List<OutputStrategy<? extends OutputStrategyParameters>> outputStragegy;
+	//private List<OutputStrategy<? extends OutputStrategyParameters>> outputStragegy;
 	
 	public SEPAClient(String name, String description, List<String> domains)
 	{

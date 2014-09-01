@@ -3,7 +3,6 @@ package de.fzi.sepa.model.client.manager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.Domain;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.client.StreamClient;

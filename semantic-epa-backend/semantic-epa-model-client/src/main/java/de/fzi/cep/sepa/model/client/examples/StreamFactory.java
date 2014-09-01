@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.model.client.examples;
 
-import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.client.StreamClient;
 
 public class StreamFactory {

@@ -1,8 +1,5 @@
 package de.fzi.cep.sepa.model.client.input;
 
-import java.util.UUID;
-
-
 public class Option {
 
 	private String elementId;
