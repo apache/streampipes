@@ -22,9 +22,4 @@ public class StaticProperty extends SEPAElement {
 	public void setInput(FormInput input) {
 		this.input = input;
 	}
-	
-	
-	
-	
-
 }
