@@ -8,8 +8,7 @@ import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
-import de.fzi.cep.sepa.rest.util.Utils;
-import de.fzi.cep.sepa.storage.util.Transformer;
+import de.fzi.cep.sepa.esper.pattern.PatternController;
 
 public class Init {
 
@@ -19,6 +18,7 @@ public class Init {
 		
 		declarers.add(new MovementController());
 		declarers.add(new TextFilterController());
+		declarers.add(new PatternController());
 		
 		
 		try {
