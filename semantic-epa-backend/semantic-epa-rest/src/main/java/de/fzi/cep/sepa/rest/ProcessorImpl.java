@@ -85,8 +85,24 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	@Path("{sepaId}")
 	@DELETE
 	@Override
-	public String deleteProcessor(String sepaId) {
-		// TODO Auto-generated method stub
+	public String deleteProcessor(@PathParam("sepaId") String sepaId) {
+		try {
+			requestor.deleteSEPA(requestor.getSEPAById(sepaId));
+			return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+		}
+	}
+
+	@Path("{sepaId}/check")
+	@GET
+	@Override
+	public String checkBinding(String subPipeline) {
+		// create pipeline
+		de.fzi.cep.sepa.model.client.Pipeline pipeline = Utils.getGson().fromJson(subPipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
+		
+		// recompute processor payload
+		
 		return null;
 	}
 }

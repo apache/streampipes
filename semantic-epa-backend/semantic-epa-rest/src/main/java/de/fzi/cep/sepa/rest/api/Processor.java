@@ -6,6 +6,8 @@ public interface Processor {
 	
 	String getProcessor(String sepaId);
 	
+	String checkBinding(String subPipeline);
+	
 	String getAllProcessors(String domain);
 	
 	String deleteProcessor(String sepaId);

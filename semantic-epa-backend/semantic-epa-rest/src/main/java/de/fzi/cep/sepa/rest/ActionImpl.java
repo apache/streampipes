@@ -93,7 +93,11 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 	@DELETE
 	@Override
 	public String deleteAction(@PathParam("actionId") String actionId) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			requestor.deleteSEC(requestor.getSECById(actionId));
+			return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+		}
 	}
 }

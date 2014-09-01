@@ -108,10 +108,15 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
+	@Path("{sepId}")
 	@DELETE
 	@Override
-	public String deleteSource(String sepId) {
-		// TODO Auto-generated method stub
-		return null;
+	public String deleteSource(@PathParam("sepId") String sepId) {
+		try {
+			requestor.deleteSEP(requestor.getSEPById(sepId));
+			return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+		}
 	}
 }
