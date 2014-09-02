@@ -154,7 +154,7 @@ body {
 	margin-right: 10%;
 }
 
-#wrapper {
+.wrapper {
 	width: 100%;
 	margin-bottom: 30%;
 
@@ -172,6 +172,18 @@ body {
 	margin: 0;
 }
 
+h4.panel-title{
+	line-height: 1.5;	
+}
+
+.btngroup {
+
+	position: relative;
+
+	vertical-align: middle;
+
+}
+
 .disabled{
 	opacity : 0.3;
 }
@@ -181,14 +193,13 @@ body {
 	margin-left: 5%;
 }
 
-/*#errorAlert{
-	/*margin-left: 5%;*/
-	/*margin-right: auto;*/
-	position: absolute;
-	opacity: 0.8;
-	width: 90vw;
-	margin-top: 48vh;
-	height:8vh;
-	text-align: center;
-	
-}*/
+
+
+.hoverable {
+	opacity: 0.2;
+}
+
+.hoverable:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}

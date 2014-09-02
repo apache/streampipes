@@ -24,7 +24,7 @@
 		<link rel="stylesheet" type="text/css" href="uistyle.css" />
 		<script type="text/javascript">
 			var domain = "";
-			var standardUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
+			var standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
 			
 			var $currentElement;
 			$(init("Proa"));
@@ -55,10 +55,11 @@
 			        	<li class="dropdown">
 			          		<a href="#" id="typeChange" class="dropdown-toggle" data-toggle="dropdown">Proasense <b class="caret"></b></a>
 			          		<ul class="dropdown-menu">
-			            		<li><a href="#home" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
-			            		<li><a href="#home" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
+			            		<li><a href="#" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
+			            		<li><a href="#" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
 			            		<li class="divider"></li>
-			            		<li><a href="#" onclick=showAdd()>Add...</a></li>
+			            		<li><a href="#" onclick=showAdd()>Hinzufügen...</a></li>
+			            		<li><a href="#" onclick=showManage()>Bearbeiten...</a></li>
 			         		</ul>
 			        	</li>
 			      	</ul>
@@ -82,6 +83,14 @@
 					        <a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne">
 					          Streams
 					        </a>
+					        <span class="btngroup pull-right">
+						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("stream")>
+						        	<span class="glyphicon glyphicon-plus"></span>
+					        	</button>
+					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("stream")>
+						        	<span class="glyphicon glyphicon-cog"></span>
+					        	</button>
+				        	</span>
 					      </h4>
 					    </div>
 					    <div id="collapseOne" class="panel-collapse collapse">
@@ -98,6 +107,14 @@
 					        <a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo">
 					          Sepas
 					        </a>
+					        <span class="btngroup pull-right">
+						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("sepa")>
+						        	<span class="glyphicon glyphicon-plus"></span>
+					        	</button>
+					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("sepa")>
+						        	<span class="glyphicon glyphicon-cog"></span>
+					        	</button>
+				        	</span>
 					      </h4>
 					    </div>
 					    <div id="collapseTwo" class="panel-collapse collapse">
@@ -114,6 +131,14 @@
 					        <a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree">
 					          Actions
 					        </a>
+					        <span class="btngroup pull-right">
+						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("action")>
+						        	<span class="glyphicon glyphicon-plus"></span>
+					        	</button>
+					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("action")>
+						        	<span class="glyphicon glyphicon-cog"></span>
+					        	</button>
+				        	</span>
 					      </h4>
 					    </div>
 					    <div id="collapseThree" class="panel-collapse collapse ">
@@ -160,7 +185,7 @@
 						    <div id="modal-content" class="modal-content">
 							      <div class="modal-header">
 								        <button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">&times;</button>
-								        <h4 class="modal-title" id="myModalLabel">Customize</h4>
+								        <h4 class="modal-title" id="myModalLabel">Anpassen</h4>
 							      </div>
 							      <div class="modal-body">
 							        
@@ -168,7 +193,7 @@
 											<fieldset id ="customize-content">
 													
 											</fieldset>
-											<div id="savedOptions"><strong>Saved options: </strong>
+											<div id="savedOptions"><strong>Gespeicherte Parameter: </strong>
 												
 												
 											</div>
@@ -176,8 +201,8 @@
 							
 							      </div>
 							      <div class="modal-footer">
-								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Close</button>
-								        <button type="button" class="btn btn-primary" onclick=save()>Save changes</button>
+								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Schliessen</button>
+								        <button type="button" class="btn btn-primary" onclick=save()>Speichern</button>
 							      </div>
 						    </div>
 					  </div>
@@ -194,26 +219,26 @@
 					        	<p id ="modal-description"></p>
 				      		</div>
 				      		<div class="modal-footer">
-					        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					        	<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
 				        	</div>
 			        	</div>
 			        </div>
 		        </div>
 				
-				<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="myModalLabel">Add...</h4>
+								<h4 class="modal-title" id="myModalLabel">Hinzufügen...</h4>
 							</div>
 							<div class="modal-body">
-								<div id="wrapper">
-									<div style="text-align: center"><p><strong>Please input Url of new Element</strong></p>
+								<div class="wrapper">
+									<div style="text-align: center"><p><strong>Bitte URI des neuen Elements eingeben</strong></p>
 										<div id="addTextInput"  class="input-group">
 											<input id ="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
 											<span class="input-group-btn">
-												<button class="btn btn-default" type="button" onclick=add()>Add</button>
+												<button class="btn btn-default" type="button" onclick=add()>Hinzufügen</button>
 											</span>
 										</div><!-- /input-group -->
 									</div><!-- /.col-lg-6 -->
@@ -229,6 +254,34 @@
 						</div>
 					</div>
 				</div>
+				
+				<div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title">Manage</h4>
+							</div>
+							<div class="modal-body">
+								<div><strong id="descr">Test</strong></div>
+								</br>
+								<ul class="list-group" id="elementList">
+								  	
+								</ul>
+								<div id="sses" style="text-align: center">
+									
+								</div>
+
+								
+								<div class="modal-footer">
+									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
 			</div>
 		</div>
 	</body>

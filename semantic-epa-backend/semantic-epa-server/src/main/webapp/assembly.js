@@ -272,17 +272,19 @@ function submit() {
 			
 			if ($(element).hasClass('sepa')) {
 				sepaPresent = true;
-				if ($(element).data("options") != null) {
+				if ($(element).data("options") != null || $(element).data("JSON").staticProperties == null) {
 					var el = {};
-					el.DOM = element;
+					el.DOM = $(element).attr("id");
 					el.JSON = $(element).data("JSON");
 					el.connectedTo = [];
 					for (var i = 0; i < jsPlumb.getConnections({
-						source : element
+						target : element
 					}).length; i++) {
-						el.connectedTo.push(jsPlumb.getConnections({source: element})[i].target);
+						el.connectedTo.push($(jsPlumb.getConnections({target: element})[i].source).attr("id"));
 					}
-					el.options = $(element).data("options");
+					if ($(element).data("options") != null){
+						el.options = $(element).data("options");
+					}
 					pipeline.sepas.push(el);
 	
 				} else if ($(element).data("JSON").staticProperties != null) {
@@ -293,19 +295,33 @@ function submit() {
 			} else if ($(element).hasClass('stream')) {
 				streamPresent = true;
 				var el = {};
-				el.DOM = element;
+				
+				el.DOM = $(element).attr("id");
 				el.JSON = $(element).data("JSON");
 				el.connectedTo = [];
 				for (var i = 0; i < jsPlumb.getConnections({
-					source : element
+					target : element
 				}).length; i++) {
-					el.connectedTo.push(jsPlumb.getConnections({source: element})[i].target);
+					el.connectedTo.push($(jsPlumb.getConnections({target: element})[i].source).attr("id"));
 				}
 				pipeline.streams.push(el);
 	
 			} else if ($(element).hasClass('action')) {
+				if (actionPresent){
+					error = true;
+					toastTop("error", "Mehr als 1 Action Element in Pipeline", "Submit Error");
+				}
 				actionPresent = true;
-				pipeline.action = "ACTION";
+				var el = {};
+				el.DOM = $(element).attr("id");
+				el.JSON = $(element).data("JSON");
+				el.connectedTo = [];
+				for (var i = 0; i < jsPlumb.getConnections({
+					target : element
+				}).length; i++) {
+					el.connectedTo.push($(jsPlumb.getConnections({target: element})[i].source).attr("id"));
+				}
+				pipeline.action = el;
 			}
 	});
 	if (!streamPresent){
@@ -324,7 +340,7 @@ function submit() {
 		
 		console.log(pipeline);
 		toastTop("success", "Pipeline wurde gesendet");
-		 $.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(pipeline));
+		$.post("http://anemone06.fzi.de/semantic-epa-backend/api/pipelines", JSON.stringify(pipeline));
 	}
 }
 /**
@@ -355,6 +371,7 @@ function save() {
 	if ($currentElement.data("options") != null) {
 		toastr.success("Parameter gespeichert!");
 		$currentElement.css("opacity", 1);
+		$('#customizeModal').modal('hide');
 	} else {
 		toastTop("warning","Oooops, irgendetwas ist schief gelaufen...");
 	}

@@ -390,22 +390,187 @@ function showAdd() {
 	$('#addModal').modal('show');
 }
 
-function add() {
-	var url = $('#addText').val();
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", "", true);
-	//URL DES SERVERS ANGEBEN
-	xmlhttp.send(url);
-	if (!!window.EventSource) {
-		var source = new EventSource('');
-	} else {
-		// Result to xhr polling :(
-	}
-	source.addEventListener('message', function(e) {
-		console.log(e.data);
-		$('<p>').text(e.data).appendTo('#sses');
-	}, false);
+function showManage(){
+	$('#elementList').empty();
+	$('#descr').text("Streams");
+	var url = standardUrl + "streams";
+	
+	$.getJSON(url, function(data){
+		$.each(data, function(i, json){
+			var $listElement = $('<li>')
+				.addClass("list-group-item")
+				.text(json.name)
+				.data("JSON", json)
+				.appendTo('#elementList');
+			$('<span>')
+				.addClass("glyphicon glyphicon-remove pull-right hoverable")
+				.on('click' , function(e){
+					var elementId = $(e.target).parent().data("JSON").elementId;
+					var uri = standardUrl + "streams/" + elementId;
 
+					$.ajax({
+					    url: uri,
+					    type: 'DELETE',
+					    success: function(result) {
+					        alert(result);
+					    }
+					});
+				})
+				.appendTo($listElement);
+		});
+	});
+	
+	
+	$('#manageModal').modal('show');
+	
+	
+	
+}
+
+function add() {			
+	var uri = $('#addText').val();
+	if (uri != ''){
+	// var xmlhttp = new XMLHttpRequest();
+	// xmlhttp.open("POST", "", true);
+	// //URL DES SERVERS ANGEBEN
+	// xmlhttp.send(url);
+	
+		var url = standardUrl + "streams/";
+		$.post(url, uri);
+			
+		if (!!window.EventSource) {
+			var source = new EventSource('');
+		} else {
+			// Result to xhr polling :(
+		}
+		source.addEventListener('message', function(e) {
+			console.log(e.data);
+			$('<p>').text(e.data).appendTo('#sses').slideDown('slow');
+		}, false);
+			
+		
+	}else{
+		toastr.error("Bitte uri eingeben");
+	}
+
+}
+
+function addTo(type){
+	
+	showAdd();
+	
+	switch (type){
+		
+		case "Streams":
+			
+		case "Sepas":
+		
+		case "Actions":
+		
+		default:
+
+	}
+}
+
+function manage(type){
+		
+	$('#elementList').empty();
+	
+	switch(type){
+		
+		case "stream":
+	
+			
+			$('#descr').text($('#typeChange').text() + " - Streams");
+			
+			$('.clickable').each(function(e){
+				var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
+				var streams = $.getJSON(url, function(data) {
+					$.each(data, function(i, json) {
+						var $listElement = $('<li>')
+							.addClass("list-group-item")
+							.text(json.name)
+							.data("JSON", json)
+							.appendTo('#elementList');
+						$('<span><strong>')
+							.text("?")
+							.addClass("hoverable")
+							.css("margin-left", "5px")
+							.appendTo($listElement)
+							.attr({
+								"data-toggle" : "popover",
+								"title" : "JSON",
+								"data-content" : JSON.stringify($(this).parent().data("JSON")),
+								"data-placement" : "auto" 
+							})
+							.popover();
+							console.log(JSON.stringify($(this).parent().data("JSON")));
+						$('<span>')
+							.addClass("glyphicon glyphicon-remove pull-right hoverable")
+							.on('click' , function(e){
+								var elementId = $(e.target).parent().data("JSON").elementId;
+								var uri = standardUrl + "streams/" + elementId;
+		
+								$.ajax({
+								    url: uri,
+								    type: 'DELETE',
+								    success: function(result) {
+								        alert(result);
+								    }
+								});
+							})
+							.appendTo($listElement);	
+					});
+				});
+				
+			});
+			
+		case "sepa":
+			
+			
+			
+			
+	}
+	
+	// if ($(selector).length){
+		
+	// switch (type){
+// 		
+		// case "Streams":
+			// $(selector).each(function(e){
+				// var $listElement = $('<li>')
+					// .addClass("list-group-item")
+					// .text($(this).data("JSON").name)
+					// .data("JSON", $(this).data("JSON"))
+					// .appendTo('#elementList');
+				// $('<span>')
+					// .addClass("glyphicon glyphicon-remove pull-right hoverable")
+					// .on('click' , function(e){
+						// var elementId = $(e.target).parent().data("JSON").elementId;
+						// // var uri = standardUrl + "streams/" + elementId;
+// // 
+						// // $.ajax({
+						    // // url: uri,
+						    // // type: 'DELETE',
+						    // // success: function(result) {
+						        // // console.log(result);
+						    // // }
+						// // });
+					// })
+					// .appendTo($listElement);
+			// });
+				
+					
+			$('#manageModal').modal('show');
+		// case "Sepas":
+// 		
+		// case "Actions":
+// 		
+		// default:
+// 		
+// 
+	// }
+	// }
 }
 
 function toastTop(type, message, title){
