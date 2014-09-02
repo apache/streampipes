@@ -80,6 +80,11 @@ body {
 	margin-bottom: 0;
 	color: #d22;
 }
+.sepa>.draggable-img{
+	height: 8vh;
+	width: 8vh;
+	margin-top: 0.5vh;
+}
 
 .draggable-img-dragging{
 	margin-left: 14%;

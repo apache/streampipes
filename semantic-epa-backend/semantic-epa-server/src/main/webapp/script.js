@@ -21,6 +21,8 @@ var standardDraggableOptions = {
  * Initiates the webapp for the given use-case
  */
 function init(type) {
+	var debug = false;
+	if (debug){standardUrl = testUrl;}
 
 	// Get and inititate sources------------------------
 	if (type == "Proa") {
@@ -434,14 +436,29 @@ function add() {
 	// xmlhttp.open("POST", "", true);
 	// //URL DES SERVERS ANGEBEN
 	// xmlhttp.send(url);
-	
-		var url = standardUrl + "streams/";
-		$.post(url, uri);
+		
+		
+		var type = $('input[name="type-radios"]:checked').val();
+		switch (type){
+			case "1":
+				var url = standardUrl + "streams";
+				break;
+			case "2":
+				var url = standardUrl + "sepas";
+				break;
+			case "3":
+				var url = standardUrl + "actions";
+		}
+		
+		$.post(url, uri, function(e){
+			console.log(e);
+			toastr.success("Success");
+		});
 			
 		if (!!window.EventSource) {
 			var source = new EventSource('');
 		} else {
-			// Result to xhr polling :(
+			console.log("test");
 		}
 		source.addEventListener('message', function(e) {
 			console.log(e.data);

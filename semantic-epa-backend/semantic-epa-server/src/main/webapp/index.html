@@ -25,6 +25,7 @@
 		<script type="text/javascript">
 			var domain = "";
 			var standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
+			var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
 			
 			var $currentElement;
 			$(init("Proa"));
@@ -180,12 +181,12 @@
 				</ul>
 				
 				
-				<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
 					  <div class="modal-dialog">
 						    <div id="modal-content" class="modal-content">
 							      <div class="modal-header">
 								        <button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">&times;</button>
-								        <h4 class="modal-title" id="myModalLabel">Anpassen</h4>
+								        <h4 class="modal-title" id="">Anpassen</h4>
 							      </div>
 							      <div class="modal-body">
 							        
@@ -226,7 +227,7 @@
 		        </div>
 				
 				<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -234,6 +235,30 @@
 							</div>
 							<div class="modal-body">
 								<div class="wrapper">
+									<form class="form-horizontal">
+										<fieldset id="addType">
+										
+										<!-- Multiple Radios (inline) -->
+										<div class="form-group" >
+										  <label class="col-md-4 control-label" for="radios">Typ</label>
+										  <div class="col-md-4"> 
+										    <label class="radio-inline" for="sourceRadio">
+										      <input name="type-radios" id="sourceRadio" value="1" checked="checked" type="radio">
+										      Source
+										    </label> 
+										    <label class="radio-inline" for="sepaRadio">
+										      <input name="type-radios" id="sepaRadio" value="2" type="radio">
+										      SEPA
+										    </label> 
+										    <label class="radio-inline" for="actionRadio">
+										      <input name="type-radios" id="actionRadio" value="3" type="radio">
+										      Action
+										    </label>
+										  </div>
+										</div>
+										
+										</fieldset>
+									</form>
 									<div style="text-align: center"><p><strong>Bitte URI des neuen Elements eingeben</strong></p>
 										<div id="addTextInput"  class="input-group">
 											<input id ="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
