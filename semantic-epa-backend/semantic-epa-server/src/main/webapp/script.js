@@ -431,17 +431,15 @@ function showManage(){
 
 function add() {			
 	var uri = $('#addText').val();
+	uri = encodeURIComponent(uri);
 	if (uri != ''){
-	// var xmlhttp = new XMLHttpRequest();
-	// xmlhttp.open("POST", "", true);
-	// //URL DES SERVERS ANGEBEN
-	// xmlhttp.send(url);
+	
 		
 		
 		var type = $('input[name="type-radios"]:checked').val();
 		switch (type){
 			case "1":
-				var url = standardUrl + "streams";
+				var url = standardUrl + "sources";
 				break;
 			case "2":
 				var url = standardUrl + "sepas";
@@ -450,20 +448,40 @@ function add() {
 				var url = standardUrl + "actions";
 		}
 		
-		$.post(url, uri, function(e){
-			console.log(e);
-			toastr.success("Success");
+		// var xmlhttp = new XMLHttpRequest();
+		// xmlhttp.open("POST", url, true);
+		// //URL DES SERVERS ANGEBEN
+		// xmlhttp.send(uri);
+		
+		var fd = new FormData();    
+		fd.append( 'uri', uri );
+		
+		$.ajax({
+		  url: url,
+		  data: fd,
+		  processData: false,
+		  type: 'POST',
+		  success: function(data){
+		    alert(data);
+		  }
 		});
+		
+		
+		
+		 // $.post(url, {"uri" : uri}, function(e){
+			 // console.log(e);
+			 // toastr.success("Success");
+		 // });
 			
-		if (!!window.EventSource) {
-			var source = new EventSource('');
-		} else {
-			console.log("test");
-		}
-		source.addEventListener('message', function(e) {
-			console.log(e.data);
-			$('<p>').text(e.data).appendTo('#sses').slideDown('slow');
-		}, false);
+		 // if (!!window.EventSource) {
+			// var source = new EventSource('');
+		 // } else {
+			 // console.log("test");
+		 // }
+		 // source.addEventListener('message', function(e) {
+			 // console.log(e.data);
+			 // $('<p>').text(e.data).appendTo('#sses').slideDown('slow');
+		 // }, false);
 			
 		
 	}else{
