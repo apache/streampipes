@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.jms.*;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.log4j.Logger;
 
 
 public class ActiveMQPublisher {

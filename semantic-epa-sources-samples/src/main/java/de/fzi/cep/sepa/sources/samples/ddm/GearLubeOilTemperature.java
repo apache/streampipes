@@ -16,7 +16,6 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class GearLubeOilTemperature implements EventStreamDeclarer {
 
-	private String topicName;
 	
 	@Override
 	public EventStream declareModel(SEP sep) {
@@ -25,8 +24,8 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://proasense.eu/ontologies/ddm#gearlubetemperature")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#time")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#temperature")));
 		
 		
@@ -34,15 +33,14 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
 		grounding.setPort(61616);
 		grounding.setUri("tcp://localhost:61616");
 		grounding.setTopicName("SEPA.SEP.DDM.GearboxTemperature");
-		this.topicName = grounding.getTopicName();
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
 		stream.setName(AkerVariables.GearLubeOilTemperature.eventName());
 		stream.setDescription(AkerVariables.GearLubeOilTemperature.description());
-		stream.setUri(sep.getUri() + "/geo");
-		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/DDM_Temperature_Icon" +"_HQ.png");
+		stream.setUri(sep.getUri() + "/gearLubeTemp");
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Temperature_Icon" +"_HQ.png");
 		
 		return stream;
 	}

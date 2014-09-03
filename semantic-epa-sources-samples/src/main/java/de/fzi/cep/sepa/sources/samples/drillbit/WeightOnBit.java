@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.sources.samples.ddm;
+package de.fzi.cep.sepa.sources.samples.drillbit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
-public class SpeedShaft implements EventStreamDeclarer {
+public class WeightOnBit implements EventStreamDeclarer {
 
 private String topicName;
 	
@@ -27,22 +27,22 @@ private String topicName;
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#drillingRPM")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#weightOnBit")));
 		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
 		grounding.setUri("tcp://localhost:61616");
-		grounding.setTopicName("SEPA.SEP.DDM.SpeedShaft");
+		grounding.setTopicName("SEPA.SEP.DrillBit.WeightOnBit");
 		this.topicName = grounding.getTopicName();
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
-		stream.setName(AkerVariables.DrillingRPM.eventName());
-		stream.setDescription(AkerVariables.DrillingRPM.description());
-		stream.setUri(sep.getUri() + "/drillingRPM");
-		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/DDM_Speed_Icon" +"_HQ.png");
+		stream.setName(AkerVariables.WeightOnBit.eventName());
+		stream.setDescription(AkerVariables.WeightOnBit.description());
+		stream.setUri(sep.getUri() + "/weightOnBit");
+		//stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Temperature_Icon" +"_HQ.png");
 		
 		return stream;
 	}
