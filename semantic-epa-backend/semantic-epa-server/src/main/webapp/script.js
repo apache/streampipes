@@ -49,6 +49,13 @@ function init(type) {
 		$('#assemblyContextMenu').hide();
 		$('#staticContextMenu').hide();
 	});
+	$('#sources').on('change', function(){
+		$(this)
+		.css("background-color", "#044")
+		.animate("200")
+		.css("background-color", "")
+		.animate("200");
+	});
 };
 
 /**
@@ -398,60 +405,42 @@ function showAdd() {
 }
 
 function showManage(){
+	var list = {};
+	var sources = [];
+	var streams = [];
+	list.sources = sources;
+	list.streams = streams;
+	
+	
+	
 	$('#elementList').empty();
 	$('#descr').text("Sources");
 	var url = standardUrl + "sources";
-	var html = "<div class='panel-group' id='manageAccordion'>";
-	$.getJSON(url, function(data){
-		$.each(data, function(i, json){
+	
+	$.getJSON(url).then(function(data){
+		return $.when.apply($, $.map(data, function(json, i){
 			var id = json.name + "collapse";
-			html += getAccordionPart(id, "manageAccordion", i, json);
 			
-			
-			
-			
-			
-			
-			// var $listElement = $('<li>')
-				// .addClass("list-group-item")
-				// .text(json.name)
-				// .data("JSON", json)
-				// .appendTo('#elementList');
-			// $('<span>')
-				// .addClass("glyphicon glyphicon-remove pull-right hoverable")
-				// .on('click' , function(e){
-					// var elementId = $(e.target).parent().data("JSON").elementId;
-					// var uri = standardUrl + "streams/" + elementId;
-// 
-					// $.ajax({
-					    // url: uri,
-					    // type: 'DELETE',
-					    // success: function(result) {
-					        // alert(result);
-					    // }
-					// });
-				// })
-				// .appendTo($listElement);
+			return getAccordionPart(id, "manageAccordion", i, json);
+		})).then(function(){
+			var html = "<div class='panel-group' id='manageAccordion'>";
+			html += Array.prototype.join.call(arguments, "\n");
+	        
+	        return html;
 		});
-		
-	}).done(function(){
+	}).done(function(html){
 		html += "</div>";
 		$('#elementList').html(html);
 		$('#manageModal').modal('show');
 	});
-	
-	
-	
-	
+
 }
 
 function add() {			
 	var uri = $('#addText').val();
 	uri = encodeURIComponent(uri);
 	if (uri != ''){
-	
-		
-		
+
 		var type = $('input[name="type-radios"]:checked').val();
 		switch (type){
 			case "1":
@@ -464,11 +453,6 @@ function add() {
 				var url = standardUrl + "actions";
 		}
 		
-		// var xmlhttp = new XMLHttpRequest();
-		// xmlhttp.open("POST", url, true);
-		// //URL DES SERVERS ANGEBEN
-		// xmlhttp.send(uri);
-		
 		var fd = new FormData();    
 		fd.append( 'uri', uri );
 		
@@ -478,28 +462,12 @@ function add() {
 		  processData: false,
 		  type: 'POST',
 		  success: function(data){
+		  	toastr.success("Element erfolgreich hinzugefügt");
+		  	refresh("Proa");
 		    console.log(data);
 		  }
 		});
-		
-		
-		
-		 // $.post(url, {"uri" : uri}, function(e){
-			 // console.log(e);
-			 // toastr.success("Success");
-		 // });
-			
-		 // if (!!window.EventSource) {
-			// var source = new EventSource('');
-		 // } else {
-			 // console.log("test");
-		 // }
-		 // source.addEventListener('message', function(e) {
-			 // console.log(e.data);
-			 // $('<p>').text(e.data).appendTo('#sses').slideDown('slow');
-		 // }, false);
-			
-		
+				
 	}else{
 		toastr.error("Bitte uri eingeben");
 	}

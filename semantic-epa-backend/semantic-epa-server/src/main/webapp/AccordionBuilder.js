@@ -1,40 +1,39 @@
 //TODO copy
 
 function getAccordionPart(id, parent, count, json){
-	
-	var html = "<div class='panel panel-default'>";
-	html += "<div class='panel-heading'>";
-	html += "<h4 class='panel-title'>";
-	html += "<a id='" + id + "' data-toggle='collapse' data-parent='#" + parent + "' href='#" + count + "'>";
-	html += json.name;
-	html += "</a>";
-	html += "</h4>";
-	html += "</div>";
-	html += "<div id='" + count + "' class='panel-collapse collapse'>";
-	html += "<div class='panel-body'>";
-	html += "<div id='body" + count + "' align='center'>";
-	console.log("vor Body 1");
-	html += getAccordionBody(json);
-	console.log("nach Body 4");
-	html += "</div></div></div></div>";
-	
-	return html;
+	return getAccordionBody(json).then(function(result) {
+		var html = "<div class='panel panel-default'>";
+		html += "<div class='panel-heading'>";
+		html += "<h4 class='panel-title'>";
+		html += "<a id='" + id + "' data-toggle='collapse' data-parent='#" + parent + "' href='#" + count + "'>";
+		html += json.name;
+		html += "</a>";
+		html += "</h4>";
+		html += "</div>";
+		html += "<div id='" + count + "' class='panel-collapse collapse'>";
+		html += "<div class='panel-body'>";
+		html += "<div id='body" + count + "' align='center'>";
+		// console.log("vor Body 1");
+		html += result;
+		// console.log("nach Body 4");
+		html += "</div></div></div></div>";
+		
+		return html;
+	});
 } 
 
 function getAccordionBody(json){
-	console.log("in body 2");
-	var html = "<ul class='list-group'>";
-	var finished = false;
+	// console.log("in body 2");
+	
+	
 	 var url = standardUrl + "sources/" + encodeURIComponent(json.elementId) + "/events";
-	 $.getJSON(url, function(data) {
+	 return $.getJSON(url).then(function(data) {
+	 	var html = "<ul class='list-group'>";
 		$.each(data, function(i, json) {
 			html += "<li class='list-group-item'>";
 			html += json.name;
 			html += "</li>";
 		});
-			
-	}).done(function(){
-		console.log("FERTIG... ANSCHEINEND... 3");
 		html += "</ul>";
 		return html;
 	});
