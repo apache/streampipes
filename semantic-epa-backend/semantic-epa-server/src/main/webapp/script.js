@@ -65,7 +65,11 @@ function initSources(data) {
 			"data-toggle" : "tooltip",
 			"data-placement" : "top",
 			title : json.name
-		}).data("JSON", json).click(displayStreams).on("contextmenu", staticContextMenu).appendTo('#sources');
+		})
+		.data("JSON", json)
+		.click(displayStreams)
+		.on("contextmenu", staticContextMenu)
+		.appendTo('#sources');
 
 		if (json.iconUrl == null) {//No Icon Path found in JSON
 			var md5 = json.elementId.replace("-", "");
@@ -92,6 +96,7 @@ function displayStreams(e) {
 	$('.clickable').not(this).fadeTo(200, .2);
 	var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
 	var streams = $.getJSON(url, function(data) {
+		
 		$.each(data, function(i, json) {
 			var idString = "stream" + i;
 			var $newStream = $('<span>')//<img>
@@ -394,36 +399,47 @@ function showAdd() {
 
 function showManage(){
 	$('#elementList').empty();
-	$('#descr').text("Streams");
-	var url = standardUrl + "streams";
-	
+	$('#descr').text("Sources");
+	var url = standardUrl + "sources";
+	var html = "<div class='panel-group' id='manageAccordion'>";
 	$.getJSON(url, function(data){
 		$.each(data, function(i, json){
-			var $listElement = $('<li>')
-				.addClass("list-group-item")
-				.text(json.name)
-				.data("JSON", json)
-				.appendTo('#elementList');
-			$('<span>')
-				.addClass("glyphicon glyphicon-remove pull-right hoverable")
-				.on('click' , function(e){
-					var elementId = $(e.target).parent().data("JSON").elementId;
-					var uri = standardUrl + "streams/" + elementId;
-
-					$.ajax({
-					    url: uri,
-					    type: 'DELETE',
-					    success: function(result) {
-					        alert(result);
-					    }
-					});
-				})
-				.appendTo($listElement);
+			var id = json.name + "collapse";
+			html += getAccordionPart(id, "manageAccordion", i, json);
+			
+			
+			
+			
+			
+			
+			// var $listElement = $('<li>')
+				// .addClass("list-group-item")
+				// .text(json.name)
+				// .data("JSON", json)
+				// .appendTo('#elementList');
+			// $('<span>')
+				// .addClass("glyphicon glyphicon-remove pull-right hoverable")
+				// .on('click' , function(e){
+					// var elementId = $(e.target).parent().data("JSON").elementId;
+					// var uri = standardUrl + "streams/" + elementId;
+// 
+					// $.ajax({
+					    // url: uri,
+					    // type: 'DELETE',
+					    // success: function(result) {
+					        // alert(result);
+					    // }
+					// });
+				// })
+				// .appendTo($listElement);
 		});
+		
+	}).done(function(){
+		html += "</div>";
+		$('#elementList').html(html);
+		$('#manageModal').modal('show');
 	});
 	
-	
-	$('#manageModal').modal('show');
 	
 	
 	
@@ -458,11 +474,11 @@ function add() {
 		
 		$.ajax({
 		  url: url,
-		  data: fd,
+		  data: "uri=" + uri,
 		  processData: false,
 		  type: 'POST',
 		  success: function(data){
-		    alert(data);
+		    console.log(data);
 		  }
 		});
 		
