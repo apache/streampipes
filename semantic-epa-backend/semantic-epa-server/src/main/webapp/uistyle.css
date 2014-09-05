@@ -85,6 +85,11 @@ body {
 	width: 8vh;
 	margin-top: 0.5vh;
 }
+.sepa>p>.draggable-img{
+	height: 8vh;
+	width: 8vh;
+	margin-top: 0.5vh;
+}
 
 .draggable-img-dragging{
 	margin-left: 14%;
@@ -121,6 +126,14 @@ body {
 	margin-left: 14%;
 	margin-right: auto;
 	height: 8vh;
+}
+.action>.connectable-img {
+	margin-top: 8.5%;
+	margin-left: 8.5%;
+}
+.action>p>.connectable-img {
+	margin-top: 10.5%;
+	margin-left: 10.5%;
 }
 #clear {
 	z-index:10;

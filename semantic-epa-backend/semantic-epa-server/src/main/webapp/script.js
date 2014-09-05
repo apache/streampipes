@@ -31,7 +31,7 @@ function init(type) {
 		domain = "DOMAIN_PERSONAL_ASSISTANT";
 	}
 	var url = standardUrl + "sources?domain=" + domain;
-	$.getJSON(url, initSources);
+	savedSources = $.getJSON(url, initSources);
 
 	//Inititate accordion functionality-----------------
 	//Initiate assembly and jsPlumb functionality-------
@@ -101,43 +101,65 @@ function displayStreams(e) {
 	$('#streams').children().remove();
 	$(this).fadeTo(0, 1);
 	$('.clickable').not(this).fadeTo(200, .2);
-	var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
-	var streams = $.getJSON(url, function(data) {
+	var $src = $(this);
+	// console.log(typeof $(this).data("streams"));
+	if (typeof $(this).data("streams") != "undefined"){
+		createStreams($(this).data("streams"));
+	}else{
+		var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
+		var promise = $.getJSON(url).then(function(data){
+			savedStreams = data;
+			$src.data("streams", savedStreams);
+			createStreams(data);
+		}); 
 		
-		$.each(data, function(i, json) {
-			var idString = "stream" + i;
-			var $newStream = $('<span>')//<img>
-			.attr({
-				id : idString,
-				class : "draggable-icon stream tt",
-				"data-toggle" : "tooltip",
-				"data-placement" : "top",
-				title : json.name
-			}).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#streams').show();
-			if (json.iconUrl == null) {
-				var md5 = json.elementId.replace("-", "");
-				var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu)
-				// .data("JSON", json)
-				.appendTo($newStream);
-				$ident.identicon5({
-					size : 150
-				});
-				$ident.children().addClass("draggable-img").data("JSON", json);
-			} else {
-				$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
-				// .data("JSON", json)
-				.appendTo($newStream);
-			}
-		});
-		makeDraggable("stream");
-		initTooltips();
-	});
+		
+		
+	}
+	
 	$('#streams').fadeTo(300, 1);
 	e.stopPropagation();
 
 	$('#collapseOne').collapse('show');
 
 }
+
+function createStreams(data){
+		
+	$.each(data, function(i, json) {
+		var idString = "stream" + i;
+		var $newStream = $('<span>')//<img>
+		.attr({
+			id : idString,
+			class : "draggable-icon stream tt",
+			"data-toggle" : "tooltip",
+			"data-placement" : "top",
+			title : json.name
+		}).data("JSON", json)
+		.on("contextmenu", staticContextMenu)
+		.appendTo('#streams').show();
+		if (json.iconUrl == null) {
+			var md5 = json.elementId.replace("-", "");
+			var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu)
+			// .data("JSON", json)
+			.appendTo($newStream);
+			$ident.identicon5({
+				size : 150
+			});
+			$ident.children().addClass("draggable-img").data("JSON", json);
+		} else {
+			$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
+			// .data("JSON", json)
+			.appendTo($newStream);
+		}
+	});
+	makeDraggable("stream");
+	initTooltips();
+}
+
+
+
+
 /**
  * Gets and displays Sepas 
  */
@@ -146,61 +168,98 @@ function displaySepas(e) {
 	$('#sepaCollapse').removeClass("disabled");
 	$('#sepas').children().remove();
 	var url = standardUrl + "sepas?domains=" + domain;
-	var sepas = $.getJSON(url, function(data) {
-		$.each(data, function(i, json) {
-			if (($.inArray(domain, json.domains) != -1) || ($.inArray("DOMAIN_INDEPENDENT", json.domains) != -1)) {
-				var idString = "sepa" + i;
-				var $newSepa = $('<span>').attr({
-					id : idString,
-					class : "draggable-icon sepa tt",
-					"data-toggle" : "tooltip",
-					"data-placement" : "top",
-					title : json.name
-				}).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
-				if (json.iconUrl == null) {
-					var md5 = json.elementId.replace("-", "");
-					var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
-					$ident.identicon5({
-						size : 180
-					});
-					$ident.children().addClass("draggable-img").data("JSON", json);
-				} else {
-					$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
-				}
-			}
+	if (!savedSepas){
+		$.getJSON(url).then(function(data){
+			createSepas(data);
+			savedSepas = data;
 		});
-		makeDraggable("sepa");
-		initTooltips();
-	});
+	}else{
+		createSepas(savedSepas);
+	}
 
 }
+
+function createSepas(data){
+	$.each(data, function(i, json) {
+		if (($.inArray(domain, json.domains) != -1) || ($.inArray("DOMAIN_INDEPENDENT", json.domains) != -1)) {
+			var idString = "sepa" + i;
+			var $newSepa = $('<span>').attr({
+				id : idString,
+				class : "draggable-icon sepa tt",
+				"data-toggle" : "tooltip",
+				"data-placement" : "top",
+				title : json.name
+			}).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
+			if (json.iconUrl == null) {
+				var md5 = json.elementId.replace("-", "");
+				var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
+				$ident.identicon5({
+					size : 180
+				});
+				$ident.children().addClass("draggable-img").data("JSON", json);
+			} else {
+				$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
+			}
+		}
+	});
+	makeDraggable("sepa");
+	initTooltips();
+}
+
+
+
 /**
  * Displays Actions 
  */
 function displayActions(e) {
 	$('#actionCollapse').attr("data-toggle", "collapse");
 	$('#actionCollapse').removeClass("disabled");
-
+	var url = standardUrl + "actions";
 	/*-----------------TEST TEST TEST TEST TEST-----------------*/
-
-	var $newAction = $('<span>').addClass("draggable-icon action tt").appendTo('#actions').attr({
-		"data-toggle" : "tooltip",
-		"data-placement" : "top",
-		title : "DO SOMETHING"
+	
+	if (savedActions){
+		createActions(savedActions);
+	}else{
+		$.getJSON(url).then(function(data){
+			createActions(data);
+			savedActions = data;
+		});
+	}
+}
+	
+function createActions(data){
+	$.each(data, function(i, json) {
+		var idString = "action" + i;
+		var $newAction = $('<span>').attr({
+			id : idString,
+			class : "draggable-icon action tt",
+			"data-toggle" : "tooltip",
+			"data-placement" : "top",
+			title : json.name
+		}).data("JSON", json)
+		.on("contextmenu", staticContextMenu)
+		.appendTo('#actions')
+		.show();
+		if (json.iconUrl == null) {
+			var md5 = json.elementId.replace("-", "");
+			var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newAction);
+			$ident.identicon5({
+				size : 180
+			});
+			$ident.children().addClass("draggable-img").data("JSON", json);
+		} else {
+			$('<img>')
+				.attr("src", json.iconUrl)
+				.addClass("draggable-img")
+				.on("contextmenu", staticContextMenu)
+				.data("JSON", json)
+				.appendTo($newAction);
+		}
 	});
-	$('<span>').addClass("glyphicon glyphicon-hand-up draggable-img").appendTo($newAction);
-
-	var $newAction = $('<span>').addClass("draggable-icon action tt").appendTo('#actions').attr({
-		"data-toggle" : "tooltip",
-		"data-placement" : "top",
-		title : "MONITOR"
-	});
-	$('<span>').addClass("glyphicon glyphicon-list-alt draggable-img").appendTo($newAction);
-
 	makeDraggable("action");
 	initTooltips();
-
-}
+}	
+	
 
 /**
  * initiates tooltip functionality 

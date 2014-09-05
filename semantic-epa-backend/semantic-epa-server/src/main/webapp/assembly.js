@@ -43,29 +43,28 @@ function initAssembly(){
 	$('#clear').click(clearAssembly); 
 
 	$('#assembly').droppable({
-			tolerance: "fit",
-			drop: function(stream, ui) {
-			
-				if (ui.draggable.hasClass('draggable-icon') && !ui.draggable.hasClass('action')) {
-					if(ui.draggable.data("JSON") == null){
-						alert("No JSON - Data for Dropped element");
-						return false;
-					}
-					//Neues Container Element für Icon / identicon erstellen
-					var $newState = createNewAssemblyElement(ui);
-				
-				
+		tolerance: "fit",
+		drop: function(stream, ui) {
+			if (ui.draggable.hasClass('draggable-icon')) {
+				if(ui.draggable.data("JSON") == null){
+					alert("No JSON - Data for Dropped element");
+					return false;
+				}
+				//Neues Container Element für Icon / identicon erstellen
+				var $newState = createNewAssemblyElement(ui);
+
 				//Droppable Streams
 				if(ui.draggable.hasClass('stream')){
 					handleDroppedStream($newState);	
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
 					handleDroppedSepa(ui, $newState);
+				//Droppable Actions
+				}else if(ui.draggable.hasClass('action')){
+					handleDroppedAction($newState);
 				}
-			}else if(ui.draggable.hasClass('draggable-icon') && ui.draggable.hasClass('action')){
-				handleDroppedAction(ui, $newState);
+				initTooltips();
 			}
-			initTooltips();
 		}
 		
 	}); //End #assembly.droppable(
@@ -81,7 +80,7 @@ function createNewAssemblyElement(ui){
 	$newState
 		.css({'position': 'absolute', 'top': newTop , 'left': newPos.left})
 		.on("contextmenu", function (e) {
-			if ($(this).hasClass('stream')){
+			if ($(this).hasClass('stream') || $(this).hasClass('action')){
 				$('#customize, #division ').hide();
 				
 			}else{
@@ -109,7 +108,8 @@ function createNewAssemblyElement(ui){
 			{"data-toggle": "tooltip",
 			"data-placement": "top",
 			"data-delay": '{"show": 1000, "hide": 100}',
-			title: ui.draggable.data("JSON").name})
+			title: ui.draggable.data("JSON").name
+			})
 		.data("JSON", ui.draggable.data("JSON"));
 	}else{
 		$('<img>')
@@ -136,13 +136,13 @@ function handleDroppedStream($newState){
 	$newState
 		.addClass('connectable stream');
 		
-	makeDraggable("sepa");
+	
 	jsPlumb.addEndpoint($newState,streamEndpointOptions);
 	
 	$newState.dblclick(function(){
 		jsPlumb.addEndpoint($newState,streamEndpointOptions);
 	});
-	// $(function() { $newState.contextMenu('#cmenu'); });
+	
 	
 	if ($('#assembly').children().hasClass('sepa')){
 		$('#actionCollapse').attr("data-toggle", "collapse");
@@ -181,41 +181,14 @@ function handleDroppedSepa(ui, $newState){
 	
 }
 
-function handleDroppedAction(ui, $newState){
+function handleDroppedAction($newState){
 	
-	var $newState = $('<span>')									
-		.appendTo('#assembly');
 	jsPlumb.draggable($newState, {containment: 'parent'});
-	var newPos = ui.helper.position();
-	var newTop = getDropPosition(ui.helper);
+	
 	$newState
-		.css({'position': 'absolute', 'top': newTop , 'left': newPos.left})
-		.addClass("connectable action")
-		.on("contextmenu", function (e) {
-			$('#customize, #division ').hide();
-			$('#assemblyContextMenu')
-				.data("invokedOn", $(e.target))
-				.show()
-                .css({
-                    position: "absolute",
-                    left: getLeftLocation(e, "assembly"),
-                    top: getTopLocation(e, "assembly")
-                });
-            ContextMenuClickHandler("assembly");
-			return false;
-		});;
+		.addClass("connectable action");
+		
 	jsPlumb.addEndpoint($newState,leftTargetPointOptions);
-	var $inner = $('<span>')
-		.addClass("connectable-img")
-		.appendTo($newState)
-		.one('contextmenu', function(event) {
-			
-		});;
-	if (ui.draggable.children().hasClass("glyphicon-hand-up")){
-		$inner.addClass("glyphicon glyphicon-hand-up");
-	}else{
-		$inner.addClass("glyphicon glyphicon-list-alt");
-	}
 	
 }
 
@@ -257,56 +230,63 @@ function submit() {
 	var pipeline = {};
 	var streams = [];
 	var sepas = [];
+	var action = {};
 	var streamPresent = false;
 	var sepaPresent = false;
 	var actionPresent = false;
 	
 	pipeline.streams = streams;
 	pipeline.sepas = sepas;
-	pipeline.action = "";
+	pipeline.action = action;
 
 	$('#assembly>span.connectable').each(function(i, element) {
-			if (!isConnected(element)){
-				toastTop("error", "Nicht alle Elemente verbunden", "Submit Error");
-			}
-			
-			if ($(element).hasClass('sepa')) {
-				sepaPresent = true;
-				if ($(element).data("options") != null) {
-					var el = {};
-					el.DOM = element;
-					el.JSON = $(element).data("JSON");
-					el.connectedTo = [];
-					for (var i = 0; i < jsPlumb.getConnections({
-						source : element
-					}).length; i++) {
-						el.connectedTo.push(jsPlumb.getConnections({source: element})[i].target);
-					}
-					el.options = $(element).data("options");
-					pipeline.sepas.push(el);
-	
-				} else if ($(element).data("JSON").staticProperties != null) {
-					toastTop("error", "Bitte für alle Elemente Parameter festlegen (Rechtsklick auf das Element -> Anpassen)", "Submit Error");	;
-					error = true;
-	
-				}
-			} else if ($(element).hasClass('stream')) {
-				streamPresent = true;
+		if (!isConnected(element)){
+			toastTop("error", "Nicht alle Elemente verbunden", "Submit Error");
+		}
+		
+		if ($(element).hasClass('sepa')) {
+			sepaPresent = true;
+			if ($(element).data("options") != null) {
 				var el = {};
 				el.DOM = element;
 				el.JSON = $(element).data("JSON");
 				el.connectedTo = [];
 				for (var i = 0; i < jsPlumb.getConnections({
-					source : element
+					target : element
 				}).length; i++) {
-					el.connectedTo.push(jsPlumb.getConnections({source: element})[i].target);
+					el.connectedTo.push(jsPlumb.getConnections({target: element})[i].source);
 				}
-				pipeline.streams.push(el);
-	
-			} else if ($(element).hasClass('action')) {
-				actionPresent = true;
-				pipeline.action = "ACTION";
+				el.options = $(element).data("options");
+				pipeline.sepas.push(el);
+
+			} else if ($(element).data("JSON").staticProperties != null) {
+				toastTop("error", "Bitte für alle Elemente Parameter festlegen (Rechtsklick auf das Element -> Anpassen)", "Submit Error");	;
+				error = true;
+
 			}
+		} else if ($(element).hasClass('stream')) {
+			streamPresent = true;
+			var el = {};
+			el.DOM = element;
+			el.JSON = $(element).data("JSON");
+			pipeline.streams.push(el);
+
+		} else if ($(element).hasClass('action')) {
+			if (actionPresent){
+				error = true;
+				toastTop("error", "Mehr als ein Action Element in Pipeline", "Submit Error");
+			}else{
+				actionPresent = true;
+				pipeline.action.DOM = element;
+				pipeline.action.JSON = $(element).data("JSON");
+				pipeline.action.connectedTo = [];
+				for (var i = 0; i < jsPlumb.getConnections({
+					target : element
+				}).length; i++) {
+					pipeline.action.connectedTo.push(jsPlumb.getConnections({target: element})[i].source);
+				}
+			}
+		}
 	});
 	if (!streamPresent){
 		toastTop("error", "Kein Stream Element in Pipeline", "Submit Error");
