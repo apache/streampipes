@@ -215,7 +215,7 @@ function displayActions(e) {
 	$('#actionCollapse').attr("data-toggle", "collapse");
 	$('#actionCollapse').removeClass("disabled");
 	var url = standardUrl + "actions";
-	/*-----------------TEST TEST TEST TEST TEST-----------------*/
+	
 	
 	if (savedActions){
 		createActions(savedActions);
@@ -473,27 +473,183 @@ function showManage(){
 	
 	
 	$('#elementList').empty();
-	$('#descr').text("Sources");
-	var url = standardUrl + "sources";
 	
-	$.getJSON(url).then(function(data){
-		return $.when.apply($, $.map(data, function(json, i){
-			var id = json.name + "collapse";
+	//  ===================== 
+	//  = Sources + Streams = 
+	//  ===================== 
+	
+	
+	$('<ul>')
+		.addClass("list-group")
+		.attr("id", "sourceList")
+		.appendTo("#elementList");
+	$('<h4>')
+		.addClass("list-group-item-heading")
+		.text("Sources/Streams")
+		.appendTo("#sourceList");
+	$('.clickable').each(function(i){
+		var $src = $('<li>')
+			.attr("id", "srcList" + i)
+			.addClass("list-group-item")
+			.html("<strong>" + $(this).data("JSON").name + "</strong>")
+			.data("JSON" , $(this).data("JSON"))
+			.appendTo("#sourceList");
+		
+		addDeleteButton($src, "sources");	
+		
+		 if ($(this).data("streams") != undefined){
+			var data = $(this).data("streams");
+			console.log(data);
+			$.each(data, function(i, json){
+					$('<li>')
+						.data("JSON", json)
+						.addClass("list-group-item")
+						.text(json.name)
+						.appendTo($src);
+			});
+		}else {
+			var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
+			var $origSrc = $(this);
+			console.log($origSrc);
+			var promise = $.getJSON(url).then(function(data){
+				savedStreams = data;
+				$origSrc.data("streams", savedStreams);
+				$.each(data, function(i, json){
+					$('<li>')
+						.data("JSON", json)
+						.addClass("list-group-item")
+						.text(json.name)
+						.appendTo($src);
+				});
+			});
+		}
+		
 			
-			return getAccordionPart(id, "manageAccordion", i, json);
-		})).then(function(){
-			var html = "<div class='panel-group' id='manageAccordion'>";
-			html += Array.prototype.join.call(arguments, "\n");
-	        
-	        return html;
-		});
-	}).done(function(html){
-		html += "</div>";
-		$('#elementList').html(html);
-		$('#manageModal').modal('show');
 	});
+	
+	//  ========== 
+	//  = Sepas = 
+	//  ========== 
+	
+	$('<ul>')
+		.addClass("list-group")
+		.attr("id", "sepaList")
+		.appendTo("#elementList");
+	var $header = $('<h4>')
+		.addClass("list-group-item-heading")
+		.text("Sepas")
+		.appendTo("#sepaList");
+	if (!savedSepas){
+		var url = standardUrl + "sepas?domains=" + domain;
+		$.getJSON(url).then(function(data){
+			savedSepas = data;
+			$.each(data, function(i, json){
+				var $el = $('<li>')
+					.data("JSON", json)
+					.addClass("list-group-item")
+					.text(json.name)
+					.appendTo("#sepaList");
+				addDeleteButton($el, "sepas");
+			});
+		});
+	}else{
+		$.each(savedSepas, function(i, json){
+				var $el = $('<li>')
+					.data("JSON", json)
+					.addClass("list-group-item")
+					.text(json.name)
+					.appendTo("#sepaList");
+				addDeleteButton($el, "sepas");
+			});
+	}
+	
+
+		$('#manageModal').modal('show');
+	
+	//  =========== 
+	//  = Actions = 
+	//  ===========
+	
+	$('<ul>')
+		.addClass("list-group")
+		.attr("id", "actionList")
+		.appendTo("#elementList");
+	$('<h4>')
+		.addClass("list-group-item-heading")
+		.text("Actions")
+		.appendTo("#actionList");
+	var $el;
+	if (!savedActions){
+		var url = standardUrl + "actions";
+		$.getJSON(url).then(function(data){
+			savedActions = data;
+			$.each(data, function(i, json){
+				var $el = $('<li>')
+					.data("JSON", json)
+					.addClass("list-group-item")
+					.text(json.name)
+					.appendTo("#actionList");
+				addDeleteButton($el, "actions");
+					
+			});
+		});
+	}else{
+		$.each(savedActions, function(i, json){
+				var $el = $('<li>')
+					.data("JSON", json)
+					.addClass("list-group-item")
+					.text(json.name)
+					.appendTo("#actionList");
+				addDeleteButton($el, "actions");
+			});
+	}
+	
+	
 
 }
+
+function addDeleteButton($element, type){
+	$('<span>')
+			.addClass("glyphicon glyphicon-remove pull-right hoverable")
+			.on('click' , function(e){
+				var elementId = $(e.target).parent().data("JSON").elementId;
+				var uri = standardUrl + type + "/" + encodeURIComponent(elementId);
+				console.log($element);
+
+				$.ajax({
+				    url: uri,
+				    type: 'DELETE',
+				    success: function(result){
+				        $element.remove();
+				        toastr.success("Element erfolgreich entfernt");
+				        refresh("Proa");  
+				    }
+				});
+			})
+			.appendTo($element);
+			
+	if (type == "sepas"){
+		refreshSepas();
+	}else if (type == "actions"){
+		refreshActions();
+	}
+}
+
+function refreshSepas(){
+	var url = standardUrl + "sepas?domains=" + domain;
+	$.getJSON(url).then(function(data){
+		savedSepas = data;
+	});
+}
+
+function refreshActions(){
+	var url = standardUrl + "actions";
+	$.getJSON(url).then(function(data){
+		savedActions = data;
+	});
+}
+
+
 
 function add() {			
 	var uri = $('#addText').val();
@@ -523,9 +679,21 @@ function add() {
 		  success: function(data){
 		  	toastr.success("Element erfolgreich hinzugefügt");
 		  	refresh("Proa");
-		    console.log(data);
+		  	$('#sses').text("Fertig!");
+		    
+		    switch (type){
+			case "1":
+				
+				break;
+			case "2":
+				refreshSepas();
+				break;
+			case "3":
+				refreshActions();
+		}
 		  }
 		});
+		$('#sses').text("Verarbeite...");
 				
 	}else{
 		toastr.error("Bitte uri eingeben");
