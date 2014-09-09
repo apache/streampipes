@@ -251,10 +251,11 @@ function submit() {
 				el.DOM = element;
 				el.JSON = $(element).data("JSON");
 				el.connectedTo = [];
+				
 				for (var i = 0; i < jsPlumb.getConnections({
 					target : element
 				}).length; i++) {
-					el.connectedTo.push(jsPlumb.getConnections({target: element})[i].source);
+					el.connectedTo.push(jsPlumb.getConnections({target: element})[i].sourceId);
 				}
 				el.options = $(element).data("options");
 				pipeline.sepas.push(el);
@@ -283,7 +284,7 @@ function submit() {
 				for (var i = 0; i < jsPlumb.getConnections({
 					target : element
 				}).length; i++) {
-					pipeline.action.connectedTo.push(jsPlumb.getConnections({target: element})[i].source);
+					pipeline.action.connectedTo.push(jsPlumb.getConnections({target: element})[i].sourceId);
 				}
 			}
 		}

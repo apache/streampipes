@@ -22,6 +22,8 @@ var standardDraggableOptions = {
  */
 function init(type) {
 	var debug = false;
+	savedSepas= false;
+	savedActions = false;
 	if (debug){standardUrl = testUrl;}
 
 	// Get and inititate sources------------------------
@@ -470,8 +472,6 @@ function showManage(){
 	list.sources = sources;
 	list.streams = streams;
 	
-	
-	
 	$('#elementList').empty();
 	
 	//  ===================== 
@@ -495,7 +495,7 @@ function showManage(){
 			.data("JSON" , $(this).data("JSON"))
 			.appendTo("#sourceList");
 		
-		addDeleteButton($src, "sources");	
+		addButtons($src, "sources");	
 		
 		 if ($(this).data("streams") != undefined){
 			var data = $(this).data("streams");
@@ -549,7 +549,8 @@ function showManage(){
 					.addClass("list-group-item")
 					.text(json.name)
 					.appendTo("#sepaList");
-				addDeleteButton($el, "sepas");
+				addButtons($el, "sepas");
+				
 			});
 		});
 	}else{
@@ -559,7 +560,7 @@ function showManage(){
 					.addClass("list-group-item")
 					.text(json.name)
 					.appendTo("#sepaList");
-				addDeleteButton($el, "sepas");
+				addButtons($el, "sepas");
 			});
 	}
 	
@@ -589,7 +590,8 @@ function showManage(){
 					.addClass("list-group-item")
 					.text(json.name)
 					.appendTo("#actionList");
-				addDeleteButton($el, "actions");
+				addButtons($el, "actions");
+				
 					
 			});
 		});
@@ -600,7 +602,7 @@ function showManage(){
 					.addClass("list-group-item")
 					.text(json.name)
 					.appendTo("#actionList");
-				addDeleteButton($el, "actions");
+				addButtons($el, "actions");
 			});
 	}
 	
@@ -608,31 +610,87 @@ function showManage(){
 
 }
 
-function addDeleteButton($element, type){
-	$('<span>')
-			.addClass("glyphicon glyphicon-remove pull-right hoverable")
-			.on('click' , function(e){
-				var elementId = $(e.target).parent().data("JSON").elementId;
-				var uri = standardUrl + type + "/" + encodeURIComponent(elementId);
-				console.log($element);
 
-				$.ajax({
-				    url: uri,
-				    type: 'DELETE',
-				    success: function(result){
-				        $element.remove();
-				        toastr.success("Element erfolgreich entfernt");
-				        refresh("Proa");  
-				    }
-				});
-			})
-			.appendTo($element);
+function addButtons($element, type){
+	var $wrapper = $('<div>')
+		.addClass("btn-group-xs pull-right");
+	
+	var $button = $('<button>')
+		.addClass("btn btn-default")
+		.attr("type", "button")
+		.on('click' , function(e){
+			var elementId = $element.data("JSON").elementId;
+			var uri = encodeURIComponent(elementId);
+			if (type == "sources"){
+				url = standardUrl + "sources";
+			}else if(type == "sepas"){
+				url = standardUrl + "sepas";
+			}else if (type == "actions"){
+				url = standardUrl + "actions";
+			} 
 			
-	if (type == "sepas"){
-		refreshSepas();
-	}else if (type == "actions"){
-		refreshActions();
-	}
+			$.ajax({
+			  	url: url,
+			  	data: "uri=" + uri,
+			  	processData: false,
+			  	type: 'POST',
+			  	success: function(data){
+			  		toastr.success("Element erfolgreich aktualisiert");
+			  		refresh("Proa");
+			    
+			    	switch (type){
+					case "1":
+						break;
+					case "2":
+						refreshSepas();
+						break;
+					case "3":
+						refreshActions();
+					}
+			  	}
+			});
+		})
+		.appendTo($wrapper);
+	
+	$('<span>')
+		.addClass("glyphicon glyphicon-refresh")
+		.appendTo($button);	
+	
+	$button = $('<button>')
+		.addClass("btn btn-default")
+		.attr("type", "button")
+		.on('click' , function(e){
+			var elementId = $element.data("JSON").elementId;
+			var uri = standardUrl + type + "/" + encodeURIComponent(elementId);
+
+			$.ajax({
+			    url: uri,
+			    type: 'DELETE',
+			    success: function(result){
+			        $element.remove();
+			        toastr.success("Element erfolgreich entfernt");
+			        refresh("Proa");
+			        
+			          
+			    }
+			});
+			if (type == "sepas"){
+				refreshSepas();
+			}else if (type == "actions"){
+				refreshActions();
+			}
+		})
+		.appendTo($wrapper);
+		
+	$('<span>')
+		.addClass("glyphicon glyphicon-remove ")
+		.appendTo($button);
+		
+	$wrapper.appendTo($element);
+			
+	
+		
+		
 }
 
 function refreshSepas(){
@@ -690,7 +748,7 @@ function add() {
 				break;
 			case "3":
 				refreshActions();
-		}
+			}
 		  }
 		});
 		$('#sses').text("Verarbeite...");
