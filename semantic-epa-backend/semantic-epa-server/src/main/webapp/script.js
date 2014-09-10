@@ -635,7 +635,7 @@ function addButtons($element, type){
 			  	processData: false,
 			  	type: 'POST',
 			  	success: function(data){
-			  		toastr.success("Element erfolgreich aktualisiert");
+			  		toastRightTop("success", "Element successfully updated");
 			  		refresh("Proa");
 			    
 			    	switch (type){
@@ -668,7 +668,7 @@ function addButtons($element, type){
 			    type: 'DELETE',
 			    success: function(result){
 			        $element.remove();
-			        toastr.success("Element erfolgreich entfernt");
+			        toastRightTop("success", "Element successfully deleted");
 			        refresh("Proa");
 			        
 			          
@@ -735,9 +735,9 @@ function add() {
 		  processData: false,
 		  type: 'POST',
 		  success: function(data){
-		  	toastr.success("Element erfolgreich hinzugefügt");
+		  	toastRightTop("success", "Element successfully added");
 		  	refresh("Proa");
-		  	$('#sses').text("Fertig!");
+		  	$('#sses').text("Finished!");
 		    
 		    switch (type){
 			case "1":
@@ -751,10 +751,10 @@ function add() {
 			}
 		  }
 		});
-		$('#sses').text("Verarbeite...");
+		$('#sses').text("Working...");
 				
 	}else{
-		toastr.error("Bitte uri eingeben");
+		toastRightTop("error", "Please enter a URI");
 	}
 
 }
@@ -881,6 +881,28 @@ function toastTop(type, message, title){
 	toastr.options = {
 		"newestOnTop":false,
 		"positionClass": "toast-top-full-width"
+	};
+	
+	switch (type){
+		case "error":	
+			toastr.error(message, title);
+			return;
+		case "warning":
+			toastr.warning(message, title);
+			return;
+		case "success":
+			toastr.success(message, title);
+			return;
+		case "info":
+			toastr.info(message, title);
+			return;
+	}
+}
+
+function toastRightTop(type, message, title){
+	toastr.options = {
+		"newestOnTop":false,
+		"positionClass": "toast-top-right"
 	};
 	
 	switch (type){

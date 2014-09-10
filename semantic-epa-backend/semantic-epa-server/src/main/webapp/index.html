@@ -65,8 +65,8 @@
 			            		<li><a href="#" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
 			            		<li><a href="#" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
 			            		<li class="divider"></li>
-			            		<li><a href="#" onclick=showAdd()>Hinzufügen...</a></li>
-			            		<li><a href="#" onclick=showManage()>Bearbeiten...</a></li>
+			            		<li><a href="#" onclick=showAdd()>Add...</a></li>
+			            		<li><a href="#" onclick=showManage()>Manage...</a></li>
 			         		</ul>
 			        	</li>
 			      	</ul>
@@ -178,12 +178,12 @@
 							
 					
 				<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
-					<li><a id="customize" tabindex="-1" href="#">Anpassen</a></li>
+					<li><a id="customize" tabindex="-1" href="#">Customize</a></li>
 					<li id='division' class="divider"></li>
-					<li><a id="delete" tabindex="-1" href="#">Entfernen</a></li>
+					<li><a id="delete" tabindex="-1" href="#">Delete</a></li>
 				</ul>
 				<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
-					<li><a id="sdescription" tabindex="-1" href="#">Beschreibung</a> </li>
+					<li><a id="sdescription" tabindex="-1" href="#">Description</a> </li>
 				</ul>
 				
 				
@@ -192,7 +192,7 @@
 						    <div id="modal-content" class="modal-content">
 							      <div class="modal-header">
 								        <button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">&times;</button>
-								        <h4 class="modal-title" id="">Anpassen</h4>
+								        <h4 class="modal-title" id="">Customize</h4>
 							      </div>
 							      <div class="modal-body">
 							        
@@ -200,7 +200,7 @@
 											<fieldset id ="customize-content">
 													
 											</fieldset>
-											<div id="savedOptions"><strong>Gespeicherte Parameter: </strong>
+											<div id="savedOptions"><strong>Saved parameters: </strong>
 												
 												
 											</div>
@@ -208,8 +208,8 @@
 							
 							      </div>
 							      <div class="modal-footer">
-								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Schliessen</button>
-								        <button type="button" class="btn btn-primary" onclick=save()>Speichern</button>
+								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Close</button>
+								        <button type="button" class="btn btn-primary" onclick=save()>Save</button>
 							      </div>
 						    </div>
 					  </div>
@@ -226,7 +226,7 @@
 					        	<p id ="modal-description"></p>
 				      		</div>
 				      		<div class="modal-footer">
-					        	<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				        	</div>
 			        	</div>
 			        </div>
@@ -237,7 +237,7 @@
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="myModalLabel">Hinzufügen...</h4>
+								<h4 class="modal-title" id="myModalLabel">Add...</h4>
 							</div>
 							<div class="modal-body">
 								<div class="wrapper">
@@ -246,7 +246,7 @@
 										
 										<!-- Multiple Radios (inline) -->
 										<div class="form-group" >
-										  <label class="col-md-4 control-label" for="radios">Typ</label>
+										  <label class="col-md-4 control-label" for="radios">Type</label>
 										  <div class="col-md-4"> 
 										    <label class="radio-inline" for="sourceRadio">
 										      <input name="type-radios" id="sourceRadio" value="1" checked="checked" type="radio">
@@ -265,11 +265,11 @@
 										
 										</fieldset>
 									</form>
-									<div style="text-align: center"><p><strong>Bitte URI des neuen Elements eingeben</strong></p>
+									<div style="text-align: center"><p><strong>Please enter the new element's URI</strong></p>
 										<div id="addTextInput"  class="input-group">
 											<input id ="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
 											<span class="input-group-btn">
-												<button class="btn btn-default" type="button" onclick=add()>Hinzufügen</button>
+												<button class="btn btn-default" type="button" onclick=add()>Add</button>
 											</span>
 										</div><!-- /input-group -->
 									</div><!-- /.col-lg-6 -->

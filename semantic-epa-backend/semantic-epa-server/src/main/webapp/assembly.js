@@ -241,14 +241,14 @@ function submit() {
 
 	$('#assembly>span.connectable').each(function(i, element) {
 		if (!isConnected(element)){
-			toastTop("error", "Nicht alle Elemente verbunden", "Submit Error");
+			toastTop("error", "All elements must be connected", "Submit Error");
 		}
 		
 		if ($(element).hasClass('sepa')) {
 			sepaPresent = true;
 			if ($(element).data("options") != null) {
 				var el = {};
-				el.DOM = element;
+				el.DOM = element.id;
 				el.JSON = $(element).data("JSON");
 				el.connectedTo = [];
 				
@@ -261,24 +261,24 @@ function submit() {
 				pipeline.sepas.push(el);
 
 			} else if ($(element).data("JSON").staticProperties != null) {
-				toastTop("error", "Bitte für alle Elemente Parameter festlegen (Rechtsklick auf das Element -> Anpassen)", "Submit Error");	;
+				toastTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");	;
 				error = true;
 
 			}
 		} else if ($(element).hasClass('stream')) {
 			streamPresent = true;
 			var el = {};
-			el.DOM = element;
+			el.DOM = element.id;
 			el.JSON = $(element).data("JSON");
 			pipeline.streams.push(el);
 
 		} else if ($(element).hasClass('action')) {
 			if (actionPresent){
 				error = true;
-				toastTop("error", "Mehr als ein Action Element in Pipeline", "Submit Error");
+				toastTop("error", "More than one action element present in pipeline", "Submit Error");
 			}else{
 				actionPresent = true;
-				pipeline.action.DOM = element;
+				pipeline.action.DOM = element.id;
 				pipeline.action.JSON = $(element).data("JSON");
 				pipeline.action.connectedTo = [];
 				for (var i = 0; i < jsPlumb.getConnections({
@@ -290,21 +290,21 @@ function submit() {
 		}
 	});
 	if (!streamPresent){
-		toastTop("error", "Kein Stream Element in Pipeline", "Submit Error");
+		toastTop("error", "No stream element present in pipeline", "Submit Error");
 		error = true;
 	}
 	if (!sepaPresent){
-		toastTop("error", "Kein Sepa Element in Pipeline", "Submit Error");
+		toastTop("error", "No sepa element present in pipeline", "Submit Error");
 		error = true;
 	}
 	if (!actionPresent){
-		toastTop("error", "Kein Action Element in Pipeline", "Submit Error");
+		toastTop("error", "No action element present in pipeline", "Submit Error");
 		error = true;
 	}
 	if (!error ) {
 		
 		console.log(pipeline);
-		toastTop("success", "Pipeline wurde gesendet");
+		toastTop("success", "Pipeline sent to server");
 		 $.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(pipeline));
 	}
 }
@@ -316,13 +316,12 @@ function save() {
 	console.log($('#modalForm').serializeArray());
 	var options = $('#modalForm').serializeArray();
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
-		toastr.error("Bitte alle Parameter angeben");
+		toastRightTop("error","Please enter all parameters");
 			return false;
 	}
 	for (var i = 0; i < options.length; i++){
 		if (options[i].value == ""){
-			// toastTop("error", "Bitte alle Parameter angeben");
-			toastr.error("Bitte alle Parameter angeben");
+			toastRightTop("error","Please enter all parameters");
 			return false;
 		}
 	}
@@ -334,10 +333,10 @@ function save() {
 	}
 
 	if ($currentElement.data("options") != null) {
-		toastr.success("Parameter gespeichert!");
+		toastRightTop("success", "Parameter gespeichert!");
 		$currentElement.css("opacity", 1);
 	} else {
-		toastTop("warning","Oooops, irgendetwas ist schief gelaufen...");
+		toastTop("warning","Oooops, something went wrong...");
 	}
 
 }
