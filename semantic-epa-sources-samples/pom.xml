@@ -40,6 +40,16 @@
 			<artifactId>twitter4j-stream</artifactId>
 			<version>4.0.1</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>

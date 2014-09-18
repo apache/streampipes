@@ -3,6 +3,16 @@ package de.fzi.cep.sepa.sources.samples.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.ontoware.rdf2go.vocabulary.XSD;
 
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
@@ -51,11 +61,26 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
 		// call some generic method which takes a source ID as a parameter and performs the request
 		// AkerVariables.GearLubeOilTemperature.tagNumber returns tag number for this event stream
 		// topicName denotes the actual topic to subscribe for
+
+        /*----------------Sample-Body---------------------------
+        POST: http:// <host>/EventPlayer/api/playback/
+        BODY (example):
+        {
+                "startTime": "2013-11-19T13:00:00+0100",
+                "endTime" : "2013-11-19T14:15:00+0100" ,
+                "variables" : ["1000692", "1002114"],
+                "topic":"some_topic",
+                "partner":"aker"
+        }
+        */
+
+        //TODO use response
+        String cont = Utils.performRequest(AkerVariables.GearLubeOilTemperature.tagNumber(), "some_topic", "121213123", "212342134");
+
 	}
 
 	@Override
 	public boolean isExecutable() {
 		return true;
 	}
-
 }
