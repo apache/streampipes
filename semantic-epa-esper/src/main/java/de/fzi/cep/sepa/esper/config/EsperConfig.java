@@ -7,6 +7,6 @@ public class EsperConfig {
 	
 	static {
 		serverUrl = "http://localhost:8090";
-		iconBaseUrl = "http://anemone06.fzi.de/semantic-epa-backend/img";
+		iconBaseUrl = "http://localhost:8080/semantic-epa-backend/img";
 	}
 }
