@@ -756,24 +756,6 @@ function add() {
 	}else{
 		toastRightTop("error", "Please enter a URI");
 	}
-
-}
-
-function addTo(type){
-	
-	showAdd();
-	
-	switch (type){
-		
-		case "Streams":
-			
-		case "Sepas":
-		
-		case "Actions":
-		
-		default:
-
-	}
 }
 
 function manage(type){
@@ -830,51 +812,10 @@ function manage(type){
 			});
 			
 		case "sepa":
-			
-			
-			
-			
-	}
 	
-	// if ($(selector).length){
-		
-	// switch (type){
-// 		
-		// case "Streams":
-			// $(selector).each(function(e){
-				// var $listElement = $('<li>')
-					// .addClass("list-group-item")
-					// .text($(this).data("JSON").name)
-					// .data("JSON", $(this).data("JSON"))
-					// .appendTo('#elementList');
-				// $('<span>')
-					// .addClass("glyphicon glyphicon-remove pull-right hoverable")
-					// .on('click' , function(e){
-						// var elementId = $(e.target).parent().data("JSON").elementId;
-						// // var uri = standardUrl + "streams/" + elementId;
-// // 
-						// // $.ajax({
-						    // // url: uri,
-						    // // type: 'DELETE',
-						    // // success: function(result) {
-						        // // console.log(result);
-						    // // }
-						// // });
-					// })
-					// .appendTo($listElement);
-			// });
+	}
 				
-					
-			$('#manageModal').modal('show');
-		// case "Sepas":
-// 		
-		// case "Actions":
-// 		
-		// default:
-// 		
-// 
-	// }
-	// }
+	$('#manageModal').modal('show');
 }
 
 function toastTop(type, message, title){
