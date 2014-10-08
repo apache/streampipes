@@ -84,8 +84,10 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	public String postSource(@FormParam("uri") String uri) {
 		SEP sep;
 		String jsonldDescription = "";
+		System.out.println(uri);
 		
 		try {
+			
 			jsonldDescription = parseURIContent(uri);
 		} catch (ClientProtocolException e) {
 			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());

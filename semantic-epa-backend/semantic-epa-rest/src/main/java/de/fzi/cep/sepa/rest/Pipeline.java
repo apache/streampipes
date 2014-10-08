@@ -6,6 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import de.fzi.cep.sepa.rest.util.Utils;
+import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 @Path("/pipelines")
 public class Pipeline {
@@ -17,6 +18,13 @@ public class Pipeline {
 		
 		
 		System.out.println(pipeline);
+		
+		de.fzi.cep.sepa.model.client.Pipeline ServerPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
+		System.out.println("/n");
+		System.out.println("TEST");
+		System.out.println("/n");
+		System.out.println(ServerPipeline.getSepas());
+		System.out.println(ServerPipeline.getStreams());
 		return "success";
 	}
 
