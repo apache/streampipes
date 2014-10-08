@@ -17,14 +17,14 @@ public class Pipeline {
 	{
 		
 		
-		System.out.println(pipeline);
+//		System.out.println(pipeline);
 		
 		de.fzi.cep.sepa.model.client.Pipeline ServerPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
-		System.out.println("/n");
+		
 		System.out.println("TEST");
-		System.out.println("/n");
-		System.out.println(ServerPipeline.getSepas());
-		System.out.println(ServerPipeline.getStreams());
+		System.out.println("\n");
+		System.out.println(ServerPipeline.getSepas().toString());
+		System.out.println(ServerPipeline.getStreams().toString());
 		return "success";
 	}
 
