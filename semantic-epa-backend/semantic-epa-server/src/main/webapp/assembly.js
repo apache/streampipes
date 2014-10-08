@@ -313,7 +313,8 @@ function submit() {
  */
 function save() {
 
-	console.log($('#modalForm').serializeArray());
+	// console.log($('#modalForm').serializeArray());
+	
 	var options = $('#modalForm').serializeArray();
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
 		toastRightTop("error","Please enter all parameters");
@@ -326,7 +327,15 @@ function save() {
 		}
 	}
 	
+	console.log("static props VOR der Umschreibung");
+	console.log($currentElement.data("JSON").staticProperties);
+	saveInStaticProperties(options);
+	console.log("static props NACH der Umschreibung");
+	console.log($currentElement.data("JSON").staticProperties);
+	
+	
 	$currentElement.data("options", options);
+	
 	$('#savedOptions').children().not('strong').remove();
 	for (var i = 0; i < $currentElement.data("options").length; i++) {
 		$('<div>').text($currentElement.data("options")[i].name + ": " + $currentElement.data("options")[i].value).appendTo('#savedOptions');
@@ -339,6 +348,39 @@ function save() {
 		toastTop("warning","Oooops, something went wrong...");
 	}
 
+}
+
+function saveInStaticProperties(options){
+	for (var i = 0; i < options.length; i++){
+		switch ($currentElement.data("JSON").staticProperties[i].input.elementType){
+			
+			case "RADIO_INPUT" || "SELECT_INPUT":
+			
+				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.options.length; j++){
+					if ($currentElement.data("JSON").staticProperties[i].input.options[j].humanDescription == options[i].value){
+						$currentElement.data("JSON").staticProperties[i].input.options[j].selected = true;
+					}else{
+						$currentElement.data("JSON").staticProperties[i].input.options[j].selected = false;
+					}
+				}
+				continue;
+				
+			case "TEXT_INPUT":
+				
+				$currentElement.data("JSON").staticProperties[i].input.value = options[i].value;
+				continue;
+				
+			// case "SELECT_INPUT":
+// 				
+				// for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.options.length; j++){
+					// if ($currentElement.data("JSON").staticProperties[i].input.options[j].humanDescription == options[i].value){
+						// $currentElement.data("JSON").staticProperties[i].input.options[j].selected = true;
+					// }else{}
+				// }
+				
+				
+		}
+	}
 }
 
 function prepareCustomizeModal(element) {
