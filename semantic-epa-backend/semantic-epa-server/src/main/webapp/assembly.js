@@ -249,7 +249,14 @@ function submit() {
 			if ($(element).data("options") != null) {
 				var el = {};
 				el.DOM = element.id;
-				el.JSON = $(element).data("JSON");
+				el.name = $(element).data("JSON").name;
+				el.description = $(element).data("JSON").description;
+				el.staticProperties = $(element).data("JSON").staticProperties;
+				el.domains = $(element).data("JSON").domains;
+				el.elementId = $(element).data("JSON").elementId;
+				
+				
+				
 				el.connectedTo = [];
 				
 				for (var i = 0; i < jsPlumb.getConnections({
@@ -269,7 +276,11 @@ function submit() {
 			streamPresent = true;
 			var el = {};
 			el.DOM = element.id;
-			el.JSON = $(element).data("JSON");
+			el.name = $(element).data("JSON").name;
+			el.description = $(element).data("JSON").description;
+			
+			el.domains = $(element).data("JSON").domains;
+			el.elementId = $(element).data("JSON").elementId;
 			pipeline.streams.push(el);
 
 		} else if ($(element).hasClass('action')) {
@@ -279,7 +290,9 @@ function submit() {
 			}else{
 				actionPresent = true;
 				pipeline.action.DOM = element.id;
-				pipeline.action.JSON = $(element).data("JSON");
+				pipeline.action.name = $(element).data("JSON").name;
+				pipeline.action.elementId = $(element).data("JSON").elementId;
+				pipeline.action.description = $(element).data("JSON").description;
 				pipeline.action.connectedTo = [];
 				for (var i = 0; i < jsPlumb.getConnections({
 					target : element
