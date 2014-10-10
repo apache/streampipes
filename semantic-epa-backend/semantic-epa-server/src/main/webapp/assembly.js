@@ -264,7 +264,7 @@ function submit() {
 				}).length; i++) {
 					el.connectedTo.push(jsPlumb.getConnections({target: element})[i].sourceId);
 				}
-				el.options = $(element).data("options");
+				// el.options = $(element).data("options");
 				pipeline.sepas.push(el);
 
 			} else if ($(element).data("JSON").staticProperties != null) {
@@ -369,18 +369,18 @@ function saveInStaticProperties(options){
 			
 			case "RADIO_INPUT" || "SELECT_INPUT":
 			
-				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.options.length; j++){
-					if ($currentElement.data("JSON").staticProperties[i].input.options[j].humanDescription == options[i].value){
-						$currentElement.data("JSON").staticProperties[i].input.options[j].selected = true;
+				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
+					if ($currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value){
+						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
 					}else{
-						$currentElement.data("JSON").staticProperties[i].input.options[j].selected = false;
+						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
 					}
 				}
 				continue;
 				
 			case "TEXT_INPUT":
 				
-				$currentElement.data("JSON").staticProperties[i].input.value = options[i].value;
+				$currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
 				continue;
 				
 			// case "SELECT_INPUT":
@@ -410,17 +410,17 @@ function prepareCustomizeModal(element) {
 			var selectInputCount = 0;
 
 			for (var i = 0; i < staticPropertiesArray.length; i++) {
-				switch (staticPropertiesArray[i].input.elementType) {
+				switch (staticPropertiesArray[i].input.properties.elementType) {
 				case "TEXT_INPUT":
 					string += getTextInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].name, textInputCount);
 					textInputCount++;
 					continue;
 				case "RADIO_INPUT":
-					string += getRadioInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.options, radioInputCount);
+					string += getRadioInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.properties.options, radioInputCount);
 					radioInputCount++;
 					continue;
 				case "SELECT_INPUT":
-					string += getSelectInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.options, selectInputCount);
+					string += getSelectInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.properties.options, selectInputCount);
 					selectInputCount++;
 					continue;
 
