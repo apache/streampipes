@@ -1,26 +1,40 @@
-package de.fzi.cep.sepa.rest;
+package de.fzi.cep.sepa.rest.test;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import de.fzi.cep.sepa.rest.util.Utils;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
-@Path("/pipelines")
-public class Pipeline {
+public class TestJSONConvert {
 	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	public String addPipelines(String pipeline)
-	{
+	
+
+	public static void main(String[] argv){
+		
+		String content = null;
 		
 		
-		System.out.println(pipeline);
+		try {
+			content = new Scanner(new File("C:\\Users\\kaulfers\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-rest\\src\\main\\resources\\TestJSON.json")).useDelimiter("\\Z").next();
+			System.out.println(content);
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		de.fzi.cep.sepa.model.client.Pipeline ServerPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
+		de.fzi.cep.sepa.model.client.Pipeline ServerPipeline = null;
 		
+		try{
+		
+		ServerPipeline = Utils.getGson().fromJson(content, de.fzi.cep.sepa.model.client.Pipeline.class);
+		
+		}catch (RuntimeException e){
+			e.printStackTrace();
+		}
 		System.out.println("TEST");
 		
 		System.out.println("\n");
@@ -39,7 +53,9 @@ public class Pipeline {
 		System.out.println("\n");
 		System.out.println("Action: ");
 		System.out.println(ServerPipeline.getAction().getName());
-		return "success";
+		
+		
 	}
-
+	
+	
 }
