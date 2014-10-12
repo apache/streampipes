@@ -9,6 +9,6 @@ public class SourcesConfig {
 	static {
 		serverUrl = "http://localhost:8089";
 		iconBaseUrl = "http://localhost:8080/semantic-epa-backend/img";
-		eventReplayURI = "http://89.215.116.44:8084";
+		eventReplayURI = "http://nissatech.no-ip.org:8084";
 	}
 }
