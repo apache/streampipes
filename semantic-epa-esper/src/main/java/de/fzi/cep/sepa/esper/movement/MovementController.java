@@ -104,7 +104,7 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 		/*
 		 * SEP sep; try { sep = Transformer.fromJsonLd(SEP.class,
 		 * HttpJsonParser.getContentFromUrl("http://localhost:8089/twitter/t"));
-		 * 
+		 *
 		 * graph = new SEPAInvocationGraph();
 		 * sep.getEventStreams().get(0).setName("TwitterEvent");
 		 * graph.addInputStream(sep.getEventStreams().get(0));

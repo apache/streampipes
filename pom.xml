@@ -16,7 +16,12 @@
 				<artifactId>junit</artifactId>
 				<version>3.8.1</version>
 				<scope>test</scope>
-			</dependency>	
+			</dependency>
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>1.0.2</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -31,6 +36,7 @@
 		<module>semantic-epa-esper</module>
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
+        <module>semantic-epa-storm</module>
 	</modules>
 
 	<!-- Build Settings -->

@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.sources.samples.config;
 
 public enum AkerVariables {
 
-	DrillingRPM(1000693, "Drilling RPM", "Denotes the rotation speed of the DDM's main shaft with revolutions per miniute as Unit of Measurement"),
+        DrillingRPM(1000693, "Drilling RPM", "Denotes the rotation speed of the DDM's main shaft with revolutions per miniute as Unit of Measurement"),
 	DrillingTorque(1000700, "Drilling Torque", "Denotes the torque readout of the DDM's main shaft with kilo Newton meters as Unit of Measurement"),
 	HookLoad(1002311, "Hook Load", "Denotes the weight carried by the Derrick Drilling Machine"),
 	GearLubeOilTemperature(1000695, "Gear lube oil temperature", "Denotes the lube oil temperature in degrees Celsius present in the DDM gear box"),

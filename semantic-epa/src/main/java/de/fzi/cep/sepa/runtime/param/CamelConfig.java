@@ -34,4 +34,23 @@ public interface CamelConfig { // every config that cannot be made with the simp
 			context.removeComponent(brokerAlias);
 		}
 	}
+
+    //TODO
+    public static class Kafka implements CamelConfig {
+        //kafka:server:port[?options]
+
+        public Kafka() {
+
+        }
+
+        @Override
+        public void applyTo(CamelContext context) {
+
+        }
+
+        @Override
+        public void removeFrom(CamelContext context) {
+
+        }
+    }
 }

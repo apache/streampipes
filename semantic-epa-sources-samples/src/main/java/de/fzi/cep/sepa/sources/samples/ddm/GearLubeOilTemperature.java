@@ -74,8 +74,8 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
         }
         */
 
-        //TODO use response
-        String cont = Utils.performRequest(AkerVariables.GearLubeOilTemperature.tagNumber(), "some_topic", "121213123", "212342134");
+        long[] variables = {AkerVariables.GearLubeOilTemperature.tagNumber()};
+        String cont = Utils.performRequest(variables, "some_topic", "121213123", "212342134");
 
 	}
 

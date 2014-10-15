@@ -15,6 +15,8 @@ import org.openrdf.sail.memory.MemoryStore;
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 
+import com.google.inject.AbstractModule;
+
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
 import de.fzi.cep.sepa.storage.util.StorageUtils;

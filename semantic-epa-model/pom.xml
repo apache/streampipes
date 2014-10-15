@@ -15,6 +15,11 @@
 			<artifactId>semantic-epa-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
@@ -88,6 +93,7 @@
 			<version>3.1.1</version>
 			<scope>compile</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>
