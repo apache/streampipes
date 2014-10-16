@@ -1,10 +1,19 @@
 package de.fzi.cep.sepa.commons;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.openrdf.model.Graph;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.JSONLDMode;
+import org.openrdf.rio.helpers.JSONLDSettings;
 
 public class Utils {
 
@@ -48,6 +57,17 @@ public class Utils {
 	public static String getRandomString()
 	{
 		return RandomStringUtils.randomAlphabetic(10);
+	}
+	
+	public static String asString(Graph graph) throws RDFHandlerException
+	{
+		OutputStream stream = new ByteArrayOutputStream();
+		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		//Rio.write(graph, stream, RDFFormat.JSONLD);
+		Rio.write(graph, writer);
+		return stream.toString();
 	}
 
 }
