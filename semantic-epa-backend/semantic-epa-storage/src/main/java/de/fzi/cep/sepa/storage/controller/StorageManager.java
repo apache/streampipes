@@ -72,6 +72,8 @@ public enum StorageManager {
 		System.setProperty(
 				"empire.configuration.file",
 				"c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties");
+        /*System.setProperty("empire.configuration.file",
+                "/home/robin/FZI/CEP/semantic-epa-parent/semantic-epa-backend/semantic-epa-storage/src/main/resources/empire.config.properties");*/
 
 		// loads Sesame bindings for Empire
 		Empire.init(new OpenRdfEmpireModule());

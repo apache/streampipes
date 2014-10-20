@@ -34,5 +34,10 @@
             <artifactId>guice</artifactId>
             <version>4.0-beta5</version>
         </dependency>
+        <dependency>
+            <groupId>com.complexible.common</groupId>
+            <artifactId>openrdf</artifactId>
+            <version>2.0.4</version>
+        </dependency>
 	</dependencies>
 </project>

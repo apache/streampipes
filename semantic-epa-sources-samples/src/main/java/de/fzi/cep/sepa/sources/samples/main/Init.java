@@ -15,14 +15,11 @@ public class Init {
 	public static void  main(String[] args) throws Exception
 	{
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
-		
+
 		declarers.add(new TwitterStreamProducer());
-		declarers.add(new DDMProducer());
-		declarers.add(new DrillBitProducer());
+		//declarers.add(new DDMProducer());
+		//declarers.add(new DrillBitProducer());
 		//twitterStream.executeStream();
 		ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
 	}
-	
-	
-	
 }
