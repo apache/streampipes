@@ -4,9 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonElement;
-
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
@@ -27,12 +24,15 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class ClientModelTransformer {
-
-	private static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
+	
+	/**
+	 * 
+	 * @param sep
+	 * @return
+	 */
 	
 	public static List<StreamClient> toStreamClientModel(SEP sep)
 	{
@@ -282,6 +282,5 @@ public class ClientModelTransformer {
 		}
 		return result;
 	}
-	
 	
 }
