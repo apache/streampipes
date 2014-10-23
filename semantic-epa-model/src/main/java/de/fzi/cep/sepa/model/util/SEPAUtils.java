@@ -29,6 +29,7 @@ public class SEPAUtils {
 	public static String getMappingPropertyName(SEPAInvocationGraph sepa, String staticPropertyName)
 	{
 		URI propertyURI = getURIFromStaticProperty(sepa, staticPropertyName);
+		
 		for(EventStream stream : sepa.getInputStreams())
 		{
 			for(EventProperty p : stream.getEventSchema().getEventProperties())
@@ -44,6 +45,7 @@ public class SEPAUtils {
 	{
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
+			
 			if (p instanceof MappingProperty)
 			{
 				MappingProperty mp = (MappingProperty) p;
