@@ -38,9 +38,8 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 		if (domain.equals("1")) sepas = requestor.getAllSEPAs();
 		else sepas = requestor.getSEPAsByDomain(domain);
 		
-		System.out.println(sepas.size());
 		
-		return Utils.getGson().toJson(ClientModelTransformer.toSEPAClientModel(sepas));
+		return toJson(ClientModelTransformer.toSEPAClientModel(sepas));
 	}
 	
 	@Path("{sepaId}")
@@ -48,7 +47,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getProcessor(@PathParam("sepaId") String sepaId)
 	{
-		return Utils.getGson().toJson(SEPAManager.INSTANCE.getSEPAById(sepaId));
+		return toJson(SEPAManager.INSTANCE.getSEPAById(sepaId));
 	}
 	
 	@POST
@@ -101,7 +100,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 		// create pipeline
 		de.fzi.cep.sepa.model.client.Pipeline pipeline = Utils.getGson().fromJson(subPipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		
-		// recompute processor payload
+		// compute SEPA payload
 		
 		return null;
 	}

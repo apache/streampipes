@@ -37,7 +37,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	public String getAllSources(@DefaultValue("1") @QueryParam("domain") String domain)
 	{
 		if (domain.equals("1")) return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getAllSEPs()));
-		else return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPsByDomain(domain)));
+		else return toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPsByDomain(domain)));
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	public String getSource(@PathParam("sourceId") String sourceId)
 	{
 		try {
-			return Utils.getGson().toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPById(sourceId)));
+			return toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(e, NotificationType.URIOFFLINE.uiNotification());
 		} catch (Exception e)
@@ -68,7 +68,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	public String getStreamsBySource(@PathParam("sourceId") String sourceId)
 	{
 		try {
-			return Utils.getGson().toJson(ClientModelTransformer.toStreamClientModel(requestor.getSEPById(sourceId)));
+			return toJson(ClientModelTransformer.toStreamClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(e, NotificationType.URIOFFLINE.uiNotification());
 		} catch (Exception e)

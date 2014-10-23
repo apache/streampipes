@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.rest.messages.Message;
 import de.fzi.cep.sepa.rest.messages.Notification;
 import de.fzi.cep.sepa.rest.messages.SuccessMessage;
 import de.fzi.cep.sepa.rest.util.Utils;
+import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.Transformer;
@@ -20,6 +21,12 @@ import de.fzi.cep.sepa.storage.util.Transformer;
 public abstract class AbstractRestInterface {
 
 	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
+	protected static PipelineStorage pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
+	
+	protected <T> String toJson(T object)
+	{
+		return Utils.getGson().toJson(object);
+	}
 	
 	protected String parseURIContent(String payload) throws URISyntaxException, ClientProtocolException, IOException
 	{
@@ -50,7 +57,7 @@ public abstract class AbstractRestInterface {
 	
 	private String constructMessage(Message message)
 	{
-		return Utils.getGson().toJson(message);
+		return toJson(message);
 	}
 	
 }

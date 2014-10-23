@@ -19,7 +19,6 @@ import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Action;
 import de.fzi.cep.sepa.rest.messages.NotificationType;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 /**
@@ -41,7 +40,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 	@Override
 	public String getAction() {
 		List<SEC> secs = requestor.getAllSECs();
-		return Utils.getGson().toJson(ClientModelTransformer.toActionClientModel(secs));
+		return toJson(ClientModelTransformer.toActionClientModel(secs));
 	}
 	
 

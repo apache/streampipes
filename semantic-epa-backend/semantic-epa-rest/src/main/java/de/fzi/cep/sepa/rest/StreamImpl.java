@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Stream;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
@@ -50,7 +49,7 @@ public class StreamImpl extends AbstractRestInterface implements Stream {
 	public String getAllStreams()
 	{
 		List<SEP> seps = requestor.getAllSEPs();
-		return Utils.getGson().toJson(ClientModelTransformer.toStreamClientModel(seps));
+		return toJson(ClientModelTransformer.toStreamClientModel(seps));
 	}
 	
 	@Path("{sourceId}")
@@ -61,7 +60,7 @@ public class StreamImpl extends AbstractRestInterface implements Stream {
 	{
 		try {
 			SEP sep = requestor.getSEPById(sepId);
-			return Utils.getGson().toJson(ClientModelTransformer.toStreamClientModel(sep));
+			return toJson(ClientModelTransformer.toStreamClientModel(sep));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			return "";

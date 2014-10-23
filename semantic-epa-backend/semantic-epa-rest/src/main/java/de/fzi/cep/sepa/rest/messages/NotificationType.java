@@ -5,7 +5,8 @@ public enum NotificationType {
 	URIOFFLINE("URI not available", "Content could not be retrieved."), 
 	NOSEPAFORMAT("Wrong Format", "Entity could not be recognized."), 
 	UNKNOWN_ERROR("Unknown Error", "An unforeseen error has occurred."), 
-	STORAGE_ERROR("Storage Error", "Entity could not be stored.");
+	STORAGE_ERROR("Storage Error", "Entity could not be stored."),
+	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully");
 
 	private final String title;
 	private final String description;
