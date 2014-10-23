@@ -1,5 +1,8 @@
 package de.fzi.cep.sepa.model.client.input;
 
+import javax.persistence.Entity;
+
+@Entity
 public class TextInput extends FormInput {
 
 	private String value;

@@ -1,9 +1,15 @@
 package de.fzi.cep.sepa.model.client;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 import de.fzi.cep.sepa.model.client.input.FormInput;
 
+@Entity
 public class StaticProperty extends SEPAElement {
 
+	@OneToOne(cascade=CascadeType.ALL)
 	FormInput input;
 	
 	public StaticProperty(String name, String description, FormInput input) {

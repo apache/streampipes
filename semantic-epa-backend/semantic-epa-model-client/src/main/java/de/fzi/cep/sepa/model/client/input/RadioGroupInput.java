@@ -3,6 +3,9 @@ package de.fzi.cep.sepa.model.client.input;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+
+@Entity
 public class RadioGroupInput extends FormInput {
 
 	private List<Option> optionLeft;

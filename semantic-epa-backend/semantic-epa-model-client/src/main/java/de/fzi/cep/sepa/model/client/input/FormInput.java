@@ -1,13 +1,15 @@
 package de.fzi.cep.sepa.model.client.input;
 
+import javax.persistence.Entity;
 
+@Entity
 public abstract class FormInput {
 
 	ElementType elementType;
 	
 	public FormInput()
 	{
-		super();
+		
 	}
 	
 	public FormInput(ElementType elementType) {

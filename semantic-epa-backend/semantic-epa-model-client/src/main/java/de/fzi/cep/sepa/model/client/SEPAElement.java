@@ -3,8 +3,11 @@ package de.fzi.cep.sepa.model.client;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Entity;
+
 import de.fzi.cep.sepa.commons.Utils;
 
+@Entity
 public abstract class SEPAElement {
 
 	protected String name;
@@ -12,7 +15,7 @@ public abstract class SEPAElement {
 	protected String iconName;
 	protected String iconUrl;
 
-	
+	protected String DOM;
 	protected String elementId;
 	List<String> connectedTo;
 	
@@ -82,6 +85,15 @@ public abstract class SEPAElement {
 	public void setConnectedTo(List<String> connectedTo) {
 		this.connectedTo = connectedTo;
 	}
+
+	public String getDOM() {
+		return DOM;
+	}
+
+	public void setDOM(String dOM) {
+		DOM = dOM;
+	}
+	
 	
 	
 

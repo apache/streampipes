@@ -2,8 +2,14 @@ package de.fzi.cep.sepa.model.client.input;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+@Entity
 public abstract class SelectInput extends FormInput {
 
+	@OneToMany(cascade=CascadeType.ALL)
 	List<Option> options;
 	
 	public SelectInput()

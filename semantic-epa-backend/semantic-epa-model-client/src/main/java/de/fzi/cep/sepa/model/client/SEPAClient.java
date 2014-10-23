@@ -3,12 +3,20 @@ package de.fzi.cep.sepa.model.client;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+@Entity
 public class SEPAClient extends SEPAElement {
 	
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<String> domains;
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<StaticProperty> staticProperties;
 	private int inputNodes;
 	
+	@OneToMany(cascade=CascadeType.ALL)
 	private Map<String, String> mappingProperties;
 	
 	//private List<OutputStrategy<? extends OutputStrategyParameters>> outputStragegy;

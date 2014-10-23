@@ -1,5 +1,8 @@
 package de.fzi.cep.sepa.model.client;
 
+import javax.persistence.Entity;
+
+@Entity
 public class StreamClient extends SEPAElement {
 
 	private String sourceId;
