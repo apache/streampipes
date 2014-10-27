@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-
-
-
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.Test;
 import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
