@@ -40,7 +40,6 @@ public class TreeBuilder {
 	{
 		for(String edge : connectedTo)
 		{
-			System.out.println(node.getData().getName() +", " + connectedTo.size());
 			SEPAElement element = TreeUtils.findSEPAElement(edge, rawPipeline.getSepas(), rawPipeline.getStreams());
 			NamedSEPAElement child = transform(element);
 			GenericTreeNode<NamedSEPAElement> nodeElement = new GenericTreeNode<NamedSEPAElement>(child);

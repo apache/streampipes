@@ -17,7 +17,7 @@ public class TreeUtils {
 		
 		for(SEPAElement element : allElements)
 		{
-			if (id.equals(element.getElementId())) return element;
+			if (id.equals(element.getDOM())) return element;
 		}
 		
 		return null;
