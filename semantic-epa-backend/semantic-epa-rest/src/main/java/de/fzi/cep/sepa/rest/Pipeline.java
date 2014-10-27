@@ -97,20 +97,22 @@ public class Pipeline extends AbstractRestInterface {
 	public String startPipeline(@PathParam("pipelineId") String pipelineId)
 	{
 		//TODO
+		return null;
 	}
 	
 	@Path("/{pipelineId}/stop")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String startPipeline(@PathParam("pipelineId") String pipelineId)
+	public String stopPipeline(@PathParam("pipelineId") String pipelineId)
 	{
 		//TODO
+		return null;
 	}
 	
 	@Path("/{pipelineId}/verify")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String stopPipeline(@PathParam("pipelineId") String pipelineId)
+	public String verifyPipeline(@PathParam("pipelineId") String pipelineId)
 	{
 		//TODO
 	}
