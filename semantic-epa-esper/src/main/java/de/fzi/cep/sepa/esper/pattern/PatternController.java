@@ -40,6 +40,7 @@ public class PatternController extends AbstractEsperTemplate<PatternParameters>{
 	public SEPA declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
+		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();

@@ -36,6 +36,8 @@ public class TextFilterController extends AbstractEsperTemplate<TextFilterParame
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
+		domains.add(Domain.DOMAIN_PROASENSE.toString());
+		
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text"));
