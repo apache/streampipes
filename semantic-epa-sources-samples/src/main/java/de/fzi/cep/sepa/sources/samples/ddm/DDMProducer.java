@@ -25,10 +25,10 @@ public class DDMProducer implements SemanticEventProducerDeclarer{
 		List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
 		
 		eventStreams.add(new GearLubeOilTemperature());
-		eventStreams.add(new Torque());
-		eventStreams.add(new SpeedShaft());
-		eventStreams.add(new HookLoad());
-		eventStreams.add(new SwivelTemperature());
+		//eventStreams.add(new Torque());
+		//eventStreams.add(new SpeedShaft());
+		//eventStreams.add(new HookLoad());
+		//eventStreams.add(new SwivelTemperature());
 		return eventStreams;
 	}
 
