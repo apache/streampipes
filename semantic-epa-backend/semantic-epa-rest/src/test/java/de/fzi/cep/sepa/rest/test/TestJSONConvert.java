@@ -2,8 +2,15 @@ package de.fzi.cep.sepa.rest.test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
+import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
+import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.util.Utils;
 
 public class TestJSONConvert {
@@ -16,7 +23,7 @@ public class TestJSONConvert {
 		
 		
 		try {
-			content = new Scanner(new File("C:\\Users\\kaulfers\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-rest\\src\\main\\resources\\TestJSON.json")).useDelimiter("\\Z").next();
+			content = new Scanner(new File("src\\main\\resources\\TestJSON.json")).useDelimiter("\\Z").next();
 			System.out.println(content);
 			
 			
@@ -54,7 +61,10 @@ public class TestJSONConvert {
 		System.out.println("Action: ");
 		System.out.println(ServerPipeline.getAction().getName());
 		
-		
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree();
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree);
+		List<SEPAInvocationGraph> graphs = builder.buildGraph();
+		new GraphSubmitter(graphs).invokeGraphs();
 	}
 	
 	
