@@ -115,6 +115,7 @@ public class Pipeline extends AbstractRestInterface {
 	public String verifyPipeline(@PathParam("pipelineId") String pipelineId)
 	{
 		//TODO
+		return null;
 	}
 
 }
