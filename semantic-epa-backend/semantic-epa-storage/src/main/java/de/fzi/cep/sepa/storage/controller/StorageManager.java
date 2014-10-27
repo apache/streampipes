@@ -120,6 +120,7 @@ public enum StorageManager {
 	public PipelineStorage getPipelineStorageAPI() {
 		//return new PipelineStorageImpl();
 		//add storage implementation
+		return null;
 	}
 	
 }
