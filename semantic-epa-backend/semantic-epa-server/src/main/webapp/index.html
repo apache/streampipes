@@ -59,25 +59,40 @@
 		
 			    <!-- Collect the nav links, forms, and other content for toggling -->
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			      	<ul class="nav navbar-nav">
-			        	<li class="dropdown">
-			          		<a href="#" id="typeChange" class="dropdown-toggle" data-toggle="dropdown">Proasense <b class="caret"></b></a>
-			          		<ul class="dropdown-menu">
-			            		<li><a href="#" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
-			            		<li><a href="#" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
-			            		<li class="divider"></li>
-			            		<li><a href="#" onclick=showAdd()>Add...</a></li>
-			            		<li><a href="#" onclick=showManage()>Manage...</a></li>
-			         		</ul>
-			        	</li>
-			      	</ul>
+				      	<ul class="nav navbar-nav" role="tablist">
+				        	<li class="dropdown active">
+				          		<a href="#"   class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
+				          		<ul class="dropdown-menu" role="menu">
+				            		<li><a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
+				            		<li><a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
+				            		<!-- <li class="divider"></li> -->
+				            		
+				         		</ul>
+				        	</li>
+				        	<li >
+				        		<a href="#pipelines" role="tab" data-toggle="tab" onclick=disableOptions()>Pipelines</a>
+			        		</li>
+		            			
+				      	</ul>
+				      	<ul class="nav navbar-nav navbar-right ">
+				      		<li id="options" class=" dropdown">
+		            			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
+		            			<ul class="dropdown-menu" role="menu">
+		            				<li><a href="#" onclick=showAdd()>Add...</a></li>
+		            				<li><a href="#" onclick=showManage()>Manage...</a></li>
+		            			</ul>
+		            			
+		            		</li>
+				      	</ul>
+				      	
+			      	
 			    </div><!-- /.navbar-collapse -->
 			  </div><!-- /.container-fluid -->
 		</nav>
 		<!-- END NAVBAR  -->
 		
 		
-		<div class="tab-content">
+		<div class="tab-content content-padding">
 			<div class="tab-pane active" id="home">	
 				
 				
@@ -162,7 +177,7 @@
 				
 	
 				
-				<div id="assembly" >
+				<div id="assembly" class="canvas">
 					
 					<span id="clear" class="glyphicon glyphicon-remove"></span>
 					<button type="button" id="submit" class="btn btn-default btn-sm" onclick=submit()>
@@ -313,6 +328,23 @@
 				</div>
 				
 				
+			</div>
+			<div class="tab-pane" id="pipelines">
+				<div class="container-fluid">
+					<div class="row">
+						<h1 class="col-md-4 ">Saved Pipelines</h1>
+					</div>
+					<div class="row">
+						<ul id="pipelineList" class="list-group col-md-6">
+							<li class="list-group-item">TestItem1</li>
+							<li class="list-group-item">TestItem2</li>
+							<li class="list-group-item">TestItem3</li>
+						</ul>
+					</div>
+				</div>
+				<div id="canvas" class="canvas">
+					
+				</div>
 			</div>
 		</div>
 	</body>

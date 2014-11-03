@@ -46,6 +46,9 @@ function init(type) {
 		$('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
 	});
 
+	
+
+
 	//Bind click handler--------------------------------
 	$(document).click(function() {
 		$('#assemblyContextMenu').hide();
@@ -447,6 +450,7 @@ function refresh(type) {
 	} else if (type == "PA") {
 		$('#typeChange').html("Personal Assistant <b class='caret'></b>");
 	}
+	enableOptions();
 
 	$('#sources').children().remove();
 	$('#streams').children().remove();
@@ -860,4 +864,18 @@ function toastRightTop(type, message, title){
 			toastr.info(message, title);
 			return;
 	}
+}
+
+function disableOptions(){
+	$('#options')
+		.addClass("disabled")
+		.children()
+		.attr("data-toggle", "");
+	
+}
+function enableOptions(){
+	$('#options')
+		.removeClass("disabled")
+		.children()
+		.attr("data-toggle", "dropdown");
 }

@@ -17,8 +17,13 @@ body {
 	background-attachment: fixed;	
 }
 
+.content-padding{
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
 #sources{
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 	width: 90%;
 	height: 10vh;
 	margin-top: 1%;
@@ -39,7 +44,7 @@ body {
 
 .clickable-img{
 	margin-top: 14%;
-	margin-right: auto;
+	/*margin-right: auto;*/
 	height: 8vh;
 	width: 8vh;
 	margin-bottom: 0;
@@ -96,17 +101,37 @@ body {
 	position: absolute;	
 }
 
-#assembly{
+.canvas{
 	position: relative;
 	overflow: visible;
 	height: 56vh;
 	width: 90vw;
 	margin-top: 1%;
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 	border-radius: 5px;
 	box-shadow: inset 0 0 15px #333;
 	
 }
+
+#canvas{
+	margin-top: 10vh;
+	height: 50vh;
+}
+/*.nav-tabs{
+	border-bottom: 0px;
+}
+
+.navbar{
+	min-height: 40px;
+	height: 40px;
+}
+.container-fluid {
+	min-height: 40px;
+}
+
+.nav{
+	height:40px;
+}*/
 
 .connectable{
 	cursor: move;
@@ -208,10 +233,13 @@ h4.panel-title{
 
 #accordion{
 	width: 90vw;
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 }
 
+h1{
+	color: #666;
 
+}
 
 .hoverable {
 	opacity: 0.2;
@@ -220,4 +248,8 @@ h4.panel-title{
 .hoverable:hover {
 	cursor: pointer;
 	opacity: 0.5;
+}
+
+#pipelineList{
+	padding-top: 10vh;
 }
