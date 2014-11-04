@@ -16,6 +16,12 @@ public abstract class SelectInput extends FormInput {
 	{
 		super();
 	}
+	
+	public SelectInput(ElementType type)
+	{
+		super(type);
+	}
+	
 	public SelectInput(ElementType elementType, List<Option> options) {
 		super(elementType);
 		this.options = options;

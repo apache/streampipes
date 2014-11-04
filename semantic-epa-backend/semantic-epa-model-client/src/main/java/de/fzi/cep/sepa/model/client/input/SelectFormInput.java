@@ -9,7 +9,7 @@ public class SelectFormInput extends SelectInput {
 
 	public SelectFormInput()
 	{
-		// gson needs this
+		super(ElementType.SELECT_INPUT);
 	}
 	
 	public SelectFormInput(List<Option> options)

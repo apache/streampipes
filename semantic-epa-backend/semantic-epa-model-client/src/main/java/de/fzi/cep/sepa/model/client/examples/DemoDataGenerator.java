@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.client.Domain;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.client.StaticProperty;
+import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
@@ -114,8 +115,8 @@ public class DemoDataGenerator {
 		
 		List<StaticProperty> properties = new ArrayList<StaticProperty>();
 		
-		StaticProperty sid1 = new StaticProperty("Operation", "select operation:", new RadioInput(tempOptions));	
-		StaticProperty sid2 = new StaticProperty("Rate", "increase/decrease rate / percentage", new TextInput("Value", ""));
+		StaticProperty sid1 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Operation", "select operation:", new RadioInput(tempOptions));	
+		StaticProperty sid2 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Rate", "increase/decrease rate / percentage", new TextInput("Value", ""));
 		properties.add(sid1);
 		properties.add(sid2);
 		suddenIncreaseDecrease.setStaticProperties(properties);
@@ -129,8 +130,8 @@ public class DemoDataGenerator {
 		
 		List<StaticProperty> textFilterProperties = new ArrayList<StaticProperty>();
 		
-		StaticProperty sid3 = new StaticProperty("Operation", "select operation", new SelectFormInput(textOptions));
-		StaticProperty sid4 = new StaticProperty("Keyword", "", new TextInput("Keyword", ""));
+		StaticProperty sid3 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Operation", "select operation", new SelectFormInput(textOptions));
+		StaticProperty sid4 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Keyword", "", new TextInput("Keyword", ""));
 		textFilterProperties.add(sid3);
 		textFilterProperties.add(sid4);
 		simpleTextFilter.setStaticProperties(textFilterProperties);
@@ -145,14 +146,14 @@ public class DemoDataGenerator {
 		SEPAClient and = SEPAFactory.generateSEPAMock("AND", "description", createDomainList(Domain.DOMAIN_INDEPENDENT), "And_Icon");
 		and.setInputNodes(2);
 		
-		StaticProperty sid5 = new StaticProperty("Time Window", "", new TextInput("Time", ""));
+		StaticProperty sid5 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Time Window", "", new TextInput("Time", ""));
 		
 		List<Option> andOptions = new ArrayList<Option>();
 		andOptions.add(new Option("sec"));
 		andOptions.add(new Option("min"));
 		andOptions.add(new Option("hrs"));
 		
-		StaticProperty sid6 = new StaticProperty("Unit", "", new RadioInput(andOptions));
+		StaticProperty sid6 = new StaticProperty(StaticPropertyType.STATIC_PROPERTY, "Unit", "", new RadioInput(andOptions));
 		
 		List<StaticProperty> andProperties = new ArrayList<StaticProperty>();
 		andProperties.add(sid5);

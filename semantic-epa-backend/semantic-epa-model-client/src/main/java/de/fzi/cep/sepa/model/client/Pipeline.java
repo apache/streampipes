@@ -22,6 +22,7 @@ public class Pipeline {
 	@OneToOne(cascade=CascadeType.ALL)
 	private ExecutionStatus pipelineStatus;
 	
+	private String pipelineId;
 	private String name;
 	private String description;
 
@@ -71,6 +72,14 @@ public class Pipeline {
 
 	public void setPipelineStatus(ExecutionStatus pipelineStatus) {
 		this.pipelineStatus = pipelineStatus;
+	}
+
+	public String getPipelineId() {
+		return pipelineId;
+	}
+
+	public void setPipelineId(String pipelineId) {
+		this.pipelineId = pipelineId;
 	}
 	
 	

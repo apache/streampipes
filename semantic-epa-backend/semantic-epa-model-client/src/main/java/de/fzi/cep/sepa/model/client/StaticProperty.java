@@ -12,9 +12,13 @@ public class StaticProperty extends SEPAElement {
 	@OneToOne(cascade=CascadeType.ALL)
 	FormInput input;
 	
-	public StaticProperty(String name, String description, FormInput input) {
+	
+	StaticPropertyType type;
+	
+	public StaticProperty(StaticPropertyType type, String name, String description, FormInput input) {
 		super(name, description);
 		this.input = input;
+		this.type = type;
 	}
 
 	public StaticProperty() {
@@ -28,4 +32,15 @@ public class StaticProperty extends SEPAElement {
 	public void setInput(FormInput input) {
 		this.input = input;
 	}
+
+	public StaticPropertyType getType() {
+		return type;
+	}
+
+	public void setType(StaticPropertyType type) {
+		this.type = type;
+	}
+	
+	
+	
 }
