@@ -60,5 +60,7 @@ public class QueryBuilder {
 
 		return builder.toString();
 	}
+	
+	//public static String buildList
 
 }

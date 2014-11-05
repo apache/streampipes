@@ -4,12 +4,17 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.*;
+import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.SEPAClient;
+import de.fzi.cep.sepa.model.client.SourceClient;
+import de.fzi.cep.sepa.model.client.StaticPropertyType;
+import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
+import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -34,18 +39,14 @@ public class ClientModelTransformer {
 	public static List<StreamClient> toStreamClientModel(SEP sep)
 	{
 		List<StreamClient> result = new ArrayList<StreamClient>();
-		for(EventStream stream : sep.getEventStreams())
-			result.add(ClientModelTransformer.toStreamClientModel(sep, stream));
+		sep.getEventStreams().forEach((stream) -> result.add(toStreamClientModel(sep, stream)));
 		return result;
 	}
 
 	public static List<StreamClient> toStreamClientModel(List<SEP> seps)
-	{
+	{		
 		List<StreamClient> result = new ArrayList<StreamClient>();
-		for(SEP sep : seps)
-		{
-			result.addAll(toStreamClientModel(sep));
-		}
+		seps.forEach((sep) -> result.addAll(toStreamClientModel(sep)));
 		return result;
 	}
 
@@ -65,8 +66,7 @@ public class ClientModelTransformer {
 	public static List<SourceClient> toSourceClientModel(List<SEP> seps)
 	{
 		List<SourceClient> result = new ArrayList<SourceClient>();
-		for(SEP sep : seps)
-			result.add(toSourceClientModel(sep));
+		seps.forEach((sep) -> result.add(toSourceClientModel(sep)));
 		return result;
 			
 	}
@@ -98,12 +98,9 @@ public class ClientModelTransformer {
 		client.setInputNodes(sepa.getEventStreams().size());
 		
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
-		for(StaticProperty p : sepa.getStaticProperties())
-		{
-			clientStaticProperties.add(convertStaticProperty(p));
-		}
-			
+		sepa.getStaticProperties().forEach((p) -> clientStaticProperties.add(convertStaticProperty(p)));			
 		client.setStaticProperties(clientStaticProperties);	
+		
 		return client;
 	}
 
@@ -130,7 +127,7 @@ public class ClientModelTransformer {
 				resultProperties.add(convertOneOfStaticProperty((OneOfStaticProperty) p, input));
 			} else if (p instanceof MappingProperty)
 			{
-				TextInput input = (TextInput) formInput;
+				SelectFormInput input = (SelectFormInput) formInput;
 				resultProperties.add(convertMappingProperty((MappingProperty) p, input));
 			} else if (p instanceof MatchingStaticProperty)
 			{
@@ -184,9 +181,12 @@ public class ClientModelTransformer {
 		return p;
 	}
 	
-	public static MappingProperty convertMappingProperty(MappingProperty p, TextInput input)
+	public static MappingProperty convertMappingProperty(MappingProperty p, SelectFormInput input)
 	{
-		p.setMapsTo(URI.create(input.getValue()));
+		for(Option option : input.getOptions())
+		{
+			if (option.isSelected()) p.setMapsTo(URI.create(option.getElementId()));
+		}
 		return p;
 	}
 
@@ -253,8 +253,9 @@ public class ClientModelTransformer {
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertMappingProperty(
 			MappingProperty p) {
-		TextInput input = new TextInput();
-		input.setValue("");
+		List<Option> options = new ArrayList<>();
+		SelectFormInput input = new SelectFormInput(options);
+		
 		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getName(), p.getDescription(), input);
 		clientProperty.setElementId(p.getRdfId().toString());
 		return clientProperty;
