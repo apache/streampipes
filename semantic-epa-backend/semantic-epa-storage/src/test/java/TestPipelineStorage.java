@@ -22,7 +22,7 @@ public class TestPipelineStorage {
 
 
     public static void main(String[] args) throws IOException{
-        URL url = Resources.getResource("pipeline.json");
+        URL url = Resources.getResource("TestJSON.json");
         Scanner scanner = new Scanner(new File(url.getPath()));
         String json = scanner.useDelimiter("\\Z").next();
         scanner.close();

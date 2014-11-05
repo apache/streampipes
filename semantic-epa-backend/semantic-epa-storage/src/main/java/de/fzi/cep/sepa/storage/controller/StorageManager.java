@@ -16,6 +16,7 @@ import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.google.inject.AbstractModule;
 
+import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
@@ -120,7 +121,7 @@ public enum StorageManager {
 	public PipelineStorage getPipelineStorageAPI() {
 		//return new PipelineStorageImpl();
 		//add storage implementation
-		return null;
+		return new PipelineStorageImpl();
 	}
 	
 }
