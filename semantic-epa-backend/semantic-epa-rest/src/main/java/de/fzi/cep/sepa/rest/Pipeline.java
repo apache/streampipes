@@ -10,7 +10,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.google.gson.JsonSyntaxException;
+
 import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
 import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
@@ -69,8 +72,8 @@ public class Pipeline extends AbstractRestInterface {
 		System.out.println("Action: ");
 		System.out.println(ServerPipeline.getAction().getName());
 		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree();
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree);
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree(false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<SEPAInvocationGraph> graphs = builder.buildGraph();
 		new GraphSubmitter(graphs).invokeGraphs();
 		
@@ -116,6 +119,20 @@ public class Pipeline extends AbstractRestInterface {
 	{
 		//TODO
 		return null;
+	}
+	
+	@Path("/update")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updateSEPAs(String pipeline)
+	{
+		try {
+			return toJson(Operations.validatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class), true));
+		} catch (JsonSyntaxException e) {
+			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+		} catch (Exception e) {
+			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+		}
 	}
 
 }
