@@ -4,10 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.ActionClient;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.SourceClient;
-import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.*;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.Option;
@@ -204,7 +201,7 @@ public class ClientModelTransformer {
 			FreeTextStaticProperty p) {
 		TextInput input = new TextInput();
 		input.setValue("");
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
@@ -216,7 +213,7 @@ public class ClientModelTransformer {
 			options.add(thisOption);
 		}
 		RadioInput input = new RadioInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
@@ -227,7 +224,7 @@ public class ClientModelTransformer {
 			options.add(new Option(option.getElementId(), option.getName()));
 		}
 		CheckboxInput input = new CheckboxInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
@@ -250,7 +247,7 @@ public class ClientModelTransformer {
 			MatchingStaticProperty p) {
 		RadioGroupInput radioGroupInput = new RadioGroupInput();
 		
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), radioGroupInput);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MATCHING_PROPERTY, p.getName(), p.getDescription(), radioGroupInput);
 		return clientProperty;
 	}
 
@@ -258,7 +255,7 @@ public class ClientModelTransformer {
 			MappingProperty p) {
 		TextInput input = new TextInput();
 		input.setValue("");
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(p.getName(), p.getDescription(), input);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getName(), p.getDescription(), input);
 		clientProperty.setElementId(p.getRdfId().toString());
 		return clientProperty;
 	}
