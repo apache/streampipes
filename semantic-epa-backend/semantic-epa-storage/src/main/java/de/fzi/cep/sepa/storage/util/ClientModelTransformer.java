@@ -4,11 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.ActionClient;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.SourceClient;
-import de.fzi.cep.sepa.model.client.StaticPropertyType;
-import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.*;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.Option;
