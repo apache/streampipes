@@ -44,23 +44,31 @@ function init(type) {
 			$('#accordion .in').collapse('hide');
 		});
 		$('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
+		
+		$(document).click(function() {
+			$('#assemblyContextMenu').hide();
+			$('#staticContextMenu').hide();
+		});
+		$('#sources').on('change', function(){
+			$(this)
+			.css("background-color", "#044")
+			.animate("200")
+			.css("background-color", "")
+			.animate("200");
+		});
+		$("#pipelineTableBody").on("click","tr", function(){
+			$(this).addClass("info");
+			$("#pipelineTableBody").children().not(this).removeClass("info");
+		});
+		
 	});
 
 	
 
 
 	//Bind click handler--------------------------------
-	$(document).click(function() {
-		$('#assemblyContextMenu').hide();
-		$('#staticContextMenu').hide();
-	});
-	$('#sources').on('change', function(){
-		$(this)
-		.css("background-color", "#044")
-		.animate("200")
-		.css("background-color", "")
-		.animate("200");
-	});
+	
+	
 };
 
 /**

@@ -16,6 +16,8 @@
 		<script type="text/javascript" src="script.js"></script>
 		<script type="text/javascript" src="assembly.js"></script>
 		<script type="text/javascript" src="AccordionBuilder.js"></script>
+		<script type="text/javascript" src="pipelines.js"></script>
+		<script type="text/javascript" src="buttons.js"></script>
 		<script type="text/javascript" src="dummyPipelineSend.js"></script> <!-- Nur für debugging -->
 		
 		<link rel="stylesheet" href="jsplumb.css"/>
@@ -335,11 +337,38 @@
 						<h1 class="col-md-4 ">Saved Pipelines</h1>
 					</div>
 					<div class="row">
-						<ul id="pipelineList" class="list-group col-md-6">
+						<!-- <ul id="pipelineList" class="list-group col-md-6">
 							<li class="list-group-item">TestItem1</li>
 							<li class="list-group-item">TestItem2</li>
 							<li class="list-group-item">TestItem3</li>
-						</ul>
+						</ul> -->
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<td>#</td>
+									<td>Pipeline Name</td>
+									<td>Validation</td>
+									<td>Status</td>
+									<td>Options</td>
+								</tr>
+							</thead>
+							<tbody id="pipelineTableBody">
+								<tr>
+									<td>1</td>
+									<td>Test Pipeline </td>
+									<td>Ok</td>
+									<td>Running</td>
+									<td><button class="btn btn-default">Start</button><button class="btn btn-default">Stop</button></td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>Test Pipeline 2 </td>
+									<td>Error</td>
+									<td>Stopped</td>
+									<td><button class="btn btn-default">Start</button><button class="btn btn-default">Stop</button></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 				<div id="canvas" class="canvas">
