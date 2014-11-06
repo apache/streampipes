@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.rest;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -51,31 +52,13 @@ public class Pipeline extends AbstractRestInterface {
 	{	
 		System.out.println(pipeline);
 		
-		de.fzi.cep.sepa.model.client.Pipeline ServerPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
+		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		
-		System.out.println("TEST");
+		serverPipeline.setPipelineId(UUID.randomUUID().toString());
+		System.out.println(serverPipeline.getName());
 		
-		System.out.println("\n");
-		System.out.println("Streams: " + ServerPipeline.getStreams().size());
+		pipelineStorage.storePipeline(serverPipeline);
 		
-		for (int i = 0; i < ServerPipeline.getStreams().size(); i++){
-			System.out.println(ServerPipeline.getStreams().get(i).getName());
-			System.out.println(ServerPipeline.getStreams().get(i).getElementId());
-		}
-		System.out.println("\n");
-		System.out.println("Sepas: " + ServerPipeline.getSepas().size());
-		for (int i = 0; i < ServerPipeline.getSepas().size(); i++){
-			System.out.println(ServerPipeline.getSepas().get(i).getName());
-			System.out.println(ServerPipeline.getSepas().get(i).getElementId());
-		}
-		System.out.println("\n");
-		System.out.println("Action: ");
-		System.out.println(ServerPipeline.getAction().getName());
-		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree(false);
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
-		List<SEPAInvocationGraph> graphs = builder.buildGraph();
-		new GraphSubmitter(graphs).invokeGraphs();
 		
 		return "success";
 	}
