@@ -16,6 +16,13 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 		super();
 		this.elementName = super.getElementId();
 	}
+	
+	public UnnamedSEPAElement(String elementName)
+	{
+		super();
+		super.setElementId(elementName);
+		this.elementName = super.getElementId();
+	}
 
 	public String getElementName() {
 	

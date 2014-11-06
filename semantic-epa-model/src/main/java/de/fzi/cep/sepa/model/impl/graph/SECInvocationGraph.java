@@ -17,9 +17,9 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
-@RdfsClass("sepa:SemanticEventConsumer")
+@RdfsClass("sepa:SECInvocationGraph")
 @Entity
-public class SEC extends NamedSEPAElement{
+public class SECInvocationGraph extends NamedSEPAElement{
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
@@ -37,14 +37,16 @@ public class SEC extends NamedSEPAElement{
 	@RdfProperty("sepa:hasDomain")
 	List<String> domains;
 	
-	public SEC(String uri, String name, String description, String iconUrl)
-	{
-		super(uri, name, description, iconUrl);
-	}
-	
-	public SEC()
+	public SECInvocationGraph(SEC sec)
 	{
 		super();
+		this.setName(sec.getName());
+		this.setDescription(sec.getDescription());
+		this.setDomains(sec.getDomains());
+		this.setIconUrl(sec.getIconUrl());
+		this.setEventStreams(sec.getEventStreams());
+		this.setStaticProperties(sec.getStaticProperties());
+		this.setUri(sec.getRdfId().toString());
 	}
 
 	public List<EventStream> getEventStreams() {
@@ -70,7 +72,6 @@ public class SEC extends NamedSEPAElement{
 	public void setDomains(List<String> domains) {
 		this.domains = domains;
 	}
-	
 	
 	
 	

@@ -48,7 +48,7 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 	@RdfProperty("sepa:hasOutputStrategy")
 	List<OutputStrategy> outputStrategies;
 	
-	
+	String domId;
 	String pathName;
 	List<String> domains;
 	
@@ -68,6 +68,12 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setUri(sepa.getRdfId().toString());
 		
+	}
+	
+	public SEPAInvocationGraph(SEPA sepa, String domId)
+	{
+		this(sepa);
+		this.domId = domId;
 	}
 	
 	public SEPAInvocationGraph()
@@ -152,6 +158,14 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 
 	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
 		this.outputStrategies = outputStrategies;
+	}
+
+	public String getDomId() {
+		return domId;
+	}
+
+	public void setDomId(String domId) {
+		this.domId = domId;
 	}
 	
 	

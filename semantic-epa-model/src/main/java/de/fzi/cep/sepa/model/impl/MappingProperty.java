@@ -14,6 +14,9 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class MappingProperty extends StaticProperty {
 
+	@RdfProperty("sepa:mapsFrom")
+	URI mapsFrom;
+	
 	@RdfProperty("sepa:mapsTo")
 	URI mapsTo;
 	
@@ -22,9 +25,10 @@ public class MappingProperty extends StaticProperty {
 		super();
 	}
 	
-	public MappingProperty(String name, String description)
+	public MappingProperty(URI mapsFrom, String name, String description)
 	{
 		super(name, description);
+		this.mapsFrom = mapsFrom;
 	}
 
 	public URI getMapsTo() {
@@ -34,6 +38,16 @@ public class MappingProperty extends StaticProperty {
 	public void setMapsTo(URI mapsTo) {
 		this.mapsTo = mapsTo;
 	}
+
+	public URI getMapsFrom() {
+		return mapsFrom;
+	}
+
+	public void setMapsFrom(URI mapsFrom) {
+		this.mapsFrom = mapsFrom;
+	}
+	
+	
 	
 	
 	
