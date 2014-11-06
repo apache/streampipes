@@ -61,10 +61,14 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 
 			EventSchema schema1 = new EventSchema();
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			eventProperties.add(new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/latitude")));
-			eventProperties.add(new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/longitude")));
+			EventProperty e1 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+					"http://test.de/latitude"));
+			EventProperty e2 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+					"http://test.de/longitude"));
+			eventProperties.add(e1);
+			eventProperties.add(e2);
+			
+		
 
 			schema1.setEventProperties(eventProperties);
 			stream1.setEventSchema(schema1);
@@ -93,8 +97,8 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 			epsg.addOption(new Option("EPSG-4329"));
 			staticProperties.add(epsg);
 			//TODO mapping properties
-			staticProperties.add(new MappingProperty("latitude", "Select Latitude Mapping"));
-			staticProperties.add(new MappingProperty("longitude", "Select Longitude Mapping"));
+			staticProperties.add(new MappingProperty(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
+			staticProperties.add(new MappingProperty(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
 			desc.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {

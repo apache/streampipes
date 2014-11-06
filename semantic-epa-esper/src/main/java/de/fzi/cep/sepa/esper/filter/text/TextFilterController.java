@@ -41,7 +41,7 @@ public class TextFilterController extends AbstractEsperTemplate<TextFilterParame
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text"));
-		
+	
 		eventProperties.add(property);
 		
 		EventSchema schema1 = new EventSchema();
@@ -67,7 +67,12 @@ public class TextFilterController extends AbstractEsperTemplate<TextFilterParame
 		operation.addOption(new Option("MATCHES"));
 		operation.addOption(new Option("CONTAINS"));
 		staticProperties.add(operation);
-		staticProperties.add(new MappingProperty("text", "Select Text Property"));
+		try {
+			staticProperties.add(new MappingProperty(new URI(property.getElementName()), "text", "Select Text Property"));
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		staticProperties.add(new FreeTextStaticProperty("keyword", "Select Keyword"));
 		desc.setStaticProperties(staticProperties);
 		

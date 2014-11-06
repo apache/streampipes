@@ -71,9 +71,9 @@ public class Test {
 		xProp.addOption(new Option("CONTAINS", true));
 		staticProperties.add(xProp);
 		
-		MappingProperty yProp = new MappingProperty("text", "Select Text Property");
-		yProp.setMapsTo(SEPAUtils.getURIbyPropertyName(sep.getEventStreams().get(0), "text"));
-		staticProperties.add(yProp);
+		//MappingProperty yProp = new MappingProperty("text", "Select Text Property");
+		//yProp.setMapsTo(SEPAUtils.getURIbyPropertyName(sep.getEventStreams().get(0), "text"));
+		//staticProperties.add(yProp);
 		
 		graph.setStaticProperties(staticProperties);
 		graph.setOutputStream(outputStream);
