@@ -2,10 +2,9 @@ package de.fzi.cep.sepa.storage;
 
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
+import de.fzi.cep.sepa.storage.util.Utils;
+
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbClientBase;
 import org.lightcouch.NoDocumentException;
 
 import java.util.List;
@@ -18,12 +17,16 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public List<Pipeline> getAllPipelines() {
-        return null;
+    	 CouchDbClient dbClient = Utils.getCouchDBClient();
+    	 List<Pipeline> pipelines = dbClient.view("_all_docs")
+    			  .includeDocs(true)
+    			  .query(Pipeline.class);
+    	 return pipelines;
     }
 
     @Override
     public void storePipeline(Pipeline pipeline) {
-        CouchDbClient dbClient = new CouchDbClient();
+        CouchDbClient dbClient = Utils.getCouchDBClient();
         dbClient.save(pipeline);
         dbClient.update(pipeline);
 
@@ -37,7 +40,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public Pipeline getPipeline(String pipelineId) {
-        CouchDbClient dbClient = new CouchDbClient();
+        CouchDbClient dbClient = Utils.getCouchDBClient();
         try {
             Pipeline pipeline = dbClient.find(Pipeline.class, pipelineId);
             dbClient.shutdown();
@@ -49,7 +52,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public void deletePipeline(String pipelineId) {
-        CouchDbClient dbClient = new CouchDbClient();
+        CouchDbClient dbClient = Utils.getCouchDBClient();
         try {
             Pipeline removePipeline = dbClient.find(Pipeline.class, pipelineId);
             dbClient.remove(removePipeline);
@@ -62,7 +65,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public <T> void store(T object) {
-        CouchDbClient dbClient = new CouchDbClient();
+        CouchDbClient dbClient = Utils.getCouchDBClient();
         dbClient.save(object);
     }
 }

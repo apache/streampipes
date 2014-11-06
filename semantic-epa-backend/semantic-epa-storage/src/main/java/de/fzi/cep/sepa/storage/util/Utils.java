@@ -2,6 +2,8 @@ package de.fzi.cep.sepa.storage.util;
 
 import java.util.List;
 
+import org.lightcouch.CouchDbClient;
+
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.input.Option;
 
@@ -23,5 +25,12 @@ public class Utils {
 			if (o.getElementId().equals(id)) return o;
 		}
 		return null;
+	}
+	
+	public static CouchDbClient getCouchDBClient()
+	{
+		CouchDbClient dbClient = new CouchDbClient();
+		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		return dbClient;
 	}
 }
