@@ -49,7 +49,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost:61616");
+		grounding.setUri("tcp://localhost");
 		grounding.setTopicName("SEPA.SEP.Twitter.Sample");
 		
 		stream.setEventGrounding(grounding);
