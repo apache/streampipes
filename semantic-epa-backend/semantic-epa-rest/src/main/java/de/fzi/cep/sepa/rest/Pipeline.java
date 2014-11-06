@@ -57,7 +57,7 @@ public class Pipeline extends AbstractRestInterface {
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		System.out.println(serverPipeline.getName());
 		
-		pipelineStorage.storePipeline(serverPipeline);
+		pipelineStorage.store(serverPipeline);
 		
 		
 		return "success";
