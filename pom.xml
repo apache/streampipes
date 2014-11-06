@@ -27,16 +27,8 @@
 
 	<modules>
 		<!-- <module>semantic-epa</module> <module>semantic-epa-esper</module> -->
-		<module>semantic-epa-backend</module>
-		<module>semantic-epa-sources</module>
-		<module>semantic-epa-model</module>
-		<module>semantic-epa-sources-samples</module>
-		<module>semantic-epa-commons</module>
-		<module>semantic-epa</module>
-		<module>semantic-epa-esper</module>
-		<module>semantic-epa-manager</module>
-		<module>semantic-epa-actions-samples</module>
-        <module>semantic-epa-storm</module>
+		
+        <module>semantic-epa-commons</module>
 	</modules>
 
 	<!-- Build Settings -->
