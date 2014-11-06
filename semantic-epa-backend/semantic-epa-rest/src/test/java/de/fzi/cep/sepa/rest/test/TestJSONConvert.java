@@ -11,7 +11,7 @@ import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
-import de.fzi.cep.sepa.rest.util.Utils;
+import de.fzi.sepa.model.client.util.Utils;
 
 public class TestJSONConvert {
 	
@@ -61,10 +61,10 @@ public class TestJSONConvert {
 		System.out.println("Action: ");
 		System.out.println(ServerPipeline.getAction().getName());
 		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree(false);
+		/*GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
-		List<SEPAInvocationGraph> graphs = builder.buildGraph();
-		new GraphSubmitter(graphs).invokeGraphs();
+		List<SEPAInvocationGraph> graphs = builder.buildGraph();*/
+		//new GraphSubmitter(graphs).invokeGraphs();
 	}
 	
 	

@@ -12,11 +12,11 @@ import de.fzi.cep.sepa.rest.messages.ErrorMessage;
 import de.fzi.cep.sepa.rest.messages.Message;
 import de.fzi.cep.sepa.rest.messages.Notification;
 import de.fzi.cep.sepa.rest.messages.SuccessMessage;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.Transformer;
+import de.fzi.sepa.model.client.util.Utils;
 
 public abstract class AbstractRestInterface {
 

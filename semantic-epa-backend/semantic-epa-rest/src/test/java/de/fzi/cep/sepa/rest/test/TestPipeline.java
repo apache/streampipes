@@ -6,8 +6,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.sepa.model.client.util.Utils;
 
 public class TestPipeline {
 
@@ -25,5 +25,7 @@ public class TestPipeline {
 		System.out.println(pipeline.getSepas().size());
 		
 		StorageManager.INSTANCE.getPipelineStorageAPI().store(pipeline);
+		
+		StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines();
 	}
 }

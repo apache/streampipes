@@ -5,22 +5,11 @@ import java.net.URISyntaxException;
 
 import org.apache.http.client.ClientProtocolException;
 
-
-
-
-
-
-
-
-
-
-
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.rest.ActionImpl;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.cep.sepa.storage.util.Transformer;

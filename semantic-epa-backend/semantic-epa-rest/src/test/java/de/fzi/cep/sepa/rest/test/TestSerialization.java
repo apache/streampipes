@@ -4,9 +4,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
+import de.fzi.sepa.model.client.util.Utils;
 
 public class TestSerialization {
 
