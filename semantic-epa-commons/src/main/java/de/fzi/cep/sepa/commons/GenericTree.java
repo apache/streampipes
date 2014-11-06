@@ -188,4 +188,25 @@ public class GenericTree<T> {
 
        return stringRepresentation;
    }
+   
+   public int maxDepth(GenericTreeNode<T> node)
+   {
+	   GenericTreeNode<T> left = null;
+	   GenericTreeNode<T> right = null;
+	   if (node == null)
+		   return 0;
+	   else
+	   {
+		   if (node.getNumberOfChildren() == 1)
+		   {
+			   left = node.getChildren().get(0);
+		   }
+		   else if (node.getNumberOfChildren() == 2)
+		   {
+			   left = node.getChildren().get(0);
+			   right = node.getChildren().get(1);
+		   }
+		   return 1 + Math.max(maxDepth(left), maxDepth(right));
+	   }
+   }
 }
