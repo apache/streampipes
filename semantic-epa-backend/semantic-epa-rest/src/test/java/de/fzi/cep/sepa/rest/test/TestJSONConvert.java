@@ -61,8 +61,8 @@ public class TestJSONConvert {
 		System.out.println("Action: ");
 		System.out.println(ServerPipeline.getAction().getName());
 		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree();
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree);
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(ServerPipeline).generateTree(false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<SEPAInvocationGraph> graphs = builder.buildGraph();
 		new GraphSubmitter(graphs).invokeGraphs();
 	}
