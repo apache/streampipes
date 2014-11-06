@@ -250,7 +250,12 @@ public class ClientModelTransformer {
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertMappingProperty(
 			MappingProperty p) {
 		List<Option> options = new ArrayList<>();
+		
+		//TODO remove later, just for testing purposes!
+		options.add(new Option("elementId", "description"));
+		
 		SelectFormInput input = new SelectFormInput(options);
+		
 		
 		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getName(), p.getDescription(), input);
 		clientProperty.setElementId(p.getRdfId().toString());
