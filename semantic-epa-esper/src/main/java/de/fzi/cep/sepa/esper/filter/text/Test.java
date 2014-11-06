@@ -19,8 +19,6 @@ import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
-import de.fzi.cep.sepa.rest.http.HttpJsonParser;
-import de.fzi.cep.sepa.rest.util.Utils;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.param.CamelConfig;
 import de.fzi.cep.sepa.runtime.param.DataType;
@@ -33,7 +31,7 @@ import de.fzi.cep.sepa.storage.util.Transformer;
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-	
+	/*
 		SEP sep = Transformer.fromJsonLd(SEP.class, HttpJsonParser.getContentFromUrl(new URI("http://localhost:8089/twitter/t")));
 		
 		SEPA textfilter = Transformer.fromJsonLd(SEPA.class, HttpJsonParser.getContentFromUrl(new URI("http://localhost:8090/sepa/textfilter")));
@@ -79,6 +77,6 @@ public class Test {
 		graph.setOutputStream(outputStream);
 	
 		new TextFilterController().invokeRuntime(graph);
-	
+	*/
 	}
 }
