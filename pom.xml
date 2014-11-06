@@ -8,7 +8,7 @@
 	<artifactId>semantic-epa-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -17,18 +17,26 @@
 				<version>3.8.1</version>
 				<scope>test</scope>
 			</dependency>
-            <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
-            </dependency>
+			<dependency>
+				<groupId>javax.persistence</groupId>
+				<artifactId>persistence-api</artifactId>
+				<version>1.0.2</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<modules>
 		<!-- <module>semantic-epa</module> <module>semantic-epa-esper</module> -->
-		
-        <module>semantic-epa-commons</module>
+		<module>semantic-epa-backend</module>
+		<module>semantic-epa-sources</module>
+		<module>semantic-epa-model</module>
+		<module>semantic-epa-sources-samples</module>
+		<module>semantic-epa-commons</module>
+		<module>semantic-epa</module>
+		<module>semantic-epa-esper</module>
+		<module>semantic-epa-manager</module>
+		<module>semantic-epa-actions-samples</module>
+		<!-- <module>semantic-epa-storm</module> -->
 	</modules>
 
 	<!-- Build Settings -->
@@ -109,5 +117,5 @@
 		</snapshotRepository>
 	</distributionManagement>
 
-	
+
 </project>
