@@ -26,6 +26,7 @@ public class TestPipelineStorage {
         Scanner scanner = new Scanner(new File(url.getPath()));
         String json = scanner.useDelimiter("\\Z").next();
         scanner.close();
+       
 
         CouchDbClient dbClient = new CouchDbClient();
         dbClient.save(json);
