@@ -7,7 +7,9 @@ function getPipelines(){
 }
 
 function listPipelines(data){
-	$.each(data, pipelineTableRowFactory(i, json));
+	$.each(data, function(i, json){
+		pipelineTableRowFactory(i, json);
+	});
 }
 
 function pipelineTableRowFactory(i, json){
@@ -22,17 +24,27 @@ function pipelineTableRowFactory(i, json){
 function createPipelineTableRowData(i, $row){
 	
 	$("<td>").text(i).appendTo($row);
-	$("<td>").text($row.data("JSON").name).appendTo($row);
-	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline($row.data("JSON").id))).appendTo($row); //VALIDATION STATUS
-	$("<td>").text($row.data("JSON").pipelineStatus).append($("<button>").addClass("btn btn-default").text("Val.")).appendTo($row);
-	$("<td>").append($("<div class='btn-group'>").append($("<button class='btn btn-default'>").text("Start")))
+	// $("<td>").text($row.data("JSON").name).appendTo($row);
+	$("<td>").text("TESTNAME").appendTo($row); //DEBUG
+	// $("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline($row.data("JSON").id))).appendTo($row); //VALIDATION STATUS
+	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline("TESTID"))).appendTo($row); //DEBUG
+	// $("<td>").text($row.data("JSON").pipelineStatus).appendTo($row);
+	$("<td>").text("TESTSTATUS").appendTo($row);
+	// $("<td>").append($("<div class='btn-group'>")
+		// .append(getGlyphIconButton("glyphicon glyphicon-play", startPipeline($row.data("JSON").id))).append(getGlyphIconButton("glyphicon glyphicon-stop", stopPipeline($row.data("JSON").id))));
+	$("<td>").append($("<div class='btn-group'>")
+		.append(getGlyphIconButton("glyphicon glyphicon-play", startPipeline("TESTID"))).append(getGlyphIconButton("glyphicon glyphicon-stop", stopPipeline("TESTID")))).appendTo($row);
 	
 	
 }
 
 function validatePipeline(pipelineId){
-	$.ajax
+	
 }
+
+function startPipeline(pipelineId){}
+
+function stopPipeline(pipelineId){}
 
 function displayPipeline(){
 	

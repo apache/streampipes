@@ -34,6 +34,8 @@ var leftTargetPointOptions = {
 	isTarget: true
 };
 
+var currentPipeline;
+
 
 /**
  * Handles everything that has to do with the assembly area, and elements in it
@@ -316,11 +318,40 @@ function submit() {
 	}
 	if (!error ) {
 		
-		console.log(pipeline);
-		toastTop("success", "Pipeline sent to server");
-		 $.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(pipeline));
+		currentPipeline = pipeline;
+		openPipelineNameModal();
+		
+		
 	}
 }
+
+function openPipelineNameModal(){
+	
+	$('#pipelineNameModal').modal('show');
+}
+
+function savePipelineName(){
+	
+	var pipelineName = $('#pipelineNameForm').serializeArray();
+	if(pipelineName.length < 2){
+		toastRightTop("error","Please enter all parameters");
+		return false;
+	}
+	currentPipeline.name = pipelineName[0].value;
+	currentPipeline.description = pipelineName[1].value;
+	sendPipeline();
+}
+
+function sendPipeline(){
+	
+	console.log(currentPipeline);
+ 	$.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline));
+ 	toastTop("success", "Pipeline sent to server");
+ 	
+	
+}
+
+
 /**
  * saves the parameters in the current element's data with key "options" 
  */
@@ -339,13 +370,6 @@ function save() {
 			return false;
 		}
 	}
-	
-	console.log("static props VOR der Umschreibung");
-	console.log($currentElement.data("JSON").staticProperties);
-	saveInStaticProperties(options);
-	console.log("static props NACH der Umschreibung");
-	console.log($currentElement.data("JSON").staticProperties);
-	
 	
 	$currentElement.data("options", options);
 	
