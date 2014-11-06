@@ -43,9 +43,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventProperty(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name")));
-		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
