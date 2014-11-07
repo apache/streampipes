@@ -17,6 +17,11 @@ public class PipelineModification {
 		this.elementId = elementId;
 		this.staticProperties = staticProperties;
 	}
+	
+	public PipelineModification()
+	{
+		
+	}
 
 	public String getDomId() {
 		return domId;
