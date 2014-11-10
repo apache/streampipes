@@ -56,20 +56,24 @@ function init(type) {
 			.css("background-color", "")
 			.animate("200");
 		});
+		
+		//Bind click handler--------------------------------
 		$("#pipelineTableBody").on("click","tr", function(){
 			$(this).addClass("info");
 			$("#pipelineTableBody").children().not(this).removeClass("info");
+		});
+		
+		jsPlumb.bind("connection", function(info){
+			console.log(info.source);
+			console.log(info.connection);
+			sendPipelinePart(info);
 		});
 		
 	});
 
 	
 
-
-	//Bind click handler--------------------------------
-	
-	
-};
+}
 
 /**
  * Converts the JSON into clickable Event Producers
@@ -272,6 +276,20 @@ function createActions(data){
 	makeDraggable("action");
 	initTooltips();
 }	
+
+
+
+function sendPipelinePart(info){
+	// var pipelinePart = {};
+// 	
+	// console.log(jsPlumb.getConnections({target : info.target}));
+	// var id = "#" + info.targetId;
+	// if ($(id).hasClass('action')){
+// 		 
+	// }
+}
+
+
 	
 
 /**

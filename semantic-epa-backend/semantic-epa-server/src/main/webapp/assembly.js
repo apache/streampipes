@@ -249,25 +249,7 @@ function submit() {
 		if ($(element).hasClass('sepa')) {
 			sepaPresent = true;
 			if ($(element).data("options") != null) {
-				var el = {};
-				el.DOM = element.id;
-				el.name = $(element).data("JSON").name;
-				el.description = $(element).data("JSON").description;
-				el.staticProperties = $(element).data("JSON").staticProperties;
-				el.domains = $(element).data("JSON").domains;
-				el.elementId = $(element).data("JSON").elementId;
-				
-				
-				
-				el.connectedTo = [];
-				
-				for (var i = 0; i < jsPlumb.getConnections({
-					target : element
-				}).length; i++) {
-					el.connectedTo.push(jsPlumb.getConnections({target: element})[i].sourceId);
-				}
-				// el.options = $(element).data("options");
-				pipeline.sepas.push(el);
+				addToPipeline(element, pipeline);
 
 			} else if ($(element).data("JSON").staticProperties != null) {
 				toastTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");	;
@@ -276,14 +258,7 @@ function submit() {
 			}
 		} else if ($(element).hasClass('stream')) {
 			streamPresent = true;
-			var el = {};
-			el.DOM = element.id;
-			el.name = $(element).data("JSON").name;
-			el.description = $(element).data("JSON").description;
-			
-			el.domains = $(element).data("JSON").domains;
-			el.elementId = $(element).data("JSON").elementId;
-			pipeline.streams.push(el);
+			addToPipeline(element, pipeline);
 
 		} else if ($(element).hasClass('action')) {
 			if (actionPresent){
@@ -291,16 +266,7 @@ function submit() {
 				toastTop("error", "More than one action element present in pipeline", "Submit Error");
 			}else{
 				actionPresent = true;
-				pipeline.action.DOM = element.id;
-				pipeline.action.name = $(element).data("JSON").name;
-				pipeline.action.elementId = $(element).data("JSON").elementId;
-				pipeline.action.description = $(element).data("JSON").description;
-				pipeline.action.connectedTo = [];
-				for (var i = 0; i < jsPlumb.getConnections({
-					target : element
-				}).length; i++) {
-					pipeline.action.connectedTo.push(jsPlumb.getConnections({target: element})[i].sourceId);
-				}
+				addToPipeline(element, pipeline);
 			}
 		}
 	});
@@ -348,7 +314,6 @@ function sendPipeline(){
  	$.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline));
  	toastTop("success", "Pipeline sent to server");
  	
-	
 }
 
 
@@ -360,16 +325,16 @@ function save() {
 	// console.log($('#modalForm').serializeArray());
 	
 	var options = $('#modalForm').serializeArray();
-	if (options.length < $currentElement.data("JSON").staticProperties.length){
-		toastRightTop("error","Please enter all parameters");
-			return false;
-	}
-	for (var i = 0; i < options.length; i++){
-		if (options[i].value == ""){
-			toastRightTop("error","Please enter all parameters");
-			return false;
-		}
-	}
+	// if (options.length < $currentElement.data("JSON").staticProperties.length){
+		// toastRightTop("error","Please enter all parameters");
+			// return false;
+	// }
+	// for (var i = 0; i < options.length; i++){
+		// if (options[i].value == ""){
+			// toastRightTop("error","Please enter all parameters");
+			// return false;
+		// }
+	// }
 	
 	$currentElement.data("options", options);
 	
@@ -379,6 +344,7 @@ function save() {
 	}
 
 	if ($currentElement.data("options") != null) {
+		saveInStaticProperties($currentElement.data("options"));
 		toastRightTop("success", "Parameter gespeichert!");
 		$currentElement.css("opacity", 1);
 	} else {
