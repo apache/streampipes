@@ -224,6 +224,25 @@ function clearAssembly() {
 	$('#collapseOne,#collapseTwo,#collapseThree').collapse('hide');
 }
 
+function createPartialPipeline(info){
+	var pipelinePart = {};
+	pipelinePart.streams = [];
+	pipelinePart.sepas = [];
+	pipelinePart.action ={};
+	
+	$('#assembly>span.connectable').each(function(i, element) {
+		if (isConnected(element)){
+			addToPipeline(element, pipelinePart);
+		}
+	});
+	console.log(pipelinePart);
+	currentPipeline = pipelinePart;
+	sendPipeline();
+}
+
+
+
+
 /**
  * Sends the pipeline to the server 
  */
@@ -325,16 +344,16 @@ function save() {
 	// console.log($('#modalForm').serializeArray());
 	
 	var options = $('#modalForm').serializeArray();
-	// if (options.length < $currentElement.data("JSON").staticProperties.length){
-		// toastRightTop("error","Please enter all parameters");
-			// return false;
-	// }
-	// for (var i = 0; i < options.length; i++){
-		// if (options[i].value == ""){
-			// toastRightTop("error","Please enter all parameters");
-			// return false;
-		// }
-	// }
+	if (options.length < $currentElement.data("JSON").staticProperties.length){
+		toastRightTop("error","Please enter all parameters");
+			return false;
+	}
+	for (var i = 0; i < options.length; i++){
+		if (options[i].value == ""){
+			toastRightTop("error","Please enter all parameters");
+			return false;
+		}
+	}
 	
 	$currentElement.data("options", options);
 	
@@ -372,15 +391,6 @@ function saveInStaticProperties(options){
 				
 				$currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
 				continue;
-				
-			// case "SELECT_INPUT":
-// 				
-				// for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.options.length; j++){
-					// if ($currentElement.data("JSON").staticProperties[i].input.options[j].humanDescription == options[i].value){
-						// $currentElement.data("JSON").staticProperties[i].input.options[j].selected = true;
-					// }else{}
-				// }
-				
 				
 		}
 	}

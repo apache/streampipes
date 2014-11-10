@@ -66,7 +66,7 @@ function init(type) {
 		jsPlumb.bind("connection", function(info){
 			console.log(info.source);
 			console.log(info.connection);
-			sendPipelinePart(info);
+			createPartialPipeline(info);
 		});
 		
 	});
@@ -279,15 +279,7 @@ function createActions(data){
 
 
 
-function sendPipelinePart(info){
-	// var pipelinePart = {};
-// 	
-	// console.log(jsPlumb.getConnections({target : info.target}));
-	// var id = "#" + info.targetId;
-	// if ($(id).hasClass('action')){
-// 		 
-	// }
-}
+
 
 
 	
