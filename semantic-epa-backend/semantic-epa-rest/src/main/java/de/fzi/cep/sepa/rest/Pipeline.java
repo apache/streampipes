@@ -22,6 +22,7 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.messages.NotificationType;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.util.Utils;
 
@@ -50,15 +51,9 @@ public class Pipeline extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipelines(String pipeline)
 	{	
-		System.out.println(pipeline);
-		
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
-		
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
-		System.out.println(serverPipeline.getName());
-		
-		pipelineStorage.store(serverPipeline);
-		
+		pipelineStorage.store(serverPipeline);	
 		
 		return "success";
 	}
@@ -82,8 +77,14 @@ public class Pipeline extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String startPipeline(@PathParam("pipelineId") String pipelineId)
 	{
-		//TODO
-		return null;
+		try {
+		de.fzi.cep.sepa.model.client.Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+		Operations.startPipeline(pipeline);
+		return constructSuccessMessage(NotificationType.PIPELINE_START_SUCCESS.uiNotification());
+		} catch (Exception e)
+		{
+			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+		}
 	}
 	
 	@Path("/{pipelineId}/stop")

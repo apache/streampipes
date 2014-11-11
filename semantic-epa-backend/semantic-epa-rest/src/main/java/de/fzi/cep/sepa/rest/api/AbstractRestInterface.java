@@ -51,7 +51,7 @@ public abstract class AbstractRestInterface {
 	
 	private String constructMessage(Exception e, Message message)
 	{
-		message.addNotification(new Notification("Stack Trace: ", e.getMessage()));
+		message.addNotification(new Notification("Type: ", e.getClass().getCanonicalName()));
 		return constructMessage(message);
 	}
 	

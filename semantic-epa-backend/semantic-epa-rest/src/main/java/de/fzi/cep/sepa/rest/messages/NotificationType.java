@@ -6,7 +6,8 @@ public enum NotificationType {
 	NOSEPAFORMAT("Wrong Format", "Entity could not be recognized."), 
 	UNKNOWN_ERROR("Unknown Error", "An unforeseen error has occurred."), 
 	STORAGE_ERROR("Storage Error", "Entity could not be stored."),
-	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully");
+	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully"), 
+	PIPELINE_START_SUCCESS("Started", "Pipeline successfully started");
 
 	private final String title;
 	private final String description;
