@@ -237,7 +237,7 @@ function createPartialPipeline(info){
 	});
 	console.log(pipelinePart);
 	currentPipeline = pipelinePart;
-	sendPipeline();
+	sendPipeline(false);
 }
 
 
@@ -324,15 +324,37 @@ function savePipelineName(){
 	}
 	currentPipeline.name = pipelineName[0].value;
 	currentPipeline.description = pipelineName[1].value;
-	sendPipeline();
+	sendPipeline(true);
 }
 
-function sendPipeline(){
+function sendPipeline(fullPipeline){
 	
-	console.log(currentPipeline);
- 	$.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline));
- 	toastTop("success", "Pipeline sent to server");
+	if(fullPipeline){
+	
+		console.log(currentPipeline);
+	 	$.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline));
+	 	toastTop("success", "Pipeline sent to server");
  	
+ 	}else{
+ 		$.post("http://localhost:8080/semantic-epa-backend/api/pipelines/update", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
+ 			alert("hallo");
+ 			console.log(data);
+ 			console.log(textStatus);
+ 			console.log(jqXHR);
+ 		});
+ 	}
+}
+
+function modifyPipeline(pipelineModification){
+	var id;
+	for (var modification in pipelineModification){
+		id = "#" - modification.domId;
+		$currentElement = $(id);
+		$currentElement.data("JSON").staticProperties = modification.staticProperties;
+		$currentElement.data("options") = null;
+		$currentElement.data("modal") = null;
+	}
+	
 }
 
 
