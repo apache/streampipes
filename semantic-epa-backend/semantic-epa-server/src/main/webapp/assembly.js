@@ -370,10 +370,11 @@ function sendPipeline(fullPipeline){
  			type : 'GET',
  			success : function(data){
  				console.log(data);
+ 				modifyPipeline(data.pipelineModifications);
  				// alert("hallo");	
  			},
  			error: function(data){
- 				console.log("Error: " + data);
+ 				console.log(data);
  			} 
  		});
  	}
