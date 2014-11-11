@@ -183,6 +183,7 @@ public class ClientModelTransformer {
 		{
 			if (option.isSelected()) p.setMapsTo(URI.create(option.getElementId()));
 		}
+		if (input.getOptions().size() == 1) p.setMapsTo(URI.create(input.getOptions().get(0).getElementId()));
 		return p;
 	}
 
