@@ -367,7 +367,7 @@ function sendPipeline(fullPipeline){
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
- 			type : 'GET',
+ 			type : 'POST',
  			success : function(data){
  				console.log(data);
  				modifyPipeline(data.pipelineModifications);
