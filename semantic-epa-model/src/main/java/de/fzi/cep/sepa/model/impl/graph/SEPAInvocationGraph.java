@@ -60,10 +60,6 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		this.setDomains(sepa.getDomains());
 		this.setIconUrl(sepa.getIconUrl());
 		this.setInputStreams(sepa.getEventStreams());
-		for(EventStream stream : this.getInputStreams())
-		{
-			System.out.println(stream.getRdfId().toString());
-		}
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setUri(sepa.getRdfId().toString());

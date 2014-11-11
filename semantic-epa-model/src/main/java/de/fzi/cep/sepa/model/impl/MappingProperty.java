@@ -30,6 +30,11 @@ public class MappingProperty extends StaticProperty {
 		super(name, description);
 		this.mapsFrom = mapsFrom;
 	}
+	
+	public MappingProperty(String name, String description)
+	{
+		super(name, description);
+	}
 
 	public URI getMapsTo() {
 		return mapsTo;
