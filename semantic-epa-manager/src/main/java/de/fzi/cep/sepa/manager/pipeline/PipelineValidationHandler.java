@@ -175,6 +175,7 @@ public class PipelineValidationHandler {
 						
 						de.fzi.cep.sepa.model.client.StaticProperty newProperty = new de.fzi.cep.sepa.model.client.StaticProperty();
 						newProperty.setName(clientStaticProperty.getName());
+						newProperty.setDescription(clientStaticProperty.getDescription());
 						newProperty.setDOM(clientStaticProperty.getDOM());
 						newProperty.setElementId(clientStaticProperty.getElementId());
 						newProperty.setInput(new SelectFormInput(options));
@@ -195,25 +196,35 @@ public class PipelineValidationHandler {
 					if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY)
 					{
 						MappingProperty mp = TreeUtils.findMappingProperty(clientStaticProperty.getElementId(), sepa);
-						EventProperty eventProperty = TreeUtils.findEventProperty(mp.getMapsFrom().toString(), sepa.getEventStreams());
 						List<Option> options = new ArrayList<>();
-						
-						for(URI subclass : eventProperty.getSubClassOf())
+						if (mp.getMapsFrom() != null)
 						{
-							for(EventProperty streamProperty : stream.getEventSchema().getEventProperties())
+							EventProperty eventProperty = TreeUtils.findEventProperty(mp.getMapsFrom().toString(), sepa.getEventStreams());
+							
+							for(URI subclass : eventProperty.getSubClassOf())
 							{
-								for(URI streamSubclassOf : streamProperty.getSubClassOf())
+								for(EventProperty streamProperty : stream.getEventSchema().getEventProperties())
 								{
-									if (subclass.toString().equals(streamSubclassOf.toString()))
+									for(URI streamSubclassOf : streamProperty.getSubClassOf())
 									{
-										options.add(new Option(streamProperty.getRdfId().toString(), streamProperty.getPropertyName()));
+										if (subclass.toString().equals(streamSubclassOf.toString()))
+										{
+											options.add(new Option(streamProperty.getRdfId().toString(), streamProperty.getPropertyName()));
+										}
 									}
 								}
 							}
 						}
-						
+						else
+						{
+							for(EventProperty streamProperty : stream.getEventSchema().getEventProperties())
+							{
+								options.add(new Option(streamProperty.getRdfId().toString(), streamProperty.getPropertyName()));
+							}
+						}
 						de.fzi.cep.sepa.model.client.StaticProperty newProperty = new de.fzi.cep.sepa.model.client.StaticProperty();
 						newProperty.setName(clientStaticProperty.getName());
+						newProperty.setDescription(clientStaticProperty.getDescription());
 						newProperty.setDOM(clientStaticProperty.getDOM());
 						newProperty.setElementId(clientStaticProperty.getElementId());
 						newProperty.setInput(new SelectFormInput(options));

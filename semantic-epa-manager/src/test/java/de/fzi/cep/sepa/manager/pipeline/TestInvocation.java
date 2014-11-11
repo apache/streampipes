@@ -17,11 +17,28 @@ public class TestInvocation {
 	public static void main(String[] args)
 	{
 		List<Pipeline> pipelines = StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines();
-		Pipeline pipeline = pipelines.get(0);
+		Pipeline pipeline = null;
+		for(Pipeline p : pipelines)
+		{
+			if (p.getAction() != null)
+			{
+				pipeline = p;
+				break;
+			}
+		}
 		
-		pipeline.setAction(null);
+		System.out.println(Utils.getGson().toJson(pipeline));
 		
+		String pipelineId = pipeline.getPipelineId();
+		System.out.println(pipelineId);
+		StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
 		
+		//GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
+		//InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		//List<SEPAInvocationGraph> graphs = builder.buildGraph();
+		//new GraphSubmitter(graphs).invokeGraphs();
+		
+		/*
 		PipelineValidationHandler handler;
 		try {
 			handler = new PipelineValidationHandler(pipeline, true);
@@ -36,5 +53,6 @@ public class TestInvocation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}			
 }
