@@ -79,7 +79,7 @@ public class TestTreeBuilder {
 		pipeline.setSepas(sepas);
 		pipeline.setStreams(streams);
 		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree();
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		System.out.println(tree.getNumberOfNodes());
 		List<GenericTreeNode<NamedSEPAElement>> list = tree.build(GenericTreeTraversalOrderEnum.POST_ORDER);
 		for(GenericTreeNode<NamedSEPAElement> node : list)
@@ -96,7 +96,7 @@ public class TestTreeBuilder {
 		
 		System.out.println("*********\n");
 		
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<SEPAInvocationGraph> graphs = builder.buildGraph();
 		System.out.println(graphs.size());
 		

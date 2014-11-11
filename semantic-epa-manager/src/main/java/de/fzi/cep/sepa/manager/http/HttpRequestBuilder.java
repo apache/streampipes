@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.manager.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,16 +16,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
-import org.openrdf.model.Graph;
 import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 
-import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
@@ -49,10 +40,9 @@ public class HttpRequestBuilder {
 		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		    HttpClient httpclient = new DefaultHttpClient(params);
 		    HttpPost httppost = new HttpPost(payload.getUri());
-		    
-		    
+		        
 		    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-		    nameValuePairs.add(new BasicNameValuePair("json", asString(Transformer.generateCompleteGraph(new GraphImpl(), payload))));
+		    nameValuePairs.add(new BasicNameValuePair("json", Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), payload))));
 		    
 		    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 		    
@@ -69,16 +59,6 @@ public class HttpRequestBuilder {
 		return true;
 	}
 	
-	private String asString(Graph graph) throws RDFHandlerException
-	{
-		OutputStream stream = new ByteArrayOutputStream();
-		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
-		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-		//Rio.write(graph, stream, RDFFormat.JSONLD);
-		Rio.write(graph, writer);
-		return stream.toString();
-	}
 	
 	public boolean detach()
 	{

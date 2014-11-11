@@ -1,0 +1,40 @@
+package de.fzi.cep.sepa.manager.pipeline;
+
+import java.util.List;
+
+import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.client.SEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.sepa.model.client.util.Utils;
+
+public class TestInvocation {
+
+	public static void main(String[] args)
+	{
+		List<Pipeline> pipelines = StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines();
+		Pipeline pipeline = pipelines.get(0);
+		
+		pipeline.setAction(null);
+		
+		
+		PipelineValidationHandler handler;
+		try {
+			handler = new PipelineValidationHandler(pipeline, true);
+			handler.validateConnection();
+			handler.computeMappingProperties();
+			PipelineModificationMessage message = handler.getPipelineModificationMessage();
+			System.out.println(Utils.getGson().toJson(message));
+		} catch (NoValidConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}			
+}

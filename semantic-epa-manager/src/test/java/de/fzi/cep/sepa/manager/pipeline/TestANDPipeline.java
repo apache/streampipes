@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -36,10 +37,10 @@ public class TestANDPipeline {
 		
 		
 		SEPAClient client1 = ClientModelTransformer.toSEPAClientModel(req.getSEPAById("http://localhost:8090/sepa/pattern"));
-		SEPAClient client2 = ClientModelTransformer.toSEPAClientModel(req.getSEPAById("http://localhost:8090/sepa/textfilter"));
+		//SEPAClient client2 = ClientModelTransformer.toSEPAClientModel(req.getSEPAById("http://localhost:8090/sepa/textfilter"));
 		SEPAClient client3 = ClientModelTransformer.toSEPAClientModel(req.getSEPAById("http://localhost:8090/sepa/textfilter"));
 		
-		
+		/*
 		for(StaticProperty p : client2.getStaticProperties())
 		{
 			FormInput input = p.getInput();
@@ -59,33 +60,43 @@ public class TestANDPipeline {
 				}
 			}
 		}
-		
+		*/
 		ActionClient action = ClientModelTransformer.toSECClientModel(req.getSECById("http://localhost:8091/jms"));
 		
 		action.setConnectedTo(Utils.createList(client3.getElementId()));
-		client3.setConnectedTo(Utils.createList(client1.getElementId(), client2.getElementId()));
-		client1.setConnectedTo(Utils.createList(stream1.getElementId()));
-		client2.setConnectedTo(Utils.createList(stream2.getElementId()));
+		//client3.setConnectedTo(Utils.createList(client1.getElementId()));
+		client3.setConnectedTo(Utils.createList(stream1.getElementId()));
+		//client2.setConnectedTo(Utils.createList(stream2.getElementId()));
 		
+		stream1.setDOM(stream1.getElementId());
+		stream2.setDOM(stream2.getElementId());
+		client1.setDOM(client1.getElementId());
+		client3.setDOM(client3.getElementId());
+		action.setDOM(action.getElementId());
 		
 		
 		List<StreamClient> streams = new ArrayList<StreamClient>();
 		streams.add(stream1);
-		streams.add(stream2);
+		//streams.add(stream2);
 		
 		List<SEPAClient> sepas = new ArrayList<>();
-		sepas.add(client2);
-		sepas.add(client1);
+		//sepas.add(client2);
+		//sepas.add(client1);
 		sepas.add(client3);
 		
 		
 		Pipeline pipeline = new Pipeline();
-		pipeline.setAction(action);
+		//pipeline.setAction(action);
 		pipeline.setSepas(sepas);
 		pipeline.setStreams(streams);
 		
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree();
+		/*
+		
+		
+		
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline, client1).generateTree(false);
 		System.out.println(tree.getNumberOfNodes());
+		System.out.println("Depth: " +tree.maxDepth(tree.getRoot()));
 		List<GenericTreeNode<NamedSEPAElement>> list = tree.build(GenericTreeTraversalOrderEnum.POST_ORDER);
 		for(GenericTreeNode<NamedSEPAElement> node : list)
 		{
@@ -101,10 +112,11 @@ public class TestANDPipeline {
 		
 		System.out.println("*********\n");
 		
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<SEPAInvocationGraph> graphs = builder.buildGraph();
 		System.out.println(graphs.size());
-		
+		*/
+		/*
 		for(SEPAInvocationGraph graph : graphs)
 		{
 		
@@ -126,5 +138,16 @@ public class TestANDPipeline {
 		}
 		
 		new GraphSubmitter(graphs).invokeGraphs();
+		*/
+		
+		try {
+			new PipelineValidationHandler(pipeline, true).validateConnection();
+		} catch (NoValidConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -27,11 +27,11 @@ public class InvocationGraphBuilder {
 	
 	List<SEPAInvocationGraph> graphs = new ArrayList<>();
 	
-	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree)
+	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree, boolean isInvocationGraph)
 	{
 		this.tree = tree;
 		this.postOrder = this.tree.build(GenericTreeTraversalOrderEnum.POST_ORDER);
-		prepare();
+		if (!isInvocationGraph) prepare();
 	}
 	
 	private void prepare()

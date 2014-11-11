@@ -9,7 +9,6 @@
 	<artifactId>semantic-epa-manager</artifactId>
 
 	<dependencies>
-		
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-storage</artifactId>
