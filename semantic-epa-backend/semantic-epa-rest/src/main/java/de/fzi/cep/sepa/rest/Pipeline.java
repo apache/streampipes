@@ -105,7 +105,7 @@ public class Pipeline extends AbstractRestInterface {
 	}
 	
 	@Path("/update")
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String updateSEPAs(String pipeline)
 	{
