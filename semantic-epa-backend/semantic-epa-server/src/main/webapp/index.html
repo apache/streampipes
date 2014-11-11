@@ -20,6 +20,8 @@
 		<script type="text/javascript" src="buttons.js"></script>
 		<script type="text/javascript" src="pipelineFactory.js"></script>
 		<script type="text/javascript" src="dummyPipelineSend.js"></script> <!-- Nur für debugging -->
+		<script type="text/javascript" src="js/stomp.js"></script>
+		<script type="text/javascript" src="js/wsConnector.js"></script>
 		
 		<link rel="stylesheet" href="jsplumb.css"/>
 		<link rel="stylesheet" href="toastr.css"/><!-- Toastr -->
@@ -420,7 +422,17 @@
 					</div>
 					<div class="row">
 						<div id="vis">
-						
+							<div class="form-group">
+							    <label for="brokerUrl">URL</label>
+							    <input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
+							  </div>
+							  <div class="form-group">
+							    <label for="brokerTopic">Topic</label>
+							    <input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
+							  </div>
+							  <button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
+							  <button id="clearTextarea" onclick="$('brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
+							  <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
 						</div>
 						<!-- 
 						<script type="text/javascript">

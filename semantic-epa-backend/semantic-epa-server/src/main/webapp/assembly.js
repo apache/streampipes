@@ -435,7 +435,7 @@ function save() {
 
 function saveInStaticProperties(options){
 	for (var i = 0; i < options.length; i++){
-		switch ($currentElement.data("JSON").staticProperties[i].input.elementType){
+		switch ($currentElement.data("JSON").staticProperties[i].input.properties.elementType){
 			
 			case "RADIO_INPUT" || "SELECT_INPUT":
 			

@@ -53,7 +53,18 @@ function verifyPipeline(pipelineId){
 
 function changePipelineStatus(data, pipelineId){}
 
-function startPipeline(pipelineId){}
+function startPipeline(pipelineId){
+	var url = standardUrl + "pipelines/" + pipelineId + "/start";
+	$.ajax({
+		url : url,
+		success : function(data){
+			alert(data);
+			changePipelineStatus(data, pipelineId);
+		},
+		type : 'GET',
+		processData: false
+	});
+}
 
 function stopPipeline(pipelineId){}
 
