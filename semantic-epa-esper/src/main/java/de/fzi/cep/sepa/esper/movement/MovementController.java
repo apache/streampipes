@@ -99,6 +99,7 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 			//TODO mapping properties
 			staticProperties.add(new MappingProperty(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
 			staticProperties.add(new MappingProperty(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
+			staticProperties.add(new MappingProperty("group by", "Group elements by"));
 			desc.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {

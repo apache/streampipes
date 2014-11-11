@@ -58,7 +58,7 @@ public abstract class AbstractEsperTemplate<B extends BindingParameters> impleme
 			
 			for(EventStream stream : sepa.getInputStreams())
 			{
-				config.add(new CamelConfig.ActiveMQ(BROKER_ALIAS, stream.getEventGrounding().getUri()));
+				config.add(new CamelConfig.ActiveMQ(BROKER_ALIAS, stream.getEventGrounding().getUri()+":" +stream.getEventGrounding().getPort()));
 				source.add(EndpointInfo.of(BROKER_ALIAS + ":topic:" +stream.getEventGrounding().getTopicName(), DataType.JSON));
 			
 				inEventTypes.put("topic://" +stream.getEventGrounding().getTopicName(), stream.getEventSchema().toRuntimeMap());

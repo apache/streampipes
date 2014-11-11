@@ -1,0 +1,87 @@
+package de.fzi.cep.sepa.esper.filter.numerical;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.Option;
+import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+
+public class NumericalFilterController implements SemanticEventProcessingAgentDeclarer{
+
+	@Override
+	public SEPA declareModel() {
+		List<String> domains = new ArrayList<String>();
+		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
+		domains.add(Domain.DOMAIN_PROASENSE.toString());
+		
+		
+		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
+		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/number"));
+	
+		eventProperties.add(property);
+		
+		EventSchema schema1 = new EventSchema();
+		schema1.setEventProperties(eventProperties);
+		
+		EventStream stream1 = new EventStream();
+		stream1.setEventSchema(schema1);
+		
+		SEPA desc = new SEPA("/sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description", "", "/sepa/numericalfilter", domains);
+		
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
+		
+		//TODO check if needed
+		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		desc.addEventStream(stream1);
+		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+		strategies.add(new RenameOutputStrategy("Rename", "NumericalFilterResult"));
+		desc.setOutputStrategies(strategies);
+		
+		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation");
+		operation.addOption(new Option("<"));
+		operation.addOption(new Option("<="));
+		operation.addOption(new Option(">"));
+		operation.addOption(new Option(">="));
+		staticProperties.add(operation);
+		try {
+			staticProperties.add(new MappingProperty(new URI(property.getElementName()), "number", "Select mapping property"));
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value"));
+		desc.setStaticProperties(staticProperties);
+		
+		return desc;
+	}
+
+	@Override
+	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean detachRuntime(SEPAInvocationGraph sepa) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

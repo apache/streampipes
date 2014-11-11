@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
@@ -19,7 +20,7 @@ public class Init {
 		declarers.add(new MovementController());
 		declarers.add(new TextFilterController());
 		declarers.add(new PatternController());
-		
+		declarers.add(new NumericalFilterController());
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);
