@@ -73,7 +73,7 @@
 				         		</ul>
 				        	</li>
 				        	<li >
-				        		<a href="#pipelines" role="tab" data-toggle="tab" onclick=disableOptions()>Pipelines</a>
+				        		<a href="#pipelines" role="tab" data-toggle="tab" onclick=pipelinesClicked() >Pipelines</a>
 			        		</li>
 			        		<li >
 				        		<a href="#visualizations" role="tab" data-toggle="tab" onclick=disableOptions()>Visualizations</a>
@@ -222,11 +222,11 @@
 											<fieldset id ="customize-content">
 													
 											</fieldset>
-											<div id="savedOptions"><strong>Saved parameters: </strong>
-												
-												
-											</div>
+											
 										</form>
+										<div id="savedOptions"><strong>Saved parameters: </strong>
+														
+										</div>
 							
 							      </div>
 							      <div class="modal-footer">
@@ -369,7 +369,7 @@
 				
 				
 			</div>
-			<div class="tab-pane" id="pipelines">
+			<div class="tab-pane" id="pipelines" onactivate=getPipelines()>
 				<div class="container-fluid">
 					<div class="row">
 						<h1 class="col-md-4 ">Saved Pipelines</h1>

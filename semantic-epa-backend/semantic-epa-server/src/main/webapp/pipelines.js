@@ -24,11 +24,11 @@ function pipelineTableRowFactory(i, json){
 function createPipelineTableRowData(i, $row){
 	
 	$("<td>").text(i).appendTo($row);
-	// $("<td>").text($row.data("JSON").name).appendTo($row);
-	$("<td>").text("TESTNAME").appendTo($row); //DEBUG
-	// $("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline($row.data("JSON").id))).appendTo($row); //VALIDATION STATUS
-	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline("TESTID"))).appendTo($row); //DEBUG
-	// $("<td>").text($row.data("JSON").pipelineStatus).appendTo($row);
+	$("<td>").text($row.data("JSON").name).appendTo($row);
+	// $("<td>").text("TESTNAME").appendTo($row); //DEBUG
+	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline($row.data("JSON").id))).appendTo($row); //VALIDATION STATUS
+	// $("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", validatePipeline("TESTID"))).appendTo($row); //DEBUG
+	$("<td>").text($row.data("JSON").pipelineStatus).appendTo($row);
 	$("<td>").text("TESTSTATUS").appendTo($row);
 	// $("<td>").append($("<div class='btn-group'>")
 		// .append(getGlyphIconButton("glyphicon glyphicon-play", startPipeline($row.data("JSON").id))).append(getGlyphIconButton("glyphicon glyphicon-stop", stopPipeline($row.data("JSON").id))));

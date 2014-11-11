@@ -884,6 +884,11 @@ function toastRightTop(type, message, title){
 	}
 }
 
+function pipelinesClicked(){
+	disableOptions();
+	getPipelines();
+}
+
 function disableOptions(){
 	$('#options')
 		.addClass("disabled")

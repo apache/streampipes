@@ -35,7 +35,7 @@ var leftTargetPointOptions = {
 };
 
 var currentPipeline;
-
+var mod;
 
 /**
  * Handles everything that has to do with the assembly area, and elements in it
@@ -332,27 +332,65 @@ function sendPipeline(fullPipeline){
 	if(fullPipeline){
 	
 		console.log(currentPipeline);
-	 	$.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline));
+	 	// $.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
+ 			// alert("hallo");
+ 			// console.log(data);
+ 			// console.log(textStatus);
+ 			// console.log(jqXHR);
+ 		// });
+ 		
+ 		$.ajax({
+ 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
+ 			data : JSON.stringify(currentPipeline),
+ 			processData : false,
+ 			type : 'POST',
+ 			success : function(data){
+ 				console.log(data);
+ 				alert("hallo");
+ 			},
+ 			error: function(data){
+ 				console.log(data);
+ 			}
+ 		});
+ 		
+ 		
 	 	toastTop("success", "Pipeline sent to server");
  	
  	}else{
- 		$.post("http://localhost:8080/semantic-epa-backend/api/pipelines/update", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
- 			alert("hallo");
- 			console.log(data);
- 			console.log(textStatus);
- 			console.log(jqXHR);
+ 		// $.post("http://localhost:8080/semantic-epa-backend/api/pipelines/update", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
+ 			// alert("hallo");
+ 			// console.log(data);
+ 			// console.log(textStatus);
+ 			// console.log(jqXHR);
+ 		// });
+ 		$.ajax({
+ 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
+ 			data : JSON.stringify(currentPipeline),
+ 			processData : false,
+ 			type : 'GET',
+ 			success : function(data){
+ 				console.log(data);
+ 				// alert("hallo");	
+ 			},
+ 			error: function(data){
+ 				console.log("Error: " + data);
+ 			} 
  		});
  	}
 }
 
-function modifyPipeline(pipelineModification){
+function modifyPipeline(pipelineModifications){
 	var id;
-	for (var modification in pipelineModification){
-		id = "#" - modification.domId;
+	console.log(pipelineModifications);
+	
+	
+	for (var i = 0, modification; modification = pipelineModifications[i]; i++){
+		console.log(modification);
+		id = "#" + modification.domId;
 		$currentElement = $(id);
 		$currentElement.data("JSON").staticProperties = modification.staticProperties;
-		$currentElement.data("options") = null;
-		$currentElement.data("modal") = null;
+		$currentElement.data("options", null);
+		$currentElement.data("modal", null);
 	}
 	
 }
@@ -434,15 +472,15 @@ function prepareCustomizeModal(element) {
 			for (var i = 0; i < staticPropertiesArray.length; i++) {
 				switch (staticPropertiesArray[i].input.properties.elementType) {
 				case "TEXT_INPUT":
-					string += getTextInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].name, textInputCount);
+					string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount);
 					textInputCount++;
 					continue;
 				case "RADIO_INPUT":
-					string += getRadioInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.properties.options, radioInputCount);
+					string += getRadioInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, radioInputCount);
 					radioInputCount++;
 					continue;
 				case "SELECT_INPUT":
-					string += getSelectInputForm(staticPropertiesArray[i].name, staticPropertiesArray[i].input.properties.options, selectInputCount);
+					string += getSelectInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, selectInputCount);
 					selectInputCount++;
 					continue;
 

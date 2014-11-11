@@ -24,7 +24,7 @@ body {
 
 #sources{
 	/*margin-left: 5%;*/
-	width: 90%;
+	width: 90vw;
 	height: 10vh;
 	margin-top: 1%;
 	line-height: 5vh;
@@ -35,9 +35,9 @@ body {
 .clickable{
 	display: inline-block;
 	height: 9vh;
-	width: 9vh;
+	/*width: 9vh;*/
 	margin-left: 5%;
-	padding: .5vh;
+	/*padding: .5vh;*/
 	vertical-align: top;
 	cursor: pointer;
 }
@@ -252,4 +252,8 @@ h1{
 
 #pipelineList{
 	padding-top: 10vh;
+}
+
+#savedOptions{
+	padding-top: 30px;
 }
