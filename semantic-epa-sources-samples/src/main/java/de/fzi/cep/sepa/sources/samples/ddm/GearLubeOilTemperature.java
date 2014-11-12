@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.sources.samples.util.Utils;
+
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.fluent.Form;
@@ -14,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ontoware.rdf2go.vocabulary.XSD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -26,6 +29,10 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class GearLubeOilTemperature implements EventStreamDeclarer {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger("GearLubeOilTemperature");
+	
+	private String topicName;
 	
 	@Override
 	public EventStream declareModel(SEP sep) {
@@ -42,7 +49,8 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
 		grounding.setUri("tcp://localhost:61616");
-		grounding.setTopicName("SEPA.SEP.DDM.GearboxTemperature");
+		grounding.setTopicName("SEPA.SEP.DDM.GearboxOilTemperature");
+		this.topicName = grounding.getTopicName();
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
@@ -75,7 +83,8 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
         */
 
         long[] variables = {AkerVariables.GearLubeOilTemperature.tagNumber()};
-        String cont = Utils.performRequest(variables, "some_topic", "121213123", "212342134");
+        String cont = Utils.performRequest(variables, topicName, "121213123", "212342134");
+        logger.info(cont);
 
 	}
 

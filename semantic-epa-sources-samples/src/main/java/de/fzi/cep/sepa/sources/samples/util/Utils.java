@@ -1,11 +1,14 @@
 package de.fzi.cep.sepa.sources.samples.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
@@ -32,19 +35,22 @@ public class Utils {
      */
     public static String performRequest(long[] sourceID, String topicName, String startTime, String endTime) {
 
-        /*String[] vars = new String[sourceID.length];
+    	
+        String[] vars = new String[sourceID.length];
         for (int i = 0; i < sourceID.length; i++) {
             vars[i] = String.valueOf(sourceID[i]);
-        }*/
+        }
         JSONObject json = new JSONObject();
-        json.put("startTime", startTime);
-        json.put("endTime", endTime);
-        //json.put("variables", vars);
+        //json.put("startTime", parseDate(startTime));
+        //json.put("endTime", parseDate(endTime));
+        json.put("startTime", "2013-11-19T11:00:00+0100");
+        json.put("endTime", "2013-11-19T14:15:00+0100");
+        json.put("variables", vars);
         json.put("topic", topicName);
         json.put("partner", "aker");
 
-       System.out.println("Sending request: \n" + json.toString());
-
+        System.out.println("Subscription: " +json.toString());
+        
         String testJson = "{\n" +
                 "  \t\"startTime\": \"2013-11-19T11:00:00+0100\", \n" +
                 "\"endTime\" : \"2013-11-19T14:15:00+0100\" , \t\t\t\n" +
@@ -53,16 +59,19 @@ public class Utils {
                 "\"partner\":\"aker\"\n" +
                 "}";
 
-
-
         try {
             return  Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
-                    .bodyString(testJson, ContentType.APPLICATION_JSON)
+                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
                     .execute().returnResponse().toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
 
+    }
+    public static String parseDate(String timestamp)
+    {
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    	return sdf.format(new Date(Long.parseLong(timestamp)));
     }
 }

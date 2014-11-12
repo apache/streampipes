@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ontoware.rdf2go.vocabulary.XSD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -13,10 +15,14 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class Torque implements EventStreamDeclarer{
 
 	private String topicName;
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger("Torque");
 	
 	@Override
 	public EventStream declareModel(SEP sep) {
@@ -53,6 +59,11 @@ public class Torque implements EventStreamDeclarer{
 		// call some generic method which takes a source ID as a parameter and performs the request
 		// AkerVariables.GearLubeOilTemperature.tagNumber returns tag number for this event stream
 		// topicName denotes the actual topic to subscribe for
+		
+		long[] variables = { AkerVariables.DrillingTorque.tagNumber() };
+		String cont = Utils.performRequest(variables, topicName, "121213123",
+				"212342134");
+		logger.info(cont);
 	}
 
 	@Override

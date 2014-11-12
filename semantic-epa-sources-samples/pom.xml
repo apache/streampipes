@@ -10,15 +10,20 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.8.0</artifactId>
+			<version>0.8.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-all</artifactId>
 			<version>5.9.1</version>
 		</dependency>
 		<dependency>
-				<groupId>de.fzi.cep.sepa</groupId>
-				<artifactId>semantic-epa-commons</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-model</artifactId>
@@ -40,16 +45,16 @@
 			<artifactId>twitter4j-stream</artifactId>
 			<version>4.0.1</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <version>4.3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
