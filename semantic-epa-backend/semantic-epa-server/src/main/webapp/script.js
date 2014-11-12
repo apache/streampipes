@@ -63,7 +63,8 @@ function init(type) {
 			$("#pipelineTableBody").children().not(this).removeClass("info");
 		});
 		
-		jsPlumb.bind("connection", function(info){
+		jsPlumb.bind("connection", function(info, originalEvent){
+			console.log(originalEvent);
 			console.log(info.source);
 			console.log(info.connection);
 			createPartialPipeline(info);
@@ -861,6 +862,7 @@ function toastTop(type, message, title){
 			return;
 	}
 }
+
 
 function toastRightTop(type, message, title){
 	toastr.options = {

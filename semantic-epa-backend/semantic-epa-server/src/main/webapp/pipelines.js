@@ -1,6 +1,7 @@
 var pipelines;
 
 function getPipelines(){
+	$("#pipelineTableBody").children().remove();
 	var url = standardUrl + "pipelines";
 	pipelines = $.getJSON(url, listPipelines);
 	
