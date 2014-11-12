@@ -386,7 +386,7 @@ function modifyPipeline(pipelineModifications){
 	
 	
 	for (var i = 0, modification; modification = pipelineModifications[i]; i++){
-		console.log(modification);
+		// console.log(modification);
 		id = "#" + modification.domId;
 		$currentElement = $(id);
 		$currentElement.data("JSON").staticProperties = modification.staticProperties;
@@ -402,9 +402,10 @@ function modifyPipeline(pipelineModifications){
  */
 function save() {
 
-	// console.log($('#modalForm').serializeArray());
+	
 	
 	var options = $('#modalForm').serializeArray();
+	console.log(options);
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
 		toastRightTop("error","Please enter all parameters");
 			return false;
@@ -437,8 +438,8 @@ function saveInStaticProperties(options){
 	for (var i = 0; i < options.length; i++){
 		switch ($currentElement.data("JSON").staticProperties[i].input.properties.elementType){
 			
-			case "RADIO_INPUT" || "SELECT_INPUT":
-			
+			case "RADIO_INPUT" :
+			case "SELECT_INPUT" :
 				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
 					if ($currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value){
 						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
