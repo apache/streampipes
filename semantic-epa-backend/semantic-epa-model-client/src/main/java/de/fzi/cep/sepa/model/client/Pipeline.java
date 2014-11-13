@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.model.client;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,8 +23,9 @@ public class Pipeline {
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	private ExecutionStatus pipelineStatus;
-	
-	private String pipelineId;
+
+
+	private @SerializedName("_id") String pipelineId;
 	private String name;
 	private String description;
 
