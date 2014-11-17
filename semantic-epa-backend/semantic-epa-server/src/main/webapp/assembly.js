@@ -43,6 +43,8 @@ var mod;
 function initAssembly(){
 	
 	$('#clear').click(clearAssembly); 
+	
+	
 
 	$('#assembly').droppable({
 		tolerance: "fit",
@@ -70,11 +72,13 @@ function initAssembly(){
 		}
 		
 	}); //End #assembly.droppable(
+		
 }
 
 function createNewAssemblyElement(ui){
+	console.log(ui.draggable);
 	var $newState = $('<span>')									
-		.data("JSON", ui.draggable.data("JSON"))
+		.data("JSON", $.extend(true, {},ui.draggable.data("JSON")))
 		.appendTo('#assembly');
 	jsPlumb.draggable($newState, {containment: 'parent'});
 	var newPos = ui.helper.position();
@@ -112,7 +116,7 @@ function createNewAssemblyElement(ui){
 			"data-delay": '{"show": 1000, "hide": 100}',
 			title: ui.draggable.data("JSON").name
 			})
-		.data("JSON", ui.draggable.data("JSON"));
+		.data("JSON", $.extend(true, {},ui.draggable.data("JSON")));
 	}else{
 		$('<img>')
 			.addClass('connectable-img tt')
@@ -267,7 +271,7 @@ function submit() {
 		
 		if ($(element).hasClass('sepa')) {
 			sepaPresent = true;
-			if ($(element).data("options") != null) {
+			if ($(element).data("options")) {
 				addToPipeline(element, pipeline);
 
 			} else if ($(element).data("JSON").staticProperties != null) {
@@ -332,12 +336,6 @@ function sendPipeline(fullPipeline){
 	if(fullPipeline){
 	
 		console.log(currentPipeline);
-	 	// $.post("http://localhost:8080/semantic-epa-backend/api/pipelines", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
- 			// alert("hallo");
- 			// console.log(data);
- 			// console.log(textStatus);
- 			// console.log(jqXHR);
- 		// });
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
@@ -345,16 +343,20 @@ function sendPipeline(fullPipeline){
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				console.log(data);
- 				alert("hallo");
+ 				if (data.success){
+ 					toastTop("success", "Pipeline sent to server");
+ 				}else{
+ 					displayErrors(data);
+ 				}
  			},
  			error: function(data){
  				console.log(data);
+ 				toastTop("error", "Could not fulfill request", "Connection Error);
  			}
  		});
  		
  		
-	 	toastTop("success", "Pipeline sent to server");
+	 	
  	
  	}else{
  		// $.post("http://localhost:8080/semantic-epa-backend/api/pipelines/update", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
@@ -363,22 +365,28 @@ function sendPipeline(fullPipeline){
  			// console.log(textStatus);
  			// console.log(jqXHR);
  		// });
+ 		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				console.log(data);
- 				modifyPipeline(data.pipelineModifications);
- 				// alert("hallo");	
+ 				if (data.success){
+ 					modifyPipeline(data.pipelineModifications);
+ 				}else{
+ 					displayErrors(data);
+ 				}
+ 					
  			},
  			error: function(data){
  				console.log(data);
+ 				toastTop("error", "Could not fulfill request", "Connection Error);
  			} 
  		});
  	}
 }
+
 
 function modifyPipeline(pipelineModifications){
 	var id;
@@ -390,8 +398,9 @@ function modifyPipeline(pipelineModifications){
 		id = "#" + modification.domId;
 		$currentElement = $(id);
 		$currentElement.data("JSON").staticProperties = modification.staticProperties;
-		$currentElement.data("options", null);
-		$currentElement.data("modal", null);
+		// $currentElement.data("options", null);
+		// $currentElement.data("modal", null);
+		clearCurrentElement();
 	}
 	
 }
@@ -417,20 +426,16 @@ function save() {
 		}
 	}
 	
-	$currentElement.data("options", options);
+	$currentElement.data("options", true);
 	
-	$('#savedOptions').children().not('strong').remove();
-	for (var i = 0; i < $currentElement.data("options").length; i++) {
-		$('<div>').text($currentElement.data("options")[i].name + ": " + $currentElement.data("options")[i].value).appendTo('#savedOptions');
-	}
-
-	if ($currentElement.data("options") != null) {
-		saveInStaticProperties($currentElement.data("options"));
-		toastRightTop("success", "Parameter gespeichert!");
-		$currentElement.css("opacity", 1);
-	} else {
-		toastTop("warning","Oooops, something went wrong...");
-	}
+	// $('#savedOptions').children().not('strong').remove();
+	// for (var i = 0; i < $currentElement.data("options").length; i++) {
+		// $('<div>').text($currentElement.data("options")[i].name + ": " + $currentElement.data("options")[i].value).appendTo('#savedOptions');
+	// }
+	saveInStaticProperties(options);
+	
+	$currentElement.css("opacity", 1);
+	
 
 }
 
@@ -456,15 +461,16 @@ function saveInStaticProperties(options){
 				
 		}
 	}
+	toastRightTop("success", "Parameters saved");
 }
 
 function prepareCustomizeModal(element) {
 	$currentElement = element;
 	var string = "";
 	$('#savedOptions').children().not('strong').remove();
-	if (element.data("modal") == null) {
+	// if (element.data("modal") == null) {
 
-		if (element.data("JSON").staticProperties != null) {
+		if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
 			var staticPropertiesArray = element.data("JSON").staticProperties;
 
 			var textInputCount = 0;
@@ -474,7 +480,7 @@ function prepareCustomizeModal(element) {
 			for (var i = 0; i < staticPropertiesArray.length; i++) {
 				switch (staticPropertiesArray[i].input.properties.elementType) {
 				case "TEXT_INPUT":
-					string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount);
+					string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount, staticPropertiesArray[i].input.properties.value);
 					textInputCount++;
 					continue;
 				case "RADIO_INPUT":
@@ -489,17 +495,17 @@ function prepareCustomizeModal(element) {
 				}
 			}
 		}
-		element.data("modal", string);
+		// element.data("modal", string);
 
-	} else {
-		string = element.data("modal");
-		if (element.data("options") != null) {
-
-			for (var i = 0; i < element.data("options").length; i++) {
-				$('<div>').text(element.data("options")[i].name + ": " + element.data("options")[i].value).appendTo('#savedOptions');
-			}
-		}
-	}
+	// } else {
+		// string = element.data("modal");
+		// if (element.data("options") != null) {
+// 
+			// for (var i = 0; i < element.data("options").length; i++) {
+				// $('<div>').text(element.data("options")[i].name + ": " + element.data("options")[i].value).appendTo('#savedOptions');
+			// }
+		// }
+	// }
 	return string;
 }
 

@@ -2,11 +2,11 @@
  * @author Florian Kaulfersch
  */
 
-function getTextInputForm(label, placeholder, i){
+function getTextInputForm(label, placeholder, i, value){
 	var string = "<div class='form-group'>";
 	string+= "<label class='col-md-4 control-label' for='textinput"+i+"'>"+label+"</label>";
 	string+="<div class='col-md-4'>";
-	string+="<input id='textinput"+i+"' name='"+label+"' placeholder='"+placeholder+"' class='form-control input-md' required='' type='text'>";
+	string+="<input id='textinput"+i+"' name='"+label+"' value='"+value+"' placeholder='"+placeholder+"' class='form-control input-md' required='' type='text'>";
 	string+="</div></div>";
 	return string;
 }
@@ -18,7 +18,11 @@ function getRadioInputForm(label, radioButtonArray, i){
 	for (var j = 0; j< radioButtonArray.length ; j++){
 		string+=" <div class='radio'>";
 		string+="<label for='radios-"+i+"-"+j+"'>";
-		string +="<input name='"+label+"' id='radios-"+i+"-"+j+"' value='"+radioButtonArray[j].humanDescription+"' type='radio'>";
+		if (radioButtonArray[j].selected == true){
+			string +="<input name='"+label+"' id='radios-"+i+"-"+j+"' checked="+true+" value='"+radioButtonArray[j].humanDescription+"' type='radio'>";
+		}else{
+			string +="<input name='"+label+"' id='radios-"+i+"-"+j+"' value='"+radioButtonArray[j].humanDescription+"' type='radio'>";
+		}
 		string += radioButtonArray[j].humanDescription;
 		string += "</label></div>";
 	}
@@ -33,7 +37,11 @@ function getSelectInputForm(label, selectArray, i){
 	string += "<div class='col-md-4'>";
 	string += "<select id='selectbasic"+i+"' name='"+label+"' class='form-control'>";
 	for (var j = 0; j < selectArray.length; j++){
-		string += "<option value='"+selectArray[j].humanDescription+"'>"+selectArray[j].humanDescription+"</option>";
+		if (selectArray[j].selected == true){
+			string += "<option selected='"+true+"' value='"+selectArray[j].humanDescription+"'>"+selectArray[j].humanDescription+"</option>";
+		}else{
+			string += "<option value='"+selectArray[j].humanDescription+"'>"+selectArray[j].humanDescription+"</option>";
+		}
 	}
 	string += "</select></div></div>";
 	return string;

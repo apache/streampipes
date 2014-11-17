@@ -14,6 +14,7 @@ var standardDraggableOptions = {
 		ui.helper.children().removeClass("draggable-img-dragging");
 	}
 };
+var y = 0;
 
 
 
@@ -33,13 +34,36 @@ function init(type) {
 		domain = "DOMAIN_PERSONAL_ASSISTANT";
 	}
 	var url = standardUrl + "sources?domain=" + domain;
-	savedSources = $.getJSON(url, initSources);
+	// savedSources = $.getJSON(url, initSources);
+	$.ajax({
+		dataType: "json",
+		url: url,
+		success: function(data){
+			savedSources = data;
+			initSources(data);
+		},
+		error: function(data){
+			displayErrors(data);
+		}
+		
+		
+	});
 
-	//Inititate accordion functionality-----------------
-	//Initiate assembly and jsPlumb functionality-------
-	jsPlumb.ready(function(e){
+	
+	
+	
+}
+//Initiate assembly and jsPlumb functionality-------
+jsPlumb.ready(function(e){
+		
+		jsPlumb.bind("connection", function(info, originalEvent){
+			console.log(info.connection);
+			createPartialPipeline(info);
+		});
+		
 		initAssembly();
  		jsPlumb.Defaults.Container = "assembly";
+ 		//Inititate accordion functionality-----------------
 		$('#accordion').on('show.bs.collapse', function() {
 			$('#accordion .in').collapse('hide');
 		});
@@ -63,18 +87,9 @@ function init(type) {
 			$("#pipelineTableBody").children().not(this).removeClass("info");
 		});
 		
-		jsPlumb.bind("connection", function(info, originalEvent){
-			console.log(originalEvent);
-			console.log(info.source);
-			console.log(info.connection);
-			createPartialPipeline(info);
-		});
+		
 		
 	});
-
-	
-
-}
 
 /**
  * Converts the JSON into clickable Event Producers
@@ -658,17 +673,22 @@ function addButtons($element, type){
 			  	processData: false,
 			  	type: 'POST',
 			  	success: function(data){
-			  		toastRightTop("success", "Element successfully updated");
-			  		refresh("Proa");
-			    
-			    	switch (type){
-					case "1":
-						break;
-					case "2":
-						refreshSepas();
-						break;
-					case "3":
-						refreshActions();
+			  		
+			  		if (data.success){
+				  		toastRightTop("success", "Element successfully updated");
+				  		refresh("Proa");
+				    
+				    	switch (type){
+						case "1":
+							break;
+						case "2":
+							refreshSepas();
+							break;
+						case "3":
+							refreshActions();
+						}
+					}else{
+						displayErrors(data);
 					}
 			  	}
 			});
@@ -690,9 +710,13 @@ function addButtons($element, type){
 			    url: uri,
 			    type: 'DELETE',
 			    success: function(result){
-			        $element.remove();
-			        toastRightTop("success", "Element successfully deleted");
-			        refresh("Proa");
+			    	if (result.success){
+				        $element.remove();
+				        toastRightTop("success", "Element successfully deleted");
+				        refresh("Proa");
+			       }else{
+			       	displayErrors(result);
+			       }
 			        
 			          
 			    }
@@ -841,11 +865,21 @@ function manage(type){
 	$('#manageModal').modal('show');
 }
 
-function toastTop(type, message, title){
-	toastr.options = {
-		"newestOnTop":false,
-		"positionClass": "toast-top-full-width"
-	};
+function toastTop(type, message, title, timeout){
+	
+	if (!timeout){
+		toastr.options = {
+			"newestOnTop":false,
+			"positionClass": "toast-top-full-width"
+		};
+	}else{
+		toastr.options = {
+			"newestOnTop":false,
+			"positionClass": "toast-top-full-width",
+			"timeOut": 50000,
+			"closeButton": true
+		};
+	}
 	
 	switch (type){
 		case "error":	
@@ -883,6 +917,12 @@ function toastRightTop(type, message, title){
 		case "info":
 			toastr.info(message, title);
 			return;
+	}
+}
+
+function displayErrors(data){
+	for (var i = 0, notification; notification = data.notifications[i]; i++){
+		toastTop("error", notification.description, notification.title, true);
 	}
 }
 
