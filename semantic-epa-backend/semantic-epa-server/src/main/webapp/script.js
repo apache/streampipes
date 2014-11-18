@@ -59,6 +59,7 @@ jsPlumb.ready(function(e){
 		jsPlumb.bind("connection", function(info, originalEvent){
 			console.log(info.connection);
 			createPartialPipeline(info);
+			sendPipeline(false);
 		});
 		
 		initAssembly();

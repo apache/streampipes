@@ -241,7 +241,7 @@ function createPartialPipeline(info){
 	});
 	console.log(pipelinePart);
 	currentPipeline = pipelinePart;
-	sendPipeline(false);
+	
 }
 
 
@@ -335,7 +335,7 @@ function sendPipeline(fullPipeline){
 	
 	if(fullPipeline){
 	
-		console.log(currentPipeline);
+		// console.log(currentPipeline);
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
@@ -343,7 +343,7 @@ function sendPipeline(fullPipeline){
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				if (data.success){
+ 				if (data.success === undefined){			//TODO Objekt im Backend ändern
  					toastTop("success", "Pipeline sent to server");
  				}else{
  					displayErrors(data);
@@ -351,7 +351,7 @@ function sendPipeline(fullPipeline){
  			},
  			error: function(data){
  				console.log(data);
- 				toastTop("error", "Could not fulfill request", "Connection Error);
+ 				toastTop("error", "Could not fulfill request", "Connection Error");
  			}
  		});
  		
@@ -359,12 +359,6 @@ function sendPipeline(fullPipeline){
 	 	
  	
  	}else{
- 		// $.post("http://localhost:8080/semantic-epa-backend/api/pipelines/update", JSON.stringify(currentPipeline), function(data, textStatus, jqXHR){
- 			// alert("hallo");
- 			// console.log(data);
- 			// console.log(textStatus);
- 			// console.log(jqXHR);
- 		// });
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
@@ -372,8 +366,17 @@ function sendPipeline(fullPipeline){
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				if (data.success){
+ 				if (data.success === undefined){			//TODO Objekt im Backend ändern
  					modifyPipeline(data.pipelineModifications);
+ 					for (var i= 0, sepa; sepa = currentPipeline.sepas[i]; i++){
+ 						var id = "#" + sepa.DOM;
+ 						if ($(id).data("options") != true){
+ 							$('#customize-content').html(prepareCustomizeModal($(id)));
+ 							var string = "Customize " + sepa.name;
+ 							$('#customizeTitle').text(string);
+							$('#customizeModal').modal('show');
+ 						}
+ 					}
  				}else{
  					displayErrors(data);
  				}
@@ -381,7 +384,7 @@ function sendPipeline(fullPipeline){
  			},
  			error: function(data){
  				console.log(data);
- 				toastTop("error", "Could not fulfill request", "Connection Error);
+ 				toastTop("error", "Could not fulfill request", "Connection Error");
  			} 
  		});
  	}
@@ -467,7 +470,7 @@ function saveInStaticProperties(options){
 function prepareCustomizeModal(element) {
 	$currentElement = element;
 	var string = "";
-	$('#savedOptions').children().not('strong').remove();
+	// $('#savedOptions').children().not('strong').remove();
 	// if (element.data("modal") == null) {
 
 		if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
@@ -495,17 +498,7 @@ function prepareCustomizeModal(element) {
 				}
 			}
 		}
-		// element.data("modal", string);
 
-	// } else {
-		// string = element.data("modal");
-		// if (element.data("options") != null) {
-// 
-			// for (var i = 0; i < element.data("options").length; i++) {
-				// $('<div>').text(element.data("options")[i].name + ": " + element.data("options")[i].value).appendTo('#savedOptions');
-			// }
-		// }
-	// }
 	return string;
 }
 
