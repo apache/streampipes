@@ -8,10 +8,10 @@ import org.apache.http.client.ClientProtocolException;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
-import de.fzi.cep.sepa.rest.messages.ErrorMessage;
-import de.fzi.cep.sepa.rest.messages.Message;
-import de.fzi.cep.sepa.rest.messages.Notification;
-import de.fzi.cep.sepa.rest.messages.SuccessMessage;
+import de.fzi.cep.sepa.messages.ErrorMessage;
+import de.fzi.cep.sepa.messages.Message;
+import de.fzi.cep.sepa.messages.Notification;
+import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;

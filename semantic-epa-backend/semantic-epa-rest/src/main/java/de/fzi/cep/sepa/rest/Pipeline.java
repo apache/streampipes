@@ -21,7 +21,7 @@ import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
-import de.fzi.cep.sepa.rest.messages.NotificationType;
+import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.util.Utils;

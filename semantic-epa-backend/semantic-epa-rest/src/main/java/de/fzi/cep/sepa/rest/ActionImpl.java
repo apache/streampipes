@@ -18,7 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Action;
-import de.fzi.cep.sepa.rest.messages.NotificationType;
+import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 /**
