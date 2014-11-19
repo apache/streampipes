@@ -21,7 +21,9 @@ import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
+import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.util.Utils;
@@ -55,7 +57,7 @@ public class Pipeline extends AbstractRestInterface {
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		pipelineStorage.store(serverPipeline);	
 		
-		return "success";
+		return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 	}
 	
 	@Path("/{pipelineId}")
@@ -68,7 +70,7 @@ public class Pipeline extends AbstractRestInterface {
 			return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
 	
@@ -83,7 +85,7 @@ public class Pipeline extends AbstractRestInterface {
 		return constructSuccessMessage(NotificationType.PIPELINE_START_SUCCESS.uiNotification());
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
 	
@@ -113,9 +115,9 @@ public class Pipeline extends AbstractRestInterface {
 		try {
 			return toJson(Operations.validatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class), true));
 		} catch (JsonSyntaxException e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch (Exception e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
 

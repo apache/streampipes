@@ -44,16 +44,11 @@ public abstract class AbstractRestInterface {
 		return constructMessage(new SuccessMessage(notifications));
 	}
 	
-	protected String constructErrorMessage(Exception e, Notification... notifications)
+	protected String constructErrorMessage(Notification... notifications)
 	{
-		return constructMessage(e, new ErrorMessage(notifications));
+		return constructMessage(new ErrorMessage(notifications));
 	}
 	
-	private String constructMessage(Exception e, Message message)
-	{
-		message.addNotification(new Notification("Type: ", e.getClass().getCanonicalName()));
-		return constructMessage(message);
-	}
 	
 	private String constructMessage(Message message)
 	{

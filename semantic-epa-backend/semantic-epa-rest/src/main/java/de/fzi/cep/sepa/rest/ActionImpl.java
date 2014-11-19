@@ -18,6 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Action;
+import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
@@ -62,11 +63,11 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 		try {
 			jsonldDescription = parseURIContent(uri);
 		} catch (ClientProtocolException e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch (URISyntaxException e) {
 			jsonldDescription = uri;
 		} catch (IOException e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 		
 		try {
@@ -77,7 +78,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 				requestor.storeSEC(sec);
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
@@ -96,7 +97,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 			requestor.deleteSEC(requestor.getSECById(actionId));
 			return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 	}
 }

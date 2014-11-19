@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Source;
+import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.util.Utils;
@@ -53,10 +54,10 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 		try {
 			return toJson(ClientModelTransformer.toSourceClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(e, NotificationType.URIOFFLINE.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(), NotificationType.URIOFFLINE.description(), e.getMessage()));
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
 	
@@ -70,10 +71,10 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 		try {
 			return toJson(ClientModelTransformer.toStreamClientModel(requestor.getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(e, NotificationType.URIOFFLINE.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(), NotificationType.URIOFFLINE.description(), e.getMessage()));
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 		
 	}
@@ -90,11 +91,11 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 			
 			jsonldDescription = parseURIContent(uri);
 		} catch (ClientProtocolException e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch (URISyntaxException e) {
 			jsonldDescription = uri;
 		} catch (IOException e) {
-			return constructErrorMessage(e, NotificationType.UNKNOWN_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 		
 		try {
@@ -105,7 +106,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 				requestor.storeSEP(sep);
 		} catch (Exception e)
 		{
-			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
@@ -118,7 +119,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 			requestor.deleteSEP(requestor.getSEPById(sepId));
 			return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(e, NotificationType.STORAGE_ERROR.uiNotification());
+			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 	}
 }
