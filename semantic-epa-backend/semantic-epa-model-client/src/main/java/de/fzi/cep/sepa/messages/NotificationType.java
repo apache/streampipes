@@ -17,6 +17,16 @@ public enum NotificationType {
 		this.description = description;
 	}
 	
+	public String title()
+	{
+		return title;
+	}
+	
+	public String description()
+	{
+		return description;
+	}
+	
 	public Notification uiNotification()
 	{
 		return new Notification(title, description);

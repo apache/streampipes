@@ -4,6 +4,7 @@ public class Notification {
 
 	private String title;
 	private String description;
+	private String additionalInformation;
 	
 	public Notification(String title, String description) {
 		super();
@@ -11,6 +12,16 @@ public class Notification {
 		this.description = description;
 	}
 	
+	public Notification(String title, String description,
+			String additionalInformation) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.additionalInformation = additionalInformation;
+	}
+
+
+
 	public String getTitle() {
 		return title;
 	}
@@ -23,6 +34,16 @@ public class Notification {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getAdditionalInformation() {
+		return additionalInformation;
+	}
+
+	public void setAdditionalInformation(String additionalInformation) {
+		this.additionalInformation = additionalInformation;
+	}
+	
+	
 	
 	
 }
