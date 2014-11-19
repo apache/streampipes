@@ -1,6 +1,9 @@
-package de.fzi.cep.sepa.model.client;
+package de.fzi.cep.sepa.messages;
 
 import java.util.List;
+
+import de.fzi.cep.sepa.model.client.ErrorDescription;
+import de.fzi.cep.sepa.model.client.StaticProperty;
 
 public class PipelineModification {
 
