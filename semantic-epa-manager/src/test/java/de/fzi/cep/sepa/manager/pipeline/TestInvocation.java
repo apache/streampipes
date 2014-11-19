@@ -4,9 +4,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -33,10 +33,10 @@ public class TestInvocation {
 		System.out.println(pipelineId);
 		StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
 		
-		//GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-		//InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
-		//List<SEPAInvocationGraph> graphs = builder.buildGraph();
-		//new GraphSubmitter(graphs).invokeGraphs();
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		List<SEPAInvocationGraph> graphs = builder.buildGraph();
+		new GraphSubmitter(graphs).invokeGraphs();
 		
 		/*
 		PipelineValidationHandler handler;

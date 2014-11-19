@@ -7,9 +7,9 @@ import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
 import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
 import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
+import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 /**
