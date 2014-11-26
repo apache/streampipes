@@ -10,11 +10,17 @@ public abstract class Message {
 	
 	private List<Notification> notifications;
 	
+	public Message(boolean success){
+		this.success = success;
+		this.notifications = null;
+	}
+	
 	public Message(boolean success, List<Notification> notifications) {
 		super();
 		this.success = success;
 		this.notifications = notifications;
 	}
+	
 	
 	public Message(boolean success, Notification...notifications)
 	{

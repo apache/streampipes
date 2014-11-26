@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.messages;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineModificationMessage {
+public class PipelineModificationMessage extends Message {
 
 	/**
 	 * Class that represents PipelineModification messages. Modifications are used to update a SEPA within an already created pipeline
@@ -13,11 +13,12 @@ public class PipelineModificationMessage {
 	
 	public PipelineModificationMessage(
 			List<PipelineModification> pipelineModifications) {
-		super();
+		super(true);
 		this.pipelineModifications = pipelineModifications;
 	}
 
 	public PipelineModificationMessage() {
+		super(true);
 		pipelineModifications = new ArrayList<>();
 	}
 
