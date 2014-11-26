@@ -328,6 +328,7 @@ function savePipelineName(){
 	}
 	currentPipeline.name = pipelineName[0].value;
 	currentPipeline.description = pipelineName[1].value;
+	console.log(currentPipeline);
 	sendPipeline(true);
 }
 
@@ -343,8 +344,9 @@ function sendPipeline(fullPipeline){
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				if (data.success === undefined){			//TODO Objekt im Backend ändern
- 					toastTop("success", "Pipeline sent to server");
+ 				if (data.success){			//TODO Objekt im Backend ändern
+ 					// toastTop("success", "Pipeline sent to server");
+ 					displaySuccess(data);
  				}else{
  					displayErrors(data);
  				}
@@ -366,7 +368,7 @@ function sendPipeline(fullPipeline){
  			processData : false,
  			type : 'POST',
  			success : function(data){
- 				if (data.success === undefined){			//TODO Objekt im Backend ändern
+ 				if (data.success){			//TODO Objekt im Backend ändern
  					modifyPipeline(data.pipelineModifications);
  					for (var i= 0, sepa; sepa = currentPipeline.sepas[i]; i++){
  						var id = "#" + sepa.DOM;

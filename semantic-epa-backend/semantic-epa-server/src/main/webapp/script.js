@@ -57,9 +57,11 @@ function init(type) {
 jsPlumb.ready(function(e){
 		
 		jsPlumb.bind("connection", function(info, originalEvent){
-			console.log(info.connection);
-			createPartialPipeline(info);
-			sendPipeline(false);
+			if(originalEvent != undefined){
+				console.log(info.connection);
+				createPartialPipeline(info);
+				sendPipeline(false);
+			}
 		});
 		
 		initAssembly();
@@ -86,6 +88,10 @@ jsPlumb.ready(function(e){
 		$("#pipelineTableBody").on("click","tr", function(){
 			$(this).addClass("info");
 			$("#pipelineTableBody").children().not(this).removeClass("info");
+			$("#canvas").children().each(function(){
+				$(this).children().remove();
+			});
+			displayPipeline($(this).data("JSON"));
 		});
 		
 		
@@ -924,6 +930,12 @@ function toastRightTop(type, message, title){
 function displayErrors(data){
 	for (var i = 0, notification; notification = data.notifications[i]; i++){
 		toastTop("error", notification.description, notification.title, true);
+	}
+}
+
+function displaySuccess(data){
+	for (var i = 0, notification; notification = data.notifications[i]; i++){
+		toastTop("success", notification.description, notification.title, false);
 	}
 }
 
