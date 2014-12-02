@@ -118,6 +118,7 @@ body {
 	height: 50vh;
 	box-shadow: 0 0 15px #333;
 	position: relative;
+	background: white;
 }
 /*.nav-tabs{
 	border-bottom: 0px;
@@ -241,6 +242,9 @@ h4.panel-title{
 h1{
 	color: #666;
 
+}
+td {
+	vertical-align:middle !important;
 }
 
 .hoverable {

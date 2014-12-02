@@ -25,6 +25,12 @@ function init(type) {
 	var debug = false;
 	savedSepas= false;
 	savedActions = false;
+	
+	$("#canvas").children().each(function(){		//In eigene Methode packen
+		$(this).children().remove();
+	});
+	
+	jsPlumb.setContainer($("#assembly"));
 	if (debug){standardUrl = testUrl;}
 
 	// Get and inititate sources------------------------
@@ -86,12 +92,18 @@ jsPlumb.ready(function(e){
 		
 		//Bind click handler--------------------------------
 		$("#pipelineTableBody").on("click","tr", function(){
-			$(this).addClass("info");
-			$("#pipelineTableBody").children().not(this).removeClass("info");
-			$("#canvas").children().each(function(){
-				$(this).children().remove();
-			});
-			displayPipeline($(this).data("JSON"));
+			if(!$(this).data("active") || $(this).data("active") == undefined){
+				$(this).data("active", true);
+				$(this).addClass("info");
+				$("#pipelineTableBody").children().not(this).removeClass("info");
+				$("#pipelineTableBody").children().not(this).data("active", false);
+				$("#canvas").children().each(function(){
+					$(this).children().remove();
+				});
+				displayPipeline($(this).data("JSON"));
+			}else{
+				
+			}
 		});
 		
 		
@@ -956,4 +968,11 @@ function enableOptions(){
 		.removeClass("disabled")
 		.children()
 		.attr("data-toggle", "dropdown");
+}
+
+function getParentWithJSONData($element){
+	while ($element.data("JSON") == undefined){
+		$element = $element.parent();
+	}
+	return $element;
 }
