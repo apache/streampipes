@@ -231,6 +231,12 @@ function connectElements(json){
 	jsPlumb.repaintEverything();
 }
 
+function adjustPipeline(json){
+	var type;
+	
+	refresh(type);
+}
+
 function getYPosition(count , i, $canvas, $element){
 	return ($canvas.height() / count)/2 - (1/2) * $element.height() + i * ($canvas.height() / count);
 }

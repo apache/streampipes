@@ -66,9 +66,13 @@ jsPlumb.ready(function(e){
 			if(originalEvent != undefined){
 				console.log(info.connection);
 				createPartialPipeline(info);
-				sendPipeline(false);
+				sendPipeline(false, info);
 			}
 		});
+		
+		window.onresize = function(event){
+			jsPlumb.repaintEverything();
+		};
 		
 		initAssembly();
  		jsPlumb.Defaults.Container = "assembly";

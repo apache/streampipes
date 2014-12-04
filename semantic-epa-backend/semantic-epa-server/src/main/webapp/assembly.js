@@ -233,15 +233,43 @@ function createPartialPipeline(info){
 	pipelinePart.streams = [];
 	pipelinePart.sepas = [];
 	pipelinePart.action ={};
+	console.log(info);
+	var finished = false;
+	var element = info.target;
+	var elementId = "#" + element;
 	
-	$('#assembly>span.connectable').each(function(i, element) {
-		if (isConnected(element)){
-			addToPipeline(element, pipelinePart);
-		}
-	});
+	addElementToPartialPipeline(element, pipelinePart);
+	
+	// while (!finished){
+		// addToPipeline(elementId, pipelinePart);
+		// for (var i= 0; i < jsPlumb.getConnections({target : element}); i++){
+			// if (jsPlumb.getConnections({target : element})[i].sourceId != null && jsPlumb.getConnections({target : element}).sourceId != undefined){
+				// element = jsPlumb.getConnections({target : element}).sourceId;
+				// elementId = "#" + element;
+			// }else{
+				// finished = true;
+			// }
+		// }
+	// }
+	
+	// $('#assembly>span.connectable').each(function(i, element) {
+		// if (isConnected(element)){
+			// addToPipeline(element, pipelinePart);
+		// }
+	// });
 	console.log(pipelinePart);
 	currentPipeline = pipelinePart;
 	
+}
+
+function addElementToPartialPipeline(element, pipelinePart){
+	var elementId = "#" + element;
+	addToPipeline(element, pipelinePart);
+	if (jsPlumb.getConnections({target : element}) != null && jsPlumb.getConnections({target : element}) != undefined){
+		for (var i = 0, con; con = jsPlumb.getConnections({target : element})[i]; i++){
+			addElementToPartialPipeline(con.source, pipelinePart);
+		}
+	}
 }
 
 
@@ -332,7 +360,7 @@ function savePipelineName(){
 	sendPipeline(true);
 }
 
-function sendPipeline(fullPipeline){
+function sendPipeline(fullPipeline, info){
 	
 	if(fullPipeline){
 	
@@ -380,6 +408,7 @@ function sendPipeline(fullPipeline){
  						}
  					}
  				}else{
+ 					jsPlumb.detach(info.connection);
  					displayErrors(data);
  				}
  					
