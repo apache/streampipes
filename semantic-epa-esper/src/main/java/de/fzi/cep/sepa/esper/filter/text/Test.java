@@ -36,7 +36,7 @@ public class Test {
 		
 		SEPA textfilter = Transformer.fromJsonLd(SEPA.class, HttpJsonParser.getContentFromUrl(new URI("http://localhost:8090/sepa/textfilter")));
 		
-		SEPAInvocationGraph graph = new SEPAInvocationGraph(textfilter);
+
 		graph.setName("Test TextFilter");
 		graph.setDescription("Test");
 		sep.getEventStreams().get(0).setName("TwitterEvent");
