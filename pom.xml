@@ -36,7 +36,7 @@
 		<module>semantic-epa-esper</module>
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
-		<!-- <module>semantic-epa-storm</module> -->
+		<module>semantic-epa-storm</module>
 	</modules>
 
 	<!-- Build Settings -->
