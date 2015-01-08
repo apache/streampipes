@@ -72,7 +72,7 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 
 			schema1.setEventProperties(eventProperties);
 			stream1.setEventSchema(schema1);
-			stream1.setUri("http://localhost:8089/" + desc.getElementId());
+			stream1.setUri("http://localhost:8090/" + desc.getElementId());
 			desc.addEventStream(stream1);
 
 			List<OutputStrategy> outputStrategies = new ArrayList<OutputStrategy>();

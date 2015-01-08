@@ -55,7 +55,7 @@ public class TextFilterController extends AbstractEsperTemplate<TextFilterParame
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
 		
 		//TODO check if needed
-		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());
 		desc.addEventStream(stream1);
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(new RenameOutputStrategy("Enrich", "EnrichedMovementAnalysis"));
