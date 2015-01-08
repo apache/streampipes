@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
+import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
@@ -21,6 +22,7 @@ public class Init {
 		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
+		declarers.add(new MobileStreamProducer());
 		
 		String zooKeeper = "nissatech.no-ip.org:2181";
 		String groupId = "groupId";
