@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.Graph;
@@ -30,6 +33,7 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
+import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.Option;
@@ -62,6 +66,7 @@ public class PipelineValidationHandler {
 		this.pipeline = pipeline;
 		this.rootElement = ClientModelUtils.getRootNode(pipeline);
 		this.sepaRootElement = ClientModelUtils.transform(rootElement);
+		this.invocationGraphs = new ArrayList<>();
 
 		// prepare a list of all pipeline elements without the root element
 		List<SEPAElement> sepaElements = new ArrayList<SEPAElement>();
@@ -127,25 +132,31 @@ public class PipelineValidationHandler {
 								.getEventSchema()));
 				System.out.println(match);
 			} else if (rootElement.getConnectedTo().size() == 2) {
+				
+				Iterator<String> it = rootElement.getConnectedTo().iterator();
+				List<EventStream> incomingStreams = new ArrayList<>();
+				while(it.hasNext())
+				{
+					String domId = it.next();
+					SEPAElement element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
+					if (element instanceof StreamClient) incomingStreams.add((EventStream) ClientModelUtils.transform(element));
+					else
+					{
+						GenericTree<NamedSEPAElement> tree = new TreeBuilder(
+								pipeline, element).generateTree(true);
+						invocationGraphs.addAll(new InvocationGraphBuilder(tree, true)
+								.buildGraph());
 
-				SEPAElement firstElement = TreeUtils.findSEPAElement(
-						rootElement.getConnectedTo().get(0),
-						pipeline.getSepas(), pipeline.getStreams());
-				SEPAElement secondElement = TreeUtils.findSEPAElement(
-						rootElement.getConnectedTo().get(1),
-						pipeline.getSepas(), pipeline.getStreams());
-
-				List<EventSchema> firstLeft = Utils
-						.createList(((EventStream) ClientModelUtils
-								.transform(firstElement)).getEventSchema());
-				List<EventSchema> secondLeft = Utils
-						.createList(((EventStream) ClientModelUtils
-								.transform(secondElement)).getEventSchema());
-				;
-
+						SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
+								element.getDOM(), invocationGraphs);
+						incomingStreams.add(ancestor.getOutputStream());
+					}
+					
+				}
+			
 				match = ConnectionValidator.validateSchema(
-						firstLeft,
-						secondLeft,
+						Utils.createList(incomingStreams.get(0).getEventSchema()),
+						Utils.createList(incomingStreams.get(1).getEventSchema()),
 						Utils.createList(sepa.getEventStreams().get(0)
 								.getEventSchema()),
 						Utils.createList(sepa.getEventStreams().get(1)
@@ -168,112 +179,61 @@ public class PipelineValidationHandler {
 	public PipelineValidationHandler computeMappingProperties() {
 		List<String> connectedTo = rootElement.getConnectedTo();
 		String domId = rootElement.getDOM();
+		
 		List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties = rootElement
 				.getStaticProperties();
-		List<de.fzi.cep.sepa.model.client.StaticProperty> newStaticProperties = new ArrayList<>();
-
-		if (connectedTo.size() == 1) {
-			SEPAElement element = TreeUtils.findSEPAElement(rootElement
-					.getConnectedTo().get(0), pipeline.getSepas(), pipeline
-					.getStreams());
-
-			// TODO: eliminate duplicates
-			if (element instanceof SEPAClient) {
-				SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
-						connectedTo.get(0), invocationGraphs);
-				SEPA currentSEPA = (SEPA) sepaRootElement;
-
-				for (de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty : currentStaticProperties) {
-					if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
-						MappingProperty mp = TreeUtils.findMappingProperty(
-								clientStaticProperty.getElementId(),
-								currentSEPA);
-						List<Option> options = new ArrayList<>();
-
-						if (mp.getMapsFrom() != null) {
-							EventProperty eventProperty = TreeUtils
-									.findEventProperty(mp.getMapsFrom()
-											.toString(), currentSEPA
-											.getEventStreams());
-
-							List<EventProperty> leftMatchingProperties = matches(
-									eventProperty, ancestor.getOutputStream()
-											.getEventSchema()
-											.getEventProperties());
-
-							for (EventProperty matchedStreamProperty : leftMatchingProperties) {
-								options.add(new Option(matchedStreamProperty
-										.getRdfId().toString(),
-										matchedStreamProperty.getPropertyName()));
-							}
-						} else {
-							for (EventProperty streamProperty : ancestor
-									.getOutputStream().getEventSchema()
-									.getEventProperties()) {
-								options.add(new Option(streamProperty
-										.getRdfId().toString(), streamProperty
-										.getPropertyName()));
-							}
-						}
-
-						newStaticProperties.add(updateStaticProperty(clientStaticProperty, options));
-
-					} else
-						newStaticProperties.add(clientStaticProperty);
-				}
-				PipelineModification modification = new PipelineModification(
-						domId, rootElement.getElementId(), newStaticProperties);
-				pipelineModificationMessage
-						.addPipelineModification(modification);
-			} else if (element instanceof StreamClient) {
-				SEPA sepa = (SEPA) sepaRootElement;
-				EventStream stream = (EventStream) ClientModelUtils
-						.transform(element);
-
-				for (de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty : currentStaticProperties) {
-					if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
-						MappingProperty mp = TreeUtils.findMappingProperty(
-								clientStaticProperty.getElementId(), sepa);
-						List<Option> options = new ArrayList<>();
-
-						if (mp.getMapsFrom() != null) {
-							EventProperty rightProperty = TreeUtils
-									.findEventProperty(mp.getMapsFrom()
-											.toString(), sepa.getEventStreams());
-
-							List<EventProperty> leftMatchingProperties = matches(
-									rightProperty, stream.getEventSchema()
-											.getEventProperties());
-
-							for (EventProperty matchedStreamProperty : leftMatchingProperties) {
-								options.add(new Option(matchedStreamProperty
-										.getRdfId().toString(),
-										matchedStreamProperty.getPropertyName()));
-							}
-						} else {
-							for (EventProperty streamProperty : stream
-									.getEventSchema().getEventProperties()) {
-								options.add(new Option(streamProperty
-										.getRdfId().toString(), streamProperty
-										.getPropertyName()));
-							}
-						}
-						newStaticProperties.add(updateStaticProperty(clientStaticProperty, options));
-
-					} else
-						newStaticProperties.add(clientStaticProperty);
-				}
+		
+		currentStaticProperties = clearOptions(currentStaticProperties);
 				
-				PipelineModification modification = new PipelineModification(
-						domId, rootElement.getElementId(), newStaticProperties);
-				pipelineModificationMessage
-						.addPipelineModification(modification);
+			for(int i = 0; i < connectedTo.size(); i++)
+			{
+				SEPAElement element = TreeUtils.findSEPAElement(rootElement
+						.getConnectedTo().get(i), pipeline.getSepas(), pipeline
+						.getStreams());
+	
+				if (element instanceof SEPAClient || element instanceof StreamClient)
+				{
+					SEPA currentSEPA = (SEPA) sepaRootElement;
+					
+					if (element instanceof SEPAClient) {
+						
+						SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
+								connectedTo.get(i), invocationGraphs);
+					
+						currentStaticProperties = updateStaticProperties(currentStaticProperties, currentSEPA, ancestor.getOutputStream(), i);		
+					} else if (element instanceof StreamClient) {
+						EventStream stream = (EventStream) ClientModelUtils
+								.transform(element);
+		
+						currentStaticProperties = updateStaticProperties(currentStaticProperties, currentSEPA, stream, i);	
+					}
+					if ( currentSEPA.getEventStreams().size()-1 == i)
+					{
+						PipelineModification modification = new PipelineModification(
+								domId, rootElement.getElementId(), currentStaticProperties);
+						pipelineModificationMessage
+								.addPipelineModification(modification);
+					}
+				}
 			}
-		} else {
-
-		}
 
 		return this;
+	}
+
+	private List<StaticProperty> clearOptions(
+			List<StaticProperty> currentStaticProperties) {
+		Iterator<StaticProperty> it = currentStaticProperties.iterator();
+		while(it.hasNext())
+		{
+			StaticProperty p = (StaticProperty) it.next();
+			if (p.getType() == StaticPropertyType.MAPPING_PROPERTY)
+			{
+				SelectFormInput input = (SelectFormInput) p.getInput();
+				input.setOptions(new ArrayList<>());
+			}
+			
+		}
+		return currentStaticProperties;
 	}
 
 	public PipelineValidationHandler computeMatchingProperties() {
@@ -304,6 +264,25 @@ public class PipelineValidationHandler {
 		}
 		return match;
 	}
+	private List<de.fzi.cep.sepa.model.client.StaticProperty> updateStaticProperties(List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties, SEPA currentSEPA, EventStream ancestorOutputStream, int i)
+	{
+		List<de.fzi.cep.sepa.model.client.StaticProperty> newStaticProperties = new ArrayList<>();
+		
+		for (de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty : currentStaticProperties) {
+			if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
+			
+				List<Option> options = ((SelectFormInput) clientStaticProperty.getInput()).getOptions();
+			
+				if (options.size() > 0)	options.addAll(updateOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i));
+				else options = updateOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i);
+				newStaticProperties.add(updateStaticProperty(clientStaticProperty, options));
+
+			} else
+				newStaticProperties.add(clientStaticProperty);
+		} 
+		
+		return newStaticProperties;
+	}
 
 	private de.fzi.cep.sepa.model.client.StaticProperty updateStaticProperty(de.fzi.cep.sepa.model.client.StaticProperty currentStaticProperty, List<Option> newOption)
 	{
@@ -315,7 +294,43 @@ public class PipelineValidationHandler {
 		newProperty.setElementId(currentStaticProperty
 				.getElementId());
 		newProperty.setInput(new SelectFormInput(newOption));
+		newProperty.setType(currentStaticProperty.getType());
 		return newProperty;
+	}
+	
+	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, SEPA sepa, EventStream leftStream, int i) {
+			
+		MappingProperty mp = TreeUtils.findMappingProperty(
+				clientStaticProperty.getElementId(), sepa);
+		List<Option> options = new ArrayList<>();
+
+		if (mp.getMapsFrom() != null) {
+			EventProperty rightProperty = TreeUtils
+					.findEventProperty(mp.getMapsFrom()
+							.toString(), sepa.getEventStreams());
+		
+			if (sepa.getEventStreams().get(i).getEventSchema().getEventProperties().contains(rightProperty))
+			{
+				List<EventProperty> leftMatchingProperties = matches(
+						rightProperty, leftStream.getEventSchema()
+								.getEventProperties());
+	
+				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
+				
+					options.add(new Option(matchedStreamProperty
+							.getRdfId().toString(),
+							matchedStreamProperty.getPropertyName()));
+				}
+			}
+		} else {
+			for (EventProperty streamProperty : leftStream
+					.getEventSchema().getEventProperties()) {
+				options.add(new Option(streamProperty
+						.getRdfId().toString(), streamProperty
+						.getPropertyName()));
+			}
+		}
+		return options;
 	}
 
 }
