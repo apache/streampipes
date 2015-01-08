@@ -29,7 +29,6 @@ public class Operations {
 		.validateConnection()
 		.computeMappingProperties()
 		.computeMatchingProperties()
-		.validateProperties()
 		.getPipelineModificationMessage();
 	}
 

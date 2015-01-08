@@ -18,6 +18,7 @@ public class GraphSubmitter {
 	{
 		for(SEPAInvocationGraph graph : graphs)
 		{
+			System.out.println("Topic: " +graph.getOutputStream().getEventGrounding().getTopicName());
 			new HttpRequestBuilder(graph).invoke();
 		}
 		

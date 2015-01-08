@@ -59,7 +59,6 @@ public class InvocationGraphBuilder {
 			else if (element instanceof SEPAInvocationGraph)
 			{
 				SEPAInvocationGraph thisGraph = (SEPAInvocationGraph) element;
-				
 				String outputTopic = TopicGenerator.generateRandomTopic();
 				try {
 					thisGraph.setRdfId(new URIKey(new URI(thisGraph.getUri()+"/" +outputTopic)));

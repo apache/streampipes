@@ -37,7 +37,13 @@ public class TreeBuilder {
 		
 		// Action as root node
 		GenericTreeNode<NamedSEPAElement> rootNode = new GenericTreeNode<>();
-		rootNode.setData(ClientModelUtils.transform(rootElement));
+		NamedSEPAElement element = ClientModelUtils.transform(rootElement);
+		
+		if (makeInvocationGraph)
+		{
+			element = new SEPAInvocationGraph((SEPA)element, rootElement.getDOM());
+		}
+		rootNode.setData(element);
 		
 		tree.setRoot(constructTree(rootElement.getConnectedTo(), rootNode, makeInvocationGraph));
 		
@@ -77,7 +83,10 @@ public class TreeBuilder {
 			
 			if (makeInvocationGraph)
 			{
-				if (child instanceof SEPA) child = new SEPAInvocationGraph((SEPA)child, element.getDOM());
+				if (child instanceof SEPA) 
+					{
+						child = new SEPAInvocationGraph((SEPA)child, element.getDOM());
+					}
 			}
 			GenericTreeNode<NamedSEPAElement> nodeElement = new GenericTreeNode<NamedSEPAElement>(child);
 			node.addChild(nodeElement);

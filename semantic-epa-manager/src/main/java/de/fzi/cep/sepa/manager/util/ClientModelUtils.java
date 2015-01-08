@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.manager.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -24,6 +25,7 @@ public class ClientModelUtils {
 	public static SEPAClient getRootNode(Pipeline pipeline) throws Exception
 	{
 		List<SEPAClient> clients = pipeline.getSepas();
+		
 		for (SEPAClient client : pipeline.getSepas())
 		{
 			clients = remove(clients, client.getConnectedTo());
@@ -39,11 +41,22 @@ public class ClientModelUtils {
 		for(String domId : domIds)
 		{
 			SEPAClient sepa = findSEPAbyId(sepas, domId);
-			if (sepa != null) result.remove(sepa);
+			if (sepa != null) 	
+				result = remove(result, sepa);
 		}
 		return result;
 	}
 	
+	private static List<SEPAClient> remove(List<SEPAClient> clients,
+			SEPAClient sepa) {
+		List<SEPAClient> result = new ArrayList<>();
+		for(SEPAClient client : clients)
+		{
+			if (!client.getDOM().equals(sepa.getDOM())) result.add(client);
+		}
+		return result;
+	}
+
 	private static SEPAClient findSEPAbyId(List<SEPAClient> sepas, String domId)
 	{
 		for(SEPAClient sepa : sepas)

@@ -15,8 +15,10 @@ public class GroundingMatchValidator implements Validator<EventGrounding> {
 
 	@Override
 	public boolean validate(List<EventGrounding> firstLeft,
-			List<EventGrounding> secondLeft, List<EventGrounding> right) {
-		return validate(firstLeft, right) && validate(secondLeft, right);
+			List<EventGrounding> secondLeft, List<EventGrounding> firstRight,
+			List<EventGrounding> secondRight) {
+		return validate(firstLeft, firstRight) && validate(secondLeft, secondRight);
+		
 	}
 
 }

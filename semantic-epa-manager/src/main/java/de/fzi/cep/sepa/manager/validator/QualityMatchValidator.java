@@ -12,10 +12,18 @@ public class QualityMatchValidator implements Validator<EventQuality> {
 		return false;
 	}
 
-	@Override
+	
 	public boolean validate(List<EventQuality> firstLeft,
 			List<EventQuality> secondLeft, List<EventQuality> right) {
 		return validate(firstLeft, right) && validate(secondLeft, right);
+	}
+
+	@Override
+	public boolean validate(List<EventQuality> firstLeft,
+			List<EventQuality> secondLeft, List<EventQuality> firstRight,
+			List<EventQuality> secondRight) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

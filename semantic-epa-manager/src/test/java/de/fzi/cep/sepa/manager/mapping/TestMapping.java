@@ -7,6 +7,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.exceptions.TooManyEdgesException;
 import de.fzi.cep.sepa.manager.pipeline.MappingCalculator;
+import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
+import de.fzi.cep.sepa.messages.PipelineModification;
+import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
@@ -20,6 +23,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
+import de.fzi.sepa.model.client.util.Utils;
 
 public class TestMapping {
 
@@ -30,12 +34,13 @@ public class TestMapping {
 		SEPA sepa = requests.getSEPAById("http://localhost:8090/sepa/movement");
 		
 		SEPAClient sepaClient = ClientModelTransformer.toSEPAClientModel(sepa);
-		StreamClient streamClient = ClientModelTransformer.toStreamClientModel(sep, sep.getEventStreams().get(0));
+		StreamClient streamClient = ClientModelTransformer.toStreamClientModel(sep, sep.getEventStreams().get(1));
 		
 		System.out.println(sep.getName());
 		System.out.println(sepa.getName());
 		System.out.println(sepaClient.getInputNodes());
 		System.out.println(streamClient.getName());
+		System.out.println("--------");
 		
 		List<SEPAElement> elements = new ArrayList<>();
 		elements.add(streamClient);
@@ -48,12 +53,32 @@ public class TestMapping {
 		pipeline.setSepas(Arrays.asList(sepaClient));
 		pipeline.setStreams(Arrays.asList(streamClient));
 		
+		PipelineModificationMessage message = new PipelineValidationHandler(pipeline, true).validateConnection().computeMappingProperties().getPipelineModificationMessage();
+	
+		System.out.println(Utils.getGson().toJson(message));
+		for(PipelineModification modification : message.getPipelineModifications())
+		{
+			for(StaticProperty staticProperty : modification.getStaticProperties())
+			{
+				if (staticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY)
+				{
+					
+					SelectFormInput input = (SelectFormInput) staticProperty.getInput();
+					for(Option o : input.getOptions())
+					{
+						//System.out.println(o.getHumanDescription());
+					}
+				}
+			}
+		}
+		
+		/*
 		try {
-			SEPAClient client = new MappingCalculator(pipeline).computeMapping();
+			//SEPAClient client = new MappingCalculator(pipeline).computeMapping();
 			
 			for(StaticProperty staticProperty : client.getStaticProperties())
 			{
-			System.out.println("SP");
+			System.out.println("SP, " +staticProperty.getName());
 				if (staticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY)
 				{
 					System.out.println("MP");
@@ -69,6 +94,7 @@ public class TestMapping {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 	}
 }
