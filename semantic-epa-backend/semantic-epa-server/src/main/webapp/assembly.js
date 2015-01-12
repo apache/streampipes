@@ -543,6 +543,6 @@ function isConnected(element){
 }
 
 function isFullyConnected(element){
-	return jsPlumb.getConnections({target : element}).length == $(element).data("JSON").inputNodes ;
+	return jsPlumb.getConnections({target : $(element)}).length == $(element).data("JSON").inputNodes ;
 }
 
