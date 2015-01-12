@@ -70,6 +70,7 @@ jsPlumb.ready(function(e){
 			}
 		});
 		
+		
 		window.onresize = function(event){
 			jsPlumb.repaintEverything();
 		};

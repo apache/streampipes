@@ -401,10 +401,12 @@ function sendPipeline(fullPipeline, info){
  					for (var i= 0, sepa; sepa = currentPipeline.sepas[i]; i++){
  						var id = "#" + sepa.DOM;
  						if ($(id).data("options") != true){
+ 							if (!isFullyConnected(id)) {return;}
  							$('#customize-content').html(prepareCustomizeModal($(id)));
  							var string = "Customize " + sepa.name;
  							$('#customizeTitle').text(string);
 							$('#customizeModal').modal('show');
+							
  						}
  					}
  				}else{
@@ -420,6 +422,8 @@ function sendPipeline(fullPipeline, info){
  		});
  	}
 }
+
+
 
 
 function modifyPipeline(pipelineModifications){
@@ -462,10 +466,7 @@ function save() {
 	
 	$currentElement.data("options", true);
 	
-	// $('#savedOptions').children().not('strong').remove();
-	// for (var i = 0; i < $currentElement.data("options").length; i++) {
-		// $('<div>').text($currentElement.data("options")[i].name + ": " + $currentElement.data("options")[i].value).appendTo('#savedOptions');
-	// }
+
 	saveInStaticProperties(options);
 	
 	$currentElement.css("opacity", 1);
@@ -539,5 +540,9 @@ function isConnected(element){
 		return false;
 	}
 	return true;
+}
+
+function isFullyConnected(element){
+	return jsPlumb.getConnections({target : element}).length == $(element).data("JSON").inputNodes ;
 }
 
