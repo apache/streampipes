@@ -1,25 +1,10 @@
 package de.fzi.cep.sepa.manager.pipeline;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-import org.openrdf.model.Graph;
-import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
@@ -45,7 +30,6 @@ import de.fzi.cep.sepa.model.impl.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class PipelineValidationHandler {
 
