@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -40,6 +41,7 @@ public class SEC extends NamedSEPAElement{
 	public SEC(String uri, String name, String description, String iconUrl)
 	{
 		super(uri, name, description, iconUrl);
+		this.eventStreams = new ArrayList<>();
 	}
 	
 	public SEC()
@@ -71,7 +73,10 @@ public class SEC extends NamedSEPAElement{
 		this.domains = domains;
 	}
 	
-	
+	public boolean addEventStream(EventStream eventStream)
+	{
+		return eventStreams.add(eventStream);
+	}
 	
 	
 }
