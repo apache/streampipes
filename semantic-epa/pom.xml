@@ -11,6 +11,12 @@
 Context: semantic-enabled complex event processing</description>
 	<name>Semantic Event Processing Agents</name>
 	<dependencies>
+
+		<dependency>
+			<groupId>org.rendersnake</groupId>
+			<artifactId>rendersnake</artifactId>
+			<version>1.8</version>
+		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-storage</artifactId>

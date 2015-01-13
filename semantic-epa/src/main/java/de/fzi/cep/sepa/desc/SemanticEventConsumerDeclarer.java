@@ -6,7 +6,7 @@ public interface SemanticEventConsumerDeclarer {
 
 	public SEC declareModel();
 
-	public boolean invokeRuntime();
+	public String invokeRuntime();
 
 	public boolean detachRuntime();
 }
