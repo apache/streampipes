@@ -27,7 +27,7 @@ public enum StorageManager {
 	INSTANCE;
 
 	private String SERVER = "http://localhost:8080/openrdf-sesame";
-	private String REPOSITORY_ID = "test-5";
+	private String REPOSITORY_ID = "test-6";
 	private String TEMP_REPOSITORY_ID = "temp-db";
 	
 	private EntityManager storageManager;
