@@ -71,8 +71,7 @@ function initAssembly(){
 			}
 		}
 		
-	}); //End #assembly.droppable(
-		
+	}); //End #assembly.droppable()	
 }
 
 function createNewAssemblyElement(ui){
@@ -86,7 +85,7 @@ function createNewAssemblyElement(ui){
 	$newState
 		.css({'position': 'absolute', 'top': newTop , 'left': newPos.left})
 		.on("contextmenu", function (e) {
-			if ($(this).hasClass('stream') || $(this).hasClass('action')){
+			if ($(this).hasClass('stream')){
 				$('#customize, #division ').hide();
 				
 			}else{
