@@ -1,5 +1,8 @@
 package de.fzi.cep.sepa.storage.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
@@ -13,6 +16,7 @@ import org.openrdf.sail.NotifyingSailConnection;
 import org.openrdf.sail.memory.MemoryStore;
 
 import com.clarkparsia.empire.Empire;
+import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.google.inject.AbstractModule;
 
@@ -35,6 +39,9 @@ public enum StorageManager {
 
 	private RepositoryConnection conn;
 	private RepositoryConnection tempConn;
+	
+	private Repository repository;
+	private Repository tempRepository;
 
 	StorageManager() {
 		initStorage();
@@ -44,23 +51,12 @@ public enum StorageManager {
 	private boolean initStorage() {
 
 		try {
-			/*
-			 * CassandraRdfHectorTriple crdf = new
-			 * CassandraRdfHectorTriple("127.0.0.1:9160", "SEPAKEYSPACE");
-			 * 
-			 * Sail sail = new CumulusRDFSail(crdf); sail.initialize();
-			 * 
-			 * SailRepository repo = new SailRepository(sail);
-			 */
-			Repository repository = new HTTPRepository(SERVER, REPOSITORY_ID);
-			Repository tempRepository = new HTTPRepository(SERVER, TEMP_REPOSITORY_ID);
-					
-					
+			repository = new HTTPRepository(SERVER, REPOSITORY_ID);
+			tempRepository = new HTTPRepository(SERVER, TEMP_REPOSITORY_ID);
+									
 			conn = repository.getConnection();
 			tempConn = tempRepository.getConnection();
-			
-			
-			
+				
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -75,8 +71,7 @@ public enum StorageManager {
 				"c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties");
         /*System.setProperty("empire.configuration.file",
                 "/home/robin/FZI/CEP/semantic-epa-parent/semantic-epa-backend/semantic-epa-storage/src/main/resources/empire.config.properties");*/
-
-		// loads Sesame bindings for Empire
+			
 		Empire.init(new OpenRdfEmpireModule());
 
 		// create an EntityManager for the specified persistence context
@@ -84,8 +79,6 @@ public enum StorageManager {
 				"sepa-server").createEntityManager();
 		
 		tempStorageManager = Persistence.createEntityManagerFactory("temp-db").createEntityManager();
-		
-		
 		
 		return true;
 		} catch (Exception e)
