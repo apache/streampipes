@@ -6,12 +6,12 @@ var standardDraggableOptions = {
 		$('.alpha').fadeTo(300, .2);
 		$('#assembly').css('border', '3px dashed grey');
 		ui.helper.appendTo('body');
-		ui.helper.children().addClass("draggable-img-dragging");
+		// ui.helper.children().addClass("draggable-img-dragging");
 	},
 	stop : function(e, ui) {
 		$('.alpha').fadeTo(300, 1);
 		$('#assembly').css('border', '');
-		ui.helper.children().removeClass("draggable-img-dragging");
+		// ui.helper.children().removeClass("draggable-img-dragging");
 	}
 };
 var y = 0;
@@ -343,14 +343,13 @@ function makeDraggable(type) {
 			helper : 'clone',
 			stack : '.draggable-icon',
 			start : function(stream, ui) {
+				ui.helper.children().addClass("draggable-img-dragging");
 				if ($('#sepas').css("opacity") === "0") {
 					$('.alpha').not('#sepas').fadeTo(300, .2);
 					ui.helper.appendTo('body');
-					ui.helper.children().addClass("draggable-img-dragging");
-
 				} else {
 					ui.helper.appendTo('body');
-					ui.helper.children().addClass("draggable-img-dragging");
+					
 				}
 
 				$('#assembly').css('border', '3px dashed grey');
