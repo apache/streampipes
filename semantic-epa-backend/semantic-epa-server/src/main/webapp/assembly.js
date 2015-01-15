@@ -103,7 +103,8 @@ function createNewAssemblyElement(ui){
 			return false;
 		});
 	if ($newState.data('JSON').iconUrl == null){ //Kein icon in JSON angegeben
-		var md5 = ui.draggable.data("JSON").elementId.replace("-", "");
+		var md5 = CryptoJS.MD5(ui.draggable.data("JSON").elementId);
+		// var md5 = ui.draggable.data("JSON").elementId.replace("-", "");
 		var $ident = $('<p>')
 			.text(md5)
 			.appendTo($newState);
@@ -448,8 +449,6 @@ function modifyPipeline(pipelineModifications){
  */
 function save() {
 
-	
-	
 	var options = $('#modalForm').serializeArray();
 	console.log(options);
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
@@ -464,10 +463,7 @@ function save() {
 	}
 	
 	$currentElement.data("options", true);
-	
-
 	saveInStaticProperties(options);
-	
 	$currentElement.css("opacity", 1);
 	
 

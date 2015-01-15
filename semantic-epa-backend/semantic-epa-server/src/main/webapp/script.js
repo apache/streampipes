@@ -136,7 +136,8 @@ function initSources(data) {
 		.appendTo('#sources');
 
 		if (json.iconUrl == null) {//No Icon Path found in JSON
-			var md5 = json.elementId.replace("-", "");
+			var md5 = CryptoJS.MD5(json.elementId);
+			// var md5 = json.elementId.replace("-", "");
 			var $ident = $('<p>').text(md5).appendTo($newSource);
 			$ident.identicon5({
 				size : 150
@@ -196,7 +197,8 @@ function createStreams(data){
 		.on("contextmenu", staticContextMenu)
 		.appendTo('#streams').show();
 		if (json.iconUrl == null) {
-			var md5 = json.elementId.replace("-", "");
+			var md5 = CryptoJS.MD5(json.elementId);
+			// var md5 = json.elementId.replace("-", "");
 			var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu)
 			// .data("JSON", json)
 			.appendTo($newStream);
@@ -248,7 +250,8 @@ function createSepas(data){
 				title : json.name
 			}).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
 			if (json.iconUrl == null) {
-				var md5 = json.elementId.replace("-", "");
+				var md5 = CryptoJS.MD5(json.elementId);
+				// var md5 = json.elementId.replace("-", "");
 				var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
 				$ident.identicon5({
 					size : 180
@@ -298,7 +301,8 @@ function createActions(data){
 		.appendTo('#actions')
 		.show();
 		if (json.iconUrl == null) {
-			var md5 = json.elementId.replace("-", "");
+			var md5 = CryptoJS.MD5(json.elementId);
+			// var md5 = json.elementId.replace("-", "");
 			var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newAction);
 			$ident.identicon5({
 				size : 180
