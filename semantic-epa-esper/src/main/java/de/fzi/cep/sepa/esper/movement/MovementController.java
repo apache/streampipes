@@ -176,8 +176,12 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 						+ stream.getEventGrounding().getTopicName(),
 						DataType.JSON);
 
-				String epsgProperty = ((FreeTextStaticProperty) (SEPAUtils
-						.getStaticPropertyByName(sepa, "epsg"))).getValue();
+				String epsgProperty = null;
+				OneOfStaticProperty osp = ((OneOfStaticProperty) (SEPAUtils
+						.getStaticPropertyByName(sepa, "epsg")));
+				for(Option option : osp.getOptions())
+					if (option.isSelected()) epsgProperty = option.getName();
+				
 				String xProperty = SEPAUtils.getMappingPropertyName(sepa,
 						"latitude");
 				String yProperty = SEPAUtils.getMappingPropertyName(sepa,

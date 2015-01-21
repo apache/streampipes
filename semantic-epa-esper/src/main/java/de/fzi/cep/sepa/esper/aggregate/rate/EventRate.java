@@ -1,7 +1,9 @@
-package de.fzi.cep.sepa.esper.filter.text;
+package de.fzi.cep.sepa.esper.aggregate.rate;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+
+
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -13,32 +15,24 @@ import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
-import com.espertech.esper.client.soda.EPStatementObjectModel;
-import com.espertech.esper.client.soda.Expression;
-import com.espertech.esper.client.soda.Expressions;
-import com.espertech.esper.client.soda.FilterStream;
-import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.InsertIntoClause;
-import com.espertech.esper.client.soda.SelectClause;
 
-import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
 
-public class TextFilter implements EPEngine<TextFilterParameter>{
+public class EventRate implements EPEngine<EventRateParameter>{
 	
 	private EPServiceProvider epService;
 
-	private static final Logger logger = LoggerFactory.getLogger(TextFilter.class.getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger(EventRate.class.getSimpleName());
 
 	private String EVENT_NAME_PARAM = "name";
 
 	@Override
-	public void bind(EngineParameters<TextFilterParameter> parameters,
+	public void bind(EngineParameters<EventRateParameter> parameters,
 			OutputCollector collector) {
 		if (parameters.getInEventTypes().size() != 1)
-			throw new IllegalArgumentException("Text Filter only possible on one event type.");
+			throw new IllegalArgumentException("Event Rate only possible on one event type.");
 		
 		parameters.getInEventTypes().keySet().forEach(e -> {
 			EVENT_NAME_PARAM = e;
@@ -50,10 +44,16 @@ public class TextFilter implements EPEngine<TextFilterParameter>{
 			config.addEventType(e.getKey(), inTypeMap); // indirect cast from Class to Object
 		});
 		
+		
+		System.out.println(parameters.getStaticProperty().getOutputName());
+		Map<String, Object> outMap = new HashMap<>();
+		outMap.put("rate", java.lang.Double.class);
+		config.addEventType(parameters.getStaticProperty().getOutputName(), outMap);
+		
+		
 		epService = EPServiceProviderManager.getProvider(RandomStringUtils.randomAlphabetic(8), config);
-
-		EPStatementObjectModel model = statement(parameters.getStaticProperty());
-		EPStatement statement = epService.getEPAdministrator().create(model);
+		System.out.println(statement(parameters.getStaticProperty()));
+		EPStatement statement = epService.getEPAdministrator().createEPL(statement(parameters.getStaticProperty()));
 		
 	
 		statement.addListener(listenerSendingTo(collector));
@@ -76,21 +76,12 @@ public class TextFilter implements EPEngine<TextFilterParameter>{
 		};
 	}
 
-	private EPStatementObjectModel statement(final TextFilterParameter params) {
-		EPStatementObjectModel model = new EPStatementObjectModel();
-		model.insertInto(new InsertIntoClause(params.getOutName())); // out name
-		model.selectClause(SelectClause.createWildcard());
-		model.fromClause(new FromClause().add(FilterStream.create(params.getInName()))); // in name
+	private String statement(final EventRateParameter params) {
+		String outName = "`" +params.getOutName() +"`";
+		String inName = "`" +params.getInName() +"`";
+		String epl = "insert into " +outName +" select rate(" +params.getAvgRate() +") as rate from " +inName +" output snapshot every " +params.getOutputRate() +" sec";
 		
-		Expression stringFilter;
-		if (params.getStringOperator() == StringOperator.MATCHES)
-			stringFilter = Expressions.eq(params.getFilterProperty(), params.getKeyword());
-		else
-			stringFilter = Expressions.like(params.getFilterProperty(), "%" +params.getKeyword() +"%");
-	
-		model.whereClause(stringFilter);
-		logger.info("Generated EPL: " +model.toEPL());
-		return model;
+		return epl;
 		
 	}
 

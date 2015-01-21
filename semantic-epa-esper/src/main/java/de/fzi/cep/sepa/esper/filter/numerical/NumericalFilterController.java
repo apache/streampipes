@@ -3,10 +3,16 @@ package de.fzi.cep.sepa.esper.filter.numerical;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.esper.AbstractEsperTemplate;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.filter.text.TextFilter;
+import de.fzi.cep.sepa.esper.filter.text.TextFilterParameter;
+import de.fzi.cep.sepa.esper.util.NumericalOperator;
+import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -20,8 +26,9 @@ import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+import de.fzi.cep.sepa.model.util.SEPAUtils;
 
-public class NumericalFilterController implements SemanticEventProcessingAgentDeclarer{
+public class NumericalFilterController extends AbstractEsperTemplate<NumericalFilterParameter> {
 
 	@Override
 	public SEPA declareModel() {
@@ -31,7 +38,7 @@ public class NumericalFilterController implements SemanticEventProcessingAgentDe
 		
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
-		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/number"));
+		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
 	
 		eventProperties.add(property);
 		
@@ -74,7 +81,34 @@ public class NumericalFilterController implements SemanticEventProcessingAgentDe
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
+		String threshold = ((FreeTextStaticProperty) (SEPAUtils
+				.getStaticPropertyByName(sepa, "value"))).getValue();
+		String stringOperation = SEPAUtils.getOneOfProperty(sepa,
+				"operation");
+		
+		String operation = "GT";
+		
+		if (stringOperation.equals("<=")) operation = "LT";
+		else if (stringOperation.equals("<")) operation="LE";
+		else if (stringOperation.equals(">=")) operation = "GE";
+		
+		
+		String filterProperty = SEPAUtils.getMappingPropertyName(sepa,
+				"number");
+		
+		logger.info("Text Property: " +filterProperty);
+	
+		String topicPrefix = "topic://";
+		NumericalFilterParameter staticParam = new NumericalFilterParameter(topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName(), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName(), sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), Collections.<String> emptyList(), Integer.parseInt(threshold), NumericalOperator.valueOf(operation), filterProperty);
+		
+		
+		try {
+			
+			return super.bind(staticParam, NumericalFilter::new, sepa);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 

@@ -10,6 +10,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public abstract class AbstractEsperTemplate<B extends BindingParameters> impleme
 
 	public static final CamelContext context = new DefaultCamelContext(); // routing context
 
-	public static final String BROKER_ALIAS = "test-jms";
+	//public static final String BROKER_ALIAS = "test-jms";
 	
 	protected EPRuntime runtime;
 	
@@ -46,6 +47,8 @@ public abstract class AbstractEsperTemplate<B extends BindingParameters> impleme
 	protected boolean bind(B bindingParameters, Supplier<EPEngine<B>> supplier, SEPAInvocationGraph sepa) 
 	{
 		try {
+			String BROKER_ALIAS = RandomStringUtils.randomAlphabetic(8);
+			
 			EndpointInfo destination;
 			List<CamelConfig> config = new ArrayList<CamelConfig>();
 			List<EndpointInfo> source = new ArrayList<EndpointInfo>();
@@ -67,19 +70,20 @@ public abstract class AbstractEsperTemplate<B extends BindingParameters> impleme
 			
 			engineParams = new EngineParameters<>(
 				inEventTypes,
-				new OutputStrategy.Rename("MovementEvent", baseEventName), bindingParameters);
+				new OutputStrategy.Rename(baseEventName, baseEventName), bindingParameters);
 	
-			RuntimeParameters<B> runtimeParameters = new RuntimeParameters<>("movement-test",
+			RuntimeParameters<B> runtimeParameters = new RuntimeParameters<>(sepa.getUri(),
 					supplier, engineParams, config, destination, source);
 			
 			runtime = new EPRuntime(context, runtimeParameters);
+			/*
 			context.addRoutes(new RouteBuilder() {
 				@Override
 				public void configure() throws Exception {
-					from("test-jms:topic:" +sepa.getOutputStream().getEventGrounding().getTopicName()) // .to("file://test")
+					from(BROKER_ALIAS +":topic:" +sepa.getOutputStream().getEventGrounding().getTopicName()) // .to("file://test")
 					.process(ex -> logger.info("Receiving Event: {}", new String((byte[]) ex.getIn().getBody())));
 				}
-			});
+			});*/
 	
 			ProducerTemplate template = context.createProducerTemplate();
 			template.setDefaultEndpointUri(BROKER_ALIAS + ":topic:PositionTopic");
