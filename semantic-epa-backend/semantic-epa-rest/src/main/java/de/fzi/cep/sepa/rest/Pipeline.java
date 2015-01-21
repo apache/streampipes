@@ -94,8 +94,14 @@ public class Pipeline extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String stopPipeline(@PathParam("pipelineId") String pipelineId)
 	{
-		//TODO
-		return null;
+		try {
+			de.fzi.cep.sepa.model.client.Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+			Operations.stopPipeline(pipeline);
+			return constructSuccessMessage(NotificationType.PIPELINE_STOP_SUCCESS.uiNotification());
+			} catch (Exception e)
+			{
+				return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+			}
 	}
 	
 	@Path("/{pipelineId}/verify")
