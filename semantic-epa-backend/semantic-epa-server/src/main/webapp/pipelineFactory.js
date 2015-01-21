@@ -9,6 +9,7 @@ function addToPipeline(element, pipeline){
 		pipeline.action.iconUrl = $(element).data("JSON").iconUrl;
 		pipeline.action.connectedTo = [];
 		pipeline.action.elementId = $(element).data("JSON").elementId;
+		pipeline.action.staticProperties = $(element).data("JSON").staticProperties;
 		for (var i = 0; i < jsPlumb.getConnections({
 			target : element
 		}).length; i++) {

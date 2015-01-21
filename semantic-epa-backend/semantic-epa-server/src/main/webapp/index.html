@@ -21,8 +21,6 @@
 		<script type="text/javascript" src="md5.js"></script>
 		<script type="text/javascript" src="pipelineFactory.js"></script>
 		<script type="text/javascript" src="dummyPipelineSend.js"></script> <!-- Nur für debugging -->
-		<script type="text/javascript" src="js/stomp.js"></script>
-		<script type="text/javascript" src="js/wsConnector.js"></script>
 		
 		<link rel="stylesheet" href="jsplumb.css"/>
 		<link rel="stylesheet" href="toastr.css"/><!-- Toastr -->
@@ -413,6 +411,39 @@
 						<h1 class="col-md-4 ">Visualizations</h1>
 					</div>
 					<div class="row">
+					<script type="text/javascript">
+						var viz;
+						var url = standardUrl + "visualizations";
+					
+						$.ajax({
+							dataType: "json",
+							url: url,
+							success: function(data){
+								var sel = $('<select>').appendTo($('#vizControl'));
+								sel.append($("<option>").text("(Select visualization)"));
+								$(data).each(function() {
+									sel.append($("<option>").attr('value',this.consumerUrl).text(this.pipelineName));
+								});
+								$('select').change(function(){
+									loadViz($(this).children(":selected").attr('value'));
+								});
+								
+							},
+							error: function(data){
+								displayErrors(data);
+							}
+						});
+						
+						function loadViz(vizUrl)
+						{
+							if (vizUrl != 'undefined')
+							$("#vis").load(vizUrl);
+						}
+						
+					</script>
+					<div id="vizControl"></div>
+					<div id="vis"></div>
+					<!-- 
 						<div id="vis">
 							<div class="form-group">
 							    <label for="brokerUrl">URL</label>
@@ -426,6 +457,7 @@
 							  <button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
 							  <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
 						</div>
+					-->
 						<!-- 
 						<script type="text/javascript">
 						$("#vis").load("http://localhost:8091/test");
