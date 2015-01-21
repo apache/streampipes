@@ -9,9 +9,19 @@
 	<artifactId>semantic-epa-actions-samples</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.8.0</artifactId>
+			<version>0.8.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.rendersnake</groupId>
+			<artifactId>rendersnake</artifactId>
+			<version>1.8</version>
 		</dependency>
 	</dependencies>
 </project>
