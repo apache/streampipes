@@ -32,12 +32,12 @@ public class HookLoad implements EventStreamDeclarer {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#drillingRPM")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost:61616");
+		grounding.setUri("tcp://localhost");
 		grounding.setTopicName("SEPA.SEP.DDM.HookLoad");
 		this.topicName = grounding.getTopicName();
 		

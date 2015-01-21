@@ -40,7 +40,7 @@ public class SpeedShaft implements EventStreamDeclarer {
 		eventProperties
 				.add(new EventProperty(
 						XSD._double.toString(),
-						"variable_value",
+						"value",
 						"",
 						de.fzi.cep.sepa.commons.Utils
 								.createURI("http://sepa.event-processing.org/sepa#drillingRPM")));
