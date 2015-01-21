@@ -32,6 +32,7 @@ import de.fzi.cep.sepa.html.EventProducerWelcomePage;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
@@ -83,7 +84,7 @@ public class ModelSubmitter {
 			SEPA sepa = declarer.declareModel();
 			sepa.setUri(baseUri + sepa.getPathName());
 			component.getDefaultHost().attach(sepa.getPathName(),
-					generateSEPARestlet(sepa, declarer));
+					generateSEPARestlet(component, sepa, declarer));
 		}
 
 		component.start();
@@ -125,14 +126,22 @@ public class ModelSubmitter {
 						response.setEntity(asString(rdfGraph),
 								MediaType.APPLICATION_JSON);
 					} else if (request.getMethod().equals(Method.POST)) {
-						String pathName = "/test";
+						String pathName = declarer.declareModel().getUri();
+						Form form = new Form(request.getEntity());
+						SECInvocationGraph graph = Transformer.fromJsonLd(
+								SECInvocationGraph.class,
+								form.getFirstValue("json"));
+						System.out.println(graph.getElementId());
+						System.out.println(graph.getUri());
 						// TODO: extract HTTP parameters
-						Restlet restlet = generateConcreteActionRestlet(null,
-								declarer);
-						component.getDefaultHost().attach(pathName, restlet);
+						Restlet restlet = generateConcreteActionRestlet(graph, 
+								declarer, component);
+						System.out.println(form.getFirstValue("json"));
+						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);
 						restlets.add(restlet);
 					} else if (request.getMethod().equals(Method.DELETE)) {
-						declarer.detachRuntime();
+						//TODO
+						//declarer.detachRuntime(new SECInvocationGraph());
 						restlets.clear();
 					}
 
@@ -143,15 +152,16 @@ public class ModelSubmitter {
 		};
 	}
 
-	private static Restlet generateConcreteActionRestlet(String url, SemanticEventConsumerDeclarer declarer)
+	private static Restlet generateConcreteActionRestlet(SECInvocationGraph graph, SemanticEventConsumerDeclarer declarer, Component component)
 	{
+		declarer.invokeRuntime(graph);
 		return new Restlet() {
 			
 			public void handle(Request request, Response response)
 			{
 				if (request.getMethod().equals(Method.GET))
 				{	
-					response.setEntity(declarer.invokeRuntime() , MediaType.TEXT_HTML);
+					response.setEntity(declarer.invokeRuntime(graph) , MediaType.TEXT_HTML);
 					getMessageHeaders(response).add("Access-Control-Allow-Origin", "*"); 
 					getMessageHeaders(response).add("Access-Control-Allow-Methods", "POST,OPTIONS,GET");
 					getMessageHeaders(response).add("Access-Control-Allow-Headers", "Content-Type"); 
@@ -166,16 +176,22 @@ public class ModelSubmitter {
 					getMessageHeaders(response).add("Access-Control-Allow-Credentials", "true"); 
 					getMessageHeaders(response).add("Access-Control-Max-Age", "60"); 
 				}
+				
+				if (request.getMethod().equals(Method.DELETE))
+				{
+					component.getDefaultHost().detach(this);
+				}
 			}
 			
 		};
 	}
 
-	private static Restlet generateSEPARestlet(SEPA sepa,
+	private static Restlet generateSEPARestlet(Component component, SEPA sepa,
 			SemanticEventProcessingAgentDeclarer declarer) {
 		return new Restlet() {
 			public void handle(Request request, Response response) {
 
+				
 				try {
 					if (request.getMethod().equals(Method.GET)) {
 						Graph rdfGraph = Transformer.generateCompleteGraph(
@@ -183,11 +199,17 @@ public class ModelSubmitter {
 						response.setEntity(asString(rdfGraph),
 								MediaType.APPLICATION_JSON);
 					} else if (request.getMethod().equals(Method.POST)) {
+						String pathName = declarer.declareModel().getUri();
 						Form form = new Form(request.getEntity());
 						// TODO: extract HTTP parameters
-						declarer.invokeRuntime(Transformer.fromJsonLd(
+						SEPAInvocationGraph graph = Transformer.fromJsonLd(
 								SEPAInvocationGraph.class,
-								form.getFirstValue("json")));
+								form.getFirstValue("json"));
+						Restlet restlet = generateConcreteSEPARestlet(graph, 
+								declarer, component);
+	
+						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);
+						
 					} else if (request.getMethod().equals(Method.DELETE)) {
 						declarer.detachRuntime(Transformer.fromJsonLd(
 								SEPAInvocationGraph.class, request.getEntity()
@@ -198,6 +220,25 @@ public class ModelSubmitter {
 					e.printStackTrace();
 				}
 			}
+		};
+	}
+
+	protected static Restlet generateConcreteSEPARestlet(
+			SEPAInvocationGraph graph,
+			SemanticEventProcessingAgentDeclarer declarer, Component component) {
+		
+		declarer.invokeRuntime(graph);
+		
+		return new Restlet() {
+			
+			public void handle(Request request, Response response)
+			{
+				if (request.getMethod().equals(Method.DELETE))
+				{
+					component.getDefaultHost().detach(this);
+				}
+			}
+			
 		};
 	}
 
