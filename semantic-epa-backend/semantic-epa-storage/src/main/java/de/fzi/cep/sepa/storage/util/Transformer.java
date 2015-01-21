@@ -106,8 +106,8 @@ public class Transformer {
 	
 	public static String getPackageName(String className)
 	{
-		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement"};
-		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph"};
+		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement", "InvocableSEPAElement"};
+		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph", "SECInvocationGraph"};
 		String[] modelClasses = {"MatchingStaticProperty", "Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol", "OneOfStaticProperty", "FreeTextStaticProperty", "AnyStaticProperty", "Option", "MappingProperty"};
 		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
@@ -217,7 +217,14 @@ public class Transformer {
 							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SEPAINVOCATIONGRAPH
 									.toSesameURI().toString())) {
 						uri = s.getSubject().toString(); 
+					}  else if (s
+							.getObject()
+							.stringValue()
+							.equals(de.fzi.cep.sepa.model.vocabulary.SEPA.SECINVOCATIONGRAPH
+									.toSesameURI().toString())) {
+						uri = s.getSubject().toString(); 
 					}
+					
 				}
 				StorageManager.INSTANCE.getTempConnection().add(s);
 			}

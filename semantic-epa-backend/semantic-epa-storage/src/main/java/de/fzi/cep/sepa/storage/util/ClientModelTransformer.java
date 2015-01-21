@@ -103,9 +103,27 @@ public class ClientModelTransformer {
 	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
 	{
 		SEPA sepa = StorageManager.INSTANCE.getEntityManager().find(SEPA.class, sepaClient.getElementId());
-		List<StaticProperty> resultProperties = new ArrayList<StaticProperty>();
+		
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
-		for(StaticProperty p : sepa.getStaticProperties())
+		sepa.setStaticProperties(convertStaticProperties(sepa, clientProperties));
+		
+		return sepa;
+	}
+	
+	private static List<StaticProperty> convertStaticProperties(SEC sec, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
+	{
+		return convertStaticProperties(sec.getStaticProperties(), clientProperties);
+	}
+	
+	private static List<StaticProperty> convertStaticProperties(SEPA sepa, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
+	{
+		return convertStaticProperties(sepa.getStaticProperties(), clientProperties);
+	}
+	
+	private static List<StaticProperty> convertStaticProperties(List<StaticProperty> serverStaticProperties, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
+	{
+		List<StaticProperty> resultProperties = new ArrayList<StaticProperty>();
+		for(StaticProperty p : serverStaticProperties)
 		{
 			String id = p.getRdfId().toString();
 			FormInput formInput = Utils.getClientPropertyById(clientProperties, id).getInput();
@@ -132,8 +150,7 @@ public class ClientModelTransformer {
 				resultProperties.add(convertMatchingStaticProperty(matchingProperty, input));
 			}
 		}
-		
-		return sepa;
+		return resultProperties;
 	}
 	
 	private static StaticProperty convertMatchingStaticProperty(
@@ -264,13 +281,19 @@ public class ClientModelTransformer {
 	}
 
 	public static SEC fromSECClientModel(ActionClient element) {
-		return StorageManager.INSTANCE.getEntityManager().find(SEC.class, element.getElementId());
+		SEC sec = StorageManager.INSTANCE.getEntityManager().find(SEC.class, element.getElementId());
+		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = element.getStaticProperties();
+		sec.setStaticProperties(convertStaticProperties(sec, clientProperties));
+		return sec;
 	}
 	
 	public static ActionClient toSECClientModel(SEC sec)
 	{
 		ActionClient client = new ActionClient(sec.getName(), sec.getDescription());
 		client.setElementId(sec.getRdfId().toString());
+		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
+		sec.getStaticProperties().forEach((p) -> clientStaticProperties.add(convertStaticProperty(p)));			
+		client.setStaticProperties(clientStaticProperties);	
 		return client;
 	}
 

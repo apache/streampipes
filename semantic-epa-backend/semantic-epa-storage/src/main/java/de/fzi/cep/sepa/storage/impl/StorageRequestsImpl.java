@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import com.clarkparsia.empire.impl.RdfQuery;
 import com.clarkparsia.empire.util.EmpireUtil;
 
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -201,6 +202,12 @@ public class StorageRequestsImpl implements StorageRequests {
 	@Override
 	public StaticProperty getStaticPropertyById(String rdfId) {
 		return entityManager.find(StaticProperty.class, URI.create(rdfId));
+	}
+
+	@Override
+	public boolean storeInvocableSEPAElement(InvocableSEPAElement element) {
+		entityManager.persist(element);
+		return true;
 	}
 
 	

@@ -3,10 +3,17 @@ package de.fzi.cep.sepa.storage.api;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.RunningVisualization;
 
 public interface PipelineStorage {
 
 	public List<Pipeline> getAllPipelines();
+	
+	public List<RunningVisualization> getRunningVisualizations();
+	
+	public void storeVisualization(RunningVisualization vizualization);
+	
+	public void deleteVisualization(String pipelineId);
 	
 	public void storePipeline(Pipeline pipeline);
 	

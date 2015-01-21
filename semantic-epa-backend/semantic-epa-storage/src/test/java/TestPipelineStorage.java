@@ -1,8 +1,11 @@
 import com.google.common.io.Resources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.input.FormInput;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+
 import org.apache.commons.io.Charsets;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
@@ -28,9 +31,13 @@ public class TestPipelineStorage {
         scanner.close();
        
 
-        CouchDbClient dbClient = new CouchDbClient();
-        dbClient.save(json);
-        dbClient.shutdown();
+        //CouchDbClient dbClient = new CouchDbClient();
+        //dbClient.save(json);
+        
+        
+        //dbClient.shutdown();
+        
+        StorageManager.INSTANCE.getPipelineStorageAPI().deletePipeline("04abe192-07ae-44d1-95a0-dc0de2e341c4");
     }
 
 }
