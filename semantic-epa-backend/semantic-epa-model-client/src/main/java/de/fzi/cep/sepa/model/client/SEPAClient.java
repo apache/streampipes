@@ -7,12 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-public class SEPAClient extends SEPAElement {
+public class SEPAClient extends ConsumableSEPAElement {
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<String> domains;
-	@OneToMany(cascade=CascadeType.ALL)
-	private List<StaticProperty> staticProperties;
+	
 	private int inputNodes;
 	
 	
@@ -38,14 +37,6 @@ public class SEPAClient extends SEPAElement {
 
 	public void setDomains(List<String> domains) {
 		this.domains = domains;
-	}
-
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
-
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
 	}
 
 	public int getInputNodes() {

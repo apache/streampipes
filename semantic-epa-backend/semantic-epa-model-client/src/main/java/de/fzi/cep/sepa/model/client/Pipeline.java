@@ -28,6 +28,8 @@ public class Pipeline {
 	private @SerializedName("_id") String pipelineId;
 	private String name;
 	private String description;
+	
+	private @SerializedName("_rev") String rev;
 
 	public List<SEPAClient> getSepas() {
 		return sepas;
@@ -83,6 +85,14 @@ public class Pipeline {
 
 	public void setPipelineId(String pipelineId) {
 		this.pipelineId = pipelineId;
+	}
+
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
 	}
 	
 	

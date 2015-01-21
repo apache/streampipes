@@ -7,7 +7,8 @@ public enum NotificationType {
 	UNKNOWN_ERROR("Unknown Error", "An unforeseen error has occurred."), 
 	STORAGE_ERROR("Storage Error", "Entity could not be stored."),
 	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully"), 
-	PIPELINE_START_SUCCESS("Started", "Pipeline successfully started");
+	PIPELINE_START_SUCCESS("Started", "Pipeline successfully started"), 
+	PIPELINE_STOP_SUCCESS("Stopped", "Pipeline stopped successfully");
 
 	private final String title;
 	private final String description;
