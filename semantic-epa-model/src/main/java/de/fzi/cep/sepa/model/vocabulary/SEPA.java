@@ -31,7 +31,8 @@ public enum SEPA {
 	HAS_NAME("hasName", OWL.DATATYPEPROPERTY),
 	HAS_DESCRIPTION("hasDescription", OWL.DATATYPEPROPERTY),
 	HAS_SCHEMA("hasSchema", OWL.OBJECTPROPERTY), 
-	SEPAINVOCATIONGRAPH("SEPAInvocationGraph", RDFS.CLASS);
+	SEPAINVOCATIONGRAPH("SEPAInvocationGraph", RDFS.CLASS),
+	SECINVOCATIONGRAPH("SECInvocationGraph", RDFS.CLASS);
 
 	public static final String NAMESPACE = "http://sepa.event-processing.org/sepa#";
 	

@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,30 +12,19 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.util.SEPAUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SECInvocationGraph")
 @Entity
-public class SECInvocationGraph extends NamedSEPAElement{
+public class SECInvocationGraph extends InvocableSEPAElement{
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:requires")
-	List<EventStream> eventStreams;
 	
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasStaticProperty")
-	List<StaticProperty> staticProperties;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasDomain")
 	List<String> domains;
 	
 	public SECInvocationGraph(SEC sec)
@@ -44,19 +34,24 @@ public class SECInvocationGraph extends NamedSEPAElement{
 		this.setDescription(sec.getDescription());
 		this.setDomains(sec.getDomains());
 		this.setIconUrl(sec.getIconUrl());
-		this.setEventStreams(sec.getEventStreams());
+		this.setInputStreams(sec.getEventStreams());
 		this.setStaticProperties(sec.getStaticProperties());
-		this.setUri(sec.getRdfId().toString());
+		this.setBelongsTo(sec.getRdfId().toString());
+		this.setUri(belongsTo +"/" +elementId);
 	}
-
-	public List<EventStream> getEventStreams() {
-		return eventStreams;
+	
+	public SECInvocationGraph(SEC sec, String domId)
+	{
+		this(sec);
+		this.setDomId(domId);
 	}
-
-	public void setEventStreams(List<EventStream> eventStreams) {
-		this.eventStreams = eventStreams;
+	
+	public SECInvocationGraph()
+	{
+		super();
+		inputStreams = new ArrayList<EventStream>();
 	}
-
+	
 	public List<StaticProperty> getStaticProperties() {
 		return staticProperties;
 	}

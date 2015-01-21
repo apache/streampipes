@@ -13,24 +13,19 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.util.SEPAUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SEPAInvocationGraph")
 @Entity
-public class SEPAInvocationGraph extends NamedSEPAElement {
-
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:receives")
-	List<EventStream> inputStreams;
-	
+public class SEPAInvocationGraph extends InvocableSEPAElement {
 	
 	@OneToOne (fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -40,15 +35,9 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasStaticProperty")
-	List<StaticProperty> staticProperties;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOutputStrategy")
 	List<OutputStrategy> outputStrategies;
 	
-	String domId;
 	String pathName;
 	List<String> domains;
 	
@@ -62,7 +51,8 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		this.setInputStreams(sepa.getEventStreams());
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
-		this.setUri(sepa.getRdfId().toString());
+		this.setBelongsTo(sepa.getRdfId().toString());
+		this.setUri(belongsTo +"/" +elementId);
 		
 	}
 	
@@ -101,19 +91,7 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		return inputStreams.add(eventStream);
 	}
 	
-	public boolean addStaticProperty(StaticProperty staticProperty)
-	{
-		return staticProperties.add(staticProperty);
-	}
-
 	
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
-
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
-	}
 
 	public String getPathName() {
 		return pathName;
@@ -132,14 +110,6 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		this.domains = domains;
 	}
 
-	public List<EventStream> getInputStreams() {
-		return inputStreams;
-	}
-
-	public void setInputStreams(List<EventStream> inputStreams) {
-		this.inputStreams = inputStreams;
-	}
-
 	public EventStream getOutputStream() {
 		return outputStream;
 	}
@@ -156,16 +126,6 @@ public class SEPAInvocationGraph extends NamedSEPAElement {
 		this.outputStrategies = outputStrategies;
 	}
 
-	public String getDomId() {
-		return domId;
-	}
 
-	public void setDomId(String domId) {
-		this.domId = domId;
-	}
-	
-	
-	
-	
 	
 }

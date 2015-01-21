@@ -12,6 +12,7 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
@@ -20,18 +21,9 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SemanticEventConsumer")
 @Entity
-public class SEC extends NamedSEPAElement{
+public class SEC extends ConsumableSEPAElement{
 
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:requires")
-	List<EventStream> eventStreams;
 	
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasStaticProperty")
-	List<StaticProperty> staticProperties;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
@@ -49,21 +41,7 @@ public class SEC extends NamedSEPAElement{
 		super();
 	}
 
-	public List<EventStream> getEventStreams() {
-		return eventStreams;
-	}
-
-	public void setEventStreams(List<EventStream> eventStreams) {
-		this.eventStreams = eventStreams;
-	}
-
-	public List<StaticProperty> getStaticProperties() {
-		return staticProperties;
-	}
-
-	public void setStaticProperties(List<StaticProperty> staticProperties) {
-		this.staticProperties = staticProperties;
-	}
+	
 
 	public List<String> getDomains() {
 		return domains;
@@ -72,11 +50,5 @@ public class SEC extends NamedSEPAElement{
 	public void setDomains(List<String> domains) {
 		this.domains = domains;
 	}
-	
-	public boolean addEventStream(EventStream eventStream)
-	{
-		return eventStreams.add(eventStream);
-	}
-	
 	
 }
