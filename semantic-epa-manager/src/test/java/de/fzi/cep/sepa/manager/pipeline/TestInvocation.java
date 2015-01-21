@@ -5,6 +5,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAElement;
@@ -35,7 +36,7 @@ public class TestInvocation {
 		
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
-		List<SEPAInvocationGraph> graphs = builder.buildGraph();
+		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		new GraphSubmitter(graphs).invokeGraphs();
 		
 		/*

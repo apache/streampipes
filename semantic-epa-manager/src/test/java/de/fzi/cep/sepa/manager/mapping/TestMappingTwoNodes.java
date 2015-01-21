@@ -15,7 +15,7 @@ public class TestMappingTwoNodes {
 
 	public static void main(String[] args) throws Exception
 	{
-		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestMappingTwoNodes2.jsonld"), "UTF-8"), Pipeline.class);
+		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestConsumerMapping.jsonld"), "UTF-8"), Pipeline.class);
 		System.out.println(pipeline.getSepas().size());
 		
 		PipelineModificationMessage message = new PipelineValidationHandler(pipeline, true).validateConnection().computeMappingProperties().getPipelineModificationMessage();

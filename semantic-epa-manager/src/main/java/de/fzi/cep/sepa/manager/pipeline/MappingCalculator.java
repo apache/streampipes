@@ -28,21 +28,21 @@ public class MappingCalculator {
 	
 	public SEPAClient computeMapping() throws Exception
 	{
-		SEPAClient rootElement = ClientModelUtils.getRootNode(pipeline);
+		SEPAElement rootElement = ClientModelUtils.getRootNode(pipeline);
 		
 		// prepare a list of all pipeline elements without the root element
 		List<SEPAElement> sepaElements = new ArrayList<SEPAElement>();
 		sepaElements.addAll(pipeline.getSepas());
 		sepaElements.addAll(pipeline.getStreams());
 		sepaElements.remove(rootElement);
-		
+		/*
 		SEPA currentSEPA = ClientModelTransformer.fromSEPAClientModel(rootElement);
 		
 		if (sepaElements.size() == 1 && rootElement.getInputNodes() == 1)
 		{
 			return computeUnaryMapping(sepaElements.get(0), rootElement);
 		}
-		
+		*/
 		return null;
 	}
 	

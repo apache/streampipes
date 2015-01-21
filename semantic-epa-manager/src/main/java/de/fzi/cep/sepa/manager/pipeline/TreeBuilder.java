@@ -7,11 +7,14 @@ import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 public class TreeBuilder {
@@ -41,7 +44,8 @@ public class TreeBuilder {
 		
 		if (makeInvocationGraph)
 		{
-			element = new SEPAInvocationGraph((SEPA)element, rootElement.getDOM());
+			if (rootElement instanceof SEPAClient) element = new SEPAInvocationGraph((SEPA)element, rootElement.getDOM());
+			else element = new SECInvocationGraph((SEC)element, rootElement.getDOM());
 		}
 		rootNode.setData(element);
 		

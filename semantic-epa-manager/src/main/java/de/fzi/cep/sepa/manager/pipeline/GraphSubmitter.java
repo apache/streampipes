@@ -3,30 +3,34 @@ package de.fzi.cep.sepa.manager.pipeline;
 import java.util.List;
 
 import de.fzi.cep.sepa.manager.http.HttpRequestBuilder;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 
 public class GraphSubmitter {
 
-	private List<SEPAInvocationGraph> graphs;
+	private List<InvocableSEPAElement> graphs;
 	
-	public GraphSubmitter(List<SEPAInvocationGraph> graphs)
+	public GraphSubmitter(List<InvocableSEPAElement> graphs)
 	{
 		this.graphs = graphs;
 	}
 	
 	public boolean invokeGraphs()
 	{
-		for(SEPAInvocationGraph graph : graphs)
+		for(InvocableSEPAElement graph : graphs)
 		{
-			System.out.println("Topic: " +graph.getOutputStream().getEventGrounding().getTopicName());
 			new HttpRequestBuilder(graph).invoke();
 		}
 		
 		return true;
 	}
 	
-	public static boolean detachGraphs()
+	public boolean detachGraphs()
 	{
+		for(InvocableSEPAElement graph : graphs)
+		{
+			new HttpRequestBuilder(graph).detach();
+		}
+		
 		return true;
 	}
 }

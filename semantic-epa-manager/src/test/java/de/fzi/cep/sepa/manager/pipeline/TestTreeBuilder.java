@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -97,12 +98,12 @@ public class TestTreeBuilder {
 		System.out.println("*********\n");
 		
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
-		List<SEPAInvocationGraph> graphs = builder.buildGraph();
+		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		System.out.println(graphs.size());
 		
-		for(SEPAInvocationGraph graph : graphs)
+		for(InvocableSEPAElement graph : graphs)
 		{
-		
+			/*
 			for(EventStream inputStream : graph.getInputStreams())
 			{
 				//System.out.println("in: " +inputStream.getEventGrounding().getTopicName());
@@ -118,6 +119,7 @@ public class TestTreeBuilder {
 				System.out.print(p.getPropertyName() +", ");
 			}
 			System.out.println("----");
+			*/
 		}
 		
 		new GraphSubmitter(graphs).invokeGraphs();

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
@@ -22,44 +23,51 @@ public class ClientModelUtils {
 	 * @throws Exception 
 	 */
 	
-	public static SEPAClient getRootNode(Pipeline pipeline) throws Exception
+	public static ConsumableSEPAElement getRootNode(Pipeline pipeline) throws Exception
 	{
-		List<SEPAClient> clients = pipeline.getSepas();
+		List<ConsumableSEPAElement> elements = new ArrayList<>();
+		elements.addAll(pipeline.getSepas());
 		
-		for (SEPAClient client : pipeline.getSepas())
+		if (pipeline.getAction().getElementId() != null) elements.add(pipeline.getAction());
+		
+		List<ConsumableSEPAElement> currentElements = new ArrayList<>();
+		currentElements.addAll(pipeline.getSepas());
+		if (pipeline.getAction().getElementId() != null) currentElements.add(pipeline.getAction());
+		
+		for (ConsumableSEPAElement client : currentElements)
 		{
-			clients = remove(clients, client.getConnectedTo());
+			elements = remove(elements, client.getConnectedTo());
 		}
-		if (clients.size() != 1) throw new Exception();
-		else return clients.get(0);
+		if (elements.size() != 1) throw new Exception();
+		else return elements.get(0);
 			
 	}
 	
-	private static List<SEPAClient> remove(List<SEPAClient> sepas, List<String> domIds)
+	private static List<ConsumableSEPAElement> remove(List<ConsumableSEPAElement> sepas, List<String> domIds)
 	{
-		List<SEPAClient> result = sepas;
+		List<ConsumableSEPAElement> result = sepas;
 		for(String domId : domIds)
 		{
-			SEPAClient sepa = findSEPAbyId(sepas, domId);
+			SEPAElement sepa = findSEPAbyId(sepas, domId);
 			if (sepa != null) 	
 				result = remove(result, sepa);
 		}
 		return result;
 	}
 	
-	private static List<SEPAClient> remove(List<SEPAClient> clients,
-			SEPAClient sepa) {
-		List<SEPAClient> result = new ArrayList<>();
-		for(SEPAClient client : clients)
+	private static List<ConsumableSEPAElement> remove(List<ConsumableSEPAElement> clients,
+			SEPAElement sepa) {
+		List<ConsumableSEPAElement> result = new ArrayList<>();
+		for(ConsumableSEPAElement client : clients)
 		{
 			if (!client.getDOM().equals(sepa.getDOM())) result.add(client);
 		}
 		return result;
 	}
 
-	private static SEPAClient findSEPAbyId(List<SEPAClient> sepas, String domId)
+	private static ConsumableSEPAElement findSEPAbyId(List<ConsumableSEPAElement> sepas, String domId)
 	{
-		for(SEPAClient sepa : sepas)
+		for(ConsumableSEPAElement sepa : sepas)
 		{
 			if (sepa.getDOM().equals(domId)) return sepa;
 		}

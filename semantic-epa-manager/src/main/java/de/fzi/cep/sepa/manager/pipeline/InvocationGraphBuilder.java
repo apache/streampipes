@@ -12,10 +12,13 @@ import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
@@ -25,7 +28,7 @@ public class InvocationGraphBuilder {
 	private GenericTree<NamedSEPAElement> tree;
 	private List<GenericTreeNode<NamedSEPAElement>> postOrder;
 	
-	List<SEPAInvocationGraph> graphs = new ArrayList<>();
+	List<InvocableSEPAElement> graphs = new ArrayList<>();
 	
 	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree, boolean isInvocationGraph)
 	{
@@ -42,10 +45,14 @@ public class InvocationGraphBuilder {
 			{
 				node.setData(new SEPAInvocationGraph((SEPA) node.getData()));
 			}
+			if (node.getData() instanceof SEC)
+			{
+				node.setData(new SECInvocationGraph((SEC) node.getData()));
+			}
 		}
 	}
 	
-	public List<SEPAInvocationGraph> buildGraph() 
+	public List<InvocableSEPAElement> buildGraph() 
 	{	
 		Iterator<GenericTreeNode<NamedSEPAElement>> it = postOrder.iterator();
 		while(it.hasNext())
@@ -56,59 +63,75 @@ public class InvocationGraphBuilder {
 			{
 				
 			}
-			else if (element instanceof SEPAInvocationGraph)
+			else if (element instanceof InvocableSEPAElement)
 			{
-				SEPAInvocationGraph thisGraph = (SEPAInvocationGraph) element;
 				String outputTopic = TopicGenerator.generateRandomTopic();
-				try {
-					thisGraph.setRdfId(new URIKey(new URI(thisGraph.getUri()+"/" +outputTopic)));
-					
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				for(int i = 0; i < node.getNumberOfChildren(); i++)
-				{
-					NamedSEPAElement child = node.getChildAt(i).getData();
-					if (child instanceof EventStream) 
+				if (element instanceof SEPAInvocationGraph) 
 					{
-						EventStream thisStream = (EventStream) child;
+						SEPAInvocationGraph thisGraph = (SEPAInvocationGraph) element;
+						thisGraph = (SEPAInvocationGraph) buildSEPAElement(thisGraph, node, outputTopic);
+						EventSchema outputSchema;
+						EventStream outputStream = new EventStream();
+						outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri().toString()));
+						EventGrounding grounding = new EventGrounding();
+						grounding.setPort(61616);
+						grounding.setUri("tcp://localhost");
+						grounding.setTopicName(outputTopic);
 						
-						thisGraph.getInputStreams().get(i).setEventSchema(thisStream.getEventSchema());
-						thisGraph.getInputStreams().get(i).setEventGrounding(thisStream.getEventGrounding());
+						if (thisGraph.getInputStreams().size() == 1) 
+						{		
+							outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
+						}
+						else outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
+						outputStream.setEventGrounding(grounding);
+						outputStream.setEventSchema(outputSchema);
 						
+						thisGraph.setOutputStream(outputStream);
+						graphs.add(thisGraph);
 					}
-					else
+					else 
 					{
-						SEPAInvocationGraph childSEPA = (SEPAInvocationGraph) child;
-						thisGraph.getInputStreams().get(i).setEventSchema(childSEPA.getOutputStream().getEventSchema());
-						thisGraph.getInputStreams().get(i).setEventGrounding(childSEPA.getOutputStream().getEventGrounding());
-					}
-				}
-				EventSchema outputSchema;
-				EventStream outputStream = new EventStream();
-				outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri().toString()));
-				EventGrounding grounding = new EventGrounding();
-				grounding.setPort(61616);
-				grounding.setUri("tcp://localhost");
-				grounding.setTopicName(outputTopic);
-				
-				if (thisGraph.getInputStreams().size() == 1) 
-				{		
-					outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
-				}
-				else outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
-				outputStream.setEventGrounding(grounding);
-				outputStream.setEventSchema(outputSchema);
-				
-				thisGraph.setOutputStream(outputStream);
-				//StorageManager.INSTANCE.getEntityManager().persist(thisGraph);
-				graphs.add(thisGraph);
+						SECInvocationGraph thisGraph = (SECInvocationGraph) element;
+						thisGraph = (SECInvocationGraph) buildSEPAElement(thisGraph, node, outputTopic);
+						graphs.add(thisGraph);
+					}				
 			} 
 		}
 		
 		return graphs;
+	}
+	
+	private InvocableSEPAElement buildSEPAElement(InvocableSEPAElement thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
+	{
+		try {
+			
+			thisGraph.setRdfId(new URIKey(new URI(thisGraph.getUri()+"/" +outputTopic)));
+			System.out.println(thisGraph.getRdfId());
+			
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(int i = 0; i < node.getNumberOfChildren(); i++)
+		{
+			NamedSEPAElement child = node.getChildAt(i).getData();
+			if (child instanceof EventStream) 
+			{
+				EventStream thisStream = (EventStream) child;
+				
+				thisGraph.getInputStreams().get(i).setEventSchema(thisStream.getEventSchema());
+				thisGraph.getInputStreams().get(i).setEventGrounding(thisStream.getEventGrounding());
+				
+			}
+			else
+			{
+				SEPAInvocationGraph childSEPA = (SEPAInvocationGraph) child;
+				thisGraph.getInputStreams().get(i).setEventSchema(childSEPA.getOutputStream().getEventSchema());
+				thisGraph.getInputStreams().get(i).setEventGrounding(childSEPA.getOutputStream().getEventGrounding());
+			}
+		}
+		return thisGraph;
 	}
 	
 	private URIKey makeRandomUriKey(String uri)

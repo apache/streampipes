@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.manager.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StreamClient;
@@ -42,9 +44,9 @@ public class TreeUtils {
 	 * @param graphs list of invocation graphs
 	 * @return an invocation graph with a given DOM Id
 	 */
-	public static SEPAInvocationGraph findByDomId(String id, List<SEPAInvocationGraph> graphs)
+	public static InvocableSEPAElement findByDomId(String id, List<InvocableSEPAElement> graphs)
 	{
-		for(SEPAInvocationGraph graph : graphs)
+		for(InvocableSEPAElement graph : graphs)
 		{
 			if (graph.getDomId().equals(id)) return graph;
 		}
@@ -65,7 +67,7 @@ public class TreeUtils {
 		return null;
 	}
 	
-	public static MappingProperty findMappingProperty(String elementId, SEPA sepa)
+	public static MappingProperty findMappingProperty(String elementId, ConsumableSEPAElement sepa)
 	{
 		for(de.fzi.cep.sepa.model.impl.StaticProperty sp : sepa.getStaticProperties())
 		{

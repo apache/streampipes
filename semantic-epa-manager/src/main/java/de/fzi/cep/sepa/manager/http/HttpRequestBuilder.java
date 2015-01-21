@@ -9,6 +9,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -19,15 +20,16 @@ import org.apache.http.util.EntityUtils;
 import org.openrdf.model.impl.GraphImpl;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class HttpRequestBuilder {
 
 	
-	SEPAInvocationGraph payload;
+	InvocableSEPAElement payload;
 	
-	public HttpRequestBuilder(SEPAInvocationGraph payload)
+	public HttpRequestBuilder(InvocableSEPAElement payload)
 	{
 		this.payload = payload;
 	}
@@ -39,7 +41,7 @@ public class HttpRequestBuilder {
 		    params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
 		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		    HttpClient httpclient = new DefaultHttpClient(params);
-		    HttpPost httppost = new HttpPost(payload.getUri());
+		    HttpPost httppost = new HttpPost(payload.getBelongsTo());
 		        
 		    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 		    nameValuePairs.add(new BasicNameValuePair("json", Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), payload))));
@@ -62,6 +64,24 @@ public class HttpRequestBuilder {
 	
 	public boolean detach()
 	{
-	return true;	
+		try {
+		    HttpParams params = new BasicHttpParams();
+		    params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
+		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		    HttpClient httpclient = new DefaultHttpClient(params);
+		    HttpDelete httpdelete = new HttpDelete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTopicName());
+		        		    
+		    HttpResponse response = httpclient.execute(httpdelete);
+		    HttpEntity entity = response.getEntity();
+		    if (entity != null)
+		    {
+		      System.out.println(EntityUtils.toString(entity));
+		    }
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
 }

@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 
 
+
+
+
+
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
@@ -14,7 +18,10 @@ import de.fzi.cep.sepa.manager.util.TreeUtils;
 import de.fzi.cep.sepa.manager.validator.ConnectionValidator;
 import de.fzi.cep.sepa.messages.PipelineModification;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
@@ -28,6 +35,7 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
@@ -36,10 +44,10 @@ public class PipelineValidationHandler {
 	Pipeline pipeline;
 	PipelineModificationMessage pipelineModificationMessage;
 
-	List<SEPAInvocationGraph> invocationGraphs;
+	List<InvocableSEPAElement> invocationGraphs;
 	List<SEPAElement> sepaClientElements;
 
-	SEPAClient rootElement;
+	ConsumableSEPAElement rootElement;
 	NamedSEPAElement sepaRootElement;
 
 	GenericTree<SEPAElement> clientTree;
@@ -56,6 +64,7 @@ public class PipelineValidationHandler {
 		List<SEPAElement> sepaElements = new ArrayList<SEPAElement>();
 		sepaElements.addAll(pipeline.getSepas());
 		sepaElements.addAll(pipeline.getStreams());
+		sepaElements.add(pipeline.getAction());
 		sepaElements.remove(rootElement);
 
 		// we need a tree of invocation graphs if there is more than one SEPA
@@ -80,16 +89,12 @@ public class PipelineValidationHandler {
 		// current root element can be either an action or a SEPA
 		NamedSEPAElement rightElement = ClientModelUtils.transform(rootElement);
 
-		// root element is an action
-		if (rightElement instanceof SEC) {
-			SEC sec = (SEC) rightElement;
-			// match = ConnectionValidator.validateGrounding(left, sec.get);
-		}
-
+		
 		// root element is SEPA
-		if (rightElement instanceof SEPA) {
-			SEPA sepa = (SEPA) rightElement;
-
+		if (! (rightElement instanceof SEP)) {
+			
+			EventSchema rightEventSchema;
+			
 			if (rootElement.getConnectedTo().size() == 1) {
 				List<EventSchema> left;
 				SEPAElement element = TreeUtils.findSEPAElement(rootElement
@@ -104,18 +109,26 @@ public class PipelineValidationHandler {
 					invocationGraphs = new InvocationGraphBuilder(tree, true)
 							.buildGraph();
 
-					SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
+					SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
 							element.getDOM(), invocationGraphs);
 					left = Utils.createList(ancestor.getOutputStream()
 							.getEventSchema());
 					// System.out.println(ancestor.getOutputStream().getEventSchema().getEventProperties().size());
 				}
+				
+				if (rightElement instanceof SEPA)
+				{
+					rightEventSchema = ((SEPA) rightElement).getEventStreams().get(0).getEventSchema();
+				}
+				else rightEventSchema = ((SEC) rightElement).getEventStreams().get(0).getEventSchema();
+				
 				match = ConnectionValidator.validateSchema(
 						left,
-						Utils.createList(sepa.getEventStreams().get(0)
-								.getEventSchema()));
+						Utils.createList(rightEventSchema));
 				System.out.println(match);
 			} else if (rootElement.getConnectedTo().size() == 2) {
+				
+				SEPA sepa = (SEPA) rightElement;
 				
 				Iterator<String> it = rootElement.getConnectedTo().iterator();
 				List<EventStream> incomingStreams = new ArrayList<>();
@@ -131,7 +144,7 @@ public class PipelineValidationHandler {
 						invocationGraphs.addAll(new InvocationGraphBuilder(tree, true)
 								.buildGraph());
 
-						SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
+						SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
 								element.getDOM(), invocationGraphs);
 						incomingStreams.add(ancestor.getOutputStream());
 					}
@@ -175,13 +188,13 @@ public class PipelineValidationHandler {
 						.getConnectedTo().get(i), pipeline.getSepas(), pipeline
 						.getStreams());
 	
-				if (element instanceof SEPAClient || element instanceof StreamClient)
+				if (element instanceof SEPAClient || element instanceof StreamClient || element instanceof ActionClient)
 				{
-					SEPA currentSEPA = (SEPA) sepaRootElement;
+					de.fzi.cep.sepa.model.ConsumableSEPAElement currentSEPA = (de.fzi.cep.sepa.model.ConsumableSEPAElement) sepaRootElement;
 					
 					if (element instanceof SEPAClient) {
 						
-						SEPAInvocationGraph ancestor = TreeUtils.findByDomId(
+						SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
 								connectedTo.get(i), invocationGraphs);
 					
 						currentStaticProperties = updateStaticProperties(currentStaticProperties, currentSEPA, ancestor.getOutputStream(), i);		
@@ -248,7 +261,7 @@ public class PipelineValidationHandler {
 		}
 		return match;
 	}
-	private List<de.fzi.cep.sepa.model.client.StaticProperty> updateStaticProperties(List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties, SEPA currentSEPA, EventStream ancestorOutputStream, int i)
+	private List<de.fzi.cep.sepa.model.client.StaticProperty> updateStaticProperties(List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties, de.fzi.cep.sepa.model.ConsumableSEPAElement currentSEPA, EventStream ancestorOutputStream, int i)
 	{
 		List<de.fzi.cep.sepa.model.client.StaticProperty> newStaticProperties = new ArrayList<>();
 		
@@ -282,7 +295,7 @@ public class PipelineValidationHandler {
 		return newProperty;
 	}
 	
-	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, SEPA sepa, EventStream leftStream, int i) {
+	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream leftStream, int i) {
 			
 		MappingProperty mp = TreeUtils.findMappingProperty(
 				clientStaticProperty.getElementId(), sepa);
