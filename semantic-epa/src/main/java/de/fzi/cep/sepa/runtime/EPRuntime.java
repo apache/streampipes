@@ -32,7 +32,7 @@ public class EPRuntime { // routing container
 		configs.forEach(config -> config.applyTo(context));
 		this.collector = new OutputCollector();
 
-		engine = params.getPreparedEngine(this, collector);
+		engine = params.getPreparedEngine(this, params.getEngineParameters().getGraph(), collector);
 
 		endpoint = new EPEndpoint(this, params.getUri(), context);
 		sources = params.getSources().stream().map(source -> source.toSourceRoute(endpoint)).collect(toList());

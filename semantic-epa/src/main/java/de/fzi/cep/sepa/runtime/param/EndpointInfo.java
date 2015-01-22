@@ -14,6 +14,7 @@ public class EndpointInfo { // any endpoint information
 	public EndpointInfo(String uri, DataType type) {
 		this.uri = uri;
 		this.type = type;
+		
 	}
 
 	public static EndpointInfo of(String uri, DataType type) {

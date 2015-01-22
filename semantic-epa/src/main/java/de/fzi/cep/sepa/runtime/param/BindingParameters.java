@@ -7,9 +7,6 @@ public abstract class BindingParameters {
 	protected String inName;
 	protected String outName;
 	
-	protected String inputTopic;
-	protected String outputTopic;
-	
 	protected List<String> allProperties;
 	protected List<String> partitionProperties;
 	
