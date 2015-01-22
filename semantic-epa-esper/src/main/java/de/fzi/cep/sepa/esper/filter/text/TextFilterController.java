@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
-import com.clarkparsia.empire.SupportsRdfId.RdfKey;
-
-import de.fzi.cep.sepa.esper.AbstractEsperTemplate;
+import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -29,7 +25,7 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
 
 
-public class TextFilterController extends AbstractEsperTemplate<TextFilterParameter> {
+public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 	
 	@Override
 	public SEPA declareModel() {
@@ -97,7 +93,7 @@ public class TextFilterController extends AbstractEsperTemplate<TextFilterParame
 			
 			try {
 				
-				return super.bind(staticParam, TextFilter::new, sepa);
+				return runEngine(staticParam, TextFilter::new, sepa);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

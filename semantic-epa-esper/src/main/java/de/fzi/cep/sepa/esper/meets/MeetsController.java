@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.AbstractEsperTemplate;
+import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.pattern.PatternParameters;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -24,7 +24,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
-public class MeetsController extends AbstractEsperTemplate<PatternParameters>{
+public class MeetsController extends EsperDeclarer<PatternParameters>{
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {

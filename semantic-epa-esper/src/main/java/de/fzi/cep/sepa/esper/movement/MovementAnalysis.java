@@ -15,14 +15,6 @@ import org.opengis.referencing.operation.TransformException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import antlr.debug.SemanticPredicateListener;
-
-import com.espertech.esper.client.Configuration;
-import com.espertech.esper.client.EPServiceProvider;
-import com.espertech.esper.client.EPServiceProviderManager;
-import com.espertech.esper.client.EPStatement;
-import com.espertech.esper.client.EventBean;
-import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.FilterStream;
@@ -38,67 +30,26 @@ import com.espertech.esper.client.soda.SelectClause;
 import com.espertech.esper.client.soda.SelectClauseExpression;
 
 import static com.espertech.esper.client.soda.Expressions.*;
+import de.fzi.cep.sepa.esper.EsperEventEngine;
 
-import de.fzi.cep.sepa.runtime.EPEngine;
-import de.fzi.cep.sepa.runtime.OutputCollector;
-import de.fzi.cep.sepa.runtime.param.EngineParameters;
-
-public class MovementAnalysis implements EPEngine<MovementParameter> {
+public class MovementAnalysis extends EsperEventEngine<MovementParameter> {
 
 	private GeodeticCalculator distanceCalc; // separated to prevent conflicts
 	private GeodeticCalculator bearingCalc; // problem -> 2x computation of same value
 
-	private EPServiceProvider epService;
-
 	private static final Logger logger = LoggerFactory.getLogger(MovementAnalysis.class.getSimpleName());
 
-	private static final String EVENT_NAME_PARAM = "name";
-
-	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void bind(EngineParameters<MovementParameter> parameters, OutputCollector collector) {
-		if (parameters.getInEventTypes().size() != 1)
-			throw new IllegalArgumentException("Movement analysis only possible on one event type.");
-
+	protected List<String> statements(final MovementParameter params) {
+		
+		List<String> statements = new ArrayList<String>();
 		try {
-			distanceCalc = new GeodeticCalculator(CRS.decode(parameters.getStaticProperty().getPositionCRS()));
-			bearingCalc = new GeodeticCalculator(CRS.decode(parameters.getStaticProperty().getPositionCRS()));
+			distanceCalc = new GeodeticCalculator(CRS.decode(params.getPositionCRS()));
+			bearingCalc = new GeodeticCalculator(CRS.decode(params.getPositionCRS()));
 		} catch (FactoryException e) {
 			throw new IllegalArgumentException("CRS not recognized! "
-				+ parameters.getStaticProperty().getPositionCRS(), e);
+				+ params.getPositionCRS(), e);
 		}
-
-		Configuration config = new Configuration();
-		parameters.getInEventTypes().entrySet().forEach(e -> {
-			Map inTypeMap = e.getValue();
-			config.addEventType(e.getKey(), inTypeMap); // indirect cast from Class to Object
-		});
-		// Map outTypeMap = parameters.getOutEventType();
-		// config.addEventType(parameters.getOutEventName(), outTypeMap); // indirect cast from Class to Object
-
-		epService = EPServiceProviderManager.getDefaultProvider(config);
-
-		EPStatementObjectModel model = statement(parameters.getStaticProperty());
-		EPStatement statement = epService.getEPAdministrator().create(model);
-		statement.addListener(listenerSendingTo(collector));
-		statement.start();
-	}
-
-	private static UpdateListener listenerSendingTo(OutputCollector collector) {
-		return new UpdateListener() {
-			@Override
-			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-				if (newEvents != null && newEvents.length > 0) {
-					logger.info("Sending event {} ", newEvents[0].getUnderlying());
-					collector.send(newEvents[0].getUnderlying());
-				} else {
-					logger.info("Triggered listener but there is no new event");
-				}
-			}
-		};
-	}
-
-	private EPStatementObjectModel statement(final MovementParameter params) {
+		
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.insertInto(new InsertIntoClause(params.getOutName())); // out name
 		model.selectClause(SelectClause.createWildcard());
@@ -152,7 +103,8 @@ public class MovementAnalysis implements EPEngine<MovementParameter> {
 
 		model.setMatchRecognizeClause(match);
 
-		return model;
+		statements.add(model.toEPL());
+		return statements;
 		// return "INSERT INTO MovementEvent SELECT * FROM PositionEvent match_recognize ( "
 		// + "partition by userId "
 		// + "measures B.userId as userId, B.position as position, B.timestamp as timestamp, B.timestamp - A.timestamp "

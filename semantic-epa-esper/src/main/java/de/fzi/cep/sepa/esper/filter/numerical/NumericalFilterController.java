@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.esper.AbstractEsperTemplate;
+import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.filter.text.TextFilter;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterParameter;
@@ -28,14 +28,13 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
 
-public class NumericalFilterController extends AbstractEsperTemplate<NumericalFilterParameter> {
+public class NumericalFilterController extends EsperDeclarer<NumericalFilterParameter> {
 
 	@Override
 	public SEPA declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
@@ -104,7 +103,7 @@ public class NumericalFilterController extends AbstractEsperTemplate<NumericalFi
 		
 		try {
 			
-			return super.bind(staticParam, NumericalFilter::new, sepa);
+			return runEngine(staticParam, NumericalFilter::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

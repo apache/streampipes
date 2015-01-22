@@ -19,7 +19,6 @@ import de.fzi.cep.sepa.runtime.param.CamelConfig;
 import de.fzi.cep.sepa.runtime.param.DataType;
 import de.fzi.cep.sepa.runtime.param.EndpointInfo;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
-import de.fzi.cep.sepa.runtime.param.OutputStrategy;
 import de.fzi.cep.sepa.runtime.param.RuntimeParameters;
 
 public class Test {
@@ -48,7 +47,7 @@ public class Test {
 		inEventType.put("latitude", Double.class);
 		inEventType.put("longitude", Double.class);
 		inEventType.put("name", String.class);
-
+/*
 		EngineParameters<MovementParameter> engineParams = new EngineParameters<>(
 			Collections.singletonMap(inEventName, inEventType),
 			new OutputStrategy.Rename("MovementEvent", inEventName), staticParam);
@@ -77,7 +76,7 @@ public class Test {
 
 		runtime.discard();
 		System.exit(1);
-	
+	*/
 	}
 
 	private static String sampleEvent(int userId, long timestamp, double lat, double lng) {

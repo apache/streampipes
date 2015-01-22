@@ -9,7 +9,7 @@ import java.util.List;
 import org.ontoware.rdf2go.vocabulary.XSD;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.AbstractEsperTemplate;
+import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilter;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterParameter;
@@ -31,7 +31,7 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
-public class EventRateController extends AbstractEsperTemplate<EventRateParameter> {
+public class EventRateController extends EsperDeclarer<EventRateParameter> {
 
 	@Override
 	public SEPA declareModel() {
@@ -86,8 +86,7 @@ public class EventRateController extends AbstractEsperTemplate<EventRateParamete
 		
 		
 		try {
-			
-			return super.bind(staticParam, EventRate::new, sepa);
+			return runEngine(staticParam, EventRate::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

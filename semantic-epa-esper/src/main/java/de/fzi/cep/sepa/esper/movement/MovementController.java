@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -37,7 +40,7 @@ import de.fzi.cep.sepa.runtime.param.EndpointInfo;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
 import de.fzi.cep.sepa.runtime.param.RuntimeParameters;
 
-public class MovementController implements SemanticEventProcessingAgentDeclarer {
+public class MovementController extends EsperDeclarer<MovementParameter> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger("MovementTest");
@@ -165,79 +168,29 @@ public class MovementController implements SemanticEventProcessingAgentDeclarer 
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-		EndpointInfo destination = EndpointInfo.of(BROKER_ALIAS + ":topic:"
-				+ sepa.getOutputStream().getEventGrounding().getTopicName(),
-				DataType.JSON);
-		for (EventStream stream : sepa.getInputStreams()) {
-			try {
-				CamelConfig config = new CamelConfig.ActiveMQ(BROKER_ALIAS,
-						stream.getEventGrounding().getUri());
-				EndpointInfo source = EndpointInfo.of(BROKER_ALIAS + ":topic:"
-						+ stream.getEventGrounding().getTopicName(),
-						DataType.JSON);
-
-				String epsgProperty = null;
-				OneOfStaticProperty osp = ((OneOfStaticProperty) (SEPAUtils
-						.getStaticPropertyByName(sepa, "epsg")));
-				for(Option option : osp.getOptions())
-					if (option.isSelected()) epsgProperty = option.getName();
+		
+		EventStream inputStream = sepa.getInputStreams().get(0);
+		EventStream outputStream = sepa.getOutputStream();
 				
-				String xProperty = SEPAUtils.getMappingPropertyName(sepa,
-						"latitude");
-				String yProperty = SEPAUtils.getMappingPropertyName(sepa,
-						"longitude");
+		String epsgProperty = null;
+		OneOfStaticProperty osp = ((OneOfStaticProperty) (SEPAUtils
+				.getStaticPropertyByName(sepa, "epsg")));
+		for(Option option : osp.getOptions())
+			if (option.isSelected()) epsgProperty = option.getName();
+		
+		String xProperty = SEPAUtils.getMappingPropertyName(sepa,
+				"latitude");
+		String yProperty = SEPAUtils.getMappingPropertyName(sepa,
+				"longitude");
 
-				MovementParameter staticParam = new MovementParameter(
-						stream.getName(), sepa.getOutputStream().getName(),
-						epsgProperty, stream.getEventSchema().toPropertyList(),
-						Arrays.asList("userName"), "timestamp", xProperty,
-						yProperty, 8000L); // TODO reduce param overhead
+		MovementParameter staticParam = new MovementParameter(
+				inputStream.getEventGrounding().getTopicName(), outputStream.getEventGrounding().getTopicName(),
+				epsgProperty, inputStream.getEventSchema().toPropertyList(),
+				Arrays.asList("userName"), "timestamp", xProperty,
+				yProperty, 8000L); // TODO reduce param overhead
 
-				String inEventName = stream.getName();
-				Map<String, Class<?>> inEventType = stream.getEventSchema()
-						.toRuntimeMap();
+		return runEngine(staticParam, MovementAnalysis::new, sepa);
 
-				EngineParameters<MovementParameter> engineParams = new EngineParameters<>(
-						Collections.singletonMap(inEventName, inEventType),
-						new de.fzi.cep.sepa.runtime.param.OutputStrategy.Rename(
-								"MovementEvent", inEventName), staticParam);
-
-				RuntimeParameters<MovementParameter> params = new RuntimeParameters<>(
-						"movement-test", MovementAnalysis::new, engineParams,
-						Arrays.asList(config), destination,
-						Arrays.asList(source));
-
-				EPRuntime runtime = new EPRuntime(context, params);
-
-				context.addRoutes(new RouteBuilder() {
-					@Override
-					public void configure() throws Exception {
-						from("test-jms:topic:MovementTopic") // .to("file://test")
-								.process(
-										ex -> logger.info(
-												"Receiving Event: {}",
-												new String((byte[]) ex.getIn()
-														.getBody())));
-					}
-				});
-
-				ProducerTemplate template = context.createProducerTemplate();
-				template.setDefaultEndpointUri(BROKER_ALIAS
-						+ ":topic:PositionTopic");
-
-				context.start();
-
-				System.in.read(); // block til <ENTER>
-
-				runtime.discard();
-				System.exit(1);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-		return false;
 	}
 
 	@Override

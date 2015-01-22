@@ -1,30 +1,16 @@
 package de.fzi.cep.sepa.esper.proximity;
 
-import java.util.Map;
+import java.util.List;
 
-import de.fzi.cep.sepa.runtime.EPEngine;
-import de.fzi.cep.sepa.runtime.OutputCollector;
-import de.fzi.cep.sepa.runtime.param.EngineParameters;
+import de.fzi.cep.sepa.esper.EsperEventEngine;
 
-public class ProximityDetection implements EPEngine<ProximityParameters>{
+public class ProximityDetection extends EsperEventEngine<ProximityParameters>{
 
 	@Override
-	public void bind(EngineParameters<ProximityParameters> parameters,
-			OutputCollector collector) {
+	protected List<String> statements(ProximityParameters bindingParameters) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
-	@Override
-	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void discard() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
