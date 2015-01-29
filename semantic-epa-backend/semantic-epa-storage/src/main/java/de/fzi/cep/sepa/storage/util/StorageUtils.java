@@ -33,4 +33,10 @@ public class StorageUtils {
 		 List<SEP> list = EmpireUtil.all(StorageManager.INSTANCE.getEntityManager(), 
 				 SEP.class); 
 	}
+	
+	public static void fixTempEmpire()
+	{
+		 List<SEP> list = EmpireUtil.all(StorageManager.INSTANCE.getTempEntityManager(), 
+				 SEP.class); 
+	}
 }

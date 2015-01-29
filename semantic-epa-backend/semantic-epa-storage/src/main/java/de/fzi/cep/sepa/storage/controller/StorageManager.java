@@ -20,6 +20,7 @@ import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.google.inject.AbstractModule;
 
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
@@ -53,7 +54,8 @@ public enum StorageManager {
 		try {
 			repository = new HTTPRepository(SERVER, REPOSITORY_ID);
 			tempRepository = new HTTPRepository(SERVER, TEMP_REPOSITORY_ID);
-									
+				
+			
 			conn = repository.getConnection();
 			tempConn = tempRepository.getConnection();
 				
@@ -68,7 +70,7 @@ public enum StorageManager {
 		try {
 		System.setProperty(
 				"empire.configuration.file",
-				"c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties");
+				Configuration.EMPIRE_CONFIG_LOCATION);
         /*System.setProperty("empire.configuration.file",
                 "/home/robin/FZI/CEP/semantic-epa-parent/semantic-epa-backend/semantic-epa-storage/src/main/resources/empire.config.properties");*/
 			
