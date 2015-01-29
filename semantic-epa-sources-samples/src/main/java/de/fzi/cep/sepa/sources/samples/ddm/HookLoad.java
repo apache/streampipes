@@ -7,6 +7,7 @@ import org.ontoware.rdf2go.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -31,13 +32,13 @@ public class HookLoad implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost");
+		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.DDM.HookLoad");
 		this.topicName = grounding.getTopicName();
 		

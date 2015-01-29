@@ -8,6 +8,7 @@ import javax.jms.JMSException;
 import org.codehaus.jettison.json.JSONObject;
 import org.ontoware.rdf2go.vocabulary.XSD;
 
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -30,8 +31,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 	
 	public TwitterSampleStream() throws JMSException
 	{
-		samplePublisher = new ActiveMQPublisher("tcp://localhost:61616", "SEPA.SEP.Twitter.Sample");
-		geoPublisher = new ActiveMQPublisher("tcp://localhost:61616", "SEPA.SEP.Twitter.Geo");
+		samplePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.Twitter.Sample");
+		geoPublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.Twitter.Geo");
 	}
 	
 	
@@ -48,7 +49,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost");
+		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.Twitter.Sample");
 		
 		stream.setEventGrounding(grounding);

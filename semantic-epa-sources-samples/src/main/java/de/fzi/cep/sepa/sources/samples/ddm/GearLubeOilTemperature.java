@@ -18,6 +18,7 @@ import org.ontoware.rdf2go.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -48,7 +49,7 @@ public class GearLubeOilTemperature implements EventStreamDeclarer {
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost:61616");
+		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.DDM.GearboxOilTemperature");
 		this.topicName = grounding.getTopicName();
 		

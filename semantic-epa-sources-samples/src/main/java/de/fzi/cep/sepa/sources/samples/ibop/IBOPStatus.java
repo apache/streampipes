@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ontoware.rdf2go.vocabulary.XSD;
 
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -32,7 +33,7 @@ private String topicName;
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost:61616");
+		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.DDM.iBOP");
 		this.topicName = grounding.getTopicName();
 		

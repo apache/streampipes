@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
+import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
@@ -23,7 +24,9 @@ public class Init {
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new MobileStreamProducer());
+		declarers.add(new RandomDataProducer());
 		
+		/*
 		String zooKeeper = "nissatech.no-ip.org:2181";
 		String groupId = "groupId";
 		String[] topic = {AkerVariables.DrillingRPM.topic(), AkerVariables.DrillingTorque.topic(), AkerVariables.GearLubeOilTemperature.topic(), AkerVariables.HookLoad.topic(), AkerVariables.SwivelOilTemperature.topic()};
@@ -32,7 +35,7 @@ public class Init {
 		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
 				topic);
 		example.run(threads);
-		
+		*/
 		ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
 		
 	}

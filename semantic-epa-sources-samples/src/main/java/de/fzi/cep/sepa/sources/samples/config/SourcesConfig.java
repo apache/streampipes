@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.sources.samples.config;
 
+import de.fzi.cep.sepa.commonss.Configuration;
+
 public class SourcesConfig {
 
 	public final static String serverUrl;
@@ -7,8 +9,8 @@ public class SourcesConfig {
 	public final static String eventReplayURI;
 	
 	static {
-		serverUrl = "http://localhost:8089";
-		iconBaseUrl = "http://localhost:8080/semantic-epa-backend/img";
+		serverUrl = Configuration.SOURCES_BASE_URL;
+		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
 		eventReplayURI = "http://nissatech.no-ip.org:8084";
 	}
 }
