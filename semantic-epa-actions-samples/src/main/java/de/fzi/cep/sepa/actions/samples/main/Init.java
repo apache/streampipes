@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.samples.charts.ChartConsumer;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
+import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
 
@@ -19,7 +20,7 @@ public class Init {
 		consumers.add(new ChartConsumer());
 		consumers.add(new MapsController());
 		
-		ModelSubmitter.submitConsumer(consumers, "http://localhost:8091", 8091);
+		ModelSubmitter.submitConsumer(consumers, Configuration.ACTION_BASE_URL, 8091);
 	}
 	
 	

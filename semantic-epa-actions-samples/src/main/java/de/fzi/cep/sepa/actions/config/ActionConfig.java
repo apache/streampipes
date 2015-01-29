@@ -1,12 +1,14 @@
 package de.fzi.cep.sepa.actions.config;
 
+import de.fzi.cep.sepa.commonss.Configuration;
+
 public class ActionConfig {
 
 	public final static String serverUrl;
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = "http://localhost:8091";
-		iconBaseUrl = "http://localhost:8080/semantic-epa-backend/img";
+		serverUrl = Configuration.ACTION_BASE_URL;
+		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
 	}
 }
