@@ -42,7 +42,8 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 	public boolean runEngine(B bindingParameters, Supplier<EPEngine<B>> supplier, SEPAInvocationGraph sepa)
 	{
 		
-		try {			
+		try {
+					
 			EndpointInfo destination;
 			List<CamelConfig> config = new ArrayList<CamelConfig>();
 			List<EndpointInfo> source = new ArrayList<EndpointInfo>();

@@ -134,7 +134,7 @@ public class MovementAnalysis extends EsperEventEngine<MovementParameter> {
 			calc.setStartingPosition(new DirectPosition2D(fromX, fromY));
 			calc.setDestinationPosition(new DirectPosition2D(toX, toY));
 		} catch (TransformException e) {
-			logger.warn("InvalidTransformation: x={} y={} to x={} y={} calc={}", fromX, fromY, toX, toY, calc);
+			//logger.warn("InvalidTransformation: x={} y={} to x={} y={} calc={}", fromX, fromY, toX, toY, calc);
 			throw new RuntimeException("Coordinates do match CRS", e);
 		}
 		return calc;

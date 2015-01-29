@@ -53,6 +53,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap)
 	{ 	
 		try {
+			logger.info("Registering event type, " +eventTypeName);
 			epService.getEPAdministrator().getConfiguration().addEventType(eventTypeName, typeMap);
 		} catch (ConfigurationException e)
 		{
@@ -65,7 +66,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		toEpStatement(statements);
 		for(EPStatement epStatement : epStatements)
 		{
-			logger.info("Registering statement " +epStatement.toString());
+			logger.info("Registering statement " +epStatement.getText());
 			epStatement.addListener(listenerSendingTo(collector));
 			epStatement.start();
 		}

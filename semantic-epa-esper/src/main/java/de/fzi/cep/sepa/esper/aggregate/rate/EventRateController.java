@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.esper.aggregate.rate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.ontoware.rdf2go.vocabulary.XSD;
@@ -11,25 +8,17 @@ import org.ontoware.rdf2go.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilter;
-import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterParameter;
-import de.fzi.cep.sepa.esper.util.NumericalOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class EventRateController extends EsperDeclarer<EventRateParameter> {
 

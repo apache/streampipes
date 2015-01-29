@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
@@ -25,6 +26,7 @@ public class Init {
 		declarers.add(new NumericalFilterController());
 		declarers.add(new MeetsController());
 		declarers.add(new EventRateController());
+		declarers.add(new AggregationController());
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);
