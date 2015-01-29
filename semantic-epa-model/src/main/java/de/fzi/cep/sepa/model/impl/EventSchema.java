@@ -65,6 +65,17 @@ public class EventSchema extends UnnamedSEPAElement{
 		return propertyMap;
 	}
 	
+	public Map<String, Object> toUntypedRuntimeMap()
+	{
+		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		
+		for(EventProperty p : this.getEventProperties())
+		{
+			propertyMap.put(p.getPropertyName(), ModelUtils.getPrimitiveClass(p.getPropertyType()));
+		}	
+		return propertyMap;
+	}
+	
 	public List<String> toPropertyList()
 	{
 		List<String> properties = new ArrayList<String>();
