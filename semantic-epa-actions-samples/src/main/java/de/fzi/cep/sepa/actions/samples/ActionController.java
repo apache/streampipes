@@ -15,7 +15,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String extractTopic(SECInvocationGraph sec)
 	{
-		return getEventGrounding(sec).getTopicName();
+		return "/topic/" +getEventGrounding(sec).getTopicName();
 	}
 	
 	private EventGrounding getEventGrounding(SECInvocationGraph sec)
