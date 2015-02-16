@@ -7,6 +7,7 @@ import org.ontoware.rdf2go.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -16,7 +17,6 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
-import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class HookLoad implements EventStreamDeclarer {
 
@@ -31,10 +31,9 @@ public class HookLoad implements EventStreamDeclarer {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		
+		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", Utils.createURI("http://schema.org/Text")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", Utils.createURI("http://schema.org/Number")));
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
@@ -60,7 +59,7 @@ public class HookLoad implements EventStreamDeclarer {
 		// AkerVariables.GearLubeOilTemperature.tagNumber returns tag number for this event stream
 		// topicName denotes the actual topic to subscribe for
 		 long[] variables = {AkerVariables.HookLoad.tagNumber()};
-	     String cont = Utils.performRequest(variables, topicName, "121213123", "212342134");
+	     String cont = de.fzi.cep.sepa.sources.samples.util.Utils.performRequest(variables, topicName, "121213123", "212342134");
 	     logger.info(cont);
 	}
 

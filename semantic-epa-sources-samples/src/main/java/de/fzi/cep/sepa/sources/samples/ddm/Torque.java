@@ -32,9 +32,9 @@ public class Torque implements EventStreamDeclarer{
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Text")));
 		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#torque")));
+		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		
 		EventGrounding grounding = new EventGrounding();

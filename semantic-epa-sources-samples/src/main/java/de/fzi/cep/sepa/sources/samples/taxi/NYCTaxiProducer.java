@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.sources.samples.twitter;
+package de.fzi.cep.sepa.sources.samples.taxi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +10,14 @@ import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSource;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
-public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
+public class NYCTaxiProducer implements SemanticEventProducerDeclarer{
 
 	@Override
 	public SEP declareModel() {
-		SEP sep = new SEP("/twitter", "Twitter", "Twitter Event Producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT, Domain.DOMAIN_PROASENSE), new EventSource());
-		sep.setIconUrl(SourcesConfig.iconBaseUrl + "/Twitter_Icon" +"_HQ.png");
+		SEP sep = new SEP("/taxi", "NYC Taxi Data", "NYC Taxi Data Producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
 		
 		return sep;
 	}
@@ -29,9 +28,8 @@ public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
 		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
 		
 		try {
-			streams.add(new TwitterSampleStream());
-			streams.add(new TwitterGeoStream());
-			streams.add(new TweetsGermanyStream());
+			streams.add(new NYCTaxiStream());
+			
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

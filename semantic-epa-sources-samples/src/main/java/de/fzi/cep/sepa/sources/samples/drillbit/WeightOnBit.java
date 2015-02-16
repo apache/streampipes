@@ -40,10 +40,10 @@ public class WeightOnBit implements EventStreamDeclarer {
 		eventProperties
 				.add(new EventProperty(
 						XSD._double.toString(),
-						"variable_value",
+						"value",
 						"",
 						de.fzi.cep.sepa.commons.Utils
-								.createURI("http://sepa.event-processing.org/sepa#weightOnBit")));
+								.createURI("http://schema.org/Number")));
 
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);

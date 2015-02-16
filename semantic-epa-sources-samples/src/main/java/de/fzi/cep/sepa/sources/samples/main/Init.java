@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
+import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
@@ -25,6 +26,7 @@ public class Init {
 		declarers.add(new DrillBitProducer());
 		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
+		declarers.add(new NYCTaxiProducer());
 		
 		/*
 		String zooKeeper = "nissatech.no-ip.org:2181";
