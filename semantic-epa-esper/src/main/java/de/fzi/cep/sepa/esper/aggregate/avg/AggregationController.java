@@ -69,7 +69,9 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		staticProperties.add(operation);
 		
 		MappingProperty mp = new MappingProperty(URI.create(e1.getElementName()), "groupBy", "group stream by: ");
+		MappingProperty agg = new MappingProperty(URI.create(e1.getElementName()), "aggregate", "aggregate property: ");
 		staticProperties.add(mp);
+		staticProperties.add(agg);
 		
 		staticProperties.add(new FreeTextStaticProperty("outputEvery", "output values every (seconds)"));
 		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size (seconds)"));
@@ -94,6 +96,9 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		String groupBy = SEPAUtils.getMappingPropertyName(sepa,
 				"groupBy");
 		
+		String aggregate = SEPAUtils.getMappingPropertyName(sepa,
+				"aggregate");
+		
 		int outputEvery = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
 				.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
 		
@@ -112,7 +117,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		else aggregationType = AggregationType.COUNT;
 		
 		
-		AggregationParameter staticParam = new AggregationParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), aggregationType, outputEvery, groupBy, timeWindowSize);
+		AggregationParameter staticParam = new AggregationParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), aggregationType, outputEvery, groupBy, aggregate, timeWindowSize);
 		
 		
 		try {

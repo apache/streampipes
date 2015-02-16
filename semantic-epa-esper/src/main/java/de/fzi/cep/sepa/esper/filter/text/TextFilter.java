@@ -25,9 +25,9 @@ public class TextFilter extends EsperEventEngine<TextFilterParameter>{
 		List<String> statements = new ArrayList<String>();
 		
 		EPStatementObjectModel model = new EPStatementObjectModel();
-		model.insertInto(new InsertIntoClause(params.getOutName())); // out name
+		model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(SelectClause.createWildcard());
-		model.fromClause(new FromClause().add(FilterStream.create(params.getInName()))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
 		
 		Expression stringFilter;
 		if (params.getStringOperator() == StringOperator.MATCHES)

@@ -15,6 +15,10 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		}
 		else if (bindingParameters.getAggregationType() == AggregationType.COUNT)
 		{
+			aggregationType = "count("; 
+		}
+		else if (bindingParameters.getAggregationType() == AggregationType.SUM)
+		{
 			aggregationType = "sum("; 
 		}
 		else if (bindingParameters.getAggregationType() == AggregationType.MIN)
@@ -26,7 +30,7 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 			aggregationType = "max("; 
 		}
 		
-		aggregationType = aggregationType +bindingParameters.getGroupBy() +")";  
+		aggregationType = aggregationType +bindingParameters.getAggregate() +")";  
 		
 		String statement = "insert into " +fixEventName(bindingParameters.getOutName()) +" select " +aggregationType +" as averageValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) output snapshot every " +bindingParameters.getOutputEvery() +" seconds";
 		return makeStatementList(statement);
