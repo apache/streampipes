@@ -367,7 +367,7 @@ function sendPipeline(fullPipeline, info){
 		// console.log(currentPipeline);
  		
  		$.ajax({
- 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
+ 			url : standardUrl +"pipelines",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
  			type : 'POST',
@@ -391,7 +391,7 @@ function sendPipeline(fullPipeline, info){
  	}else{
  		
  		$.ajax({
- 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
+ 			url : standardUrl +"pipelines/update",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
  			type : 'POST',
