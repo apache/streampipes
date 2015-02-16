@@ -37,7 +37,13 @@ public class TestPipelineStorage {
         
         //dbClient.shutdown();
         
-        StorageManager.INSTANCE.getPipelineStorageAPI().deletePipeline("04abe192-07ae-44d1-95a0-dc0de2e341c4");
+        Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
+        System.out.println(pipeline.getPipelineId());
+        pipeline.setRunning(true);
+       // System.out.println(pipeline.getRev());
+      StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+        
+        pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("fa95b256-b6b0-4600-b998-6df72a19fa5b");
     }
 
 }

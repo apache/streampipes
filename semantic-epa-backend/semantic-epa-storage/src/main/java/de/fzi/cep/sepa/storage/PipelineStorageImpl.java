@@ -36,14 +36,16 @@ public class PipelineStorageImpl implements PipelineStorage {
     public void storePipeline(Pipeline pipeline) {
         CouchDbClient dbClient = Utils.getCouchDBClient();
         dbClient.save(pipeline);
-        dbClient.update(pipeline);
+        //dbClient.update(pipeline);
 
         dbClient.shutdown();
     }
 
     @Override
     public void updatePipeline(Pipeline pipeline) {
-        //CouchDbClient dbClient = new CouchDbClient();
+        CouchDbClient dbClient = Utils.getCouchDBClient();
+        dbClient.update(pipeline);
+        dbClient.shutdown();
     }
 
     @Override
