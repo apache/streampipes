@@ -7,15 +7,14 @@ import javax.persistence.Entity;
 @Entity
 public class ExecutionStatus {
 
-	boolean isRunning;
+	boolean running;
 	Date startedAt;
 	
-	
 	public boolean isRunning() {
-		return isRunning;
+		return running;
 	}
-	public void setRunning(boolean isRunning) {
-		this.isRunning = isRunning;
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 	public Date getStartedAt() {
 		return startedAt;

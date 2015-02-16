@@ -22,13 +22,13 @@ public class Pipeline {
 	private ActionClient action;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	private ExecutionStatus pipelineStatus;
-
-
-	private @SerializedName("_id") String pipelineId;
+	private boolean running;
+	private long startedAt;
+	
 	private String name;
 	private String description;
 	
+	private @SerializedName("_id") String pipelineId;
 	private @SerializedName("_rev") String rev;
 
 	public List<SEPAClient> getSepas() {
@@ -71,14 +71,6 @@ public class Pipeline {
 		this.description = description;
 	}
 
-	public ExecutionStatus getPipelineStatus() {
-		return pipelineStatus;
-	}
-
-	public void setPipelineStatus(ExecutionStatus pipelineStatus) {
-		this.pipelineStatus = pipelineStatus;
-	}
-
 	public String getPipelineId() {
 		return pipelineId;
 	}
@@ -94,8 +86,21 @@ public class Pipeline {
 	public void setRev(String rev) {
 		this.rev = rev;
 	}
-	
-	
-	
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	public long getStartedAt() {
+		return startedAt;
+	}
+
+	public void setStartedAt(long startedAt) {
+		this.startedAt = startedAt;
+	}
 	
 }
