@@ -1,9 +1,9 @@
 package de.fzi.cep.sepa.manager.operations;
 
+import java.util.Date;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
 import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
@@ -15,9 +15,7 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 /**
  * class that provides several (partial) pipeline verification methods
@@ -28,6 +26,7 @@ import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class Operations {
 
+	
 	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial)
 			throws Exception {
 		PipelineValidationHandler validator = new PipelineValidationHandler(
@@ -41,6 +40,7 @@ public class Operations {
 
 	public static void startPipeline(
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+		
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
@@ -51,6 +51,20 @@ public class Operations {
 		storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 		new GraphSubmitter(graphs).invokeGraphs();
 		
+		setPipelineStarted(pipeline);
+		
+	}
+	
+	private static void setPipelineStarted(de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+		System.out.println("Updating pipeline: " +pipeline.getName());
+		pipeline.setRunning(true);
+		pipeline.setStartedAt(new Date().getTime());
+		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+	}
+	
+	private static void setPipelineStopped(de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+		pipeline.setRunning(false);
+		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 	}
 	
 	private static void storeInvocationGraphs(String pipelineId, List<InvocableSEPAElement> graphs)
@@ -71,6 +85,7 @@ public class Operations {
 		new GraphSubmitter(graphs).detachGraphs();
 		
 		StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
+		setPipelineStopped(pipeline);
 	}
 	
 }
