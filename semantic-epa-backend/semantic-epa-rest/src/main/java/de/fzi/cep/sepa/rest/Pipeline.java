@@ -55,6 +55,7 @@ public class Pipeline extends AbstractRestInterface {
 	{	
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
+		serverPipeline.setRunning(false);
 		pipelineStorage.store(serverPipeline);	
 		
 		return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());

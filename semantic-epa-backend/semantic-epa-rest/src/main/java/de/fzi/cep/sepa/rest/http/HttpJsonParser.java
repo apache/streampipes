@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.rest.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -20,6 +21,7 @@ public class HttpJsonParser {
 		HttpResponse response = client.execute(request);
 		
 		String pageContent = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+		Logger.getAnonymousLogger().info("Content: " +pageContent);
 		return pageContent;
 		
 	}
