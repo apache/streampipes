@@ -10,15 +10,15 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class ChartConsumer implements SemanticEventConsumerDeclarer {
 
@@ -33,14 +33,13 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
+		EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
 		eventProperties.add(e1);
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);		
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		sec.addEventStream(stream1);
-		
 	
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -55,7 +54,7 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 		staticProperties.add(yAxis);
 		
 		try {
-			staticProperties.add(new MappingProperty(new URI(e1.getElementName()), "Mapping", "Select Mapping"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping"));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

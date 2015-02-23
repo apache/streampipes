@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.actions.samples.maps;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +9,10 @@ import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
@@ -31,9 +31,9 @@ public class MapsController extends ActionController {
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventProperty(Utils.createURI("http://test.de/latitude"));
-		EventProperty e2 = new EventProperty(Utils.createURI("http://test.de/longitude"));
-		EventProperty e3 = new EventProperty(Utils.createURI("http://test.de/text"));
+		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));
+		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI("http://test.de/longitude"));
+		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI("http://test.de/text"));
 		
 		eventProperties.add(e1);
 		eventProperties.add(e2);
@@ -48,9 +48,9 @@ public class MapsController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new MappingProperty(URI.create(e1.getElementName()), "latitude", "Select latitude property"));
-		staticProperties.add(new MappingProperty(URI.create(e2.getElementName()), "longitude", "Select longitude property"));
-		staticProperties.add(new MappingProperty(URI.create(e3.getElementName()), "label", "Select Label"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "label", "Select Label"));
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
