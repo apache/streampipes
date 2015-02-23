@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
 import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
 import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
@@ -123,7 +124,10 @@ public class Pipeline extends AbstractRestInterface {
 			return toJson(Operations.validatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class), true));
 		} catch (JsonSyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		} catch(NoValidConnectionException e) {
+			return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION.title(), NotificationType.NO_VALID_CONNECTION.description(), e.getMessage()));
 		} catch (Exception e) {
+			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
