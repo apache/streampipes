@@ -30,6 +30,26 @@ function getRadioInputForm(label, radioButtonArray, i){
 	return string;
 }
 
+function getCheckboxInputForm(label, checkboxArray, i){
+	var string="<div class='form-group'>";
+	string +="<input name='" +label +"' type='hidden' value='" +label +"'" +">";
+	string+= "<label class='col-md-4 control-label' for='checkboxes"+i+"'>"+label+"</label>";
+	string+= "<div class='col-md-4'>";
+	for (var j = 0; j< checkboxArray.length ; j++){
+		string+=" <div class='checkbox'>";
+		string+="<label for='checkboxes-"+i+"-"+j+"'>";
+		if (checkboxArray[j].selected == true){
+			string +="<input id='checkboxes-"+i+"-"+j+"' checked='checked' value=' "+checkboxArray[j].humanDescription+"' type='checkbox'>";
+		}else{
+			string +="<input id='checkboxes-"+i+"-"+j+"' value=' "+checkboxArray[j].humanDescription+"' type='checkbox'>";
+		}
+		string += checkboxArray[j].humanDescription;
+		string += "</label></div>";
+	}
+	string += "</div></div>";
+	return string;
+}
+
 function getSelectInputForm(label, selectArray, i){
 	
 	var string ="<div class='form-group'>";
