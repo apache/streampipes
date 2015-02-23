@@ -11,17 +11,25 @@ import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
+import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.util.SEPAUtils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class ClientModelTransformer {
@@ -94,11 +102,35 @@ public class ClientModelTransformer {
 		client.setInputNodes(sepa.getEventStreams().size());
 		
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
-		sepa.getStaticProperties().forEach((p) -> clientStaticProperties.add(convertStaticProperty(p)));			
+		sepa.getStaticProperties().forEach((p) -> clientStaticProperties.add(convertStaticProperty(p)));		
+		
+		//TODO support multiple output strategies
+		if (sepa.getOutputStrategies().get(0) instanceof CustomOutputStrategy)
+		{
+			CustomOutputStrategy strategy = (CustomOutputStrategy) sepa.getOutputStrategies().get(0);
+			clientStaticProperties.add(convertCustomOutput(strategy));
+		}
+	
 		client.setStaticProperties(clientStaticProperties);	
 		
 		return client;
 	}
+	
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertCustomOutput(
+			CustomOutputStrategy strategy) {
+		
+		CheckboxInput checkboxInput = new CheckboxInput();
+		List<Option> options = new ArrayList<>();
+		
+		for(EventProperty p : strategy.getEventProperties())
+			options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
+		checkboxInput.setOptions(options);
+		
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.CUSTOM_OUTPUT, "Output properties:", "Output: ", checkboxInput);
+		clientProperty.setElementId(strategy.getRdfId().toString());
+		return clientProperty;
+	}
+
 
 	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
 	{
@@ -107,6 +139,29 @@ public class ClientModelTransformer {
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
 		sepa.setStaticProperties(convertStaticProperties(sepa, clientProperties));
 		
+		if (sepa.getOutputStrategies().get(0) instanceof CustomOutputStrategy)
+		{
+			List<EventProperty> outputProperties = new ArrayList<EventProperty>();
+			List<EventProperty> processedProperties = new ArrayList<>();
+			CustomOutputStrategy strategy = (CustomOutputStrategy) sepa.getOutputStrategies().get(0);
+			String id = strategy.getRdfId().toString();
+			CheckboxInput input = (CheckboxInput) Utils.getClientPropertyById(sepaClient.getStaticProperties(), id).getInput();
+			for(Option option : input.getOptions())
+			{
+				if (option.isSelected()) 
+					{
+						EventProperty matchedProperty = StorageManager.INSTANCE.getEntityManager().find(EventProperty.class, option.getElementId());
+						if (!processedProperties.contains(matchedProperty)) 
+							{
+								outputProperties.add(matchedProperty);
+							}
+						if (matchedProperty instanceof EventPropertyNested) processedProperties.addAll(((EventPropertyNested) matchedProperty).getEventProperties());
+						
+					}
+			}
+			((CustomOutputStrategy) sepa.getOutputStrategies().get(0)).setEventProperties(outputProperties);
+		}
+			
 		return sepa;
 	}
 	
@@ -141,8 +196,16 @@ public class ClientModelTransformer {
 				resultProperties.add(convertOneOfStaticProperty((OneOfStaticProperty) p, input));
 			} else if (p instanceof MappingProperty)
 			{
-				SelectFormInput input = (SelectFormInput) formInput;
-				resultProperties.add(convertMappingProperty((MappingProperty) p, input));
+				if (p instanceof MappingPropertyUnary)
+				{
+					SelectFormInput input = (SelectFormInput) formInput;
+					resultProperties.add(convertMappingPropertyUnary((MappingPropertyUnary) p, input));
+				}
+				else
+				{
+					CheckboxInput input = (CheckboxInput) formInput;
+					resultProperties.add(convertMappingPropertyNary((MappingPropertyNary) p, input));
+				}
 			} else if (p instanceof MatchingStaticProperty)
 			{
 				MatchingStaticProperty matchingProperty = (MatchingStaticProperty) p;
@@ -150,6 +213,7 @@ public class ClientModelTransformer {
 				resultProperties.add(convertMatchingStaticProperty(matchingProperty, input));
 			}
 		}
+
 		return resultProperties;
 	}
 	
@@ -194,13 +258,29 @@ public class ClientModelTransformer {
 		return p;
 	}
 	
-	public static MappingProperty convertMappingProperty(MappingProperty p, SelectFormInput input)
+	public static MappingPropertyUnary convertMappingPropertyUnary(MappingPropertyUnary p, SelectFormInput input)
 	{
 		for(Option option : input.getOptions())
 		{
 			if (option.isSelected()) p.setMapsTo(URI.create(option.getElementId()));
 		}
 		if (input.getOptions().size() == 1) p.setMapsTo(URI.create(input.getOptions().get(0).getElementId()));
+		return p;
+	}
+	
+	public static MappingPropertyNary convertMappingPropertyNary(MappingPropertyNary p, CheckboxInput input)
+	{
+		List<URI> mapsTo = new ArrayList<URI>();
+		for(Option option : input.getOptions())
+		{
+			if (option.isSelected()) 
+				{
+					System.out.println("select mapping property nary");
+					mapsTo.add(URI.create(option.getElementId()));
+				}
+		}
+		//if (input.getOptions().size() == 1) p.setMapsTo(URI.create(input.getOptions().get(0).getElementId()));
+		p.setMapsTo(mapsTo);
 		return p;
 	}
 
@@ -249,7 +329,11 @@ public class ClientModelTransformer {
 		if (p instanceof FreeTextStaticProperty) property = convertFreeTextStaticProperty((FreeTextStaticProperty) p);
 		else if (p instanceof OneOfStaticProperty) property = convertOneOfStaticProperty((OneOfStaticProperty) p);
 		else if (p instanceof AnyStaticProperty) property = convertAnyStaticProperty((AnyStaticProperty) p);
-		else if (p instanceof MappingProperty) property = convertMappingProperty((MappingProperty) p);
+		else if (p instanceof MappingProperty) 
+			{
+				if (p instanceof MappingPropertyUnary) property = convertMappingProperty((MappingProperty) p, new SelectFormInput());
+				else property = convertMappingProperty((MappingProperty) p, new CheckboxInput());
+			}
 		else if (p instanceof MatchingStaticProperty) property = convertMatchingProperty((MatchingStaticProperty) p);
 		
 		property.setElementId(p.getRdfId().toString());
@@ -266,13 +350,13 @@ public class ClientModelTransformer {
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertMappingProperty(
-			MappingProperty p) {
+			MappingProperty p, SelectInput input) {
 		List<Option> options = new ArrayList<>();
 		
 		//TODO remove later, just for testing purposes!
 		options.add(new Option("elementId", "description"));
-		
-		SelectFormInput input = new SelectFormInput(options);
+		input.setOptions(options);
+		//SelectFormInput input = new SelectFormInput(options);
 		
 		
 		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getName(), p.getDescription(), input);

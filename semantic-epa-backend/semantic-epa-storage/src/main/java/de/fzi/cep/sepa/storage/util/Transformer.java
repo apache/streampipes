@@ -78,7 +78,12 @@ public class Transformer {
 									&& !m.getReturnType()
 											.getCanonicalName()
 											.startsWith(
-													"com.clarkparsia.empire.")) {
+													"com.clarkparsia.empire.")
+													
+									&& !m.getName().equals("getUntypedRuntimeFormat")
+									&& !m.getName().equals("getRuntimeFormat")
+									&& !m.getName().equals("getFullPropertyName")
+									) {
 								generateCompleteGraph(graph,
 										(AbstractSEPAElement) m.invoke(element));
 							}
@@ -108,7 +113,32 @@ public class Transformer {
 	{
 		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement", "InvocableSEPAElement"};
 		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph", "SECInvocationGraph"};
-		String[] modelClasses = {"MatchingStaticProperty", "Domain", "EventGrounding", "EventProperty", "EventQuality", "EventSchema", "EventSource", "EventStream", "MeasurementUnit", "Namespace", "Pipeline", "PipelineElement", "SEPAFactory", "StaticProperty", "TransportFormat", "TransportProtocol", "OneOfStaticProperty", "FreeTextStaticProperty", "AnyStaticProperty", "Option", "MappingProperty"};
+		String[] modelClasses = {"MatchingStaticProperty",
+				"Domain", 
+				"EventGrounding", 
+				"EventProperty", 
+				"EventQuality", 
+				"EventSchema", 
+				"EventSource", 
+				"EventStream", 
+				"MeasurementUnit", 
+				"Namespace", 
+				"Pipeline", 
+				"PipelineElement", 
+				"SEPAFactory", 
+				"StaticProperty", 
+				"TransportFormat", 
+				"TransportProtocol", 
+				"OneOfStaticProperty", 
+				"FreeTextStaticProperty", 
+				"AnyStaticProperty", 
+				"Option", 
+				"MappingProperty", 
+				"EventPropertyPrimitive", 
+				"EventPropertyNested", 
+				"EventPropertyList", 
+				"MappingPropertyUnary",
+				"MappingPropertyNary"};
 		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
 		if (contains(className, abstractClasses)) 
