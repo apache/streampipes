@@ -28,11 +28,14 @@ public class ClientModelUtils {
 		List<ConsumableSEPAElement> elements = new ArrayList<>();
 		elements.addAll(pipeline.getSepas());
 		
-		if (pipeline.getAction().getElementId() != null) elements.add(pipeline.getAction());
+		if (pipeline.getAction() != null)
+		{
+			if (pipeline.getAction().getElementId() != null) elements.add(pipeline.getAction());
+		}
 		
 		List<ConsumableSEPAElement> currentElements = new ArrayList<>();
 		currentElements.addAll(pipeline.getSepas());
-		if (pipeline.getAction().getElementId() != null) currentElements.add(pipeline.getAction());
+		if (pipeline.getAction() != null && pipeline.getAction().getElementId() != null) currentElements.add(pipeline.getAction());
 		
 		for (ConsumableSEPAElement client : currentElements)
 		{

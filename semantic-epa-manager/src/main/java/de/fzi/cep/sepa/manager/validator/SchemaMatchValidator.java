@@ -3,11 +3,14 @@ package de.fzi.cep.sepa.manager.validator;
 import java.net.URI;
 import java.util.List;
 
+import de.fzi.cep.sepa.manager.pipeline.Matcher;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 
 public class SchemaMatchValidator implements Validator<EventSchema> {
 
+	
 	@Override
 	public boolean validate(List<EventSchema> left, List<EventSchema> right) {
 		boolean match = true;
@@ -21,7 +24,8 @@ public class SchemaMatchValidator implements Validator<EventSchema> {
 			for(EventProperty rightProperty : schema.getEventProperties())
 			{
 				System.out.println("RIGHT: " +printSubclasses(rightProperty));	
-				if (!matches(rightProperty, left.get(0).getEventProperties())) match = false;
+				//if (!matches(rightProperty, left.get(0).getEventProperties())) match = false;
+				if (!new Matcher().matches(rightProperty, left.get(0).getEventProperties())) match = false;
 			}
 		}
 		System.out.println("Overall Match: " +match);
@@ -44,17 +48,29 @@ public class SchemaMatchValidator implements Validator<EventSchema> {
 		boolean match = true;
 		System.out.println("Right: " + right.getPropertyName() +", " +printSubclasses(right));
 		System.out.println("Left: " + left.getPropertyName() +", " +printSubclasses(left));
-		List<URI> leftUris = left.getSubClassOf();
-		for(URI uri : right.getSubClassOf())
-		{
-			if (!leftUris.contains(uri)) match = false;
+		
+		if (right.getClass() != left.getClass()) return false;
+		else {
+			if (right instanceof EventPropertyPrimitive)
+			{
+				EventPropertyPrimitive rightPrimitive = (EventPropertyPrimitive) right;
+				EventPropertyPrimitive leftPrimitive = (EventPropertyPrimitive) left;
+				List<URI> leftUris = leftPrimitive.getSubClassOf();
+				for(URI uri : rightPrimitive.getSubClassOf())
+				{
+					if (!leftUris.contains(uri)) match = false;
+				}
+			}
 		}
+		
+		
 		System.out.println("Match: " +match);
 		return match;
 	}
 	
 	private String printSubclasses(EventProperty p)
 	{
+		/*
 		String result = "(";
 		for (URI uri : p.getSubClassOf())
 		{
@@ -62,6 +78,8 @@ public class SchemaMatchValidator implements Validator<EventSchema> {
 		}
 		result += ")";
 		return result;
+		*/
+		return null;
 	}
 
 	@Override

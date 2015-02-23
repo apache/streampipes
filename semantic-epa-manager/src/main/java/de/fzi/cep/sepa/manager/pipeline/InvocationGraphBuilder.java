@@ -11,6 +11,7 @@ import com.clarkparsia.empire.SupportsRdfId.URIKey;
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -22,6 +23,7 @@ import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 
 public class InvocationGraphBuilder {
 
@@ -79,10 +81,13 @@ public class InvocationGraphBuilder {
 						grounding.setTopicName(outputTopic);
 						
 						if (thisGraph.getInputStreams().size() == 1) 
-						{		
-							outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
+						{	
+							SchemaOutputCalculator calc = new SchemaOutputCalculator();	
+							outputSchema = calc.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
+							thisGraph.setOutputStrategies(Utils.createList(calc.getOutputStrategy()));
+							
 						}
-						else outputSchema = SchemaOutputCalculator.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
+						else outputSchema = new SchemaOutputCalculator().calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
 						outputStream.setEventGrounding(grounding);
 						outputStream.setEventSchema(outputSchema);
 						
