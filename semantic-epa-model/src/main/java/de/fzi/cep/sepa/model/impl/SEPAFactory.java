@@ -24,7 +24,7 @@ public class SEPAFactory {
 	
 	public static EventProperty createEventProperty(String name, String measurementUnit, String propertyType, List<URI> subClassOf)
 	{
-		return new EventProperty(propertyType, name, measurementUnit, subClassOf);
+		return new EventPropertyPrimitive(propertyType, name, measurementUnit, subClassOf);
 	}
 	
 	public static StaticProperty createStaticProperty(String name, String description, StaticPropertytype type)

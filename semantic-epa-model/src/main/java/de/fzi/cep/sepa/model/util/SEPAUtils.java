@@ -9,9 +9,14 @@ import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
@@ -40,27 +45,111 @@ public class SEPAUtils {
 	// TODO: fetch event property from db for given static property name
 	public static String getMappingPropertyName(InvocableSEPAElement sepa, String staticPropertyName)
 	{
+		return getMappingPropertyName(sepa, staticPropertyName, false);
+	}
+	
+	public static String getMappingPropertyName(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
+	{
 		URI propertyURI = getURIFromStaticProperty(sepa, staticPropertyName);
-		
 		for(EventStream stream : sepa.getInputStreams())
 		{
-			for(EventProperty p : stream.getEventSchema().getEventProperties())
+			return getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
+		}
+		return null;
+		//TODO: exceptions
+	}
+	
+	public static List<String> getMultipleMappingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
+	{
+		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
+		List<String> result = new ArrayList<String>();
+		for(URI propertyUri : propertyUris)
+		{
+			for(EventStream stream : sepa.getInputStreams())
 			{
-				if (p.getRdfId().toString().equals(propertyURI.toString())) return p.getPropertyName();
+				String name = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyUri, completeNames, "");
+				if (name != null) result.add(name);
+			}
+		}
+		return result;
+		//TODO: exceptions
+	}
+	
+	//TODO fix return null
+	private static String getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
+	{
+		for(EventProperty p : eventProperties)
+		{
+			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
+			{
+				if (p.getRdfId().toString().equals(propertyURI.toString())) 
+					{
+						if (!completeNames) return p.getPropertyName();
+						else return prefix + p.getPropertyName();
+					}
+			}
+			else if (p instanceof EventPropertyNested)
+			{
+				prefix = prefix + p.getPropertyName() +".";
+				getMappingPropertyName(((EventPropertyNested) p).getEventProperties(), propertyURI, completeNames, prefix);
+			}
+		}
+		return null;
+	}
+	
+	//TODO check if correct
+	private static String getEventPropertyNameByPrefix(List<EventProperty> eventProperties, String namePrefix, boolean completeNames, String propertyPrefix)
+	{
+		for(EventProperty p : eventProperties)
+		{
+			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
+			{
+				if (p.getPropertyName().startsWith(namePrefix)) 
+					{
+						if (!completeNames) return p.getPropertyName();
+						else return propertyPrefix + p.getPropertyName();
+					}
+			}
+			else if (p instanceof EventPropertyNested)
+			{
+				//propertyPrefix = propertyPrefix + p.getPropertyName() +".";
+				//getEventPropertyNameByPrefix(((EventPropertyNested) p).getEventProperties(), namePrefix, completeNames, propertyPrefix);
+				if (p.getPropertyName().startsWith(namePrefix))
+				{
+					if (!completeNames) return p.getPropertyName();
+					else return propertyPrefix + p.getPropertyName();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static String getEventPropertyName(List<EventProperty> properties, String namePrefix)
+	{
+		return getEventPropertyNameByPrefix(properties, namePrefix, true, "");
+	}
+	
+	private static URI getURIFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
+	{
+		for(StaticProperty p : sepa.getStaticProperties())
+		{		
+			if (p instanceof MappingPropertyUnary)
+			{
+				MappingPropertyUnary mp = (MappingPropertyUnary) p;
+				if (mp.getName().equals(staticPropertyName)) return mp.getMapsTo();
 			}
 		}
 		return null;
 		//TODO: exceptions
 	}
 	
-	private static URI getURIFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
+	private static List<URI> getMultipleURIsFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
 	{
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
-			
-			if (p instanceof MappingProperty)
+			if (p instanceof MappingPropertyNary)
 			{
-				MappingProperty mp = (MappingProperty) p;
+				MappingPropertyNary mp = (MappingPropertyNary) p;
 				if (mp.getName().equals(staticPropertyName)) return mp.getMapsTo();
 			}
 		}
@@ -160,9 +249,20 @@ public class SEPAUtils {
 
 	private static StaticProperty generateClonedMappingProperty(
 			MappingProperty property) {
-		MappingProperty mp = new MappingProperty(property.getMapsFrom(), property.getName(), property.getDescription());
-		mp.setMapsTo(property.getMapsTo());
-		return mp;
+		
+		if (property instanceof MappingPropertyUnary)
+		{
+			MappingPropertyUnary unaryProperty = (MappingPropertyUnary) property;
+			MappingPropertyUnary mp = new MappingPropertyUnary(unaryProperty.getMapsFrom(), unaryProperty.getName(), unaryProperty.getDescription());
+			mp.setMapsTo(unaryProperty.getMapsTo());
+			return mp;
+		}
+		else {
+			MappingPropertyNary naryProperty = (MappingPropertyNary) property;
+			MappingPropertyNary mp = new MappingPropertyNary(naryProperty.getMapsFrom(), naryProperty.getName(), naryProperty.getDescription());
+			mp.setMapsTo(naryProperty.getMapsTo());
+			return mp;
+		}
 	}
 
 	private static StaticProperty generateClonedOneOfStaticProperty(
@@ -178,5 +278,18 @@ public class SEPAUtils {
 		ftsp.setType(property.getType());
 		ftsp.setValue(property.getValue());
 		return ftsp;
+	}
+	
+	public static String getFullPropertyName(EventProperty property, List<EventProperty> topLevelProperties, String initialPrefix, char delimiter)
+	{
+		for(EventProperty schemaProperty : topLevelProperties)
+		{
+			if (property.getRdfId().toString().equals(schemaProperty.getRdfId().toString())) return initialPrefix + property.getPropertyName();
+			else if (schemaProperty instanceof EventPropertyNested)
+			{
+				return getFullPropertyName(property, ((EventPropertyNested) schemaProperty).getEventProperties(), initialPrefix +schemaProperty.getPropertyName() +delimiter, delimiter);
+			}
+		}
+		return null;
 	}
 }

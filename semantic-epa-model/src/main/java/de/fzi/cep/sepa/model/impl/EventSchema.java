@@ -15,7 +15,6 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
-import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -53,16 +52,9 @@ public class EventSchema extends UnnamedSEPAElement{
 		return eventProperties.add(p);
 	}
 	
-	public Map<String, Class<?>> toRuntimeMap()
+	public Map<String, Object> toRuntimeMap()
 	{
-		Map<String, Class<?>> propertyMap = new HashMap<String, Class<?>>();
-		
-		for(EventProperty p : this.getEventProperties())
-		{
-			propertyMap.put(p.getPropertyName(), ModelUtils.getPrimitiveClass(p.getPropertyType()));
-		}
-		
-		return propertyMap;
+		return toUntypedRuntimeMap();
 	}
 	
 	public Map<String, Object> toUntypedRuntimeMap()
@@ -71,7 +63,7 @@ public class EventSchema extends UnnamedSEPAElement{
 		
 		for(EventProperty p : this.getEventProperties())
 		{
-			propertyMap.put(p.getPropertyName(), ModelUtils.getPrimitiveClass(p.getPropertyType()));
+			propertyMap.putAll(p.getUntypedRuntimeFormat());
 		}	
 		return propertyMap;
 	}
@@ -82,7 +74,7 @@ public class EventSchema extends UnnamedSEPAElement{
 		
 		for(EventProperty p : this.getEventProperties())
 		{
-			properties.add(p.getPropertyName());
+			properties.addAll(p.getFullPropertyName(""));
 		}
 		return properties;
 	}

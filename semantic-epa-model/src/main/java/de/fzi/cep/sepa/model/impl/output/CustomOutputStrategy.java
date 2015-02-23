@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl.output;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,7 @@ public class CustomOutputStrategy extends OutputStrategy {
 	public CustomOutputStrategy()
 	{
 		super();
+		this.eventProperties = new ArrayList<>();
 	}
 	
 	public CustomOutputStrategy(List<EventProperty> eventProperties)

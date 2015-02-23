@@ -87,7 +87,5 @@ public class SEPA extends ConsumableSEPAElement {
 	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
 		this.outputStrategies = outputStrategies;
 	}
-
-	
 		
 }

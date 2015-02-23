@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,11 +28,13 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 	public ConsumableSEPAElement()
 	{
 		super();
+		this.staticProperties = new ArrayList<>();
 	}
 	
 	public ConsumableSEPAElement(String uri, String name, String description, String iconUrl)
 	{
 		super(uri, name, description, iconUrl);
+		this.staticProperties = new ArrayList<>();
 	}
 	
 	public List<EventStream> getEventStreams() {
