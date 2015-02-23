@@ -11,11 +11,11 @@ import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.pattern.PatternParameters;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
@@ -48,9 +48,9 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+		EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 				"http://test.de/latitude"));
-		EventProperty e2 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+		EventProperty e2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 				"http://test.de/longitude"));
 		eventProperties.add(e1);
 		eventProperties.add(e2);
@@ -61,9 +61,9 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 		EventStream stream2 = new EventStream();
 		EventSchema schema2 = new EventSchema();
 		List<EventProperty> eventProperties2 = new ArrayList<EventProperty>();
-		EventProperty e3 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+		EventProperty e3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 				"http://test.de/latitude"));
-		EventProperty e4 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+		EventProperty e4 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 				"http://test.de/longitude"));
 		eventProperties2.add(e3);
 		eventProperties2.add(e4);
@@ -100,10 +100,10 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 		staticProperties.add(duration);
 		
 		try {
-			staticProperties.add(new MappingProperty(new URI(e1.getElementName()), "Latitude", "Select Latitude Mapping (Stream 1)"));
-			staticProperties.add(new MappingProperty(new URI(e2.getElementName()), "Longitude", "Select Longitude Mapping (Stream 1)"));
-			staticProperties.add(new MappingProperty(new URI(e3.getElementName()), "Latitude", "Select Latitude Mapping (Stream 2)"));
-			staticProperties.add(new MappingProperty(new URI(e4.getElementName()), "Longitude", "Select Longitude Mapping (Stream 2)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Latitude", "Select Latitude Mapping (Stream 1)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "Longitude", "Select Longitude Mapping (Stream 1)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e3.getElementName()), "Latitude", "Select Latitude Mapping (Stream 2)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e4.getElementName()), "Longitude", "Select Longitude Mapping (Stream 2)"));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

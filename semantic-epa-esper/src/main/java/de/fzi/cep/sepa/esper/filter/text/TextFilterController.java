@@ -11,10 +11,12 @@ import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
@@ -36,7 +38,7 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 		
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
-		EventProperty property = new EventProperty("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text"));
+		EventProperty property = new EventPropertyPrimitive("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text"));
 	
 		eventProperties.add(property);
 		
@@ -64,7 +66,7 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 		operation.addOption(new Option("CONTAINS"));
 		staticProperties.add(operation);
 		try {
-			staticProperties.add(new MappingProperty(new URI(property.getElementName()), "text", "Select Text Property"));
+			staticProperties.add(new MappingPropertyUnary(new URI(property.getElementName()), "text", "Select Text Property"));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,7 +90,13 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 			logger.info("Text Property: " +filterProperty);
 		
 			String topicPrefix = "topic://";
-			TextFilterParameter staticParam = new TextFilterParameter(topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName(), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName(), sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), Collections.<String> emptyList(), keyword, StringOperator.valueOf(operation), filterProperty);
+			TextFilterParameter staticParam = new TextFilterParameter(topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName(), 
+					topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName(), 
+					sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), 
+					Collections.<String> emptyList(), 
+					keyword, 
+					StringOperator.valueOf(operation), 
+					filterProperty);
 			
 			
 			try {

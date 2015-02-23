@@ -14,10 +14,12 @@ import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
@@ -46,7 +48,7 @@ public class TestAggregation {
 		EventStream outputStream = new EventStream();
 		
 		List<EventProperty> outputProperties = new ArrayList<>();
-		outputProperties.add(new EventProperty(XSD._double.toString(),
+		outputProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
 				"averageValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		EventSchema outputSchema = new EventSchema();
@@ -59,7 +61,7 @@ public class TestAggregation {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		MappingProperty mp = new MappingProperty(URI.create(test.getEventStreams().get(0).getEventSchema().getEventProperties().get(0).getElementId()), "groupBy", "group stream by: ");
+		MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(test.getEventStreams().get(0).getEventSchema().getEventProperties().get(0).getElementId()), "groupBy", "group stream by: ");
 		mp.setMapsTo(URI.create(sep.getEventStreams().get(0).getEventSchema().getEventProperties().get(1).getElementId()));
 		staticProperties.add(mp);
 		

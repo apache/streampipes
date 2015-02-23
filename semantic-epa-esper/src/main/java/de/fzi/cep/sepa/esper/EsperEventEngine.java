@@ -1,9 +1,13 @@
 package de.fzi.cep.sepa.esper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,17 +40,40 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			throw new IllegalArgumentException("Event Rate only possible on one event type.");
 			
 		epService = EPServiceProviderManager.getDefaultProvider();
-		
 		logger.info("Configuring event types for graph " +graph.getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
-			registerEventTypeIfNotExists(e.getKey(), inTypeMap); // indirect cast from Class to Object
+			//registerEventTypeIfNotExists(e.getKey(), inTypeMap); // indirect cast from Class to Object
+			checkAndRegisterEventType(e.getKey(), inTypeMap);
 		});
-		
-		registerEventTypeIfNotExists(graph.getOutputStream().getEventGrounding().getTopicName(), graph.getOutputStream().getEventSchema().toUntypedRuntimeMap());
+		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
+		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
 		
 		List<String> statements = statements(parameters.getStaticProperty());
 		registerStatements(statements, collector);
+		
+	}
+	
+	private void checkAndRegisterEventType(String key, Map<String, Object> typeMap)
+	{
+		Map<String, Object> newTypeMap = new HashMap<String, Object>();
+		Iterator<String> it = typeMap.keySet().iterator();
+		while(it.hasNext())
+		{
+			String objKey = it.next();
+			Object obj = typeMap.get(objKey);
+			if (obj instanceof java.util.List)
+			{
+				String eventName = StringUtils.capitalize(objKey);
+				registerEventTypeIfNotExists(eventName, (Map<String, Object>) ((java.util.List) obj).get(0));
+				newTypeMap.put(objKey, eventName +"[]");
+			}
+			else {
+				newTypeMap.put(objKey, obj);
+			}			
+		}
+		//MapUtils.debugPrint(System.out, key, newTypeMap);
+		registerEventTypeIfNotExists(key, newTypeMap);
 		
 	}
 	
@@ -57,6 +84,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			epService.getEPAdministrator().getConfiguration().addEventType(eventTypeName, typeMap);
 		} catch (ConfigurationException e)
 		{
+			e.printStackTrace();
 			logger.info("Event type does already exist, " +eventTypeName);
 		}
 	}
@@ -118,4 +146,10 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	{
 		return Utils.createList(statement);
 	}
+	/*
+	protected boolean discard()
+	{
+		epService.destroy();
+	}
+	*/
 }

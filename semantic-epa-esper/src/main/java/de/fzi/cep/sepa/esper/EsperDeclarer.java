@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.EPEngine;
@@ -47,8 +48,8 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 			EndpointInfo destination;
 			List<CamelConfig> config = new ArrayList<CamelConfig>();
 			List<EndpointInfo> source = new ArrayList<EndpointInfo>();
-			Map<String, Map<String, Class<?>>> inEventTypes = new HashMap<>();
-			Map<String, Class<?>> outEventType = new HashMap<>();
+			Map<String, Map<String, Object>> inEventTypes = new HashMap<>();
+			Map<String, Object> outEventType = new HashMap<>();
 			EngineParameters<B> engineParams;
 			String outputBrokerAlias;
 			
@@ -64,6 +65,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 			}
 			
 			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), DataType.JSON);
+			
 			outEventType = sepa.getOutputStream().getEventSchema().toRuntimeMap();
 			
 			for(EventStream stream : sepa.getInputStreams())

@@ -21,10 +21,13 @@ import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
@@ -64,9 +67,9 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 
 			EventSchema schema1 = new EventSchema();
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+			EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 					"http://test.de/latitude"));
-			EventProperty e2 = new EventProperty(de.fzi.cep.sepa.commons.Utils.createURI(
+			EventProperty e2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
 					"http://test.de/longitude"));
 			eventProperties.add(e1);
 			eventProperties.add(e2);
@@ -83,11 +86,11 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 			AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
 
 			List<EventProperty> appendProperties = new ArrayList<EventProperty>();
-			appendProperties.add(new EventProperty(XSD._double.toString(),
+			appendProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
 					"speed", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/speed")));
-			appendProperties.add(new EventProperty(XSD._double.toString(),
+			appendProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
 					"bearing", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/bearing")));
-			appendProperties.add(new EventProperty(XSD._double.toString(),
+			appendProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
 					"distance", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/distance")));
 			outputStrategy.setEventProperties(appendProperties);
 			outputStrategies.add(outputStrategy);
@@ -96,13 +99,13 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
 			OneOfStaticProperty epsg = new OneOfStaticProperty("epsg", "Select Projection");
-			epsg.addOption(new Option("EPSG-4326"));
-			epsg.addOption(new Option("EPSG-4329"));
+			epsg.addOption(new Option("EPSG:4326"));
+			epsg.addOption(new Option("EPSG:4329"));
 			staticProperties.add(epsg);
 			//TODO mapping properties
-			staticProperties.add(new MappingProperty(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
-			staticProperties.add(new MappingProperty(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
-			staticProperties.add(new MappingProperty("group by", "Group elements by"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
+			staticProperties.add(new MappingPropertyNary("group by", "Group elements by"));
 			desc.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {

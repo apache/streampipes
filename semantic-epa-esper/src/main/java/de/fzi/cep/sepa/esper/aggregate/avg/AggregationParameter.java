@@ -10,10 +10,10 @@ public class AggregationParameter extends BindingParameters {
 	private int outputEvery;
 	private int timeWindowSize;
 	private String aggregate;
-	private String groupBy;
+	private List<String> groupBy;
 	
 	public AggregationParameter(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, AggregationType aggregationType, int outputEvery, String groupBy, String aggregate, int timeWindowSize) {
+			List<String> allProperties, List<String> partitionProperties, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize) {
 		super(inName, outName, allProperties, partitionProperties);
 		this.aggregationType = aggregationType;
 		this.outputEvery = outputEvery;
@@ -37,11 +37,11 @@ public class AggregationParameter extends BindingParameters {
 		this.outputEvery = outputEvery;
 	}
 
-	public String getGroupBy() {
+	public List<String> getGroupBy() {
 		return groupBy;
 	}
 
-	public void setGroupBy(String groupBy) {
+	public void setGroupBy(List<String> groupBy) {
 		this.groupBy = groupBy;
 	}
 

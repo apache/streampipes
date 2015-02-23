@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
@@ -46,7 +47,7 @@ public class EventRateController extends EsperDeclarer<EventRateParameter> {
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		
 		
-		EventProperty outputProperty = new EventProperty(XSD._double.toString(),
+		EventProperty outputProperty = new EventPropertyPrimitive(XSD._double.toString(),
 				"rate", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
 		FixedOutputStrategy outputStrategy = new FixedOutputStrategy(Utils.createList(outputProperty));
 		strategies.add(outputStrategy);

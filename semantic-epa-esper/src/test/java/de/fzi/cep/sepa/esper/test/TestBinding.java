@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.ontoware.rdf2go.vocabulary.XSD;
 
-import com.clarkparsia.empire.SupportsRdfId.RdfKey;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
@@ -45,7 +45,7 @@ public class TestBinding {
 		EventStream outputStream = new EventStream();
 		
 		List<EventProperty> outputProperties = new ArrayList<>();
-		outputProperties.add(new EventProperty(XSD._double.toString(),
+		outputProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
 				"rate", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		EventSchema outputSchema = new EventSchema();

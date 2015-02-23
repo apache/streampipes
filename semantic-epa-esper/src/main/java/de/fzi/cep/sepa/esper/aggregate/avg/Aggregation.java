@@ -13,10 +13,6 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		{
 			aggregationType = "avg("; 
 		}
-		else if (bindingParameters.getAggregationType() == AggregationType.COUNT)
-		{
-			aggregationType = "count("; 
-		}
 		else if (bindingParameters.getAggregationType() == AggregationType.SUM)
 		{
 			aggregationType = "sum("; 
@@ -32,8 +28,30 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		
 		aggregationType = aggregationType +bindingParameters.getAggregate() +")";  
 		
-		String statement = "insert into " +fixEventName(bindingParameters.getOutName()) +" select " +aggregationType +" as averageValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) output snapshot every " +bindingParameters.getOutputEvery() +" seconds";
+		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as averageValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) group by " +getGroupBy(bindingParameters) +" output snapshot every " +bindingParameters.getOutputEvery() +" seconds";
 		return makeStatementList(statement);
+	}
+	
+	private String getSelectClause(AggregationParameter params)
+	{
+		String result = "";
+		for(String property : params.getAllProperties())
+		{
+			result = result +property +", ";
+		}
+		return result;
+	}
+	
+	private String getGroupBy(AggregationParameter params)
+	{
+		String result = "";
+		List<String> groupBy = params.getGroupBy();
+		for(int i = 0; i < groupBy.size(); i++)
+		{
+			result += groupBy.get(i);
+			if (! (i == groupBy.size())) result += ", ";
+		}
+		return result;
 	}
 
 }
