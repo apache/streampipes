@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -26,9 +27,9 @@ private String topicName;
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		eventProperties.add(new EventProperty(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#ibopStatus")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_type", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "variable_value", "", de.fzi.cep.sepa.commons.Utils.createURI("http://sepa.event-processing.org/sepa#ibopStatus")));
 		
 		
 		EventGrounding grounding = new EventGrounding();

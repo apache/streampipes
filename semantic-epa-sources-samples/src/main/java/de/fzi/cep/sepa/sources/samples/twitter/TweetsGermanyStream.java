@@ -19,6 +19,7 @@ import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -40,11 +41,11 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "latitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/latitude")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "longitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/longitude")));
-		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "latitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/latitude")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "longitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/longitude")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name")));
 		
 		
 		EventGrounding grounding = new EventGrounding();

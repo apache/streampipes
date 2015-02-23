@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -31,9 +32,9 @@ public class HookLoad implements EventStreamDeclarer {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_type", "", Utils.createURI("http://schema.org/Text")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventProperty(XSD._double.toString(), "value", "", Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_type", "", Utils.createURI("http://schema.org/Text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "value", "", Utils.createURI("http://schema.org/Number")));
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);

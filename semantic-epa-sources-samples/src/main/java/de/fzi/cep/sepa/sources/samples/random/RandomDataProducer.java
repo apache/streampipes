@@ -23,11 +23,14 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 	
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
+		
 		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
 		
 		try {
 			//streams.add(new RandomTextStream());
 			streams.add(new RandomNumberStream());
+			streams.add(new NestedListRandomNumberStream());
+			streams.add(new NestedRandomNumberStream());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -12,6 +12,8 @@ import de.fzi.cep.sepa.commonss.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -43,9 +45,16 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventProperty(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
-		eventProperties.add(new EventProperty(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
-		eventProperties.add(new EventProperty(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
+		
+		EventPropertyPrimitive userName = new EventPropertyPrimitive(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name"));
+		EventPropertyPrimitive followerCount = new EventPropertyPrimitive(XSD._integer.toString(), "followers", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
+		List<EventProperty> userProperties = new ArrayList<>();
+		userProperties.add(userName);
+		userProperties.add(followerCount);
+		
+		eventProperties.add(new EventPropertyNested("user", userProperties));
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
@@ -127,9 +136,12 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		
 		try {
 			json.put("timestamp", status.getCreatedAt().getTime());
-			json.put("userName", status.getUser().getName());
+			JSONObject user = new JSONObject();
+			user.put("userName", status.getUser().getName());
+			user.put("follower", status.getUser().getFollowersCount());
+			json.put("user", user);
 			json.put("text", status.getText());
-			json.put("name", "TwitterEvent");
+			//json.put("name", "TwitterEvent");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -148,7 +160,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			json.put("timestamp", status.getCreatedAt().getTime());
 			json.put("userName", status.getUser().getName());
 			json.put("text", status.getText());
-			json.put("name", "TwitterGeoEvent");
+			//json.put("name", "TwitterGeoEvent");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
