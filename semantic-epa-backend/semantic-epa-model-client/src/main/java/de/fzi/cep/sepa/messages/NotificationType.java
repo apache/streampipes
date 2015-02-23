@@ -8,7 +8,8 @@ public enum NotificationType {
 	STORAGE_ERROR("Storage Error", "Entity could not be stored."),
 	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully"), 
 	PIPELINE_START_SUCCESS("Started", "Pipeline successfully started"), 
-	PIPELINE_STOP_SUCCESS("Stopped", "Pipeline stopped successfully");
+	PIPELINE_STOP_SUCCESS("Stopped", "Pipeline stopped successfully"),
+	NO_VALID_CONNECTION("Not a valid connection", "Expected input event type does not match computed output type");
 
 	private final String title;
 	private final String description;

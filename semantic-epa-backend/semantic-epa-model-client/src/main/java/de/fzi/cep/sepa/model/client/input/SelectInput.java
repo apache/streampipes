@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.client.input;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,6 +21,7 @@ public abstract class SelectInput extends FormInput {
 	public SelectInput(ElementType type)
 	{
 		super(type);
+		this.options = new ArrayList<>();
 	}
 	
 	public SelectInput(ElementType elementType, List<Option> options) {

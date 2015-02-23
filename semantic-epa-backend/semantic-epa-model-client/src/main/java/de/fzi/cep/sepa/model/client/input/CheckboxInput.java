@@ -8,7 +8,7 @@ public class CheckboxInput extends SelectInput {
 
 	public CheckboxInput()
 	{
-		super();
+		super(ElementType.CHECKBOX);
 	}
 	public CheckboxInput(List<Option> options) {
 		super(ElementType.CHECKBOX, options);
