@@ -68,6 +68,7 @@ function changePipelineStatus(data, pipelineId){
 }
 
 function startPipeline(pipelineId){
+	console.log("Starting Pipeline");
 	var url = standardUrl + "pipelines/" + pipelineId + "/start";
 	$.ajax({
 		url : url,
@@ -82,6 +83,7 @@ function startPipeline(pipelineId){
 
 
 function deletePipeline(pipelineId, $row){
+	console.log("Deleting Pipeline");
 	var url = standardUrl + "pipelines/" + pipelineId;
 	$.ajax({
 		url : url,
@@ -99,6 +101,7 @@ function deletePipeline(pipelineId, $row){
 }
 
 function stopPipeline(pipelineId){
+	console.log("Stopping Pipeline");
 	var url = standardUrl + "pipelines/" + pipelineId + "/stop";
 	$.ajax({
 		url : url,
@@ -112,7 +115,8 @@ function stopPipeline(pipelineId){
 }
 
 function displayPipeline(json){
-	console.log(json);
+	// console.log(json);
+	console.log("Displaying Pipeline");
 	for (var i = 0, stream; stream = json.streams[i]; i++){		
 		createPreviewElement("stream", stream, i, json);
 	}
@@ -130,7 +134,7 @@ function createPreviewElement(type, element, i, json){
 		.attr("id", element.DOM)
 		.data("JSON", $.extend(true, {}, element));
 	if (element.iconUrl == null){ //Kein icon in JSON angegeben
-		var md5 = element.elementId.replace("-", "");
+		var md5 = CryptoJS.MD5(element.elementId);
 		var $ident = $('<p>')
 			.text(md5)
 			.appendTo($state);
@@ -156,7 +160,7 @@ function createPreviewElement(type, element, i, json){
 				})
 			.appendTo($state)
 			
-			.data("JSON", element);
+			.data("JSON", $.extend(true, {},element));
 	}
 	
 	var topLeftY, topLeftX;
@@ -232,8 +236,8 @@ function connectElements(json){
 				
 				source = connection;
 				target = sepa.DOM;
-				console.log(source);
-				console.log(target);
+				// console.log(source);
+				// console.log(target);
 				
 				var sourceEndpoint = jsPlumb.addEndpoint(source, sourceOptions);
 				var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
