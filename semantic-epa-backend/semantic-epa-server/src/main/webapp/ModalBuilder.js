@@ -31,10 +31,12 @@ function getRadioInputForm(label, radioButtonArray, i){
 }
 
 function getCheckboxInputForm(label, checkboxArray, i){
+	var random = randString(5);
 	var string="<div class='form-group'>";
-	string +="<input name='" +label +"' type='hidden' value='" +label +"'" +">";
+	string +="<input name='" +label +"' type='hidden' value='" +random +"'" +">";
 	string+= "<label class='col-md-4 control-label' for='checkboxes"+i+"'>"+label+"</label>";
 	string+= "<div class='col-md-4'>";
+	string += "<div id='" +random +"'>";
 	for (var j = 0; j< checkboxArray.length ; j++){
 		string+=" <div class='checkbox'>";
 		string+="<label for='checkboxes-"+i+"-"+j+"'>";
@@ -46,7 +48,7 @@ function getCheckboxInputForm(label, checkboxArray, i){
 		string += checkboxArray[j].humanDescription;
 		string += "</label></div>";
 	}
-	string += "</div></div>";
+	string += "</div></div></div>";
 	return string;
 }
 
@@ -104,9 +106,22 @@ function getSelectInputForm(label, selectArray, i){
     </select>
   </div>
 </div>
-
-
-
-
-
 */
+
+function randString(n)
+{
+    if(!n)
+    {
+        n = 5;
+    }
+
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for(var i=0; i < n; i++)
+    {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+}
