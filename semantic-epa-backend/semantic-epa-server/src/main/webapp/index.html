@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
-	
+
 	<!-- <link rel="stylesheet" type="text/css" href="jqueryuistyle.css" /> -->
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -20,335 +20,413 @@
 		<script type="text/javascript" src="buttons.js"></script>
 		<script type="text/javascript" src="md5.js"></script>
 		<script type="text/javascript" src="pipelineFactory.js"></script>
-		<script type="text/javascript" src="dummyPipelineSend.js"></script> <!-- Nur für debugging -->
+		<script type="text/javascript" src="dummyPipelineSend.js"></script>
+		<!-- Nur für debugging -->
 		<script type="text/javascript" src="js/stomp.js"></script>
 		<script type="text/javascript" src="js/wsConnector.js"></script>
-		
+
 		<link rel="stylesheet" href="jsplumb.css"/>
-		<link rel="stylesheet" href="toastr.css"/><!-- Toastr -->
+		<link rel="stylesheet" href="toastr.css"/>
+		<!-- Toastr -->
 		<script type="text/javascript" src="toastr.js"></script><!-- Toastr -->
-		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> <!-- Bootstrap -->
-		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> <!-- Bootstrap -->
-		<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script> <!-- IdentIcon -->
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<!-- Bootstrap -->
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<!-- Bootstrap -->
+		<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
+		<!-- IdentIcon -->
 		<link rel="stylesheet" type="text/css" href="uistyle.css" />
 		<script type="text/javascript">
 			var domain = "";
 			var standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
 			var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
-			
+
 			var savedSources;
-			var dummyPipeline = {"streams":[{"DOM":"jsPlumb_1_1","sourceId":"http://localhost:8089/twitter","name":"Twitter Sample Stream","description":"Twitter Sample Stream Description","iconUrl":"http://localhost:8080/semantic-epa-backend/img/Tweet_Icon_HQ.png","elementId":"http://localhost:8089/twitter/sample"}],"sepas":[{"DOM":"jsPlumb_1_64", "domains":["DOMAIN_PERSONAL_ASSISTANT"],"staticProperties":[{"input":{"options":[{"elementId":"urn:clarkparsia.com:empire:8de23a43-8d98-446a-9415-6081409caf60","humanDescription":"MATCHES","selected":true},{"elementId":"urn:clarkparsia.com:empire:730ef27f-3eb0-402e-a21b-67626630daf2","humanDescription":"CONTAINS","selected":false}],"elementType":"RADIO_INPUT"},"name":"operation","description":"Select Operation","elementId":"urn:clarkparsia.com:empire:fbb9a1c2-6e57-47f6-8dbc-d8f0cffb44f3"},{"input":{"value":"vfv","elementType":"TEXT_INPUT"},"name":"text","description":"Select Text Property","elementId":"urn:clarkparsia.com:empire:c6380254-09ed-46fe-b50e-279fe72650df"},{"input":{"value":"ngfn","elementType":"TEXT_INPUT"},"name":"keyword","description":"Select Keyword","elementId":"urn:clarkparsia.com:empire:abcc7672-7948-4189-b74e-e70bb4fec42b"}],"inputNodes":1,"name":"Text Filter","description":"Text Filter Description","iconUrl":"http://localhost:8080/semantic-epa-backend/img/Textual_Filter_Icon_HQ.png","elementId":"http://localhost:8090/sepa/textfilter","connectedTo":["jsPlumb_1_1"],"options":[{"name":"operation","value":"MATCHES"},{"name":"text","value":"vfv"},{"name":"keyword","value":"ngfn"}]}],"action":{"DOM":"jsPlumb_1_73","name":"JMS Consumer","description":"Desc","elementId":"http://localhost:8091/jms","connectedTo":["jsPlumb_1_64"]}};
+			var dummyPipeline = {
+				"streams" : [{
+					"DOM" : "jsPlumb_1_1",
+					"sourceId" : "http://localhost:8089/twitter",
+					"name" : "Twitter Sample Stream",
+					"description" : "Twitter Sample Stream Description",
+					"iconUrl" : "http://localhost:8080/semantic-epa-backend/img/Tweet_Icon_HQ.png",
+					"elementId" : "http://localhost:8089/twitter/sample"
+				}],
+				"sepas" : [{
+					"DOM" : "jsPlumb_1_64",
+					"domains" : ["DOMAIN_PERSONAL_ASSISTANT"],
+					"staticProperties" : [{
+						"input" : {
+							"options" : [{
+								"elementId" : "urn:clarkparsia.com:empire:8de23a43-8d98-446a-9415-6081409caf60",
+								"humanDescription" : "MATCHES",
+								"selected" : true
+							}, {
+								"elementId" : "urn:clarkparsia.com:empire:730ef27f-3eb0-402e-a21b-67626630daf2",
+								"humanDescription" : "CONTAINS",
+								"selected" : false
+							}],
+							"elementType" : "RADIO_INPUT"
+						},
+						"name" : "operation",
+						"description" : "Select Operation",
+						"elementId" : "urn:clarkparsia.com:empire:fbb9a1c2-6e57-47f6-8dbc-d8f0cffb44f3"
+					}, {
+						"input" : {
+							"value" : "vfv",
+							"elementType" : "TEXT_INPUT"
+						},
+						"name" : "text",
+						"description" : "Select Text Property",
+						"elementId" : "urn:clarkparsia.com:empire:c6380254-09ed-46fe-b50e-279fe72650df"
+					}, {
+						"input" : {
+							"value" : "ngfn",
+							"elementType" : "TEXT_INPUT"
+						},
+						"name" : "keyword",
+						"description" : "Select Keyword",
+						"elementId" : "urn:clarkparsia.com:empire:abcc7672-7948-4189-b74e-e70bb4fec42b"
+					}],
+					"inputNodes" : 1,
+					"name" : "Text Filter",
+					"description" : "Text Filter Description",
+					"iconUrl" : "http://localhost:8080/semantic-epa-backend/img/Textual_Filter_Icon_HQ.png",
+					"elementId" : "http://localhost:8090/sepa/textfilter",
+					"connectedTo" : ["jsPlumb_1_1"],
+					"options" : [{
+						"name" : "operation",
+						"value" : "MATCHES"
+					}, {
+						"name" : "text",
+						"value" : "vfv"
+					}, {
+						"name" : "keyword",
+						"value" : "ngfn"
+					}]
+				}],
+				"action" : {
+					"DOM" : "jsPlumb_1_73",
+					"name" : "JMS Consumer",
+					"description" : "Desc",
+					"elementId" : "http://localhost:8091/jms",
+					"connectedTo" : ["jsPlumb_1_64"]
+				}
+			};
 			var savedSepas;
 			var savedActions;
 			var $currentElement;
 			$(init("Proa"));
-			
-			
+
 		</script>
 	</head>
-	
+
 	<body>
 		<!-- NAVBAR  -->
-		
+
 		<nav class="navbar navbar-default" role="navigation">
-		  	<div class="container-fluid">
-		    	<!-- Brand and toggle get grouped for better mobile display -->
-		    	<div class="navbar-header">
-		      		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-		        		<span class="sr-only">Toggle navigation</span>
-		        		<span class="icon-bar"></span>
-		        		<span class="icon-bar"></span>
-		        		<span class="icon-bar"></span>
-		      		</button>
-		      		<a class="navbar-brand" href="#" onclick=sendDummyPipeline(dummyPipeline)>EPA - Creator</a> <!-- OnCLick nur für Debug!!! -->
-		    	</div>
-		
-			    <!-- Collect the nav links, forms, and other content for toggling -->
-			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				      	<ul class="nav navbar-nav" role="tablist">
-				        	<li class="dropdown active">
-				          		<a href="#"   class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
-				          		<ul class="dropdown-menu" role="menu">
-				            		<li><a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("Proa")>Proasense</a></li>
-				            		<li><a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a></li>
-				            		<!-- <li class="divider"></li> -->
-				            		
-				         		</ul>
-				        	</li>
-				        	<li >
-				        		<a href="#pipelines" role="tab" data-toggle="tab" onclick=pipelinesClicked() >Pipelines</a>
-			        		</li>
-			        		<li >
-				        		<a href="#visualizations" role="tab" data-toggle="tab" onclick=disableOptions()>Visualizations</a>
-			        		</li>
-		            			
-				      	</ul>
-				      	<ul class="nav navbar-nav">
-				      		<li id="options" class=" dropdown">
-		            			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
-		            			<ul class="dropdown-menu" role="menu">
-		            				<li><a href="#" onclick=showAdd()>Add...</a></li>
-		            				<li><a href="#" onclick=showManage()>Manage...</a></li>
-		            			</ul>
-		            			
-		            		</li>
-				      	</ul>
-				      	<ul class="nav navbar-nav navbar-right ">
-				      		<li id="login" class="dropdown">
-				      			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
-				      			<ul id="login-form-dropdown" class="dropdown-menu" role="menu">
-				      				<form id="login-form">
-										<div class="form-group">
-										    <label for="exampleInputEmail1">Email address</label>
-										    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-									  	</div>
-									  	<div class="form-group">
-										    <label for="exampleInputPassword1">Password</label>
-										    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-									  	</div>
-									  	
-								  	</form>
-								  	<button type="submit" class="btn btn-default pull-right" onclick=attemptLogin()>Submit</button>
-				      			</ul>
-				      		</li>
-				      	</ul>
-				      	
-			      	
-			    </div><!-- /.navbar-collapse -->
-			  </div><!-- /.container-fluid -->
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#" onclick=sendDummyPipeline(dummyPipeline)>EPA - Creator</a><!-- OnCLick nur für Debug!!! -->
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav" role="tablist">
+						<li class="dropdown active">
+							<a href="#"   class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("Proa")>Proasense</a>
+								</li>
+								<li>
+									<a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a>
+								</li>
+								<!-- <li class="divider"></li> -->
+
+							</ul>
+						</li>
+						<li >
+							<a href="#pipelines" role="tab" data-toggle="tab" onclick=pipelinesClicked() >Pipelines</a>
+						</li>
+						<li >
+							<a href="#visualizations" role="tab" data-toggle="tab" onclick=disableOptions()>Visualizations</a>
+						</li>
+
+					</ul>
+					<ul class="nav navbar-nav">
+						<li id="options" class=" dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a href="#" onclick=showAdd()>Add...</a>
+								</li>
+								<li>
+									<a href="#" onclick=showManage()>Manage...</a>
+								</li>
+							</ul>
+
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right ">
+						<li id="login" class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
+							<ul id="login-form-dropdown" class="dropdown-menu" role="menu">
+								<form id="login-form">
+									<div class="form-group">
+										<label for="exampleInputEmail1">Email address</label>
+										<input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+									</div>
+									<div class="form-group">
+										<label for="exampleInputPassword1">Password</label>
+										<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+									</div>
+
+								</form>
+								<button type="submit" class="btn btn-default pull-right" onclick=attemptLogin()>
+									Submit
+								</button>
+							</ul>
+						</li>
+					</ul>
+
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
 		</nav>
 		<!-- END NAVBAR  -->
-		
-		
+
 		<div class="tab-content content-padding">
-			<div class="tab-pane active" id="home">	
-				
-				
-				<div id ="sources" align="center" class="alpha">
-				</div>
+			<div class="tab-pane active" id="home">
+
+				<div id ="sources" align="center" class="alpha"></div>
 				<div class="panel-group" id="accordion">
-					
-					  <div class="panel panel-default">
-					    <div class="panel-heading panel-streams">
-					      <h4 class="panel-title">
-					        <a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne">
-					          Streams
-					        </a>
-					        <!-- <span class="btngroup pull-right">
-						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("stream")>
-						        	<span class="glyphicon glyphicon-plus"></span>
-					        	</button>
-					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("stream")>
-						        	<span class="glyphicon glyphicon-cog"></span>
-					        	</button>
-				        	</span> -->
-					      </h4>
-					    </div>
-					    <div id="collapseOne" class="panel-collapse collapse">
-					      <div class="panel-body">
-					        <div id="streams" align="center" class="icon-stands alpha panel-body-streams">
-	
+
+					<div class="panel panel-default">
+						<div class="panel-heading panel-streams">
+							<h4 class="panel-title"><a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne"> Streams </a><!-- <span class="btngroup pull-right">
+							<button type="button" class="btn btn-default btn-xs" onclick=addTo("stream")>
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-xs" onclick=manage("stream")>
+							<span class="glyphicon glyphicon-cog"></span>
+							</button>
+							</span> --></h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse">
+							<div class="panel-body">
+								<div id="streams" align="center" class="icon-stands alpha panel-body-streams">
+
+								</div>
 							</div>
-					      </div>
-					    </div>
-					  </div>
-					  <div class="panel panel-default">
-					    <div class="panel-heading panel-sepas">
-					      <h4 class="panel-title">
-					        <a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo">
-					          Sepas
-					        </a>
-					        <!-- <span class="btngroup pull-right">
-						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("sepa")>
-						        	<span class="glyphicon glyphicon-plus"></span>
-					        	</button>
-					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("sepa")>
-						        	<span class="glyphicon glyphicon-cog"></span>
-					        	</button>
-				        	</span> -->
-					      </h4>
-					    </div>
-					    <div id="collapseTwo" class="panel-collapse collapse">
-					      <div class="panel-body">
-							<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">
-			
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading panel-sepas">
+							<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a><!-- <span class="btngroup pull-right">
+							<button type="button" class="btn btn-default btn-xs" onclick=addTo("sepa")>
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-xs" onclick=manage("sepa")>
+							<span class="glyphicon glyphicon-cog"></span>
+							</button>
+							</span> --></h4>
+						</div>
+						<div id="collapseTwo" class="panel-collapse collapse">
+							<div class="panel-body">
+								<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">
+
+								</div>
 							</div>
-					      </div>
-					    </div>
-					  </div>
-					  <div class="panel panel-default">
-					    <div class="panel-heading panel-actions">
-					      <h4 class="panel-title">
-					        <a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree">
-					          Actions
-					        </a>
-					        <!-- <span class="btngroup pull-right">
-						        <button type="button" class="btn btn-default btn-xs" onclick=addTo("action")>
-						        	<span class="glyphicon glyphicon-plus"></span>
-					        	</button>
-					        	<button type="button" class="btn btn-default btn-xs" onclick=manage("action")>
-						        	<span class="glyphicon glyphicon-cog"></span>
-					        	</button>
-				        	</span> -->
-					      </h4>
-					    </div>
-					    <div id="collapseThree" class="panel-collapse collapse ">
-					      <div class="panel-body">
-					        <div id="actions" align="center" class="icon-stands alpha panel-body-actions">
-			
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading panel-actions">
+							<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a><!-- <span class="btngroup pull-right">
+							<button type="button" class="btn btn-default btn-xs" onclick=addTo("action")>
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-xs" onclick=manage("action")>
+							<span class="glyphicon glyphicon-cog"></span>
+							</button>
+							</span> --></h4>
+						</div>
+						<div id="collapseThree" class="panel-collapse collapse ">
+							<div class="panel-body">
+								<div id="actions" align="center" class="icon-stands alpha panel-body-actions">
+
+								</div>
 							</div>
-					      </div>
-					    </div>
-					  </div>
-					 
+						</div>
+					</div>
+
 				</div>
-				
-	
-				
+
 				<div id="assembly" class="canvas">
-					
+
 					<span id="clear" class="glyphicon glyphicon-remove"></span>
 					<button type="button" id="submit" class="btn btn-default btn-sm shadow" onclick=submit()>
-				  		<span class="glyphicon glyphicon-ok"></span> Submit
+						<span class="glyphicon glyphicon-ok"></span> Submit
 					</button>
-					
-					
-				</div>
-				
-				
-				
-				
 
-							
-					
+				</div>
+
 				<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
-					<li><a id="customize" tabindex="-1" href="#">Customize</a></li>
+					<li>
+						<a id="customize" tabindex="-1" href="#">Customize</a>
+					</li>
 					<li id='division' class="divider"></li>
-					<li><a id="delete" tabindex="-1" href="#">Delete</a></li>
+					<li>
+						<a id="delete" tabindex="-1" href="#">Delete</a>
+					</li>
 				</ul>
 				<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
-					<li><a id="sdescription" tabindex="-1" href="#">Description</a> </li>
+					<li>
+						<a id="sdescription" tabindex="-1" href="#">Description</a>
+					</li>
 				</ul>
-				
-				
+
 				<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-					  <div class="modal-dialog">
-						    <div id="modal-content" class="modal-content">
-							      <div class="modal-header">
-								        <button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">&times;</button>
-								        <h4 class="modal-title" id="customizeTitle">Customize</h4>
-							      </div>
-							      <div class="modal-body">
-							        
-										<form id="modalForm" class="form-horizontal">
-											<fieldset id ="customize-content">
-													
-											</fieldset>
-											
-										</form>
-										<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
-														
-										</div> -->
-							
-							      </div>
-							      <div class="modal-footer">
-								        <button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>Close</button>
-								        <button type="button" class="btn btn-primary" onclick=save()>Save</button>
-							      </div>
-						    </div>
-					  </div>
+					<div class="modal-dialog">
+						<div id="modal-content" class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="customizeTitle">Customize</h4>
+							</div>
+							<div class="modal-body">
+
+								<form id="modalForm" class="form-horizontal">
+									<fieldset id ="customize-content">
+
+									</fieldset>
+
+								</form>
+								<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
+
+								</div> -->
+
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>
+									Close
+								</button>
+								<button type="button" class="btn btn-primary" onclick=save()>
+									Save
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
-				
+
 				<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-			  		<div class="modal-dialog">
+					<div class="modal-dialog">
 						<div class="modal-content">
-					      	<div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						        <h4 class="modal-title" id="description-title"></h4>
-				      		</div>
-				      		<div class="modal-body">
-					        	<p id ="modal-description"></p>
-				      		</div>
-				      		<div class="modal-footer">
-					        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				        	</div>
-			        	</div>
-			        </div>
-		        </div>
-				
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="description-title"></h4>
+							</div>
+							<div class="modal-body">
+								<p id ="modal-description"></p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Close
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
 								<h4 class="modal-title" id="myModalLabel">Add...</h4>
 							</div>
 							<div class="modal-body">
 								<div class="wrapper">
 									<form class="form-horizontal">
 										<fieldset id="addType">
-										
-										<!-- Multiple Radios (inline) -->
-										<div class="form-group" >
-										  <label class="col-md-4 control-label" for="radios">Type</label>
-										  <div class="col-md-4"> 
-										    <label class="radio-inline" for="sourceRadio">
-										      <input name="type-radios" id="sourceRadio" value="1" checked="checked" type="radio">
-										      Source
-										    </label> 
-										    <label class="radio-inline" for="sepaRadio">
-										      <input name="type-radios" id="sepaRadio" value="2" type="radio">
-										      SEPA
-										    </label> 
-										    <label class="radio-inline" for="actionRadio">
-										      <input name="type-radios" id="actionRadio" value="3" type="radio">
-										      Action
-										    </label>
-										  </div>
-										</div>
-										
+
+											<!-- Multiple Radios (inline) -->
+											<div class="form-group" >
+												<label class="col-md-4 control-label" for="radios">Type</label>
+												<div class="col-md-4">
+													<label class="radio-inline" for="sourceRadio">
+														<input name="type-radios" id="sourceRadio" value="1" checked="checked" type="radio">
+														Source </label>
+													<label class="radio-inline" for="sepaRadio">
+														<input name="type-radios" id="sepaRadio" value="2" type="radio">
+														SEPA </label>
+													<label class="radio-inline" for="actionRadio">
+														<input name="type-radios" id="actionRadio" value="3" type="radio">
+														Action </label>
+												</div>
+											</div>
+
 										</fieldset>
 									</form>
-									<div style="text-align: center"><p><strong>Please enter the new element's URI</strong></p>
+									<div style="text-align: center">
+										<p>
+											<strong>Please enter the new element's URI</strong>
+										</p>
 										<div id="addTextInput"  class="input-group">
 											<input id ="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
 											<span class="input-group-btn">
-												<button class="btn btn-default" type="button" onclick=add()>Add</button>
-											</span>
+												<button class="btn btn-default" type="button" onclick=add()>
+													Add
+												</button> </span>
 										</div><!-- /input-group -->
 									</div><!-- /.col-lg-6 -->
 									<div id="sses" style="text-align: center">
-										
+
 									</div>
 
 								</div>
 								<div class="modal-footer">
-									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >
+										Close
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
 								<h4 class="modal-title">Manage</h4>
 							</div>
 							<div class="modal-body">
-								
+
 								<div id="elementList">
-								  	
+
 								</div>
 								<div id="sses" style="text-align: center">
-									
+
 								</div>
 
-								
 								<div class="modal-footer">
-									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >
+										Close
+									</button>
 								</div>
 							</div>
 						</div>
@@ -358,38 +436,42 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
 								<h4 class="modal-title">Pipeline Name</h4>
 							</div>
 							<div class="modal-body">
-								
+
 								<form id="pipelineNameForm" class="form-horizontal" role="form">
 									<div class="form-group">
 										<label for="nameInput" class="col-sm-2 control-label">Name</label>
 										<div class="col-sm-6">
-									      	<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
-									    </div>
+											<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
+										</div>
 									</div>
 									<div class="form-group">
 										<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
 										<div class="col-sm-6">
-									      	<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
-								      		
-									    </div>
+											<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
+
+										</div>
 									</div>
 								</form>
 
-								
 								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-									<button type="button" class="btn btn-primary" data-dismiss="modal" onclick=savePipelineName()>Save</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" >
+										Close
+									</button>
+									<button type="button" class="btn btn-primary" data-dismiss="modal" onclick=savePipelineName()>
+										Save
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				
-				
+
 			</div>
 			<div class="tab-pane" id="pipelines" onactivate=getPipelines()>
 				<div class="container-fluid">
@@ -398,9 +480,9 @@
 					</div>
 					<div class="row">
 						<!-- <ul id="pipelineList" class="list-group col-md-6">
-							<li class="list-group-item">TestItem1</li>
-							<li class="list-group-item">TestItem2</li>
-							<li class="list-group-item">TestItem3</li>
+						<li class="list-group-item">TestItem1</li>
+						<li class="list-group-item">TestItem2</li>
+						<li class="list-group-item">TestItem3</li>
 						</ul> -->
 						<table class="table table-hover">
 							<thead>
@@ -412,11 +494,11 @@
 									<td><b>Options</b></td>
 									<td><b>Delete</b></td>
 									<td><b>Modify</b></td>
-									
+
 								</tr>
 							</thead>
 							<tbody id="pipelineTableBody">
-								
+
 							</tbody>
 						</table>
 					</div>
@@ -427,31 +509,111 @@
 					<div id="actionDisplay"></div>
 				</div>
 			</div>
+			<!-- <div class="tab-pane" id="visualizations">
+			<div class="container-fluid">
+			<div class="row">
+			<h1 class="col-md-4 ">Visualizations</h1>
+			</div>
+			<div class="row">
+			<div id="vis">
+			<div class="form-group">
+			<label for="brokerUrl">URL</label>
+			<input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
+			</div>
+			<div class="form-group">
+			<label for="brokerTopic">Topic</label>
+			<input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
+			</div>
+			<button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
+			<button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
+			<textarea id="brokerMessages" class="form-control" rows="20"></textarea>
+			</div>
+			<!--
+			<script type="text/javascript">
+			$("#vis").load("http://localhost:8091/test");
+			</script>
+
+			</div>
+			</div>
+			</div> -->
 			<div class="tab-pane" id="visualizations">
 				<div class="container-fluid">
 					<div class="row">
 						<h1 class="col-md-4 ">Visualizations</h1>
 					</div>
 					<div class="row">
-						<div id="vis">
-							<div class="form-group">
-							    <label for="brokerUrl">URL</label>
-							    <input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
-							  </div>
-							  <div class="form-group">
-							    <label for="brokerTopic">Topic</label>
-							    <input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
-							  </div>
-							  <button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
-							  <button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
-							  <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
-						</div>
-						<!-- 
 						<script type="text/javascript">
-						$("#vis").load("http://localhost:8091/test");
+							var viz;
+							var url = standardUrl + "visualizations";
+
+							updateViz();
+							function updateViz() {
+								$('#vizControl').empty();
+								$.ajax({
+									dataType : "json",
+									url : url,
+									success : function(data) {
+										var sel = $("<select class='form-control' width='100'>").appendTo($('#vizControl'));
+										sel.append($("<option>").text("(Select visualization)"));
+										$(data).each(function() {
+											sel.append($("<option>").attr('value', this.consumerUrl).text(this.pipelineName));
+										});
+										$('select').change(function() {
+											loadViz($(this).children(":selected").attr('value'));
+										});
+
+									},
+									error : function(data) {
+										displayErrors(data);
+									}
+								});
+							}
+
+							function loadViz(vizUrl) {
+								if (vizUrl != 'undefined')
+									$("#vis").load(vizUrl);
+							}
+
 						</script>
-						 -->
+						<div class="row">
+							<div class="col-md-12 pull-right">
+								<div class="pull-right">
+									<div class="col-md-6">
+										<div class="pull-right">
+											<button class="btn btn-success" onclick="updateViz()">
+												Refresh
+											</button>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div id="vizControl"></div>
+									</div>
+
+								</div>
+							</div>
+						</div>
 					</div>
+					<!-- <div id="vis"></div> -->
+					<!--
+					<div id="vis">
+					<div class="form-group">
+					<label for="brokerUrl">URL</label>
+					<input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
+					</div>
+					<div class="form-group">
+					<label for="brokerTopic">Topic</label>
+					<input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
+					</div>
+					<button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
+					<button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
+					<textarea id="brokerMessages" class="form-control" rows="20"></textarea>
+					</div>
+					-->
+					<!--
+					<script type="text/javascript">
+					$("#vis").load("http://localhost:8091/test");
+					</script>
+					-->
 				</div>
 			</div>
 		</div>
