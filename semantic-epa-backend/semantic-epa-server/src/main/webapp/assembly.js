@@ -65,7 +65,7 @@ function initAssembly(){
 					handleDroppedSepa(ui, $newState);
 				//Droppable Actions
 				}else if(ui.draggable.hasClass('action')){
-					handleDroppedAction($newState);
+					handleDroppedAction(ui, $newState);
 				}
 				initTooltips();
 			}
@@ -187,12 +187,16 @@ function handleDroppedSepa(ui, $newState){
 	
 }
 
-function handleDroppedAction($newState){
+function handleDroppedAction(ui, $newState){
 	
 	jsPlumb.draggable($newState, {containment: 'parent'});
 	
 	$newState
 		.addClass("connectable action");
+	if (ui.draggable.data("JSON").staticProperties != null){
+		$newState
+			.addClass('disabled');
+	}
 		
 	jsPlumb.addEndpoint($newState,leftTargetPointOptions);
 	
@@ -316,8 +320,15 @@ function submit() {
 				error = true;
 				toastTop("error", "More than one action element present in pipeline", "Submit Error");
 			}else{
-				actionPresent = true;
-				addToPipeline(element, pipeline);
+				if ($(element).data("JSON").staticProperties == null || $(element).data("options")) {
+					actionPresent = true;
+					addToPipeline(element, pipeline);
+
+				} else {
+					toastTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");	;
+					error = true;
+
+				}
 			}
 		}
 	});
@@ -367,7 +378,7 @@ function sendPipeline(fullPipeline, info){
 		// console.log(currentPipeline);
  		
  		$.ajax({
- 			url : standardUrl +"pipelines",
+ 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
  			type : 'POST',
@@ -391,7 +402,7 @@ function sendPipeline(fullPipeline, info){
  	}else{
  		
  		$.ajax({
- 			url : standardUrl +"pipelines/update",
+ 			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
  			data : JSON.stringify(currentPipeline),
  			processData : false,
  			type : 'POST',
@@ -408,7 +419,15 @@ function sendPipeline(fullPipeline, info){
 							$('#customizeModal').modal('show');
 							
  						}
- 					}
+ 					}if (currentPipeline.action != null){
+ 						var id = "#" + currentPipeline.action.DOM;
+ 						if (!isFullyConnected(id)) {return;}
+ 						$('#customize-content').html(prepareCustomizeModal($(id)));
+						var string = "Customize " + currentPipeline.action.name;
+						$('#customizeTitle').text(string);
+						$('#customizeModal').modal('show');
+					}
+ 					
  				}else{
  					jsPlumb.detach(info.connection);
  					displayErrors(data);
@@ -464,7 +483,8 @@ function save() {
 	
 	$currentElement.data("options", true);
 	saveInStaticProperties(options);
-	$currentElement.css("opacity", 1);
+	$currentElement.removeClass("disabled");
+	// $currentElement.css("opacity", 1);
 	
 
 }
@@ -481,18 +501,6 @@ function saveInStaticProperties(options){
 					}else{
 						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
 					}
-				}
-				continue;
-			case "CHECKBOX" :
-				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
-						if ($("#" +options[i].value +" #checkboxes-" +i +"-" +j).is(':checked')) {
-							console.log("Val: " +options[i].value);
-							console.log("checked");
-							$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
-						}else{
-							$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
-						}
-					
 				}
 				continue;
 				
@@ -518,7 +526,6 @@ function prepareCustomizeModal(element) {
 			var textInputCount = 0;
 			var radioInputCount = 0;
 			var selectInputCount = 0;
-			var checkboxInputCount = 0;
 
 			for (var i = 0; i < staticPropertiesArray.length; i++) {
 				switch (staticPropertiesArray[i].input.properties.elementType) {
@@ -529,10 +536,6 @@ function prepareCustomizeModal(element) {
 				case "RADIO_INPUT":
 					string += getRadioInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, radioInputCount);
 					radioInputCount++;
-					continue;
-				case "CHECKBOX":
-					string += getCheckboxInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, i);
-					checkboxInputCount++;
 					continue;
 				case "SELECT_INPUT":
 					string += getSelectInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, selectInputCount);
@@ -555,6 +558,6 @@ function isConnected(element){
 }
 
 function isFullyConnected(element){
-	return jsPlumb.getConnections({target : $(element)}).length == $(element).data("JSON").inputNodes ;
+	return $(element).data("JSON").inputNodes == null || jsPlumb.getConnections({target : $(element)}).length == $(element).data("JSON").inputNodes  ;
 }
 

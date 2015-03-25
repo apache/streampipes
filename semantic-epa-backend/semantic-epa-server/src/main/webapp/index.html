@@ -21,6 +21,8 @@
 		<script type="text/javascript" src="md5.js"></script>
 		<script type="text/javascript" src="pipelineFactory.js"></script>
 		<script type="text/javascript" src="dummyPipelineSend.js"></script> <!-- Nur für debugging -->
+		<script type="text/javascript" src="js/stomp.js"></script>
+		<script type="text/javascript" src="js/wsConnector.js"></script>
 		
 		<link rel="stylesheet" href="jsplumb.css"/>
 		<link rel="stylesheet" href="toastr.css"/><!-- Toastr -->
@@ -187,7 +189,7 @@
 				<div id="assembly" class="canvas">
 					
 					<span id="clear" class="glyphicon glyphicon-remove"></span>
-					<button type="button" id="submit" class="btn btn-default btn-sm" onclick=submit()>
+					<button type="button" id="submit" class="btn btn-default btn-sm shadow" onclick=submit()>
 				  		<span class="glyphicon glyphicon-ok"></span> Submit
 					</button>
 					
@@ -384,13 +386,14 @@
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<td>#</td>
-									<td>Pipeline Name</td>
-									<td>Validation</td>
-									<td>Status</td>
-									<td>Options</td>
-									<td>Delete</td>
-									<td>Modify</td>
+									<td><b>#</b></td>
+									<td><b>Pipeline Name</b></td>
+									<td><b>Validation</b></td>
+									<td><b>Status</b></td>
+									<td><b>Options</b></td>
+									<td><b>Delete</b></td>
+									<td><b>Modify</b></td>
+									
 								</tr>
 							</thead>
 							<tbody id="pipelineTableBody">
@@ -411,58 +414,6 @@
 						<h1 class="col-md-4 ">Visualizations</h1>
 					</div>
 					<div class="row">
-					<script type="text/javascript">
-						var viz;
-						var url = standardUrl + "visualizations";
-					
-						updateViz();
-						function updateViz() {
-						$('#vizControl').empty();
-							$.ajax({
-								dataType: "json",
-								url: url,
-								success: function(data){
-									var sel = $("<select class='form-control' width='100'>").appendTo($('#vizControl'));
-									sel.append($("<option>").text("(Select visualization)"));
-									$(data).each(function() {
-										sel.append($("<option>").attr('value',this.consumerUrl).text(this.pipelineName));
-									});
-									$('select').change(function(){
-										loadViz($(this).children(":selected").attr('value'));
-									});
-									
-								},
-								error: function(data){
-									displayErrors(data);
-								}
-							});
-						}
-						
-						function loadViz(vizUrl)
-						{
-							if (vizUrl != 'undefined')
-							$("#vis").load(vizUrl);
-						}
-						
-					</script>
-					<div class="row">
-						<div class="col-md-12 pull-right">
-							<div class="pull-right">
-							<div class="col-md-6">
-							<div class="pull-right">
-							<button class="btn btn-success" onclick="updateViz()">Refresh</button>
-							</div>
-							</div>
-							<div class="col-md-6">
-							<div id="vizControl">
-							</div>
-							</div>
-							
-							</div>
-						</div>
-					</div>					
-					<div id="vis"></div>
-					<!-- 
 						<div id="vis">
 							<div class="form-group">
 							    <label for="brokerUrl">URL</label>
@@ -476,7 +427,6 @@
 							  <button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
 							  <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
 						</div>
-					-->
 						<!-- 
 						<script type="text/javascript">
 						$("#vis").load("http://localhost:8091/test");

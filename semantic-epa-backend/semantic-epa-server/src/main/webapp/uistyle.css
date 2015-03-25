@@ -121,7 +121,7 @@ body {
 	width: 90vw;
 	margin-top: 1%;
 	/*margin-left: 5%;*/
-	box-shadow: 0 0 10px #333;
+	box-shadow: inset 0 0 10px #333;
 	background:white;
 	
 }
@@ -132,6 +132,9 @@ body {
 	box-shadow: 0 0 15px #333;
 	position: relative;
 	background: white;
+}
+.shadow{
+	box-shadow: 0 0 5px #333
 }
 /*.nav-tabs{
 	border-bottom: 0px;

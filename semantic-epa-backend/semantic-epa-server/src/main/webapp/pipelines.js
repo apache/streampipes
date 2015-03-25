@@ -24,28 +24,14 @@ function pipelineTableRowFactory(i, json){
 }
 
 function createPipelineTableRowData(i, $row){
-	var status = "TESTSTATUS";
 	$("<td>").text(i).appendTo($row); // #
 	$("<td>").text($row.data("JSON").name).appendTo($row); // Name
 	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", function(){verifyPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).appendTo($row); //VALIDATION STATUS
-	
-	if ($row.data("JSON").running) status = "Running";
-	else status = "Idle";
-	$("<td>").text(status).appendTo($row); 
-	
-	if ($row.data("JSON").running)
-		{
-			$("<td>").append($("<div class='btn-group'>") //Options
-				.append(getGlyphIconButton("glyphicon glyphicon-play", false, function(){startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", true, function(){stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
-		}
-	else
-		{
-		$("<td>").append($("<div class='btn-group'>") //Options
-				.append(getGlyphIconButton("glyphicon glyphicon-play", true, function(){startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", false, function(){stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
-
-		}
-		$("<td>").append(getGlyphIconButton("glyphicon glyphicon-remove", true, function(){deletePipeline(getParentWithJSONData($(this)).data("JSON")._id, getParentWithJSONData($(this)));})).appendTo($row); //Delete
-	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", true, function(){adjustPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
+	$("<td>").text("TESTSTATUS").appendTo($row); //TODO ändern auf eigentlichen Status
+	$("<td>").append($("<div class='btn-group'>") //Options
+		.append(getGlyphIconButton("glyphicon glyphicon-play", function(){startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", function(){stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
+	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-remove", function(){deletePipeline(getParentWithJSONData($(this)).data("JSON")._id, getParentWithJSONData($(this)));})).appendTo($row); //Delete
+	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", function(){adjustPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
 	
 	
 }
