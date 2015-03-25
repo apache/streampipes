@@ -503,9 +503,18 @@ function saveInStaticProperties(options){
 					}
 				}
 				continue;
-				
+			 case "CHECKBOX" :
+                 for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
+                     if ($("#" +options[i].value +" #checkboxes-" +i +"-" +j).is(':checked')) {
+                             console.log("Val: " +options[i].value);
+                             console.log("checked");
+                             $currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
+                     }else{
+                             $currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
+                     }
+                 }
+                 continue;
 			case "TEXT_INPUT":
-				
 				$currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
 				continue;
 				
@@ -526,6 +535,7 @@ function prepareCustomizeModal(element) {
 			var textInputCount = 0;
 			var radioInputCount = 0;
 			var selectInputCount = 0;
+			var checkboxInputCount = 0;
 
 			for (var i = 0; i < staticPropertiesArray.length; i++) {
 				switch (staticPropertiesArray[i].input.properties.elementType) {
@@ -537,11 +547,14 @@ function prepareCustomizeModal(element) {
 					string += getRadioInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, radioInputCount);
 					radioInputCount++;
 					continue;
+				case "CHECKBOX":
+                    string += getCheckboxInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, i);
+                    checkboxInputCount++;
+                    continue;
 				case "SELECT_INPUT":
 					string += getSelectInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, selectInputCount);
 					selectInputCount++;
 					continue;
-
 				}
 			}
 		}
