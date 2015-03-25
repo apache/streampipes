@@ -74,7 +74,14 @@ function startPipeline(pipelineId){
 		url : url,
 		success : function(data){
 			console.log(data);
-			changePipelineStatus(data, pipelineId);
+			if (data.success){
+				changePipelineStatus(data, pipelineId);
+			}else{
+				displayErrors(data);
+			}
+		},
+		error : function(data){
+			console.log(data);
 		},
 		type : 'GET',
 		processData: false
@@ -95,6 +102,9 @@ function deletePipeline(pipelineId, $row){
 				displayErrors(data);
 			}
 		},
+		error : function(data){
+			console.log(data);
+		},
 		type : 'DELETE',
 		processData: false
 	});
@@ -106,8 +116,16 @@ function stopPipeline(pipelineId){
 	$.ajax({
 		url : url,
 		success : function(data){
+			
 			console.log(data);
-			changePipelineStatus(data, pipelineId);
+			if (data.success){
+				changePipelineStatus(data, pipelineId);
+			}else{
+				displayErrors(data);
+			}
+		},
+		error : function(data){
+			console.log(data);
 		},
 		type : 'GET',
 		processData: false

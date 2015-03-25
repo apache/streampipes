@@ -64,7 +64,7 @@ jsPlumb.ready(function(e){
 		
 		jsPlumb.bind("connection", function(info, originalEvent){
 			if(originalEvent != undefined){
-				console.log(info.connection);
+
 				createPartialPipeline(info);
 				sendPipeline(false, info);
 			}
@@ -160,7 +160,7 @@ function displayStreams(e) {
 	$(this).fadeTo(0, 1);
 	$('.clickable').not(this).fadeTo(200, .2);
 	var $src = $(this);
-	// console.log(typeof $(this).data("streams"));
+
 	if (typeof $(this).data("streams") != "undefined"){
 		createStreams($(this).data("streams"));
 	}else{
@@ -564,7 +564,7 @@ function showManage(){
 		
 		 if ($(this).data("streams") != undefined){
 			var data = $(this).data("streams");
-			console.log(data);
+
 			$.each(data, function(i, json){
 					$('<li>')
 						.data("JSON", json)
@@ -575,7 +575,7 @@ function showManage(){
 		}else {
 			var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
 			var $origSrc = $(this);
-			console.log($origSrc);
+
 			var promise = $.getJSON(url).then(function(data){
 				savedStreams = data;
 				$origSrc.data("streams", savedStreams);
@@ -864,7 +864,7 @@ function manage(type){
 								"data-placement" : "auto" 
 							})
 							.popover();
-							console.log(JSON.stringify($(this).parent().data("JSON")));
+
 						$('<span>')
 							.addClass("glyphicon glyphicon-remove pull-right hoverable")
 							.on('click' , function(e){
@@ -984,3 +984,7 @@ function getParentWithJSONData($element){
 	}
 	return $element;
 }
+function attemptLogin(){
+	console.log($("#login-form").serializeArray());
+}
+

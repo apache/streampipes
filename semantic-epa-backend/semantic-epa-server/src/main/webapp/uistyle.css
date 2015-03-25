@@ -228,6 +228,24 @@ body {
 #navbar:active {
 	color: #000000;
 }
+#login-form-dropdown{
+	padding:10px;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #eee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#eee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#eee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#eee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#eee 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #ffffff 0%,#eee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eee',GradientType=0 ); /* IE6-9 */ 
+	
+	max-width: 20vw;
+	max-height: 25vh;
+	
+	min-width: 280px;
+	min-height: 200px;
+	
+}
 
 .panel-body{
 	padding: 0;

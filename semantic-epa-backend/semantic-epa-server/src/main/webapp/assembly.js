@@ -75,7 +75,7 @@ function initAssembly(){
 }
 
 function createNewAssemblyElement(ui){
-	console.log(ui.draggable);
+
 	var $newState = $('<span>')									
 		.data("JSON", $.extend(true, {},ui.draggable.data("JSON")))
 		.appendTo('#assembly');
@@ -237,7 +237,7 @@ function createPartialPipeline(info){
 	pipelinePart.streams = [];
 	pipelinePart.sepas = [];
 	pipelinePart.action ={};
-	console.log(info);
+
 	var finished = false;
 	var element = info.target;
 	var elementId = "#" + element;
@@ -261,7 +261,6 @@ function createPartialPipeline(info){
 			// addToPipeline(element, pipelinePart);
 		// }
 	// });
-	console.log(pipelinePart);
 	currentPipeline = pipelinePart;
 	
 }
@@ -367,15 +366,13 @@ function savePipelineName(){
 	}
 	currentPipeline.name = pipelineName[0].value;
 	currentPipeline.description = pipelineName[1].value;
-	console.log(currentPipeline);
+
 	sendPipeline(true);
 }
 
 function sendPipeline(fullPipeline, info){
 	
 	if(fullPipeline){
-	
-		// console.log(currentPipeline);
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
@@ -391,7 +388,6 @@ function sendPipeline(fullPipeline, info){
  				}
  			},
  			error: function(data){
- 				console.log(data);
  				toastTop("error", "Could not fulfill request", "Connection Error");
  			}
  		});
@@ -435,7 +431,6 @@ function sendPipeline(fullPipeline, info){
  					
  			},
  			error: function(data){
- 				console.log(data);
  				toastTop("error", "Could not fulfill request", "Connection Error");
  			} 
  		});
@@ -447,11 +442,8 @@ function sendPipeline(fullPipeline, info){
 
 function modifyPipeline(pipelineModifications){
 	var id;
-	console.log(pipelineModifications);
-	
 	
 	for (var i = 0, modification; modification = pipelineModifications[i]; i++){
-		// console.log(modification);
 		id = "#" + modification.domId;
 		$currentElement = $(id);
 		$currentElement.data("JSON").staticProperties = modification.staticProperties;
@@ -469,7 +461,6 @@ function modifyPipeline(pipelineModifications){
 function save() {
 
 	var options = $('#modalForm').serializeArray();
-	console.log(options);
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
 		toastRightTop("error","Please enter all parameters");
 			return false;
