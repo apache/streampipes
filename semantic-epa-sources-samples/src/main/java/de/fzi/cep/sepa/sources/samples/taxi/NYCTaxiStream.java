@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,8 +37,9 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 	
 	public static final Logger logger = Logger.getLogger(NYCTaxiStream.class);
 	
-	public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
-	
+	//public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
+	public static final String FILENAME = "/home/robin/FZI/CEP/sorted_data.csv";
+
 	public NYCTaxiStream() throws JMSException {
 		publisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.NYC.Taxi");
 	}
@@ -66,7 +68,11 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "tip_amount", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "tolls_amount", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "total_amount", "", Utils.createURI("http://schema.org/Number")));
-		
+
+		//current time for later delay calculation
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "read_datetime", "", Utils.createURI("http://test.de/timestamp")));
+
+
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
@@ -108,15 +114,15 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 						
 						long diff = currentDropOffTime - previousDropoffTime;
 						logger.info("Waiting " +diff/1000 + " seconds");
-						if (diff > 0) Thread.sleep(diff);
+						if (diff > 0) Thread.sleep(0); //TODO change back to diff
 						previousDropoffTime = currentDropOffTime;
 						
 						String json = buildJson(records).toString();
 						publisher.sendText(json);
 						logger.info(json);
-					
+						//System.out.println(json);
+
 					}
-					
 					br.close();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -175,6 +181,10 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 			json.put("tip_amount", Double.parseDouble(line[14]));
 			json.put("tolls_amount", Double.parseDouble(line[15]));
 			json.put("total_amount", Double.parseDouble(line[16]));
+
+			//for later delay calculation
+			Date date = new Date();
+			json.put("read_datetime", date.getTime());
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -182,6 +192,31 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		}
 		
 		return json;
+	}
+
+
+	/**
+	 * Sending
+	 */
+	class OutputThread implements Runnable {
+		long diff;
+
+		public OutputThread(long sleepTime) {
+			diff = sleepTime;
+		}
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(diff);
+				synchronized (publisher) {
+					//publisher.sendText(json);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 }
