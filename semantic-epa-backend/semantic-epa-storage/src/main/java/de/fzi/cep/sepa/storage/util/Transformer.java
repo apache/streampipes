@@ -139,7 +139,7 @@ public class Transformer {
 				"EventPropertyList", 
 				"MappingPropertyUnary",
 				"MappingPropertyNary"};
-		String[] outputClasses = {"AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
+		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
 		if (contains(className, abstractClasses)) 
 			{
