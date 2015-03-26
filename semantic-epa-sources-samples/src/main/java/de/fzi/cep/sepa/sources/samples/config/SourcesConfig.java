@@ -11,6 +11,6 @@ public class SourcesConfig {
 	static {
 		serverUrl = Configuration.SOURCES_BASE_URL;
 		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
-		eventReplayURI = "http://nissatech.no-ip.org:8084";
+		eventReplayURI = "http://89.216.116.44:8084";
 	}
 }

@@ -65,8 +65,8 @@ public class TestRandomNumberStream {
 			else if (p instanceof EventPropertyList)
 			{
 				System.out.println("list, " +p.getPropertyName());
-				EventProperty sub = ((EventPropertyList) p).getEventProperty();
-				System.out.println(sub.getPropertyName());
+				//EventProperty sub = ((EventPropertyList) p).getEventProperty();
+				//System.out.println(sub.getPropertyName());
 			}
 		}
 		
