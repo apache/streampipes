@@ -8,7 +8,7 @@ public class TestPipelineExecution {
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("1d598509-f067-489f-bc91-25dbb3198aa2");
+		Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("cd4d999f-615b-4890-9508-dcc98c52b77b");
 		
 		Operations.startPipeline(pipeline);
 		

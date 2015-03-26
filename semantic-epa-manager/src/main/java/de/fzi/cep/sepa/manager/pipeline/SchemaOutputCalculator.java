@@ -7,7 +7,9 @@ import java.util.UUID;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -15,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 
@@ -60,9 +63,24 @@ public class SchemaOutputCalculator {
 				CustomOutputStrategy thisStrategy = (CustomOutputStrategy) strategy;
 				return generateSchema(thisStrategy.getEventProperties());
 			}
+			else if (strategy instanceof ListOutputStrategy)
+			{
+				ListOutputStrategy thisStrategy = (ListOutputStrategy) strategy;
+				return makeList(outputSchema.getEventProperties(), thisStrategy.getPropertyName());
+			}
 		}
 		// TODO exceptions
 		return null;
+	}
+	
+	private EventSchema makeList(List<EventProperty> schemaProperties, String propertyName)
+	{
+		EventPropertyList list = new EventPropertyList();
+		list.setEventProperties(schemaProperties);
+		list.setPropertyName(propertyName);
+		EventSchema schema = new EventSchema();
+		schema.setEventProperties(Utils.createList(list));
+		return schema;
 	}
 	
 	private List<EventProperty> rename(

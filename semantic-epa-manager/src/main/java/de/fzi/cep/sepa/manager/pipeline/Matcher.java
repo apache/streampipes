@@ -75,7 +75,12 @@ public class Matcher {
 	
 	public boolean matchesList(EventPropertyList left, EventPropertyList right)
 	{
-		return matches(right.getEventProperty(), left.getEventProperty());
+		boolean match = true;
+		for(EventProperty p : right.getEventProperties())
+		{
+			if (!matches(p, left.getEventProperties())) match = false;
+		}
+		return match;
 	}
 	
 	public boolean matches(List<URI> leftSubClasses, List<URI> rightSubClasses)
