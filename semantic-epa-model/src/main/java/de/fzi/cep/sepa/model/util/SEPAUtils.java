@@ -22,7 +22,6 @@ import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 public class SEPAUtils {
@@ -53,7 +52,7 @@ public class SEPAUtils {
 		URI propertyURI = getURIFromStaticProperty(sepa, staticPropertyName);
 		for(EventStream stream : sepa.getInputStreams())
 		{
-			return getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
+			return getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "").get(0);
 		}
 		return null;
 		//TODO: exceptions
@@ -62,13 +61,13 @@ public class SEPAUtils {
 	public static List<String> getMultipleMappingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
 	{
 		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
+		
 		List<String> result = new ArrayList<String>();
 		for(URI propertyUri : propertyUris)
 		{
 			for(EventStream stream : sepa.getInputStreams())
 			{
-				String name = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyUri, completeNames, "");
-				if (name != null) result.add(name);
+				result.addAll(getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyUri, completeNames, ""));
 			}
 		}
 		return result;
@@ -76,25 +75,26 @@ public class SEPAUtils {
 	}
 	
 	//TODO fix return null
-	private static String getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
+	private static List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
 	{
+		List<String> result = new ArrayList<String>();
 		for(EventProperty p : eventProperties)
 		{
 			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
-			{
+			{	
 				if (p.getRdfId().toString().equals(propertyURI.toString())) 
 					{
-						if (!completeNames) return p.getPropertyName();
-						else return prefix + p.getPropertyName();
+						if (!completeNames) result.add(p.getPropertyName());
+						else 
+								result.add(prefix + p.getPropertyName());
 					}
 			}
 			else if (p instanceof EventPropertyNested)
 			{
-				prefix = prefix + p.getPropertyName() +".";
-				getMappingPropertyName(((EventPropertyNested) p).getEventProperties(), propertyURI, completeNames, prefix);
+				result.addAll(getMappingPropertyName(((EventPropertyNested) p).getEventProperties(), propertyURI, completeNames, prefix + p.getPropertyName() +"."));
 			}
 		}
-		return null;
+		return result;
 	}
 	
 	//TODO check if correct

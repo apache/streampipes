@@ -28,7 +28,7 @@ public class EventPropertyList extends EventProperty {
 	@RdfProperty("sepa:hasEventProperty")
 	@OneToOne (fetch = FetchType.EAGER,
 	   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	EventProperty eventProperty;
+	List<EventProperty> eventProperties;
 	
 	public EventPropertyList()
 	{
@@ -37,15 +37,16 @@ public class EventPropertyList extends EventProperty {
 	
 	public EventPropertyList(String propertyName, EventProperty eventProperty) {
 		super(propertyName);
-		this.eventProperty = eventProperty;
+		eventProperties = new ArrayList<EventProperty>();
+		eventProperties.add(eventProperty);
 	}
 
-	public EventProperty getEventProperty() {
-		return eventProperty;
+	public List<EventProperty> getEventProperties() {
+		return eventProperties;
 	}
 
-	public void setEventProperty(EventProperty eventProperty) {
-		this.eventProperty = eventProperty;
+	public void setEventProperties(List<EventProperty> eventProperties) {
+		this.eventProperties = eventProperties;
 	}
 
 	@Override
@@ -56,11 +57,16 @@ public class EventPropertyList extends EventProperty {
 	@Override
 	public Map<String, Object> getUntypedRuntimeFormat() {
 		Map<String, Object> result = new HashMap<>();
-		System.out.println(propertyName);
-		System.out.println(eventProperty.getPropertyName());
-		if (eventProperty instanceof EventPropertyPrimitive) result.put(propertyName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) eventProperty).getPropertyType()));
-		else result.put(propertyName, ModelUtils.asList(eventProperty.getUntypedRuntimeFormat()));
-		System.out.println("EVP" +eventProperty.getRuntimeFormat());
+		for(EventProperty p : eventProperties)
+		{
+			if (p instanceof EventPropertyPrimitive && eventProperties.size() == 1) 
+				{
+					result.put(propertyName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getPropertyType()));
+					break;
+				}
+			else 
+				result.put(propertyName, ModelUtils.asList(p.getUntypedRuntimeFormat()));
+		}
 		return result;
 	}
 
