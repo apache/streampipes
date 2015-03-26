@@ -22,7 +22,7 @@ public class GridCalculator {
 		System.out.println("nw lat " +nw.getLatitude());
 		System.out.println("nw lng " +nw.getLongitude());
 		*/
-		return new CellOption(cellX, cellY, 12, 12, 12, 12, 500);
+		return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 500);
 	}
 	
 	private int findMinimal(LatLng start, LatLng current, int xValue, double currentDistance, int metersToWalk, double bearing)

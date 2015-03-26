@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -61,6 +62,7 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		SEPA desc = new SEPA("/sepa/movement", "Movement Analysis",
 				"Movement Analysis Enricher", "", "/sepa/movement", domains);
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_2_HQ.png");
 		// desc.setIconUrl(EsperConfig.iconBaseUrl + "/Proximity_Icon_HQ.png");
 		try {
 			EventStream stream1 = new EventStream();

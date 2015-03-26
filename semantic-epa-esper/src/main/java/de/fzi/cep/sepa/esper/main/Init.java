@@ -10,10 +10,12 @@ import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
+import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.meets.MeetsController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
+import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 
@@ -33,6 +35,9 @@ public class Init {
 		declarers.add(new GridEnrichmentController());
 		declarers.add(new ProjectController());
 		declarers.add(new CountController());
+		declarers.add(new TopXController());
+		declarers.add(new TimestampController());
+		
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);

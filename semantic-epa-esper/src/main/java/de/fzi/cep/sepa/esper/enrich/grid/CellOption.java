@@ -1,44 +1,49 @@
 package de.fzi.cep.sepa.esper.enrich.grid;
 
 public class CellOption {
-	private int cellIdX;
-	private int cellIdY;
+	private int cellX;
+	private int cellY;
 	
 	private double latitudeNW;
 	private double longitudeNW;
-	private double latitudeSW;
-	private double longitudeSW;
+	private double latitudeSE;
+	private double longitudeSE;
 	
 	private int cellSize;
 
-	public CellOption(int cellIdX, int cellIdY, double latitudeNW,
-			double longitudeNW, double latitudeSW, double longitudeSW,
+	public CellOption(int cellX, int cellY, double latitudeNW,
+			double longitudeNW, double latitudeSE, double longitudeSE,
 			int cellSize) {
 		super();
-		this.cellIdX = cellIdX;
-		this.cellIdY = cellIdY;
+		this.cellX = cellX;
+		this.cellY = cellY;
 		this.latitudeNW = latitudeNW;
 		this.longitudeNW = longitudeNW;
-		this.latitudeSW = latitudeSW;
-		this.longitudeSW = longitudeSW;
+		this.latitudeSE = latitudeSE;
+		this.longitudeSE = longitudeSE;
 		this.cellSize = cellSize;
 	}
 
-	public int getCellIdX() {
-		return cellIdX;
+
+	public int getCellX() {
+		return cellX;
 	}
 
-	public void setCellIdX(int cellIdX) {
-		this.cellIdX = cellIdX;
+
+	public void setCellX(int cellX) {
+		this.cellX = cellX;
 	}
 
-	public int getCellIdY() {
-		return cellIdY;
+
+	public int getCellY() {
+		return cellY;
 	}
 
-	public void setCellIdY(int cellIdY) {
-		this.cellIdY = cellIdY;
+
+	public void setCellY(int cellY) {
+		this.cellY = cellY;
 	}
+
 
 	public double getLatitudeNW() {
 		return latitudeNW;
@@ -56,20 +61,20 @@ public class CellOption {
 		this.longitudeNW = longitudeNW;
 	}
 
-	public double getLatitudeSW() {
-		return latitudeSW;
+	public double getLatitudeSE() {
+		return latitudeSE;
 	}
 
-	public void setLatitudeSW(double latitudeSW) {
-		this.latitudeSW = latitudeSW;
+	public void setLatitudeSE(double latitudeSE) {
+		this.latitudeSE = latitudeSE;
 	}
 
-	public double getLongitudeSW() {
-		return longitudeSW;
+	public double getLongitudeSE() {
+		return longitudeSE;
 	}
 
-	public void setLongitudeSW(double longitudeSW) {
-		this.longitudeSW = longitudeSW;
+	public void setLongitudeSE(double longitudeSE) {
+		this.longitudeSE = longitudeSE;
 	}
 
 	public int getCellSize() {

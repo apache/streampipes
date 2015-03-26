@@ -49,7 +49,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		stream1.setEventSchema(schema1);
 		
 		SEPA desc = new SEPA("/sepa/aggregation", "Aggregation", "Performs different aggregation functions", "", "/sepa/aggregation", domains);
-		
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);

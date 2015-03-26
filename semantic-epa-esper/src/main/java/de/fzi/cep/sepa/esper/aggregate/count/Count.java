@@ -8,7 +8,7 @@ public class Count extends EsperEventEngine<CountParameter>{
 
 	@Override
 	protected List<String> statements(CountParameter bindingParameters) {
-		String statement = "select " +getSelectClause(bindingParameters) +" count(*) as averageValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindow() +" " +bindingParameters.getTimeScale().value() +")" +getGroupBy(bindingParameters);
+		String statement = "select " +getSelectClause(bindingParameters) +" count(*) as countValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindow() +" " +bindingParameters.getTimeScale().value() +")" +getGroupBy(bindingParameters);
 		return makeStatementList(statement);
 	}
 	
@@ -30,7 +30,7 @@ public class Count extends EsperEventEngine<CountParameter>{
 		for(int i = 0; i < groupBy.size(); i++)
 		{
 			result += groupBy.get(i);
-			if (! (i == groupBy.size())) result += ", ";
+			if (! (i == groupBy.size()-1)) result += ", ";
 		}
 		if (!result.equals("")) return groupByPrefix + result;
 		else return result;
