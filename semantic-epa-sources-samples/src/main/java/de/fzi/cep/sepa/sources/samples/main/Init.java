@@ -21,11 +21,11 @@ public class Init {
 	{
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-		declarers.add(new TwitterStreamProducer());
+		/*declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new MobileStreamProducer());
-		declarers.add(new RandomDataProducer());
+		declarers.add(new RandomDataProducer());*/
 		declarers.add(new NYCTaxiProducer());
 		
 		
@@ -34,9 +34,9 @@ public class Init {
 		String[] topic = {AkerVariables.DrillingRPM.topic(), AkerVariables.DrillingTorque.topic(), AkerVariables.GearLubeOilTemperature.topic(), AkerVariables.HookLoad.topic(), AkerVariables.SwivelOilTemperature.topic()};
 		int threads = 1;
 
-		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
-				topic);
-		example.run(threads);
+		/*KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
+				topic);*/
+		//example.run(threads);
 		
 		ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
 		
