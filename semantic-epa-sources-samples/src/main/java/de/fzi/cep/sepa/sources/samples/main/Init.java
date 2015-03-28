@@ -28,7 +28,6 @@ public class Init {
 		declarers.add(new RandomDataProducer());*/
 		declarers.add(new NYCTaxiProducer());
 		
-		
 		String zooKeeper = "89.216.116.44:2181";
 		String groupId = "groupId";
 		String[] topic = {AkerVariables.DrillingRPM.topic(), AkerVariables.DrillingTorque.topic(), AkerVariables.GearLubeOilTemperature.topic(), AkerVariables.HookLoad.topic(), AkerVariables.SwivelOilTemperature.topic()};
@@ -39,6 +38,5 @@ public class Init {
 		//example.run(threads);
 		
 		ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
-		
 	}
 }
