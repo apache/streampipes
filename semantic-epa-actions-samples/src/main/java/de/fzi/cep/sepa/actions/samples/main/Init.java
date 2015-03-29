@@ -21,9 +21,7 @@ public class Init {
 		consumers.add(new ChartConsumer());
 		consumers.add(new MapsController());
 		consumers.add(new TableViewController());
-		
+
 		ModelSubmitter.submitConsumer(consumers, Configuration.ACTION_BASE_URL, 8091);
 	}
-	
-	
 }
