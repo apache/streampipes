@@ -49,7 +49,8 @@ body {
 	display: inline-block;
 	height: 9vh;
 	/*width: 9vh;*/
-	margin-left: 5%;
+	margin-left: 3%;
+	margin-right: 3%;
 	/*padding: .5vh;*/
 	vertical-align: top;
 	cursor: pointer;
@@ -216,9 +217,18 @@ body {
 	margin-right: 10%;
 }
 
+.sse-working{
+	color: black;
+}
+.sse-success{
+	color: #33dd33;
+}
+.sse-error{
+	color: #dd3333;
+}
 .wrapper {
 	width: 100%;
-	margin-bottom: 30%;
+	margin-bottom: 10%;
 
 }
 
@@ -317,4 +327,8 @@ td {
 
 #savedOptions{
 	padding-top: 30px;
+}
+
+textarea{
+	resize: none;
 }

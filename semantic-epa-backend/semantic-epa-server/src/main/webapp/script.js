@@ -527,6 +527,8 @@ function refresh(type) {
 
 
 function showAdd() {
+	$("#sses").children().remove();
+	$("#addText").val("");
 	$('#addModal').modal('show');
 }
 
@@ -783,54 +785,89 @@ function refreshActions(){
 
 
 
-function add() {			
-	var uri = $('#addText').val();
-	uri = encodeURIComponent(uri);
-	if (uri != ''){
-
-		var type = $('input[name="type-radios"]:checked').val();
+function add() {
+	var url;
+	var type = $('input[name="type-radios"]:checked').val();
 		switch (type){
 			case "1":
-				var url = standardUrl + "sources";
+				url = standardUrl + "sources";
 				break;
 			case "2":
-				var url = standardUrl + "sepas";
+				url = standardUrl + "sepas";
 				break;
 			case "3":
-				var url = standardUrl + "actions";
+				url = standardUrl + "actions";
 		}
 		
-		var fd = new FormData();    
-		fd.append( 'uri', uri );
+	var str = $('#addText').val();
+	if (str == ""){
+		toastRightTop("error", "Please enter a URI");
+	}else{
+		var uris = str.split(" ");
 		
-		$.ajax({
-		  url: url,
-		  data: "uri=" + uri,
-		  processData: false,
-		  type: 'POST',
-		  success: function(data){
-		  	toastRightTop("success", "Element successfully added");
-		  	refresh("Proa");
-		  	$('#sses').text("Finished!");
-		    
-		    switch (type){
+		addElements(url, uris, 0, type);
+		// for (var i = 0, uri; uri = uris[i]; i++){
+			// if (i+1 == uris.length){
+				// addElement(url, uri, i, type, true);
+			// }else{
+				// addElement(url, uri, i, type, false);
+			// }				
+		// }		
+	}
+}
+
+function addElements(url, uris, i, type){
+	if(i == uris.length){
+		
+		switch (type){
 			case "1":
-				
+				refresh("Proa");
 				break;
 			case "2":
 				refreshSepas();
 				break;
 			case "3":
 				refreshActions();
-			}
-		  }
-		});
-		$('#sses').text("Working...");
-				
+		}
+		return;
 	}else{
-		toastRightTop("error", "Please enter a URI");
+		var uri = uris[i];
+		var id = "sse" + i;
+		$("<div>")
+			.attr("id" , id)
+			.text(uri)
+			.addClass("sse-working")
+			.appendTo("#sses");
+		uri = encodeURIComponent(uri);
+		
+		var id = "#sse" + i;
+		$.ajax({
+		  	url: url,
+		  	data: "uri=" + uri,
+		  	processData: false,
+		  	type: 'POST',
+		  	success: function(data){
+		  		
+		  		$(id)
+		  			.removeClass("sse-working")
+		  			.addClass("sse-success");
+			  	toastRightTop("success", data.notifications[0].description);
+			  			    
+			    
+		  	},
+		  	error: function(data){
+		  		$(id)
+		  			.removeClass("sse-working")
+		  			.addClass("sse-error");
+	  			toastRightTop("error", data.notifications[0].description);
+		  	}
+		}).then(function(){
+			addElements(url, uris, ++i, type);
+		});
 	}
+	
 }
+
 
 function manage(type){
 		
