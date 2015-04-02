@@ -26,6 +26,7 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.html.EventConsumerWelcomePage;
 import de.fzi.cep.sepa.html.EventProcessingAgentWelcomePage;
 import de.fzi.cep.sepa.html.EventProducerWelcomePage;
@@ -272,7 +273,7 @@ public class ModelSubmitter {
 	}
 
 	public static String asString(Graph graph) throws RDFHandlerException {
-		OutputStream stream = new ByteArrayOutputStream();
+		/*OutputStream stream = new ByteArrayOutputStream();
 		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE,
 				JSONLDMode.COMPACT);
@@ -280,6 +281,8 @@ public class ModelSubmitter {
 		// Rio.write(graph, stream, RDFFormat.JSONLD);
 		Rio.write(graph, writer);
 		return stream.toString();
+		*/
+		return Utils.asString(graph);
 	}
 
 	@SuppressWarnings("unchecked")
