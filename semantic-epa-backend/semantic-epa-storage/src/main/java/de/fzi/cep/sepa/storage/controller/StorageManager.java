@@ -1,8 +1,5 @@
 package de.fzi.cep.sepa.storage.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
@@ -10,17 +7,10 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.http.HTTPRepository;
 
-
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.NotifyingSailConnection;
-import org.openrdf.sail.memory.MemoryStore;
-
 import com.clarkparsia.empire.Empire;
-import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
-import com.google.inject.AbstractModule;
 
-import de.fzi.cep.sepa.commonss.Configuration;
+import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;

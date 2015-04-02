@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.clarkparsia.empire.SupportsRdfId.URIKey;
+
 import de.fzi.cep.sepa.model.client.*;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
@@ -16,6 +18,7 @@ import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
@@ -150,7 +153,29 @@ public class ClientModelTransformer {
 			{
 				if (option.isSelected()) 
 					{
-						EventProperty matchedProperty = StorageManager.INSTANCE.getEntityManager().find(EventProperty.class, option.getElementId());
+						EventProperty matchedProperty;
+						matchedProperty = StorageManager.INSTANCE.getEntityManager().find(EventProperty.class, option.getElementId());
+						//TODO not working for j > 1
+						if (matchedProperty == null)
+						{
+							int j = Integer.parseInt(option.getHumanDescription().substring(option.getHumanDescription().length()-1, option.getHumanDescription().length()));
+							if (option.getElementId().substring(option.getElementId().length()-1, option.getElementId().length()).equals(String.valueOf(j)))
+							{
+								String fixedId = option.getElementId().substring(0, option.getElementId().length()-1);
+								EventProperty tempProperty = StorageManager.INSTANCE.getEntityManager().find(EventProperty.class, fixedId);
+								if (tempProperty != null)
+								{
+									if (tempProperty instanceof EventPropertyPrimitive)
+									{
+										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getPropertyType(), tempProperty.getPropertyName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getSubClassOf());
+										newProperty.setRdfId(new URIKey(URI.create(tempProperty.getRdfId().toString() +j)));
+										matchedProperty = newProperty;
+									}
+								}
+							}
+							j++;
+						}
+						System.out.println(option.getHumanDescription() +", " +matchedProperty +", " +option.getElementId());
 						if (!processedProperties.contains(matchedProperty)) 
 							{
 								outputProperties.add(matchedProperty);

@@ -25,11 +25,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
 			<groupId>com.complexible.common</groupId>
 			<artifactId>openrdf</artifactId>
 			<version>2.0.2</version>
