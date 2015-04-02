@@ -15,10 +15,15 @@ import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
-public class Init {
+public class Init implements Runnable {
 
-	public static void  main(String[] args) throws Exception
+	public static void  main(String[] args) 
 	{
+		new Init().declare();
+	}
+	
+	public void declare() {
+		
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
 		/*declarers.add(new TwitterStreamProducer());
@@ -27,6 +32,7 @@ public class Init {
 		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());*/
 		declarers.add(new NYCTaxiProducer());
+		
 		
 		String zooKeeper = "89.216.116.44:2181";
 		String groupId = "groupId";
@@ -37,6 +43,16 @@ public class Init {
 				topic);*/
 		//example.run(threads);
 		
-		ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
+		try {
+			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		declare();
 	}
 }

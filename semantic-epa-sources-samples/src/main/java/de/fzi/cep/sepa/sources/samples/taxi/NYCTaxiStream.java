@@ -15,12 +15,13 @@ import java.util.List;
 import javax.jms.JMSException;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.ontoware.rdf2go.vocabulary.XSD;
 
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commonss.Configuration;
+import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -34,14 +35,16 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 public class NYCTaxiStream implements EventStreamDeclarer {
 
 	ActiveMQPublisher publisher;
+	ActiveMQPublisher timePublisher;
 	
 	public static final Logger logger = Logger.getLogger(NYCTaxiStream.class);
 	
-	//public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
-	public static final String FILENAME = "/home/robin/FZI/CEP/sorted_data.csv";
+	public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
+	//public static final String FILENAME = "/home/robin/FZI/CEP/sorted_data.csv";
 
 	public NYCTaxiStream() throws JMSException {
 		publisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.NYC.Taxi");
+		timePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "FZI.Timer");
 	}
 	
 	@Override
@@ -70,7 +73,7 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "total_amount", "", Utils.createURI("http://schema.org/Number")));
 
 		//current time for later delay calculation
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "read_datetime", "", Utils.createURI("http://test.de/timestamp")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "read_datetime", "", Utils.createURI("http://schema.org/Number")));
 
 
 		EventGrounding grounding = new EventGrounding();
@@ -105,25 +108,31 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 					br = new BufferedReader(new FileReader(file));
 					
 					String line;
+					long counter = 0;
 					
 					while ((line = br.readLine()) != null) {
-						String[] records = line.split(",");
-						long currentDropOffTime = toTimestamp(records[3]);
-						
-						if (previousDropoffTime == -1) previousDropoffTime = currentDropOffTime;
-						
-						long diff = currentDropOffTime - previousDropoffTime;
-						logger.info("Waiting " +diff/1000 + " seconds");
-						if (diff > 0) Thread.sleep(0); //TODO change back to diff
-						previousDropoffTime = currentDropOffTime;
-						
-						String json = buildJson(records).toString();
-						publisher.sendText(json);
-						logger.info(json);
-						//System.out.println(json);
+						if (counter > -1)
+						{
+							counter++;
+							String[] records = line.split(",");
+							long currentDropOffTime = toTimestamp(records[3]);
+							
+							if (previousDropoffTime == -1) previousDropoffTime = currentDropOffTime;
+							
+							long diff = currentDropOffTime - previousDropoffTime;
+							//System.out.println("Waiting " +diff/1000 + " seconds");
+							if (diff > 0) Thread.sleep(0); //TODO change back to diff
+							previousDropoffTime = currentDropOffTime;
+							
+							JSONObject obj = buildJson(records);
+							if (obj.getDouble("pickup_latitude") > 0) publisher.sendText(obj.toString());
+							//if (diff > 0) timePublisher.sendText(String.valueOf(currentDropOffTime));
+							if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
+						}
 
 					}
 					br.close();
+					System.out.println("finished!");
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -137,6 +146,9 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
@@ -184,7 +196,7 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 
 			//for later delay calculation
 			Date date = new Date();
-			json.put("read_datetime", date.getTime());
+			json.put("read_datetime", System.currentTimeMillis());
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

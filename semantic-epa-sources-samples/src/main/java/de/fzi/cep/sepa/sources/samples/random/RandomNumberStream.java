@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.ontoware.rdf2go.vocabulary.XSD;
 
 import twitter4j.Status;
-import de.fzi.cep.sepa.commonss.Configuration;
+import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -38,6 +38,8 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomString", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
@@ -97,12 +99,20 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		try {
 			json.put("timestamp", timestamp);
 			json.put("randomValue", number);
+			json.put("randomString", randomString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		}
 		
 		return json;
+	}
+	
+	private String randomString()
+	{
+		String[] randomStrings = new String[] {"a", "b", "c", "d"};
+		Random random = new Random();
+		return randomStrings[random.nextInt(3)];
 	}
 
 }
