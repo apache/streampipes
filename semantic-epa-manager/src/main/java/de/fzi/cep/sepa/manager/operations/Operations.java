@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.manager.operations;
 import java.util.Date;
 import java.util.List;
 
+import org.lightcouch.DocumentConflictException;
+
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
 import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
@@ -59,7 +61,12 @@ public class Operations {
 		System.out.println("Updating pipeline: " +pipeline.getName());
 		pipeline.setRunning(true);
 		pipeline.setStartedAt(new Date().getTime());
-		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+		try {
+			StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+		} catch (DocumentConflictException dce)
+		{
+			dce.printStackTrace();
+		}
 	}
 	
 	private static void setPipelineStopped(de.fzi.cep.sepa.model.client.Pipeline pipeline) {
@@ -82,7 +89,12 @@ public class Operations {
 	public static void stopPipeline(
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
 		List<InvocableSEPAElement> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-		new GraphSubmitter(graphs).detachGraphs();
+		try {
+			new GraphSubmitter(graphs).detachGraphs();
+		} catch (Exception e)
+		{
+			System.err.println("Error: Could not detach graphs.");
+		}
 		
 		StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
 		setPipelineStopped(pipeline);

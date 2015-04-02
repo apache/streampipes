@@ -35,7 +35,6 @@ public class Matcher {
 	
 	public boolean matches(EventProperty right, EventProperty left) {
 		boolean match = true;
-		
 		//if (right.getClass() != left.getClass()) return false;
 		if (right instanceof EventPropertyPrimitive)
 			{
@@ -60,7 +59,9 @@ public class Matcher {
 				if (!(left instanceof EventPropertyList)) match = false;
 				else {
 					if (!matchesList((EventPropertyList) left, (EventPropertyList) right)) match = false;
+					else allMatchingProperties.add(left);
 				}
+				
 			} else if (right instanceof EventPropertyNested)
 			{
 				EventPropertyNested rightNested = (EventPropertyNested) right;

@@ -26,6 +26,8 @@ public class SchemaOutputCalculator {
 	private OutputStrategy outputStrategy;
 	private boolean propertyUpdated;
 	
+	//private static final String prefix = "urn:fzi.de:sepa:";
+	
 	public SchemaOutputCalculator(List<OutputStrategy> strategies)
 	{
 		this.outputStrategy = strategies.get(0);
@@ -78,6 +80,7 @@ public class SchemaOutputCalculator {
 		EventPropertyList list = new EventPropertyList();
 		list.setEventProperties(schemaProperties);
 		list.setPropertyName(propertyName);
+		list.setRdfId(new URIKey(URI.create(schemaProperties.get(0).getRdfId()+"-list")));
 		EventSchema schema = new EventSchema();
 		schema.setEventProperties(Utils.createList(list));
 		return schema;
@@ -99,19 +102,37 @@ public class SchemaOutputCalculator {
 					{
 						EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
 						newProperty = new EventPropertyPrimitive(primitive.getPropertyType(), primitive.getPropertyName() +i, primitive.getMeasurementUnit(), primitive.getSubClassOf());
-						newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
+						//newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
+						newProperty.setRdfId(new URIKey(URI.create(primitive.getRdfId().toString() +i)));
 					}
 				if (newProperty instanceof EventPropertyNested)
 					{
 						EventPropertyNested nested = (EventPropertyNested) newProperty;
-						newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
-						newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
+						
+						//TODO: hack
+						List<EventProperty> nestedProperties = new ArrayList<>();
+						
+						for(EventProperty np : nested.getEventProperties())
+						{
+							if (np instanceof EventPropertyPrimitive)
+							{
+								EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
+								EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getPropertyType(), thisPrimitive.getPropertyName(), thisPrimitive.getMeasurementUnit(), thisPrimitive.getSubClassOf());	
+								//newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
+								newNested.setRdfId(new URIKey(URI.create(thisPrimitive.getRdfId().toString())));
+								nestedProperties.add(newNested);
+							}
+								
+						}
+						newProperty = new EventPropertyNested(nested.getPropertyName() +i, nestedProperties);
+						//newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
+						//newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
+						newProperty.setRdfId(new URIKey(URI.create(nested.getRdfId().toString() +i)));
 					}
 				i++;
 			}
 			newEventProperties.add(newProperty);
 		}
-		System.out.println("Size: " +newEventProperties.size());
 		updateOutputStrategy(newEventProperties);
 		return newEventProperties;
 		
