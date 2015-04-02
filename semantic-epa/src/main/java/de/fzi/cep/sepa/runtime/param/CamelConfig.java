@@ -3,8 +3,11 @@ package de.fzi.cep.sepa.runtime.param;
 import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.camel.component.ActiveMQComponent;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.jms.JmsComponent;
+import org.apache.camel.component.jms.JmsConfiguration;
 
 public interface CamelConfig { // every config that cannot be made with the simple endpoint uri string
 
@@ -25,8 +28,22 @@ public interface CamelConfig { // every config that cannot be made with the simp
 
 		@Override
 		public void applyTo(CamelContext context) {
-			ConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
-			context.addComponent(brokerAlias, JmsComponent.jmsComponentAutoAcknowledge(factory));
+			ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
+			//factory.setUseAsyncSend(true);
+			PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(factory);
+
+	        JmsConfiguration config = new JmsConfiguration(pooledConnectionFactory);
+	        //config.setConcurrentConsumers(1);
+	        //config.setMaxConcurrentConsumers(1);
+	        //config.setAsyncConsumer(true);
+	        
+	        ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
+	        activeMQComponent.setConfiguration(config);
+
+	        
+	        context.addComponent(brokerAlias, activeMQComponent);
+			
+			//context.addComponent(brokerAlias, JmsComponent.jmsComponentAutoAcknowledge(factory));
 		}
 
 		@Override
