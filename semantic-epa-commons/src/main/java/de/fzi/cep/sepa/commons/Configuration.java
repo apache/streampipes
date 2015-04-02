@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.commonss;
+package de.fzi.cep.sepa.commons;
 
 public class Configuration {
 
@@ -25,5 +25,7 @@ public class Configuration {
 	//public static final String EMPIRE_CONFIG_LOCATION = "/home/riemer/empire.config.properties";
 
 	public static final String EMPIRE_CONFIG_LOCATION = "c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties";
+
+	//public static final String EMPIRE_CONFIG_LOCATION = "e:\\Workspace Eclipse Luna\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties";
 
 }
