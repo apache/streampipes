@@ -1,34 +1,39 @@
 package de.fzi.cep.sepa.actions.samples.table;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
 
-public class TableViewController extends ActionController {
+public class MultiRowTableController extends ActionController {
 
 	@Override
 	public SEC declareModel() {
-		SEC sec = new SEC("/table", "Table", "", "");
+		SEC sec = new SEC("/table/multirow", "Multi-Row Table", "", "");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		
+		EventPropertyList e1 = new EventPropertyList();
+		e1.setEventProperties(new ArrayList<>());
+		eventProperties.add(e1);
 		
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
@@ -39,9 +44,13 @@ public class TableViewController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("rows", "Maximum number of rows");
-		staticProperties.add(maxNumberOfRows);
-
+		OneOfStaticProperty operation = new OneOfStaticProperty("output", "Output strategy: ");
+		operation.addOption(new Option("Replace rows"));
+		operation.addOption(new Option("Append rows"));
+		
+		staticProperties.add(operation);
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "list", "Select list property"));
+	
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
 		
@@ -50,15 +59,32 @@ public class TableViewController extends ActionController {
 
 	@Override
 	public String invokeRuntime(SECInvocationGraph sec) {
+		
+		String[] propertyNames = new String[0];
 		String newUrl = createWebsocketUri(sec);
 		String inputTopic = extractTopic(sec);
+		boolean replace = false;
 		
-		String rows = ((FreeTextStaticProperty) (SEPAUtils
-				.getStaticPropertyByName(sec, "rows"))).getValue();
+		String outputStrategy = SEPAUtils.getOneOfProperty(sec,
+				"output");
 		
-		TableParameters tableParameters = new TableParameters(inputTopic, newUrl, Integer.parseInt(rows), getColumnNames(sec.getInputStreams().get(0).getEventSchema().getEventProperties()));
+		//if (outputStrategy.equals("replace")) replace = true;
+		//else replace = false;
 		
-		return new TableGenerator(tableParameters).generateHtml();
+		String listProperty = SEPAUtils.getMappingPropertyName(sec,
+				"list");
+		
+		for(EventProperty p : sec.getInputStreams().get(0).getEventSchema().getEventProperties())
+		{
+			if (p.getPropertyName().equals(listProperty))
+			{
+				if (p instanceof EventPropertyList) propertyNames = getColumnNames(((EventPropertyList) p).getEventProperties());
+			}
+		}
+		
+		MultiRowTableParameters tableParameters = new MultiRowTableParameters(inputTopic, newUrl, replace, listProperty, propertyNames);
+		
+		return new MultiRowTableGenerator(tableParameters).generateHtml();
 	}
 
 	@Override

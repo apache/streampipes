@@ -1,11 +1,10 @@
-package de.fzi.cep.sepa.actions.samples.table;
+package de.fzi.cep.sepa.actions.samples.file;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -17,11 +16,12 @@ import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
 
-public class TableViewController extends ActionController {
+public class FileController extends ActionController {
 
 	@Override
 	public SEC declareModel() {
-		SEC sec = new SEC("/table", "Table", "", "");
+		
+		SEC sec = new SEC("/file", "File Output", "", "");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -39,7 +39,7 @@ public class TableViewController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("rows", "Maximum number of rows");
+		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("path", "Path");
 		staticProperties.add(maxNumberOfRows);
 
 		sec.addEventStream(stream1);
@@ -50,15 +50,17 @@ public class TableViewController extends ActionController {
 
 	@Override
 	public String invokeRuntime(SECInvocationGraph sec) {
-		String newUrl = createWebsocketUri(sec);
-		String inputTopic = extractTopic(sec);
+		String brokerUrl = createJmsUri(sec);
+		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTopicName();
 		
-		String rows = ((FreeTextStaticProperty) (SEPAUtils
-				.getStaticPropertyByName(sec, "rows"))).getValue();
+		String path = ((FreeTextStaticProperty) (SEPAUtils
+				.getStaticPropertyByName(sec, "path"))).getValue();
 		
-		TableParameters tableParameters = new TableParameters(inputTopic, newUrl, Integer.parseInt(rows), getColumnNames(sec.getInputStreams().get(0).getEventSchema().getEventProperties()));
+		FileParameters fileParameters = new FileParameters(inputTopic, brokerUrl, path);
 		
-		return new TableGenerator(tableParameters).generateHtml();
+		new Thread(new FileWriter(fileParameters)).start();
+		
+		return "";
 	}
 
 	@Override
