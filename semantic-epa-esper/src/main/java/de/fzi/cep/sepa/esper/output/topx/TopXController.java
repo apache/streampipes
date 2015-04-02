@@ -73,6 +73,10 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 		MappingProperty mp = new MappingPropertyUnary(URI.create(e1.getElementName()), "sortBy", "Sort by: ");
 		staticProperties.add(mp);
 		staticProperties.add(new FreeTextStaticProperty("topx", "Number of events: "));
+		
+		MappingProperty unique = new MappingPropertyNary("unique", "Unique properties: ");
+		staticProperties.add(unique);
+		
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;
@@ -102,6 +106,9 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 		String direction = SEPAUtils.getOneOfProperty(sepa,
 				"direction");
 		
+		List<String> uniqueProperties = SEPAUtils.getMultipleMappingPropertyNames(sepa,
+				"unique", true);
+		
 		OrderDirection orderDirection;
 		
 		if (direction.equals("Ascending")) orderDirection = OrderDirection.ASCENDING;
@@ -114,7 +121,7 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 			selectProperties.add(p.getPropertyName());
 		}
 		
-		TopXParameter staticParam = new TopXParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), orderDirection, sortBy, "list", limit);
+		TopXParameter staticParam = new TopXParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), orderDirection, sortBy, "list", limit, uniqueProperties);
 		
 		try {
 			return runEngine(staticParam, TopX::new, sepa);

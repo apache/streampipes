@@ -49,7 +49,7 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		for(int i = 0; i < groupBy.size(); i++)
 		{
 			result += groupBy.get(i);
-			if (! (i == groupBy.size())) result += ", ";
+			if (! (i == groupBy.size()-1)) result += ", ";
 		}
 		return result;
 	}

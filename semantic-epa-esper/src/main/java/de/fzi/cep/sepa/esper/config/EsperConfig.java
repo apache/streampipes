@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.esper.config;
 
-import de.fzi.cep.sepa.commonss.Configuration;
+import de.fzi.cep.sepa.commons.Configuration;
 
 public class EsperConfig {
 

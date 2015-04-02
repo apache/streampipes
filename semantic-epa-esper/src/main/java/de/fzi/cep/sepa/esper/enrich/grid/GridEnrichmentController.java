@@ -147,6 +147,7 @@ public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParame
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
 		String cellOptionsPropertyName = SEPAUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
+		String cellOptionsAppendix;
 
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())

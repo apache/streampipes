@@ -1,5 +1,17 @@
 package de.fzi.cep.sepa.esper.output.topx;
 
 public enum OrderDirection {
-ASCENDING, DESCENDING;
+ASCENDING(" asc"), DESCENDING(" desc");
+	
+	String epl;
+
+	OrderDirection(String epl)
+	{
+		this.epl = epl;
+	}
+	
+	public String toEpl()
+	{
+		return epl;
+	}
 }

@@ -10,15 +10,15 @@ public class TopXParameter extends BindingParameters{
 	String orderByPropertyName;
 	String outputPropertyName;
 	int limit;
-	
-	
+	List<String> uniqueProperties;	
 	
 	public TopXParameter(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit) {
+			List<String> allProperties, List<String> partitionProperties, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit, List<String> uniqueProperties) {
 		super(inName, outName, allProperties, partitionProperties);
 		this.orderDirection = orderDirection;
 		this.orderByPropertyName = orderByPropertyName;
 		this.outputPropertyName = outputPropertyName;
+		this.uniqueProperties = uniqueProperties;
 		this.limit = limit;
 	}
 
@@ -53,7 +53,13 @@ public class TopXParameter extends BindingParameters{
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-	
-	
+
+	public List<String> getUniqueProperties() {
+		return uniqueProperties;
+	}
+
+	public void setUniqueProperties(List<String> uniqueProperties) {
+		this.uniqueProperties = uniqueProperties;
+	}
 
 }

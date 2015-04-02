@@ -38,8 +38,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 	
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
-		EventPropertyPrimitive e1 = new EventPropertyPrimitive("name", "description", "a", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
-		e1.setPropertyType(XSD._integer.toString());
+		EventPropertyPrimitive e1 = new EventPropertyPrimitive();
 		eventProperties.add(e1);
 		
 		EventSchema schema1 = new EventSchema();
@@ -102,6 +101,8 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		String aggregate = SEPAUtils.getMappingPropertyName(sepa,
 				"aggregate");
 		
+		System.out.println("AGG: " +aggregate);
+		
 		int outputEvery = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
 				.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
 		
@@ -110,6 +111,8 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 	
 		String aggregateOperation = SEPAUtils.getOneOfProperty(sepa,
 				"operation");
+		
+		System.out.println("AGGOP: " +aggregateOperation);
 		
 		AggregationType aggregationType;
 		

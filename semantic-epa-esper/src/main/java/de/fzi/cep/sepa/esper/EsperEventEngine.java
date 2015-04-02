@@ -20,6 +20,7 @@ import com.espertech.esper.client.UpdateListener;
 import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.esper.main.ExternalTimer;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
@@ -40,6 +41,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			throw new IllegalArgumentException("Event Rate only possible on one event type.");
 			
 		epService = EPServiceProviderManager.getDefaultProvider();
+		//epService = ExternalTimer.epService;
 		logger.info("Configuring event types for graph " +graph.getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
@@ -111,7 +113,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		logger.info("New event: {}", event);
+		//logger.info("New event: {}", event);
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
 
@@ -125,9 +127,17 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		return new UpdateListener() {
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-				if (newEvents != null && newEvents.length > 0) {
-					logger.info("Sending event {} ", newEvents[0].getUnderlying());
+				if (newEvents != null && newEvents.length == 1) {
+					//logger.info("SINGLE , Sending event {} ", newEvents[0].getUnderlying());
 					collector.send(newEvents[0].getUnderlying());
+				} else if (newEvents != null && newEvents.length > 1){
+					Object[] events = new Object[newEvents.length];
+					for(int i = 0; i < newEvents.length; i++)
+					{
+						events[i] = newEvents[i].getUnderlying();
+					}
+					//logger.info("ARRAY, Sending event {} ", events);
+					collector.send(events);
 				} else {
 					logger.info("Triggered listener but there is no new event");
 				}

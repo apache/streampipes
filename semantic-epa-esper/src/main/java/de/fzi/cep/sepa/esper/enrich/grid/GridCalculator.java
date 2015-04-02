@@ -6,6 +6,23 @@ import com.javadocmd.simplelatlng.util.LengthUnit;
 
 public class GridCalculator {
 
+	 private static final double LAT = 41.474937;
+	 private static final double LON = -74.913585;
+	 private static final double SOUTHDIFF = 0.004491556;
+	 private static final double EASTDIFF = 0.005986;
+	
+	public CellOption computeCellsNaive(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
+	{
+		LatLng startLocation = new LatLng(latitudeStart, longitudeStart);
+		
+		int cellX = calculateXCoordinate(longitude);
+	    int cellY = calculateYCoordinate(latitude);
+         
+        LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
+ 		LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
+ 		
+ 		return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 500);
+	}
 	
 	public CellOption computeCells(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart) {
 		LatLng currentLocation = new LatLng(latitude, longitude);
@@ -24,6 +41,24 @@ public class GridCalculator {
 		*/
 		return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 500);
 	}
+	
+	private static int calculateXCoordinate(double longitude) {
+	        Double ret = (Math.abs(LON - longitude)/ EASTDIFF);
+	        return ret.intValue();
+	}
+	 
+    private static int calculateYCoordinate(double latitude) {
+        Double ret = (Math.abs(LAT - latitude)/ SOUTHDIFF);
+        return ret.intValue();
+    }
+    
+    private boolean isValidLatitude(double lat) {
+        return (lat <= LAT && lat > LAT - SOUTHDIFF*600);
+    }
+
+    private boolean isValidLongitude(double lon) {
+        return (lon > LON && lon < LON + EASTDIFF*600);
+    }
 	
 	private int findMinimal(LatLng start, LatLng current, int xValue, double currentDistance, int metersToWalk, double bearing)
 	{

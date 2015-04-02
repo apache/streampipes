@@ -12,12 +12,7 @@ import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
-import com.espertech.esper.epl.generated.EsperEPL2GrammarParser.propertyExpression_return;
-import com.javadocmd.simplelatlng.LatLng;
-import com.javadocmd.simplelatlng.LatLngTool;
-import com.javadocmd.simplelatlng.util.LengthUnit;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
 
@@ -62,7 +57,7 @@ public class GridEnrichment extends EsperEventEngine<GridEnrichmentParameter>{
 	
 	public static synchronized CellOption computeCells(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
 	{
-		return new GridCalculator().computeCells(latitude, longitude, cellSize, latitudeStart, longitudeStart);
+		return new GridCalculator().computeCellsNaive(latitude, longitude, cellSize, latitudeStart, longitudeStart);
 	}
 
 }

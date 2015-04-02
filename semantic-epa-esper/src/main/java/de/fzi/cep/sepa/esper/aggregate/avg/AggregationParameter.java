@@ -19,6 +19,7 @@ public class AggregationParameter extends BindingParameters {
 		this.outputEvery = outputEvery;
 		this.groupBy = groupBy;
 		this.timeWindowSize = timeWindowSize;
+		this.aggregate = aggregate;
 	}
 
 	public AggregationType getAggregationType() {

@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
+import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
@@ -19,9 +20,14 @@ import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 
-public class Init {
+public class Init implements Runnable {
 
 	public static void main(String[] args)
+	{
+		new Init().declare();
+	}
+	
+	public void declare()
 	{
 		List<SemanticEventProcessingAgentDeclarer> declarers = new ArrayList<SemanticEventProcessingAgentDeclarer>();
 		
@@ -37,7 +43,10 @@ public class Init {
 		declarers.add(new CountController());
 		declarers.add(new TopXController());
 		declarers.add(new TimestampController());
+		declarers.add(new MathController());
 		
+		// Configure external timing for DEBS Challenge
+		//new Thread(new ExternalTimer()).start();
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);
@@ -45,5 +54,10 @@ public class Init {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void run() {
+		declare();
 	}
 }

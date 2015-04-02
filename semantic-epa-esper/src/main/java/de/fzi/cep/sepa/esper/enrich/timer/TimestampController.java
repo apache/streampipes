@@ -57,7 +57,7 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 
 		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
 		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(),
-				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/DateTime")));
+				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
