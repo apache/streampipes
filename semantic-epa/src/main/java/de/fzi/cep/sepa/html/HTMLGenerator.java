@@ -5,7 +5,6 @@ import static org.rendersnake.HtmlAttributesFactory.href;
 import static org.rendersnake.HtmlAttributesFactory.name;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 
 import org.rendersnake.HtmlCanvas;
