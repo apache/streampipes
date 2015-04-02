@@ -100,4 +100,16 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 	}
+	
+	@Path("{actionId}/jsonld")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getActionAsJsonLd(@PathParam("actionId") String actionId)
+	{
+		try {
+			return toJsonLd(requestor.getSECById(actionId));
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		}
+	}
 }

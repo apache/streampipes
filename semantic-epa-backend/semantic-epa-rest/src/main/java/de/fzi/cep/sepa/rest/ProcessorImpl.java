@@ -16,6 +16,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
+import org.openrdf.model.impl.GraphImpl;
+import org.openrdf.rio.RDFHandlerException;
 
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
@@ -23,6 +25,7 @@ import de.fzi.cep.sepa.rest.api.Processor;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
+import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.manager.SEPAManager;
 import de.fzi.sepa.model.client.util.Utils;
 
@@ -49,6 +52,18 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	public String getProcessor(@PathParam("sepaId") String sepaId)
 	{
 		return toJson(SEPAManager.INSTANCE.getSEPAById(sepaId));
+	}
+	
+	@Path("{sepaId}/jsonld")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getProcessorAsJsonLd(@PathParam("sepaId") String sepaId)
+	{
+		try {
+			return toJsonLd(requestor.getSEPAById(sepaId));
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		}
 	}
 	
 	@POST

@@ -11,6 +11,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.fzi.cep.sepa.messages.Notification;
+import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Stream;
@@ -66,6 +68,18 @@ public class StreamImpl extends AbstractRestInterface implements Stream {
 			return "";
 		}
 		
+	}
+	
+	@Path("{sourceId}/jsonld")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getProcessorAsJsonLd(@PathParam("sourceId") String sourceId)
+	{
+		try {
+			return toJsonLd(requestor.getSEPById(sourceId));
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		}
 	}
 		
 }
