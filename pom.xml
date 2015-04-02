@@ -36,7 +36,7 @@
 		<module>semantic-epa-esper</module>
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
-		<module>semantic-epa-storm</module>
+		<!-- <module>semantic-epa-storm</module> -->
 	</modules>
 
 	<!-- Build Settings -->
@@ -55,6 +55,14 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+			</plugin>
+		</plugins>
+
 
 	</build>
 
@@ -67,11 +75,10 @@
 		<developerConnection>scm:svn:https://ipesvn.fzi.de/svn/icep/semantic-epa-parent</developerConnection>
 	</scm>
 	<repositories>
-		<!-- work only in fzi network -->
 		<repository>
 			<id>laus</id>
 			<name>nexus repository</name>
-			<url>http://laus.fzi.de:8081/nexus/content/repositories/public/</url>
+			<url>http://laus.fzi.de/nexus/content/repositories/public/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
@@ -108,14 +115,12 @@
 		<repository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://laus.fzi.de:8081/nexus/content/repositories/releases/</url>
+			<url>http://laus.fzi.de/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>deployment</id>
 			<name>Internal Releases</name>
-			<url>http://laus.fzi.de:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://laus.fzi.de/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-
 </project>
