@@ -33,6 +33,7 @@ public class EventPropertyList extends EventProperty {
 	public EventPropertyList()
 	{
 		super();
+		eventProperties = new ArrayList<>();
 	}
 	
 	public EventPropertyList(String propertyName, EventProperty eventProperty) {
