@@ -1,5 +1,15 @@
 package de.fzi.cep.sepa.commons;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.JSONLDMode;
+import org.openrdf.rio.helpers.JSONLDSettings;
+
 public class Configuration {
 
 	public static final String SERVER_URL = "http://localhost";
@@ -28,4 +38,19 @@ public class Configuration {
 
 	//public static final String EMPIRE_CONFIG_LOCATION = "e:\\Workspace Eclipse Luna\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties";
 
+	public static final RDFFormat RDF_FORMAT = RDFFormat.JSONLD;
+	
+	public static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
+	{
+		RDFWriter writer = Rio.createWriter(RDF_FORMAT, stream);
+		
+		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
+		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+		
+		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		
+		return writer;
+	}
 }

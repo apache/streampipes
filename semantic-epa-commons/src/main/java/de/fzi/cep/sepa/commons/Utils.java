@@ -14,7 +14,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
-import org.openrdf.sail.rdbms.managers.NamespaceManager;
 
 public class Utils {
 
@@ -63,14 +62,19 @@ public class Utils {
 	public static String asString(Graph graph) throws RDFHandlerException
 	{
 		OutputStream stream = new ByteArrayOutputStream();
-		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
-	
-		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
-		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
 		
-		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		RDFWriter writer = Configuration.getRioWriter(stream);
+		
+		//RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+//		RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, stream);
+//	
+//		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+//		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
+//		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+		
+		//writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+		//writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		
 		//Rio.write(graph, stream, RDFFormat.JSONLD);
 		Rio.write(graph, writer);
 		return stream.toString();
