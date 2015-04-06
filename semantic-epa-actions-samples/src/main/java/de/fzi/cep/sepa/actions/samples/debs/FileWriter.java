@@ -24,11 +24,12 @@ public class FileWriter implements Runnable, IMessageListener {
 	DebsParameters params;
 	FileOutputStream stream;
 	BufferedWriter writer;
+	StringBuilder builder;
 	JsonParser parser;
 	File file;
 	long previousDateTimeSum = 0;
 	static int c = 1;
-	static int counter = 0;
+	static int counter = 1;
 	
 	public FileWriter(DebsParameters params)
 	{
@@ -40,6 +41,7 @@ public class FileWriter implements Runnable, IMessageListener {
 	{
 		file = new File(params.getPath());
 		parser = new JsonParser();
+		builder = new StringBuilder();
 		
 	}
 	
@@ -52,19 +54,26 @@ public class FileWriter implements Runnable, IMessageListener {
 	@Override
 	public void onEvent(String json) {
 		counter ++;
-		if (counter % 50000 == 0) System.out.println(counter +" Events processed.");
+		
 		try {
-			JsonElement jsonElement = parser.parse(json);
-			JsonElement list = jsonElement.getAsJsonObject().get("list");
-			if (list.isJsonArray())
-				FileUtils.writeStringToFile(file, makeDebsOutput(list), true);
+		if (counter % 100 == 0) 
+			{
+				FileUtils.writeStringToFile(file, builder.toString(), true);
+				builder = new StringBuilder();
+			}
+		
+		JsonElement jsonElement = parser.parse(json);
+		JsonElement list = jsonElement.getAsJsonObject().get("list");
+		long counter = jsonElement.getAsJsonObject().get("generalCounter").getAsLong();
+		if (list.isJsonArray())
+			builder.append(makeDebsOutput(list, counter));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private String makeDebsOutput(JsonElement jsonElement) throws IOException
+	private String makeDebsOutput(JsonElement jsonElement, long counter) throws IOException
 	{
 		JsonArray arr = jsonElement.getAsJsonArray();
 		
@@ -86,6 +95,7 @@ public class FileWriter implements Runnable, IMessageListener {
 			}
 			sb.append("delay=" +output.getDelay() +", ");
 			sb.append("order=" +c);
+			sb.append(", generalCounter=" +counter);
 			c++;
 			sb.append(System.lineSeparator() +System.lineSeparator());
 		
@@ -114,7 +124,6 @@ public class FileWriter implements Runnable, IMessageListener {
 		DebsOutput debsOutput = new DebsOutput();
 		long currentTime = System.currentTimeMillis();
 		
-		
 		for(int i = 0; i < jsonArr.size(); i++)
 		{
 			JsonElement obj = jsonArr.get(i);
@@ -131,6 +140,7 @@ public class FileWriter implements Runnable, IMessageListener {
 		}
 		
 		CellData recentData = findMax(cellDataset);
+		
 		debsOutput.setDelay(currentTime - recentData.getReadDatetime());
 		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
 		debsOutput.setPickup_time(recentData.getPickup_datetime());

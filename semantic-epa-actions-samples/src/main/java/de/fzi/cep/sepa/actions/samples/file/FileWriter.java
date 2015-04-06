@@ -13,6 +13,7 @@ public class FileWriter implements Runnable, IMessageListener {
 
 	FileParameters params;
 	FileOutputStream stream;
+	static long counter = 0;
 	
 	public FileWriter(FileParameters params)
 	{
@@ -41,9 +42,11 @@ public class FileWriter implements Runnable, IMessageListener {
 
 	@Override
 	public void onEvent(String json) {
+		counter++;
 		try {
-			stream.write(json.getBytes());
-		} catch (IOException e) {
+			//stream.write(json.getBytes());
+			if (counter % 10000 == 0) System.out.println(counter + " Event processed."); 
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
