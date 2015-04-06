@@ -65,7 +65,7 @@ public class Operations {
 			StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 		} catch (DocumentConflictException dce)
 		{
-			dce.printStackTrace();
+			//dce.printStackTrace();
 		}
 	}
 	
