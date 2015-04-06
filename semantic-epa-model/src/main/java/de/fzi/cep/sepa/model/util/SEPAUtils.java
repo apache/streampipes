@@ -78,13 +78,11 @@ public class SEPAUtils {
 	//TODO fix return null
 	private static List<String> getMappingPropertyName(List<EventProperty> eventProperties, URI propertyURI, boolean completeNames, String prefix)
 	{
-		System.out.println("PROP URI " + propertyURI.toString());
 		List<String> result = new ArrayList<String>();
 		for(EventProperty p : eventProperties)
 		{
 			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
 			{	
-				System.out.println(p.getPropertyName() +", " +p.getRdfId().toString());
 				if (p.getRdfId().toString().equals(propertyURI.toString())) 
 					{
 						if (!completeNames) result.add(p.getPropertyName());
