@@ -9,6 +9,8 @@ import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
+import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
 import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
@@ -44,9 +46,11 @@ public class Init implements Runnable {
 		declarers.add(new TopXController());
 		declarers.add(new TimestampController());
 		declarers.add(new MathController());
+		declarers.add(new DebsChallenge1Controller());
+		declarers.add(new DebsChallenge2Controller());
 		
 		// Configure external timing for DEBS Challenge
-		//new Thread(new ExternalTimer()).start();
+		new Thread(new ExternalTimer()).start();
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);

@@ -36,9 +36,7 @@ public class Project extends EsperEventEngine<ProjectParameter>{
 		SelectClause clause = SelectClause.create();
 		for(NestedPropertyMapping property : params.getProjectProperties())
 		{
-			System.out.println(property.getFullPropertyName());
-			System.out.println(property.getPropertyName());
-			//clause.addWithAsProvidedName(property.getFullPropertyName(), property.getPropertyName());
+			clause.addWithAsProvidedName(property.getFullPropertyName(), property.getPropertyName());
 		}
 		return clause;
 	}

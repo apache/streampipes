@@ -1,0 +1,394 @@
+package de.fzi.cep.sepa.esper.debs.c1;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+
+import com.espertech.esper.client.EventBean;
+import com.google.gson.Gson;
+
+import de.fzi.cep.sepa.esper.Writer;
+import de.fzi.cep.sepa.esper.debs.c2.CellDataBest;
+import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2;
+import de.fzi.cep.sepa.esper.debs.c2.DebsOutputC2;
+import de.fzi.cep.sepa.esper.enrich.grid.CellOption;
+
+public class Challenge1FileWriter implements Writer {
+	
+	DebsOutputParameters params;
+	FileOutputStream stream;
+	BufferedWriter writer;
+	
+	//StringBuilder builderC1;
+	//StringBuilder builderC2;
+	PrintWriter writerc1;
+	PrintWriter writerc2;
+	PrintWriter statisticsWriter;
+	
+	
+	File file;
+	File file2;
+	
+	int counterC1 = 1;
+	int counterC2 = 1;
+	long c = 0;
+	long unique = 0;
+	long startTime;
+	
+	long delayC1 = 0;
+	long delayC2 = 0;
+	long overallDelay = 0;
+	
+	long previousDateTimeSumC1 = 0;
+	long previousDateTimeSumC2 = 0;
+
+	final OutputType outputType;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	BufferedWriter out;
+	Gson gson = new Gson();
+	
+	static final double NANO_TO_MILLISECONDS = 1.0 / 1000000;
+	
+	public Challenge1FileWriter(DebsOutputParameters params, OutputType outputType)
+	{
+		this.params = params;
+		this.outputType = outputType;
+		prepare();
+	}
+	
+	private void prepare()
+	{
+		file = new File("query1-" +System.currentTimeMillis() +".csv");
+		file2 = new File("query2-" +System.currentTimeMillis() +".csv");
+		File statistics = new File("statistics-" +System.currentTimeMillis() +".csv");
+		//builderC1 = new StringBuilder();
+		//builderC2 = new StringBuilder();
+		
+		
+		try {
+			writerc1 = new PrintWriter(new FileOutputStream(file), true);
+			writerc2 = new PrintWriter(new FileOutputStream(file2), true);
+			statisticsWriter = new PrintWriter(new FileOutputStream(statistics), true);
+			out = new BufferedWriter(new OutputStreamWriter(System.out, "ASCII"), 512);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		startTime = 0;
+	}
+
+	@Override
+	public void onEvent(EventBean bean) {	
+	
+	
+		Object object = bean.getUnderlying();
+		if (object instanceof java.util.HashMap)
+		{
+			c++;
+			Map<String, Object> map = (Map<String, Object>) object;
+			
+			if (map.containsKey(TaxiDataInputProvider.LIST))
+			{
+				Map<String, Object>[] list = (Map<String, Object>[]) map.get(TaxiDataInputProvider.LIST);
+				//int generalCounter = (int) map.get("generalCounter");
+				int generalCounter = 0;
+				if (list != null && list.length > 0)
+				{
+					try {
+						String output = makeDebsOutput(list, generalCounter);
+						if (outputType == OutputType.PERSIST) writerc1.write(output);
+						else if (outputType == OutputType.PRINT)
+							{
+								out.write(output);
+							}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else 
+				{
+					// TODO: write null values
+				}		
+			}
+			else if (map.containsKey(TaxiDataInputProvider.BEST_CELLS))
+			{
+				Map<String, Object>[] bestCells = (Map<String, Object>[]) map.get(TaxiDataInputProvider.BEST_CELLS);
+				if (bestCells.length > 0)
+				{
+					try {
+						String output = makeDebsOutputC2(bestCells);
+						if (outputType == OutputType.PERSIST) writerc2.write(output);//builderC2.append(output);
+						else if (outputType == OutputType.PRINT)
+						{
+							out.write(output);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			writeStatistics();
+		}
+		else if (object instanceof StatusEvent)
+		{
+			StatusEvent statusEvent = (StatusEvent) object;
+			if (!statusEvent.isStart())
+			{
+				System.out.println("Status Event received - Finished Processing");
+				System.out.println("Performance Metrics: Query 1 + Query 2\n");
+				System.out.println("StartTime: " +startTime);
+				long endTime = statusEvent.getTimestamp();
+				System.out.println("EndTime: " +endTime);
+				
+				long duration = endTime-startTime;
+				String formattedDuration = String.format("%d min, %d sec", 
+					    TimeUnit.NANOSECONDS.toMinutes(duration),
+					    TimeUnit.NANOSECONDS.toSeconds(duration) - 
+					    TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))
+					);
+				
+				double avgDelay = overallDelay / (double) c;
+			
+				System.out.println("Total execution time (ns): " +duration);
+				System.out.println("Total execution time (ms): " +TimeUnit.NANOSECONDS.toMillis(duration));
+				System.out.println("Total execution time: " +formattedDuration);
+				System.out.println("Total events produced: " +statusEvent.getEventCount());
+				System.out.println("Total events received: " +c);
+				System.out.println("Query 1 total results (written to file): " +counterC1);
+				System.out.println("Query 2 total results (written to file): " +counterC2);
+				System.out.println("Total unique events received: " +unique);
+				System.out.println("Delay (sum ms): " +TimeUnit.NANOSECONDS.toMillis(overallDelay));
+				System.out.println("Delay (avg ms): " +(avgDelay / 1000000));
+				
+			}
+			else
+			{
+				System.out.println("Status Event received - Processing has started at time " +statusEvent.getTimestamp());
+				startTime = statusEvent.getTimestamp();
+			}
+		}
+	}
+	
+	private void writeStatistics() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(System.nanoTime());
+		builder.append(c +", ");
+		builder.append(unique +", ");
+		builder.append(counterC1 +", ");
+		builder.append(counterC2 +", ");
+		builder.append(overallDelay +", ");
+		builder.append(System.lineSeparator());
+		statisticsWriter.write(builder.toString());
+	}
+
+	private String makeDebsOutputC2(Map<String, Object>[] bestCells) {
+		DebsOutputC2 output = prepareListDebsOutputC2(bestCells);
+		StringBuilder sb = new StringBuilder();
+		boolean newValue = isNew(output);
+		if (newValue)
+		{	
+			counterC2++;
+			sb.append(output.getPickup_time() +", ");
+			sb.append(output.getDropoff_time() +", ");
+			
+			for(int i = 0; i < output.getCellData().size(); i++)
+			{
+				CellDataBest thisCell = output.getCellData().get(i);
+				sb.append(thisCell.getCellId() +", ");
+				sb.append(thisCell.getEmptyTaxis() +", ");
+				sb.append(thisCell.getMedianProfit() +", ");
+				sb.append(thisCell.getProfitability() +", ");
+			}
+			long thisDelay = output.getDelay();
+			sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +", ");
+			//sb.append(c +", ");
+			//sb.append(counterC2);
+			sb.append(System.lineSeparator());
+			unique++;
+			overallDelay = overallDelay + thisDelay;
+		}
+		return sb.toString();
+	}
+
+	private DebsOutputC2 prepareListDebsOutputC2(Map<String, Object>[] item) {
+		List<CellDataBest> cellDataset = new ArrayList<>();
+		DebsOutputC2 debsOutput = new DebsOutputC2();
+		
+		for(int i = 0; i < item.length; i++)
+		{
+			
+			Map<String, Object> obj = item[i];
+			String cellId = obj.get(TaxiDataInputProvider.CELLX) +TaxiDataInputProvider.DOT +obj.get(TaxiDataInputProvider.CELLY);
+			final long emptyTaxis = (long) obj.get(TaxiDataInputProvider.EMPTY_TAXIS); 
+			final double profitability = (double) obj.get(TaxiDataInputProvider.PROFITABILITY); 
+			final double medianProfit = (double) obj.get(TaxiDataInputProvider.MEDIAN_PROFIT); 
+			final long readTime = (long) obj.get(TaxiDataInputProvider.READ_DATETIME);
+			final long pickupTime = (long) obj.get(TaxiDataInputProvider.PICKUP_DATETIME);
+			final long dropoffTime = (long) obj.get(TaxiDataInputProvider.DROPOFF_DATETIME);
+			
+			cellDataset.add(new CellDataBest(cellId, emptyTaxis, medianProfit, profitability, readTime, pickupTime, dropoffTime));
+		}
+		
+		CellDataBest recentData = findMaxBest(cellDataset);
+		long currentTime = System.nanoTime();
+		debsOutput.setDelay((currentTime - recentData.getReadDatetime()));
+		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
+		debsOutput.setPickup_time(recentData.getPickup_datetime());
+	
+		Collections.sort(cellDataset, Collections.reverseOrder());
+		debsOutput.setCellData(cellDataset);
+	
+		return debsOutput;
+	}
+
+	private String makeDebsOutput(Map<String, Object>[] list, long counter) throws IOException
+	{
+		
+		DebsOutput output = prepareListDebsOutput(list);
+		StringBuilder sb = new StringBuilder();
+		boolean newValue = isNew(output);
+		if (newValue)
+		{	
+			counterC1 ++;
+			sb.append(sdf.format(new Date(output.getPickup_time())) +", ");
+			sb.append(sdf.format(new Date(output.getDropoff_time())) +", ");
+			
+			for(int i = 0; i < output.getCellData().size(); i++)
+			{
+				CellData thisCell = output.getCellData().get(i);
+				sb.append(thisCell.getStartCellId() +", ");
+				sb.append(thisCell.getEndCellId() +", ");
+				//sb.append(thisCell.getCount() +", ");
+			}
+			long thisDelay = output.getDelay();
+			sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +", ");
+			//sb.append(c +", ");
+			//sb.append(counter);
+			sb.append(System.lineSeparator());
+			unique++;
+			overallDelay = overallDelay + thisDelay;
+		}
+		
+		return sb.toString();
+	}
+	
+	private boolean isNew(DebsOutput output) {
+		long dateTimeSum = 0;
+		for(CellData cd : output.getCellData())
+			{
+				dateTimeSum += cd.getReadDatetime();
+			}
+		if (dateTimeSum == previousDateTimeSumC1)
+			return false;
+		else 
+			{
+				previousDateTimeSumC1 = dateTimeSum;
+				return true;
+			}
+	}
+	
+	private boolean isNew(DebsOutputC2 output) {
+		long dateTimeSum = 0;
+		for(CellDataBest cd : output.getCellData())
+			{
+				dateTimeSum += cd.getReadDatetime();
+			}
+		if (dateTimeSum == previousDateTimeSumC2)
+			return false;
+		else 
+			{
+				previousDateTimeSumC2 = dateTimeSum;
+				return true;
+			}
+	}
+
+	private DebsOutput prepareListDebsOutput(Map<String, Object>[] item)
+	{
+		List<CellData> cellDataset = new ArrayList<>();
+		DebsOutput debsOutput = new DebsOutput();
+		
+		
+		for(int i = 0; i < item.length; i++)
+		{
+			Map<String, Object> obj = item[i];
+			
+			String startCellId = obj.get("cellXPickup") +TaxiDataInputProvider.DOT +obj.get("cellYPickup");
+			String endCellId = obj.get("cellXDropoff") +TaxiDataInputProvider.DOT +obj.get("cellYDropoff");
+			
+			//String startCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
+			//String endCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS_1, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
+			long count = (long) obj.get(TaxiDataInputProvider.COUNT_VALUE); 
+			long readTime = (long) obj.get(TaxiDataInputProvider.READ_DATETIME);
+			long pickupTime = (long) obj.get(TaxiDataInputProvider.PICKUP_DATETIME);
+			long dropoffTime = (long) obj.get(TaxiDataInputProvider.DROPOFF_DATETIME);
+			
+			
+			cellDataset.add(new CellData(startCellId, endCellId, count, readTime, pickupTime, dropoffTime));
+		}
+		
+		CellData recentData = findMax(cellDataset);
+		long currentTime = System.nanoTime();
+		debsOutput.setDelay(currentTime - recentData.getReadDatetime());
+		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
+		debsOutput.setPickup_time(recentData.getPickup_datetime());
+	
+		Collections.sort(cellDataset, Collections.reverseOrder());
+		debsOutput.setCellData(cellDataset);
+	
+		return debsOutput;
+	}
+	
+	private CellData findMax(List<CellData> cellDataset) {
+		long max = 0;
+		CellData result = null;
+		for(CellData cellData : cellDataset)
+		{
+			if (cellData.getReadDatetime() > max) 
+				{
+					result = cellData;
+					max = cellData.getReadDatetime();
+				}
+		}
+		return result;
+	}
+
+	private CellDataBest findMaxBest(List<CellDataBest> cellDataset) {
+		long max = 0;
+		CellDataBest result = null;
+		for(CellDataBest cellData : cellDataset)
+		{
+			if (cellData.getReadDatetime() > max) 
+				{
+					result = cellData;
+					max = cellData.getReadDatetime();
+				}
+		}
+		return result;
+	}
+	
+	private String extractCellId(String objectName, String fieldXName, String fieldYName, Map<String, Object> obj)
+	{
+		return ((CellOption) obj.get(objectName)).getCellX()
+		+ TaxiDataInputProvider.DOT
+		+ ((CellOption) obj.get(objectName)).getCellY();
+	}
+}
+

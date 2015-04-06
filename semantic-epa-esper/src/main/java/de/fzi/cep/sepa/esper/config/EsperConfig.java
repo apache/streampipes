@@ -1,6 +1,9 @@
 package de.fzi.cep.sepa.esper.config;
 
 import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.esper.SEPAWriter;
+import de.fzi.cep.sepa.esper.Writer;
+import de.fzi.cep.sepa.runtime.OutputCollector;
 
 public class EsperConfig {
 
@@ -10,5 +13,10 @@ public class EsperConfig {
 	static {
 		serverUrl = Configuration.ESPER_BASE_URL;
 		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+	}
+	
+	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)
+	{
+		return new SEPAWriter(collector);
 	}
 }

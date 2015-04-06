@@ -4,12 +4,16 @@ import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
 
-public class GridCalculator {
+public class GridCalculator2 {
 
-	 private static final double LAT = 41.474937;
-	 private static final double LON = -74.913585;
-	 private static final double SOUTHDIFF = 0.004491556;
-	 private static final double EASTDIFF = 0.005986;
+	private static double LAT = 41.474937;
+    private static double LON = -74.913585;
+
+    // 250 meter south corresponds to a change of 0.002245778
+    private static double SOUTHDIFF = 0.002245778;
+
+    // 500 meter east corresponds to a change of 0.002993 degrees
+    private static double EASTDIFF = 0.002993;
 	
 	public CellOption computeCellsNaive(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
 	{
@@ -21,8 +25,8 @@ public class GridCalculator {
         //LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
  		//LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
  		
- 		return new CellOption(cellX, cellY, 0, 0, 0, 0, 500);
- 		//return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 500);
+		return new CellOption(cellX, cellY, 0, 0, 0, 0, 250);
+ 		//return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 250);
 	}
 	
 	public CellOption computeCells(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart) {
@@ -97,24 +101,4 @@ public class GridCalculator {
 	{
 		return LatLngTool.travel(start, bearing, distance, LengthUnit.METER);
 	}
-	
-	public static void main(String[] args)
-	{
-		double startLatitude = 41.474937;
-		double startLongitude = -74.913585;
-		LatLng start = new LatLng(startLatitude, startLongitude);
-		
-		double currentLatitude = 41.474937;
-		double currentLongitude = -74.913585;
-		
-		GridCalculator calc = new GridCalculator();
-		
-		LatLng eastCoordinate = calc.moveEast(new LatLng(startLatitude, startLongitude), 2500);
-		LatLng southCoordinate = calc.move(eastCoordinate, 180, 1000);
-		System.out.println("lat: " +southCoordinate.getLatitude());
-		System.out.println("lng: " +southCoordinate.getLongitude());
-		
-		calc.computeCells(currentLatitude, currentLongitude, 500, startLatitude, startLongitude);
-	}
-
 }

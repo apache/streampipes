@@ -91,8 +91,9 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 	
 			RuntimeParameters<B> runtimeParameters = new RuntimeParameters<>(sepa.getUri(),
 					supplier, engineParams, config, destination, source);
-			
+			//context.getManagementStrategy().addEventNotifier(new LoggingEventNotifer());
 			runtime = new EPRuntime(context, runtimeParameters);
+			
 			context.start();
 			
 		} catch(Exception e)

@@ -34,7 +34,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.esper.movement.Init</mainClass>
+                  <mainClass>de.fzi.cep.sepa.esper.main.Init</mainClass>
                 </transformer>
               </transformers>
             </configuration>

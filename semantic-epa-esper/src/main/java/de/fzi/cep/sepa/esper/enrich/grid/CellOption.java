@@ -84,4 +84,31 @@ public class CellOption {
 	public void setCellSize(int cellSize) {
 		this.cellSize = cellSize;
 	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other == this) return true;
+		if (!(other instanceof CellOption)) return false;
+		else
+		{
+			CellOption c2 = (CellOption) other;
+			return c2.getCellSize() == cellSize
+					&& c2.getCellX() == cellX
+					&& c2.getCellY() == cellY
+					&& c2.getLatitudeNW() == latitudeNW
+					&& c2.getLatitudeSE() == latitudeSE
+					&& c2.getLongitudeNW() == longitudeNW
+					&& c2.getLongitudeSE() == longitudeSE;
+		}
+	}
+	
+	@Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 17 + cellSize;
+        hash = hash * 31 + cellX;
+        hash = hash * 13 + cellY;
+        return hash;
+    }
 }
