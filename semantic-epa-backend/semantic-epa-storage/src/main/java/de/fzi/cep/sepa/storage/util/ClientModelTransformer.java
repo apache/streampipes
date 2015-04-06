@@ -175,7 +175,6 @@ public class ClientModelTransformer {
 							}
 							j++;
 						}
-						System.out.println(option.getHumanDescription() +", " +matchedProperty +", " +option.getElementId());
 						if (!processedProperties.contains(matchedProperty)) 
 							{
 								outputProperties.add(matchedProperty);
@@ -300,7 +299,6 @@ public class ClientModelTransformer {
 		{
 			if (option.isSelected()) 
 				{
-					System.out.println("select mapping property nary");
 					mapsTo.add(URI.create(option.getElementId()));
 				}
 		}

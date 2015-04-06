@@ -8,8 +8,6 @@ import de.fzi.cep.sepa.storage.util.Utils;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 
-import com.complexible.common.net.VisualAuthenticator;
-
 import java.util.ArrayList;
 import java.util.List;
 
