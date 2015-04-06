@@ -1,9 +1,13 @@
 package de.fzi.cep.sepa.runtime.param;
 
+import javax.jms.DeliveryMode;
+import javax.jms.Session;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsConfiguration;
 
 public interface CamelConfig { // every config that cannot be made with the simple endpoint uri string
@@ -27,20 +31,27 @@ public interface CamelConfig { // every config that cannot be made with the simp
 		public void applyTo(CamelContext context) {
 			ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(brokerUrl);
 			//factory.setUseAsyncSend(true);
+			//factory.setDispatchAsync(false);
+			
+			
 			PooledConnectionFactory pooledConnectionFactory = new PooledConnectionFactory(factory);
-
+			pooledConnectionFactory.setMaxConnections(10000);
+			//pooledConnectionFactory.set
 	        JmsConfiguration config = new JmsConfiguration(pooledConnectionFactory);
 	        //config.setConcurrentConsumers(1);
 	        //config.setMaxConcurrentConsumers(1);
-	        //config.setAsyncConsumer(true);
+	        config.setAsyncConsumer(true);
+	        
+	        //config.setAcknowledgementModeName(JmsConfiguration.J);
 	        
 	        ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
 	        activeMQComponent.setConfiguration(config);
-
+	        activeMQComponent.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+	        activeMQComponent.setAcknowledgementMode(Session.AUTO_ACKNOWLEDGE);
 	        
-	        context.addComponent(brokerAlias, activeMQComponent);
+	        //context.addComponent(brokerAlias, activeMQComponent);
 			
-			//context.addComponent(brokerAlias, JmsComponent.jmsComponentAutoAcknowledge(factory));
+			context.addComponent(brokerAlias, JmsComponent.jmsComponentAutoAcknowledge(factory));
 		}
 
 		@Override

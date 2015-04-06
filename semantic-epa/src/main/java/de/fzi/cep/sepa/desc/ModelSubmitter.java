@@ -1,19 +1,12 @@
 package de.fzi.cep.sepa.desc;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 import org.restlet.Component;
 import org.restlet.Message;
 import org.restlet.Request;
@@ -252,7 +245,6 @@ public class ModelSubmitter {
 				try {
 					Graph rdfGraph = Transformer.generateCompleteGraph(
 							new GraphImpl(), sepaElement);
-					Rio.write(rdfGraph, System.out, RDFFormat.JSONLD);
 					response.setEntity(asString(rdfGraph),
 							MediaType.APPLICATION_JSON);
 				} catch (RDFHandlerException e) {
@@ -273,15 +265,6 @@ public class ModelSubmitter {
 	}
 
 	public static String asString(Graph graph) throws RDFHandlerException {
-		/*OutputStream stream = new ByteArrayOutputStream();
-		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
-		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE,
-				JSONLDMode.COMPACT);
-		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-		// Rio.write(graph, stream, RDFFormat.JSONLD);
-		Rio.write(graph, writer);
-		return stream.toString();
-		*/
 		return Utils.asString(graph);
 	}
 
