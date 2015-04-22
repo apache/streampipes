@@ -5,7 +5,6 @@
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>semantic-epa-commons</artifactId>
 	<properties>
