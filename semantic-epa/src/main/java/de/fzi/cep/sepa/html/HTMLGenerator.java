@@ -40,7 +40,15 @@ public class HTMLGenerator {
 						._div()
 					._nav()
 					.div(class_("container"));
-														
+						
+				html.h4().write("Copy and paste the following URIs into the pipeline editor to add all elements of this node.")._h4();
+				html.h5();
+				for(Description description : description)
+				{
+					html.write(description.getUri().toString() +" ");
+				}
+				html._h5();
+				
 				for(Description description : description)
 				{
 					

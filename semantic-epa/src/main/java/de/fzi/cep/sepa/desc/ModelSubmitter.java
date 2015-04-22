@@ -30,6 +30,7 @@ import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.util.GsonSerializer;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 @SuppressWarnings("deprecation")
@@ -202,13 +203,8 @@ public class ModelSubmitter {
 						Restlet restlet = generateConcreteSEPARestlet(graph, 
 								declarer, component);
 	
-						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);
-						
-					} else if (request.getMethod().equals(Method.DELETE)) {
-						declarer.detachRuntime(Transformer.fromJsonLd(
-								SEPAInvocationGraph.class, request.getEntity()
-										.getText()));
-					}
+						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);	
+					} 
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -229,6 +225,7 @@ public class ModelSubmitter {
 			{
 				if (request.getMethod().equals(Method.DELETE))
 				{
+					declarer.detachRuntime();
 					component.getDefaultHost().detach(this);
 				}
 			}
@@ -242,11 +239,14 @@ public class ModelSubmitter {
 
 			@Override
 			public void handle(Request request, Response response) {
-				try {
-					Graph rdfGraph = Transformer.generateCompleteGraph(
-							new GraphImpl(), sepaElement);
-					response.setEntity(asString(rdfGraph),
-							MediaType.APPLICATION_JSON);
+				
+				try {	
+				Graph rdfGraph = Transformer.generateCompleteGraph(
+						new GraphImpl(), sepaElement);
+				
+				response.setEntity(asString(rdfGraph),
+						MediaType.APPLICATION_JSON);
+							
 				} catch (RDFHandlerException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -260,6 +260,9 @@ public class ModelSubmitter {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				//response.setEntity(GsonSerializer.getGson().toJson(sepaElement),
+				//		MediaType.APPLICATION_JSON);
 			}
 		};
 	}

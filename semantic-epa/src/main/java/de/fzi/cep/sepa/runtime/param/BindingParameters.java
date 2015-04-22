@@ -1,38 +1,51 @@
 package de.fzi.cep.sepa.runtime.param;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 
 public abstract class BindingParameters {
 
-	protected String inName;
-	protected String outName;
+	protected SEPAInvocationGraph graph;
 	
-	protected List<String> allProperties;
-	protected List<String> partitionProperties;
+	private List<InputStreamParameters> inputStreamParams = new ArrayList<>();
 	
-	public BindingParameters(String inName, String outName, List<String> allProperties, List<String> partitionProperties)
+	private EventGrounding outputGrounding;
+	private EventStream outputStream;
+	private String outName;
+	
+	private static String topicPrefix = "topic://";
+	
+	public BindingParameters(SEPAInvocationGraph graph)
 	{
-		this.inName = inName;
-		this.outName = outName;
-		this.allProperties = allProperties;
-		this.partitionProperties = partitionProperties;
+		this.graph = graph;
+		
+		graph.getInputStreams().forEach(s -> inputStreamParams.add(new InputStreamParameters(s)));
+
+		outputStream = graph.getOutputStream();
+		outputGrounding = outputStream.getEventGrounding();
+		outName = topicPrefix + outputGrounding.getTopicName();
+		
 	}
 
-	public String getInName() {
-		return inName;
+	public SEPAInvocationGraph getGraph() {
+		return graph;
 	}
 
-	public String getOutName() {
+	public String getOutName()
+	{
 		return outName;
 	}
 
-	public List<String> getAllProperties() {
-		return allProperties;
-	}
-
-	public List<String> getPartitionProperties() {
-		return partitionProperties;
+	public List<InputStreamParameters> getInputStreamParams() {
+		return inputStreamParams;
 	}
 	
-	
+	public List<String> getOutputProperties()
+	{
+		return outputStream.getEventSchema().toPropertyList();
+	}
 }
