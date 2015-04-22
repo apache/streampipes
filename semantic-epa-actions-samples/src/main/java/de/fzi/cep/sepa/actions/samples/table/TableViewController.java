@@ -22,7 +22,7 @@ public class TableViewController extends ActionController {
 	@Override
 	public SEC declareModel() {
 		SEC sec = new SEC("/table", "Table", "", "");
-		
+		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());

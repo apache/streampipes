@@ -37,7 +37,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 		List<String> result = new ArrayList<>();
 		for(EventProperty p : eventProperties)
 		{
-			result.add(p.getPropertyName());
+			result.add(p.getRuntimeName());
 		}
 		return result.toArray(new String[0]);
 	}
