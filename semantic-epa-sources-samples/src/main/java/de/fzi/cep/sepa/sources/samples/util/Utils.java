@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.util;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +10,10 @@ import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
+import org.apache.http.HttpHost;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Content;
+import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.json.JSONArray;
@@ -69,6 +73,18 @@ public class Utils {
         return null;
 
     }
+    
+    public static String fetchJson(String url) throws ClientProtocolException, IOException
+    {
+    	Executor executor = Executor.newInstance()
+    	        .auth(new HttpHost("localhost"), "testManager", "1234");
+
+    	String content = executor.execute(Request.Get(url))
+    	        .returnContent().asString();
+		return content;
+    }
+    
+    
     public static String parseDate(String timestamp)
     {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");

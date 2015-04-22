@@ -51,20 +51,20 @@ public class TestRandomNumberStream {
 		{
 			if (p instanceof EventPropertyPrimitive)
 			{
-				System.out.println("primitive, " +p.getPropertyName());
+				System.out.println("primitive, " +p.getRuntimeName());
 			}
 			else if (p instanceof EventPropertyNested)
 			{
-				System.out.println("nested, " +p.getPropertyName());
+				System.out.println("nested, " +p.getRuntimeName());
 				EventPropertyNested nestedProperty = (EventPropertyNested) p;
 				for(EventProperty np : nestedProperty.getEventProperties())
 				{
-					System.out.println(p.getPropertyName() +", " +np.getPropertyName());
+					System.out.println(p.getRuntimeName() +", " +np.getRuntimeName());
 				}
 			}
 			else if (p instanceof EventPropertyList)
 			{
-				System.out.println("list, " +p.getPropertyName());
+				System.out.println("list, " +p.getRuntimeName());
 				//EventProperty sub = ((EventPropertyList) p).getEventProperty();
 				//System.out.println(sub.getPropertyName());
 			}

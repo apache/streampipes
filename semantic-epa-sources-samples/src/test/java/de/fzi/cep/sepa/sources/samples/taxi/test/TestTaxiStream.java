@@ -46,15 +46,15 @@ public class TestTaxiStream {
 		{
 			if (p instanceof EventPropertyPrimitive)
 			{
-				System.out.println("primitive, " +p.getPropertyName());
+				System.out.println("primitive, " +p.getRuntimeName());
 			}
 			else if (p instanceof EventPropertyNested)
 			{
-				System.out.println("nested, " +p.getPropertyName());
+				System.out.println("nested, " +p.getRuntimeName());
 				EventPropertyNested nestedProperty = (EventPropertyNested) p;
 				for(EventProperty np : nestedProperty.getEventProperties())
 				{
-					System.out.println(p.getPropertyName() +", " +np.getPropertyName());
+					System.out.println(p.getRuntimeName() +", " +np.getRuntimeName());
 				}
 				
 			}

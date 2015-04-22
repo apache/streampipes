@@ -7,7 +7,7 @@ import java.util.Random;
 import javax.jms.JMSException;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Configuration;

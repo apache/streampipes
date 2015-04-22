@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.sources.samples.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -18,7 +18,7 @@ public class MobileLocationStream implements EventStreamDeclarer {
 
 	@Override
 	public EventStream declareModel(SEP sep) {
-EventStream stream = new EventStream();
+		EventStream stream = new EventStream();
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

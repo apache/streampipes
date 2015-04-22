@@ -2,8 +2,7 @@ package de.fzi.cep.sepa.sources.samples.drillbit;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

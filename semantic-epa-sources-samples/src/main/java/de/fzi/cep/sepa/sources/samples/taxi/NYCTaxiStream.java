@@ -17,12 +17,15 @@ import javax.jms.JMSException;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.ontoware.rdf2go.vocabulary.XSD;
 
+import de.fzi.cep.sepa.model.vocabulary.SchemaOrg;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.model.builder.SchemaBuilder;
+import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -40,6 +43,8 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 	public static final Logger logger = Logger.getLogger(NYCTaxiStream.class);
 	
 	public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
+	
+	//public static String FILENAME = "/home/fzi/Downloads/sorted_data.csv";
 	//public static final String FILENAME = "/home/robin/FZI/CEP/sorted_data.csv";
 
 	public NYCTaxiStream() throws JMSException {
@@ -49,9 +54,9 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 	
 	@Override
 	public EventStream declareModel(SEP sep) {
-		
+			
 		EventStream stream = new EventStream();
-		
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Taxi_Icon_2" +"_HQ.png");
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "medallion", "", Utils.createURI("http://test.de/text")));
@@ -120,8 +125,8 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 							if (previousDropoffTime == -1) previousDropoffTime = currentDropOffTime;
 							
 							long diff = currentDropOffTime - previousDropoffTime;
-							//System.out.println("Waiting " +diff/1000 + " seconds");
-							if (diff > 0) Thread.sleep(0); //TODO change back to diff
+							System.out.println("Waiting " +diff/1000 + " seconds");
+							if (diff > 0) Thread.sleep(diff/10); //TODO change back to diff
 							previousDropoffTime = currentDropOffTime;
 							
 							JSONObject obj = buildJson(records);
@@ -139,16 +144,16 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (InterruptedException e) {
+				} catch (JMSException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (JMSException e) {
+				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (JSONException e) {
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 

@@ -6,10 +6,12 @@ import java.util.List;
 import javax.jms.JMSException;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.ontoware.rdf2go.vocabulary.XSD;
 
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyNested;
@@ -42,10 +44,10 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 	public EventStream declareModel(SEP sep) {
 		
 		EventStream stream = new EventStream();
-		
 		EventSchema schema = new EventSchema();
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		
+		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
+		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "text", "http://schema.org/Text").build());
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		
 		EventPropertyPrimitive userName = new EventPropertyPrimitive(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name"));
@@ -67,7 +69,6 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		stream.setName("Twitter Sample Stream");
 		stream.setDescription("Twitter Sample Stream Description");
 		stream.setUri(sep.getUri() + "/sample");
-		System.out.println(stream.getUri());
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Tweet_Icon" +"_HQ.png");
 		
 		return stream;

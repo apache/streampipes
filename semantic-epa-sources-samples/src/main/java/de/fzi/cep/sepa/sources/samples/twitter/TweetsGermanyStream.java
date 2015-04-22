@@ -6,7 +6,7 @@ import java.util.List;
 import javax.jms.JMSException;
 
 import org.codehaus.jettison.json.JSONObject;
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;

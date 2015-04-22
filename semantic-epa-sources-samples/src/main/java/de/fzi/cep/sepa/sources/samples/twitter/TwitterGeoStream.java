@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.sources.samples.twitter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;

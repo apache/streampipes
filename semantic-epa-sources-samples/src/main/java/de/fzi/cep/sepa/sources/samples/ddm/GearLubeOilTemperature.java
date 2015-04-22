@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +16,7 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 

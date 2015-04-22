@@ -9,7 +9,7 @@ import javax.jms.JMSException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.ontoware.rdf2go.vocabulary.XSD;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;

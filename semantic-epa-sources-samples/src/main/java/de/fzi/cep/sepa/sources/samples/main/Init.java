@@ -10,10 +10,12 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
+import de.fzi.cep.sepa.sources.samples.proveit.ProveITEventProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class Init implements Runnable {
 
@@ -23,16 +25,15 @@ public class Init implements Runnable {
 	}
 	
 	public void declare() {
-		
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-		/*declarers.add(new TwitterStreamProducer());
+		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new MobileStreamProducer());
-		declarers.add(new RandomDataProducer());*/
+		declarers.add(new RandomDataProducer());
 		declarers.add(new NYCTaxiProducer());
-		
+		declarers.add(new ProveITEventProducer());
 		
 		String zooKeeper = "89.216.116.44:2181";
 		String groupId = "groupId";
