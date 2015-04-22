@@ -29,6 +29,7 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.clarkparsia.empire.annotation.RdfGenerator;
+import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
@@ -211,6 +212,7 @@ public class Transformer {
 	}
 
 	public static <T> T fromJsonLd(Class<T> destination, String jsonld) {
+		
 		EntityManager manager = StorageManager.INSTANCE.getTempEntityManager();
 		String uri = null;
 		InputStream stream = new ByteArrayInputStream(
@@ -274,8 +276,6 @@ public class Transformer {
 		}
 		T result = manager.find(destination, java.net.URI.create(uri));
 		StorageUtils.emptyRepository(StorageManager.INSTANCE.getTempConnection());
-	
-		
 		return result;
 	}
 

@@ -126,7 +126,7 @@ public class ClientModelTransformer {
 		List<Option> options = new ArrayList<>();
 		
 		for(EventProperty p : strategy.getEventProperties())
-			options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
+			options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
 		checkboxInput.setOptions(options);
 		
 		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.CUSTOM_OUTPUT, "Output properties:", "Output: ", checkboxInput);
@@ -167,7 +167,7 @@ public class ClientModelTransformer {
 								{
 									if (tempProperty instanceof EventPropertyPrimitive)
 									{
-										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getPropertyType(), tempProperty.getPropertyName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getSubClassOf());
+										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getPropertyType(), tempProperty.getRuntimeName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getSubClassOf());
 										newProperty.setRdfId(new URIKey(URI.create(tempProperty.getRdfId().toString() +j)));
 										matchedProperty = newProperty;
 									}
@@ -318,7 +318,7 @@ public class ClientModelTransformer {
 			FreeTextStaticProperty p) {
 		TextInput input = new TextInput();
 		input.setValue("");
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
@@ -330,7 +330,7 @@ public class ClientModelTransformer {
 			options.add(thisOption);
 		}
 		RadioInput input = new RadioInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
@@ -341,7 +341,7 @@ public class ClientModelTransformer {
 			options.add(new Option(option.getElementId(), option.getName()));
 		}
 		CheckboxInput input = new CheckboxInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
@@ -368,7 +368,7 @@ public class ClientModelTransformer {
 			MatchingStaticProperty p) {
 		RadioGroupInput radioGroupInput = new RadioGroupInput();
 		
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MATCHING_PROPERTY, p.getName(), p.getDescription(), radioGroupInput);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MATCHING_PROPERTY, p.getInternalName(), p.getDescription(), radioGroupInput);
 		return clientProperty;
 	}
 
@@ -382,7 +382,7 @@ public class ClientModelTransformer {
 		//SelectFormInput input = new SelectFormInput(options);
 		
 		
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getName(), p.getDescription(), input);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getInternalName(), p.getDescription(), input);
 		clientProperty.setElementId(p.getRdfId().toString());
 		return clientProperty;
 	}
