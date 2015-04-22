@@ -11,7 +11,6 @@ import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
@@ -29,7 +28,7 @@ public class NumericalFilter extends EsperEventEngine<NumericalFilterParameter>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(SelectClause.createWildcard());
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		Expression numericalFilter = null;
 		if (params.getNumericalOperator() == NumericalOperator.GE)

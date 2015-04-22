@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.esper.enrich.timer;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class TimestampParameter extends BindingParameters {
@@ -9,9 +10,8 @@ public class TimestampParameter extends BindingParameters {
 	private List<String> propertyNames;
 	private String appendTimePropertyName;
 	
-	public TimestampParameter(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, String appendTimePropertyName, List<String> propertyNames) {
-		super(inName, outName, allProperties, partitionProperties);
+	public TimestampParameter(SEPAInvocationGraph graph, String appendTimePropertyName, List<String> propertyNames) {
+		super(graph);
 		this.appendTimePropertyName = appendTimePropertyName;
 		this.propertyNames = propertyNames;
 	}

@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
+
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
@@ -21,6 +21,7 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class TestBinding {

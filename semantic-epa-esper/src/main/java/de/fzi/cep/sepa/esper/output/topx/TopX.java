@@ -28,7 +28,7 @@ public class TopX extends EsperEventEngine<TopXParameter>{
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(makeSelectClause(bindingParameters));
 		
-		FilterStream stream = FilterStream.create(fixEventName(bindingParameters.getInName()));
+		FilterStream stream = FilterStream.create(fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()));
 		
 		List<Expression> uniqueProperties = new ArrayList<>();
 		for(String propertyName : bindingParameters.getUniqueProperties())

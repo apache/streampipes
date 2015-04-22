@@ -23,7 +23,7 @@ public class TimestampEnrichment extends EsperEventEngine<TimestampParameter>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(makeSelectClause(bindingParameters));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(bindingParameters.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(bindingParameters.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		

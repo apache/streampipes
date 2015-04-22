@@ -31,7 +31,7 @@ import de.fzi.cep.sepa.runtime.OutputCollector;
 public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 
 	private static final Logger logger = Logger.getAnonymousLogger();
-	static String C1_FILENAME = "c:\\users\\riemer\\desktop\\debs-output-short-c1.txt";
+	private static String C1_FILENAME = "c:\\users\\riemer\\desktop\\debs-output-short-c1.txt";
 	
 	private static final double LAT = 41.474937;
 	private static final double LON = -74.913585;
@@ -50,7 +50,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		//remove
 		statements.add(generateTopXDistinctStatement(params));
 		
-		statements.add("select * from StatusEvent");
+		//statements.add("select * from StatusEvent");
 
 		statements.addAll(addChallenge2Queries(params));
 		
@@ -64,10 +64,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 
 	private Collection<? extends String> addChallenge2Queries(
 			DebsChallenge1Parameters params) {
-		DebsChallenge2Parameters c2Params = new DebsChallenge2Parameters(params.getInName(), 
-				params.getOutName(), 
-				params.getAllProperties(), 
-				params.getPartitionProperties(), 
+		DebsChallenge2Parameters c2Params = new DebsChallenge2Parameters(params.getGraph(),
 				params.getStartingLatitude(), 
 				params.getStartingLongitude(), 
 				250, params.getLatitudeName(), 
@@ -157,7 +154,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.insertInto(new InsertIntoClause("AppendOne")); // out name
 		model.selectClause(makeSelectClause(params, true));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		
@@ -169,7 +166,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		model.insertInto(new InsertIntoClause("AppendTwo")); // out name
 		model.selectClause(makeSelectClause(params, false));//.add("cellOptions"));
 		
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		//model.fromClause(new FromClause().add(FilterStream.create("AppendOne"))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
@@ -280,6 +277,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		return generalCounter;
 	}
 	
+	/*
 	@Override
 	public Writer getWriter(OutputCollector collector, DebsChallenge1Parameters params)
 	{
@@ -288,7 +286,7 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		
 		return writer;
 	}
-	
+	*/
 	public static boolean isInArray(Map<String, Object> lastEvent, Map<String, Object>[] lastWindow)
 	{
 		for(Map<String, Object> windowItem : lastWindow)

@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
@@ -25,6 +23,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parameters>{
 
@@ -66,7 +65,7 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 			FixedOutputStrategy outputStrategy = new FixedOutputStrategy();
 
 			EventPropertyList list = new EventPropertyList();
-			list.setPropertyName("list");
+			list.setRuntimeName("list");
 			
 			
 			List<EventProperty> appendProperties = new ArrayList<EventProperty>();			
@@ -168,14 +167,11 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
-			selectProperties.add(p.getPropertyName());
+			selectProperties.add(p.getRuntimeName());
 		}
 		
 		DebsChallenge2Parameters staticParam = new DebsChallenge2Parameters(
-				inName, 
-				outName, 
-				inputStream.getEventSchema().toPropertyList(), 
-				sepa.getOutputStream().getEventSchema().toPropertyList(), 
+				sepa, 
 				startingLatitude, startingLongitude, 
 				cellSize, 
 				latPropertyName, 
@@ -185,7 +181,7 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 				selectProperties);
 	
 		try {
-			runEngine(staticParam, DebsChallenge2::new, sepa);
+			invokeEPRuntime(staticParam, DebsChallenge2::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -194,11 +190,4 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 		new Thread(new TaxiDataInputProvider(inName)).start();
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

@@ -16,7 +16,7 @@ import com.espertech.esper.client.EPException;
 import com.espertech.esper.client.EventSender;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.fzi.cep.sepa.esper.main.ExternalTimer;
+import de.fzi.cep.sepa.esper.main.EsperEngineSettings;
 
 public class TaxiDataInputProvider implements Runnable {
 	
@@ -51,7 +51,8 @@ public class TaxiDataInputProvider implements Runnable {
 	public static final String MEDIAN_PROFIT = "medianFare";
 	public static final String PROFITABILITY = "profitability";
 
-	public static String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
+	//public static String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
+	public static String FILENAME = "/home/fzi/Downloads/sorted_data.csv";
 	
 	//Complete dataset
 	//public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data_complete.csv\\sorted_data.csv";
@@ -72,7 +73,7 @@ public class TaxiDataInputProvider implements Runnable {
 			e1.printStackTrace();
 		}
 		System.out.println("Start sending Events");
-		com.espertech.esper.client.EPRuntime runtime = ExternalTimer.epService.getEPRuntime();
+		com.espertech.esper.client.EPRuntime runtime = EsperEngineSettings.epService.getEPRuntime();
 		EventSender sender = runtime.getEventSender(eventName);
 		File file = new File(FILENAME);
 		

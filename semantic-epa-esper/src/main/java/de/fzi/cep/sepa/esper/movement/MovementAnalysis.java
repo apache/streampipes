@@ -53,7 +53,7 @@ public class MovementAnalysis extends EsperEventEngine<MovementParameter> {
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.insertInto(new InsertIntoClause(params.getOutName())); // out name
 		model.selectClause(SelectClause.createWildcard());
-		model.fromClause(new FromClause().add(FilterStream.create(params.getInName()))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(params.getInputStreamParams().get(0).getInName()))); // in name
 
 		MatchRecognizeClause match = new MatchRecognizeClause();
 		if (!params.getPartitionProperties().isEmpty()) { // partition by
@@ -61,7 +61,7 @@ public class MovementAnalysis extends EsperEventEngine<MovementParameter> {
 				.stream().map(propertyName -> property(propertyName)).collect(toList()));
 		}
 
-		List<SelectClauseExpression> measures = params.getAllProperties().stream().map( // all props
+		List<SelectClauseExpression> measures = params.getInputStreamParams().get(0).getAllProperties().stream().map( // all props
 			property -> new SelectClauseExpression(property("B." + property), property)
 			).collect(toList());
 

@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -24,6 +22,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class DebsChallenge1Controller extends EsperDeclarer<DebsChallenge1Parameters>{
 
@@ -64,7 +63,7 @@ public class DebsChallenge1Controller extends EsperDeclarer<DebsChallenge1Parame
 			FixedOutputStrategy outputStrategy = new FixedOutputStrategy();
 
 			EventPropertyList list = new EventPropertyList();
-			list.setPropertyName("list");
+			list.setRuntimeName("list");
 			
 			
 			List<EventProperty> appendProperties = new ArrayList<EventProperty>();			
@@ -134,15 +133,6 @@ public class DebsChallenge1Controller extends EsperDeclarer<DebsChallenge1Parame
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
 		
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
-		
 		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
 				.getStaticPropertyByName(sepa, "cellSize"))).getValue());
 		
@@ -167,14 +157,11 @@ public class DebsChallenge1Controller extends EsperDeclarer<DebsChallenge1Parame
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
-			selectProperties.add(p.getPropertyName());
+			selectProperties.add(p.getRuntimeName());
 		}
 		
 		DebsChallenge1Parameters staticParam = new DebsChallenge1Parameters(
-				inName, 
-				outName, 
-				inputStream.getEventSchema().toPropertyList(), 
-				sepa.getOutputStream().getEventSchema().toPropertyList(), 
+				sepa, 
 				startingLatitude, startingLongitude, 
 				cellSize, 
 				latPropertyName, 
@@ -184,22 +171,13 @@ public class DebsChallenge1Controller extends EsperDeclarer<DebsChallenge1Parame
 				selectProperties);
 	
 		try {
-			runEngine(staticParam, DebsChallenge1::new, sepa);
+			invokeEPRuntime(staticParam, DebsChallenge1::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		new Thread(new TaxiDataInputProvider(inName)).start();
+		//new Thread(new TaxiDataInputProvider(inName)).start();
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	
-
 }

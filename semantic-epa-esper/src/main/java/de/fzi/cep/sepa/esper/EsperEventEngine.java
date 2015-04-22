@@ -5,13 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.jms.JMSException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +14,10 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
-import com.espertech.esper.client.metric.EngineMetric;
-import com.espertech.esper.client.metric.StatementMetric;
-import com.espertech.esper.client.util.JSONEventRenderer;
-import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.jms.ActiveMQPublisher;
-import de.fzi.cep.sepa.esper.main.ExternalTimer;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.esper.main.EsperEngineSettings;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
@@ -40,79 +27,31 @@ import de.fzi.cep.sepa.runtime.param.EngineParameters;
 public abstract class EsperEventEngine<T extends BindingParameters> implements EPEngine<T>{
 
 	protected EPServiceProvider epService;
-	protected List<EPStatement> epStatements;
-	private ActiveMQPublisher publisher;
+	protected List<EPStatement> epStatements;	
+	
+	private AbstractQueueRunnable<EventBean[]> queue;
+	private List<String> eventTypeNames = new ArrayList<>();
 	
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	
 	@Override
 	public void bind(EngineParameters<T> parameters, OutputCollector collector, SEPAInvocationGraph graph) {
-		if (parameters.getInEventTypes().size() != 1)
-			throw new IllegalArgumentException("Event Rate only possible on one event type.");
+		if (parameters.getInEventTypes().size() != graph.getInputStreams().size())
+			throw new IllegalArgumentException("Input parameters do not match!");
 			
-		epService = ExternalTimer.epService;
-		//epService = EPServiceProviderManager.getDefaultProvider(conf);
-		//enableMetrics();
-		EventGrounding grounding = graph.getOutputStream().getEventGrounding();
-		
-		try {
-			publisher = new ActiveMQPublisher(grounding.getUri() +":" +grounding.getPort(), grounding.getTopicName());
-			
-		} catch (JMSException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	
+		epService = EsperEngineSettings.epService;
+
 		logger.info("Configuring event types for graph " +graph.getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
-			//registerEventTypeIfNotExists(e.getKey(), inTypeMap); // indirect cast from Class to Object
 			checkAndRegisterEventType(e.getKey(), inTypeMap);
 		});
+		
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
 		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
 		
 		List<String> statements = statements(parameters.getStaticProperty());
 		registerStatements(statements, collector, parameters.getStaticProperty());
-		
-		
-	}
-	
-	private void enableMetrics() {
-		
-		EPStatement engineMetrics = epService.getEPAdministrator().createEPL("select * from com.espertech.esper.client.metric.EngineMetric");
-		engineMetrics.addListener(new UpdateListener() {
-
-			@Override
-			public void update(EventBean[] arg0, EventBean[] arg1) {
-				// TODO Auto-generated method stub
-				for(EventBean bean : arg0)
-				{
-					System.out.println("***");
-					EngineMetric engineMetric = (EngineMetric) bean.getUnderlying();
-					System.out.println("Input Count: " +engineMetric.getInputCount());
-					System.out.println("Input Count Delta: " +engineMetric.getInputCountDelta());
-				}
-			}
-		});
-		engineMetrics.start();
-		
-		EPStatement statementMetrics = epService.getEPAdministrator().createEPL("select * from com.espertech.esper.client.metric.StatementMetric");
-		statementMetrics.addListener(new UpdateListener() {
-
-			@Override
-			public void update(EventBean[] arg0, EventBean[] arg1) {
-				// TODO Auto-generated method stub
-				for(EventBean bean : arg0)
-				{
-					StatementMetric statementMetric = (StatementMetric) bean.getUnderlying();
-					System.out.println("***");
-					System.out.println(statementMetric.getStatementName());
-					System.out.println("CPU Time: " +statementMetric.getCpuTime());
-				}
-			}
-		});
-		//statementMetrics.start();
 		
 	}
 
@@ -144,6 +83,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		try {
 			logger.info("Registering event type, " +eventTypeName);
 			epService.getEPAdministrator().getConfiguration().addEventType(eventTypeName, typeMap);
+			eventTypeNames.add(eventTypeName);
 		} catch (ConfigurationException e)
 		{
 			e.printStackTrace();
@@ -154,18 +94,15 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private void registerStatements(List<String> statements, OutputCollector collector, T params)
 	{
 		toEpStatement(statements);
-		//OutputThread outputThread = new OutputThread(collector, publisher);
-		//new Thread(outputThread).start();
-		StatementAwareQueue outputThread = new StatementAwareQueue(getWriter(collector, params), 500000, 20);
-		outputThread.start();
+		queue = new StatementAwareQueue(getWriter(collector, params), 50000);
+		queue.start();
 		for(EPStatement epStatement : epStatements)
 		{
 			logger.info("Registering statement " +epStatement.getText());
 			
 			if (epStatement.getText().startsWith("select")) 
 			{
-				epStatement.addListener(listenerSendingTo(outputThread));
-				//epStatement.addListener(listenerSendingTo(collector));
+				epStatement.addListener(listenerSendingTo(queue));
 			}
 			epStatement.start();
 			
@@ -189,41 +126,37 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void discard() {
-		// TODO Auto-generated method stub
+		logger.info("Removing existing statements");
+		for(EPStatement epStatement : epStatements)
+		{
+			epService.getEPAdministrator().getStatement(epStatement.getName()).removeAllListeners();
+			epService.getEPAdministrator().getStatement(epStatement.getName()).stop();
+			epService.getEPAdministrator().getStatement(epStatement.getName()).destroy();		
+		}
+		epStatements.clear();
+		for(String eventName : eventTypeNames) 
+			{
+				try {
+					epService.getEPAdministrator().getConfiguration().removeEventType(eventName, false);
+				} catch (ConfigurationException ce)
+				{
+					logger.info("Event type used in another statement which is still running, skipping...");
+				}
+			}
 		
+		queue.interrupt();
 	}
 	
-	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<EventBean[]> abstractQueue) {
+	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<EventBean[]> queue) {
 		return new UpdateListener() {
 				
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-				//OutputThread.queue.offer(newEvents);	
 				try {
-					abstractQueue.add(newEvents);
+					queue.add(newEvents);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				/*
-				if (newEvents != null && newEvents.length == 1) {
-					//logger.info("SINGLE , Sending event {} ", newEvents[0].getUnderlying());
-					//collector.send(newEvents[0].getUnderlying());
-					outputThread.add(newEvents[0].getUnderlying());
-				} else if (newEvents != null && newEvents.length > 1){
-					Object[] events = new Object[newEvents.length];
-					for(int i = 0; i < newEvents.length; i++)
-					{
-						events[i] = newEvents[i].getUnderlying();
-					}
-					outputThread.add(events);
-					//logger.info("ARRAY, Sending event {} ", events);
-					//collector.send(events);
-				} else {
-					//logger.info("Triggered listener but there is no new event");
-				}		
-				*/
 			}
 		};
 	}
@@ -239,13 +172,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	{
 		return Utils.createList(statement);
 	}
-	/*
-	protected boolean discard()
-	{
-		epService.destroy();
-	}
-	*/
-	
+		
 	protected Writer getWriter(OutputCollector collector, T params)
 	{
 		return EsperConfig.getDefaultWriter(collector, params); 

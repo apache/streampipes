@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.esper.output.topx;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class TopXParameter extends BindingParameters{
@@ -12,9 +13,8 @@ public class TopXParameter extends BindingParameters{
 	int limit;
 	List<String> uniqueProperties;	
 	
-	public TopXParameter(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit, List<String> uniqueProperties) {
-		super(inName, outName, allProperties, partitionProperties);
+	public TopXParameter(SEPAInvocationGraph graph, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit, List<String> uniqueProperties) {
+		super(graph);
 		this.orderDirection = orderDirection;
 		this.orderByPropertyName = orderByPropertyName;
 		this.outputPropertyName = outputPropertyName;

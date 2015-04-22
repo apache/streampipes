@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.esper.proximity;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class ProximityParameters extends BindingParameters {
@@ -13,9 +14,8 @@ public class ProximityParameters extends BindingParameters {
 	private String lngProperty;
 	
 	
-	public ProximityParameters(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, List<Location> proximityLocations, double distance, String latProperty, String lngProperty) {
-		super(inName, outName, allProperties, partitionProperties);
+	public ProximityParameters(SEPAInvocationGraph graph, List<Location> proximityLocations, double distance, String latProperty, String lngProperty) {
+		super(graph);
 		this.proximityLocations = proximityLocations;
 		this.distance = distance;
 		this.latProperty = latProperty;

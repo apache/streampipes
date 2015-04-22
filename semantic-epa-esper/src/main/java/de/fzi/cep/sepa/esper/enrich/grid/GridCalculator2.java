@@ -101,4 +101,9 @@ public class GridCalculator2 {
 	{
 		return LatLngTool.travel(start, bearing, distance, LengthUnit.METER);
 	}
+	
+	private double findLatitude(int cellY) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

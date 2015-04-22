@@ -6,7 +6,7 @@ import java.util.List;
 public class DebsOutput {
 
 	private List<CellData> cellData;
-	private long delay;
+	private double delay;
 	private long pickup_time;
 	private long dropoff_time;
 	
@@ -22,10 +22,10 @@ public class DebsOutput {
 	public void setCellData(List<CellData> cellData) {
 		this.cellData = cellData;
 	}
-	public long getDelay() {
+	public double getDelay() {
 		return delay;
 	}
-	public void setDelay(long delay) {
+	public void setDelay(double delay) {
 		this.delay = delay;
 	}
 	public long getPickup_time() {

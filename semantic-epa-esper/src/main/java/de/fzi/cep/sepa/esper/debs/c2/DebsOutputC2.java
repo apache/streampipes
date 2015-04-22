@@ -4,13 +4,13 @@ import java.util.List;
 
 public class DebsOutputC2 {
 
-	private long delay;
+	private double delay;
 	private long pickup_time;
 	private long dropoff_time;
 	
 	private List<CellDataBest> cellData;
 	
-	public DebsOutputC2(long delay, long pickup_time, long dropoff_time,
+	public DebsOutputC2(double delay, long pickup_time, long dropoff_time,
 			List<CellDataBest> cellData) {
 		super();
 		this.delay = delay;
@@ -23,11 +23,11 @@ public class DebsOutputC2 {
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getDelay() {
+	public double getDelay() {
 		return delay;
 	}
 
-	public void setDelay(long delay) {
+	public void setDelay(double delay) {
 		this.delay = delay;
 	}
 

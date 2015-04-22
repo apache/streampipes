@@ -9,6 +9,7 @@ public abstract class AbstractQueueRunnable<T> extends Thread
     protected long closeAfter = 0;
     protected long currentTimestamp;
     protected boolean autoClose;
+    private boolean running;
     
     public AbstractQueueRunnable(int maxQueueSize, int closeAfter)
     {
@@ -28,7 +29,8 @@ public abstract class AbstractQueueRunnable<T> extends Thread
     @Override
     public void run()
     {
-        while (true)
+    	running = true;
+        while (running)
         {
         	if (autoClose)
         		if (System.currentTimeMillis()-currentTimestamp > closeAfter) break;
@@ -48,6 +50,11 @@ public abstract class AbstractQueueRunnable<T> extends Thread
             }
         }
         System.out.println("Interrupted");
+    }
+    
+    public void interrupt()
+    {
+    	running = false;
     }
 
     public void add(T data) throws InterruptedException 

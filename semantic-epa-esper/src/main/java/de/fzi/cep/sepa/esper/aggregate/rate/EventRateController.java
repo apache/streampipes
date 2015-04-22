@@ -3,8 +3,6 @@ package de.fzi.cep.sepa.esper.aggregate.rate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
@@ -20,6 +18,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class EventRateController extends EsperDeclarer<EventRateParameter> {
 
@@ -72,22 +71,15 @@ public class EventRateController extends EsperDeclarer<EventRateParameter> {
 				.getStaticPropertyByName(sepa, "output"))).getValue();
 	
 		String topicPrefix = "topic://";
-		EventRateParameter staticParam = new EventRateParameter(topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName(), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName(), sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName());
+		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName());
 		
 		
 		try {
-			return runEngine(staticParam, EventRate::new, sepa);
+			return invokeEPRuntime(staticParam, EventRate::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

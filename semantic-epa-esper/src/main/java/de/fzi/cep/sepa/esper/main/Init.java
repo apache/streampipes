@@ -50,7 +50,7 @@ public class Init implements Runnable {
 		declarers.add(new DebsChallenge2Controller());
 		
 		// Configure external timing for DEBS Challenge
-		new Thread(new ExternalTimer()).start();
+		new Thread(new EsperEngineSettings()).start();
 		
 		try {
 			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);

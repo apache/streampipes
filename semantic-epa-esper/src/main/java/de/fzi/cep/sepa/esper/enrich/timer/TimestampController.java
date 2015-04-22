@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
@@ -28,6 +26,7 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class TimestampController extends EsperDeclarer<TimestampParameter>{
 
@@ -47,7 +46,7 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 		stream1.setEventSchema(schema1);
 		
 		SEPA desc = new SEPA("/sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload", "", "/sepa/enrich/timestamp", domains);
-	
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());
 		desc.addEventStream(stream1);
@@ -85,30 +84,20 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
-			selectProperties.add(p.getPropertyName());
+			selectProperties.add(p.getRuntimeName());
 		}
 		
 		TimestampParameter staticParam = new TimestampParameter (
-				inName, 
-				outName, 
-				inputStream.getEventSchema().toPropertyList(), 
-				sepa.getOutputStream().getEventSchema().toPropertyList(), 
+				sepa, 
 				appendTimePropertyName,
 				selectProperties);
 	
 		try {
-			return runEngine(staticParam, TimestampEnrichment::new, sepa);
+			return invokeEPRuntime(staticParam, TimestampEnrichment::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

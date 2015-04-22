@@ -4,13 +4,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -25,9 +22,9 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class AggregationController extends EsperDeclarer<AggregationParameter> {
 
@@ -84,16 +81,6 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-	
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
-		
 		
 		List<String> groupBy = SEPAUtils.getMultipleMappingPropertyNames(sepa,
 				"groupBy", true);
@@ -122,22 +109,15 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		else aggregationType = AggregationType.MAX;
 		
 		
-		AggregationParameter staticParam = new AggregationParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), aggregationType, outputEvery, groupBy, aggregate, timeWindowSize);
+		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy, aggregate, timeWindowSize);
 		
 		
 		try {
-			return runEngine(staticParam, Aggregation::new, sepa);
+			return invokeEPRuntime(staticParam, Aggregation::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

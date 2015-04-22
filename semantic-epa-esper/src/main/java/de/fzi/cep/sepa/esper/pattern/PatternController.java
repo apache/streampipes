@@ -25,13 +25,7 @@ public class PatternController extends EsperDeclarer<PatternParameters>{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public SEPA declareModel() {
 		List<String> domains = new ArrayList<String>();

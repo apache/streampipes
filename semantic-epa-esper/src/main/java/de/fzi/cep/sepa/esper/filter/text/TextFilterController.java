@@ -89,11 +89,7 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 			
 			logger.info("Text Property: " +filterProperty);
 		
-			String topicPrefix = "topic://";
-			TextFilterParameter staticParam = new TextFilterParameter(topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName(), 
-					topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName(), 
-					sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), 
-					Collections.<String> emptyList(), 
+			TextFilterParameter staticParam = new TextFilterParameter(sepa, 
 					keyword, 
 					StringOperator.valueOf(operation), 
 					filterProperty);
@@ -101,17 +97,11 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 			
 			try {
 				
-				return runEngine(staticParam, TextFilter::new, sepa);
+				return invokeEPRuntime(staticParam, TextFilter::new, sepa);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return false;
-	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		super.runtime.discard();
-		return true;
 	}
 }

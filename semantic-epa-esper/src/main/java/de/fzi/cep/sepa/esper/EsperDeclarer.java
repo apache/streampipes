@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.EPEngine;
@@ -36,13 +35,12 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 
 	public static final CamelContext context = new DefaultCamelContext(); // routing context
 	
-	public static final Map<String, String> brokerAliases = new HashMap<String, String>();
+	public Map<String, String> brokerAliases = new HashMap<String, String>();
 	
 	protected EPRuntime runtime;
 	
-	public boolean runEngine(B bindingParameters, Supplier<EPEngine<B>> supplier, SEPAInvocationGraph sepa)
+	public boolean invokeEPRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, SEPAInvocationGraph sepa)
 	{
-		
 		try {
 					
 			EndpointInfo destination;
@@ -100,6 +98,13 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 		{
 			e.printStackTrace();
 		}
+		return true;
+	}
+	
+	public boolean detachRuntime() 
+	{
+		brokerAliases.clear();
+		runtime.discard();
 		return true;
 	}
 }

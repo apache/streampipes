@@ -23,7 +23,7 @@ public class Math extends EsperEventEngine<MathParameter>{
 		
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.selectClause(makeSelectClause(bindingParameters));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(bindingParameters.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(bindingParameters.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		

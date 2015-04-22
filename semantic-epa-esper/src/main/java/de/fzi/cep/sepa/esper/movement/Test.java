@@ -35,11 +35,11 @@ public class Test {
 		CamelConfig config = new CamelConfig.ActiveMQ(BROKER_ALIAS, "vm://localhost?broker.persistent=false");
 		EndpointInfo source = EndpointInfo.of(BROKER_ALIAS + ":topic:PositionTopic", DataType.JSON);
 		EndpointInfo destination = EndpointInfo.of(BROKER_ALIAS + ":topic:MovementTopic", DataType.JSON);
-
+/*
 		MovementParameter staticParam = new MovementParameter("TwitterEvent", "MovementEvent", "EPSG:4326",
 			Arrays.asList("userId", "timestamp", "latitude", "longitude"),
 			Arrays.asList("userId"), "timestamp", "latitude", "longitude", 8000L); // TODO reduce param overhead
-
+*/
 		String inEventName = "TwitterEvent";
 		HashMap<String, Class<?>> inEventType = new HashMap<>();
 		inEventType.put("userId", Integer.class);

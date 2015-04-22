@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
@@ -24,7 +23,7 @@ public class Project extends EsperEventEngine<ProjectParameter>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(makeSelectClause(params));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		

@@ -139,7 +139,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.insertInto(new InsertIntoClause("C2AppendOne")); // out name
 		model.selectClause(makeSelectClause(params, true));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		
@@ -152,7 +152,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		model.selectClause(makeSelectClause(params, false));//.add("cellOptions"));
 		
 		//model.fromClause(new FromClause().add(FilterStream.create("C2AppendOne"))); // in name
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		
 		logger.info("Generated EPL: " +model.toEPL());

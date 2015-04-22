@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.aggregate.count.Count;
@@ -31,6 +29,7 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class TopXController extends EsperDeclarer<TopXParameter>{
 
@@ -41,7 +40,7 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 	
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(XSD._double.toString(), "", "", Utils.createList(URI.create("http://schema.org/Number")));
+		EventProperty e1 = new EventPropertyPrimitive(XSD._integer.toString(), "", "", Utils.createList(URI.create("http://schema.org/Number")));
 		eventProperties.add(e1);
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
@@ -118,24 +117,17 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
-			selectProperties.add(p.getPropertyName());
+			selectProperties.add(p.getRuntimeName());
 		}
 		
-		TopXParameter staticParam = new TopXParameter(inName, outName, inputStream.getEventSchema().toPropertyList(), sepa.getOutputStream().getEventSchema().toPropertyList(), orderDirection, sortBy, "list", limit, uniqueProperties);
+		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
 		
 		try {
-			return runEngine(staticParam, TopX::new, sepa);
+			return invokeEPRuntime(staticParam, TopX::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

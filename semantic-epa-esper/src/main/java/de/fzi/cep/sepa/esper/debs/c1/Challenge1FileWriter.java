@@ -39,7 +39,8 @@ public class Challenge1FileWriter implements Writer {
 	PrintWriter writerc1;
 	PrintWriter writerc2;
 	PrintWriter statisticsWriter;
-	
+	PrintWriter statisticsWriterc1;
+	PrintWriter statisticsWriterc2;
 	
 	File file;
 	File file2;
@@ -50,9 +51,9 @@ public class Challenge1FileWriter implements Writer {
 	long unique = 0;
 	long startTime;
 	
-	long delayC1 = 0;
-	long delayC2 = 0;
-	long overallDelay = 0;
+	double delayC1 = 0;
+	double delayC2 = 0;
+	double overallDelay = 0;
 	
 	long previousDateTimeSumC1 = 0;
 	long previousDateTimeSumC2 = 0;
@@ -77,6 +78,8 @@ public class Challenge1FileWriter implements Writer {
 		file = new File("query1-" +System.currentTimeMillis() +".csv");
 		file2 = new File("query2-" +System.currentTimeMillis() +".csv");
 		File statistics = new File("statistics-" +System.currentTimeMillis() +".csv");
+		File statisticsC1 = new File("statistics-c1-" +System.currentTimeMillis() +".csv");
+		File statisticsC2 = new File("statistics-c2-" +System.currentTimeMillis() +".csv");
 		//builderC1 = new StringBuilder();
 		//builderC2 = new StringBuilder();
 		
@@ -85,6 +88,11 @@ public class Challenge1FileWriter implements Writer {
 			writerc1 = new PrintWriter(new FileOutputStream(file), true);
 			writerc2 = new PrintWriter(new FileOutputStream(file2), true);
 			statisticsWriter = new PrintWriter(new FileOutputStream(statistics), true);
+			statisticsWriter.write("nanoTime,counter,unique,counterC1,counterC2,totalDelay" +System.lineSeparator());
+			statisticsWriterc1 = new PrintWriter(new FileOutputStream(statisticsC1), true);
+			statisticsWriterc2 = new PrintWriter(new FileOutputStream(statisticsC2), true);
+			statisticsWriterc1.write("nanoTime,counter,delay,totalDelayQuery,totalDelay" +System.lineSeparator());
+			statisticsWriterc2.write("nanoTime,counter,delay,totalDelayQuery,totalDelay" +System.lineSeparator());
 			out = new BufferedWriter(new OutputStreamWriter(System.out, "ASCII"), 512);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -165,7 +173,9 @@ public class Challenge1FileWriter implements Writer {
 					    TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))
 					);
 				
-				double avgDelay = overallDelay / (double) c;
+				double avgDelay = overallDelay / c;
+				double avgDelayC1 = delayC1 / counterC1;
+				double avgDelayC2 = delayC2 / counterC2;
 			
 				System.out.println("Total execution time (ns): " +duration);
 				System.out.println("Total execution time (ms): " +TimeUnit.NANOSECONDS.toMillis(duration));
@@ -175,8 +185,12 @@ public class Challenge1FileWriter implements Writer {
 				System.out.println("Query 1 total results (written to file): " +counterC1);
 				System.out.println("Query 2 total results (written to file): " +counterC2);
 				System.out.println("Total unique events received: " +unique);
-				System.out.println("Delay (sum ms): " +TimeUnit.NANOSECONDS.toMillis(overallDelay));
-				System.out.println("Delay (avg ms): " +(avgDelay / 1000000));
+				System.out.println("Delay Query 1 (sum ms): " +delayC1);
+				System.out.println("Delay Query 1 (avg ms): " +(avgDelayC1));
+				System.out.println("Delay Query 2(sum ms): " +delayC2);
+				System.out.println("Delay Query 2(avg ms): " +(avgDelayC2));
+				System.out.println("Delay (sum ms): " +overallDelay);
+				System.out.println("Delay (avg ms): " +(avgDelay));
 				
 			}
 			else
@@ -187,17 +201,7 @@ public class Challenge1FileWriter implements Writer {
 		}
 	}
 	
-	private void writeStatistics() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(System.nanoTime());
-		builder.append(c +", ");
-		builder.append(unique +", ");
-		builder.append(counterC1 +", ");
-		builder.append(counterC2 +", ");
-		builder.append(overallDelay +", ");
-		builder.append(System.lineSeparator());
-		statisticsWriter.write(builder.toString());
-	}
+	
 
 	private String makeDebsOutputC2(Map<String, Object>[] bestCells) {
 		DebsOutputC2 output = prepareListDebsOutputC2(bestCells);
@@ -217,13 +221,26 @@ public class Challenge1FileWriter implements Writer {
 				sb.append(thisCell.getMedianProfit() +", ");
 				sb.append(thisCell.getProfitability() +", ");
 			}
-			long thisDelay = output.getDelay();
-			sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +", ");
+			
+			if (output.getCellData().size() <= 10)
+			{
+				int restToWrite = 10 - output.getCellData().size();
+				for(int i = 0; i < restToWrite; i++)
+				{
+					sb.append("NaN, NaN, NaN, NaN, ");
+				}
+			}
+			double thisDelay = output.getDelay();
+			//sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +";");
+			sb.append(thisDelay +";");
 			//sb.append(c +", ");
 			//sb.append(counterC2);
 			sb.append(System.lineSeparator());
 			unique++;
 			overallDelay = overallDelay + thisDelay;
+			delayC2 = delayC2 + thisDelay;
+			
+			writeStatisticsPerQuery(statisticsWriterc2, System.nanoTime(), counterC2, thisDelay, delayC2, overallDelay);
 		}
 		return sb.toString();
 	}
@@ -249,7 +266,7 @@ public class Challenge1FileWriter implements Writer {
 		
 		CellDataBest recentData = findMaxBest(cellDataset);
 		long currentTime = System.nanoTime();
-		debsOutput.setDelay((currentTime - recentData.getReadDatetime()));
+		debsOutput.setDelay((currentTime - recentData.getReadDatetime())  / 1000000.0);
 		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
 		debsOutput.setPickup_time(recentData.getPickup_datetime());
 	
@@ -278,16 +295,95 @@ public class Challenge1FileWriter implements Writer {
 				sb.append(thisCell.getEndCellId() +", ");
 				//sb.append(thisCell.getCount() +", ");
 			}
-			long thisDelay = output.getDelay();
-			sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +", ");
+			if (output.getCellData().size() <= 10)
+			{
+				int restToWrite = 10 - output.getCellData().size();
+				for(int i = 0; i < restToWrite; i++)
+				{
+					sb.append("NaN, NaN, NaN, NaN, ");
+				}
+			}
+			double thisDelay = output.getDelay();
+			//sb.append(TimeUnit.NANOSECONDS.toMillis(thisDelay) +", ");
+			sb.append(thisDelay +", ");
 			//sb.append(c +", ");
 			//sb.append(counter);
 			sb.append(System.lineSeparator());
 			unique++;
 			overallDelay = overallDelay + thisDelay;
+			delayC1 = delayC1 + thisDelay;
+			
+			writeStatisticsPerQuery(statisticsWriterc1, System.nanoTime(), counterC1, thisDelay, delayC1, overallDelay);
 		}
 		
 		return sb.toString();
+	}	
+
+	private DebsOutput prepareListDebsOutput(Map<String, Object>[] item)
+	{
+		List<CellData> cellDataset = new ArrayList<>();
+		DebsOutput debsOutput = new DebsOutput();
+		
+		
+		for(int i = 0; i < item.length; i++)
+		{
+			Map<String, Object> obj = item[i];
+			
+			String startCellId = obj.get("cellXPickup") +TaxiDataInputProvider.DOT +obj.get("cellYPickup");
+			String endCellId = obj.get("cellXDropoff") +TaxiDataInputProvider.DOT +obj.get("cellYDropoff");
+			
+			//String startCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
+			//String endCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS_1, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
+			long count = (long) obj.get(TaxiDataInputProvider.COUNT_VALUE); 
+			long readTime = (long) obj.get(TaxiDataInputProvider.READ_DATETIME);
+			long pickupTime = (long) obj.get(TaxiDataInputProvider.PICKUP_DATETIME);
+			long dropoffTime = (long) obj.get(TaxiDataInputProvider.DROPOFF_DATETIME);
+			
+			
+			cellDataset.add(new CellData(startCellId, endCellId, count, readTime, pickupTime, dropoffTime));
+		}
+		
+		CellData recentData = findMax(cellDataset);
+		long currentTime = System.nanoTime();
+		debsOutput.setDelay((currentTime - recentData.getReadDatetime()) / 1000000.0);
+		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
+		debsOutput.setPickup_time(recentData.getPickup_datetime());
+	
+		Collections.sort(cellDataset, Collections.reverseOrder());
+		debsOutput.setCellData(cellDataset);
+	
+		return debsOutput;
+	}
+	
+	
+	
+	
+	private CellData findMax(List<CellData> cellDataset) {
+		long max = 0;
+		CellData result = null;
+		for(CellData cellData : cellDataset)
+		{
+			if (cellData.getReadDatetime() > max) 
+				{
+					result = cellData;
+					max = cellData.getReadDatetime();
+				}
+		}
+		return result;
+	}
+
+	private CellDataBest findMaxBest(List<CellDataBest> cellDataset) {
+		long max = 0;
+		CellDataBest result = null;
+		for(CellDataBest cellData : cellDataset)
+		{
+			if (cellData.getReadDatetime() > max) 
+				{
+					result = cellData;
+					max = cellData.getReadDatetime();
+				}
+		}
+		return result;
 	}
 	
 	private boolean isNew(DebsOutput output) {
@@ -319,76 +415,31 @@ public class Challenge1FileWriter implements Writer {
 				return true;
 			}
 	}
-
-	private DebsOutput prepareListDebsOutput(Map<String, Object>[] item)
-	{
-		List<CellData> cellDataset = new ArrayList<>();
-		DebsOutput debsOutput = new DebsOutput();
-		
-		
-		for(int i = 0; i < item.length; i++)
-		{
-			Map<String, Object> obj = item[i];
-			
-			String startCellId = obj.get("cellXPickup") +TaxiDataInputProvider.DOT +obj.get("cellYPickup");
-			String endCellId = obj.get("cellXDropoff") +TaxiDataInputProvider.DOT +obj.get("cellYDropoff");
-			
-			//String startCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
-			//String endCellId = extractCellId(TaxiDataInputProvider.CELLOPTIONS_1, TaxiDataInputProvider.CELLX, TaxiDataInputProvider.CELLY, obj);
-			long count = (long) obj.get(TaxiDataInputProvider.COUNT_VALUE); 
-			long readTime = (long) obj.get(TaxiDataInputProvider.READ_DATETIME);
-			long pickupTime = (long) obj.get(TaxiDataInputProvider.PICKUP_DATETIME);
-			long dropoffTime = (long) obj.get(TaxiDataInputProvider.DROPOFF_DATETIME);
-			
-			
-			cellDataset.add(new CellData(startCellId, endCellId, count, readTime, pickupTime, dropoffTime));
-		}
-		
-		CellData recentData = findMax(cellDataset);
-		long currentTime = System.nanoTime();
-		debsOutput.setDelay(currentTime - recentData.getReadDatetime());
-		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
-		debsOutput.setPickup_time(recentData.getPickup_datetime());
 	
-		Collections.sort(cellDataset, Collections.reverseOrder());
-		debsOutput.setCellData(cellDataset);
-	
-		return debsOutput;
+	private void writeStatistics() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(System.nanoTime() +", ");
+		builder.append(c +", ");
+		builder.append(unique +", ");
+		builder.append(counterC1 +", ");
+		builder.append(counterC2 +", ");
+		builder.append(overallDelay);
+		builder.append(System.lineSeparator());
+		statisticsWriter.write(builder.toString());
 	}
 	
-	private CellData findMax(List<CellData> cellDataset) {
-		long max = 0;
-		CellData result = null;
-		for(CellData cellData : cellDataset)
-		{
-			if (cellData.getReadDatetime() > max) 
-				{
-					result = cellData;
-					max = cellData.getReadDatetime();
-				}
-		}
-		return result;
-	}
-
-	private CellDataBest findMaxBest(List<CellDataBest> cellDataset) {
-		long max = 0;
-		CellDataBest result = null;
-		for(CellDataBest cellData : cellDataset)
-		{
-			if (cellData.getReadDatetime() > max) 
-				{
-					result = cellData;
-					max = cellData.getReadDatetime();
-				}
-		}
-		return result;
-	}
-	
-	private String extractCellId(String objectName, String fieldXName, String fieldYName, Map<String, Object> obj)
-	{
-		return ((CellOption) obj.get(objectName)).getCellX()
-		+ TaxiDataInputProvider.DOT
-		+ ((CellOption) obj.get(objectName)).getCellY();
+	private void writeStatisticsPerQuery(PrintWriter writer,
+			long nanoTime, int counterC22, double thisDelay, double delayC22,
+			double overallDelay2) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(nanoTime +", ");
+		builder.append(counterC22 +", ");
+		builder.append(thisDelay +", ");
+		builder.append(delayC22  +", ");
+		builder.append(overallDelay2);
+		builder.append(System.lineSeparator());
+		writer.write(builder.toString());
+		
 	}
 }
 

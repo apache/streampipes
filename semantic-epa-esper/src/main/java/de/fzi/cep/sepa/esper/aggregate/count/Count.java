@@ -8,7 +8,7 @@ public class Count extends EsperEventEngine<CountParameter>{
 
 	@Override
 	protected List<String> statements(CountParameter bindingParameters) {
-		String statement = "select " +getSelectClause(bindingParameters) +" count(*) as countValue from " +fixEventName(bindingParameters.getInName()) +".win:time(" +bindingParameters.getTimeWindow() +" " +bindingParameters.getTimeScale().value() +")" +getGroupBy(bindingParameters);
+		String statement = "select " +getSelectClause(bindingParameters) +" count(*) as countValue from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindow() +" " +bindingParameters.getTimeScale().value() +")" +getGroupBy(bindingParameters);
 		return makeStatementList(statement);
 	}
 	

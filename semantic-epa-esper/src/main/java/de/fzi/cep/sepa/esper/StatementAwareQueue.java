@@ -11,6 +11,11 @@ public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{
 		super(maxQueueSize, closeAfter);
 		this.writer = writer;
 	}
+	
+	public StatementAwareQueue(Writer writer, int maxQueueSize) {
+		super(maxQueueSize);
+		this.writer = writer;
+	}
 
 	@Override
 	protected void doNext(EventBean[] newEvents) throws Exception {

@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ontoware.rdf2go.vocabulary.XSD;
-import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.rio.RDFHandlerException;
 
 import de.fzi.cep.sepa.commons.Utils;
@@ -24,6 +22,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class MathController extends EsperDeclarer<MathParameter>{
@@ -91,10 +90,6 @@ public class MathController extends EsperDeclarer<MathParameter>{
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
 		
-		String topicPrefix = "topic://";
-		String inputTopic = topicPrefix + sepa.getInputStreams().get(0).getEventGrounding().getTopicName();
-		String outputTopic = topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName();
-		
 		String operation = SEPAUtils.getOneOfProperty(sepa,
 				"operation");
 		
@@ -117,13 +112,10 @@ public class MathController extends EsperDeclarer<MathParameter>{
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
-			selectProperties.add(p.getPropertyName());
+			selectProperties.add(p.getRuntimeName());
 		}
 		
-		MathParameter staticParam = new MathParameter(inputTopic, 
-				outputTopic, 
-				sepa.getInputStreams().get(0).getEventSchema().toPropertyList(), 
-				sepa.getInputStreams().get(0).getEventSchema().toPropertyList(),
+		MathParameter staticParam = new MathParameter(sepa,
 				selectProperties, 
 				arithmeticOperation, 
 				leftOperand, 
@@ -131,20 +123,11 @@ public class MathController extends EsperDeclarer<MathParameter>{
 				appendPropertyName);	
 		
 		try {
-			return runEngine(staticParam, Math::new, sepa);
+			return invokeEPRuntime(staticParam, Math::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		super.runtime.discard();
-		return false;
-	}
-	
-	
-
 }

@@ -50,42 +50,24 @@ public class ProjectController extends EsperDeclarer<ProjectParameter>{
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
-		
+			
 		List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 		
 		for(EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties())
 		{
-			projectProperties.add(new NestedPropertyMapping(p.getPropertyName(), SEPAUtils.getFullPropertyName(p, sepa.getInputStreams().get(0).getEventSchema().getEventProperties(), "", '.')));
+			projectProperties.add(new NestedPropertyMapping(p.getRuntimeName(), SEPAUtils.getFullPropertyName(p, sepa.getInputStreams().get(0).getEventSchema().getEventProperties(), "", '.')));
 		}
 		
 		ProjectParameter staticParam = new ProjectParameter(
-				inName, 
-				outName, 
-				inputStream.getEventSchema().toPropertyList(), 
-				sepa.getOutputStream().getEventSchema().toPropertyList(), 
+				sepa, 
 				projectProperties);
 	
 		try {
-			return runEngine(staticParam, Project::new, sepa);
+			return invokeEPRuntime(staticParam, Project::new, sepa);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
-
-	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

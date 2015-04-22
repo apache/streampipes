@@ -27,7 +27,7 @@ public class GridEnrichment extends EsperEventEngine<GridEnrichmentParameter>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(makeSelectClause(params));
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		logger.info("Generated EPL: " +model.toEPL());
 		

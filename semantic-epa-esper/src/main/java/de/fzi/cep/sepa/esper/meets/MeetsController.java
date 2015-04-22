@@ -33,12 +33,6 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 	}
 
 	@Override
-	public boolean detachRuntime(SEPAInvocationGraph sepa) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public SEPA declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

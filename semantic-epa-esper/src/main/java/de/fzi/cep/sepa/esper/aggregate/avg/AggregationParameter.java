@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.esper.aggregate.avg;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class AggregationParameter extends BindingParameters {
@@ -12,9 +13,8 @@ public class AggregationParameter extends BindingParameters {
 	private String aggregate;
 	private List<String> groupBy;
 	
-	public AggregationParameter(String inName, String outName,
-			List<String> allProperties, List<String> partitionProperties, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize) {
-		super(inName, outName, allProperties, partitionProperties);
+	public AggregationParameter(SEPAInvocationGraph graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize) {
+		super(graph);
 		this.aggregationType = aggregationType;
 		this.outputEvery = outputEvery;
 		this.groupBy = groupBy;
