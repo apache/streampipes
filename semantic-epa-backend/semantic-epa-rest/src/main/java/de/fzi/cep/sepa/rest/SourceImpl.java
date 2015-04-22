@@ -85,16 +85,17 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	public String postSource(@FormParam("uri") String uri) {
 		SEP sep;
 		String jsonldDescription = "";
-		System.out.println(uri);
-		
 		try {
 			
 			jsonldDescription = parseURIContent(uri);
 		} catch (ClientProtocolException e) {
+			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch (URISyntaxException e) {
+			e.printStackTrace();
 			jsonldDescription = uri;
 		} catch (IOException e) {
+			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 		
@@ -106,6 +107,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 				requestor.storeSEP(sep);
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
@@ -121,5 +123,10 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
+	}
+	
+	public static void main(String[] args)
+	{
+		new SourceImpl().postSource("http://localhost:8089/proveit");
 	}
 }
