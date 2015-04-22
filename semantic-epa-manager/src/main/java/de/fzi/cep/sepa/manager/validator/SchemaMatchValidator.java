@@ -46,8 +46,8 @@ public class SchemaMatchValidator implements Validator<EventSchema> {
 	private boolean matches(EventProperty right, EventProperty left)
 	{
 		boolean match = true;
-		System.out.println("Right: " + right.getPropertyName() +", " +printSubclasses(right));
-		System.out.println("Left: " + left.getPropertyName() +", " +printSubclasses(left));
+		System.out.println("Right: " + right.getRuntimeName() +", " +printSubclasses(right));
+		System.out.println("Left: " + left.getRuntimeName() +", " +printSubclasses(left));
 		
 		if (right.getClass() != left.getClass()) return false;
 		else {

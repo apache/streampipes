@@ -228,11 +228,11 @@ public class PipelineValidationHandler {
 		
 		for(EventProperty p : eventProperties)
 		{
-			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
-			else if (p instanceof EventPropertyList) options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
+			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+			else if (p instanceof EventPropertyList) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
 			else if (p instanceof EventPropertyNested) 
 				{
-					options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
+					options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
 					options.addAll(convertCustomOutput(((EventPropertyNested) p).getEventProperties(), new ArrayList<Option>()));
 				}
 		}
@@ -334,7 +334,7 @@ public class PipelineValidationHandler {
 					System.out.println(matchedStreamProperty.getRdfId().toString());
 					options.add(new Option(matchedStreamProperty
 							.getRdfId().toString(),
-							matchedStreamProperty.getPropertyName()));
+							matchedStreamProperty.getRuntimeName()));
 				}
 			}
 		} else {
@@ -344,7 +344,7 @@ public class PipelineValidationHandler {
 				{
 					options.add(new Option(streamProperty
 							.getRdfId().toString(), streamProperty
-							.getPropertyName()));
+							.getRuntimeName()));
 				} else {
 					options.addAll(addNestedOptions((EventPropertyNested) streamProperty));
 				}
@@ -358,7 +358,7 @@ public class PipelineValidationHandler {
 		List<Option> options = new ArrayList<>();
 		for(EventProperty p : properties.getEventProperties())
 		{
-			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getPropertyName()));
+			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
 			else options.addAll(addNestedOptions(properties));
 		}
 		return options;

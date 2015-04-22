@@ -84,7 +84,7 @@ public class TestCustomOutputStrategy {
 			{
 				CheckboxInput input = ((CheckboxInput) p.getInput());
 				List<Option> options = new ArrayList<>();
-				Option option = new Option(prop.getRdfId().toString(), prop.getPropertyName());
+				Option option = new Option(prop.getRdfId().toString(), prop.getRuntimeName());
 				option.setSelected(true);
 				options.add(option);
 				input.setOptions(options);

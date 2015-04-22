@@ -60,7 +60,7 @@ public class MappingCalculator {
 					List<Option> options = new ArrayList<Option>();
 					for(EventProperty eventProperty : stream.getEventSchema().getEventProperties())
 					{
-						options.add(new Option(eventProperty.getRdfId().toString(), eventProperty.getPropertyName()));
+						options.add(new Option(eventProperty.getRdfId().toString(), eventProperty.getRuntimeName()));
 					}
 					input.setOptions(options);
 					

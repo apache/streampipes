@@ -79,7 +79,7 @@ public class SchemaOutputCalculator {
 	{
 		EventPropertyList list = new EventPropertyList();
 		list.setEventProperties(schemaProperties);
-		list.setPropertyName(propertyName);
+		list.setRuntimeName(propertyName);
 		list.setRdfId(new URIKey(URI.create(schemaProperties.get(0).getRdfId()+"-list")));
 		EventSchema schema = new EventSchema();
 		schema.setEventProperties(Utils.createList(list));
@@ -101,7 +101,7 @@ public class SchemaOutputCalculator {
 				if (newProperty instanceof EventPropertyPrimitive) 
 					{
 						EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
-						newProperty = new EventPropertyPrimitive(primitive.getPropertyType(), primitive.getPropertyName() +i, primitive.getMeasurementUnit(), primitive.getSubClassOf());
+						newProperty = new EventPropertyPrimitive(primitive.getPropertyType(), primitive.getRuntimeName() +i, primitive.getMeasurementUnit(), primitive.getSubClassOf());
 						//newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
 						newProperty.setRdfId(new URIKey(URI.create(primitive.getRdfId().toString() +i)));
 					}
@@ -117,14 +117,14 @@ public class SchemaOutputCalculator {
 							if (np instanceof EventPropertyPrimitive)
 							{
 								EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
-								EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getPropertyType(), thisPrimitive.getPropertyName(), thisPrimitive.getMeasurementUnit(), thisPrimitive.getSubClassOf());	
+								EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getPropertyType(), thisPrimitive.getRuntimeName(), thisPrimitive.getMeasurementUnit(), thisPrimitive.getSubClassOf());	
 								//newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
 								newNested.setRdfId(new URIKey(URI.create(thisPrimitive.getRdfId().toString())));
 								nestedProperties.add(newNested);
 							}
 								
 						}
-						newProperty = new EventPropertyNested(nested.getPropertyName() +i, nestedProperties);
+						newProperty = new EventPropertyNested(nested.getRuntimeName() +i, nestedProperties);
 						//newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
 						//newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
 						newProperty.setRdfId(new URIKey(URI.create(nested.getRdfId().toString() +i)));
@@ -147,7 +147,7 @@ public class SchemaOutputCalculator {
 	{
 		for(EventProperty existingAppendProperty : existingProperties)
 		{
-			if (appendProperty.getPropertyName().equals(existingAppendProperty.getPropertyName()))
+			if (appendProperty.getRuntimeName().equals(existingAppendProperty.getRuntimeName()))
 				return true;
 		}
 		return false;
