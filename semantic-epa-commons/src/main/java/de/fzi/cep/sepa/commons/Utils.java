@@ -8,12 +8,9 @@ import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.model.Graph;
-import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 
 public class Utils {
 

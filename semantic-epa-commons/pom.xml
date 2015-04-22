@@ -34,11 +34,6 @@
 			<version>1.0.13</version>
 		</dependency>
 		<dependency>
-			<groupId>org.semweb4j</groupId>
-			<artifactId>rdf2go.api</artifactId>
-			<version>4.8.3</version>
-		</dependency>
-		<dependency>
 			<groupId>com.complexible.common</groupId>
 			<artifactId>cp-common-utils</artifactId>
 			<version>4.0</version>
