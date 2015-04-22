@@ -14,21 +14,12 @@
 	<modules>
 	<module>semantic-epa-server</module>
 	<module>semantic-epa-rest</module>
-	<module>semantic-epa-discovery</module>
+<!-- 	<module>semantic-epa-discovery</module> -->
 	<module>semantic-epa-storage</module>
-	<module>semantic-epa-validation</module>
+<!-- 	<module>semantic-epa-validation</module> -->
 	<module>semantic-epa-model-client</module>
 	</modules>
 	
-	
-	
-	<dependencies>
-	
-
-		
-		
-
-	</dependencies>
 	<build>
 		<finalName>semantic-epa-backend</finalName>
 
