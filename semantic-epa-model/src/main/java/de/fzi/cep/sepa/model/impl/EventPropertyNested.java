@@ -64,7 +64,7 @@ public class EventPropertyNested extends EventProperty {
 		{
 			subTypes.putAll(p.getUntypedRuntimeFormat());
 		}	
-		propertyMap.put(propertyName, subTypes);
+		propertyMap.put(runtimeName, subTypes);
 		return propertyMap;
 	}
 
@@ -74,7 +74,7 @@ public class EventPropertyNested extends EventProperty {
 		List<String> result = new ArrayList<String>();
 		for(EventProperty p : eventProperties)
 		{
-			result.addAll(p.getFullPropertyName(propertyName +"."));
+			result.addAll(p.getFullPropertyName(runtimeName +"."));
 		}
 		return result;
 	}

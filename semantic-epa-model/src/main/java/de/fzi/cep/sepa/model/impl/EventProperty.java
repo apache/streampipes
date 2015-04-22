@@ -28,8 +28,14 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	
 	String propertyId;
 	
-	@RdfProperty("sepa:hasPropertyName")
-	protected String propertyName;
+	@RdfProperty("rdfs:label")
+	protected String label;
+	
+	@RdfProperty("rdfs:description")
+	protected String description;
+	
+	@RdfProperty("sepa:hasRuntimeName")
+	protected String runtimeName;
 	
 	@RdfProperty("sepa:required")
 	protected boolean required;
@@ -53,20 +59,20 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		
 	public EventProperty(String propertyName, List<URI> subClassOf) {
 		this();
-		this.propertyName = propertyName;		
+		this.runtimeName = propertyName;		
 		this.subClassOf = subClassOf;
 	}
 	
 	public EventProperty(String propertyName) {
 		this();
-		this.propertyName = propertyName;		
+		this.runtimeName = propertyName;		
 	}
 	
-	public String getPropertyName() {
-		return propertyName;
+	public String getRuntimeName() {
+		return runtimeName;
 	}
-	public void setPropertyName(String propertyName) {
-		this.propertyName = propertyName;
+	public void setRuntimeName(String propertyName) {
+		this.runtimeName = propertyName;
 	}
 
 	public String getPropertyId() {
@@ -92,7 +98,26 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	public void setSubClassOf(List<URI> subClassOf) {
 		this.subClassOf = subClassOf;
 	}
-	
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String humanReadableTitle) {
+		this.label = humanReadableTitle;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String humanReadableDescription) {
+		this.description = humanReadableDescription;
+	}
+
+	public static String getPrefix() {
+		return prefix;
+	}
 
 	public abstract Map<String, Object> getRuntimeFormat();
 	

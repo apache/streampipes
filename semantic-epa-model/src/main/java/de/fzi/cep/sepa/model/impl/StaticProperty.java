@@ -16,10 +16,13 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public abstract class StaticProperty extends UnnamedSEPAElement {
 
-	@RdfProperty("sepa:hasName")
-	String name;
+	@RdfProperty("rdfs:label")
+	protected String label;
 	
-	@RdfProperty("sepa:hasDescription")
+	@RdfProperty("sepa:internalName")
+	String internalName;
+	
+	@RdfProperty("rdfs:description")
 	String description;
 	
 	
@@ -31,16 +34,16 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	public StaticProperty(String name, String description)
 	{
 		super();
-		this.name = name;
+		this.internalName = name;
 		this.description = description;
 	}
 
-	public String getName() {
-		return name;
+	public String getInternalName() {
+		return internalName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setInternalName(String name) {
+		this.internalName = name;
 	}
 
 	public String getDescription() {
@@ -51,4 +54,11 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 		this.description = description;
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
 }

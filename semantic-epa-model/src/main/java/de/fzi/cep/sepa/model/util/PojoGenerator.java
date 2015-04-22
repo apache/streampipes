@@ -19,7 +19,7 @@ public class PojoGenerator {
 		CtClass cc = pool.makeClass(className);
 
 		for (EventProperty p : eventProperties) {
-			String propertyName = p.getPropertyName();
+			String propertyName = p.getRuntimeName();
 			if (p instanceof EventPropertyPrimitive)
 			{
 				EventPropertyPrimitive primitive = (EventPropertyPrimitive) p;

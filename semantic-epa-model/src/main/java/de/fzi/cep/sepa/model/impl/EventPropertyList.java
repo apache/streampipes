@@ -62,11 +62,11 @@ public class EventPropertyList extends EventProperty {
 		{
 			if (p instanceof EventPropertyPrimitive && eventProperties.size() == 1) 
 				{
-					result.put(propertyName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getPropertyType()));
+					result.put(runtimeName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getPropertyType()));
 					break;
 				}
 			else 
-				result.put(propertyName, ModelUtils.asList(p.getUntypedRuntimeFormat()));
+				result.put(runtimeName, ModelUtils.asList(p.getUntypedRuntimeFormat()));
 		}
 		return result;
 	}
@@ -74,7 +74,7 @@ public class EventPropertyList extends EventProperty {
 	@Override
 	public List<String> getFullPropertyName(String prefix) {
 		List<String> result = new ArrayList<String>();
-		result.add(prefix + propertyName);
+		result.add(prefix + runtimeName);
 		return result;
 	}
 	

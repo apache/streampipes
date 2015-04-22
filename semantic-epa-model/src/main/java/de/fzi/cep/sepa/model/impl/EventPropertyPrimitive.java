@@ -68,14 +68,14 @@ public class EventPropertyPrimitive extends EventProperty {
 	@Override
 	public Map<String, Object> getUntypedRuntimeFormat() {
 		Map<String, Object> result = new HashMap<>();
-		result.put(propertyName, ModelUtils.getPrimitiveClass(propertyType));
+		result.put(runtimeName, ModelUtils.getPrimitiveClass(propertyType));
 		return result;
 	}
 
 	@Override
 	public List<String> getFullPropertyName(String prefix) {
 		List<String> result = new ArrayList<String>();
-		result.add(prefix + propertyName);
+		result.add(prefix + runtimeName);
 		return result;
 	}
 	
