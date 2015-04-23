@@ -2,6 +2,7 @@ var pipelines;
 
 function getPipelines(){
 	clearAssembly();
+	jsPlumb.setContainer($("#pipelineDisplay"));
 	$("#pipelineTableBody").children().remove();
 	var url = standardUrl + "pipelines";
 	pipelines = $.getJSON(url, listPipelines);
@@ -27,7 +28,7 @@ function createPipelineTableRowData(i, $row){
 	var status = "TESTSTATUS";
 	$("<td>").text(i).appendTo($row); // #
 	$("<td>").text($row.data("JSON").name).appendTo($row); // Name
-	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", function(){verifyPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).appendTo($row); //VALIDATION STATUS
+	$("<td>").text("OK").append(getGlyphIconButton("glyphicon glyphicon-refresh", function(e){e.stopPropagation(); verifyPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).appendTo($row); //VALIDATION STATUS
 	
 	if ($row.data("JSON").running) status = "Running";
 	else status = "Idle";
@@ -36,16 +37,16 @@ function createPipelineTableRowData(i, $row){
 	if ($row.data("JSON").running)
 		{
 			$("<td>").append($("<div class='btn-group'>") //Options
-				.append(getGlyphIconButton("glyphicon glyphicon-play", false, function(){startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", true, function(){stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
+				.append(getGlyphIconButton("glyphicon glyphicon-play", false, function(e){e.stopPropagation(); startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", true, function(e){e.stopPropagation(); stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
 		}
 	else
 		{
 		$("<td>").append($("<div class='btn-group'>") //Options
-				.append(getGlyphIconButton("glyphicon glyphicon-play", true, function(){startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", false, function(){stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
+				.append(getGlyphIconButton("glyphicon glyphicon-play", true, function(e){e.stopPropagation(); startPipeline(getParentWithJSONData($(this)).data("JSON")._id);})).append(getGlyphIconButton("glyphicon glyphicon-stop", false, function(e){e.stopPropagation(); stopPipeline(getParentWithJSONData($(this)).data("JSON")._id);}))).appendTo($row);
 
 		}
-		$("<td>").append(getGlyphIconButton("glyphicon glyphicon-remove", true, function(){deletePipeline(getParentWithJSONData($(this)).data("JSON")._id, getParentWithJSONData($(this)));})).appendTo($row); //Delete
-	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", true, function(){adjustPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
+		$("<td>").append(getGlyphIconButton("glyphicon glyphicon-remove", true, function(e){e.stopPropagation(); deletePipeline(getParentWithJSONData($(this)).data("JSON")._id, getParentWithJSONData($(this)));})).appendTo($row); //Delete
+	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", true, function(e){e.stopPropagation(); adjustPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
 	
 	
 }
@@ -133,8 +134,8 @@ function stopPipeline(pipelineId){
 }
 
 function displayPipeline(json){
-	// console.log(json);
-	console.log("Displaying Pipeline");
+	console.log("displayPipeline()");
+	console.log(jsPlumb.getContainer());
 	for (var i = 0, stream; stream = json.streams[i]; i++){		
 		createPreviewElement("stream", stream, i, json);
 	}
@@ -143,10 +144,12 @@ function displayPipeline(json){
 		createPreviewElement("sepa", sepa, i, json);
 	}
 	createPreviewElement("action", json.action);
-	connectElements(json);
+	connectElements(json, false);
+	jsPlumb.repaintEverything(true);
 }
 
 function createPreviewElement(type, element, i, json){
+	
 	var $state = $("<span>")
 		.addClass("connectable")
 		.attr("id", element.DOM)
@@ -219,9 +222,9 @@ function createPreviewElement(type, element, i, json){
 	);
 }
 
-function connectElements(json){
-	jsPlumb.setContainer($("#canvas"));
-	
+function connectElements(json, detachable){
+	console.log("connectElements()");
+	console.log(jsPlumb.getContainer());
 	var source, target;
 	var sourceOptions = {
 		endpoint: ["Dot", {radius: 5}],
@@ -236,17 +239,19 @@ function connectElements(json){
 	var targetOptions = {
 		endpoint: "Rectangle",
 		paintStyle: {fillStyle: "grey"},
-		anchor: "Left"
+		anchor: "Left",
+		isTarget: true
 	};
+	jsPlumb.setSuspendDrawing(true);
 	
 	//Action --> Sepas----------------------//
 		target = json.action.DOM;
 	
 		for (var i = 0, connection; connection = json.action.connectedTo[i]; i++){
 			source = connection;
-			var sourceEndpoint = jsPlumb.addEndpoint(source, sourceOptions);
+			var sourceEndpoint = jsPlumb.addEndpoint(source, sepaEndpointOptions);
 			var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
-			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:false});
+			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 		}
 	//Sepas --> Streams---------------------//
 		for (var i = 0, sepa; sepa = json.sepas[i]; i++){
@@ -257,20 +262,48 @@ function connectElements(json){
 				// console.log(source);
 				// console.log(target);
 				
-				var sourceEndpoint = jsPlumb.addEndpoint(source, sourceOptions);
+				var sourceEndpoint = jsPlumb.addEndpoint(source, streamEndpointOptions);
 				var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
-				jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:false});
+				jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 			}
 		}
+		jsPlumb.setSuspendDrawing(false ,true);
 	
 	
-	jsPlumb.repaintEverything();
+	
 }
 
 function adjustPipeline(json){
-	var type;
+	var type = "Proa"; //ändern auf jeweiligen Use-Case
+	console.log(json);
+	adjustingPipelineState = true;
+	clearPipelineDisplay();
+	jsPlumb.setContainer($("#assembly"));
+	$("#tabs a[href='#home']").tab('show');
 	
-	refresh(type);
+	// refresh(type);
+	
+	var currentx = 50;
+	var currenty = 50;
+	for (var i = 0, stream; stream = json.streams[i]; i++){
+		handleDroppedStream(createNewAssemblyElement(stream, {'x':currentx, 'y':currenty}));
+		currenty += 200;
+	}
+	currenty = 50;
+	for (var i = 0, sepa; sepa = json.sepas[i]; i++){
+		currentx += 200;
+		handleDroppedSepa(createNewAssemblyElement(sepa, {'x':currentx, 'y':currenty})
+		.data("options", true));
+			
+	}
+	currentx += 200;
+	handleDroppedAction(createNewAssemblyElement(json.action, {'x':currentx, 'y':currenty})
+		.data("options", true));
+	$("#logo-home").data("pipeline", json);
+	
+	connectElements(json, true);
+	jsPlumb.repaintEverything(true);
+	
 }
 
 function getYPosition(count , i, $canvas, $element){
@@ -278,4 +311,11 @@ function getYPosition(count , i, $canvas, $element){
 }
 function getXPosition($canvas, $element){
 	return ($canvas.width() / 2) - (1/2) * $element.width();
+}
+function clearPipelineDisplay(){
+	jsPlumb.deleteEveryEndpoint();
+	$("#pipelineDisplay").children().each(function(){		
+		$(this).children().remove();
+	});
+	
 }

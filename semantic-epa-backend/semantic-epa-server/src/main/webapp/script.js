@@ -25,10 +25,11 @@ function init(type) {
 	var debug = false;
 	savedSepas= false;
 	savedActions = false;
+	adjustingPipelineState = false;
+	overwriteOldPipeline = false
+	$("#logo-home").data("pipeline", false);
 	
-	$("#canvas").children().each(function(){		//In eigene Methode packen
-		$(this).children().remove();
-	});
+	if (plumbReady){clearPipelineDisplay();}
 	
 	jsPlumb.setContainer($("#assembly"));
 	if (debug){standardUrl = testUrl;}
@@ -61,7 +62,7 @@ function init(type) {
 }
 //Initiate assembly and jsPlumb functionality-------
 jsPlumb.ready(function(e){
-		
+		plumbReady = true;
 		jsPlumb.bind("connection", function(info, originalEvent){
 			if(originalEvent != undefined){
 
@@ -72,7 +73,7 @@ jsPlumb.ready(function(e){
 		
 		
 		window.onresize = function(event){
-			jsPlumb.repaintEverything();
+			jsPlumb.repaintEverything(true);
 		};
 		
 		initAssembly();
@@ -102,9 +103,7 @@ jsPlumb.ready(function(e){
 				$(this).addClass("info");
 				$("#pipelineTableBody").children().not(this).removeClass("info");
 				$("#pipelineTableBody").children().not(this).data("active", false);
-				$("#canvas").children().each(function(){
-					$(this).children().remove();
-				});
+				clearPipelineDisplay();
 				displayPipeline($(this).data("JSON"));
 			}else{
 				
@@ -517,7 +516,7 @@ function refresh(type) {
 	$('#streams').children().remove();
 	$('#streams').fadeTo(300, 0);
 	$('#sepas').fadeTo(300, 0);
-	clearAssembly();
+	// clearAssembly();
 	$('#streamCollapse').attr("data-toggle", "");
 	$('#streamCollapse').addClass("disabled");
 
@@ -1025,3 +1024,9 @@ function attemptLogin(){
 	console.log($("#login-form").serializeArray());
 }
 
+function showTutorial(){
+	$("#tutorialModal").modal('show');
+}
+function setAssemblyAsContainer(){
+	jsPlumb.setContainer($("#assembly"));
+}

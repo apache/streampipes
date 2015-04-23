@@ -8,17 +8,6 @@
     user-select: none;
 }
 
-/** OPEN SANS FONT **/
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
- 	src:local('Open Sans'), 
- 		local('OpenSans'),
- 		url("OpenSans-Regular.ttf") format('truetype'),
- 		url("OpenSans.woff") format('woff');
-}
-
 /** FB **/
 #like {
     position: fixed;
@@ -38,7 +27,7 @@
 body {
     padding:0;
     margin:0;    
-    font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;    
+    font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: whitesmoke;
 }
 
@@ -50,7 +39,6 @@ body {
   z-index:100001;
 	height:44px;
   padding:0;
-  opacity:0.8;
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
   box-shadow: 0px 1px #eee;
@@ -153,26 +141,15 @@ body {
 }
 
 .explanation {
-  position: absolute;
-  text-align: center;
-  background-color: #7AB02C;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
-  color: white;
-  width: 100%;
-  height: 54px;
-  z-index: 10000;
-  overflow: hidden;
-  box-shadow: 0px 0px 10px gray;
+    text-align: center;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    width: 100%;
+    z-index: 10000;
+    overflow: hidden;
+    font-size:13px;
 }
 
-.explanation.expanded {
-  height:auto;
-  min-height:54px;
-    
-  -webkit-transition: max-height 0.8s;
-  max-height:100%;    
-}
 
 .commands {
   margin-bottom:10px;
@@ -227,18 +204,6 @@ a:active {
   color:orange !important;
 }
 
-.window, .label {   
-  text-align:center;
-  z-index:24;
-	cursor:pointer;
-	box-shadow: 2px 2px 19px #aaa;
-   -o-box-shadow: 2px 2px 19px #aaa;
-   -webkit-box-shadow: 2px 2px 19px #aaa;
-   -moz-box-shadow: 2px 2px 19px #aaa;
-    
-}
-path, ._jsPlumb_endpoint { cursor:pointer; }
-
 .cmd { 
   color:white;
   margin-right:25px;
@@ -260,7 +225,7 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
 
 .component { 
   border:1px solid #346789; 
-  border-radius:0.5em;        
+  border-radius:0.5em;
   opacity:0.8; 
   filter:alpha(opacity=80);
   background-color:white;
@@ -279,41 +244,6 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
     filter:alpha(opacity=90);
 }
 
-.window {
-    background-color:white;
-    border:1px solid #346789;
-    box-shadow: 2px 2px 19px #e0e0e0;
-    -o-box-shadow: 2px 2px 19px #e0e0e0;
-    -webkit-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-box-shadow: 2px 2px 19px #e0e0e0;
-    -moz-border-radius:0.5em;
-    border-radius:0.5em;        
-    width:5em; height:5em;        
-    position:absolute;    
-    color:black;
-    padding:0.5em;
-    width:80px; 
-    height:80px;
-    line-height: 80px;     
-    -webkit-transition: -webkit-box-shadow 0.15s ease-in;
-    -moz-transition: -moz-box-shadow 0.15s ease-in;
-    -o-transition: -o-box-shadow 0.15s ease-in;
-    transition: box-shadow 0.15s ease-in;
-}
-
-.window:hover {
-    border:1px solid #123456;
-    box-shadow: 2px 2px 19px #444;
-   -o-box-shadow: 2px 2px 19px #444;
-   -webkit-box-shadow: 2px 2px 19px #444;
-   -moz-box-shadow: 2px 2px 19px #fff;
-    opacity:0.9;
-    filter:alpha(opacity=90);
-}
-
-.window a {
-    font-family:helvetica;
-}
 
 .demo-links, .library-links {
   position: fixed;
@@ -453,6 +383,8 @@ path, ._jsPlumb_endpoint { cursor:pointer; }
     height:70px;
     cursor:pointer;
 }
+
+._jsPlumb_endpoint { cursor:pointer; }
 
 .loadtest #header {
   height:11em;

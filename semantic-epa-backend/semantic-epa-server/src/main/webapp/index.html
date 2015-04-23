@@ -9,9 +9,9 @@
 
 		<title>User-Interface CEP</title>
 		<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
-		<script type="text/javascript" src="jquery-2.1.1.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="jquery.jsPlumb-1.6.4.js"></script>
+		<script type="text/javascript" src="jquery-2.1.3.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="jquery.jsPlumb-1.7.5.js"></script>
 		<script type="text/javascript" src="ModalBuilder.js"></script>
 		<script type="text/javascript" src="script.js"></script>
 		<script type="text/javascript" src="assembly.js"></script>
@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="pipelineFactory.js"></script>
 		<!-- <script type="text/javascript" src="dummyPipelineSend.js"></script> -->
 		<!-- Nur für debugging -->
-
+		<link rel="subsection" href="test.html"/>
 		<link rel="stylesheet" href="jsplumb.css"/>
 		<link rel="stylesheet" href="toastr.css"/>
 		<!-- Toastr -->
@@ -38,81 +38,14 @@
 			var domain = "";
 			var standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
 			var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
-
+			var plumbReady = false;
 			var savedSources;
-			var dummyPipeline = {
-				"streams" : [{
-					"DOM" : "jsPlumb_1_1",
-					"sourceId" : "http://localhost:8089/twitter",
-					"name" : "Twitter Sample Stream",
-					"description" : "Twitter Sample Stream Description",
-					"iconUrl" : "http://localhost:8080/semantic-epa-backend/img/Tweet_Icon_HQ.png",
-					"elementId" : "http://localhost:8089/twitter/sample"
-				}],
-				"sepas" : [{
-					"DOM" : "jsPlumb_1_64",
-					"domains" : ["DOMAIN_PERSONAL_ASSISTANT"],
-					"staticProperties" : [{
-						"input" : {
-							"options" : [{
-								"elementId" : "urn:clarkparsia.com:empire:8de23a43-8d98-446a-9415-6081409caf60",
-								"humanDescription" : "MATCHES",
-								"selected" : true
-							}, {
-								"elementId" : "urn:clarkparsia.com:empire:730ef27f-3eb0-402e-a21b-67626630daf2",
-								"humanDescription" : "CONTAINS",
-								"selected" : false
-							}],
-							"elementType" : "RADIO_INPUT"
-						},
-						"name" : "operation",
-						"description" : "Select Operation",
-						"elementId" : "urn:clarkparsia.com:empire:fbb9a1c2-6e57-47f6-8dbc-d8f0cffb44f3"
-					}, {
-						"input" : {
-							"value" : "vfv",
-							"elementType" : "TEXT_INPUT"
-						},
-						"name" : "text",
-						"description" : "Select Text Property",
-						"elementId" : "urn:clarkparsia.com:empire:c6380254-09ed-46fe-b50e-279fe72650df"
-					}, {
-						"input" : {
-							"value" : "ngfn",
-							"elementType" : "TEXT_INPUT"
-						},
-						"name" : "keyword",
-						"description" : "Select Keyword",
-						"elementId" : "urn:clarkparsia.com:empire:abcc7672-7948-4189-b74e-e70bb4fec42b"
-					}],
-					"inputNodes" : 1,
-					"name" : "Text Filter",
-					"description" : "Text Filter Description",
-					"iconUrl" : "http://localhost:8080/semantic-epa-backend/img/Textual_Filter_Icon_HQ.png",
-					"elementId" : "http://localhost:8090/sepa/textfilter",
-					"connectedTo" : ["jsPlumb_1_1"],
-					"options" : [{
-						"name" : "operation",
-						"value" : "MATCHES"
-					}, {
-						"name" : "text",
-						"value" : "vfv"
-					}, {
-						"name" : "keyword",
-						"value" : "ngfn"
-					}]
-				}],
-				"action" : {
-					"DOM" : "jsPlumb_1_73",
-					"name" : "JMS Consumer",
-					"description" : "Desc",
-					"elementId" : "http://localhost:8091/jms",
-					"connectedTo" : ["jsPlumb_1_64"]
-				}
-			};
 			var savedSepas;
 			var savedActions;
 			var $currentElement;
+			var currentTutorialPage;
+			var adjustingPipelineState = false;
+			var overwriteOldPipeline = false;
 			$(init("Proa"));
 
 		</script>
@@ -131,12 +64,12 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#" onclick=sendDummyPipeline(dummyPipeline)>EPA - Creator</a><!-- OnCLick nur für Debug!!! -->
+					<a id="logo-home" class="navbar-brand" href="#">StreamPipes</a>
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav" role="tablist">
+					<ul class="nav navbar-nav" id="tabs" role="tablist">
 						<li class="dropdown active">
 							<a href="#"   class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
 							<ul class="dropdown-menu" role="menu">
@@ -173,6 +106,10 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right ">
+						<li id="tutorial" class="nav navbar-nav">
+							<a href="#" onclick=showTutorial()>Tutorial</a>
+						</li>
+						
 						<li id="login" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
 							<ul id="login-form-dropdown" class="dropdown-menu" role="menu">
@@ -315,7 +252,7 @@
 								<button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>
 									Close
 								</button>
-								<button type="button" class="btn btn-primary" onclick=save()>
+								<button type="button" class="btn btn-primary"  onclick=save()>
 									Save
 								</button>
 							</div>
@@ -461,6 +398,11 @@
 										</div>
 									</div>
 								</form>
+								<div id="overwriteCheckbox" class="checkbox" style="display: none">
+								    	<label>
+								      		<input name="overwrite" type="checkbox"> Overwrite 
+								    	</label>
+							  	</div>
 
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default" data-dismiss="modal" >
@@ -469,6 +411,158 @@
 									<button type="button" class="btn btn-primary" data-dismiss="modal" onclick=savePipelineName()>
 										Save
 									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title">Tutorial</h4>
+							</div>
+							<div class="modal-body">
+								<div id="tutorial-content">
+									<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=false>
+									  <!-- Indicators -->
+									  <ol class="carousel-indicators">
+									    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="6"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="7"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="8"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="9"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="10"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="11"></li>
+									    <li data-target="#carousel-example-generic" data-slide-to="12"></li>
+									  </ol>
+									
+									  <!-- Wrapper for slides -->
+									  <div class="carousel-inner" role="listbox">
+									  	<div class="item active">
+									      <img src="img/tut1/blank.png" >
+									      <div class="carousel-caption">
+									        <h3>Welcome!</h3>
+									        <p>This tutorial will give you a quick introduction to the editor and will teach you how to create your first pipeline.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/1.png" >
+									      <div class="carousel-caption">
+									        <h3>Use-Case Selection</h3>
+									        <p>Use the dropdown menu to select the desired use-case.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/2.png" >
+									      <div class="carousel-caption">
+									        <h3>Source Selection</h3>
+									        <p>Choose one of the provided sources. Additional informaton can be displayed by pressing the right mouse button and choosing "Description".</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/3.png" >
+									      <div class="carousel-caption">
+									        <h3>Stream Selection</h3>
+									        <p>Streams will be available once you select a source.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/4.png" >
+									      <div class="carousel-caption">
+									        <h3>Drag'n'drop</h3>
+									        <p>Drag the desired stream to the indicated assembly area.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/5.png" >
+									      <div class="carousel-caption">
+									        <h3>Sepas</h3>
+									        <p>Category "Sepas" (eg filter elements) will be available once you dropped a stream element into the assembly area.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/6.png" >
+									      <div class="carousel-caption">
+									        <h3></h3>
+									        <p>Sepas are draggable too. </p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/7.png" >
+									      <div class="carousel-caption">
+									        <h3>Connections</h3>
+									        <p>Drag the little knob from the stream element to create a connection. Connect the stream and sepa elements.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/8.png" >
+									      <div class="carousel-caption">
+									        <h3>Customizing</h3>
+									        <p>Once a valid connection is established, a window pops up that let's you customize the sepa element. After customizing, click save. </p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/9.png" >
+									      <div class="carousel-caption">
+									        <h3>Pipelines</h3>
+									        <p>Repeat this procedure with an action element. You can have any number of stream and sepa elements in your pipeline, but only one action element. When you're done, click "Submit" in the bottom right corner.</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/10.png" >
+									      <div class="carousel-caption">
+									        <h3></h3>
+									        <p>Name your pipeline and enter a short description to make it easier to understand what it does. Click Save. Congratulations, you've just created your very first pipeline!</p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/11.png" >
+									      <div class="carousel-caption">
+									        <h3>Other features</h3>
+									        <p><b>Pipelines</b> shows all your saved pipelines and lets you inspect, run, modify and delete them.<br>
+									        	<b>Visualizations</b> lets you view your pipelines output in different ways. <br>
+									        	<b>Options</b> lets you manage your existing elements or add new ones.
+									        </p>
+									      </div>
+									    </div>
+									    <div class="item">
+									      <img src="img/tut1/blank.png" >
+									      <div class="carousel-caption">
+									        <h3>Thank you!</h3>
+									        <p></p>
+									      </div>
+									    </div>
+									  </div>
+									
+									  <!-- Controls -->
+									  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+									    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+									    <span class="sr-only">Previous</span>
+									  </a>
+									  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+									    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+									    <span class="sr-only">Next</span>
+									  </a>
+									</div>
+								</div>
+								
+								
+								
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">
+										Close
+									</button>
+									
 								</div>
 							</div>
 						</div>
@@ -506,7 +600,7 @@
 						</table>
 					</div>
 				</div>
-				<div id="canvas" class="">
+				<div id="pipelineDisplay" class="">
 					<div id="streamDisplay"></div>
 					<div id="sepaDisplay"></div>
 					<div id="actionDisplay"></div>

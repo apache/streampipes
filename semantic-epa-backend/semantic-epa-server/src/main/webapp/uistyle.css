@@ -127,7 +127,7 @@ body {
 	
 }
 
-#canvas{
+#pipelineDisplay{
 	margin-top: 10vh;
 	height: 50vh;
 	box-shadow: 0 0 15px #333;

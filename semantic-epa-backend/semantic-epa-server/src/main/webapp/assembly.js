@@ -55,35 +55,49 @@ function initAssembly(){
 					return false;
 				}
 				//Neues Container Element für Icon / identicon erstellen
-				var $newState = createNewAssemblyElement(ui);
+				var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
 
 				//Droppable Streams
 				if(ui.draggable.hasClass('stream')){
-					handleDroppedStream($newState);	
+					handleDroppedStream($newState, false);	
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
-					handleDroppedSepa(ui, $newState);
+					handleDroppedSepa($newState, false);
 				//Droppable Actions
 				}else if(ui.draggable.hasClass('action')){
-					handleDroppedAction(ui, $newState);
+					handleDroppedAction($newState, false);
 				}
 				initTooltips();
 			}
+			jsPlumb.repaintEverything(true);
 		}
 		
 	}); //End #assembly.droppable()	
 }
 
-function createNewAssemblyElement(ui){
-
-	var $newState = $('<span>')									
-		.data("JSON", $.extend(true, {},ui.draggable.data("JSON")))
-		.appendTo('#assembly');
-	jsPlumb.draggable($newState, {containment: 'parent'});
+function getCoordinates(ui){
+	console.log(ui);
 	var newPos = ui.helper.position();
 	var newTop = getDropPosition(ui.helper);
+	
+	return coord = {
+		'x' : newPos.left,
+		'y' : newTop
+	};
+}
+
+function createNewAssemblyElement(json, coordinates){
+	console.log(coordinates);
+	var $newState = $('<span>')									
+		.data("JSON", $.extend(true, {}, json))
+		.appendTo('#assembly');
+	if (adjustingPipelineState){$newState.attr("id", json.DOM);}
+	
+	jsPlumb.draggable($newState, {containment: 'parent'});
+	// var newPos = ui.helper.position();
+	// var newTop = getDropPosition(ui.helper);
 	$newState
-		.css({'position': 'absolute', 'top': newTop , 'left': newPos.left})
+		.css({'position': 'absolute', 'top': coordinates.y , 'left': coordinates.x})
 		.on("contextmenu", function (e) {
 			if ($(this).hasClass('stream')){
 				$('#customize, #division ').hide();
@@ -103,7 +117,7 @@ function createNewAssemblyElement(ui){
 			return false;
 		});
 	if ($newState.data('JSON').iconUrl == null){ //Kein icon in JSON angegeben
-		var md5 = CryptoJS.MD5(ui.draggable.data("JSON").elementId);
+		var md5 = CryptoJS.MD5(json.elementId);
 		// var md5 = ui.draggable.data("JSON").elementId.replace("-", "");
 		var $ident = $('<p>')
 			.text(md5)
@@ -114,20 +128,20 @@ function createNewAssemblyElement(ui){
 			{"data-toggle": "tooltip",
 			"data-placement": "top",
 			"data-delay": '{"show": 1000, "hide": 100}',
-			title: ui.draggable.data("JSON").name
+			title: json.name
 			})
-		.data("JSON", $.extend(true, {},ui.draggable.data("JSON")));
+		.data("JSON", $.extend(true, {},json));
 	}else{
 		$('<img>')
 			.addClass('connectable-img tt')
-			.attr({src: ui.draggable.children().attr('src'),
+			.attr({src: json.iconUrl,
 				"data-toggle": "tooltip",
 				"data-placement": "top",
 				"data-delay": '{"show": 1000, "hide": 100}',
-				title: ui.draggable.data("JSON").name})
+				title: json.name})
 			.appendTo($newState)
 			
-			.data("JSON", ui.draggable.data("JSON"));
+			.data("JSON", $.extend(true, {},json));
 	}
 	
 	return $newState;
@@ -142,8 +156,9 @@ function handleDroppedStream($newState){
 	$newState
 		.addClass('connectable stream');
 		
-	
-	jsPlumb.addEndpoint($newState,streamEndpointOptions);
+	if(!adjustingPipelineState){
+		jsPlumb.addEndpoint($newState,streamEndpointOptions);
+	}
 	
 	$newState.dblclick(function(){
 		jsPlumb.addEndpoint($newState,streamEndpointOptions);
@@ -157,7 +172,7 @@ function handleDroppedStream($newState){
 	
 }
 
-function handleDroppedSepa(ui, $newState){
+function handleDroppedSepa($newState){
 	
 	$('#actions').children().remove();
 	displayActions();
@@ -165,21 +180,22 @@ function handleDroppedSepa(ui, $newState){
 	$('#actions').fadeTo(100,1);									
 	$newState
 		.addClass('connectable sepa');
-	if (ui.draggable.data("JSON").staticProperties != null){
+	if ($newState.data("JSON").staticProperties != null && !adjustingPipelineState){
 		$newState
 			.addClass('disabled');
 	}
-		
-	if (ui.draggable.data("JSON").inputNodes < 2){ //1 InputNode
-		
-		jsPlumb.addEndpoint($newState, leftTargetPointOptions);	
-	}else{ 
-		jsPlumb.addEndpoint($newState,getNewTargetPoint(0, 0.25));
-		
-		jsPlumb.addEndpoint($newState,getNewTargetPoint(0, 0.75));
-	}
 	
-	jsPlumb.addEndpoint($newState, sepaEndpointOptions);
+	if (!adjustingPipelineState){	
+		if ($newState.data("JSON").inputNodes < 2){ //1 InputNode
+			
+			jsPlumb.addEndpoint($newState, leftTargetPointOptions);	
+		}else{ 
+			jsPlumb.addEndpoint($newState,getNewTargetPoint(0, 0.25));
+			
+			jsPlumb.addEndpoint($newState,getNewTargetPoint(0, 0.75));
+		}
+		jsPlumb.addEndpoint($newState, sepaEndpointOptions);
+	}
 	
 	$newState.dblclick(function(){
 		jsPlumb.addEndpoint($newState, sepaEndpointOptions);
@@ -187,18 +203,19 @@ function handleDroppedSepa(ui, $newState){
 	
 }
 
-function handleDroppedAction(ui, $newState){
+function handleDroppedAction($newState){
 	
 	jsPlumb.draggable($newState, {containment: 'parent'});
 	
 	$newState
 		.addClass("connectable action");
-	if (ui.draggable.data("JSON").staticProperties != null){
+	if ($newState.data("JSON").staticProperties != null && !adjustingPipelineState){
 		$newState
 			.addClass('disabled');
 	}
-		
-	jsPlumb.addEndpoint($newState,leftTargetPointOptions);
+	if (!adjustingPipelineState){	
+		jsPlumb.addEndpoint($newState,leftTargetPointOptions);
+	}
 	
 }
 
@@ -297,6 +314,8 @@ function submit() {
 
 	$('#assembly>span.connectable').each(function(i, element) {
 		if (!isConnected(element)){
+			error = true;
+			
 			toastTop("error", "All elements must be connected", "Submit Error");
 		}
 		
@@ -319,10 +338,10 @@ function submit() {
 				error = true;
 				toastTop("error", "More than one action element present in pipeline", "Submit Error");
 			}else{
+				actionPresent = true;
 				if ($(element).data("JSON").staticProperties == null || $(element).data("options")) {
-					actionPresent = true;
+					
 					addToPipeline(element, pipeline);
-
 				} else {
 					toastTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");	;
 					error = true;
@@ -345,6 +364,9 @@ function submit() {
 	}
 	if (!error ) {
 		
+		if($("#logo-home").data("pipeline") != false){
+			adjustingPipelineState = true;
+		}
 		currentPipeline = pipeline;
 		openPipelineNameModal();
 		
@@ -353,7 +375,14 @@ function submit() {
 }
 
 function openPipelineNameModal(){
-	
+	if (adjustingPipelineState) {
+		var name = $("#logo-home").data("pipeline").name;
+		var descr = $("#logo-home").data("pipeline").description;
+		
+		$("#nameInput").attr("value", name);
+		$("#descriptionInput").attr("value", descr);
+		$("#overwriteCheckbox").show();
+	}
 	$('#pipelineNameModal').modal('show');
 }
 
@@ -364,8 +393,14 @@ function savePipelineName(){
 		toastRightTop("error","Please enter all parameters");
 		return false;
 	}
+	console.log(pipelineName);
 	currentPipeline.name = pipelineName[0].value;
 	currentPipeline.description = pipelineName[1].value;
+	if ( !($("#overwriteCheckbox").css('display') == 'none')){
+		overwriteOldPipeline = $("#overwriteCheckbox").prop("checked");
+	}else{
+		overwriteOldPipeline = false;
+	}
 
 	sendPipeline(true);
 }
@@ -383,6 +418,30 @@ function sendPipeline(fullPipeline, info){
  				if (data.success){			//TODO Objekt im Backend ändern
  					// toastTop("success", "Pipeline sent to server");
  					displaySuccess(data);
+ 					if (adjustingPipelineState && overwriteOldPipeline){
+ 						var pipelineId = $("#logo-home").data("pipeline")._id;
+ 						var url = standardUrl + "pipelines/" + pipelineId;
+						$.ajax({
+							url : url,
+							success : function(data){
+								if (data.success){
+									adjustingPipelineState = false;
+									overwriteOldPipeline = false;
+									$("#overwriteCheckbox").css("display", "none");
+									refresh("Proa");
+								}else{
+									displayErrors(data);
+								}
+							},
+							error : function(data){
+								console.log(data);
+							},
+							type : 'DELETE',
+							processData: false
+						});
+ 					}
+ 					
+ 					
  				}else{
  					displayErrors(data);
  				}
@@ -415,7 +474,8 @@ function sendPipeline(fullPipeline, info){
 							$('#customizeModal').modal('show');
 							
  						}
- 					}if (currentPipeline.action != null){
+					console.log(currentPipeline);
+ 					}if (!$.isEmptyObject(currentPipeline.action)){
  						var id = "#" + currentPipeline.action.DOM;
  						if (!isFullyConnected(id)) {return;}
  						$('#customize-content').html(prepareCustomizeModal($(id)));
@@ -461,6 +521,7 @@ function modifyPipeline(pipelineModifications){
 function save() {
 
 	var options = $('#modalForm').serializeArray();
+	console.log(options);
 	if (options.length < $currentElement.data("JSON").staticProperties.length){
 		toastRightTop("error","Please enter all parameters");
 			return false;
@@ -522,7 +583,7 @@ function prepareCustomizeModal(element) {
 
 		if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
 			var staticPropertiesArray = element.data("JSON").staticProperties;
-
+			console.log(staticPropertiesArray);
 			var textInputCount = 0;
 			var radioInputCount = 0;
 			var selectInputCount = 0;
