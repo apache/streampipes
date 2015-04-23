@@ -26,7 +26,7 @@ function init(type) {
 	savedSepas= false;
 	savedActions = false;
 	adjustingPipelineState = false;
-	overwriteOldPipeline = false
+	overwriteOldPipeline = false;
 	$("#logo-home").data("pipeline", false);
 	
 	if (plumbReady){clearPipelineDisplay();}
@@ -480,10 +480,15 @@ function ContextMenuClickHandler(type) {
 				} else if (!$('#assembly').children().hasClass('action')){
 					$('#collapseThree').collapse('show');
 				}
-			} else {//Customize clicked
+			} else if ($selected.get(0) === $('#customize').get(0)) {//Customize clicked
 
 				$('#customize-content').html(prepareCustomizeModal($invokedOn));
 				$('#customizeModal').modal('show');
+			} else {
+				var json = $invokedOn.data("JSON");
+				$('#description-title').text(json.name);
+				$('#modal-description').text(json.description);
+				$('#descrModal').modal('show');
 			}
 		});
 	} else if (type === "static") {
