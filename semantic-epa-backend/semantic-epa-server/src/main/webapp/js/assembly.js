@@ -43,8 +43,6 @@ var mod;
 function initAssembly(){
 	
 	$('#clear').click(clearAssembly); 
-	
-	
 
 	$('#assembly').droppable({
 		tolerance: "fit",
@@ -59,10 +57,17 @@ function initAssembly(){
 
 				//Droppable Streams
 				if(ui.draggable.hasClass('stream')){
-					handleDroppedStream($newState, false);	
+					handleDroppedStream($newState, false);
+					// $newState.selectable({
+						// selected: function(event, ui){
+							// console.log("selectable test");
+							// console.log(ui);
+						// }
+					// });	
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
 					handleDroppedSepa($newState, false);
+					// $newState.selectable();	
 				//Droppable Actions
 				}else if(ui.draggable.hasClass('action')){
 					handleDroppedAction($newState, false);

@@ -110,6 +110,9 @@ body {
 	margin-top: 0.5vh;
 }
 
+.ui-selectable-helper {background: rgba(51, 200, 51, 0.5);}
+.ui-selected {box-shadow: 0 0 10px #33DD33 !important}
+
 .draggable-img-dragging{
 	margin-left: 14%;
 	position: absolute;	
@@ -332,3 +335,5 @@ td {
 textarea{
 	resize: none;
 }
+
+

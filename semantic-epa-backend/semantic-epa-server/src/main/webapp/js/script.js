@@ -77,6 +77,16 @@ jsPlumb.ready(function(e){
 		};
 		
 		initAssembly();
+		$("#assembly")
+			.selectable({
+				selected: function(event, ui){
+					console.log("selectable test");
+					console.log(ui);
+				},
+				filter : ".connectable.stream,.connectable.sepa:not('.disabled')",
+				delay: 150
+						
+			});
  		jsPlumb.Defaults.Container = "assembly";
  		//Inititate accordion functionality-----------------
 		$('#accordion').on('show.bs.collapse', function() {
@@ -508,7 +518,7 @@ function ContextMenuClickHandler(type) {
 
 
 
-function refresh(type) {
+function refresh(type, tabReset) {
 
 	if (type == "Proa") {
 		$('#typeChange').html("Proasense <b class='caret'></b>");
@@ -516,6 +526,7 @@ function refresh(type) {
 		$('#typeChange').html("Personal Assistant <b class='caret'></b>");
 	}
 	enableOptions();
+	
 
 	$('#sources').children().remove();
 	$('#streams').children().remove();
@@ -526,6 +537,10 @@ function refresh(type) {
 	$('#streamCollapse').addClass("disabled");
 
 	init(type);
+	
+	if(tabReset){
+		$("#tabs a[href='#home']").tab('show');
+	}
 }
 
 
