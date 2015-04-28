@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.desc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -19,6 +20,8 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
+import com.clarkparsia.empire.annotation.InvalidRdfException;
+
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.html.EventConsumerWelcomePage;
 import de.fzi.cep.sepa.html.EventProcessingAgentWelcomePage;
@@ -31,7 +34,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
-import de.fzi.cep.sepa.storage.util.Transformer;
+import de.fzi.cep.sepa.transform.Transformer;
 
 @SuppressWarnings("deprecation")
 public class ModelSubmitter {
@@ -116,8 +119,7 @@ public class ModelSubmitter {
 
 				try {
 					if (request.getMethod().equals(Method.GET)) {
-						Graph rdfGraph = Transformer.generateCompleteGraph(
-								new GraphImpl(), sec);
+						Graph rdfGraph = Transformer.toJsonLd(sec);
 						response.setEntity(asString(rdfGraph),
 								MediaType.APPLICATION_JSON);
 					} else if (request.getMethod().equals(Method.POST)) {
@@ -126,12 +128,9 @@ public class ModelSubmitter {
 						SECInvocationGraph graph = Transformer.fromJsonLd(
 								SECInvocationGraph.class,
 								form.getFirstValue("json"));
-						System.out.println(graph.getElementId());
-						System.out.println(graph.getUri());
 						// TODO: extract HTTP parameters
 						Restlet restlet = generateConcreteActionRestlet(graph, 
 								declarer, component);
-						System.out.println(form.getFirstValue("json"));
 						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);
 						restlets.add(restlet);
 					} else if (request.getMethod().equals(Method.DELETE)) {
@@ -189,8 +188,7 @@ public class ModelSubmitter {
 				
 				try {
 					if (request.getMethod().equals(Method.GET)) {
-						Graph rdfGraph = Transformer.generateCompleteGraph(
-								new GraphImpl(), sepa);
+						Graph rdfGraph = Transformer.toJsonLd(sepa);
 						response.setEntity(asString(rdfGraph),
 								MediaType.APPLICATION_JSON);
 					} else if (request.getMethod().equals(Method.POST)) {
@@ -241,8 +239,7 @@ public class ModelSubmitter {
 			public void handle(Request request, Response response) {
 				
 				try {	
-				Graph rdfGraph = Transformer.generateCompleteGraph(
-						new GraphImpl(), sepaElement);
+				Graph rdfGraph = Transformer.toJsonLd(sepaElement);
 				
 				response.setEntity(asString(rdfGraph),
 						MediaType.APPLICATION_JSON);
@@ -259,10 +256,17 @@ public class ModelSubmitter {
 				} catch (SecurityException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidRdfException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
-				//response.setEntity(GsonSerializer.getGson().toJson(sepaElement),
-				//		MediaType.APPLICATION_JSON);
+
 			}
 		};
 	}
