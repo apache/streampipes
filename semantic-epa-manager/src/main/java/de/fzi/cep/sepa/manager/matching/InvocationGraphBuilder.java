@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.manager.pipeline;
+package de.fzi.cep.sepa.manager.matching;
 
 import java.net.URI;
 import java.net.URISyntaxException;

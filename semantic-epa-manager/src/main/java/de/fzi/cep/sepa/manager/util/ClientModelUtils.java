@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.manager.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
@@ -23,7 +24,18 @@ public class ClientModelUtils {
 	 * @throws Exception 
 	 */
 	
-	public static ConsumableSEPAElement getRootNode(Pipeline pipeline) throws Exception
+	public static boolean isSepaInPipeline(Pipeline pipeline)
+	{
+		try {
+			getRootNode(pipeline);
+			return true;
+		} catch (NoSepaInPipelineException e)
+		{
+			return false;
+		}
+	}
+	
+	public static ConsumableSEPAElement getRootNode(Pipeline pipeline) throws NoSepaInPipelineException
 	{
 		List<ConsumableSEPAElement> elements = new ArrayList<>();
 		elements.addAll(pipeline.getSepas());
@@ -41,7 +53,7 @@ public class ClientModelUtils {
 		{
 			elements = remove(elements, client.getConnectedTo());
 		}
-		if (elements.size() != 1) throw new Exception();
+		if (elements.size() != 1) throw new NoSepaInPipelineException();
 		else return elements.get(0);
 			
 	}

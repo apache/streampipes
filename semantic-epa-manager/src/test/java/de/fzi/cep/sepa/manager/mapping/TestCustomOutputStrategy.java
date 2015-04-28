@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
-import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.messages.PipelineModification;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.ActionClient;

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.manager.pipeline;
+package de.fzi.cep.sepa.manager.matching;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,9 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.manager.matching.schema.ConnectionValidator;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
-import de.fzi.cep.sepa.manager.validator.ConnectionValidator;
 import de.fzi.cep.sepa.messages.PipelineModification;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
@@ -114,7 +114,6 @@ public class PipelineValidationHandler {
 							element.getDOM(), invocationGraphs);
 					left = Utils.createList(ancestor.getOutputStream()
 							.getEventSchema());
-					// System.out.println(ancestor.getOutputStream().getEventSchema().getEventProperties().size());
 				}
 				
 				if (rightElement instanceof SEPA)
@@ -126,7 +125,6 @@ public class PipelineValidationHandler {
 				match = ConnectionValidator.validateSchema(
 						left,
 						Utils.createList(rightEventSchema));
-				System.out.println(match);
 			} else if (rootElement.getConnectedTo().size() == 2) {
 				
 				SEPA sepa = (SEPA) rightElement;
@@ -331,7 +329,6 @@ public class PipelineValidationHandler {
 								.getEventProperties());
 	
 				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
-					System.out.println(matchedStreamProperty.getRdfId().toString());
 					options.add(new Option(matchedStreamProperty
 							.getRdfId().toString(),
 							matchedStreamProperty.getRuntimeName()));

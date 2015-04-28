@@ -2,15 +2,23 @@ package de.fzi.cep.sepa.manager.pipeline;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.openrdf.model.impl.GraphImpl;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.UnsupportedRDFormatException;
 
+import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -22,7 +30,7 @@ import de.fzi.sepa.model.client.util.Utils;
 
 public class TestCompletePipeline {
 
-	public static void main(String[] args) throws JsonSyntaxException, IOException, RDFHandlerException, IllegalArgumentException, IllegalAccessException, SecurityException
+	public static void main(String[] args) throws JsonSyntaxException, IOException, RDFHandlerException, IllegalArgumentException, IllegalAccessException, SecurityException, RDFParseException, UnsupportedRDFormatException, RepositoryException, InvocationTargetException, ClassNotFoundException, InvalidRdfException
 	{
 		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestCompletePipeline.jsonld"), "UTF-8"), Pipeline.class);
 		

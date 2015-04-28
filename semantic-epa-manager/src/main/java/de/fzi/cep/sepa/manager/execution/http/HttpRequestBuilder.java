@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.manager.http;
+package de.fzi.cep.sepa.manager.execution.http;
 
 import java.util.ArrayList;
 import java.util.List;

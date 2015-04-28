@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.exceptions.TooManyEdgesException;
-import de.fzi.cep.sepa.manager.pipeline.MappingCalculator;
-import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.MappingCalculator;
+import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.messages.PipelineModification;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;

@@ -4,6 +4,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;

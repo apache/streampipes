@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.Pipeline;

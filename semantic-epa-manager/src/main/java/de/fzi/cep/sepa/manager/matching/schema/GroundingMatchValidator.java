@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.manager.validator;
+package de.fzi.cep.sepa.manager.matching.schema;
 
 import java.util.List;
 

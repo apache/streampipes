@@ -6,12 +6,15 @@ import java.util.List;
 import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
-import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
-import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
+import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
+import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.TreeBuilder;
+import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
+import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -38,6 +41,11 @@ public class Operations {
 		.computeMappingProperties()
 		.computeMatchingProperties()
 		.getPipelineModificationMessage();
+	}
+	
+	public static RecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
+	{
+		return new ElementRecommender(partialPipeline).findRecommendedElements();
 	}
 
 	public static void startPipeline(

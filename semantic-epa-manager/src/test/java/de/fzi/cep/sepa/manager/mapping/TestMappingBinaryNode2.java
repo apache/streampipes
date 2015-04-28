@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
-import de.fzi.cep.sepa.manager.pipeline.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.sepa.model.client.util.Utils;

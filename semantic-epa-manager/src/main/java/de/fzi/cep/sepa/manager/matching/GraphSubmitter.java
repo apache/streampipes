@@ -1,8 +1,8 @@
-package de.fzi.cep.sepa.manager.pipeline;
+package de.fzi.cep.sepa.manager.matching;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.manager.http.HttpRequestBuilder;
+import de.fzi.cep.sepa.manager.execution.http.HttpRequestBuilder;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 
 public class GraphSubmitter {
