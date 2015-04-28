@@ -25,7 +25,6 @@ import de.fzi.cep.sepa.runtime.param.DataType;
 import de.fzi.cep.sepa.runtime.param.EndpointInfo;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
 import de.fzi.cep.sepa.runtime.param.RuntimeParameters;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class Test {
 
