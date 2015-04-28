@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -68,6 +69,66 @@ public class ModelUtils {
 		List<Map<String, Object>> result = new ArrayList<>();
 		result.add(map);
 		return result;
+	}
+	
+	public static String getPackageName(String className)
+	{
+		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement", "InvocableSEPAElement"};
+		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph", "SECInvocationGraph"};
+		String[] modelClasses = {"MatchingStaticProperty",
+				"Domain", 
+				"EventGrounding", 
+				"EventProperty", 
+				"EventQuality", 
+				"EventSchema", 
+				"EventSource", 
+				"EventStream", 
+				"MeasurementUnit", 
+				"Namespace", 
+				"Pipeline", 
+				"PipelineElement", 
+				"SEPAFactory", 
+				"StaticProperty", 
+				"TransportFormat", 
+				"TransportProtocol", 
+				"OneOfStaticProperty", 
+				"FreeTextStaticProperty", 
+				"AnyStaticProperty", 
+				"Option", 
+				"MappingProperty", 
+				"EventPropertyPrimitive", 
+				"EventPropertyNested", 
+				"EventPropertyList", 
+				"MappingPropertyUnary",
+				"MappingPropertyNary"};
+		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
+		
+		if (contains(className, abstractClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.";
+			}
+		else if (contains(className, graphClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.graph.";
+			}
+		else if (contains(className, outputClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.output.";
+			}
+		else if (contains(className, modelClasses)) 
+			{
+				return "de.fzi.cep.sepa.model.impl.";
+			}
+		else 
+			{
+				System.out.println("MISSING: " +className);
+				throw new IllegalArgumentException();
+			}
+	}
+	
+	private static boolean contains(String value, String[] list)
+	{
+		return Arrays.asList(list).contains(value);
 	}
 	
 }
