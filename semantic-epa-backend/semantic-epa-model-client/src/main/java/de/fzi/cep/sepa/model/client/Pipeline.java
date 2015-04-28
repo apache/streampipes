@@ -103,4 +103,16 @@ public class Pipeline {
 		this.startedAt = startedAt;
 	}
 	
+	public Pipeline clone()
+	{
+		Pipeline pipeline = new Pipeline();
+		pipeline.setName(name);
+		pipeline.setDescription(description);
+		pipeline.setSepas(sepas);
+		pipeline.setStreams(streams);
+		pipeline.setAction(action);
+		
+		return pipeline;
+	}
+	
 }

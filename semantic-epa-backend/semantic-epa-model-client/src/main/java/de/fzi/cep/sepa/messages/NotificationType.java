@@ -9,7 +9,8 @@ public enum NotificationType {
 	PIPELINE_STORAGE_SUCCESS("Success", "Pipeline stored successfully"), 
 	PIPELINE_START_SUCCESS("Started", "Pipeline successfully started"), 
 	PIPELINE_STOP_SUCCESS("Stopped", "Pipeline stopped successfully"),
-	NO_VALID_CONNECTION("Not a valid connection", "Expected input event type does not match computed output type");
+	NO_VALID_CONNECTION("Not a valid connection", "Expected input event type does not match computed output type"),
+	NO_SEPA_FOUND("No element found", "Could not find any element that matches the output of this element.");
 
 	private final String title;
 	private final String description;
