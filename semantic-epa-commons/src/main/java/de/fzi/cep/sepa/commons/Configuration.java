@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.commons;
 
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.openrdf.rio.RDFFormat;
@@ -31,6 +30,10 @@ public class Configuration {
 	public static final String SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 	
 	public static final String WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
+	
+	public static final String SESAME_URI = "http://localhost:8080/openrdf-sesame";
+	
+	public static final String SESAME_REPOSITORY_ID = "test-6";
 	
 	//public static final String EMPIRE_CONFIG_LOCATION = "/home/riemer/empire.config.properties";
 
