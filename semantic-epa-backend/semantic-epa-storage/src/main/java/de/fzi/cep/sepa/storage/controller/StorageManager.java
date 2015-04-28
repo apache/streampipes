@@ -16,6 +16,7 @@ import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
+import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
@@ -27,8 +28,8 @@ public enum StorageManager {
 
 	INSTANCE;
 
-	private String SERVER = "http://localhost:8080/openrdf-sesame";
-	private String REPOSITORY_ID = "test-6";
+	private String SERVER = Configuration.SESAME_URI;
+	private String REPOSITORY_ID = Configuration.SESAME_REPOSITORY_ID;
 	
 	private EntityManager storageManager;
 
