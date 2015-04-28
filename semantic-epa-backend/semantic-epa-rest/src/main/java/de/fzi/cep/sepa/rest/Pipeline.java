@@ -14,11 +14,12 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
+import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
-import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
@@ -127,6 +128,24 @@ public class Pipeline extends AbstractRestInterface {
 		} catch(NoValidConnectionException e) {
 			return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION.title(), NotificationType.NO_VALID_CONNECTION.description(), e.getMessage()));
 		} catch (Exception e) {
+			e.printStackTrace();
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		}
+	}
+	
+	@Path("/recommend")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public String recommendSepa(String pipeline)
+	{
+		try {
+			return toJson(Operations.findRecommendedElements(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class)));
+		} catch (JsonSyntaxException e) {
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		} catch (NoSuitableSepasAvailableException e) {
+			return constructErrorMessage(new Notification(NotificationType.NO_SEPA_FOUND.title(), NotificationType.NO_SEPA_FOUND.description(), e.getMessage()));
+		}  
+		catch (Exception e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}

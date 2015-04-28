@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.manager.pipeline.GraphSubmitter;
-import de.fzi.cep.sepa.manager.pipeline.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.pipeline.TreeBuilder;
+import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
+import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.sepa.model.client.util.Utils;

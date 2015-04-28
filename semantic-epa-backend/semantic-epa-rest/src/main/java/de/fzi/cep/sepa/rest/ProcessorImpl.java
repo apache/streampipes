@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
 import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.rio.RDFHandlerException;
 
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
@@ -25,7 +24,6 @@ import de.fzi.cep.sepa.rest.api.Processor;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
-import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.manager.SEPAManager;
 import de.fzi.sepa.model.client.util.Utils;
 
@@ -37,11 +35,9 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllProcessors(@DefaultValue("1") @QueryParam("domains") String domain)
 	{
-		System.out.println(domain);
 		List<SEPA> sepas;
 		if (domain.equals("1")) sepas = requestor.getAllSEPAs();
 		else sepas = requestor.getSEPAsByDomain(domain);
-		
 		
 		return toJson(ClientModelTransformer.toSEPAClientModel(sepas));
 	}

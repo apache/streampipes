@@ -1,12 +1,18 @@
 package de.fzi.cep.sepa.rest.api;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.openrdf.model.impl.GraphImpl;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.UnsupportedRDFormatException;
+
+import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
@@ -36,7 +42,7 @@ public abstract class AbstractRestInterface {
 		try {
 			return de.fzi.cep.sepa.commons.Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), object));
 		} catch (RDFHandlerException | IllegalArgumentException
-				| IllegalAccessException | SecurityException e) {
+				| IllegalAccessException | SecurityException | InvocationTargetException | ClassNotFoundException | InvalidRdfException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
@@ -47,7 +53,7 @@ public abstract class AbstractRestInterface {
 		return HttpJsonParser.getContentFromUrl(uri);
 	}
 	
-	protected <T extends NamedSEPAElement> T parseObjectContent(Class<T> clazz, String payload)
+	protected <T extends NamedSEPAElement> T parseObjectContent(Class<T> clazz, String payload) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException
 	{
 		return Transformer.fromJsonLd(clazz, payload);
 	}
