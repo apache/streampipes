@@ -1,16 +1,22 @@
 package de.fzi.cep.sepa.storage.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import javax.persistence.spi.PersistenceProvider;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.http.HTTPRepository;
 
 import com.clarkparsia.empire.Empire;
+import com.clarkparsia.empire.config.ConfigKeys;
+import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
+import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
@@ -23,16 +29,12 @@ public enum StorageManager {
 
 	private String SERVER = "http://localhost:8080/openrdf-sesame";
 	private String REPOSITORY_ID = "test-6";
-	private String TEMP_REPOSITORY_ID = "temp-db";
 	
 	private EntityManager storageManager;
-	private EntityManager tempStorageManager;
 
 	private RepositoryConnection conn;
-	private RepositoryConnection tempConn;
 	
 	private Repository repository;
-	private Repository tempRepository;
 
 	StorageManager() {
 		initStorage();
@@ -42,12 +44,8 @@ public enum StorageManager {
 	private boolean initStorage() {
 
 		try {
-			repository = new HTTPRepository(SERVER, REPOSITORY_ID);
-			tempRepository = new HTTPRepository(SERVER, TEMP_REPOSITORY_ID);
-				
-			
+			repository = new HTTPRepository(SERVER, REPOSITORY_ID);	
 			conn = repository.getConnection();
-			tempConn = tempRepository.getConnection();
 				
 			return true;
 		} catch (Exception e) {
@@ -58,20 +56,22 @@ public enum StorageManager {
 	private boolean initEmpire() {
 		
 		try {
-		System.setProperty(
-				"empire.configuration.file",
-				Configuration.EMPIRE_CONFIG_LOCATION);
-//        System.setProperty("empire.configuration.file",
-//                "c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties");
+		
+		EmpireConfiguration empireCfg = new EmpireConfiguration(); 
+		empireCfg.setAnnotationProvider(CustomAnnotationProvider.class); 
 			
-		Empire.init(new OpenRdfEmpireModule());
-
-		// create an EntityManager for the specified persistence context
-		storageManager = Persistence.createEntityManagerFactory(
-				"sepa-server").createEntityManager();
-		
-		tempStorageManager = Persistence.createEntityManagerFactory("temp-db").createEntityManager();
-		
+	    Empire.init(empireCfg, new OpenRdfEmpireModule()); 
+	    Map<Object, Object> map = new HashMap<Object,Object>(); 
+	    
+	    map.put(RepositoryFactoryKeys.REPO_HANDLE, repository); 
+	    map.put(ConfigKeys.FACTORY, "sesame");
+	    map.put(ConfigKeys.NAME, "sepa-server");
+	    map.put("url", SERVER);
+	    map.put("repo", REPOSITORY_ID);
+	    
+	    PersistenceProvider provider = Empire.get().persistenceProvider(); 
+	    storageManager = provider.createEntityManagerFactory("sepa-server", map).createEntityManager(); 
+			
 		return true;
 		} catch (Exception e)
 		{
@@ -82,10 +82,6 @@ public enum StorageManager {
 
 	public RepositoryConnection getConnection() {
 		return conn;
-	}
-	
-	public RepositoryConnection getTempConnection() {
-		return tempConn;
 	}
 
 	public StorageRequests getStorageAPI() {
@@ -98,14 +94,7 @@ public enum StorageManager {
 		return storageManager;
 	}
 	
-	public EntityManager getTempEntityManager()
-	{
-		return tempStorageManager;
-	}
-	
 	public PipelineStorage getPipelineStorageAPI() {
-		//return new PipelineStorageImpl();
-		//add storage implementation
 		return new PipelineStorageImpl();
 	}
 	

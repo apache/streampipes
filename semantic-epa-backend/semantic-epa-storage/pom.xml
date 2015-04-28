@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>semantic-epa-storage</artifactId>
 	<packaging>jar</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>

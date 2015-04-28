@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.storage.impl;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -7,6 +8,10 @@ import java.util.List;
 import javax.crypto.SealedObject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.impl.RdfQuery;
 import com.clarkparsia.empire.util.EmpireUtil;
@@ -42,8 +47,24 @@ public class StorageRequestsImpl implements StorageRequests {
 
 	@Override
 	public boolean storeSEP(String jsonld) {
-		SEP sep = Transformer.fromJsonLd(SEP.class, jsonld);
-		return storeSEP(sep);
+		SEP sep;
+		try {
+			sep = Transformer.fromJsonLd(SEP.class, jsonld);
+			return storeSEP(sep);
+		} catch (RDFParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedRDFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
@@ -54,8 +75,24 @@ public class StorageRequestsImpl implements StorageRequests {
 
 	@Override
 	public boolean storeSEPA(String jsonld) {
-		SEPA sepa = Transformer.fromJsonLd(SEPA.class, jsonld);
-		return storeSEPA(sepa);
+		SEPA sepa;
+		try {
+			sepa = Transformer.fromJsonLd(SEPA.class, jsonld);
+			return storeSEPA(sepa);
+		} catch (RDFParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedRDFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	@Override
@@ -72,7 +109,6 @@ public class StorageRequestsImpl implements StorageRequests {
 	public List<SEP> getAllSEPs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPQuery());
 		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEP.class);
-		System.out.println(query.toString());
 		return query.getResultList();
 	}
 
@@ -80,7 +116,6 @@ public class StorageRequestsImpl implements StorageRequests {
 	public List<SEPA> getAllSEPAs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPAQuery());
 		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEPA.class);
-		System.out.println(query.toString());
 		return query.getResultList();
 	}
 
