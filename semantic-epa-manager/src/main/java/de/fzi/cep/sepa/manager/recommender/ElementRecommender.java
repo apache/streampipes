@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.manager.recommender;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -33,7 +32,6 @@ public class ElementRecommender {
 	
 	public RecommendationMessage findRecommendedElements() throws NoSuitableSepasAvailableException
 	{
-		pipeline.setSepas(new ArrayList<>());
 		String connectedTo;
 		try {
 			ConsumableSEPAElement sepaElement = getRootNode();
@@ -41,19 +39,16 @@ public class ElementRecommender {
 		} catch (NoSepaInPipelineException e) {
 			connectedTo = pipeline.getStreams().get(0).getDOM();
 		}
-		System.out.println(connectedTo);
 		
 		List<SEPA> sepas = getAllSepas();
 		for(SEPA sepa : sepas)
 		{
 			try {
 				Pipeline tempPipeline = pipeline.clone();
-				tempPipeline.setSepas(new ArrayList<>());
 				SEPAClient sepaClient = ClientModelTransformer.toSEPAClientModel(sepa);
 				sepaClient.setConnectedTo(Utils.createList(connectedTo));
 				sepaClient.setDOM(RandomStringUtils.randomAlphanumeric(5));
 				tempPipeline.getSepas().add(sepaClient);
-				System.out.println(tempPipeline.getSepas().size());
 				new PipelineValidationHandler(tempPipeline, true).validateConnection();
 				addRecommendation(sepa);
 			} catch (NoValidConnectionException e) {
