@@ -21,7 +21,7 @@
 		<script type="text/javascript" src="js/md5.js"></script>
 		<script type="text/javascript" src="js/pipelineFactory.js"></script>
 		<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
 		
 		<link rel="stylesheet" href="css/jsplumb.css"/>
@@ -66,44 +66,49 @@
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav" id="tabs" role="tablist">
-						<li class="dropdown active">
-							<a href="#"   class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
+						<li class="active">
+							<a href="#editor" role="tab" data-toggle="tab">Editor</a>
+						</li>
+						<li >
+							<a href="#pipelines" role="tab" data-toggle="tab" onclick="refreshPipelines()">Pipelines</a>
+						</li>
+						<li >
+							<a href="#visualizations" role="tab" data-toggle="tab" onclick="updateViz()">Visualizations</a>
+						</li>
+
+					</ul>
+					<ul class="nav navbar-nav">
+
+						<li id="options" class=" dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
 								<li>
-									<a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("Proa")>Proasense</a>
+									<a href="#" onclick="showAdd()">Add...</a>
 								</li>
 								<li>
-									<a href="#home" tabindex="-1" role="tab" data-toggle="tab" onclick=refresh("PA")>Personal Assistant</a>
+									<a href="#" onclick="showManage()">Manage...</a>
+								</li>
+							</ul>
+
+						</li>
+						<p class="navbar-text"><strong>Use-Case:</strong></p>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="typeChange">Proasense <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a href="#" onclick=refresh("Proa")>Proasense</a>
+								</li>
+								<li>
+									<a href="#" onclick=refresh("PA")>Personal Assistant</a>
 								</li>
 								<!-- <li class="divider"></li> -->
 
 							</ul>
 						</li>
-						<li >
-							<a href="#pipelines" role="tab" data-toggle="tab" onclick=pipelinesClicked() >Pipelines</a>
-						</li>
-						<li >
-							<a href="#visualizations" role="tab" data-toggle="tab" onclick="disableOptions();updateViz()">Visualizations</a>
-						</li>
-
-					</ul>
-					<ul class="nav navbar-nav">
-						<li id="options" class=" dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a href="#" onclick=showAdd()>Add...</a>
-								</li>
-								<li>
-									<a href="#" onclick=showManage()>Manage...</a>
-								</li>
-							</ul>
-
-						</li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right ">
 						<li id="tutorial" class="nav navbar-nav">
-							<a href="#" onclick=showTutorial()>Tutorial</a>
+							<a href="#" onclick="showTutorial()">Tutorial</a>
 						</li>
 						
 						<li id="login" class="dropdown">
@@ -120,7 +125,7 @@
 									</div>
 
 								</form>
-								<button type="submit" class="btn btn-default pull-right" onclick=attemptLogin()>
+								<button type="submit" class="btn btn-default pull-right" onclick="attemptLogin()">
 									Submit
 								</button>
 							</ul>
@@ -133,8 +138,24 @@
 		<!-- END NAVBAR  -->
 
 		<div class="tab-content content-padding">
-			<div class="tab-pane active" id="home">
+			<div class="tab-pane active" id="editor">
+				<!--<div id="uc-dropdown">
+					<ul>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#" onclick=refresh("Proa")>Proasense</a>
+							</li>
+							<li>
+								<a href="#" onclick=refresh("PA")>Personal Assistant</a>
+							</li>
+							 <li class="divider"></li>
 
+						</ul>
+					</li>
+					</ul>
+				</div>-->
 				<div id ="sources" align="center" class="alpha"></div>
 				<div class="panel-group" id="accordion">
 
@@ -159,14 +180,7 @@
 					</div>
 					<div class="panel panel-default">
 						<div class="panel-heading panel-sepas">
-							<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a><!-- <span class="btngroup pull-right">
-							<button type="button" class="btn btn-default btn-xs" onclick=addTo("sepa")>
-							<span class="glyphicon glyphicon-plus"></span>
-							</button>
-							<button type="button" class="btn btn-default btn-xs" onclick=manage("sepa")>
-							<span class="glyphicon glyphicon-cog"></span>
-							</button>
-							</span> --></h4>
+							<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a></h4>
 						</div>
 						<div id="collapseTwo" class="panel-collapse collapse">
 							<div class="panel-body">
@@ -178,14 +192,7 @@
 					</div>
 					<div class="panel panel-default">
 						<div class="panel-heading panel-actions">
-							<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a><!-- <span class="btngroup pull-right">
-							<button type="button" class="btn btn-default btn-xs" onclick=addTo("action")>
-							<span class="glyphicon glyphicon-plus"></span>
-							</button>
-							<button type="button" class="btn btn-default btn-xs" onclick=manage("action")>
-							<span class="glyphicon glyphicon-cog"></span>
-							</button>
-							</span> --></h4>
+							<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a></h4>
 						</div>
 						<div id="collapseThree" class="panel-collapse collapse ">
 							<div class="panel-body">
@@ -297,7 +304,7 @@
 											<!-- Multiple Radios (inline) -->
 											<div class="form-group" >
 												<label class="col-md-4 control-label" for="radios">Type</label>
-												<div class="col-md-6">
+												<div class="col-md-6" id="radios">
 													<label class="radio-inline" for="sourceRadio">
 														<input name="type-radios" id="sourceRadio" value="1" checked="checked" type="radio">
 														Source </label>
@@ -358,12 +365,10 @@
 								<div id="elementList">
 
 								</div>
-								<div id="sses" style="text-align: center">
 
-								</div>
 
 								<div class="modal-footer">
-									<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >
+									<button type="button" class="btn btn-default" data-dismiss="modal" >
 										Close
 									</button>
 								</div>

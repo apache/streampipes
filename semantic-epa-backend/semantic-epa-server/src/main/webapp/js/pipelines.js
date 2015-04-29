@@ -1,8 +1,7 @@
 var pipelines;
 
-function getPipelines(){
-	clearAssembly();
-	jsPlumb.setContainer($("#pipelineDisplay"));
+function refreshPipelines(){
+
 	$("#pipelineTableBody").children().remove();
 	var url = standardUrl + "pipelines";
 	pipelines = $.getJSON(url, listPipelines);
@@ -65,7 +64,19 @@ function verifyPipeline(pipelineId){
 }
 
 function changePipelineStatus(data, pipelineId){
-	//TODO
+	refreshPipelines();		//Cheap Way
+	//$("#pipelineTableBody").children().each(function(i){
+	//	if ($(this).data("JSON")._id == pipelineId){
+	//		if (data.notifications[0].title == "Started"){
+	//			//Running
+	//			//Disable Play Button, enable stop button
+	//		}else if (data.notifications[0].title == "Stopped"){
+	//			//Idle
+	//			//Disable Stop Button, enable play button
+	//		}
+	//	}
+    //
+	//});
 }
 
 function startPipeline(pipelineId){
@@ -76,6 +87,7 @@ function startPipeline(pipelineId){
 		success : function(data){
 			console.log(data);
 			if (data.success){
+				displaySuccess(data);
 				changePipelineStatus(data, pipelineId);
 			}else{
 				displayErrors(data);
@@ -117,9 +129,10 @@ function stopPipeline(pipelineId){
 	$.ajax({
 		url : url,
 		success : function(data){
-			
+			console.log("success");
 			console.log(data);
 			if (data.success){
+				displaySuccess(data);
 				changePipelineStatus(data, pipelineId);
 			}else{
 				displayErrors(data);
