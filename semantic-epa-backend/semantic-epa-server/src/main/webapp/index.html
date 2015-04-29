@@ -83,7 +83,7 @@
 							<a href="#pipelines" role="tab" data-toggle="tab" onclick=pipelinesClicked() >Pipelines</a>
 						</li>
 						<li >
-							<a href="#visualizations" role="tab" data-toggle="tab" onclick=disableOptions()>Visualizations</a>
+							<a href="#visualizations" role="tab" data-toggle="tab" onclick="disableOptions();updateViz()">Visualizations</a>
 						</li>
 
 					</ul>
@@ -649,7 +649,7 @@
 									dataType : "json",
 									url : url,
 									success : function(data) {
-										var sel = $("<select class='form-control' width='100'>").appendTo($('#vizControl'));
+										var sel = $("<select class='form-control' style='width:100%;font-size:18pt;height:50px;'>").appendTo($('#vizControl'));
 										sel.append($("<option>").text("(Select visualization)"));
 										$(data).each(function() {
 											sel.append($("<option>").attr('value', this.consumerUrl).text(this.pipelineName));
@@ -672,44 +672,12 @@
 
 						</script>
 						<div class="row">
-							<div class="col-md-12 pull-right">
-								<div class="pull-right">
-									<div class="col-md-6">
-										<div class="pull-right">
-											<button class="btn btn-success" onclick="updateViz()">
-												Refresh
-											</button>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div id="vizControl"></div>
-									</div>
-
-								</div>
+							<div class="col-md-12">
+								<div id="vizControl"></div>	
 							</div>
 						</div>
 					</div>
-					 <div id="vis"></div> 
-					<!--
-					<div id="vis">
-					<div class="form-group">
-					<label for="brokerUrl">URL</label>
-					<input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
-					</div>
-					<div class="form-group">
-					<label for="brokerTopic">Topic</label>
-					<input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
-					</div>
-					<button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
-					<button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
-					<textarea id="brokerMessages" class="form-control" rows="20"></textarea>
-					</div>
-					-->
-					<!--
-					<script type="text/javascript">
-					$("#vis").load("http://localhost:8091/test");
-					</script>
-					-->
+					<div id="vis"></div> 
 				</div>
 			</div>
 		</div>
