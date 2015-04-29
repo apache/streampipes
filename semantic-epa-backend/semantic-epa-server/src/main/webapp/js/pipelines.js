@@ -251,7 +251,7 @@ function connectElements(json, detachable){
 			source = connection;
 			var sourceEndpoint = jsPlumb.addEndpoint(source, sepaEndpointOptions);
 			var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
-			jsPlumb.connect({sorce: sourceEndpoint, target: targetEndpoint, detachable:detachable});
+			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 		}
 	//Sepas --> Streams---------------------//
 		for (var i = 0, sepa; sepa = json.sepas[i]; i++){
@@ -279,7 +279,7 @@ function adjustPipeline(json){
 	adjustingPipelineState = true;
 	clearPipelineDisplay();
 	jsPlumb.setContainer($("#assembly"));
-	$("#tabs a[href='#home']").tab('show');
+	$("#tabs").find("a[href='#home']").tab('show');
 	
 	// refresh(type);
 	

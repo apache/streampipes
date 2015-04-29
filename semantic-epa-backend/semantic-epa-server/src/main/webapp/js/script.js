@@ -90,7 +90,7 @@ jsPlumb.ready(function(e){
  		jsPlumb.Defaults.Container = "assembly";
  		//Inititate accordion functionality-----------------
 		$('#accordion').on('show.bs.collapse', function() {
-			$('#accordion .in').collapse('hide');
+			$('#accordion').find('.in').collapse('hide');
 		});
 		$('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
 		
@@ -539,7 +539,7 @@ function refresh(type, tabReset) {
 	init(type);
 	
 	if(tabReset){
-		$("#tabs a[href='#home']").tab('show');
+		$("#tabs").find("a[href='#home']").tab('show');
 	}
 }
 
