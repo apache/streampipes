@@ -12,7 +12,7 @@ import org.apache.shiro.util.SimpleByteSource;
 
 /**
  * Principals are a subjects identifying attributesm such as first name, last name or user name.
- * Credentials are usually secret values known unly by the subject
+ * Credentials are usually secret values known only by the subject
  *
  *
  * Created by robin on 26.04.15.
