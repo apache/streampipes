@@ -3,13 +3,14 @@ package de.fzi.cep.sepa.rest;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.User;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 
 /**
  * Created by robin on 04.05.15.
@@ -24,20 +25,35 @@ public class UserImpl extends AbstractRestInterface implements User{
 
     @Override
     @Path("/login")
-    @GET
-    public String doLoginUser() {
+    @POST
+    public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
         Subject subject = SecurityUtils.getSubject();
-        return subject.toString() + "is a subject";
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        try {
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            return "Could not login. Wrong password or username";
+        }
+        return "Successfully logged in" + username;
     }
 
     @Override
+    @POST
+    @Path("/logout")
     public String doLogoutUser() {
-        return null;
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "Logged out";
     }
 
     @Override
+    @Path("/sources")
+    @GET
     public String getAllSources() {
-        return null;
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            return "Secret sources";
+        }
+        return "Leider keinen Zugriff";
     }
 
     @Override
@@ -64,4 +80,6 @@ public class UserImpl extends AbstractRestInterface implements User{
     public String getSelectedActions() {
         return null;
     }
+
+
 }

@@ -139,7 +139,7 @@ function clearTab(e){
 
     var fromId = $(e.target).attr("href");
 
-    if ( fromId == "#editor") {                 //Verlässt Editor Tab
+    if ( fromId == "#editor") {                 //Verlï¿½sst Editor Tab
 
         disableOptions();
 
@@ -151,7 +151,7 @@ function clearTab(e){
                 clearAssembly();
             }
         }
-    }else if (fromId == "#pipelines"){          //Verlässt Pipeline Tab
+    }else if (fromId == "#pipelines"){          //Verlï¿½sst Pipeline Tab
         clearPipelineDisplay();
     }
 }
@@ -1075,6 +1075,15 @@ function getParentWithJSONData($element) {
 }
 function attemptLogin() {
     console.log($("#login-form").serializeArray());
+    $.ajax({
+        url: standardUrl + "user/login",
+
+        data: "username="+$('#exampleInputEmail1').val()+"&password="+$('#exampleInputPassword1').val(),
+        type: 'POST',
+        success: function(ret) {
+            console.log(ret);
+        }
+    })
 }
 
 function showTutorial() {

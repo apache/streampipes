@@ -4,7 +4,7 @@ public interface User {
 
 	public String doRegisterUser();
 	
-	public String doLoginUser();
+	public String doLoginUser(String username, String password);
 	
 	public String doLogoutUser();
 	
