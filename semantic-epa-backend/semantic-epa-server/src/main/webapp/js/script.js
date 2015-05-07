@@ -98,6 +98,7 @@ jsPlumb.ready(function (e) {
     $(document).click(function () {
         $('#assemblyContextMenu').hide();
         $('#staticContextMenu').hide();
+        $('.circleMenu-open').circleMenu('close');
     });
     $('#sources').on('change', function () {
         $(this)
@@ -219,6 +220,7 @@ function displayStreams(e) {
         var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
         var promise = $.getJSON(url).then(function (data) {
             savedStreams = data;
+            console.log(savedStreams);
             $src.data("streams", savedStreams);
             createStreams(data);
         });
@@ -829,6 +831,11 @@ function refreshActions() {
     });
 }
 
+function debugCircleMenuConsole(){
+    var $el = $('.recommended-button>ul>li');
+    console.log($el);
+    console.log($el.data('plugin_circleMenu-pos-x'));
+}
 
 function add() {
     var url;

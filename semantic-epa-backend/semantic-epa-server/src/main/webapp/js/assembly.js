@@ -37,11 +37,12 @@ var leftTargetPointOptions = {
 var currentPipeline;
 var mod;
 
+
 /**
  * Handles everything that has to do with the assembly area, and elements in it
  */
 function initAssembly(){
-	
+
 	$('#clear').click(clearAssembly); 
 
 	$('#assembly').droppable({
@@ -58,12 +59,31 @@ function initAssembly(){
 				//Droppable Streams
 				if(ui.draggable.hasClass('stream')){
 					handleDroppedStream($newState, false);
-					// $newState.selectable({
-						// selected: function(event, ui){
-							// console.log("selectable test");
-							// console.log(ui);
-						// }
-					// });	
+					addRecommendedButton($newState);
+					var tempPipeline = {streams: [], sepas: [], action: {}};
+					addToPipeline($newState[0], tempPipeline);
+					//console.log($newState[0]);
+					var url = standardUrl + "pipelines/recommend";
+					var recs;
+
+					$.when($.ajax({			//Todo change
+						url: url,
+						data : JSON.stringify(tempPipeline),
+						processData : false,
+						type : 'POST',
+						success: function(data){
+							//DEBUG
+							recs = $.parseJSON('{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}');
+
+						},
+						error: function(data){
+							console.log(data);
+						}
+
+					})).then(function(){populateRecommendedList($newState, recs);});
+
+					$newState.hover(showRecButton, hideRecButton);
+
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
 					handleDroppedSepa($newState, false);
@@ -78,6 +98,34 @@ function initAssembly(){
 		}
 		
 	}); //End #assembly.droppable()	
+}
+
+function addRecommendedButton($newState) {
+	var $button =$("<span>")
+		.addClass("recommended-button")
+		.click(function (e) {
+			e.stopPropagation();
+			var recJson = $(e.target).data("recommended");
+			var $recList = $("ul", $newState);
+			$recList.circleMenu('open');
+
+		})
+		.appendTo($newState);
+	$newState.append($("<span><ul>").addClass("recommended-list"));
+	$("ul", $newState)
+		.circleMenu({
+			direction: "right",
+			item_diameter: 50,
+			circle_radius: 150,
+			trigger: 'none'
+		});
+}
+
+function showRecButton(e){
+	$("span", this).show();
+}
+function hideRecButton(e){
+	$("span", this).hide();
 }
 
 function getCoordinates(ui){
@@ -99,6 +147,7 @@ function createNewAssemblyElement(json, coordinates){
 	if (adjustingPipelineState){$newState.attr("id", json.DOM);}
 	
 	jsPlumb.draggable($newState, {containment: 'parent'});
+
 	// var newPos = ui.helper.position();
 	// var newTop = getDropPosition(ui.helper);
 	$newState
@@ -164,7 +213,7 @@ function handleDroppedStream($newState){
 	if(!adjustingPipelineState){
 		jsPlumb.addEndpoint($newState,streamEndpointOptions);
 	}
-	
+
 	$newState.dblclick(function(){
 		jsPlumb.addEndpoint($newState,streamEndpointOptions);
 	});
@@ -260,34 +309,17 @@ function createPartialPipeline(info){
 	pipelinePart.sepas = [];
 	pipelinePart.action ={};
 
-	var finished = false;
+
 	var element = info.target;
-	var elementId = "#" + element;
+
 	
 	addElementToPartialPipeline(element, pipelinePart);
-	
-	// while (!finished){
-		// addToPipeline(elementId, pipelinePart);
-		// for (var i= 0; i < jsPlumb.getConnections({target : element}); i++){
-			// if (jsPlumb.getConnections({target : element})[i].sourceId != null && jsPlumb.getConnections({target : element}).sourceId != undefined){
-				// element = jsPlumb.getConnections({target : element}).sourceId;
-				// elementId = "#" + element;
-			// }else{
-				// finished = true;
-			// }
-		// }
-	// }
-	
-	// $('#assembly>span.connectable').each(function(i, element) {
-		// if (isConnected(element)){
-			// addToPipeline(element, pipelinePart);
-		// }
-	// });
 	currentPipeline = pipelinePart;
 	
 }
 
 function addElementToPartialPipeline(element, pipelinePart){
+	console.log(element);
 	var elementId = "#" + element;
 	addToPipeline(element, pipelinePart);
 	if (jsPlumb.getConnections({target : element}) != null && jsPlumb.getConnections({target : element}) != undefined){
@@ -617,6 +649,53 @@ function prepareCustomizeModal(element) {
 		}
 
 	return string;
+}
+
+function getRecommendations(partialPipeline){
+	var url = standardUrl + "pipelines/recommend";
+
+	$.ajax({
+		url: url,
+		data : JSON.stringify(partialPipeline),
+		processData : false,
+		type : 'POST',
+		success: function(data){
+			//DEBUG
+			var json = '{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}';
+
+
+		},
+		error: function(data){
+			console.log(data);
+		}
+
+	});
+}
+
+function populateRecommendedList($element, recs){
+	console.log(recs);
+	for (var i = 0, el; el = recs.recommendedElements[i]; i++){
+		console.log(el);
+		var recommendedElement = getElementByElementId(el.elementId);
+		$("<li>").append($('<a>').append($('<img>').attr("src", recommendedElement.iconUrl).css({'height': '80%', 'width': '80%'}))).appendTo($('ul', $element));
+		$('ul', $element).circleMenu('init');
+	}
+}
+
+function getElementByElementId(elId){
+	if (elId.indexOf("sepa") >= 0){ //Sepa
+		for (var i = 0, element; element=savedSepas[i]; i++){
+			if (element.elementId === elId){
+				return element;
+			}
+		}
+	}else {		//Action
+		for (var i = 0, element; element=savedActions[i]; i++){
+			if (element.elementId === elId){
+				return element;
+			}
+		}
+	}
 }
 
 function isConnected(element){
