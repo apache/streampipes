@@ -30,9 +30,7 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class ClientModelTransformer {
@@ -59,7 +57,7 @@ public class ClientModelTransformer {
 
 	public static SEP fromSourceClientModel(SourceClient client)
 	{
-		return StorageManager.INSTANCE.getEntityManager().find(SEP.class, client.getElementId());
+		return StorageManager.INSTANCE.getStorageAPI().getSEPById(URI.create(client.getElementId()));
 	}
 
 	public static SourceClient toSourceClientModel(SEP sep)
@@ -80,7 +78,7 @@ public class ClientModelTransformer {
 
 	public static EventStream fromStreamClientModel(StreamClient client)
 	{
-		return StorageManager.INSTANCE.getEntityManager().find(EventStream.class, client.getElementId());
+		return StorageManager.INSTANCE.getStorageAPI().getEventStreamById(client.getElementId());
 	}
 
 	public static StreamClient toStreamClientModel(SEP sep, EventStream stream)
@@ -137,8 +135,8 @@ public class ClientModelTransformer {
 
 	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
 	{
-		SEPA sepa = StorageManager.INSTANCE.getEntityManager().find(SEPA.class, sepaClient.getElementId());
-		
+		SEPA sepa = StorageManager.INSTANCE.getStorageAPI().getSEPAById(URI.create(sepaClient.getElementId()));
+			
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
 		sepa.setStaticProperties(convertStaticProperties(sepa, clientProperties));
 		
@@ -388,7 +386,7 @@ public class ClientModelTransformer {
 	}
 
 	public static SEC fromSECClientModel(ActionClient element) {
-		SEC sec = StorageManager.INSTANCE.getEntityManager().find(SEC.class, element.getElementId());
+		SEC sec = StorageManager.INSTANCE.getStorageAPI().getSECById(URI.create(element.getElementId()));
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = element.getStaticProperties();
 		sec.setStaticProperties(convertStaticProperties(sec, clientProperties));
 		return sec;

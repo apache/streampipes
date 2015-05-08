@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.crypto.SealedObject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -14,9 +13,9 @@ import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.impl.RdfQuery;
-import com.clarkparsia.empire.util.EmpireUtil;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
@@ -26,12 +25,12 @@ import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
-public class StorageRequestsImpl implements StorageRequests {
+public class SesameStorageRequests implements StorageRequests {
 
 	private StorageManager manager;
 	private EntityManager entityManager;
 	
-	public StorageRequestsImpl()
+	public SesameStorageRequests()
 	{
 		manager = StorageManager.INSTANCE;
 		entityManager = manager.getEntityManager();
@@ -105,6 +104,7 @@ public class StorageRequestsImpl implements StorageRequests {
 		return getSEPById(new URI(rdfId));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SEP> getAllSEPs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPQuery());
@@ -112,6 +112,7 @@ public class StorageRequestsImpl implements StorageRequests {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SEPA> getAllSEPAs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPAQuery());
@@ -167,6 +168,7 @@ public class StorageRequestsImpl implements StorageRequests {
 		return deleteSEPA(sepa) && storeSEPA(sepa);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SEP> getSEPsByDomain(String domain) {
 		Query query = entityManager.createQuery(QueryBuilder.buildSEPByDomainQuery(domain));
@@ -175,6 +177,7 @@ public class StorageRequestsImpl implements StorageRequests {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SEPA> getSEPAsByDomain(String domain) {
 		Query query = entityManager.createQuery(QueryBuilder.buildSEPAByDomainQuery(domain));
@@ -227,6 +230,7 @@ public class StorageRequestsImpl implements StorageRequests {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SEC> getAllSECs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSECQuery());
@@ -243,6 +247,11 @@ public class StorageRequestsImpl implements StorageRequests {
 	public boolean storeInvocableSEPAElement(InvocableSEPAElement element) {
 		entityManager.persist(element);
 		return true;
+	}
+
+	@Override
+	public EventStream getEventStreamById(String rdfId) {
+		return entityManager.find(EventStream.class, URI.create(rdfId));
 	}
 
 	

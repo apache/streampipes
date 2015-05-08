@@ -21,7 +21,8 @@ import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
-import de.fzi.cep.sepa.storage.impl.StorageRequestsImpl;
+import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
+import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
 public enum StorageManager {
@@ -36,6 +37,10 @@ public enum StorageManager {
 	private RepositoryConnection conn;
 	
 	private Repository repository;
+	
+	private InMemoryStorage inMemoryStorage;
+	
+	private boolean inMemoryInitialized = false;
 
 	StorageManager() {
 		initStorage();
@@ -43,7 +48,6 @@ public enum StorageManager {
 	}
 
 	private boolean initStorage() {
-
 		try {
 			repository = new HTTPRepository(SERVER, REPOSITORY_ID);	
 			conn = repository.getConnection();
@@ -72,10 +76,11 @@ public enum StorageManager {
 	    
 	    PersistenceProvider provider = Empire.get().persistenceProvider(); 
 	    storageManager = provider.createEntityManagerFactory("sepa-server", map).createEntityManager(); 
-			
+	   
 		return true;
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			return false;
 		}
 		
@@ -86,8 +91,13 @@ public enum StorageManager {
 	}
 
 	public StorageRequests getStorageAPI() {
-		StorageUtils.fixEmpire();
-		return new StorageRequestsImpl();
+		if (!inMemoryInitialized)
+		{
+			this.inMemoryStorage = new InMemoryStorage(getSesameStorage());
+			inMemoryInitialized = true;
+		}
+		return this.inMemoryStorage;
+		
 	}
 	
 	public EntityManager getEntityManager()
@@ -97,6 +107,11 @@ public enum StorageManager {
 	
 	public PipelineStorage getPipelineStorageAPI() {
 		return new PipelineStorageImpl();
+	}
+	
+	public StorageRequests getSesameStorage() {
+		StorageUtils.fixEmpire();
+		return new SesameStorageRequests();
 	}
 	
 }
