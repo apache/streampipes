@@ -32,10 +32,7 @@ public class SEP extends NamedSEPAElement {
 	@RdfProperty("sepa:produces")
 	List<EventStream> eventStreams;	
 	
-	//@OneToOne(cascade = {CascadeType.ALL})
-	//@RdfProperty("sepa:hasSource")
 	EventSource eventSource;
-	
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
@@ -45,7 +42,6 @@ public class SEP extends NamedSEPAElement {
 	public SEP() {
 		super();
 		eventStreams = new ArrayList<EventStream>();
-		//empire needs this
 	}
 	
 	public SEP(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<String> domains, EventSource eventSource)
