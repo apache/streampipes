@@ -15,11 +15,14 @@ public class TestRecommendation {
 
 	public static void main(String[] args) throws Exception
 	{
-		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestRecommendation.jsonld"), "UTF-8"), Pipeline.class);
+		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestRecommendation2.jsonld"), "UTF-8"), Pipeline.class);
 		System.out.println(pipeline.getSepas().size());
 		
 		RecommendationMessage message = Operations.findRecommendedElements(pipeline);
-		
 		System.out.println(Utils.getGson().toJson(message));
+		RecommendationMessage message2 = Operations.findRecommendedElements(pipeline);
+		
+		
+		System.out.println(Utils.getGson().toJson(message2));
 	}
 }
