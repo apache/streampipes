@@ -81,5 +81,11 @@ public class UserImpl extends AbstractRestInterface implements User{
         return null;
     }
 
+    @GET
+    @Path("/authc")
+    public String isAuthenticated() {
+        return Boolean.toString(SecurityUtils.getSubject().isAuthenticated());
+    }
+
 
 }

@@ -1086,6 +1086,20 @@ function attemptLogin() {
     })
 }
 
+function isUserAuthenticated() {
+    $.ajax({
+        url: standardUrl + "user/authc",
+        type: 'GET',
+        success: function(ret) {
+            if (ret == "true)") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    })
+}
+
 function showTutorial() {
     $("#tutorialModal").modal('show');
 }
