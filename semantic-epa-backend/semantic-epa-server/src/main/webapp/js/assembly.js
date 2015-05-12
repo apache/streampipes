@@ -73,8 +73,10 @@ function initAssembly(){
 						type : 'POST',
 						success: function(data){
 							//DEBUG
-							recs = $.parseJSON('{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}');
-
+							recs = $.parseJSON('{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}');
+							//End Debug
+							//recs = data;
+							console.log(recs);
 						},
 						error: function(data){
 							console.log(data);
@@ -108,6 +110,17 @@ function addRecommendedButton($newState) {
 			var recJson = $(e.target).data("recommended");
 			var $recList = $("ul", $newState);
 			$recList.circleMenu('open');
+			var $this = $(this);
+			//if ($this.data('open')){
+			//	$recList.circleMenu('close');
+			////	$this.parent().hover(showRecButton, hideRecButton);
+			//	$this.data('open', false);
+			//}else {
+			//	$recList.circleMenu('open');
+			////	$this.parent().unbind('mouseleave').unbind('mouseenter');
+			//	$this.data('open', true);
+			//}
+
 
 		})
 		.appendTo($newState);
@@ -122,10 +135,16 @@ function addRecommendedButton($newState) {
 }
 
 function showRecButton(e){
-	$("span", this).show();
+	$("span:not(.recommended-list)", this).show();
 }
 function hideRecButton(e){
-	$("span", this).hide();
+	$("span:not(.recommended-list)", this).hide();
+}
+function openCircleMenu(){
+
+}
+function closeCircleMenu(){
+
 }
 
 function getCoordinates(ui){
@@ -176,7 +195,7 @@ function createNewAssemblyElement(json, coordinates){
 		var $ident = $('<p>')
 			.text(md5)
 			.appendTo($newState);
-		$ident.identicon5({size:150});
+		$ident.identicon5({size: 79});
 		$ident.children().addClass("connectable-img tt")
 		.attr(
 			{"data-toggle": "tooltip",
@@ -673,7 +692,7 @@ function getRecommendations(partialPipeline){
 }
 
 function populateRecommendedList($element, recs){
-	console.log(recs);
+	//console.log(recs);
 	for (var i = 0, el; el = recs.recommendedElements[i]; i++){
 		console.log(el);
 		var recommendedElement = getElementByElementId(el.elementId);
