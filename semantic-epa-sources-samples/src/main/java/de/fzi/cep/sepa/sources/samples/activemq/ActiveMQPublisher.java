@@ -33,6 +33,12 @@ public class ActiveMQPublisher {
 		TextMessage message = session.createTextMessage(text);
 		producer.send(message);
 	}
+	
+	public void sendBinary(byte[] payload) throws JMSException {
+		BytesMessage message = session.createBytesMessage();
+		message.writeBytes(payload);
+		producer.send(message);
+	}
 
 	public void sendTextFile(File textFile) throws JMSException, IOException {
 		FileInputStream stream = new FileInputStream(textFile);

@@ -7,8 +7,11 @@ import javax.jms.JMSException;
 
 import org.codehaus.jettison.json.JSONObject;
 
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
@@ -18,6 +21,7 @@ import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
@@ -47,7 +51,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
-		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "text", "http://schema.org/Text").build());
+		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "text", SO.Text).build());
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		
 		EventPropertyPrimitive userName = new EventPropertyPrimitive(XSD._string.toString(), "userName", "", de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name"));
@@ -62,6 +66,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.Twitter.Sample");
+		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);

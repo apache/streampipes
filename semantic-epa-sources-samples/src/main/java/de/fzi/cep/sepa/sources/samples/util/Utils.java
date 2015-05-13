@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
@@ -64,9 +65,10 @@ public class Utils {
                 "}";
 
         try {
-            return  Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
+            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
                     .bodyString(json.toString(), ContentType.APPLICATION_JSON)
-                    .execute().returnResponse().toString();
+                    .execute().returnResponse();
+            return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }

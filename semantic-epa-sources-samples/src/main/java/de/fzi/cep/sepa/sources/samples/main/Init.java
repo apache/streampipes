@@ -39,9 +39,9 @@ public class Init implements Runnable {
 		String[] topic = {AkerVariables.DrillingRPM.topic(), AkerVariables.DrillingTorque.topic(), AkerVariables.GearLubeOilTemperature.topic(), AkerVariables.HookLoad.topic(), AkerVariables.SwivelOilTemperature.topic()};
 		int threads = 1;
 
-		/*KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
-				topic);*/
-		//example.run(threads);
+		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
+				topic);
+		example.run(threads);
 		
 		try {
 			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);

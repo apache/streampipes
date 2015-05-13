@@ -1,14 +1,23 @@
 package de.fzi.cep.sepa.sources.samples.random;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.jms.JMSException;
 
-import org.codehaus.jettison.json.JSONObject;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
+import kafka.utils.Utils;
 
+import org.apache.thrift.TException;
+import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.codehaus.jettison.json.JSONObject;
+
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
@@ -17,9 +26,13 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import eu.proasense.internal.ComplexValue;
+import eu.proasense.internal.SimpleEvent;
+import eu.proasense.internal.VariableType;
 
 public class RandomNumberStream implements EventStreamDeclarer {
 
@@ -38,13 +51,15 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomString", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "randomString", "", de.fzi.cep.sepa.commons.Utils.createURI(SO.Text)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "count", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
 		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.Random.Number");
+		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Thrift)));
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
@@ -64,17 +79,25 @@ public class RandomNumberStream implements EventStreamDeclarer {
 			@Override
 			public void run() {
 				Random random = new Random();
+				TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
+				int j = 0;
 				for(;;)
 				{
 					try {
-						String json = buildJson(System.currentTimeMillis(), random.nextInt(100)).toString();
-						System.out.println(json);
-						samplePublisher.sendText(json);
+						//String json = buildJson(System.currentTimeMillis(), random.nextInt(100)).toString();
+						//System.out.println(json);
+								    	
+						byte[] payload = serializer.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
+						samplePublisher.sendBinary(payload);
 						Thread.sleep(1000);
+						j++;
 					} catch (JMSException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (TException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -106,6 +129,28 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		}
 		
 		return json;
+	}
+	
+	private SimpleEvent buildSimpleEvent(long timestamp, int number, int count)
+	{
+		Map<String, ComplexValue> map = new HashMap<String, ComplexValue>();
+		ComplexValue value = new ComplexValue();
+		value.setType(VariableType.LONG);
+		value.setValue(String.valueOf(number));
+		
+		ComplexValue value2 = new ComplexValue();
+		value2.setType(VariableType.STRING);
+		value2.setValue(String.valueOf(randomString()));
+		
+		ComplexValue value3 = new ComplexValue();
+		value3.setType(VariableType.LONG);
+		value3.setValue(String.valueOf(count));
+		
+		map.put("randomValue", value);
+		map.put("randomString", value2);
+		map.put("count", value3);
+		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "RandomNumber", map);
+		return simpleEvent;
 	}
 	
 	private String randomString()
