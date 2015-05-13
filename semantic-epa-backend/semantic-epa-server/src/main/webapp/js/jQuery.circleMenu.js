@@ -205,20 +205,20 @@
         var self = this,
             selected, set_other;
 
-        if(self._state === 'open' || self._state === 'opening'){
-            self.clearTimeouts();
-            //set_other = self.element.children('li:not(:nth-child('+index+'),:first-child)'); //TODO
-            set_other = self.element.children('li:not(:nth-child('+index+')');
-            selected = self.element.children('li:nth-child('+index+')');
-            self.trigger('select',selected);
-            vendorPrefixes(selected.add(set_other), 'transition', 'all 500ms ease-out');
-            vendorPrefixes(selected, 'transform', 'scale(2)');
-            vendorPrefixes(set_other, 'transform', 'scale(0)');
-            selected.css('opacity','0');
-            set_other.css('opacity','0');
-            self.element.removeClass(pluginName+'-open');
-            setTimeout(function(){self.initCss();},500);
-        }
+        //if(self._state === 'open' || self._state === 'opening'){
+        //    self.clearTimeouts();
+        //    //set_other = self.element.children('li:not(:nth-child('+index+'),:first-child)'); //TODO
+        //    set_other = self.element.children('li:not(:nth-child('+index+'))');
+        //    selected = self.element.children('li:nth-child('+index+')');
+        //    self.trigger('select',selected);
+        //    vendorPrefixes(selected.add(set_other), 'transition', 'all 500ms ease-out');
+        //    vendorPrefixes(selected, 'transform', 'scale(2)');
+        //    vendorPrefixes(set_other, 'transform', 'scale(0)');
+        //    selected.css('opacity','0');
+        //    set_other.css('opacity','0');
+        //    self.element.removeClass(pluginName+'-open');
+        //    setTimeout(function(){self.initCss();},500);
+        //}
     };
     CircleMenu.prototype.clearTimeouts = function(){
         var timeout;
@@ -256,7 +256,7 @@
             top:0,
             left:0
         });
-        vendorPrefixes($items, 'border-radius', self.options.item_diameter+'px');
+        //vendorPrefixes($items, 'border-radius', self.options.item_diameter+'px');
         vendorPrefixes(self.menu_items, 'transform', 'scale(.5)');
         setTimeout(function(){
             vendorPrefixes($items, 'transition', 'all '+self.options.speed+'ms '+self.options.transition_function);

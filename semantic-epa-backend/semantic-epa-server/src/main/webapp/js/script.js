@@ -132,7 +132,6 @@ jsPlumb.ready(function (e) {
         });
 
 
-
 });
 
 function clearTab(e){

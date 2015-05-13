@@ -68,7 +68,7 @@ function initAssembly(){
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
 					handleDroppedSepa($newState, false);
-					addRecommendedButton($newState);
+					//addRecommendedButton($newState);
 
 				//Droppable Actions
 				}else if(ui.draggable.hasClass('action')){
@@ -94,7 +94,7 @@ function addRecommendedButton($newState) {
 	$newState.append($("<span><ul>").addClass("recommended-list"));
 	$("ul", $newState)
 		.circleMenu({
-			direction: "right",
+			direction: "right-half",
 			item_diameter: 50,
 			circle_radius: 150,
 			trigger: 'none'
@@ -102,10 +102,10 @@ function addRecommendedButton($newState) {
 }
 
 function showRecButton(e){
-	$("span:not(.recommended-list)", this).show();
+	$("span:not(.recommended-list,.recommended-item)", this).show();
 }
 function hideRecButton(e){
-	$("span:not(.recommended-list)", this).hide();
+	$("span:not(.recommended-list,.recommended-item)", this).hide();
 }
 
 
@@ -652,8 +652,6 @@ function getRecommendations(partialPipeline){
 		processData : false,
 		type : 'POST',
 		success: function(data){
-			//DEBUG
-			//var json = '{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}';
 		},
 		error: function(data){
 			console.log(data);
@@ -662,17 +660,27 @@ function getRecommendations(partialPipeline){
 	});
 }
 
+
 function populateRecommendedList($element, recs){
-	console.log(recs);
+	//console.log(recs);
 	for (var i = 0, el; el = recs.recommendedElements[i]; i++){
-		console.log(el);
+		//console.log(el);
 		var recommendedElement = getElementByElementId(el.elementId);
 		if (recommendedElement != undefined) {
 			var recEl = new recElement(recommendedElement);
-			$("<li>").append(recEl.getjQueryElement()).appendTo($('ul', $element));
+			$("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
+				"data-toggle": "tooltip",
+				"data-placement": "top",
+				"data-delay": '{"show": 100, "hide": 100}',
+				title: recEl.name
+			}).appendTo($('ul', $element));
 			$('ul', $element).circleMenu('init');
 		}
 	}
+	$('.recommended-item').on('click', function(e){
+		createAndConnect(this);
+	})
+	initTooltips();
 }
 
 function getElementByElementId(elId){
@@ -689,6 +697,17 @@ function getElementByElementId(elId){
 			}
 		}
 	}
+}
+
+function createAndConnect(target) {
+	var json = $("a", $(target)).data("recObject").json;
+	var $parentElement = $(target).parents(".connectable");
+	var x = $parentElement.position().left;
+	var y = $parentElement.position().top;
+	var coord = {'x' : x + 200, 'y' : y};
+	handleDroppedSepa(createNewAssemblyElement(json, coord));
+
+
 }
 
 function isConnected(element){
