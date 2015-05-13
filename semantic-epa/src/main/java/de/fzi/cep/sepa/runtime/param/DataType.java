@@ -11,13 +11,16 @@ import org.apache.camel.model.dataformat.SerializationDataFormat;
 import org.apache.camel.model.dataformat.XStreamDataFormat;
 import org.apache.camel.spi.DataFormat;
 
+import de.fzi.cep.sepa.util.ThriftDataFormatDefinition;
+
 public enum DataType {
 	JAVA(new SerializationDataFormat()), // only maps (String -> Object)
 	XML(new XStreamDataFormat()), // XStream marshaled! only maps
 	JSON(jsonToMapFormat()),
 	GZIP_JAVA(new GzipDataFormat(), new SerializationDataFormat()),
 	GZIP_XML(new GzipDataFormat(), new XStreamDataFormat()),
-	GZIP_JSON(new GzipDataFormat(), jsonToMapFormat());
+	GZIP_JSON(new GzipDataFormat(), jsonToMapFormat()),
+	THRIFT(new ThriftDataFormatDefinition());
 	// maybe encryption
 
 	private final DataFormat additionalFormat;
