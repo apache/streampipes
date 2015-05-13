@@ -41,6 +41,7 @@ public class Utils {
 		return result;
 	}
 	
+	@SafeVarargs
 	public static <T> List<T> createList(T...objects)
 	{
 		List<T> result = new ArrayList<T>();

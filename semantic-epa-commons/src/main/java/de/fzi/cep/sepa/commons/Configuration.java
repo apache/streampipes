@@ -35,6 +35,8 @@ public class Configuration {
 	
 	public static final String SESAME_REPOSITORY_ID = "test-6";
 	
+	public static final String CONTEXT_PATH = "/semantic-epa-backend";
+	
 	//public static final String EMPIRE_CONFIG_LOCATION = "/home/riemer/empire.config.properties";
 
 	public static final String EMPIRE_CONFIG_LOCATION = "c:\\workspace\\semantic-epa-parent\\semantic-epa-backend\\semantic-epa-storage\\src\\main\\resources\\empire.config.properties";
