@@ -30,5 +30,10 @@
 			<artifactId>lightcouch</artifactId>
 			<version>0.1.6</version>
 		</dependency>
+		<dependency>
+			<groupId>uk.com.robust-it</groupId>
+			<artifactId>cloning</artifactId>
+			<version>1.9.0</version>
+		</dependency>
 	</dependencies>
 </project>

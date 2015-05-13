@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rits.cloning.Cloner;
+
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
@@ -22,6 +24,7 @@ public class InMemoryStorage implements StorageRequests {
 	private Map<String, SEPA> inMemorySEPAStorage;
 	private Map<String, EventStream> inMemoryEventStreamStorage;
 	private StorageRequests sesameStorage;
+	private Cloner cloner;
 	
 	
 	public InMemoryStorage(StorageRequests sesameStorage)
@@ -31,6 +34,7 @@ public class InMemoryStorage implements StorageRequests {
 		this.inMemorySEPStorage = new HashMap<>();
 		this.inMemoryEventStreamStorage = new HashMap<>();
 		this.sesameStorage = sesameStorage;
+		this.cloner = new Cloner();
 		init();
 	}
 	
@@ -95,7 +99,7 @@ public class InMemoryStorage implements StorageRequests {
 
 	@Override
 	public SEP getSEPById(URI rdfId) {
-		return inMemorySEPStorage.get(rdfId.toString());
+		return cloner.deepClone(inMemorySEPStorage.get(rdfId.toString()));
 	}
 
 	@Override
@@ -105,22 +109,22 @@ public class InMemoryStorage implements StorageRequests {
 
 	@Override
 	public SEPA getSEPAById(String rdfId) throws URISyntaxException {
-		return inMemorySEPAStorage.get(rdfId);
+		return cloner.deepClone(inMemorySEPAStorage.get(rdfId));
 	}
 
 	@Override
 	public SEPA getSEPAById(URI rdfId) {
-		return inMemorySEPAStorage.get(rdfId.toString());
+		return cloner.deepClone(inMemorySEPAStorage.get(rdfId.toString()));
 	}
 
 	@Override
 	public SEC getSECById(String rdfId) throws URISyntaxException {
-		return inMemorySECStorage.get(rdfId);
+		return cloner.deepClone(inMemorySECStorage.get(rdfId));
 	}
 
 	@Override
 	public SEC getSECById(URI rdfId) {
-		return inMemorySECStorage.get(rdfId.toString());
+		return cloner.deepClone(inMemorySECStorage.get(rdfId.toString()));
 	}
 
 	@Override
@@ -138,7 +142,7 @@ public class InMemoryStorage implements StorageRequests {
 		List<SEP> result = new ArrayList<>();
 		for(SEP sep : getAllSEPs())
 		{
-			if (sep.getDomains().contains(domain)) result.add(sep);
+			if (sep.getDomains().contains(domain)) result.add(cloner.deepClone(sep));
 		}
 		return result;
 	}
@@ -148,7 +152,7 @@ public class InMemoryStorage implements StorageRequests {
 		List<SEPA> result = new ArrayList<>();
 		for(SEPA sepa : getAllSEPAs())
 		{
-			if (sepa.getDomains().contains(domain)) result.add(sepa);
+			if (sepa.getDomains().contains(domain)) result.add(cloner.deepClone(sepa));
 		}
 		return result;
 	}

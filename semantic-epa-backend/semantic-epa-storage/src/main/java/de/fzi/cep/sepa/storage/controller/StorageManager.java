@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.storage.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,10 @@ import javax.persistence.spi.PersistenceProvider;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.sail.memory.MemoryStore;
 
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.config.ConfigKeys;
@@ -19,8 +23,10 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
+import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
 import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
 import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
@@ -39,12 +45,27 @@ public enum StorageManager {
 	private Repository repository;
 	
 	private InMemoryStorage inMemoryStorage;
+	private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
 	
 	private boolean inMemoryInitialized = false;
 
 	StorageManager() {
 		initStorage();
 		initEmpire();
+		initBackgroundKnowledgeStorage();
+	}
+
+	private void initBackgroundKnowledgeStorage() {
+		//File dataDir = new File("C:\\temp\\myRepository\\");
+		//Repository repo = new SailRepository( new MemoryStore(dataDir) );
+		Repository repo = new HTTPRepository(SERVER, REPOSITORY_ID);
+		try {
+			repo.initialize();
+			this.backgroundKnowledgeStorage = new BackgroundKnowledgeStorageImpl(repo);
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private boolean initStorage() {
@@ -112,6 +133,10 @@ public enum StorageManager {
 	public StorageRequests getSesameStorage() {
 		StorageUtils.fixEmpire();
 		return new SesameStorageRequests();
+	}
+	
+	public BackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
+		return this.backgroundKnowledgeStorage;
 	}
 	
 }
