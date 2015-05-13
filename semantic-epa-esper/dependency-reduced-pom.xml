@@ -49,5 +49,27 @@
       <url>http://download.osgeo.org/webdav/geotools</url>
     </repository>
   </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>de.fzi.cep.sepa</groupId>
+      <artifactId>semantic-epa-storage</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>semantic-epa-model-client</artifactId>
+          <groupId>de.fzi.cep.sepa</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>lightcouch</artifactId>
+          <groupId>org.lightcouch</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>cloning</artifactId>
+          <groupId>uk.com.robust-it</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
 </project>
 

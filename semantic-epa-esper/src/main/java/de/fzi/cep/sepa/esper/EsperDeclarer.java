@@ -62,7 +62,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 				brokerAliases.put(outputBrokerUrl, outputBrokerAlias);
 			}
 			
-			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), DataType.JSON);
+			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), DataType.THRIFT);
 			
 			outEventType = sepa.getOutputStream().getEventSchema().toRuntimeMap();
 			
@@ -79,7 +79,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 					config.add(new CamelConfig.ActiveMQ(inputBrokerAlias, inputBrokerUrl));
 					brokerAliases.put(inputBrokerUrl, inputBrokerAlias);
 				}
-				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), DataType.JSON));
+				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), DataType.THRIFT));
 				inEventTypes.put("topic://" +inputEventGrounding.getTopicName(), stream.getEventSchema().toRuntimeMap());
 			}
 			

@@ -26,7 +26,7 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 			aggregationType = "max("; 
 		}
 		
-		aggregationType = aggregationType +bindingParameters.getAggregate() +")";  
+		aggregationType = aggregationType +"cast(" +bindingParameters.getAggregate() +", double))";  
 		
 		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as averageValue from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) group by " +getGroupBy(bindingParameters) +" output snapshot every " +bindingParameters.getOutputEvery() +" seconds";
 		return makeStatementList(statement);
