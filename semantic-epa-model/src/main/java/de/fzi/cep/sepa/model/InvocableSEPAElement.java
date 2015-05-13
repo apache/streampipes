@@ -8,6 +8,7 @@ import javax.persistence.OneToMany;
 
 import com.clarkparsia.empire.annotation.RdfProperty;
 
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 
@@ -27,6 +28,8 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	protected String belongsTo;
 	
 	protected String domId;
+	
+	protected EventGrounding supportedGrounding;
 	
 	public InvocableSEPAElement() {
 		super();
@@ -72,6 +75,13 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	public void setBelongsTo(String belongsTo) {
 		this.belongsTo = belongsTo;
 	}
-	
+
+	public EventGrounding getSupportedGrounding() {
+		return supportedGrounding;
+	}
+
+	public void setSupportedGrounding(EventGrounding supportedGrounding) {
+		this.supportedGrounding = supportedGrounding;
+	}	
 	
 }

@@ -6,9 +6,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.RdfProperty;
 
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 
@@ -24,6 +26,11 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasStaticProperty")
 	protected List<StaticProperty> staticProperties;
+	
+	@OneToOne(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:supportedGrounding")
+	EventGrounding supportedGrounding;
 	
 	public ConsumableSEPAElement()
 	{
@@ -57,4 +64,13 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 	{
 		return eventStreams.add(eventStream);
 	}
+
+	public EventGrounding getSupportedGrounding() {
+		return supportedGrounding;
+	}
+
+	public void setSupportedGrounding(EventGrounding supportedGrounding) {
+		this.supportedGrounding = supportedGrounding;
+	}
+	
 }

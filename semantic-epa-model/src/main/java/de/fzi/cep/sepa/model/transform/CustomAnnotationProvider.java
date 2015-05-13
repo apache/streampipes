@@ -45,7 +45,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.FreeTextStaticProperty.class, 
 				de.fzi.cep.sepa.model.impl.Option.class, 
 				de.fzi.cep.sepa.model.impl.MappingProperty.class, 
-				de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph.class
+				de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph.class,
+				de.fzi.cep.sepa.model.impl.TransportFormat.class
 		);
 	}
 

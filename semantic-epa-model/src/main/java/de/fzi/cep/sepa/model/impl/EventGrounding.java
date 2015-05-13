@@ -1,6 +1,13 @@
 package de.fzi.cep.sepa.model.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
@@ -23,7 +30,10 @@ public class EventGrounding extends UnnamedSEPAElement {
 	@RdfProperty("sepa:hasUri")
 	private String uri;
 	
-	private TransportFormat transportFormat;
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:transportFormat")
+	private List<TransportFormat> transportFormats;
 	
 	@RdfProperty("sepa:hasTopic")
 	private String topicName;
@@ -35,7 +45,8 @@ public class EventGrounding extends UnnamedSEPAElement {
 	
 	public EventGrounding(TransportProtocol transportProtocol, int port, String uri, TransportFormat transportFormat)
 	{
-		this.transportFormat = transportFormat;
+		this.transportFormats = new ArrayList<>();
+		this.transportFormats.add(transportFormat);
 		this.transportProtocol = transportProtocol;
 		this.uri = uri;
 		this.port = port;
@@ -65,12 +76,12 @@ public class EventGrounding extends UnnamedSEPAElement {
 		this.uri = uri;
 	}
 
-	public TransportFormat getTransportFormat() {
-		return transportFormat;
+	public List<TransportFormat> getTransportFormats() {
+		return transportFormats;
 	}
 
-	public void setTransportFormat(TransportFormat transportFormat) {
-		this.transportFormat = transportFormat;
+	public void setTransportFormats(List<TransportFormat> transportFormats) {
+		this.transportFormats = transportFormats;
 	}
 
 	public String getTopicName() {
