@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
-import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;

@@ -1,9 +1,8 @@
-package de.fzi.cep.sepa.manager.matching;
+package de.fzi.cep.sepa.manager.matching.output;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
@@ -25,8 +24,6 @@ public class SchemaOutputCalculator {
 
 	private OutputStrategy outputStrategy;
 	private boolean propertyUpdated;
-	
-	//private static final String prefix = "urn:fzi.de:sepa:";
 	
 	public SchemaOutputCalculator(List<OutputStrategy> strategies)
 	{

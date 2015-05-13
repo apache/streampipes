@@ -12,18 +12,20 @@ import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.manager.matching.output.SchemaOutputCalculator;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class InvocationGraphBuilder {
 
@@ -85,9 +87,9 @@ public class InvocationGraphBuilder {
 							SchemaOutputCalculator calc = new SchemaOutputCalculator();	
 							outputSchema = calc.calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getOutputStrategies());
 							thisGraph.setOutputStrategies(Utils.createList(calc.getOutputStrategy()));
-							
 						}
 						else outputSchema = new SchemaOutputCalculator().calculateOutputSchema(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1), thisGraph.getOutputStrategies());
+						grounding.setTransportFormats(Utils.createList(getPreferredTransportFormat(thisGraph)));
 						outputStream.setEventGrounding(grounding);
 						outputStream.setEventSchema(outputSchema);
 						
@@ -106,6 +108,16 @@ public class InvocationGraphBuilder {
 		return graphs;
 	}
 	
+	private TransportFormat getPreferredTransportFormat(SEPAInvocationGraph thisGraph) {
+		for(TransportFormat format : thisGraph.getInputStreams().get(0).getEventGrounding().getTransportFormats())
+		{
+			if (thisGraph.getSupportedGrounding().getTransportFormats().get(0).getRdfType().containsAll(format.getRdfType()))
+				return format;
+		}
+		//TODO
+		return null;
+	}
+
 	private InvocableSEPAElement buildSEPAElement(InvocableSEPAElement thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
 	{
 		try {
@@ -148,11 +160,5 @@ public class InvocationGraphBuilder {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	
-	private void build(GenericTreeNode<NamedSEPAElement> element, String topicName)
-	{
-		
 	}
 }

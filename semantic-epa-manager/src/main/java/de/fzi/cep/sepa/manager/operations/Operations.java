@@ -7,7 +7,7 @@ import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
-import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;

@@ -12,6 +12,9 @@ import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 
@@ -91,11 +94,31 @@ public class ClientModelUtils {
 	
 	public static NamedSEPAElement transform(SEPAElement element)
 	{
-		if (element instanceof ActionClient) return ClientModelTransformer.fromSECClientModel(((ActionClient) element));
-		else if (element instanceof SEPAClient) return ClientModelTransformer.fromSEPAClientModel(((SEPAClient) element));
-		else if (element instanceof StreamClient) return ClientModelTransformer.fromStreamClientModel(((StreamClient) element));
-		//exceptions
-		return null;
+		if (element instanceof StreamClient) return transformStream(element);
+		else return transformConsumable(element);
+	}
+	
+	public static de.fzi.cep.sepa.model.ConsumableSEPAElement transformConsumable(SEPAElement element)
+	{
+		if (element instanceof ActionClient) return transformAction(element);
+		else if (element instanceof SEPAClient) return transformSEPA(element);
+		
+		throw new IllegalArgumentException();
+	}
+	
+	public static SEC transformAction(SEPAElement element)
+	{
+		return ClientModelTransformer.fromSECClientModel(((ActionClient) element));
+	}
+	
+	public static SEPA transformSEPA(SEPAElement element)
+	{
+		return ClientModelTransformer.fromSEPAClientModel(((SEPAClient) element));
+	}
+	
+	public static EventStream transformStream(SEPAElement element)
+	{
+		return ClientModelTransformer.fromStreamClientModel(((StreamClient) element));
 	}
 	
 	public static StaticProperty getStaticPropertyById(String id, List<StaticProperty> staticProperties)

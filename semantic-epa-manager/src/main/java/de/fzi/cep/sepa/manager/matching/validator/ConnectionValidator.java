@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.manager.matching.schema;
+package de.fzi.cep.sepa.manager.matching.validator;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ConnectionValidator {
 		return new QualityMatchValidator().validate(left, right);
 	}
 	
-	public static boolean validateGrounding(List<EventGrounding> left, List<EventGrounding> right)
+	public static boolean validateGrounding(EventGrounding left, EventGrounding right)
 	{
 		return new GroundingMatchValidator().validate(left, right);
 	}
@@ -40,7 +40,7 @@ public class ConnectionValidator {
 		return new QualityMatchValidator().validate(firstLeft, secondLeft, right);
 	}
 	
-	public static boolean validateGrounding(List<EventGrounding> firstLeft, List<EventGrounding> secondLeft, List<EventGrounding> right)
+	public static boolean validateGrounding(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
 	{
 		return new GroundingMatchValidator().validate(firstLeft, secondLeft, right, right);
 	}

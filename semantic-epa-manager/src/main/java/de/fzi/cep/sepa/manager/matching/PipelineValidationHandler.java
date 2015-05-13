@@ -6,8 +6,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
-import de.fzi.cep.sepa.manager.matching.schema.ConnectionValidator;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
+import de.fzi.cep.sepa.manager.matching.validator.ConnectionValidator;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
 import de.fzi.cep.sepa.messages.PipelineModification;
@@ -26,6 +27,7 @@ import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventPropertyNested;
@@ -33,8 +35,6 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.model.impl.graph.SEPA;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
@@ -47,18 +47,18 @@ public class PipelineValidationHandler {
 	List<InvocableSEPAElement> invocationGraphs;
 	List<SEPAElement> sepaClientElements;
 
-	ConsumableSEPAElement rootElement;
-	NamedSEPAElement sepaRootElement;
+	ConsumableSEPAElement clientRootElement;
+	NamedSEPAElement rdfRootElement;
 
 	GenericTree<SEPAElement> clientTree;
-	GenericTree<NamedSEPAElement> modelTree;
+	GenericTree<NamedSEPAElement> rdfTree;
 
 	public PipelineValidationHandler(Pipeline pipeline, boolean isPartial)
 			throws Exception {
 		
 		this.pipeline = pipeline;
-		this.rootElement = ClientModelUtils.getRootNode(pipeline);
-		this.sepaRootElement = ClientModelUtils.transform(rootElement);
+		this.clientRootElement = ClientModelUtils.getRootNode(pipeline);
+		this.rdfRootElement = ClientModelUtils.transform(clientRootElement);
 		this.invocationGraphs = new ArrayList<>();
 
 		// prepare a list of all pipeline elements without the root element
@@ -66,14 +66,12 @@ public class PipelineValidationHandler {
 		sepaElements.addAll(pipeline.getSepas());
 		sepaElements.addAll(pipeline.getStreams());
 		sepaElements.add(pipeline.getAction());
-		sepaElements.remove(rootElement);
+		sepaElements.remove(clientRootElement);
 
 		// we need a tree of invocation graphs if there is more than one SEPA
-		clientTree = new TreeBuilder(pipeline, rootElement)
-				.generateClientTree();
+		clientTree = new TreeBuilder(pipeline, clientRootElement).generateClientTree();
 		if (clientTree.maxDepth(clientTree.getRoot()) > 2)
-			modelTree = new TreeBuilder(pipeline, rootElement)
-					.generateTree(true);
+			rdfTree = new TreeBuilder(pipeline, clientRootElement).generateTree(true);
 
 		pipelineModificationMessage = new PipelineModificationMessage();
 	}
@@ -81,86 +79,75 @@ public class PipelineValidationHandler {
 	/**
 	 * 
 	 * @return
+	 * @throws NoMatchingGroundingException 
+	 * @throws NoMatchingSchemaException 
 	 */
 	public PipelineValidationHandler validateConnection()
-			throws NoValidConnectionException {
+			throws NoMatchingGroundingException, NoMatchingSchemaException {
 		// determines if root element and current ancestor can be matched
-		boolean match = false;
+		boolean schemaMatch = false;
+		boolean groundingMatch = false;
 
 		// current root element can be either an action or a SEPA
-		NamedSEPAElement rightElement = ClientModelUtils.transform(rootElement);
-
+		de.fzi.cep.sepa.model.ConsumableSEPAElement rightElement = ClientModelUtils.transformConsumable(clientRootElement);
+		List<String> connectedTo = clientRootElement.getConnectedTo();
 		
-		// root element is SEPA
-		if (! (rightElement instanceof SEP)) {
+		if (connectedTo.size() == 1) {
+			EventStream rightEventStream = rightElement.getEventStreams().get(0);
+			EventSchema rightEventSchema = rightEventStream.getEventSchema();
+			EventGrounding rightEventGrounding = rightElement.getSupportedGrounding();
 			
-			EventSchema rightEventSchema;
+			List<EventSchema> leftEventSchema;
+			EventGrounding leftEventGrounding;
 			
-			if (rootElement.getConnectedTo().size() == 1) {
-				List<EventSchema> left;
-				SEPAElement element = TreeUtils.findSEPAElement(rootElement
-						.getConnectedTo().get(0), pipeline.getSepas(), pipeline
-						.getStreams());
-				if (element instanceof StreamClient) {
-					left = Utils.createList(((EventStream) ClientModelUtils
-							.transform(element)).getEventSchema());
-				} else {
-					GenericTree<NamedSEPAElement> tree = new TreeBuilder(
-							pipeline, element).generateTree(true);
-					invocationGraphs = new InvocationGraphBuilder(tree, true)
-							.buildGraph();
-
-					SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
-							element.getDOM(), invocationGraphs);
-					left = Utils.createList(ancestor.getOutputStream()
-							.getEventSchema());
-				}
-				
-				if (rightElement instanceof SEPA)
-				{
-					rightEventSchema = ((SEPA) rightElement).getEventStreams().get(0).getEventSchema();
-				}
-				else rightEventSchema = ((SEC) rightElement).getEventStreams().get(0).getEventSchema();
-				
-				match = ConnectionValidator.validateSchema(
-						left,
-						Utils.createList(rightEventSchema));
-			} else if (rootElement.getConnectedTo().size() == 2) {
-				
-				SEPA sepa = (SEPA) rightElement;
-				
-				Iterator<String> it = rootElement.getConnectedTo().iterator();
-				List<EventStream> incomingStreams = new ArrayList<>();
-				while(it.hasNext())
-				{
-					String domId = it.next();
-					SEPAElement element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
-					if (element instanceof StreamClient) incomingStreams.add((EventStream) ClientModelUtils.transform(element));
-					else
-					{
-						GenericTree<NamedSEPAElement> tree = new TreeBuilder(
-								pipeline, element).generateTree(true);
-						invocationGraphs.addAll(new InvocationGraphBuilder(tree, true)
-								.buildGraph());
-
-						SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
-								element.getDOM(), invocationGraphs);
-						incomingStreams.add(ancestor.getOutputStream());
-					}
-					
-				}
-			
-				match = ConnectionValidator.validateSchema(
-						Utils.createList(incomingStreams.get(0).getEventSchema()),
-						Utils.createList(incomingStreams.get(1).getEventSchema()),
-						Utils.createList(sepa.getEventStreams().get(0)
-								.getEventSchema()),
-						Utils.createList(sepa.getEventStreams().get(1)
-								.getEventSchema()));
+			SEPAElement element = TreeUtils.findSEPAElement(connectedTo.get(0), pipeline.getSepas(), pipeline
+					.getStreams());
+			if (element instanceof StreamClient) {
+				EventStream leftEventStream = ClientModelUtils.transformStream(element);
+				leftEventSchema = asList(leftEventStream.getEventSchema());
+				leftEventGrounding = leftEventStream.getEventGrounding();
+			} else {
+				invocationGraphs = makeInvocationGraphs(element);
+				SEPAInvocationGraph ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+				EventStream ancestorOutputStream = ancestor.getOutputStream();
+				leftEventSchema = asList(ancestorOutputStream.getEventSchema());
+				leftEventGrounding = ancestorOutputStream.getEventGrounding();
 			}
+			schemaMatch = ConnectionValidator.validateSchema(
+					leftEventSchema,
+					asList(rightEventSchema));
+			
+			groundingMatch = ConnectionValidator.validateGrounding(leftEventGrounding, rightEventGrounding);
+		} else if (connectedTo.size() == 2) {
+			
+			SEPA sepa = (SEPA) rightElement;
+			Iterator<String> it = connectedTo.iterator();
+			List<EventStream> incomingStreams = new ArrayList<>();
+			while(it.hasNext())
+			{
+				String domId = it.next();
+				SEPAElement element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
+				if (element instanceof StreamClient) incomingStreams.add((EventStream) ClientModelUtils.transform(element));
+				else
+				{
+					invocationGraphs.addAll(makeInvocationGraphs(element));
+					SEPAInvocationGraph ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+					incomingStreams.add(ancestor.getOutputStream());
+				}			
+			}
+		
+			schemaMatch = ConnectionValidator.validateSchema(
+					asList(incomingStreams.get(0).getEventSchema()),
+					asList(incomingStreams.get(1).getEventSchema()),
+					asList(sepa.getEventStreams().get(0)
+							.getEventSchema()),
+					asList(sepa.getEventStreams().get(1)
+							.getEventSchema()));
 		}
-		if (!match)
-			throw new NoValidConnectionException();
+		if (!schemaMatch)
+			throw new NoMatchingSchemaException();
+		if (!groundingMatch)
+			throw new NoMatchingGroundingException();
 
 		return this;
 	}
@@ -174,23 +161,23 @@ public class PipelineValidationHandler {
 
 	public PipelineValidationHandler computeMappingProperties() {
 		try {
-		List<String> connectedTo = rootElement.getConnectedTo();
-		String domId = rootElement.getDOM();
+		List<String> connectedTo = clientRootElement.getConnectedTo();
+		String domId = clientRootElement.getDOM();
 		
-		List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties = rootElement
+		List<de.fzi.cep.sepa.model.client.StaticProperty> currentStaticProperties = clientRootElement
 				.getStaticProperties();
 		
 		currentStaticProperties = clearOptions(currentStaticProperties);
 				
 			for(int i = 0; i < connectedTo.size(); i++)
 			{
-				SEPAElement element = TreeUtils.findSEPAElement(rootElement
+				SEPAElement element = TreeUtils.findSEPAElement(clientRootElement
 						.getConnectedTo().get(i), pipeline.getSepas(), pipeline
 						.getStreams());
 	
 				if (element instanceof SEPAClient || element instanceof StreamClient || element instanceof ActionClient)
 				{
-					de.fzi.cep.sepa.model.ConsumableSEPAElement currentSEPA = (de.fzi.cep.sepa.model.ConsumableSEPAElement) sepaRootElement;
+					de.fzi.cep.sepa.model.ConsumableSEPAElement currentSEPA = (de.fzi.cep.sepa.model.ConsumableSEPAElement) rdfRootElement;
 					
 					if (element instanceof SEPAClient) {
 						
@@ -209,7 +196,7 @@ public class PipelineValidationHandler {
 					if ( currentSEPA.getEventStreams().size()-1 == i)
 					{
 						PipelineModification modification = new PipelineModification(
-								domId, rootElement.getElementId(), currentStaticProperties);
+								domId, clientRootElement.getElementId(), currentStaticProperties);
 						pipelineModificationMessage
 								.addPipelineModification(modification);
 					}
@@ -359,6 +346,23 @@ public class PipelineValidationHandler {
 			else options.addAll(addNestedOptions(properties));
 		}
 		return options;
+	}
+	
+	private List<InvocableSEPAElement> makeInvocationGraphs(SEPAElement rootElement)
+	{
+		GenericTree<NamedSEPAElement> tree = new TreeBuilder(
+				pipeline, rootElement).generateTree(true);
+		return new InvocationGraphBuilder(tree, true).buildGraph();
+	}
+	
+	private SEPAInvocationGraph findInvocationGraph(List<InvocableSEPAElement> graphs, String domId)
+	{
+		return (SEPAInvocationGraph) TreeUtils.findByDomId(domId, invocationGraphs);
+	}
+	
+	private <T> List<T> asList(T object)
+	{
+		return Utils.createList(object);
 	}
 
 }

@@ -16,7 +16,7 @@ import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
+import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
