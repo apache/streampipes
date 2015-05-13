@@ -38,6 +38,7 @@ var currentPipeline;
 var mod;
 
 
+
 /**
  * Handles everything that has to do with the assembly area, and elements in it
  */
@@ -60,36 +61,15 @@ function initAssembly(){
 				if(ui.draggable.hasClass('stream')){
 					handleDroppedStream($newState, false);
 					addRecommendedButton($newState);
-					var tempPipeline = {streams: [], sepas: [], action: {}};
-					addToPipeline($newState[0], tempPipeline);
-					//console.log($newState[0]);
-					var url = standardUrl + "pipelines/recommend";
-					var recs;
-
-					$.when($.ajax({			//Todo change
-						url: url,
-						data : JSON.stringify(tempPipeline),
-						processData : false,
-						type : 'POST',
-						success: function(data){
-							//DEBUG
-							recs = $.parseJSON('{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}');
-							//End Debug
-							//recs = data;
-							console.log(recs);
-						},
-						error: function(data){
-							console.log(data);
-						}
-
-					})).then(function(){populateRecommendedList($newState, recs);});
+					initRecs($newState);
 
 					$newState.hover(showRecButton, hideRecButton);
 
 				//Droppable Sepas
 				}else if(ui.draggable.hasClass('sepa')){
 					handleDroppedSepa($newState, false);
-					// $newState.selectable();	
+					addRecommendedButton($newState);
+
 				//Droppable Actions
 				}else if(ui.draggable.hasClass('action')){
 					handleDroppedAction($newState, false);
@@ -103,25 +83,12 @@ function initAssembly(){
 }
 
 function addRecommendedButton($newState) {
-	var $button =$("<span>")
+	$("<span>")
 		.addClass("recommended-button")
 		.click(function (e) {
 			e.stopPropagation();
-			var recJson = $(e.target).data("recommended");
 			var $recList = $("ul", $newState);
 			$recList.circleMenu('open');
-			var $this = $(this);
-			//if ($this.data('open')){
-			//	$recList.circleMenu('close');
-			////	$this.parent().hover(showRecButton, hideRecButton);
-			//	$this.data('open', false);
-			//}else {
-			//	$recList.circleMenu('open');
-			////	$this.parent().unbind('mouseleave').unbind('mouseenter');
-			//	$this.data('open', true);
-			//}
-
-
 		})
 		.appendTo($newState);
 	$newState.append($("<span><ul>").addClass("recommended-list"));
@@ -140,12 +107,7 @@ function showRecButton(e){
 function hideRecButton(e){
 	$("span:not(.recommended-list)", this).hide();
 }
-function openCircleMenu(){
 
-}
-function closeCircleMenu(){
-
-}
 
 function getCoordinates(ui){
 	console.log(ui);
@@ -670,19 +632,28 @@ function prepareCustomizeModal(element) {
 	return string;
 }
 
+//------------------------------------------------------------------------------------------------
+//Recommendations
+//------------------------------------------------------------------------------------------------
+
+function initRecs($newState) {
+	var tempPipeline = {streams: [], sepas: [], action: {}};
+	addToPipeline($newState[0], tempPipeline);
+	$.when(getRecommendations(tempPipeline))
+		.then(function(data){populateRecommendedList($newState, data);}, function(data){console.log(data);});
+}
+
 function getRecommendations(partialPipeline){
 	var url = standardUrl + "pipelines/recommend";
 
-	$.ajax({
+	return $.ajax({
 		url: url,
 		data : JSON.stringify(partialPipeline),
 		processData : false,
 		type : 'POST',
 		success: function(data){
 			//DEBUG
-			var json = '{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}';
-
-
+			//var json = '{"recommendedElements":[{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"},{"elementId":"http://localhost:8090/sepa/movement","name":"Movement Analysis","description":"Movement Analysis Enricher"}]}';
 		},
 		error: function(data){
 			console.log(data);
@@ -692,12 +663,15 @@ function getRecommendations(partialPipeline){
 }
 
 function populateRecommendedList($element, recs){
-	//console.log(recs);
+	console.log(recs);
 	for (var i = 0, el; el = recs.recommendedElements[i]; i++){
 		console.log(el);
 		var recommendedElement = getElementByElementId(el.elementId);
-		$("<li>").append($('<a>').append($('<img>').attr("src", recommendedElement.iconUrl).css({'height': '80%', 'width': '80%'}))).appendTo($('ul', $element));
-		$('ul', $element).circleMenu('init');
+		if (recommendedElement != undefined) {
+			var recEl = new recElement(recommendedElement);
+			$("<li>").append(recEl.getjQueryElement()).appendTo($('ul', $element));
+			$('ul', $element).circleMenu('init');
+		}
 	}
 }
 

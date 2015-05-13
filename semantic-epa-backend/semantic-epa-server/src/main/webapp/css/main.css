@@ -202,6 +202,14 @@ body {
 	height: 40px;
 	width: 40px;
 }
+.recommended-item {
+	border-radius: 50%;
+	background-color: #ffffff;
+}
+.recommended-item-img {
+	width: 80%;
+	height: 80%;
+ }
 ul.circleMenu-open{
 	visibility: visible;
 	top: 50%;
@@ -212,6 +220,7 @@ ul.circleMenu-closed{
 	top: 50%;
 	left: 50%;
 }
+
 
 #clear {
 	z-index:10;
