@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.rest;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.DELETE;
@@ -13,21 +12,14 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
-import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
-import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
-import de.fzi.cep.sepa.manager.matching.GraphSubmitter;
-import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/pipelines")
@@ -125,8 +117,10 @@ public class Pipeline extends AbstractRestInterface {
 			return toJson(Operations.validatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class), true));
 		} catch (JsonSyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
-		} catch(NoValidConnectionException e) {
+		} catch(NoMatchingSchemaException e) {
 			return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION.title(), NotificationType.NO_VALID_CONNECTION.description(), e.getMessage()));
+		} catch(NoMatchingGroundingException e) {
+			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_GROUNDING_CONNECTION.title(), NotificationType.NO_MATCHING_GROUNDING_CONNECTION.description(), e.getMessage()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
