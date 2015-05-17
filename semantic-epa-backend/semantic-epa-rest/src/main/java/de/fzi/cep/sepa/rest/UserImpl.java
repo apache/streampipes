@@ -29,9 +29,11 @@ public class UserImpl extends AbstractRestInterface implements User{
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        token.setRememberMe(true);
         try {
             subject.login(token);
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             return "Could not login. Wrong password or username";
         }
         return "Successfully logged in" + username;
