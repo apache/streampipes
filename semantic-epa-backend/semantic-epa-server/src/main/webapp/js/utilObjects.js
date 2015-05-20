@@ -16,7 +16,6 @@ function State(){
     this.sepas = {};
     this.actions = {};
     this.currentElement = {};
-    this.overWriteOldPipeline = false;
     this.currentPipeline;
 }
 

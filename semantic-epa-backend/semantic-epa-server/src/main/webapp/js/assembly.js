@@ -423,16 +423,18 @@ function savePipelineName(){
 	state.currentPipeline.name = pipelineName[0].value;
 	state.currentPipeline.description = pipelineName[1].value;
 
+	var overWrite;
+
 	if ( !($("#overwriteCheckbox").css('display') == 'none')){
-		state.overWriteOldPipeline = $("#overwriteCheckbox").prop("checked");
+		overWrite = $("#overwriteCheckbox").prop("checked");
 	}else{
-		state.overWriteOldPipeline = false;
+		overWrite = false;
 	}
 
-	sendPipeline(true);
+	sendPipeline(true, overWrite);
 }
 
-function sendPipeline(fullPipeline, info){
+function sendPipeline(fullPipeline, overWrite, info){
 	
 	if(fullPipeline){
  		
@@ -445,7 +447,7 @@ function sendPipeline(fullPipeline, info){
  				if (data.success){			//TODO Objekt im Backend ändern
  					// toastTop("success", "Pipeline sent to server");
  					displaySuccess(data);
- 					if (state.adjustingPipelineState && state.overWriteOldPipeline){
+ 					if (state.adjustingPipelineState && overWrite){
  						var pipelineId = $("#logo-home").data("pipeline")._id;
  						var url = standardUrl + "pipelines/" + pipelineId;
 						$.ajax({
@@ -453,7 +455,6 @@ function sendPipeline(fullPipeline, info){
 							success : function(data){
 								if (data.success){
 									state.adjustingPipelineState = false;
-									state.overWriteOldPipeline = false;
 									$("#overwriteCheckbox").css("display", "none");
 									refresh("Proa");
 								}else{

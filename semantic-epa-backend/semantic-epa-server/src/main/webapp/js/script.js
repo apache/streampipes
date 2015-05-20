@@ -64,12 +64,12 @@ jsPlumb.ready(function (e) {
         if (originalEvent != undefined) {
 
             createPartialPipeline(info);
-            sendPipeline(false, info);
+            sendPipeline(false, false, info);
         }else{
             var $target = $(info.target);
             if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
                 createPartialPipeline(info);
-                sendPipeline(false, info);
+                sendPipeline(false, false, info);
                 if ($target.hasClass('sepa')){
                     initRecs(state.currentPipeline, $target);
                 }
