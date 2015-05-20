@@ -380,4 +380,13 @@ textarea{
 	resize: none;
 }
 
+#adjustString {
+	font-size : 30px;
+	color: #666;
+	opacity: 0.5;
+	position: absolute;
+
+	width: 100%;
+	text-align: center;
+}
 

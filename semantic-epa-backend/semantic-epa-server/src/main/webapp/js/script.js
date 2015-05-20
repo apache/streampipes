@@ -22,20 +22,17 @@ var standardDraggableOptions = {
  */
 function init(type) {
     //var debug = false;
-    savedSepas = false;
-    savedActions = false;
-    adjustingPipelineState = false;
-    overwriteOldPipeline = false;
+    state.sources = false;
+    state.sepas = false;
+    state.actions = false;
+    state.adjustingPipelineState = false;
+    state.overWriteOldPipeline = false;
+
     $("#logo-home").data("pipeline", false);
 
-    if (plumbReady) {
+    if (state.plumbReady) {
         clearPipelineDisplay();
     }
-
-    //jsPlumb.setContainer($("#assembly"));
-    //if (debug) {
-    //    standardUrl = testUrl;
-    //}
 
     // Get and inititate sources------------------------
     if (type == "Proa") {
@@ -44,12 +41,11 @@ function init(type) {
         domain = "DOMAIN_PERSONAL_ASSISTANT";
     }
     var url = standardUrl + "sources?domain=" + domain;
-    // savedSources = $.getJSON(url, initSources);
     $.ajax({
         dataType: "json",
         url: url,
         success: function (data) {
-            savedSources = data;
+            state.sources = data;
             initSources(data);
         },
         error: function (data) {
@@ -63,12 +59,21 @@ function init(type) {
 }
 //Initiate assembly and jsPlumb functionality-------
 jsPlumb.ready(function (e) {
-    plumbReady = true;
+    state.plumbReady = true;
     jsPlumb.bind("connection", function (info, originalEvent) {
         if (originalEvent != undefined) {
 
             createPartialPipeline(info);
             sendPipeline(false, info);
+        }else{
+            var $target = $(info.target);
+            if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
+                createPartialPipeline(info);
+                sendPipeline(false, info);
+                if ($target.hasClass('sepa')){
+                    initRecs(state.currentPipeline, $target);
+                }
+            }
         }
     });
 
@@ -217,9 +222,8 @@ function displayStreams(e) {
         createStreams($(this).data("streams"));
     } else {
         var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
-        var promise = $.getJSON(url).then(function (data) {
-            savedStreams = data;
-            console.log(savedStreams);
+        $.getJSON(url).then(function (data) {
+            var savedStreams = data;
             $src.data("streams", savedStreams);
             createStreams(data);
         });
@@ -277,13 +281,13 @@ function displaySepas(e) {
     $('#sepaCollapse').removeClass("disabled");
     $('#sepas').children().remove();
     var url = standardUrl + "sepas?domains=" + domain;
-    if (!savedSepas) {
+    if (!state.sepas) {
         $.getJSON(url).then(function (data) {
             createSepas(data);
-            savedSepas = data;
+            state.sepas = data;
         });
     } else {
-        createSepas(savedSepas);
+        createSepas(state.sepas);
     }
 
 }
@@ -326,12 +330,12 @@ function displayActions(e) {
     var url = standardUrl + "actions";
 
 
-    if (savedActions) {
-        createActions(savedActions);
+    if (state.actions) {
+        createActions(state.actions);
     } else {
         $.getJSON(url).then(function (data) {
             createActions(data);
-            savedActions = data;
+            state.actions = data;
         });
     }
 }
@@ -567,11 +571,11 @@ function refresh(type, tabReset) {
     // clearAssembly();
     $('#streamCollapse').attr("data-toggle", "");
     $('#streamCollapse').addClass("disabled");
-
+    hideAdjustingPipelineState();
     init(type);
 
     if (tabReset) {
-        $("#tabs").find("a[href='#home']").tab('show');
+        $("#tabs").find("a[href='#editor']").tab('show');
     }
 }
 
@@ -628,8 +632,8 @@ function showManage() {
             var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
             var $origSrc = $(this);
 
-            var promise = $.getJSON(url).then(function (data) {
-                savedStreams = data;
+            $.getJSON(url).then(function (data) {
+                var savedStreams = data;
                 $origSrc.data("streams", savedStreams);
                 $.each(data, function (i, json) {
                     $('<li>')
@@ -656,10 +660,10 @@ function showManage() {
         .addClass("list-group-item-heading")
         .text("Sepas")
         .appendTo("#sepaList");
-    if (!savedSepas) {
+    if (!state.sepas) {
         var url = standardUrl + "sepas?domains=" + domain;
         $.getJSON(url).then(function (data) {
-            savedSepas = data;
+            state.sepas = data;
             $.each(data, function (i, json) {
                 var $el = $('<li>')
                     .data("JSON", json)
@@ -671,7 +675,7 @@ function showManage() {
             });
         });
     } else {
-        $.each(savedSepas, function (i, json) {
+        $.each(state.sepas, function (i, json) {
             var $el = $('<li>')
                 .data("JSON", json)
                 .addClass("list-group-item")
@@ -697,10 +701,10 @@ function showManage() {
         .text("Actions")
         .appendTo("#actionList");
     var $el;
-    if (!savedActions) {
+    if (!state.actions) {
         var url = standardUrl + "actions";
         $.getJSON(url).then(function (data) {
-            savedActions = data;
+            state.actions = data;
             $.each(data, function (i, json) {
                 var $el = $('<li>')
                     .data("JSON", json)
@@ -713,7 +717,7 @@ function showManage() {
             });
         });
     } else {
-        $.each(savedActions, function (i, json) {
+        $.each(state.actions, function (i, json) {
             var $el = $('<li>')
                 .data("JSON", json)
                 .addClass("list-group-item")
@@ -819,14 +823,14 @@ function addButtons($element, type) {
 function refreshSepas() {
     var url = standardUrl + "sepas?domains=" + domain;
     $.getJSON(url).then(function (data) {
-        savedSepas = data;
+        state.sepas = data;
     });
 }
 
 function refreshActions() {
     var url = standardUrl + "actions";
     $.getJSON(url).then(function (data) {
-        savedActions = data;
+        state.actions = data;
     });
 }
 
@@ -1102,6 +1106,5 @@ function isUserAuthenticated() {
 function showTutorial() {
     $("#tutorialModal").modal('show');
 }
-function setAssemblyAsContainer() {
-    jsPlumb.setContainer($("#assembly"));
-}
+
+

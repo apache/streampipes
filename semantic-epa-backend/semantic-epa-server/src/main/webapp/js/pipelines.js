@@ -157,14 +157,14 @@ function displayPipeline(json){
 		createPreviewElement("sepa", sepa, i, json);
 	}
 	createPreviewElement("action", json.action);
-	connectElements(json, false);
+	connectPipelineElements(json, false);
 	jsPlumb.repaintEverything(true);
 }
 
 function createPreviewElement(type, element, i, json){
 	
 	var $state = $("<span>")
-		.addClass("connectable")
+		.addClass("connectable a")
 		.attr("id", element.DOM)
 		.data("JSON", $.extend(true, {}, element));
 	if (element.iconUrl == null){ //Kein icon in JSON angegeben
@@ -172,7 +172,7 @@ function createPreviewElement(type, element, i, json){
 		var $ident = $('<p>')
 			.text(md5)
 			.appendTo($state);
-		$ident.identicon5({size:150});
+		$ident.identicon5({size:79});
 		$ident.children().addClass("connectable-img tt")
 		.attr(
 			{"data-toggle": "tooltip",
@@ -235,8 +235,8 @@ function createPreviewElement(type, element, i, json){
 	);
 }
 
-function connectElements(json, detachable){
-	console.log("connectElements()");
+function connectPipelineElements(json, detachable){
+	console.log("connectPipelineElements()");
 	console.log(jsPlumb.getContainer());
 	var source, target;
 	var sourceOptions = {
@@ -262,8 +262,9 @@ function connectElements(json, detachable){
 	
 		for (var i = 0, connection; connection = json.action.connectedTo[i]; i++){
 			source = connection;
+
 			var sourceEndpoint = jsPlumb.addEndpoint(source, sepaEndpointOptions);
-			var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
+			var targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
 			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 		}
 	//Sepas --> Streams---------------------//
@@ -276,7 +277,7 @@ function connectElements(json, detachable){
 				// console.log(target);
 				
 				var sourceEndpoint = jsPlumb.addEndpoint(source, streamEndpointOptions);
-				var targetEndpoint = jsPlumb.addEndpoint(target, targetOptions);
+				var targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
 				jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 			}
 		}
@@ -292,7 +293,8 @@ function adjustPipeline(json){
 	adjustingPipelineState = true;
 	clearPipelineDisplay();
 	jsPlumb.setContainer($("#assembly"));
-	$("#tabs").find("a[href='#home']").tab('show');
+	$("#tabs").find("a[href='#editor']").tab('show');
+	showAdjustingPipelineState(json.name);
 	
 	// refresh(type);
 	
@@ -314,7 +316,7 @@ function adjustPipeline(json){
 		.data("options", true));
 	$("#logo-home").data("pipeline", json);
 	
-	connectElements(json, true);
+	connectPipelineElements(json, true);
 	jsPlumb.repaintEverything(true);
 	
 }

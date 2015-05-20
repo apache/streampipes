@@ -9,3 +9,14 @@ function recElement(json){
     };
 }
 
+function State(){
+    this.adjustingPipelineState = false;
+    this.plumbReady = false;
+    this.sources = {};
+    this.sepas = {};
+    this.actions = {};
+    this.currentElement = {};
+    this.overWriteOldPipeline = false;
+    this.currentPipeline;
+}
+

@@ -34,10 +34,6 @@ var leftTargetPointOptions = {
 	isTarget: true
 };
 
-var currentPipeline;
-var mod;
-
-
 
 /**
  * Handles everything that has to do with the assembly area, and elements in it
@@ -61,7 +57,9 @@ function initAssembly(){
 				if(ui.draggable.hasClass('stream')){
 					handleDroppedStream($newState, false);
 					addRecommendedButton($newState);
-					initRecs($newState);
+					var tempPipeline = {streams: [], sepas: [], action: {}};
+					addToPipeline($newState[0], tempPipeline);
+					initRecs(tempPipeline, $newState);
 
 					$newState.hover(showRecButton, hideRecButton);
 
@@ -82,17 +80,17 @@ function initAssembly(){
 	}); //End #assembly.droppable()	
 }
 
-function addRecommendedButton($newState) {
+function addRecommendedButton($element) {
 	$("<span>")
 		.addClass("recommended-button")
 		.click(function (e) {
 			e.stopPropagation();
-			var $recList = $("ul", $newState);
+			var $recList = $("ul", $element);
 			$recList.circleMenu('open');
 		})
-		.appendTo($newState);
-	$newState.append($("<span><ul>").addClass("recommended-list"));
-	$("ul", $newState)
+		.appendTo($element);
+	$element.append($("<span><ul>").addClass("recommended-list"));
+	$("ul", $element)
 		.circleMenu({
 			direction: "right-half",
 			item_diameter: 50,
@@ -125,7 +123,10 @@ function createNewAssemblyElement(json, coordinates){
 	var $newState = $('<span>')									
 		.data("JSON", $.extend(true, {}, json))
 		.appendTo('#assembly');
-	if (adjustingPipelineState){$newState.attr("id", json.DOM);}
+	if (state.adjustingPipelineState){
+		$newState.attr("id", json.DOM);
+		$newState.addClass('a'); //Flag so customize modal won't get triggered
+	}
 	
 	jsPlumb.draggable($newState, {containment: 'parent'});
 
@@ -191,7 +192,7 @@ function handleDroppedStream($newState){
 	$newState
 		.addClass('connectable stream');
 		
-	if(!adjustingPipelineState){
+	if(!state.adjustingPipelineState){
 		jsPlumb.addEndpoint($newState,streamEndpointOptions);
 	}
 
@@ -215,12 +216,12 @@ function handleDroppedSepa($newState){
 	$('#actions').fadeTo(100,1);									
 	$newState
 		.addClass('connectable sepa');
-	if ($newState.data("JSON").staticProperties != null && !adjustingPipelineState){
+	if ($newState.data("JSON").staticProperties != null && !state.adjustingPipelineState){
 		$newState
 			.addClass('disabled');
 	}
 	
-	if (!adjustingPipelineState){	
+	if (!state.adjustingPipelineState){
 		if ($newState.data("JSON").inputNodes < 2){ //1 InputNode
 			
 			jsPlumb.addEndpoint($newState, leftTargetPointOptions);	
@@ -235,7 +236,7 @@ function handleDroppedSepa($newState){
 	$newState.dblclick(function(){
 		jsPlumb.addEndpoint($newState, sepaEndpointOptions);
 	});
-	
+	return $newState;
 }
 
 function handleDroppedAction($newState){
@@ -244,11 +245,11 @@ function handleDroppedAction($newState){
 	
 	$newState
 		.addClass("connectable action");
-	if ($newState.data("JSON").staticProperties != null && !adjustingPipelineState){
+	if ($newState.data("JSON").staticProperties != null && !state.adjustingPipelineState){
 		$newState
 			.addClass('disabled');
 	}
-	if (!adjustingPipelineState){	
+	if (!state.adjustingPipelineState){
 		jsPlumb.addEndpoint($newState,leftTargetPointOptions);
 	}
 	
@@ -282,6 +283,7 @@ function clearAssembly() {
 	$('#actionCollapse').attr("data-toggle", "");
 	$('#actionCollapse').addClass("disabled");
 	$('#collapseOne,#collapseTwo,#collapseThree').collapse('hide');
+	state.adjustingPipelineState = false;
 }
 
 function createPartialPipeline(info){
@@ -295,7 +297,7 @@ function createPartialPipeline(info){
 
 	
 	addElementToPartialPipeline(element, pipelinePart);
-	currentPipeline = pipelinePart;
+	state.currentPipeline = pipelinePart;
 	
 }
 
@@ -310,7 +312,13 @@ function addElementToPartialPipeline(element, pipelinePart){
 	}
 }
 
-
+function showAdjustingPipelineState(pipelineName){
+	var text = 'Modifying Pipeline "' + pipelineName + '"'
+	$("<div>").attr("id", "adjustString").append($("<p>").text(text)).appendTo($('#assembly'));
+}
+function hideAdjustingPipelineState(){
+	$('#adjustString').hide();
+}
 
 
 /**
@@ -383,9 +391,9 @@ function submit() {
 	if (!error ) {
 		
 		if($("#logo-home").data("pipeline") != false){
-			adjustingPipelineState = true;
+			state.adjustingPipelineState = true;
 		}
-		currentPipeline = pipeline;
+		state.currentPipeline = pipeline;
 		openPipelineNameModal();
 		
 		
@@ -393,7 +401,7 @@ function submit() {
 }
 
 function openPipelineNameModal(){
-	if (adjustingPipelineState) {
+	if (state.adjustingPipelineState) {
 		var name = $("#logo-home").data("pipeline").name;
 		var descr = $("#logo-home").data("pipeline").description;
 		
@@ -412,12 +420,13 @@ function savePipelineName(){
 		return false;
 	}
 	console.log(pipelineName);
-	currentPipeline.name = pipelineName[0].value;
-	currentPipeline.description = pipelineName[1].value;
+	state.currentPipeline.name = pipelineName[0].value;
+	state.currentPipeline.description = pipelineName[1].value;
+
 	if ( !($("#overwriteCheckbox").css('display') == 'none')){
-		overwriteOldPipeline = $("#overwriteCheckbox").prop("checked");
+		state.overWriteOldPipeline = $("#overwriteCheckbox").prop("checked");
 	}else{
-		overwriteOldPipeline = false;
+		state.overWriteOldPipeline = false;
 	}
 
 	sendPipeline(true);
@@ -429,22 +438,22 @@ function sendPipeline(fullPipeline, info){
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines",
- 			data : JSON.stringify(currentPipeline),
+ 			data : JSON.stringify(state.currentPipeline),
  			processData : false,
  			type : 'POST',
  			success : function(data){
  				if (data.success){			//TODO Objekt im Backend ändern
  					// toastTop("success", "Pipeline sent to server");
  					displaySuccess(data);
- 					if (adjustingPipelineState && overwriteOldPipeline){
+ 					if (state.adjustingPipelineState && state.overWriteOldPipeline){
  						var pipelineId = $("#logo-home").data("pipeline")._id;
  						var url = standardUrl + "pipelines/" + pipelineId;
 						$.ajax({
 							url : url,
 							success : function(data){
 								if (data.success){
-									adjustingPipelineState = false;
-									overwriteOldPipeline = false;
+									state.adjustingPipelineState = false;
+									state.overWriteOldPipeline = false;
 									$("#overwriteCheckbox").css("display", "none");
 									refresh("Proa");
 								}else{
@@ -476,13 +485,13 @@ function sendPipeline(fullPipeline, info){
  		
  		$.ajax({
  			url : "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
- 			data : JSON.stringify(currentPipeline),
+ 			data : JSON.stringify(state.currentPipeline),
  			processData : false,
  			type : 'POST',
  			success : function(data){
  				if (data.success){			//TODO Objekt im Backend ändern
  					modifyPipeline(data.pipelineModifications);
- 					for (var i= 0, sepa; sepa = currentPipeline.sepas[i]; i++){
+ 					for (var i= 0, sepa; sepa = state.currentPipeline.sepas[i]; i++){
  						var id = "#" + sepa.DOM;
  						if ($(id).data("options") != true){
  							if (!isFullyConnected(id)) {return;}
@@ -492,12 +501,12 @@ function sendPipeline(fullPipeline, info){
 							$('#customizeModal').modal('show');
 							
  						}
-					console.log(currentPipeline);
- 					}if (!$.isEmptyObject(currentPipeline.action)){
- 						var id = "#" + currentPipeline.action.DOM;
+
+ 					}if (!$.isEmptyObject(state.currentPipeline.action)){
+ 						var id = "#" + state.currentPipeline.action.DOM;
  						if (!isFullyConnected(id)) {return;}
  						$('#customize-content').html(prepareCustomizeModal($(id)));
-						var string = "Customize " + currentPipeline.action.name;
+						var string = "Customize " + state.currentPipeline.action.name;
 						$('#customizeTitle').text(string);
 						$('#customizeModal').modal('show');
 					}
@@ -523,10 +532,9 @@ function modifyPipeline(pipelineModifications){
 	
 	for (var i = 0, modification; modification = pipelineModifications[i]; i++){
 		id = "#" + modification.domId;
-		$currentElement = $(id);
-		$currentElement.data("JSON").staticProperties = modification.staticProperties;
-		// $currentElement.data("options", null);
-		// $currentElement.data("modal", null);
+		state.currentElement = $(id);
+		state.currentElement.data("JSON").staticProperties = modification.staticProperties;
+
 		clearCurrentElement();
 	}
 	
@@ -539,8 +547,7 @@ function modifyPipeline(pipelineModifications){
 function save() {
 
 	var options = $('#modalForm').serializeArray();
-	console.log(options);
-	if (options.length < $currentElement.data("JSON").staticProperties.length){
+	if (options.length < state.currentElement.data("JSON").staticProperties.length){
 		toastRightTop("error","Please enter all parameters");
 			return false;
 	}
@@ -551,41 +558,41 @@ function save() {
 		}
 	}
 	
-	$currentElement.data("options", true);
+	state.currentElement.data("options", true);
 	saveInStaticProperties(options);
-	$currentElement.removeClass("disabled");
-	// $currentElement.css("opacity", 1);
+	state.currentElement.removeClass("disabled");
+	// state.currentElement.css("opacity", 1);
 	
 
 }
 
 function saveInStaticProperties(options){
 	for (var i = 0; i < options.length; i++){
-		switch ($currentElement.data("JSON").staticProperties[i].input.properties.elementType){
+		switch (state.currentElement.data("JSON").staticProperties[i].input.properties.elementType){
 			
 			case "RADIO_INPUT" :
 			case "SELECT_INPUT" :
-				for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
-					if ($currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value){
-						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
+				for (var j = 0; j < state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
+					if (state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value){
+						state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
 					}else{
-						$currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
+						state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
 					}
 				}
 				continue;
 			 case "CHECKBOX" :
-                 for (var j = 0; j < $currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
+                 for (var j = 0; j < state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++){
                      if ($("#" +options[i].value +" #checkboxes-" +i +"-" +j).is(':checked')) {
                              console.log("Val: " +options[i].value);
                              console.log("checked");
-                             $currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
+                             state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
                      }else{
-                             $currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
+                             state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
                      }
                  }
                  continue;
 			case "TEXT_INPUT":
-				$currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
+				state.currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
 				continue;
 				
 		}
@@ -594,7 +601,7 @@ function saveInStaticProperties(options){
 }
 
 function prepareCustomizeModal(element) {
-	$currentElement = element;
+	state.currentElement = element;
 	var string = "";
 	// $('#savedOptions').children().not('strong').remove();
 	// if (element.data("modal") == null) {
@@ -636,11 +643,9 @@ function prepareCustomizeModal(element) {
 //Recommendations
 //------------------------------------------------------------------------------------------------
 
-function initRecs($newState) {
-	var tempPipeline = {streams: [], sepas: [], action: {}};
-	addToPipeline($newState[0], tempPipeline);
-	$.when(getRecommendations(tempPipeline))
-		.then(function(data){populateRecommendedList($newState, data);}, function(data){console.log(data);});
+function initRecs(pipeline, $element) {
+	$.when(getRecommendations(pipeline))
+		.then(function(data){populateRecommendedList($element, data);}, function(data){console.log(data);});
 }
 
 function getRecommendations(partialPipeline){
@@ -662,11 +667,14 @@ function getRecommendations(partialPipeline){
 
 
 function populateRecommendedList($element, recs){
-	//console.log(recs);
-	for (var i = 0, el; el = recs.recommendedElements[i]; i++){
+	console.log(recs);
+	var el;
+	for (var i = 0; i < recs.recommendedElements.length ; i++){
 		//console.log(el);
+		el = recs.recommendedElements[i];
 		var recommendedElement = getElementByElementId(el.elementId);
-		if (recommendedElement != undefined) {
+		if (typeof recommendedElement !== "undefined") {
+
 			var recEl = new recElement(recommendedElement);
 			$("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
 				"data-toggle": "tooltip",
@@ -675,7 +683,7 @@ function populateRecommendedList($element, recs){
 				title: recEl.name
 			}).appendTo($('ul', $element));
 			$('ul', $element).circleMenu('init');
-		}
+		}else{console.log(i)}
 	}
 	$('.recommended-item').on('click', function(e){
 		createAndConnect(this);
@@ -685,13 +693,13 @@ function populateRecommendedList($element, recs){
 
 function getElementByElementId(elId){
 	if (elId.indexOf("sepa") >= 0){ //Sepa
-		for (var i = 0, element; element=savedSepas[i]; i++){
+		for (var i = 0, element; element = state.sepas[i]; i++){
 			if (element.elementId === elId){
 				return element;
 			}
 		}
 	}else {		//Action
-		for (var i = 0, element; element=savedActions[i]; i++){
+		for (var i = 0, element; element = state.actions[i]; i++){
 			if (element.elementId === elId){
 				return element;
 			}
@@ -705,7 +713,21 @@ function createAndConnect(target) {
 	var x = $parentElement.position().left;
 	var y = $parentElement.position().top;
 	var coord = {'x' : x + 200, 'y' : y};
-	handleDroppedSepa(createNewAssemblyElement(json, coord));
+	var $target = handleDroppedSepa(createNewAssemblyElement(json, coord));
+	addRecommendedButton($target);
+	$target.hover(showRecButton, hideRecButton);
+	var options;
+	if ($parentElement.hasClass("stream")){
+		options = streamEndpointOptions;
+	}else{
+		options = sepaEndpointOptions;
+	}
+	var sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
+	var targetEndPoint = jsPlumb.selectEndpoints({target : $target}).get(0);
+
+	jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
+	jsPlumb.repaintEverything();
+
 
 
 }
