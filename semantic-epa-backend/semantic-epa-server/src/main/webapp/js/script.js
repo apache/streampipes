@@ -26,7 +26,6 @@ function init(type) {
     state.sepas = false;
     state.actions = false;
     state.adjustingPipelineState = false;
-    state.overWriteOldPipeline = false;
 
     $("#logo-home").data("pipeline", false);
 
