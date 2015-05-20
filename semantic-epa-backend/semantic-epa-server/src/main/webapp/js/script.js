@@ -132,7 +132,7 @@ jsPlumb.ready(function (e) {
             console.log("hide");
             clearTab(e);
         })
-        .on('shown.bs.tab', function (e) {
+        .on('show.bs.tab', function (e) {
             toTab(e);
         });
 
@@ -534,7 +534,8 @@ function ContextMenuClickHandler(type) {
             } else {
                 var json = $invokedOn.data("JSON");
                 $('#description-title').text(json.name);
-                $('#modal-description').text(json.description);
+                if (json.description) {$('#modal-description').text(json.description);}
+                else {$('#modal-description').text("No description available");}
                 $('#descrModal').modal('show');
             }
         });

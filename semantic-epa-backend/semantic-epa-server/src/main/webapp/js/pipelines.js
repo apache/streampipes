@@ -288,11 +288,11 @@ function connectPipelineElements(json, detachable){
 }
 
 function adjustPipeline(json){
-	var type = "Proa"; //ändern auf jeweiligen Use-Case
+	var type = "Proa"; //TODO ändern auf jeweiligen Use-Case
 	console.log(json);
-	adjustingPipelineState = true;
+	state.adjustingPipelineState = true;
 	clearPipelineDisplay();
-	jsPlumb.setContainer($("#assembly"));
+	//jsPlumb.setContainer($("#assembly"));
 	$("#tabs").find("a[href='#editor']").tab('show');
 	showAdjustingPipelineState(json.name);
 	
