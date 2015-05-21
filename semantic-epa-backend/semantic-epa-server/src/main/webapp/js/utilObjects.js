@@ -17,5 +17,6 @@ function State(){
     this.actions = {};
     this.currentElement = {};
     this.currentPipeline;
+    this.adjustingPipeline = {};
 }
 

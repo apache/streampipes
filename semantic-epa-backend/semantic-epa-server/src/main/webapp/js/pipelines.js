@@ -314,7 +314,7 @@ function adjustPipeline(json){
 	currentx += 200;
 	handleDroppedAction(createNewAssemblyElement(json.action, {'x':currentx, 'y':currenty})
 		.data("options", true));
-	$("#logo-home").data("pipeline", json);
+	state.adjustingPipeline = json;
 	
 	connectPipelineElements(json, true);
 	jsPlumb.repaintEverything(true);

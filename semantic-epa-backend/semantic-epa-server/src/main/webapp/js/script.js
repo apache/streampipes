@@ -26,8 +26,7 @@ function init(type) {
     state.sepas = false;
     state.actions = false;
     state.adjustingPipelineState = false;
-
-    $("#logo-home").data("pipeline", false);
+    state.adjustingPipeline = {};
 
     if (state.plumbReady) {
         clearPipelineDisplay();
@@ -60,18 +59,12 @@ function init(type) {
 jsPlumb.ready(function (e) {
     state.plumbReady = true;
     jsPlumb.bind("connection", function (info, originalEvent) {
-        if (originalEvent != undefined) {
-
+        var $target = $(info.target);
+        if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
             createPartialPipeline(info);
             sendPipeline(false, false, info);
-        }else{
-            var $target = $(info.target);
-            if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
-                createPartialPipeline(info);
-                sendPipeline(false, false, info);
-                if ($target.hasClass('sepa')){
-                    initRecs(state.currentPipeline, $target);
-                }
+            if ($target.hasClass('sepa')){
+                initRecs(state.currentPipeline, $target);
             }
         }
     });
@@ -568,7 +561,7 @@ function refresh(type, tabReset) {
     $('#streams').children().remove();
     $('#streams').fadeTo(300, 0);
     $('#sepas').fadeTo(300, 0);
-    // clearAssembly();
+     clearAssembly();
     $('#streamCollapse').attr("data-toggle", "");
     $('#streamCollapse').addClass("disabled");
     hideAdjustingPipelineState();
@@ -1041,20 +1034,16 @@ function toastRightTop(type, message, title) {
 
 function displayErrors(data) {
     for (var i = 0, notification; notification = data.notifications[i]; i++) {
-        toastTop("error", notification.description, notification.title, true);
+        toastRightTop("error", notification.description, notification.title);
     }
 }
 
 function displaySuccess(data) {
     for (var i = 0, notification; notification = data.notifications[i]; i++) {
-        toastTop("success", notification.description, notification.title, false);
+        toastRightTop("success", notification.description, notification.title);
     }
 }
 
-function pipelinesClicked() {
-    disableOptions();
-    refreshPipelines();
-}
 
 function disableOptions() {
     $('#options')

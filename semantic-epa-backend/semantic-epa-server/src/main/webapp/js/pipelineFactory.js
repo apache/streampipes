@@ -1,5 +1,5 @@
 function addToPipeline(element, pipeline){
-	console.log(element);
+
 	if ($(element).hasClass('action')){
 
 
