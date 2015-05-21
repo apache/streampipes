@@ -109,13 +109,14 @@ public class InvocationGraphBuilder {
 	}
 	
 	private TransportFormat getPreferredTransportFormat(SEPAInvocationGraph thisGraph) {
+		if (thisGraph.getInputStreams().get(0).getEventGrounding().getTransportFormats() == null) return new TransportFormat(MessageFormat.Json);
 		for(TransportFormat format : thisGraph.getInputStreams().get(0).getEventGrounding().getTransportFormats())
 		{
 			if (thisGraph.getSupportedGrounding().getTransportFormats().get(0).getRdfType().containsAll(format.getRdfType()))
 				return format;
 		}
 		//TODO
-		return null;
+		return new TransportFormat(MessageFormat.Json);
 	}
 
 	private InvocableSEPAElement buildSEPAElement(InvocableSEPAElement thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)

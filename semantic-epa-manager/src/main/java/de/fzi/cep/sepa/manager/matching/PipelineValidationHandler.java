@@ -143,6 +143,8 @@ public class PipelineValidationHandler {
 							.getEventSchema()),
 					asList(sepa.getEventStreams().get(1)
 							.getEventSchema()));
+			
+			groundingMatch = ConnectionValidator.validateGrounding(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
 		}
 		if (!schemaMatch)
 			throw new NoMatchingSchemaException();

@@ -154,12 +154,19 @@ public class SchemaOutputCalculator {
 	{
 		for(OutputStrategy strategy : strategies)
 		{
+			List<EventProperty> properties = new ArrayList<>();
 			if (strategy instanceof CustomOutputStrategy)
 			{
-				List<EventProperty> properties = stream1.getEventSchema().getEventProperties();
+				properties = stream1.getEventSchema().getEventProperties();
 				properties.addAll(stream2.getEventSchema().getEventProperties());
-				return generateSchema(properties);
 			} 
+			else if (strategy instanceof AppendOutputStrategy)
+			{
+				properties = stream1.getEventSchema().getEventProperties();
+				properties.addAll(rename(properties, stream2.getEventSchema().getEventProperties()));
+				properties.addAll(rename(properties, ((AppendOutputStrategy) strategy).getEventProperties()));
+			}
+			return generateSchema(properties);
 		}
 		//TODO exceptions
 		return null;

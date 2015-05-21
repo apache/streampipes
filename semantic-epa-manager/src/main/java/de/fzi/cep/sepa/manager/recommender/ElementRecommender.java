@@ -8,6 +8,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import com.rits.cloning.Cloner;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
@@ -54,7 +56,8 @@ public class ElementRecommender {
 				new PipelineValidationHandler(tempPipeline, true).validateConnection();
 				addRecommendation(sepa);
 				tempPipeline.setSepas(new ArrayList<>());
-			} catch (NoValidConnectionException e) {
+			} catch (NoMatchingSchemaException e) {
+			} catch (NoMatchingGroundingException e) {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

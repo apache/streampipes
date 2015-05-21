@@ -18,7 +18,6 @@ public class GroundingMatchValidator implements Validator<EventGrounding> {
 		{
 			List<TransportFormat> rightFormats = right.getTransportFormats();
 			List<TransportFormat> leftFormats = left.getTransportFormats();
-			rightFormats.forEach(rightFormat -> rightFormat.getRdfType().forEach(rightType -> System.out.println(rightType.toString())));
 			match = rightFormats.stream().anyMatch(rightFormat -> leftFormats.stream().anyMatch(leftFormat -> rightFormat.getRdfType().containsAll(leftFormat.getRdfType())));
 		}
 		return match;
