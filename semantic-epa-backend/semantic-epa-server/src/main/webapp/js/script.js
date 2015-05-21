@@ -62,10 +62,14 @@ jsPlumb.ready(function (e) {
         var $target = $(info.target);
         if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
             createPartialPipeline(info);
-            sendPipeline(false, false, info);
-            if ($target.hasClass('sepa')){
-                initRecs(state.currentPipeline, $target);
-            }
+            $.when(sendPipeline(false, false, info)).then(function(data){
+                if (data.success) {
+                    if ($target.hasClass('sepa')) {
+                        initRecs(state.currentPipeline, $target);
+                    }
+                }
+            });
+
         }
     });
 
@@ -528,6 +532,11 @@ function ContextMenuClickHandler(type) {
                 $('#description-title').text(json.name);
                 if (json.description) {$('#modal-description').text(json.description);}
                 else {$('#modal-description').text("No description available");}
+                var url = standardUrl + "sources/" +  encodeURIComponent(json.elementId) +"/jsonld";
+
+                $.ajax({url : url, type : "GET", success : function(data){
+                    $("#jsonld").text(data);
+                }});
                 $('#descrModal').modal('show');
             }
         });
@@ -1059,12 +1068,17 @@ function enableOptions() {
         .attr("data-toggle", "dropdown");
 }
 
-function getParentWithJSONData($element) {
+function getParentWithJSONData($element) { //TODO umschreiben auf $.parents
     while ($element.data("JSON") == undefined) {
         $element = $element.parent();
     }
     return $element;
 }
+
+function openJsonLDModal(){
+    var jsonld = state.currentElement.jsonld
+}
+
 function attemptLogin() {
     console.log($("#login-form").serializeArray());
     $.ajax({

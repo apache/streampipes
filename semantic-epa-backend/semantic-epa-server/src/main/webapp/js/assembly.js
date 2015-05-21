@@ -54,12 +54,12 @@ function initAssembly() {
                 //Droppable Streams
                 if (ui.draggable.hasClass('stream')) {
                     handleDroppedStream($newState, false);
-                    addRecommendedButton($newState);
+                    //addRecommendedButton($newState);
                     var tempPipeline = {streams: [], sepas: [], action: {}};
                     addToPipeline($newState[0], tempPipeline);
                     initRecs(tempPipeline, $newState);
 
-                    $newState.hover(showRecButton, hideRecButton);
+                    //$newState.hover(showRecButton, hideRecButton);
 
                     //Droppable Sepas
                 } else if (ui.draggable.hasClass('sepa')) {
@@ -440,7 +440,7 @@ function sendPipeline(fullPipeline, overWrite, info) {
 
     if (fullPipeline) {
 
-        $.ajax({
+        return $.ajax({
             url: "http://localhost:8080/semantic-epa-backend/api/pipelines",
             data: JSON.stringify(state.currentPipeline),
             processData: false,
@@ -485,7 +485,7 @@ function sendPipeline(fullPipeline, overWrite, info) {
 
     } else {
 
-        $.ajax({
+        return $.ajax({
             url: "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
             data: JSON.stringify(state.currentPipeline),
             processData: false,
@@ -652,6 +652,8 @@ function initRecs(pipeline, $element) {
     $.when(getRecommendations(pipeline))
         .then(function (data) {
             if (data.success) {
+                addRecommendedButton($element);
+                $element.hover(showRecButton, hideRecButton);
                 populateRecommendedList($element, data.recommendedElements);
 
             }else{
@@ -725,8 +727,7 @@ function createAndConnect(target) {
     var y = $parentElement.position().top;
     var coord = {'x': x + 200, 'y': y};
     var $target = handleDroppedSepa(createNewAssemblyElement(json, coord));
-    addRecommendedButton($target);
-    $target.hover(showRecButton, hideRecButton);
+
     var options;
     if ($parentElement.hasClass("stream")) {
         options = streamEndpointOptions;
