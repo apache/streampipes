@@ -3,7 +3,9 @@ package de.fzi.cep.sepa.sources.samples.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
@@ -40,6 +43,8 @@ public class HookLoad implements EventStreamDeclarer {
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.DDM.HookLoad");
+		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
+		
 		this.topicName = grounding.getTopicName();
 		
 		stream.setEventGrounding(grounding);

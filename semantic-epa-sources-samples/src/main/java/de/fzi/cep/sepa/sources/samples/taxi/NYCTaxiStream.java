@@ -18,7 +18,8 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import de.fzi.cep.sepa.model.vocabulary.SchemaOrg;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Utils;
@@ -31,6 +32,7 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SEP;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
@@ -59,8 +61,8 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Taxi_Icon_2" +"_HQ.png");
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "medallion", "", Utils.createURI("http://test.de/text")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "hack_license", "", Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "medallion", "", Utils.createURI(SO.Text)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "hack_license", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "pickup_datetime", "", Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "dropoff_datetime", "", Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "trip_time_in_secs", "", Utils.createURI("http://schema.org/Number")));
@@ -69,7 +71,7 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_latitude", "", Utils.createURI("http://test.de/latitude")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_longitude", "", Utils.createURI("http://test.de/longitude")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_latitude", "", Utils.createURI("http://test.de/latitude")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "payment_type", "", Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "payment_type", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "fare_amount", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "surcharge", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "mta_tax", "", Utils.createURI("http://schema.org/Number")));
@@ -85,6 +87,7 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
 		grounding.setTopicName("SEPA.SEP.NYC.Taxi");
+		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
