@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
@@ -68,7 +69,7 @@ public class PatternController extends EsperDeclarer<PatternParameters>{
 		
 		staticProperties.add(new MatchingStaticProperty("select matching", ""));
 		desc.setStaticProperties(staticProperties);
-		
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		return desc;
 	}
 

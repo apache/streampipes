@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
@@ -80,6 +81,7 @@ public class NumericalFilterController extends EsperDeclarer<NumericalFilterPara
 		}
 		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value"));
 		desc.setStaticProperties(staticProperties);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		return desc;
 	}

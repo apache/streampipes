@@ -7,6 +7,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
@@ -23,7 +24,7 @@ public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParame
 		
 		SEPA sepa = new SEPA("/sepa/grid", "Grid Cell Grouping",
 				"Groups location-based events into cells of a given size", "", "/sepa/grid", Utils.createList(Domain.DOMAIN_PERSONAL_ASSISTANT.toString()));
-		
+		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 			EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.de/latitude").build();

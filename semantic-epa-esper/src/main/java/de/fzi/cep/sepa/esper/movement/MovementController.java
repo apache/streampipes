@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -88,7 +89,7 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		return desc;
 	}
 

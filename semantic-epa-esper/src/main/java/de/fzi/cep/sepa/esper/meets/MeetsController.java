@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.pattern.PatternParameters;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -77,6 +78,7 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(new CustomOutputStrategy());
 		desc.setOutputStrategies(strategies);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		

@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -67,6 +68,7 @@ public class CountController extends EsperDeclarer<CountParameter>{
 		staticProperties.add(mp);
 		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size: "));
 		desc.setStaticProperties(staticProperties);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		return desc;
 	}

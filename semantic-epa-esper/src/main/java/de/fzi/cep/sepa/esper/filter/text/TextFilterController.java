@@ -8,6 +8,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -51,11 +52,8 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 		stream1.setEventSchema(schema1);
 		
 		SEPA desc = new SEPA("/sepa/textfilter", "Text Filter", "Text Filter Description", "", "/sepa/textfilter", domains);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
-		EventGrounding supportedGrounding = new EventGrounding();
-		supportedGrounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Thrift)));
-		
-		desc.setSupportedGrounding(supportedGrounding);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
 		
 		//TODO check if needed

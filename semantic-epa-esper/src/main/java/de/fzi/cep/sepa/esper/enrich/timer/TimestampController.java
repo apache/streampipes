@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentParameter;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -61,6 +62,7 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
 		desc.setOutputStrategies(strategies);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		return desc;
 	}

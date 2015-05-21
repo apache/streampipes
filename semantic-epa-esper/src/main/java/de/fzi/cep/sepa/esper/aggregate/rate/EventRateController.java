@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -42,6 +43,7 @@ public class EventRateController extends EsperDeclarer<EventRateParameter> {
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		

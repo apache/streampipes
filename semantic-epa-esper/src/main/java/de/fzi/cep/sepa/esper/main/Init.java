@@ -20,6 +20,7 @@ import de.fzi.cep.sepa.esper.meets.MeetsController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
 import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
+import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 
 public class Init implements Runnable {
@@ -48,6 +49,7 @@ public class Init implements Runnable {
 		declarers.add(new MathController());
 		declarers.add(new DebsChallenge1Controller());
 		declarers.add(new DebsChallenge2Controller());
+		declarers.add(new DrillingStartController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

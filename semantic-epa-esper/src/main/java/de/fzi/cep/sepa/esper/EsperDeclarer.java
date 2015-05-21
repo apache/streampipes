@@ -18,6 +18,7 @@ import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
@@ -62,7 +63,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 				brokerAliases.put(outputBrokerUrl, outputBrokerAlias);
 			}
 			
-			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), DataType.THRIFT);
+			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), getMessageFormat(outputEventGrounding));
 			
 			outEventType = sepa.getOutputStream().getEventSchema().toRuntimeMap();
 			
@@ -79,7 +80,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 					config.add(new CamelConfig.ActiveMQ(inputBrokerAlias, inputBrokerUrl));
 					brokerAliases.put(inputBrokerUrl, inputBrokerAlias);
 				}
-				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), DataType.THRIFT));
+				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), getMessageFormat(inputEventGrounding)));
 				inEventTypes.put("topic://" +inputEventGrounding.getTopicName(), stream.getEventSchema().toRuntimeMap());
 			}
 			
@@ -101,6 +102,11 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 		return true;
 	}
 	
+	private DataType getMessageFormat(EventGrounding inputEventGrounding) {
+		if (inputEventGrounding.getTransportFormats().get(0).getRdfType().contains(MessageFormat.Thrift)) return DataType.THRIFT;
+		else return DataType.JSON;
+	}
+
 	public boolean detachRuntime() 
 	{
 		brokerAliases.clear();

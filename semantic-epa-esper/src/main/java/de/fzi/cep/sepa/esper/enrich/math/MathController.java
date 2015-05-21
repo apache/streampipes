@@ -8,6 +8,7 @@ import org.openrdf.rio.RDFHandlerException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -31,8 +32,10 @@ public class MathController extends EsperDeclarer<MathParameter>{
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
+		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		SEPA desc = new SEPA("/sepa/math", "Math EPA",
 				"performs simple calculations on event properties", "", "/sepa/math", domains);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {
 			EventStream stream1 = new EventStream();
 
