@@ -1083,7 +1083,6 @@ function attemptLogin() {
     console.log($("#login-form").serializeArray());
     $.ajax({
         url: standardUrl + "user/login",
-
         data: "username="+$('#exampleInputEmail1').val()+"&password="+$('#exampleInputPassword1').val(),
         type: 'POST',
         success: function(ret) {
@@ -1092,6 +1091,18 @@ function attemptLogin() {
     })
 }
 
+function registerUser() {
+    console.log($("#login-form").serializeArray());
+    $.ajax({
+        url: standardUrl + "user/register",
+        data: "username="+$('#exampleInputEmail1').val()+"&password="+$('#exampleInputPassword1').val(),
+        type: 'POST',
+        success: function(ret) {
+            console.log(ret); }
+    })
+}
+
+//See: https://stackoverflow.com/questions/14220321/how-to-return-the-response-from-an-asynchronous-call
 function isUserAuthenticated() {
     $.ajax({
         url: standardUrl + "user/authc",

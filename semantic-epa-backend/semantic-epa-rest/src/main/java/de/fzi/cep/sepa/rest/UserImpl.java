@@ -2,31 +2,90 @@ package de.fzi.cep.sepa.rest;
 
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.User;
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
+import org.lightcouch.CouchDbClient;
+import com.google.gson.JsonObject;
+import java.security.MessageDigest;
+
+
 
 import javax.ws.rs.*;
+import java.util.List;
 
 /**
  * Created by robin on 04.05.15.
  */
 @Path("/user")
 public class UserImpl extends AbstractRestInterface implements User{
-    @Override
-    public String doRegisterUser() {
-        return null;
-    }
 
+    StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
+    String username;
+
+
+    List<String> sources;
+    List<String> actions;
+    List<String> streams;
+
+
+
+    @Override
+    @POST
+    @Path("/register")
+    /**
+     * Store user in database.
+     */
+    public String doRegisterUser(@FormParam("username") String username, @FormParam("password") String password) {
+        CouchDbClient dbClient = new CouchDbClient();
+        JsonObject user =  new JsonObject();
+        user.addProperty("username", username);
+        user.addProperty("password", password);
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            byte[] input = digest.digest(password.getBytes("UTF-8"));
+            user.addProperty("hashedPassword", new String(input));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        dbClient.save(user);
+        dbClient.shutdown();
+
+        return  "Registered user";
+    }
 
     @Override
     @Path("/login")
     @POST
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
+        CouchDbClient dbClient = new CouchDbClient();
+        JsonObject user =  new JsonObject();
+        user.addProperty("username", username);
+        user.addProperty("password", password);
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            byte[] input = digest.digest(password.getBytes("UTF-8"));
+            user.addProperty("hashedPassword", new String(input));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        dbClient.save(user);
+        dbClient.shutdown();
+
+        this.username = username;
+
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
@@ -53,9 +112,19 @@ public class UserImpl extends AbstractRestInterface implements User{
     @GET
     public String getAllSources() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
+            CouchDbClient dbClient = new CouchDbClient();
+
             return "Secret sources";
         }
         return "Leider keinen Zugriff";
+    }
+
+    @Path("/remember")
+    @GET
+    public String isRemembered() {
+        if (SecurityUtils.getSubject().isRemembered()) {
+            return "You are remembered";
+        } else return "You are a stranger";
     }
 
     @Override

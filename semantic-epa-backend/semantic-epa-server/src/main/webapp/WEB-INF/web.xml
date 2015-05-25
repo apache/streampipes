@@ -3,7 +3,6 @@
 <web-app>
 	<display-name>Archetype Created Web Application</display-name>
 
-
 	<servlet>
 		<servlet-name>SemanticEPA-API</servlet-name>
 		<servlet-class>
@@ -52,7 +51,5 @@
 		<filter-name>CORS</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
-
-
 
 </web-app>

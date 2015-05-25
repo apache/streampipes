@@ -1,8 +1,10 @@
 package de.fzi.cep.sepa.rest.api;
 
+import javax.ws.rs.core.Response;
+
 public interface User {
 
-	public String doRegisterUser();
+	public String doRegisterUser(String username, String password);
 	
 	public String doLoginUser(String username, String password);
 	
