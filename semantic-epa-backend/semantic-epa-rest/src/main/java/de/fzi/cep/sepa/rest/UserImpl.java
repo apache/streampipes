@@ -45,6 +45,11 @@ public class UserImpl extends AbstractRestInterface implements User{
      */
     public String doRegisterUser(@FormParam("username") String username, @FormParam("password") String password) {
         CouchDbClient dbClient = new CouchDbClient();
+
+        if (dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class).size() != 0) {
+            return "Username already exists. Sorry choose another one";
+        }
+
         JsonObject user =  new JsonObject();
         user.addProperty("username", username);
         user.addProperty("password", password);
@@ -81,7 +86,7 @@ public class UserImpl extends AbstractRestInterface implements User{
 
 
 
-        dbClient.save(user);
+        //dbClient.save(user);
         dbClient.shutdown();
 
         this.username = username;
