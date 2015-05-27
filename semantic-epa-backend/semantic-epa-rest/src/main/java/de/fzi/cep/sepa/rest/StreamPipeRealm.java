@@ -71,13 +71,16 @@ public  class StreamPipeRealm implements Realm {
             try {
                 String username = ((UsernamePasswordToken) authenticationToken).getUsername();
                 List<JsonObject> users = dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class);
-                if (users.size() != 1) throw new AuthenticationException("Several users with matching username");
+                if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
                 JsonObject user = users.get(0);
                 String password = user.get("password").getAsString();
 
                 SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
                 SimplePrincipalCollection principals = new SimplePrincipalCollection();
                 principals.add("username", username);
+
+                LOG.info(principals.toString());
+
                 info.setPrincipals(principals);
                 info.setCredentials(password);
 
@@ -91,7 +94,6 @@ public  class StreamPipeRealm implements Realm {
             } catch (CouchDbException e) {
                 e.printStackTrace();
             }
-
         }
 
         return null;

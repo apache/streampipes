@@ -14,6 +14,9 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
 import org.lightcouch.CouchDbClient;
 import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 
 
@@ -26,6 +29,9 @@ import java.util.List;
  */
 @Path("/user")
 public class UserImpl extends AbstractRestInterface implements User{
+
+
+    Logger LOG = LoggerFactory.getLogger(UserImpl.class);
 
     StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
     String username;
@@ -71,6 +77,11 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Path("/login")
     @POST
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
+        LOG.info(SecurityUtils.getSecurityManager().toString());
+
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) return "Already logged in. Please log out to change user";
+
         CouchDbClient dbClient = new CouchDbClient();
         JsonObject user =  new JsonObject();
         user.addProperty("username", username);
@@ -84,14 +95,11 @@ public class UserImpl extends AbstractRestInterface implements User{
             e.printStackTrace();
         }
 
-
-
         //dbClient.save(user);
         dbClient.shutdown();
 
         this.username = username;
 
-        Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
         try {
@@ -104,7 +112,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     }
 
     @Override
-    @POST
+    @GET
     @Path("/logout")
     public String doLogoutUser() {
         Subject subject = SecurityUtils.getSubject();
@@ -127,6 +135,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Path("/remember")
     @GET
     public String isRemembered() {
+
         if (SecurityUtils.getSubject().isRemembered()) {
             return "You are remembered";
         } else return "You are a stranger";
@@ -160,7 +169,11 @@ public class UserImpl extends AbstractRestInterface implements User{
     @GET
     @Path("/authc")
     public String isAuthenticated() {
-        return Boolean.toString(SecurityUtils.getSubject().isAuthenticated());
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            return SecurityUtils.getSubject().getPrincipal().toString();
+        }
+        return "false";
+        //return Boolean.toString(SecurityUtils.getSubject().isAuthenticated());
     }
 
 

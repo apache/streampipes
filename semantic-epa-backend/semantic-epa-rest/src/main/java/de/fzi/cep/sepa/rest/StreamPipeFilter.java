@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.rest;
 
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.apache.shiro.web.filter.authc.UserFilter;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.servlet.ServletRequest;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by robin on 21.05.15.
  */
 
-public class StreamPipeFilter extends FormAuthenticationFilter{
+public class StreamPipeFilter extends UserFilter {
     private static final String message = "Access denied!";
 
     @Override
