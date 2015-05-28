@@ -104,7 +104,7 @@ public class InMemoryStorage implements StorageRequests {
 
 	@Override
 	public SEP getSEPById(String rdfId) throws URISyntaxException {
-		return inMemorySEPStorage.get(rdfId);
+		return cloner.deepClone(inMemorySEPStorage.get(rdfId));
 	}
 
 	@Override
