@@ -24,16 +24,7 @@ public class SchemaOutputCalculator {
 
 	private OutputStrategy outputStrategy;
 	private boolean propertyUpdated;
-	
-	public SchemaOutputCalculator(List<OutputStrategy> strategies)
-	{
-		this.outputStrategy = strategies.get(0);
-	}
-	
-	public SchemaOutputCalculator() {
 		
-	}
-	
 	public EventSchema calculateOutputSchema(EventStream outputStream, List<OutputStrategy> strategies)
 	{
 		EventSchema outputSchema = outputStream.getEventSchema();
@@ -94,12 +85,10 @@ public class SchemaOutputCalculator {
 			EventProperty newProperty = p;
 			while(isAlreadyDefined(existingProperties, newProperty))
 			{
-				//p.setPropertyName(p.getPropertyName() +i);
 				if (newProperty instanceof EventPropertyPrimitive) 
 					{
 						EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
 						newProperty = new EventPropertyPrimitive(primitive.getPropertyType(), primitive.getRuntimeName() +i, primitive.getMeasurementUnit(), primitive.getSubClassOf());
-						//newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
 						newProperty.setRdfId(new URIKey(URI.create(primitive.getRdfId().toString() +i)));
 					}
 				if (newProperty instanceof EventPropertyNested)
@@ -163,8 +152,9 @@ public class SchemaOutputCalculator {
 			else if (strategy instanceof AppendOutputStrategy)
 			{
 				properties = stream1.getEventSchema().getEventProperties();
-				properties.addAll(rename(properties, stream2.getEventSchema().getEventProperties()));
-				properties.addAll(rename(properties, ((AppendOutputStrategy) strategy).getEventProperties()));
+				//properties.addAll(rename(properties, stream2.getEventSchema().getEventProperties()));
+				//properties.addAll(rename(properties, ((AppendOutputStrategy) strategy).getEventProperties()));
+				properties.addAll(((AppendOutputStrategy) strategy).getEventProperties());
 			}
 			return generateSchema(properties);
 		}

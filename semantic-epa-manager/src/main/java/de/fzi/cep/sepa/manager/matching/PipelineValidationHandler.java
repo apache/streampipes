@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.rits.cloning.Cloner;
+
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;

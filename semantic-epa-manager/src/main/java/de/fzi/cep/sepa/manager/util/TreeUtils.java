@@ -47,7 +47,10 @@ public class TreeUtils {
 	{
 		for(InvocableSEPAElement graph : graphs)
 		{
-			if (graph.getDomId().equals(id)) return graph;
+			if (graph.getDomId().equals(id)) 
+				{
+					return graph;
+				}
 		}
 		//TODO
 		return null;

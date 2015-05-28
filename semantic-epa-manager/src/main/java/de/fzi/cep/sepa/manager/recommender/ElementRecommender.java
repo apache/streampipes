@@ -12,10 +12,10 @@ import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
-import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
 import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.messages.ElementRecommendation;
+import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -46,14 +46,13 @@ public class ElementRecommender {
 		} catch (NoSepaInPipelineException e) {
 			connectedTo = pipeline.getStreams().get(0).getDOM();
 		}
-		
 		List<SEPA> sepas = getAllSepas();
 		for(SEPA sepa : sepas)
 		{
 			try {
 				Pipeline tempPipeline = cloner.deepClone(pipeline);
 				tempPipeline.getSepas().add(generateSepaClient(sepa, connectedTo));
-				new PipelineValidationHandler(tempPipeline, true).validateConnection();
+				new PipelineValidationHandler(tempPipeline, true).validateConnection().getPipelineModificationMessage();
 				addRecommendation(sepa);
 				tempPipeline.setSepas(new ArrayList<>());
 			} catch (NoMatchingSchemaException e) {
