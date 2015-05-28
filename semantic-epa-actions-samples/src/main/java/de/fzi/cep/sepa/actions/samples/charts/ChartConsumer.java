@@ -19,6 +19,7 @@ import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SEC;
 import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
 public class ChartConsumer implements SemanticEventConsumerDeclarer {
 
@@ -33,7 +34,7 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
+		EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number", MhWirth.RamVelSetpoint, MhWirth.RamPosSetpoint));
 		eventProperties.add(e1);
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);		
