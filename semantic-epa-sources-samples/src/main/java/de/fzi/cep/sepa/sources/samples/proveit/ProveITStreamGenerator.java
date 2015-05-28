@@ -17,7 +17,7 @@ import de.fzi.proveit.senslet.model.Senslet;
 
 public class ProveITStreamGenerator {
 
-	public static final String PROVEIT_URL = "http://localhost:8080/proveit-cockpit-0.1/api/senslets/templates";
+	public static final String PROVEIT_URL = "http://kalmar29.fzi.de:8080/ProveIT/api/senslets/templates";
 	
 	public List<EventStreamDeclarer> generateStreams() {
 		List<EventStreamDeclarer> streams = new ArrayList<>();

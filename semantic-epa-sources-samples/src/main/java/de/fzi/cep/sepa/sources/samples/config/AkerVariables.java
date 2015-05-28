@@ -15,8 +15,12 @@ public enum AkerVariables {
 	RamVelocitySetPoint(1002114, "Ram Velocity Set Point", "Denotes the calculated velocity from a machine's control system", "SEPA.SEP.Ram.VelocitySetPoint"),
 	RamVelocityMeasuredValue(1002116, "Ram Velocity Measured Value", "Denotes the actual speed of machine movement", "SEPA.SEP.Ram.VelocityMeasuredValue"),
 	MRUPosition(1002127, "Motion Reference Unit Position", "denotes the relative, vertical position of the rig due to wave motions", "SEPA.SEP.MRU.Position"),
-	MRUVelocity(1002128, "MRU velocity", "denotes the rig's vertical velocity with mm/s as Unit of Measurement", "SEPA.SEP.MRU.Velocity");
+	MRUVelocity(1002128, "MRU velocity", "denotes the rig's vertical velocity with mm/s as Unit of Measurement", "SEPA.SEP.MRU.Velocity"),
 	
+    Enriched(10000, "Enriched stream", "", "SEPA.SEP.Enriched");
+	
+    
+    
 	long tagNumber;
 	String eventName;
 	String description;
@@ -47,6 +51,7 @@ public enum AkerVariables {
 	
 	public String topic()
 	{
+		String topic = "eu.proasense.internal.sp.internal.outgoing." +tagNumber;
 		return topic;
 	}
 }

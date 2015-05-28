@@ -52,7 +52,7 @@ public class SwivelTemperature implements EventStreamDeclarer {
 		EventGrounding grounding = new EventGrounding();
 		grounding.setPort(61616);
 		grounding.setUri(Configuration.TCP_SERVER_URL);
-		grounding.setTopicName("SEPA.SEP.DDM.SwivelTemperature");
+		grounding.setTopicName(AkerVariables.SwivelOilTemperature.topic());
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		this.topicName = grounding.getTopicName();

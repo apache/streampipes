@@ -7,17 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Utils {
@@ -65,10 +62,11 @@ public class Utils {
                 "}";
 
         try {
-            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
-                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
-                    .execute().returnResponse();
-            return response.toString();
+           // HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
+           //         .bodyString(json.toString(), ContentType.APPLICATION_JSON)
+           //         .execute().returnResponse();
+            //return response.toString();
+        	return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +77,7 @@ public class Utils {
     public static String fetchJson(String url) throws ClientProtocolException, IOException
     {
     	Executor executor = Executor.newInstance()
-    	        .auth(new HttpHost("localhost"), "testManager", "1234");
+    	        .auth(new HttpHost("kalmar29.fzi.de"), "testManager", "1234");
 
     	String content = executor.execute(Request.Get(url))
     	        .returnContent().asString();
