@@ -82,6 +82,7 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 				}
 				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), getMessageFormat(inputEventGrounding)));
 				inEventTypes.put("topic://" +inputEventGrounding.getTopicName(), stream.getEventSchema().toRuntimeMap());
+				stream.getEventSchema().toRuntimeMap().keySet().forEach(key -> System.out.print(key +", " +stream.getEventSchema().toRuntimeMap().get(key) +", "));
 			}
 			
 			engineParams = new EngineParameters<>(

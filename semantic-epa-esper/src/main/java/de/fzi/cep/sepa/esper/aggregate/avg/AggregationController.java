@@ -25,6 +25,7 @@ import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class AggregationController extends EsperDeclarer<AggregationParameter> {
@@ -36,7 +37,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 	
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
-		EventPropertyPrimitive e1 = new EventPropertyPrimitive();
+		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI("http://schema.org/Number"));
 		eventProperties.add(e1);
 		
 		EventSchema schema1 = new EventSchema();
@@ -68,7 +69,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		operation.addOption(new Option("Max"));
 		staticProperties.add(operation);
 		
-		MappingProperty mp = new MappingPropertyNary(URI.create(e1.getElementName()), "groupBy", "group stream by: ");
+		MappingProperty mp = new MappingPropertyNary("groupBy", "group stream by: ");
 		MappingProperty agg = new MappingPropertyUnary(URI.create(e1.getElementName()), "aggregate", "aggregate property: ");
 		staticProperties.add(mp);
 		staticProperties.add(agg);
