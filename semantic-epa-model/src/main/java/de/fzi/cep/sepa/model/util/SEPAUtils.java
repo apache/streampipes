@@ -58,10 +58,10 @@ public class SEPAUtils {
 	public static String getMappingPropertyName(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
 	{
 		URI propertyURI = getURIFromStaticProperty(sepa, staticPropertyName);
-		
 		for(EventStream stream : sepa.getInputStreams())
 		{
-			return getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "").get(0);
+			List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
+			if (matchedProperties.size() > 0) return matchedProperties.get(0);
 		}
 		return null;
 		//TODO: exceptions

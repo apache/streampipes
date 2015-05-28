@@ -53,8 +53,7 @@ public class SEPAInvocationGraph extends InvocableSEPAElement {
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setBelongsTo(sepa.getRdfId().toString());
-		this.setUri(belongsTo +"/" +elementId);
-		
+		this.setUri(belongsTo +"/" +elementId);		
 	}
 
 	public SEPAInvocationGraph(SEPA sepa, String domId)
