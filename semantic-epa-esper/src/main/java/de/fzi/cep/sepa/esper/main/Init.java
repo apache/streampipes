@@ -8,9 +8,11 @@ import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
+import de.fzi.cep.sepa.esper.compose.ComposeController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
+import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnrichedController;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
 import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
@@ -21,6 +23,7 @@ import de.fzi.cep.sepa.esper.movement.MovementController;
 import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
 import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
+import de.fzi.cep.sepa.esper.proasense.drillingstop.DrillingStopController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 
 public class Init implements Runnable {
@@ -50,6 +53,9 @@ public class Init implements Runnable {
 		declarers.add(new DebsChallenge1Controller());
 		declarers.add(new DebsChallenge2Controller());
 		declarers.add(new DrillingStartController());
+		declarers.add(new DrillingStopController());
+		declarers.add(new ComposeController());
+		declarers.add(new DrillingStartEnrichedController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

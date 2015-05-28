@@ -1,0 +1,424 @@
+{
+  "@graph" : [ {
+    "@id" : "http://localhost:8090/gILjTmhEXw",
+    "@type" : "sepa:EventStream",
+    "sepa:hasGrounding" : {
+      "@id" : "empire:841c169a-0f9e-4d8c-8186-dc48555a9c6b"
+    },
+    "sepa:hasSchema" : {
+      "@id" : "empire:8e974169-ce0d-402b-84c9-3edabac6314e"
+    },
+    "sepa:hasURI" : "http://localhost:8090/gILjTmhEXw"
+  }, {
+    "@id" : "http://localhost:8090/sepa/drillingstartenriched/31eadcec-2c4f-4dda-8342-35908a822193",
+    "@type" : "sepa:EventStream",
+    "sepa:hasGrounding" : {
+      "@id" : "empire:fb8f37dd-5d1b-4b02-9921-78c075373cf3"
+    },
+    "sepa:hasSchema" : {
+      "@id" : "empire:faed6419-59aa-4a38-bee1-c2a650563086"
+    }
+  }, {
+    "@id" : "http://localhost:8090/sepa/drillingstartenriched/31eadcec-2c4f-4dda-8342-35908a822193/FZI.SEPA.vAjslMZBNBofaVziMrZl",
+    "@type" : "sepa:SEPAInvocationGraph",
+    "sepa:belongsTo" : "http://localhost:8090/sepa/drillingstartenriched",
+    "sepa:hasDescription" : "Detects start of a drilling process (starting from single event source)",
+    "sepa:hasIconUrl" : "http://localhost:8080/semantic-epa-backend/img/Drilling_Start_HQ.png",
+    "sepa:hasName" : "Drilling Start",
+    "sepa:hasOutputStrategy" : {
+      "@id" : "empire:2ab048b1-5dfc-41a5-9f9a-3334ecbf4390"
+    },
+    "sepa:hasStaticProperty" : [ {
+      "@id" : "empire:9cfe2e5d-f663-45af-a6c6-0114f1e54c47"
+    }, {
+      "@id" : "empire:3ac06d95-f072-415b-a39f-ed0d9286b8c6"
+    }, {
+      "@id" : "empire:50707cbf-57a4-4e86-bb3a-f39d8ebd540c"
+    }, {
+      "@id" : "empire:22a82a5b-d4c4-48a5-8710-382fea380e19"
+    } ],
+    "sepa:hasURI" : "http://localhost:8090/sepa/drillingstartenriched/31eadcec-2c4f-4dda-8342-35908a822193",
+    "sepa:produces" : {
+      "@id" : "http://localhost:8090/sepa/drillingstartenriched/31eadcec-2c4f-4dda-8342-35908a822193"
+    },
+    "sepa:receives" : {
+      "@id" : "http://localhost:8090/gILjTmhEXw"
+    }
+  }, {
+    "@id" : "empire:22a82a5b-d4c4-48a5-8710-382fea380e19",
+    "@type" : "sepa:MappingPropertyUnary",
+    "sepa:internalName" : "torque",
+    "sepa:mapsFrom" : {
+      "@id" : "fzi:96a5c63a-337f-47a3-85d3-fd1e6697a5a7"
+    },
+    "sepa:mapsTo" : {
+      "@id" : "fzi:a56a7c8e-b59f-44fb-97c8-0047c70c83e1"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Select Torque Mapping"
+  }, {
+    "@id" : "empire:2ab048b1-5dfc-41a5-9f9a-3334ecbf4390",
+    "@type" : "sepa:AppendOutputStrategy",
+    "sepa:appendsProperty" : [ {
+      "@id" : "fzi:03ffa3c4-127a-47c6-8ce6-b46c4c57e215"
+    }, {
+      "@id" : "fzi:2c3c1f62-59e0-4dce-9e3c-df9a622f323a"
+    }, {
+      "@id" : "fzi:74da2ec4-3901-4e73-b3ad-b252cdbe3e4b"
+    }, {
+      "@id" : "fzi:2ffc59fa-ccc7-4bfe-991e-c6b5aebb1ab9"
+    }, {
+      "@id" : "fzi:a56a7c8e-b59f-44fb-97c8-0047c70c83e1"
+    }, {
+      "@id" : "fzi:58708cd5-4662-4c24-bd11-fcc1c67a520e"
+    }, {
+      "@id" : "fzi:52a8e986-c10c-4f78-a1fd-eb9944a3e419"
+    }, {
+      "@id" : "fzi:908ad8e9-fe26-481e-a5c8-295434374b76"
+    }, {
+      "@id" : "fzi:f65fde46-cfb2-41b3-bbbc-c3962ee5c3ac"
+    }, {
+      "@id" : "fzi:f883d228-34c5-4f5e-8aee-2ce477bab5b6"
+    }, {
+      "@id" : "fzi:3005f096-f546-473d-ad4b-c794671e7025"
+    }, {
+      "@id" : "fzi:c642b678-d074-4775-94cd-ef9b0f7e97a4"
+    }, {
+      "@id" : "fzi:fe02ff7d-332b-41bf-96f6-5e0bac52c86d"
+    }, {
+      "@id" : "fzi:db92d6ad-19ff-49d4-9075-e053dbef7482"
+    }, {
+      "@id" : "fzi:f5bdc7e2-799c-4e44-a055-ff5e51374b53"
+    }, {
+      "@id" : "fzi:69cdf465-3950-4052-b8fc-fe0fea0344bf"
+    }, {
+      "@id" : "fzi:c6714377-e35e-4316-9ad3-4452394b509b"
+    }, {
+      "@id" : "fzi:c076f0ca-a008-49e5-bbd1-f2bbc6c1a0df"
+    }, {
+      "@id" : "fzi:3248ee17-b471-4f59-94fb-020895d1c780"
+    }, {
+      "@id" : "fzi:46f7bb6a-3c0e-4599-bd1a-163881428f50"
+    } ]
+  }, {
+    "@id" : "empire:3ac06d95-f072-415b-a39f-ed0d9286b8c6",
+    "@type" : "sepa:FreeTextStaticProperty",
+    "sepa:hasValue" : "5",
+    "sepa:internalName" : "torque",
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Torque threshold"
+  }, {
+    "@id" : "empire:50707cbf-57a4-4e86-bb3a-f39d8ebd540c",
+    "@type" : "sepa:MappingPropertyUnary",
+    "sepa:internalName" : "rpm",
+    "sepa:mapsFrom" : {
+      "@id" : "fzi:56ec37bf-bb70-4fa3-a802-752b616722a2"
+    },
+    "sepa:mapsTo" : {
+      "@id" : "fzi:2ffc59fa-ccc7-4bfe-991e-c6b5aebb1ab9"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Select RPM Mapping"
+  }, {
+    "@id" : "empire:7ca89911-4ed7-4c45-9f5f-815bf5c71484",
+    "@type" : [ "sepa:TransportFormat", "http://sepa.event-processing.org/transport/format/json", "http://www.w3.org/2000/01/rdf-schema#Resource" ]
+  }, {
+    "@id" : "empire:841c169a-0f9e-4d8c-8186-dc48555a9c6b",
+    "@type" : "sepa:EventGrounding",
+    "sepa:hasPort" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#int",
+      "@value" : "61616"
+    },
+    "sepa:hasTopic" : "eu.proasense.internal.sp.internal.outgoing.10000",
+    "sepa:hasUri" : "tcp://localhost",
+    "sepa:transportFormat" : {
+      "@id" : "empire:7ca89911-4ed7-4c45-9f5f-815bf5c71484"
+    }
+  }, {
+    "@id" : "empire:8e974169-ce0d-402b-84c9-3edabac6314e",
+    "@type" : "sepa:EventSchema",
+    "sepa:hasEventProperty" : [ {
+      "@id" : "fzi:2c3c1f62-59e0-4dce-9e3c-df9a622f323a"
+    }, {
+      "@id" : "fzi:74da2ec4-3901-4e73-b3ad-b252cdbe3e4b"
+    }, {
+      "@id" : "fzi:2ffc59fa-ccc7-4bfe-991e-c6b5aebb1ab9"
+    }, {
+      "@id" : "fzi:a56a7c8e-b59f-44fb-97c8-0047c70c83e1"
+    }, {
+      "@id" : "fzi:58708cd5-4662-4c24-bd11-fcc1c67a520e"
+    }, {
+      "@id" : "fzi:52a8e986-c10c-4f78-a1fd-eb9944a3e419"
+    }, {
+      "@id" : "fzi:908ad8e9-fe26-481e-a5c8-295434374b76"
+    }, {
+      "@id" : "fzi:f65fde46-cfb2-41b3-bbbc-c3962ee5c3ac"
+    }, {
+      "@id" : "fzi:f883d228-34c5-4f5e-8aee-2ce477bab5b6"
+    }, {
+      "@id" : "fzi:3005f096-f546-473d-ad4b-c794671e7025"
+    }, {
+      "@id" : "fzi:c642b678-d074-4775-94cd-ef9b0f7e97a4"
+    }, {
+      "@id" : "fzi:fe02ff7d-332b-41bf-96f6-5e0bac52c86d"
+    }, {
+      "@id" : "fzi:db92d6ad-19ff-49d4-9075-e053dbef7482"
+    }, {
+      "@id" : "fzi:f5bdc7e2-799c-4e44-a055-ff5e51374b53"
+    }, {
+      "@id" : "fzi:69cdf465-3950-4052-b8fc-fe0fea0344bf"
+    }, {
+      "@id" : "fzi:c6714377-e35e-4316-9ad3-4452394b509b"
+    }, {
+      "@id" : "fzi:c076f0ca-a008-49e5-bbd1-f2bbc6c1a0df"
+    }, {
+      "@id" : "fzi:3248ee17-b471-4f59-94fb-020895d1c780"
+    }, {
+      "@id" : "fzi:46f7bb6a-3c0e-4599-bd1a-163881428f50"
+    } ]
+  }, {
+    "@id" : "empire:9cfe2e5d-f663-45af-a6c6-0114f1e54c47",
+    "@type" : "sepa:FreeTextStaticProperty",
+    "sepa:hasValue" : "5",
+    "sepa:internalName" : "rpm",
+    "http://www.w3.org/2000/01/rdf-schema#description" : "RPM threshold"
+  }, {
+    "@id" : "empire:faed6419-59aa-4a38-bee1-c2a650563086",
+    "@type" : "sepa:EventSchema",
+    "sepa:hasEventProperty" : [ {
+      "@id" : "fzi:03ffa3c4-127a-47c6-8ce6-b46c4c57e215"
+    }, {
+      "@id" : "fzi:2c3c1f62-59e0-4dce-9e3c-df9a622f323a"
+    }, {
+      "@id" : "fzi:74da2ec4-3901-4e73-b3ad-b252cdbe3e4b"
+    }, {
+      "@id" : "fzi:2ffc59fa-ccc7-4bfe-991e-c6b5aebb1ab9"
+    }, {
+      "@id" : "fzi:a56a7c8e-b59f-44fb-97c8-0047c70c83e1"
+    }, {
+      "@id" : "fzi:58708cd5-4662-4c24-bd11-fcc1c67a520e"
+    }, {
+      "@id" : "fzi:52a8e986-c10c-4f78-a1fd-eb9944a3e419"
+    }, {
+      "@id" : "fzi:908ad8e9-fe26-481e-a5c8-295434374b76"
+    }, {
+      "@id" : "fzi:f65fde46-cfb2-41b3-bbbc-c3962ee5c3ac"
+    }, {
+      "@id" : "fzi:f883d228-34c5-4f5e-8aee-2ce477bab5b6"
+    }, {
+      "@id" : "fzi:3005f096-f546-473d-ad4b-c794671e7025"
+    }, {
+      "@id" : "fzi:c642b678-d074-4775-94cd-ef9b0f7e97a4"
+    }, {
+      "@id" : "fzi:fe02ff7d-332b-41bf-96f6-5e0bac52c86d"
+    }, {
+      "@id" : "fzi:db92d6ad-19ff-49d4-9075-e053dbef7482"
+    }, {
+      "@id" : "fzi:f5bdc7e2-799c-4e44-a055-ff5e51374b53"
+    }, {
+      "@id" : "fzi:69cdf465-3950-4052-b8fc-fe0fea0344bf"
+    }, {
+      "@id" : "fzi:c6714377-e35e-4316-9ad3-4452394b509b"
+    }, {
+      "@id" : "fzi:c076f0ca-a008-49e5-bbd1-f2bbc6c1a0df"
+    }, {
+      "@id" : "fzi:3248ee17-b471-4f59-94fb-020895d1c780"
+    }, {
+      "@id" : "fzi:46f7bb6a-3c0e-4599-bd1a-163881428f50"
+    } ]
+  }, {
+    "@id" : "empire:fb8f37dd-5d1b-4b02-9921-78c075373cf3",
+    "@type" : "sepa:EventGrounding",
+    "sepa:hasPort" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#int",
+      "@value" : "61616"
+    },
+    "sepa:hasTopic" : "FZI.SEPA.vAjslMZBNBofaVziMrZl",
+    "sepa:hasUri" : "tcp://localhost",
+    "sepa:transportFormat" : {
+      "@id" : "empire:7ca89911-4ed7-4c45-9f5f-815bf5c71484"
+    }
+  }, {
+    "@id" : "fzi:03ffa3c4-127a-47c6-8ce6-b46c4c57e215",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/drillingStatus", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#boolean",
+    "sepa:hasRuntimeName" : "drillingStatus",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:2c3c1f62-59e0-4dce-9e3c-df9a622f323a",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://schema.org/Number", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#long",
+    "sepa:hasRuntimeName" : "timestamp",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:2ffc59fa-ccc7-4bfe-991e-c6b5aebb1ab9",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/drillingRpm", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "rpm",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:3005f096-f546-473d-ad4b-c794671e7025",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ambientTemp", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "temp_ambient",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:3248ee17-b471-4f59-94fb-020895d1c780",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/hoistPressureA", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "hoist_press_A",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:46f7bb6a-3c0e-4599-bd1a-163881428f50",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/hoistPressureB", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "hoist_press_B",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:52a8e986-c10c-4f78-a1fd-eb9944a3e419",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/gearboxOilTemperature", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "oil_temp_gearbox",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:58708cd5-4662-4c24-bd11-fcc1c67a520e",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/hookLoad", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "hook_load",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:69cdf465-3950-4052-b8fc-fe0fea0344bf",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/mruPos", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "mru_pos",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:74da2ec4-3901-4e73-b3ad-b252cdbe3e4b",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://schema.org/Text", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
+    "sepa:hasRuntimeName" : "eventName",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:908ad8e9-fe26-481e-a5c8-295434374b76",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/gearboxPressure", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "pressure_gearbox",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:a56a7c8e-b59f-44fb-97c8-0047c70c83e1",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/torqueLoad", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "torque",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:c076f0ca-a008-49e5-bbd1-f2bbc6c1a0df",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ibop", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "ibop",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:c642b678-d074-4775-94cd-ef9b0f7e97a4",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ramPosSetpoint", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "ram_pos_setpoint",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:c6714377-e35e-4316-9ad3-4452394b509b",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/mruVel", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "mru_vel",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:db92d6ad-19ff-49d4-9075-e053dbef7482",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ramVelSetpoint", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "ram_vel_setpoint",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f5bdc7e2-799c-4e44-a055-ff5e51374b53",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ramVelMeasured", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "ram_vel_measured",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f65fde46-cfb2-41b3-bbbc-c3962ee5c3ac",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/swivelOilTemperature", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "oil_temp_swivel",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f883d228-34c5-4f5e-8aee-2ce477bab5b6",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/wob", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "wob",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:fe02ff7d-332b-41bf-96f6-5e0bac52c86d",
+    "@type" : [ "sepa:EventPropertyPrimitive", "http://mhwirth.com/ramPosMeasured", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "ram_pos_measured",
+    "sepa:required" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#boolean",
+      "@value" : "false"
+    }
+  } ],
+  "@context" : {
+    "sepa" : "http://sepa.event-processing.org/sepa#",
+    "empire" : "urn:clarkparsia.com:empire:",
+    "fzi" : "urn:fzi.de:sepa:"
+  }
+}

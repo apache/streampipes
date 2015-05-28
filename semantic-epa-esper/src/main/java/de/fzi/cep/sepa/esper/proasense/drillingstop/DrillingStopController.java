@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.esper.proasense.drillingstart;
+package de.fzi.cep.sepa.esper.proasense.drillingstop;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import de.fzi.cep.sepa.model.util.SEPAUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
-public class DrillingStartController extends EsperDeclarer<DrillingStartParameters>{
+public class DrillingStopController extends EsperDeclarer<DrillingStopParameters>{
 
 	@Override
 	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
@@ -40,7 +40,7 @@ public class DrillingStartController extends EsperDeclarer<DrillingStartParamete
 		String lngPropertyName = SEPAUtils.getMappingPropertyName(sepa, "latitude");	
 	
 		System.out.println(minRpm +", " +minTorque +", " +latPropertyName +", " +lngPropertyName);
-		DrillingStartParameters staticParam = new DrillingStartParameters(
+		DrillingStopParameters staticParam = new DrillingStopParameters(
 				sepa, 
 				minRpm,
 				minTorque,
@@ -48,7 +48,7 @@ public class DrillingStartController extends EsperDeclarer<DrillingStartParamete
 				lngPropertyName);
 	
 		try {
-			return invokeEPRuntime(staticParam, DrillingStart::new, sepa);
+			return invokeEPRuntime(staticParam, DrillingStop::new, sepa);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -72,8 +72,8 @@ public class DrillingStartController extends EsperDeclarer<DrillingStartParamete
 		schema2.addEventProperty(p2);
 		
 		
-		SEPA desc = new SEPA("/sepa/drillingstart", "Driling Start", "Detects start of a drilling process", "", "/sepa/drillingstart", domains);
-		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
+		SEPA desc = new SEPA("/sepa/drillingstop", "Driling Stop", "Detects stop of a drilling process", "", "/sepa/drillingstop", domains);
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
 		
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
