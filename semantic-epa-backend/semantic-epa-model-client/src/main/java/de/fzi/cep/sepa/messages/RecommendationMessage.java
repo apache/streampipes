@@ -36,7 +36,4 @@ public class RecommendationMessage {
 		this.recommendedElements = recommendedElements;
 	}
 	
-	
-	
-	
 }
