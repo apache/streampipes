@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
+import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.commons.Configuration;
@@ -34,6 +35,7 @@ public class Init implements Runnable {
 		consumers.add(new MultiRowTableController());
 		consumers.add(new DebsOutputController());
 		consumers.add(new HeatmapController());
+		consumers.add(new ProaSenseTopologyController());
 		
 		try {
 			ModelSubmitter.submitConsumer(consumers, Configuration.ACTION_BASE_URL, 8091);
