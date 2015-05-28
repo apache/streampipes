@@ -12,6 +12,8 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 public class Matcher {
 
 	private List<EventProperty> allMatchingProperties = new ArrayList<>();
+	private static final String sepaPrefix = "http://sepa.event-processing.org";
+	private static final String rdfPrefix = "http://www.w3.org";
 	
 	public List<EventProperty> matchesProperties(EventProperty right,
 			List<EventProperty> left) {
@@ -86,11 +88,13 @@ public class Matcher {
 	
 	public boolean matches(List<URI> leftSubClasses, List<URI> rightSubClasses)
 	{
+		List<URI> relevantSubclasses = new ArrayList<>();
 		boolean match = true;
 		for (URI uri : rightSubClasses) {
-			if (!leftSubClasses.contains(uri))
-				match = false;
+			if (!uri.toString().startsWith(sepaPrefix) && !uri.toString().startsWith(rdfPrefix))
+				relevantSubclasses.add(uri);
 		}
+		if (!leftSubClasses.stream().anyMatch(uri -> relevantSubclasses.contains(uri))) match = false;
 		return match;
 	}
 }
