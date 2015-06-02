@@ -10,8 +10,8 @@ import org.codehaus.jettison.json.JSONObject;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
@@ -22,8 +22,9 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -45,7 +46,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 	
 	
 	@Override
-	public EventStream declareModel(SEP sep) {
+	public EventStream declareModel(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
 		EventSchema schema = new EventSchema();
@@ -63,9 +64,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		eventProperties.add(new EventPropertyNested("user", userProperties));
 		
 		EventGrounding grounding = new EventGrounding();
-		grounding.setPort(61616);
-		grounding.setUri(Configuration.TCP_SERVER_URL);
-		grounding.setTopicName("SEPA.SEP.Twitter.Sample");
+		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Twitter.Geo"));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		stream.setEventGrounding(grounding);

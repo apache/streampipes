@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.config;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 
 public class SourcesConfig {
 

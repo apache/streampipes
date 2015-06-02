@@ -9,15 +9,15 @@ import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSource;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class MobileStreamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
-	public SEP declareModel() {
-		SEP sep = new SEP("/mobile", "Mobile phone events", "Mobile phone event producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
+	public SepDescription declareModel() {
+		SepDescription sep = new SepDescription("/mobile", "Mobile phone events", "Mobile phone event producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
 		sep.setIconUrl(SourcesConfig.iconBaseUrl + "/Mobile_Phone" +"_HQ.png");
 		
 		return sep;

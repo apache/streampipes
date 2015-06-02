@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jms.JMSException;
+
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import com.google.gson.Gson;
 
-import de.fzi.cep.sepa.commons.Configuration;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -19,10 +20,11 @@ import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQConsumer;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.activemq.IMessageListener;
+import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.proveit.senslet.model.Header;
 import de.fzi.proveit.senslet.model.Senslet;
 import de.fzi.proveit.senslet.model.input.BarcodeInput;
@@ -55,7 +57,7 @@ public class ProveITEventStream implements EventStreamDeclarer {
 	}
 
 	@Override
-	public EventStream declareModel(SEP sep) {
+	public EventStream declareModel(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
 		EventSchema schema = new EventSchema();
@@ -68,8 +70,8 @@ public class ProveITEventStream implements EventStreamDeclarer {
 		stream.setDescription(senslet.getHeader().getSensletType().toString());
 		stream.setUri(sep.getUri() + "/" +senslet.getHeader().getSensletType().toString());
 		
-		this.brokerUrl = standardGrounding.getUri() + ":" +standardGrounding.getPort();
-		this.destinationTopic = standardGrounding.getTopicName();
+		this.brokerUrl = standardGrounding.getTransportProtocol().getUri() + ":" +standardGrounding.getTransportProtocol().getPort();
+		this.destinationTopic = standardGrounding.getTransportProtocol().getTopicName();
 		this.sourceTopic = "ProveIT.*." +senslet.getHeader().getSensletType().toString();
 		
 		return stream;
@@ -236,10 +238,7 @@ public class ProveITEventStream implements EventStreamDeclarer {
 	private EventGrounding standardGrounding(String eventName)
 	{
 		EventGrounding grounding = new EventGrounding();
-		grounding.setPort(61616);
-		grounding.setUri("tcp://kalmar29.fzi.de");
-		grounding.setTopicName("SEP.Flattened." +eventName);
-		
+		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEP.Flattened." +eventName));
 		return grounding;
 	}
 	

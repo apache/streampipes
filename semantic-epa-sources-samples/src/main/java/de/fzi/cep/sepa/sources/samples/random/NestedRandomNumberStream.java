@@ -9,9 +9,9 @@ import javax.jms.JMSException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -20,8 +20,9 @@ import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 
 public class NestedRandomNumberStream implements EventStreamDeclarer {
 	
@@ -33,7 +34,7 @@ public class NestedRandomNumberStream implements EventStreamDeclarer {
 	}
 	
 	@Override
-	public EventStream declareModel(SEP sep) {
+	public EventStream declareModel(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
 		
@@ -50,10 +51,8 @@ public class NestedRandomNumberStream implements EventStreamDeclarer {
 		eventProperties.add(nestedList);
 		
 		EventGrounding grounding = new EventGrounding();
-		grounding.setPort(61616);
-		grounding.setUri(Configuration.TCP_SERVER_URL);
-		grounding.setTopicName("SEPA.SEP.Random.SimpleNestedNumber");
-		
+		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Random.SimpleNestedNumber"));
+
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);

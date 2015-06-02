@@ -9,7 +9,7 @@ import de.fzi.cep.sepa.model.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -17,8 +17,9 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
+import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
@@ -29,7 +30,7 @@ public class SwivelTemperature implements EventStreamDeclarer {
 			.getLogger("SwivelTemperature");
 
 	@Override
-	public EventStream declareModel(SEP sep) {
+	public EventStream declareModel(SepDescription sep) {
 
 		EventStream stream = new EventStream();
 
@@ -50,12 +51,10 @@ public class SwivelTemperature implements EventStreamDeclarer {
 								.createURI("http://schema.org/Number")));
 
 		EventGrounding grounding = new EventGrounding();
-		grounding.setPort(61616);
-		grounding.setUri(Configuration.TCP_SERVER_URL);
-		grounding.setTopicName(AkerVariables.SwivelOilTemperature.topic());
+		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.SwivelOilTemperature.topic()));
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
-		this.topicName = grounding.getTopicName();
+		this.topicName = grounding.getTransportProtocol().getTopicName();
 
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);

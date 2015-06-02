@@ -9,14 +9,14 @@ import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSource;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class RandomDataProducer implements SemanticEventProducerDeclarer {
 	
 	@Override
-	public SEP declareModel() {
-		SEP sep = new SEP("/random", "Random", "Random Event Producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());		
+	public SepDescription declareModel() {
+		SepDescription sep = new SepDescription("/random", "Random", "Random Event Producer", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());		
 		return sep;
 	}
 

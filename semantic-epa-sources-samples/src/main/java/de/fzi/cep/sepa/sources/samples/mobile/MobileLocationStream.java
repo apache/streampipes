@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-
 import de.fzi.cep.sepa.desc.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class MobileLocationStream implements EventStreamDeclarer {
 
 	@Override
-	public EventStream declareModel(SEP sep) {
+	public EventStream declareModel(SepDescription sep) {
 		EventStream stream = new EventStream();
 		
 		EventSchema schema = new EventSchema();
@@ -29,9 +29,7 @@ public class MobileLocationStream implements EventStreamDeclarer {
 		
 		
 		EventGrounding grounding = new EventGrounding();
-		grounding.setPort(61616);
-		grounding.setUri("tcp://localhost");
-		grounding.setTopicName("SEPA.SEP.Mobile.Geo");
+		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Mobile.Geo"));
 		
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
