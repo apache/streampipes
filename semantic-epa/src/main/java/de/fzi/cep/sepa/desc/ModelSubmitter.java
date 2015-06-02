@@ -28,11 +28,11 @@ import de.fzi.cep.sepa.html.EventProcessingAgentWelcomePage;
 import de.fzi.cep.sepa.html.EventProducerWelcomePage;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
 import de.fzi.cep.sepa.transform.Transformer;
 
@@ -50,7 +50,7 @@ public class ModelSubmitter {
 		component.getDefaultHost().attach("", new EventProducerWelcomePage(baseUri, producers));
 
 		for (SemanticEventProducerDeclarer producer : producers) {
-			SEP sep = producer.declareModel();
+			SepDescription sep = producer.declareModel();
 			String currentPath = sep.getUri();
 			sep.setUri(baseUri + currentPath);
 
@@ -79,7 +79,7 @@ public class ModelSubmitter {
 		component.getDefaultHost().attach("", new EventProcessingAgentWelcomePage(baseUri, declarers));
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
-			SEPA sepa = declarer.declareModel();
+			SepaDescription sepa = declarer.declareModel();
 			sepa.setUri(baseUri + sepa.getPathName());
 			component.getDefaultHost().attach(sepa.getPathName(),
 					generateSEPARestlet(component, sepa, declarer));
@@ -98,7 +98,7 @@ public class ModelSubmitter {
 
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
 
-			SEC sec = declarer.declareModel();
+			SecDescription sec = declarer.declareModel();
 			String pathName = sec.getUri();
 			sec.setUri(baseUri + sec.getUri());
 			component.getDefaultHost().attach(pathName,
@@ -109,7 +109,7 @@ public class ModelSubmitter {
 		return true;
 	}
 
-	private static Restlet generateSECRestlet(Component component, SEC sec,
+	private static Restlet generateSECRestlet(Component component, SecDescription sec,
 			SemanticEventConsumerDeclarer declarer) {
 
 		List<Restlet> restlets = new ArrayList<>();
@@ -125,13 +125,13 @@ public class ModelSubmitter {
 					} else if (request.getMethod().equals(Method.POST)) {
 						String pathName = declarer.declareModel().getUri();
 						Form form = new Form(request.getEntity());
-						SECInvocationGraph graph = Transformer.fromJsonLd(
-								SECInvocationGraph.class,
+						SecInvocation graph = Transformer.fromJsonLd(
+								SecInvocation.class,
 								form.getFirstValue("json"));
 						// TODO: extract HTTP parameters
 						Restlet restlet = generateConcreteActionRestlet(graph, 
 								declarer, component);
-						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);
+						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), restlet);
 						restlets.add(restlet);
 					} else if (request.getMethod().equals(Method.DELETE)) {
 						//TODO
@@ -146,7 +146,7 @@ public class ModelSubmitter {
 		};
 	}
 
-	private static Restlet generateConcreteActionRestlet(SECInvocationGraph graph, SemanticEventConsumerDeclarer declarer, Component component)
+	private static Restlet generateConcreteActionRestlet(SecInvocation graph, SemanticEventConsumerDeclarer declarer, Component component)
 	{
 		declarer.invokeRuntime(graph);
 		return new Restlet() {
@@ -180,7 +180,7 @@ public class ModelSubmitter {
 		};
 	}
 
-	private static Restlet generateSEPARestlet(Component component, SEPA sepa,
+	private static Restlet generateSEPARestlet(Component component, SepaDescription sepa,
 			SemanticEventProcessingAgentDeclarer declarer) {
 		return new Restlet() {
 			public void handle(Request request, Response response) {
@@ -195,13 +195,13 @@ public class ModelSubmitter {
 						String pathName = declarer.declareModel().getUri();
 						Form form = new Form(request.getEntity());
 						// TODO: extract HTTP parameters
-						SEPAInvocationGraph graph = Transformer.fromJsonLd(
-								SEPAInvocationGraph.class,
+						SepaInvocation graph = Transformer.fromJsonLd(
+								SepaInvocation.class,
 								form.getFirstValue("json"));
 						Restlet restlet = generateConcreteSEPARestlet(graph, 
 								declarer, component);
 	
-						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTopicName(), restlet);	
+						component.getDefaultHost().attach(pathName +"/" +graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), restlet);	
 					} 
 
 				} catch (Exception e) {
@@ -212,7 +212,7 @@ public class ModelSubmitter {
 	}
 
 	protected static Restlet generateConcreteSEPARestlet(
-			SEPAInvocationGraph graph,
+			SepaInvocation graph,
 			SemanticEventProcessingAgentDeclarer declarer, Component component) {
 		
 		declarer.invokeRuntime(graph);

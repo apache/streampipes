@@ -17,7 +17,7 @@ public class InputStreamParameters {
 	public InputStreamParameters(EventStream inputStream) {
 		super();
 		this.eventGrounding = inputStream.getEventGrounding();
-		this.inName = topicPrefix + eventGrounding.getTopicName();
+		this.inName = topicPrefix + eventGrounding.getTransportProtocol().getTopicName();
 		this.eventSchema = inputStream.getEventSchema();
 	}
 	

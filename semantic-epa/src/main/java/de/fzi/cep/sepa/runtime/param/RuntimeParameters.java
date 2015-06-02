@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.runtime.param;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.OutputCollector;
@@ -35,7 +35,7 @@ public class RuntimeParameters<B extends BindingParameters> { // B - Bind Type
 		return uri;
 	}
 
-	public EPEngine<B> getPreparedEngine(EPRuntime container, SEPAInvocationGraph graph, OutputCollector collector) {
+	public EPEngine<B> getPreparedEngine(EPRuntime container, SepaInvocation graph, OutputCollector collector) {
 		EPEngine<B> engine = supplier.get();
 		engine.bind(engineParameters, collector, graph);
 		return engine;

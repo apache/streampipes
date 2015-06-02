@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.runtime.param;
 
 import java.util.Map;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class EngineParameters<B extends BindingParameters> {
 
@@ -12,10 +12,10 @@ public class EngineParameters<B extends BindingParameters> {
 
 	private final B staticProperty;
 	
-	private final SEPAInvocationGraph graph;
+	private final SepaInvocation graph;
 
 	public EngineParameters(Map<String, Map<String, Object>> inEventTypes, Map<String, Object> outEventType,
-		B staticProperty, SEPAInvocationGraph graph) {
+		B staticProperty, SepaInvocation graph) {
 		this.inEventTypes = inEventTypes;
 		this.outEventType = outEventType;
 		this.staticProperty = staticProperty;
@@ -35,7 +35,7 @@ public class EngineParameters<B extends BindingParameters> {
 		return staticProperty;
 	}
 
-	public SEPAInvocationGraph getGraph() {
+	public SepaInvocation getGraph() {
 		return graph;
 	}
 	

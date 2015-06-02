@@ -58,7 +58,11 @@ public class EPRuntime { // routing container
 	public void discard() {
 		try {
 			for (SourceRoute source : sources)
+			{
+				context.stopRoute(source.getRouteId());
 				context.removeRoute(source.getRouteId());
+			}
+			context.stopRoute(destination.getRouteId());
 			context.removeRoute(destination.getRouteId());
 			engine.discard();
 			for (CamelConfig config : configs)

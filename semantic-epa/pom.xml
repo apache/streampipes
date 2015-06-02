@@ -10,7 +10,10 @@
 	<description>Large scale event processing agents with semantic checking for combinability.
 	Context: semantic-enabled complex event processing</description>
 	<name>Semantic Event Processing Agents</name>
-	
+
+	<properties>
+		<camel.version>2.15.2</camel.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.rendersnake</groupId>
@@ -30,17 +33,17 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
-			<version>2.12.3</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-xstream</artifactId>
-			<version>2.12.3</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-jms</artifactId>
-			<version>2.12.3</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
@@ -48,14 +51,19 @@
 			<version>5.9.0</version>
 		</dependency>
 		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.10.4</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-gson</artifactId>
-			<version>2.12.3</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-jackson</artifactId>
-			<version>2.12.3</version>
+			<version>${camel.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.restlet.jee</groupId>
@@ -66,6 +74,11 @@
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
 			<version>0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-kafka</artifactId>
+			<version>${camel.version}</version>
 		</dependency>
 	</dependencies>
 </project>

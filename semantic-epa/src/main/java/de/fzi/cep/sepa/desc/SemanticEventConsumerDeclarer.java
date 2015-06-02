@@ -1,13 +1,13 @@
 package de.fzi.cep.sepa.desc;
 
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 public interface SemanticEventConsumerDeclarer {
 
-	public SEC declareModel();
+	public SecDescription declareModel();
 
-	public String invokeRuntime(SECInvocationGraph sec);
+	public String invokeRuntime(SecInvocation sec);
 
-	public boolean detachRuntime(SECInvocationGraph sec);
+	public boolean detachRuntime(SecInvocation sec);
 }

@@ -5,11 +5,11 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public abstract class BindingParameters {
 
-	protected SEPAInvocationGraph graph;
+	protected SepaInvocation graph;
 	
 	private List<InputStreamParameters> inputStreamParams = new ArrayList<>();
 	
@@ -19,7 +19,7 @@ public abstract class BindingParameters {
 	
 	private static String topicPrefix = "topic://";
 	
-	public BindingParameters(SEPAInvocationGraph graph)
+	public BindingParameters(SepaInvocation graph)
 	{
 		this.graph = graph;
 		
@@ -27,11 +27,11 @@ public abstract class BindingParameters {
 
 		outputStream = graph.getOutputStream();
 		outputGrounding = outputStream.getEventGrounding();
-		outName = topicPrefix + outputGrounding.getTopicName();
+		outName = topicPrefix + outputGrounding.getTransportProtocol().getTopicName();
 		
 	}
 
-	public SEPAInvocationGraph getGraph() {
+	public SepaInvocation getGraph() {
 		return graph;
 	}
 

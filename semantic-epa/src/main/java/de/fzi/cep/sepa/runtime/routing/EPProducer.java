@@ -22,7 +22,10 @@ public class EPProducer extends DefaultProducer {
 	public void process(Exchange exchange) throws Exception { // incoming messages
 		Object body = exchange.getIn().getBody(); 
 		if (body instanceof Map) {
-			String sourceInfo = String.valueOf(exchange.getIn().getHeaders().get("jmsdestination"));
+			String sourceInfo;
+			Object destinationHeader = exchange.getIn().getHeaders().get("jmsdestination");
+			if (destinationHeader != null) sourceInfo = String.valueOf(destinationHeader);
+			else sourceInfo = String.valueOf("topic://" +exchange.getIn().getHeaders().get("kafka.TOPIC"));
 			engine.onEvent((Map<String, Object>) body, sourceInfo);
 		} else {
 			throw new RuntimeException("Incoming event is not of type Map (" + body + ")");

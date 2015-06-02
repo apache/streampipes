@@ -9,6 +9,7 @@ import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.jms.JmsConfiguration;
+import org.apache.camel.component.kafka.KafkaComponent;
 
 public interface CamelConfig { // every config that cannot be made with the simple endpoint uri string
 
@@ -21,6 +22,7 @@ public interface CamelConfig { // every config that cannot be made with the simp
 		private final String brokerAlias; // e.g. test-jms -> "test-jms:topic:test.destination"
 
 		private final String brokerUrl;
+		
 
 		public ActiveMQ(String brokerAlias, String brokerUrl) {
 			this.brokerAlias = brokerAlias;
@@ -64,18 +66,24 @@ public interface CamelConfig { // every config that cannot be made with the simp
     public static class Kafka implements CamelConfig {
         //kafka:server:port[?options]
 
-        public Kafka() {
-
+    	private final String brokerAlias;
+    	private final String zookeeperHost;
+    	private final int zookeeperPort;
+    	
+        public Kafka(String brokerAlias, String zookeeperHost, int zookeeperPort) {
+        	this.brokerAlias = brokerAlias;
+        	this.zookeeperHost = zookeeperHost;
+        	this.zookeeperPort = zookeeperPort;
         }
 
         @Override
         public void applyTo(CamelContext context) {
-
+             context.addComponent(brokerAlias, new KafkaComponent());
         }
 
         @Override
         public void removeFrom(CamelContext context) {
-
+        	context.removeComponent(brokerAlias);
         }
     }
 }
