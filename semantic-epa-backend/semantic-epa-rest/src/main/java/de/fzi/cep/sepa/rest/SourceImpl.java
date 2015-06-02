@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
 
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Source;
 import de.fzi.cep.sepa.messages.Notification;
@@ -83,7 +83,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public String postSource(@FormParam("uri") String uri) {
-		SEP sep;
+		SepDescription sep;
 		String jsonldDescription = "";
 		try {
 			
@@ -100,7 +100,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 		}
 		
 		try {
-			sep = parseObjectContent(SEP.class, jsonldDescription);
+			sep = parseObjectContent(SepDescription.class, jsonldDescription);
 			if (requestor.exists(sep)) 
 				requestor.update(sep);
 			else 

@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.sepa.model.client.util.Utils;
 
 public class TestJSONConvert {

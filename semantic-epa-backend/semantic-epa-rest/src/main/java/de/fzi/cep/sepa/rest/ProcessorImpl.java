@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.client.ClientProtocolException;
 import org.openrdf.model.impl.GraphImpl;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Processor;
 import de.fzi.cep.sepa.messages.Notification;
@@ -35,7 +35,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllProcessors(@DefaultValue("1") @QueryParam("domains") String domain)
 	{
-		List<SEPA> sepas;
+		List<SepaDescription> sepas;
 		if (domain.equals("1")) sepas = requestor.getAllSEPAs();
 		else sepas = requestor.getSEPAsByDomain(domain);
 		
@@ -67,7 +67,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	@Override
 	public String postProcessor(@FormParam("uri") String uri)
 	{
-		SEPA sepa;
+		SepaDescription sepa;
 		String jsonldDescription = "";
 		
 		try {
@@ -81,7 +81,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 		}
 		
 		try {
-			sepa = parseObjectContent(SEPA.class, jsonldDescription);
+			sepa = parseObjectContent(SepaDescription.class, jsonldDescription);
 			if (requestor.exists(sepa)) 
 				requestor.update(sepa);
 			else 

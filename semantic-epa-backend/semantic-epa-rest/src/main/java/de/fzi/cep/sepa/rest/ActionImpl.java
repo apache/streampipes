@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.client.ClientProtocolException;
 
-import de.fzi.cep.sepa.model.impl.graph.SEC;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.Action;
 import de.fzi.cep.sepa.messages.Notification;
@@ -40,7 +40,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String getAction() {
-		List<SEC> secs = requestor.getAllSECs();
+		List<SecDescription> secs = requestor.getAllSECs();
 		return toJson(ClientModelTransformer.toActionClientModel(secs));
 	}
 	
@@ -57,7 +57,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 	@Override
 	public String postAction(@FormParam("uri") String uri) {
 		
-		SEC sec;
+		SecDescription sec;
 		String jsonldDescription = "";
 		
 		try {
@@ -71,7 +71,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 		}
 		
 		try {
-			sec = parseObjectContent(SEC.class, jsonldDescription);
+			sec = parseObjectContent(SecDescription.class, jsonldDescription);
 			if (requestor.exists(sec)) 
 				requestor.update(sec);
 			else 
