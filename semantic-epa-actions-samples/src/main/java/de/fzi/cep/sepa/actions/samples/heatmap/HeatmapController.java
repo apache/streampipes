@@ -15,15 +15,15 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class HeatmapController extends ActionController {
 
 	@Override
-	public SEC declareModel() {
-		SEC sec = new SEC("/maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
+	public SecDescription declareModel() {
+		SecDescription sec = new SecDescription("/maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -55,17 +55,17 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
+	public String invokeRuntime(SecInvocation sec) {
 		
 		String brokerUrl = createJmsUri(sec);
-		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTopicName();
+		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
 		String newUrl = createWebsocketUri(sec);
 		String websocketTopic = "/topic/heatmap.websocket";
 		
-		String latitudeName = SEPAUtils.getMappingPropertyName(sec, "latitude");
-		String longitudeName = SEPAUtils.getMappingPropertyName(sec, "longitude");
-		int maxPoints = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		String latitudeName = SepaUtils.getMappingPropertyName(sec, "latitude");
+		String longitudeName = SepaUtils.getMappingPropertyName(sec, "longitude");
+		int maxPoints = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sec, "points"))).getValue());
 		
 		HeatmapParameters mapsParameters = new HeatmapParameters(websocketTopic, newUrl, latitudeName, longitudeName, maxPoints);
@@ -77,7 +77,7 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		// TODO Auto-generated method stub
 		return false;
 	}

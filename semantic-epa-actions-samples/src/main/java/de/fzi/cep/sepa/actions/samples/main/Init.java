@@ -12,7 +12,7 @@ import de.fzi.cep.sepa.actions.samples.maps.MapsController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
 

@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.actions.test;
 
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseConfig;
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseConfig;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 
 public class TestKafkaProducer {
 

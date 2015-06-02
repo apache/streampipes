@@ -14,15 +14,15 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 public class ProaSenseTopologyController implements SemanticEventConsumerDeclarer {
 
 	ActiveMQConsumer consumer;
 	
 	@Override
-	public SEC declareModel() {
+	public SecDescription declareModel() {
 		
 		
 		List<String> domains = new ArrayList<String>();
@@ -35,7 +35,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SEC desc = new SEC("/storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("/storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
@@ -47,9 +47,9 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
-		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getUri() + ":" +sec.getInputStreams().get(0).getEventGrounding().getPort();
-		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTopicName();
+	public String invokeRuntime(SecInvocation sec) {
+		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getUri() + ":" +sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getPort();
+		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 	
 		consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
 		consumer.setListener(new ProaSenseTopologyPublisher(sec));
@@ -58,7 +58,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		try {
 			consumer.close();
 		} catch (JMSException e) {

@@ -9,11 +9,6 @@
 	<artifactId>semantic-epa-actions-samples</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.10</artifactId>
-			<version>0.8.2.1</version>
-		</dependency>
-		<dependency>
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
 			<version>0.3-SNAPSHOT</version>
@@ -22,6 +17,12 @@
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.camel</groupId>
+					<artifactId>camel-kafka</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.rendersnake</groupId>

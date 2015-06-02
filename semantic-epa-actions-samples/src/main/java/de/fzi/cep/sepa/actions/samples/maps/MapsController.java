@@ -14,17 +14,17 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 
 public class MapsController extends ActionController {
 
 	@Override
-	public SEC declareModel() {
+	public SecDescription declareModel() {
 		
-		SEC sec = new SEC("/maps", "Map view", "Displays location-based events on a map", "");
+		SecDescription sec = new SecDescription("/maps", "Map view", "Displays location-based events on a map", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -59,14 +59,14 @@ public class MapsController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
+	public String invokeRuntime(SecInvocation sec) {
 		
 		String newUrl = createWebsocketUri(sec);
 		String inputTopic = extractTopic(sec);
 		
-		String latitudeName = SEPAUtils.getMappingPropertyName(sec, "latitude");
-		String longitudeName = SEPAUtils.getMappingPropertyName(sec, "longitude");
-		String labelName = SEPAUtils.getMappingPropertyName(sec, "label");
+		String latitudeName = SepaUtils.getMappingPropertyName(sec, "latitude");
+		String longitudeName = SepaUtils.getMappingPropertyName(sec, "longitude");
+		String labelName = SepaUtils.getMappingPropertyName(sec, "label");
 		
 		MapsParameters mapsParameters = new MapsParameters(inputTopic, newUrl, latitudeName, longitudeName, labelName);
 		
@@ -74,7 +74,7 @@ public class MapsController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		// TODO Auto-generated method stub
 		return false;
 	}

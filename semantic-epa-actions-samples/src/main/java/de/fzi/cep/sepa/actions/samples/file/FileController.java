@@ -12,16 +12,16 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class FileController extends ActionController {
 
 	@Override
-	public SEC declareModel() {
+	public SecDescription declareModel() {
 		
-		SEC sec = new SEC("/file", "File Output", "", "");
+		SecDescription sec = new SecDescription("/file", "File Output", "", "");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -49,11 +49,11 @@ public class FileController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
+	public String invokeRuntime(SecInvocation sec) {
 		String brokerUrl = createJmsUri(sec);
-		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTopicName();
+		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
-		String path = ((FreeTextStaticProperty) (SEPAUtils
+		String path = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sec, "path"))).getValue();
 		
 		FileParameters fileParameters = new FileParameters(inputTopic, brokerUrl, path);
@@ -64,7 +64,7 @@ public class FileController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		// TODO Auto-generated method stub
 		return false;
 	}

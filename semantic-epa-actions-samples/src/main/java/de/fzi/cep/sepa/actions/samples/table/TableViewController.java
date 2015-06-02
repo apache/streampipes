@@ -13,15 +13,15 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class TableViewController extends ActionController {
 
 	@Override
-	public SEC declareModel() {
-		SEC sec = new SEC("/table", "Table", "", "");
+	public SecDescription declareModel() {
+		SecDescription sec = new SecDescription("/table", "Table", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -49,11 +49,11 @@ public class TableViewController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
+	public String invokeRuntime(SecInvocation sec) {
 		String newUrl = createWebsocketUri(sec);
 		String inputTopic = extractTopic(sec);
 		
-		String rows = ((FreeTextStaticProperty) (SEPAUtils
+		String rows = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sec, "rows"))).getValue();
 		
 		TableParameters tableParameters = new TableParameters(inputTopic, newUrl, Integer.parseInt(rows), getColumnNames(sec.getInputStreams().get(0).getEventSchema().getEventProperties()));
@@ -62,7 +62,7 @@ public class TableViewController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -16,15 +16,15 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class MultiRowTableController extends ActionController {
 
 	@Override
-	public SEC declareModel() {
-		SEC sec = new SEC("/table/multirow", "Multi-Row Table", "", "");
+	public SecDescription declareModel() {
+		SecDescription sec = new SecDescription("/table/multirow", "Multi-Row Table", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -58,20 +58,20 @@ public class MultiRowTableController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph sec) {
+	public String invokeRuntime(SecInvocation sec) {
 		
 		String[] propertyNames = new String[0];
 		String newUrl = createWebsocketUri(sec);
 		String inputTopic = extractTopic(sec);
 		boolean replace = false;
 		
-		String outputStrategy = SEPAUtils.getOneOfProperty(sec,
+		String outputStrategy = SepaUtils.getOneOfProperty(sec,
 				"output");
 		
 		//if (outputStrategy.equals("replace")) replace = true;
 		//else replace = false;
 		
-		String listProperty = SEPAUtils.getMappingPropertyName(sec,
+		String listProperty = SepaUtils.getMappingPropertyName(sec,
 				"list");
 		
 		for(EventProperty p : sec.getInputStreams().get(0).getEventSchema().getEventProperties())
@@ -88,7 +88,7 @@ public class MultiRowTableController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph sec) {
+	public boolean detachRuntime(SecInvocation sec) {
 		// TODO Auto-generated method stub
 		return false;
 	}

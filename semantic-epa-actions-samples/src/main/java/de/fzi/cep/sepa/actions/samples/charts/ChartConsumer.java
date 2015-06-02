@@ -16,16 +16,16 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
 public class ChartConsumer implements SemanticEventConsumerDeclarer {
 
 	@Override
-	public SEC declareModel() {
-		SEC sec = new SEC("/chart", "Line Chart", "Generates a line chart", "http://localhost:8080/img");
+	public SecDescription declareModel() {
+		SecDescription sec = new SecDescription("/chart", "Line Chart", "Generates a line chart", "http://localhost:8080/img");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -66,24 +66,24 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 	}
 
 	@Override
-	public String invokeRuntime(SECInvocationGraph graph) {
-		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getUri().replace("tcp",  "ws") + ":61614";
+	public String invokeRuntime(SecInvocation graph) {
+		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getUri().replace("tcp",  "ws") + ":61614";
 		
-		String variableName = SEPAUtils.getMappingPropertyName(graph, "Mapping");
-		String title = ((FreeTextStaticProperty) (SEPAUtils
+		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
+		String title = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(graph, "title"))).getValue();
-		String xAxis = ((FreeTextStaticProperty) (SEPAUtils
+		String xAxis = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(graph, "xTitle"))).getValue();
-		String yAxis = ((FreeTextStaticProperty) (SEPAUtils
+		String yAxis = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(graph, "yTitle"))).getValue();
 		
-		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, "/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTopicName(), newUrl, variableName);
+		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, "/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName);
 		
 		return new ChartGenerator(lineChart).generateHtml();
 	}
 
 	@Override
-	public boolean detachRuntime(SECInvocationGraph graph) {
+	public boolean detachRuntime(SecInvocation graph) {
 		// TODO Auto-generated method stub
 		return false;
 	}
