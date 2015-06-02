@@ -52,7 +52,7 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 	
 	@Path("{sepaId}/jsonld")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public String getProcessorAsJsonLd(@PathParam("sepaId") String sepaId)
 	{
 		try {

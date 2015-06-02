@@ -103,7 +103,7 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 	
 	@Path("{actionId}/jsonld")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public String getActionAsJsonLd(@PathParam("actionId") String actionId)
 	{
 		try {

@@ -80,7 +80,7 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 	}
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Override
 	public String postSource(@FormParam("uri") String uri) {
 		SEP sep;

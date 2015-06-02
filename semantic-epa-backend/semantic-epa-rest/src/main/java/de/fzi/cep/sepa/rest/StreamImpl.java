@@ -72,7 +72,7 @@ public class StreamImpl extends AbstractRestInterface implements Stream {
 	
 	@Path("{sourceId}/jsonld")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public String getProcessorAsJsonLd(@PathParam("sourceId") String sourceId)
 	{
 		try {
