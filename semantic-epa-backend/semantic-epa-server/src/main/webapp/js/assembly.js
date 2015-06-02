@@ -53,7 +53,7 @@ function initAssembly() {
 
                 //Droppable Streams
                 if (ui.draggable.hasClass('stream')) {
-                    handleDroppedStream($newState, false);
+                    handleDroppedStream($newState, true);
                     //addRecommendedButton($newState);
                     var tempPipeline = {streams: [], sepas: [], action: {}};
                     addToPipeline($newState[0], tempPipeline);
@@ -63,12 +63,12 @@ function initAssembly() {
 
                     //Droppable Sepas
                 } else if (ui.draggable.hasClass('sepa')) {
-                    handleDroppedSepa($newState, false);
+                    handleDroppedSepa($newState, true);
                     //addRecommendedButton($newState);
 
                     //Droppable Actions
                 } else if (ui.draggable.hasClass('action')) {
-                    handleDroppedAction($newState, false);
+                    handleDroppedAction($newState, true);
                 }
                 initTooltips();
             }
@@ -106,7 +106,7 @@ function hideRecButton(e) {
 
 
 function getCoordinates(ui) {
-    console.log(ui);
+
     var newPos = ui.helper.position();
     var newTop = getDropPosition(ui.helper);
 
@@ -128,8 +128,6 @@ function createNewAssemblyElement(json, coordinates) {
 
     jsPlumb.draggable($newState, {containment: 'parent'});
 
-    // var newPos = ui.helper.position();
-    // var newTop = getDropPosition(ui.helper);
     $newState
         .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x})
         .on("contextmenu", function (e) {
@@ -184,7 +182,7 @@ function createNewAssemblyElement(json, coordinates) {
     return $newState;
 }
 
-function handleDroppedStream($newState) {
+function handleDroppedStream($newState, endpoints) {
 
     displaySepas();
     $('#sepas').children().show();
@@ -193,13 +191,13 @@ function handleDroppedStream($newState) {
     $newState
         .addClass('connectable stream');
 
-    if (!state.adjustingPipelineState) {
+    if (endpoints) {
         jsPlumb.addEndpoint($newState, streamEndpointOptions);
     }
 
-    $newState.dblclick(function () {
-        jsPlumb.addEndpoint($newState, streamEndpointOptions);
-    });
+    //$newState.dblclick(function () {
+    //    jsPlumb.addEndpoint($newState, streamEndpointOptions);
+    //});
 
 
     if ($('#assembly').children().hasClass('sepa')) {
@@ -209,7 +207,7 @@ function handleDroppedStream($newState) {
 
 }
 
-function handleDroppedSepa($newState) {
+function handleDroppedSepa($newState, endpoints) {
 
     $('#actions').children().remove();
     displayActions();
@@ -222,7 +220,7 @@ function handleDroppedSepa($newState) {
             .addClass('disabled');
     }
 
-    if (!state.adjustingPipelineState) {
+    if (endpoints) {
         if ($newState.data("JSON").inputNodes < 2) { //1 InputNode
 
             jsPlumb.addEndpoint($newState, leftTargetPointOptions);
@@ -234,13 +232,13 @@ function handleDroppedSepa($newState) {
         jsPlumb.addEndpoint($newState, sepaEndpointOptions);
     }
 
-    $newState.dblclick(function () {
-        jsPlumb.addEndpoint($newState, sepaEndpointOptions);
-    });
+    //$newState.dblclick(function () {
+    //    jsPlumb.addEndpoint($newState, sepaEndpointOptions);
+    //});
     return $newState;
 }
 
-function handleDroppedAction($newState) {
+function handleDroppedAction($newState, endpoints) {
 
     jsPlumb.draggable($newState, {containment: 'parent'});
 
@@ -250,7 +248,7 @@ function handleDroppedAction($newState) {
         $newState
             .addClass('disabled');
     }
-    if (!state.adjustingPipelineState) {
+    if (endpoints) {
         jsPlumb.addEndpoint($newState, leftTargetPointOptions);
     }
 
@@ -268,7 +266,7 @@ function getNewTargetPoint(x, y) {
 
 
 function clearCurrentElement() {
-    $currentElement = null;
+    state.currentElement = null;
 }
 
 /**
@@ -537,10 +535,9 @@ function modifyPipeline(pipelineModifications) {
 
     for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
         id = "#" + modification.domId;
-        state.currentElement = $(id);
-        state.currentElement.data("JSON").staticProperties = modification.staticProperties;
+        $(id).data("JSON").staticProperties = modification.staticProperties;
 
-        clearCurrentElement();
+        //clearCurrentElement();
     }
 
 }
@@ -726,7 +723,7 @@ function createAndConnect(target) {
     var x = $parentElement.position().left;
     var y = $parentElement.position().top;
     var coord = {'x': x + 200, 'y': y};
-    var $target = handleDroppedSepa(createNewAssemblyElement(json, coord));
+    var $target = handleDroppedSepa(createNewAssemblyElement(json, coord), true);
 
     var options;
     if ($parentElement.hasClass("stream")) {

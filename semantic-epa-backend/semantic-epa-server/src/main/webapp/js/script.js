@@ -532,12 +532,9 @@ function ContextMenuClickHandler(type) {
                 $('#description-title').text(json.name);
                 if (json.description) {$('#modal-description').text(json.description);}
                 else {$('#modal-description').text("No description available");}
-                var url = standardUrl + "sources/" +  encodeURIComponent(json.elementId) +"/jsonld";
-
-                $.ajax({url : url, type : "GET", success : function(data){
-                    $("#jsonld").text(data);
-                }});
                 $('#descrModal').modal('show');
+                state.currentElement = $invokedOn;
+                prepareJsonLDModal(json)
             }
         });
     } else if (type === "static") {
@@ -570,7 +567,7 @@ function refresh(type, tabReset) {
     $('#streams').children().remove();
     $('#streams').fadeTo(300, 0);
     $('#sepas').fadeTo(300, 0);
-     clearAssembly();
+    clearAssembly();
     $('#streamCollapse').attr("data-toggle", "");
     $('#streamCollapse').addClass("disabled");
     hideAdjustingPipelineState();
@@ -1075,8 +1072,29 @@ function getParentWithJSONData($element) { //TODO umschreiben auf $.parents
     return $element;
 }
 
+function prepareJsonLDModal(json){
+    console.log(json);
+    var path ="";
+    if (state.currentElement.hasClass("stream")){
+        path = "streams/";
+    }else if (state.currentElement.hasClass("sepa")){
+        path = "sepas/";
+    }else{
+        path = "actions/";
+    }
+    var url = standardUrl + path +  encodeURIComponent(json.elementId) +"/jsonld";
+    //var url = "http://localhost:8080/semantic-epa-backend/api/actions/http%3A%2F%2Flocalhost%3A8091%2Ftable/jsonld";
+
+    $.ajax({url : url, type : "GET", success : function(data){
+        console.log(data);
+        $("#modal-jsonld").text(data);
+    }, error : function(data){
+        $("#modal-jsonld").text("");
+    }});
+
+}
 function openJsonLDModal(){
-    var jsonld = state.currentElement.jsonld
+    $("#jsonldModal").modal('show');
 }
 
 function attemptLogin() {
