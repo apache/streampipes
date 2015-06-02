@@ -12,6 +12,8 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
+
 public class Utils {
 
 	public static final String SERVER_URL;

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.commons;
+package de.fzi.cep.sepa.commons.config;
 
 import java.io.OutputStream;
 
