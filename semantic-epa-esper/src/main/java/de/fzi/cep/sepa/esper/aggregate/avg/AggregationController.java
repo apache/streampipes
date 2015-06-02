@@ -20,18 +20,18 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class AggregationController extends EsperDeclarer<AggregationParameter> {
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -46,7 +46,7 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/aggregation", "Aggregation", "Performs different aggregation functions", "", "/sepa/aggregation", domains);
+		SepaDescription desc = new SepaDescription("/sepa/aggregation", "Aggregation", "Performs different aggregation functions", "", "/sepa/aggregation", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
@@ -83,23 +83,23 @@ public class AggregationController extends EsperDeclarer<AggregationParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
-		List<String> groupBy = SEPAUtils.getMultipleMappingPropertyNames(sepa,
+		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 				"groupBy", true);
 		
-		String aggregate = SEPAUtils.getMappingPropertyName(sepa,
+		String aggregate = SepaUtils.getMappingPropertyName(sepa,
 				"aggregate");
 		
 		System.out.println("AGG: " +aggregate);
 		
-		int outputEvery = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		int outputEvery = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
 		
-		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
 	
-		String aggregateOperation = SEPAUtils.getOneOfProperty(sepa,
+		String aggregateOperation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
 		
 		System.out.println("AGGOP: " +aggregateOperation);

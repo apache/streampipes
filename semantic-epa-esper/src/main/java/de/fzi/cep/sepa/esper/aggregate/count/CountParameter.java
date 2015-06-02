@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.aggregate.count;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class CountParameter extends BindingParameters{
@@ -12,7 +12,7 @@ public class CountParameter extends BindingParameters{
 	private TimeScale timeScale;
 	private List<String> selectProperties;
 	
-	public CountParameter(SEPAInvocationGraph graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
+	public CountParameter(SepaInvocation graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
 		super(graph);
 		this.timeScale = timeScale;
 		this.groupBy = groupBy;

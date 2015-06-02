@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.movement;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class MovementParameter extends BindingParameters {
@@ -17,7 +17,7 @@ public class MovementParameter extends BindingParameters {
 	
 	private final List<String> partitionProperties;
 
-	public MovementParameter(SEPAInvocationGraph graph,
+	public MovementParameter(SepaInvocation graph,
 		List<String> partitionProperties, String positionCrs, String timestampProperty, String xProperty, String yProperty,
 		long maxInterval) {
 		super(graph);

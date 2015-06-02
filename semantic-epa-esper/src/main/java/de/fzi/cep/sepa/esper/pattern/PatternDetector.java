@@ -15,7 +15,7 @@ import com.espertech.esper.client.soda.SelectClause;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class PatternDetector extends EsperEventEngine<PatternParameters> {
 
@@ -26,7 +26,7 @@ public class PatternDetector extends EsperEventEngine<PatternParameters> {
 		model.insertInto(new InsertIntoClause(params.getOutName())); // out name
 		model.selectClause(SelectClause.createWildcard());
 		
-		SEPAInvocationGraph graph = params.getGraph();
+		SepaInvocation graph = params.getGraph();
 		
 		PatternAndExpr pattern = Patterns.and();
 				 

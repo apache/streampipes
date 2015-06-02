@@ -14,21 +14,21 @@ import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
 public class PatternController extends EsperDeclarer<PatternParameters>{
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -36,7 +36,7 @@ public class PatternController extends EsperDeclarer<PatternParameters>{
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SEPA desc = new SEPA("/sepa/pattern", "Pattern Detector", "Detects AND/OR/SEQUENCE-based patterns", "", "/sepa/pattern", domains);
+		SepaDescription desc = new SepaDescription("/sepa/pattern", "Pattern Detector", "Detects AND/OR/SEQUENCE-based patterns", "", "/sepa/pattern", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

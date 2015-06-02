@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +16,7 @@ import com.google.gson.Gson;
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.EPRuntime;
@@ -36,11 +35,11 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 
 	public static final CamelContext context = new DefaultCamelContext(); // routing context
 	
-	public Map<String, String> brokerAliases = new HashMap<String, String>();
+	public Map<String, GroundingConfig> brokerAliases = new HashMap<>();
 	
 	protected EPRuntime runtime;
 	
-	public boolean invokeEPRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, SEPAInvocationGraph sepa)
+	public boolean invokeEPRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, SepaInvocation sepa)
 	{
 		try {
 					
@@ -50,38 +49,38 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 			Map<String, Map<String, Object>> inEventTypes = new HashMap<>();
 			Map<String, Object> outEventType = new HashMap<>();
 			EngineParameters<B> engineParams;
-			String outputBrokerAlias;
+			GroundingConfig outputGroundingConfig;
 			
 			EventGrounding outputEventGrounding = sepa.getOutputStream().getEventGrounding();
-			String outputBrokerUrl = outputEventGrounding.getUri()+":" +outputEventGrounding.getPort();
+			String outputBrokerUrl = outputEventGrounding.getTransportProtocol().getUri()+":" +outputEventGrounding.getTransportProtocol().getPort();
 			logger.info("OutputBrokerUrl is " +outputBrokerUrl);
-			if (brokerAliases.containsKey(outputBrokerUrl)) outputBrokerAlias = brokerAliases.get(outputBrokerUrl);
+			if (brokerAliases.containsKey(outputBrokerUrl)) outputGroundingConfig = brokerAliases.get(outputBrokerUrl);
 			else
 			{
-				outputBrokerAlias = RandomStringUtils.randomAlphabetic(10);
-				config.add(new CamelConfig.ActiveMQ(outputBrokerAlias, outputBrokerUrl));
-				brokerAliases.put(outputBrokerUrl, outputBrokerAlias);
+				outputGroundingConfig = new GroundingConfig(outputEventGrounding);
+				config.add(outputGroundingConfig.getCamelConfig());
+				brokerAliases.put(outputBrokerUrl, outputGroundingConfig);
 			}
 			
-			destination = EndpointInfo.of(outputBrokerAlias + ":topic:" +outputEventGrounding.getTopicName(), getMessageFormat(outputEventGrounding));
+			destination = EndpointInfo.of(outputGroundingConfig.getEndpointUri(outputEventGrounding.getTransportProtocol().getTopicName()), getMessageFormat(outputEventGrounding));
 			
 			outEventType = sepa.getOutputStream().getEventSchema().toRuntimeMap();
 			
 			for(EventStream stream : sepa.getInputStreams())
 			{
 				EventGrounding inputEventGrounding = stream.getEventGrounding();
-				String inputBrokerUrl = inputEventGrounding.getUri()+":" +inputEventGrounding.getPort();
-				String inputBrokerAlias;
+				String inputBrokerUrl = inputEventGrounding.getTransportProtocol().getUri()+":" +inputEventGrounding.getTransportProtocol().getPort();
+				GroundingConfig inputGroundingConfig;
 				
-				if (brokerAliases.containsKey(inputBrokerUrl)) inputBrokerAlias = brokerAliases.get(inputBrokerUrl);
+				if (brokerAliases.containsKey(inputBrokerUrl)) inputGroundingConfig = brokerAliases.get(inputBrokerUrl);
 				else
 				{
-					inputBrokerAlias = RandomStringUtils.randomAlphabetic(10);
-					config.add(new CamelConfig.ActiveMQ(inputBrokerAlias, inputBrokerUrl));
-					brokerAliases.put(inputBrokerUrl, inputBrokerAlias);
+					inputGroundingConfig = new GroundingConfig(inputEventGrounding);
+					config.add(inputGroundingConfig.getCamelConfig());
+					brokerAliases.put(inputBrokerUrl, inputGroundingConfig);
 				}
-				source.add(EndpointInfo.of(inputBrokerAlias + ":topic:" +inputEventGrounding.getTopicName(), getMessageFormat(inputEventGrounding)));
-				inEventTypes.put("topic://" +inputEventGrounding.getTopicName(), stream.getEventSchema().toRuntimeMap());
+				source.add(EndpointInfo.of(inputGroundingConfig.getEndpointUri(inputEventGrounding.getTransportProtocol().getTopicName()), getMessageFormat(inputEventGrounding)));
+				inEventTypes.put("topic://" +inputEventGrounding.getTransportProtocol().getTopicName(), stream.getEventSchema().toRuntimeMap());
 				stream.getEventSchema().toRuntimeMap().keySet().forEach(key -> System.out.print(key +", " +stream.getEventSchema().toRuntimeMap().get(key) +", "));
 			}
 			
@@ -104,10 +103,10 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 	}
 	
 	private DataType getMessageFormat(EventGrounding inputEventGrounding) {
-		if (inputEventGrounding.getTransportFormats().get(0).getRdfType().contains(MessageFormat.Thrift)) return DataType.THRIFT;
+		if (inputEventGrounding.getTransportFormats().get(0).getRdfType().stream().anyMatch(type -> type.toString().equals(MessageFormat.Thrift))) return DataType.THRIFT;
 		else return DataType.JSON;
 	}
-
+	
 	public boolean detachRuntime() 
 	{
 		brokerAliases.clear();

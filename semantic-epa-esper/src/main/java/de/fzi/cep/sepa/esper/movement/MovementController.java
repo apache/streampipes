@@ -21,11 +21,11 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class MovementController extends EsperDeclarer<MovementParameter> {
@@ -34,11 +34,11 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 			.getLogger("MovementTest");
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		SEPA desc = new SEPA("/sepa/movement", "Movement Analysis",
+		SepaDescription desc = new SepaDescription("/sepa/movement", "Movement Analysis",
 				"Movement Analysis Enricher", "", "/sepa/movement", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_1_HQ.png");
 		// desc.setIconUrl(EsperConfig.iconBaseUrl + "/Proximity_Icon_HQ.png");
@@ -94,17 +94,17 @@ public class MovementController extends EsperDeclarer<MovementParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 					
 		String epsgProperty = null;
-		OneOfStaticProperty osp = ((OneOfStaticProperty) (SEPAUtils
+		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "epsg")));
 		for(Option option : osp.getOptions())
 			if (option.isSelected()) epsgProperty = option.getName();
 		
-		String xProperty = SEPAUtils.getMappingPropertyName(sepa,
+		String xProperty = SepaUtils.getMappingPropertyName(sepa,
 				"latitude");
-		String yProperty = SEPAUtils.getMappingPropertyName(sepa,
+		String yProperty = SepaUtils.getMappingPropertyName(sepa,
 				"longitude");
 
 		MovementParameter staticParam = new MovementParameter(

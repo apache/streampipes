@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.enrich.math;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class MathParameter extends BindingParameters {
@@ -13,7 +13,7 @@ public class MathParameter extends BindingParameters {
 	private String rightOperand; 
 	private String appendPropertyName;
 	
-	public MathParameter(SEPAInvocationGraph graph, List<String> selectProperties, Operation operation, String leftOperand, String rightOperand, String appendPropertyName) {
+	public MathParameter(SepaInvocation graph, List<String> selectProperties, Operation operation, String leftOperand, String rightOperand, String appendPropertyName) {
 		super(graph);
 		this.selectProperties = selectProperties;
 		this.operation = operation;

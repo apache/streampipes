@@ -20,21 +20,21 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
 public class MeetsController extends EsperDeclarer<PatternParameters>{
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -65,7 +65,7 @@ public class MeetsController extends EsperDeclarer<PatternParameters>{
 		schema2.setEventProperties(eventProperties2);
 		stream2.setEventSchema(schema2);
 		
-		SEPA desc = new SEPA("/sepa/meets", "Geospatial distance", "Detects two location-based streams within a given distance", "", "/sepa/meets", domains);
+		SepaDescription desc = new SepaDescription("/sepa/meets", "Geospatial distance", "Detects two location-based streams within a given distance", "", "/sepa/meets", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

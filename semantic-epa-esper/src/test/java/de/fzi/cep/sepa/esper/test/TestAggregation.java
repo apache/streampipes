@@ -8,6 +8,7 @@ import java.util.List;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.SampleConfig;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -16,12 +17,13 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -29,7 +31,7 @@ public class TestAggregation {
 
 	public static void main(String[] args)
 	{
-		SEP sep = null;
+		SepDescription sep = null;
 		try {
 			sep = StorageManager.INSTANCE.getStorageAPI().getSEPById("http://localhost:8089/random");
 		} catch (URISyntaxException e) {
@@ -37,12 +39,12 @@ public class TestAggregation {
 			e.printStackTrace();
 		}
 		AggregationController eventRateController = new AggregationController();
-		SEPA test = eventRateController.declareModel();
+		SepaDescription test = eventRateController.declareModel();
 		test.setUri("http://test");
 		test.setElementId("http://test");
 		test.setRdfId(new URIKey(URI.create("http://test.de")));
 		
-		SEPAInvocationGraph testGraph = new SEPAInvocationGraph(test);
+		SepaInvocation testGraph = new SepaInvocation(test);
 		testGraph.setInputStreams(Utils.createList(sep.getEventStreams().get(0)));
 		EventStream outputStream = new EventStream();
 		
@@ -54,8 +56,9 @@ public class TestAggregation {
 		outputSchema.setEventProperties(outputProperties);
 		outputStream.setEventSchema(outputSchema);
 		
-		EventGrounding outputGrounding = new EventGrounding(null, 61616, "tcp://localhost", null);
-		outputGrounding.setTopicName("FZI.TEST");
+		EventGrounding outputGrounding = new EventGrounding();
+		outputGrounding.setTransportProtocol(new JmsTransportProtocol(SampleConfig.jmsHost, SampleConfig.jmsPort, "FZI.Test"));
+		
 		outputStream.setEventGrounding(outputGrounding);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();

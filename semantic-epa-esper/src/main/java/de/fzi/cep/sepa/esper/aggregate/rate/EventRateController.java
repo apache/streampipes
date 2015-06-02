@@ -14,17 +14,17 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class EventRateController extends EsperDeclarer<EventRateParameter> {
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -38,7 +38,7 @@ public class EventRateController extends EsperDeclarer<EventRateParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/eventrate", "Event rate", "Computes current event rate", "", "/sepa/eventrate", domains);
+		SepaDescription desc = new SepaDescription("/sepa/eventrate", "Event rate", "Computes current event rate", "", "/sepa/eventrate", domains);
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
@@ -64,16 +64,16 @@ public class EventRateController extends EsperDeclarer<EventRateParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 	
-		String avgRate = ((FreeTextStaticProperty) (SEPAUtils
+		String avgRate = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "rate"))).getValue();
 		
-		String outputRate = ((FreeTextStaticProperty) (SEPAUtils
+		String outputRate = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "output"))).getValue();
 	
 		String topicPrefix = "topic://";
-		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTopicName());
+		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
 		
 		
 		try {

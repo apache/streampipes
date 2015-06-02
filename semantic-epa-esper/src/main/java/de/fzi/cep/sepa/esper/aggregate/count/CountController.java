@@ -18,17 +18,17 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class CountController extends EsperDeclarer<CountParameter>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -40,7 +40,7 @@ public class CountController extends EsperDeclarer<CountParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.", "", "/sepa/count", domains);
+		SepaDescription desc = new SepaDescription("/sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.", "", "/sepa/count", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Counter_Icon_HQ.png");
 		
 		//TODO check if needed
@@ -74,15 +74,15 @@ public class CountController extends EsperDeclarer<CountParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {		
+	public boolean invokeRuntime(SepaInvocation sepa) {		
 		
-		List<String> groupBy = SEPAUtils.getMultipleMappingPropertyNames(sepa,
+		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 				"groupBy", true);
 		
-		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
 	
-		String scale = SEPAUtils.getOneOfProperty(sepa,
+		String scale = SepaUtils.getOneOfProperty(sepa,
 				"scale");
 		
 		TimeScale timeScale;

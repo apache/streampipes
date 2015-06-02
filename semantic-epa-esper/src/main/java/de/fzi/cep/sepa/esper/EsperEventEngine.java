@@ -18,7 +18,7 @@ import com.espertech.esper.client.UpdateListener;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.main.EsperEngineSettings;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
@@ -35,7 +35,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	
 	@Override
-	public void bind(EngineParameters<T> parameters, OutputCollector collector, SEPAInvocationGraph graph) {
+	public void bind(EngineParameters<T> parameters, OutputCollector collector, SepaInvocation graph) {
 		if (parameters.getInEventTypes().size() != graph.getInputStreams().size())
 			throw new IllegalArgumentException("Input parameters do not match!");
 			
@@ -48,7 +48,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		});
 		
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
-		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
+		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName(), parameters.getOutEventType());
 		
 		List<String> statements = statements(parameters.getStaticProperty());
 		registerStatements(statements, collector, parameters.getStaticProperty());
@@ -120,7 +120,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		//logger.info("New event: {}", event);
+		logger.info("New event: {}", event);
+		logger.info("New source: {}", sourceInfo);
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
 

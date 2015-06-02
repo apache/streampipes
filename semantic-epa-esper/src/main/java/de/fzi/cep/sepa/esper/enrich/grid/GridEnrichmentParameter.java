@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.enrich.grid;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class GridEnrichmentParameter extends BindingParameters {
@@ -18,7 +18,7 @@ public class GridEnrichmentParameter extends BindingParameters {
 	private String lngPropertyName;
 	private List<String> selectProperties;
 	
-	public GridEnrichmentParameter(SEPAInvocationGraph graph, double latitudeStart, double longitudeStart, int cellSize, String cellOptionsPropertyName, String latPropertyName, String lngPropertyName, List<String> selectProperties) {
+	public GridEnrichmentParameter(SepaInvocation graph, double latitudeStart, double longitudeStart, int cellSize, String cellOptionsPropertyName, String latPropertyName, String lngPropertyName, List<String> selectProperties) {
 		super(graph);
 		this.latitudeStart = latitudeStart;
 		this.longitudeStart = longitudeStart;

@@ -18,22 +18,22 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class MathController extends EsperDeclarer<MathParameter>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		SEPA desc = new SEPA("/sepa/math", "Math EPA",
+		SepaDescription desc = new SepaDescription("/sepa/math", "Math EPA",
 				"performs simple calculations on event properties", "", "/sepa/math", domains);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {
@@ -90,20 +90,20 @@ public class MathController extends EsperDeclarer<MathParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
-		String operation = SEPAUtils.getOneOfProperty(sepa,
+		String operation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
 		
-		String leftOperand = SEPAUtils.getMappingPropertyName(sepa,
+		String leftOperand = SepaUtils.getMappingPropertyName(sepa,
 				"leftOperand");
 		
-		String rightOperand = SEPAUtils.getMappingPropertyName(sepa,
+		String rightOperand = SepaUtils.getMappingPropertyName(sepa,
 				"rightOperand");
 		
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 		
-		String appendPropertyName = SEPAUtils.getEventPropertyName(strategy.getEventProperties(), "delay");
+		String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "delay");
 	
 		Operation arithmeticOperation;
 		if (operation.equals("+")) arithmeticOperation = Operation.ADD;

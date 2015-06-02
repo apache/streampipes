@@ -14,15 +14,15 @@ import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.graph.*;
 import de.fzi.cep.sepa.model.impl.output.*;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParameter> {
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
-		SEPA sepa = new SEPA("/sepa/grid", "Grid Cell Grouping",
+		SepaDescription sepa = new SepaDescription("/sepa/grid", "Grid Cell Grouping",
 				"Groups location-based events into cells of a given size", "", "/sepa/grid", Utils.createList(Domain.DOMAIN_PERSONAL_ASSISTANT.toString()));
 		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	
@@ -82,17 +82,17 @@ public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParame
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {		
+	public boolean invokeRuntime(SepaInvocation sepa) {		
 		
-		int cellSize = Integer.parseInt(SEPAUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
-		double startingLatitude = Double.parseDouble(SEPAUtils.getFreeTextStaticPropertyValue(sepa, "startingLatitude"));
-		double startingLongitude = Double.parseDouble(SEPAUtils.getFreeTextStaticPropertyValue(sepa, "startingLongitude"));
+		int cellSize = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
+		double startingLatitude = Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "startingLatitude"));
+		double startingLongitude = Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "startingLongitude"));
 		
-		String latPropertyName = SEPAUtils.getMappingPropertyName(sepa, "latitude");
-		String lngPropertyName = SEPAUtils.getMappingPropertyName(sepa, "longitude");	
+		String latPropertyName = SepaUtils.getMappingPropertyName(sepa, "latitude");
+		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "longitude");	
 			
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
-		String cellOptionsPropertyName = SEPAUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
+		String cellOptionsPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
 	
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())

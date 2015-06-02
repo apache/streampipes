@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.esper.drillingstop.single;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class DrillingStopEnrichedParameters extends BindingParameters {
@@ -11,7 +11,7 @@ public class DrillingStopEnrichedParameters extends BindingParameters {
 	private String rpmPropertyName;
 	private String torquePropertyName;
 	
-	public DrillingStopEnrichedParameters(SEPAInvocationGraph graph, int minRpm, int minTorque, String rpmPropertyName, String torquePropertyName) {
+	public DrillingStopEnrichedParameters(SepaInvocation graph, int minRpm, int minTorque, String rpmPropertyName, String torquePropertyName) {
 		super(graph);
 		this.minRpm = minRpm;
 		this.minTorque = minTorque;

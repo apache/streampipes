@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.esper.config;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.esper.SEPAWriter;
 import de.fzi.cep.sepa.esper.Writer;
 import de.fzi.cep.sepa.runtime.OutputCollector;

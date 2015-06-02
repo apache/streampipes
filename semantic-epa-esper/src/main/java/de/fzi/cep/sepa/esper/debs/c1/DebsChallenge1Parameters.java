@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.debs.c1;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class DebsChallenge1Parameters extends BindingParameters {
@@ -12,7 +12,7 @@ public class DebsChallenge1Parameters extends BindingParameters {
 	private String latitudeName, longitudeName, latitude2Name, longitude2Name;
 	private List<String> propertyNames;
 	
-	public DebsChallenge1Parameters(SEPAInvocationGraph graph, double startingLatitude, double startingLongitude, int cellSize, String latitudeName, String longitudeName, String latitude2Name, String longitude2Name, List<String> propertyNames) {
+	public DebsChallenge1Parameters(SepaInvocation graph, double startingLatitude, double startingLongitude, int cellSize, String latitudeName, String longitudeName, String latitude2Name, String longitude2Name, List<String> propertyNames) {
 		super(graph);
 		this.startingLatitude = startingLatitude;
 		this.startingLongitude = startingLongitude;

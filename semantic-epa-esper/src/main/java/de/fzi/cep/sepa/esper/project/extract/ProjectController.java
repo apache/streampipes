@@ -12,16 +12,16 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class ProjectController extends EsperDeclarer<ProjectParameter>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -33,7 +33,7 @@ public class ProjectController extends EsperDeclarer<ProjectParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/project", "General Project EPA", "Outputs a selectable subset of an input event type", "", "/sepa/project", domains);
+		SepaDescription desc = new SepaDescription("/sepa/project", "General Project EPA", "Outputs a selectable subset of an input event type", "", "/sepa/project", domains);
 
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
@@ -51,13 +51,13 @@ public class ProjectController extends EsperDeclarer<ProjectParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 			
 		List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 		
 		for(EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties())
 		{
-			projectProperties.add(new NestedPropertyMapping(p.getRuntimeName(), SEPAUtils.getFullPropertyName(p, sepa.getInputStreams().get(0).getEventSchema().getEventProperties(), "", '.')));
+			projectProperties.add(new NestedPropertyMapping(p.getRuntimeName(), SepaUtils.getFullPropertyName(p, sepa.getInputStreams().get(0).getEventSchema().getEventProperties(), "", '.')));
 		}
 		
 		ProjectParameter staticParam = new ProjectParameter(

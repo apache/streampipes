@@ -18,26 +18,26 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class DrillingStartController extends EsperDeclarer<DrillingStartParameters>{
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
 		System.out.println(sepa.getBelongsTo());
 		
-		int minRpm = Integer.parseInt(SEPAUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
-		int minTorque = Integer.parseInt(SEPAUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
+		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
+		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
 		
-		String latPropertyName = SEPAUtils.getMappingPropertyName(sepa, "rpm");
-		String lngPropertyName = SEPAUtils.getMappingPropertyName(sepa, "latitude");	
+		String latPropertyName = SepaUtils.getMappingPropertyName(sepa, "rpm");
+		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "latitude");	
 	
 		System.out.println(minRpm +", " +minTorque +", " +latPropertyName +", " +lngPropertyName);
 		DrillingStartParameters staticParam = new DrillingStartParameters(
@@ -56,7 +56,7 @@ public class DrillingStartController extends EsperDeclarer<DrillingStartParamete
 	}
 	
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
@@ -72,7 +72,7 @@ public class DrillingStartController extends EsperDeclarer<DrillingStartParamete
 		schema2.addEventProperty(p2);
 		
 		
-		SEPA desc = new SEPA("/sepa/drillingstart", "Driling Start", "Detects start of a drilling process", "", "/sepa/drillingstart", domains);
+		SepaDescription desc = new SepaDescription("/sepa/drillingstart", "Driling Start", "Detects start of a drilling process", "", "/sepa/drillingstart", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
 		
 		

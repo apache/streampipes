@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.esper.aggregate.rate;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class EventRateParameter extends BindingParameters {
@@ -9,7 +9,7 @@ public class EventRateParameter extends BindingParameters {
 	int outputRate;
 	String outputName; 
 	
-	public EventRateParameter(SEPAInvocationGraph graph, int avgRate, int outputRate, String outputName) {
+	public EventRateParameter(SepaInvocation graph, int avgRate, int outputRate, String outputName) {
 		super(graph);
 		this.avgRate = avgRate;
 		this.outputRate = outputRate;

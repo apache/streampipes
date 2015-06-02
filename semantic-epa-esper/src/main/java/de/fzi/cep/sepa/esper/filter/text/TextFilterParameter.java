@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.esper.filter.text;
 
 import de.fzi.cep.sepa.esper.util.StringOperator;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class TextFilterParameter extends BindingParameters {
@@ -10,7 +10,7 @@ public class TextFilterParameter extends BindingParameters {
 	private StringOperator stringOperator;
 	private String filterProperty;
 	
-	public TextFilterParameter(SEPAInvocationGraph graph, String keyword, StringOperator stringOperator, String filterProperty) {
+	public TextFilterParameter(SepaInvocation graph, String keyword, StringOperator stringOperator, String filterProperty) {
 		super(graph);
 		this.keyword = keyword;
 		this.stringOperator = stringOperator;

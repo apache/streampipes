@@ -15,8 +15,8 @@ import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
@@ -24,7 +24,7 @@ import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 public class ComposeController extends EsperDeclarer<ComposeParameters>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -32,7 +32,7 @@ public class ComposeController extends EsperDeclarer<ComposeParameters>{
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SEPA desc = new SEPA("/sepa/compose", "Compose EPA", "", "", "/sepa/compose", domains);
+		SepaDescription desc = new SepaDescription("/sepa/compose", "Compose EPA", "", "", "/sepa/compose", domains);
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
@@ -52,7 +52,7 @@ public class ComposeController extends EsperDeclarer<ComposeParameters>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 	
 		try {
 			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));

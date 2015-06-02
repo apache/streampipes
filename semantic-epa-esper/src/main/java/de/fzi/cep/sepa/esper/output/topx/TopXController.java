@@ -24,18 +24,18 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class TopXController extends EsperDeclarer<TopXParameter>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -49,7 +49,7 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property", "", "/sepa/topX", domains);
+		SepaDescription desc = new SepaDescription("/sepa/topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property", "", "/sepa/topX", domains);
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
@@ -83,30 +83,18 @@ public class TopXController extends EsperDeclarer<TopXParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-		
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
-		
-		//SEPAUtils.getMapp
-		
-		
-		String sortBy = SEPAUtils.getMappingPropertyName(sepa,
+	public boolean invokeRuntime(SepaInvocation sepa) {
+				
+		String sortBy = SepaUtils.getMappingPropertyName(sepa,
 				"sortBy", true);
 		
-		int limit = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		int limit = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "topx"))).getValue());
 	
-		String direction = SEPAUtils.getOneOfProperty(sepa,
+		String direction = SepaUtils.getOneOfProperty(sepa,
 				"direction");
 		
-		List<String> uniqueProperties = SEPAUtils.getMultipleMappingPropertyNames(sepa,
+		List<String> uniqueProperties = SepaUtils.getMultipleMappingPropertyNames(sepa,
 				"unique", true);
 		
 		OrderDirection orderDirection;

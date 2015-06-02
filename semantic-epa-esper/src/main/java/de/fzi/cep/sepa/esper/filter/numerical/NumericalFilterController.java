@@ -23,22 +23,22 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class NumericalFilterController extends EsperDeclarer<NumericalFilterParameter> {
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
-		SEPA desc = new SEPA("/sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description", "", "/sepa/numericalfilter", domains);
+		SepaDescription desc = new SepaDescription("/sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description", "", "/sepa/numericalfilter", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
 		
 		List<EventProperty> propertyRestrictions = new ArrayList<>();
@@ -87,11 +87,11 @@ public class NumericalFilterController extends EsperDeclarer<NumericalFilterPara
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
-		String threshold = ((FreeTextStaticProperty) (SEPAUtils
+		String threshold = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "value"))).getValue();
-		String stringOperation = SEPAUtils.getOneOfProperty(sepa,
+		String stringOperation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
 		
 		String operation = "GT";
@@ -101,7 +101,7 @@ public class NumericalFilterController extends EsperDeclarer<NumericalFilterPara
 		else if (stringOperation.equals(">=")) operation = "GE";
 		
 		
-		String filterProperty = SEPAUtils.getMappingPropertyName(sepa,
+		String filterProperty = SepaUtils.getMappingPropertyName(sepa,
 				"number", true);
 		
 		logger.info("Text Property: " +filterProperty);

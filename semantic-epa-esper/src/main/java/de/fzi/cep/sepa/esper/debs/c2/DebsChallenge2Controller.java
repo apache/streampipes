@@ -18,11 +18,11 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parameters>{
@@ -31,11 +31,11 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 	private EventProperty yCellProperty;
 	
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		SEPA desc = new SEPA("/sepa/debs/c2", "DEBS Challenge v2",
+		SepaDescription desc = new SepaDescription("/sepa/debs/c2", "DEBS Challenge v2",
 				"Solves query 2 of the 2015 Debs Challenge", "", "/sepa/debs/c2", domains);
 		try {
 			EventStream stream1 = new EventStream();
@@ -132,36 +132,34 @@ public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parame
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
 		EventStream inputStream = sepa.getInputStreams().get(0);
 		
 		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
 		String topicPrefix = "topic://";
 		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
+		String inName = topicPrefix + inputGrounding.getTransportProtocol().getTopicName();
 		
-		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SEPAUtils
+		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "cellSize"))).getValue());
 		
-		double startingLatitude = Double.parseDouble(((FreeTextStaticProperty) (SEPAUtils
+		double startingLatitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "startingLatitude"))).getValue());
 		
-		double startingLongitude = Double.parseDouble(((FreeTextStaticProperty) (SEPAUtils
+		double startingLongitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "startingLongitude"))).getValue());
 		
-		String latPropertyName = SEPAUtils.getMappingPropertyName(sepa,
+		String latPropertyName = SepaUtils.getMappingPropertyName(sepa,
 				"latitude");
 		
-		String lngPropertyName = SEPAUtils.getMappingPropertyName(sepa,
+		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa,
 				"longitude");	
 		
-		String latProperty2Name = SEPAUtils.getMappingPropertyName(sepa,
+		String latProperty2Name = SepaUtils.getMappingPropertyName(sepa,
 				"latitude2");
 		
-		String lngProperty2Name = SEPAUtils.getMappingPropertyName(sepa,
+		String lngProperty2Name = SepaUtils.getMappingPropertyName(sepa,
 				"longitude2");	
 
 		List<String> selectProperties = new ArrayList<>();

@@ -21,18 +21,18 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class TimestampController extends EsperDeclarer<TimestampParameter>{
 
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -46,7 +46,7 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload", "", "/sepa/enrich/timestamp", domains);
+		SepaDescription desc = new SepaDescription("/sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload", "", "/sepa/enrich/timestamp", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());
@@ -68,20 +68,11 @@ public class TimestampController extends EsperDeclarer<TimestampParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
-		
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		EventGrounding outputGrounding = sepa.getOutputStream().getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTopicName();
-		String outName = topicPrefix + outputGrounding.getTopicName();
+	public boolean invokeRuntime(SepaInvocation sepa) {
 		
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
-		String appendTimePropertyName = SEPAUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");
+		String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");
 		
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())

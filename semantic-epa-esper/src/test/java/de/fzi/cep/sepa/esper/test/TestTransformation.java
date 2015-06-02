@@ -16,7 +16,7 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -33,7 +33,7 @@ public class TestTransformation {
 			
 			//System.out.println(Utils.asString(graph));
 			
-			SEPA sepa = new JsonLdTransformer().fromJsonLd(test, SEPA.class);
+			SepaDescription sepa = new JsonLdTransformer().fromJsonLd(test, SepaDescription.class);
 			System.out.println(sepa.getElementId());
 			
 		} catch (IllegalArgumentException e) {

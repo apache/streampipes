@@ -22,11 +22,11 @@ import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 
@@ -34,7 +34,7 @@ import de.fzi.cep.sepa.model.vocabulary.SO;
 public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 	
 	@Override
-	public SEPA declareModel() {
+	public SepaDescription declareModel() {
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -51,7 +51,7 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SEPA desc = new SEPA("/sepa/textfilter", "Text Filter", "Text Filter Description", "", "/sepa/textfilter", domains);
+		SepaDescription desc = new SepaDescription("/sepa/textfilter", "Text Filter", "Text Filter Description", "", "/sepa/textfilter", domains);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
@@ -82,13 +82,13 @@ public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SEPAInvocationGraph sepa) {
+	public boolean invokeRuntime(SepaInvocation sepa) {
 			
-			String keyword = ((FreeTextStaticProperty) (SEPAUtils
+			String keyword = ((FreeTextStaticProperty) (SepaUtils
 					.getStaticPropertyByName(sepa, "keyword"))).getValue();
-			String operation = SEPAUtils.getOneOfProperty(sepa,
+			String operation = SepaUtils.getOneOfProperty(sepa,
 					"operation");
-			String filterProperty = SEPAUtils.getMappingPropertyName(sepa,
+			String filterProperty = SepaUtils.getMappingPropertyName(sepa,
 					"text");
 			
 			logger.info("Text Property: " +filterProperty);
