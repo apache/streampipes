@@ -7,14 +7,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
@@ -23,7 +21,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SemanticEventProcessingAgent")
 @Entity
-public class SEPA extends ConsumableSEPAElement {
+public class SepaDescription extends ConsumableSEPAElement {
 
 	
 	@OneToMany(fetch = FetchType.EAGER,
@@ -38,13 +36,13 @@ public class SEPA extends ConsumableSEPAElement {
 	@RdfProperty("sepa:hasDomain")
 	List<String> domains;
 	
-	public SEPA()
+	public SepaDescription()
 	{
 		super();
 		this.outputStrategies = new ArrayList<>();
 	}
 	
-	public SEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
+	public SepaDescription(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
@@ -54,7 +52,7 @@ public class SEPA extends ConsumableSEPAElement {
 		this.outputStrategies = outputStrategies;
 	}
 	
-	public SEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
+	public SepaDescription(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;

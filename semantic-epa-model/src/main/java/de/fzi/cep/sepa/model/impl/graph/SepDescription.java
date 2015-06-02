@@ -25,7 +25,7 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SemanticEventProducer")
 @Entity
-public class SEP extends NamedSEPAElement {
+public class SepDescription extends NamedSEPAElement {
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
@@ -39,19 +39,19 @@ public class SEP extends NamedSEPAElement {
 	@RdfProperty("sepa:hasDomain")
 	List<String> domains;
 		
-	public SEP() {
+	public SepDescription() {
 		super();
 		eventStreams = new ArrayList<EventStream>();
 	}
 	
-	public SEP(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<String> domains, EventSource eventSource)
+	public SepDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<String> domains, EventSource eventSource)
 	{
 		super(uri, name, description, iconUrl);
 		this.eventStreams = eventStreams;
 		this.domains = domains;
 	}
 	
-	public SEP(String uri, String name2, String description2, String iconUrl, List<String> domains, EventSource eventSource) {
+	public SepDescription(String uri, String name2, String description2, String iconUrl, List<String> domains, EventSource eventSource) {
 		this(uri, name2, description2, iconUrl, new ArrayList<EventStream>(), domains, eventSource);
 	}
 

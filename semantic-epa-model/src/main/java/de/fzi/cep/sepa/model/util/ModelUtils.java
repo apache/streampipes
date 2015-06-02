@@ -74,7 +74,7 @@ public class ModelUtils {
 	public static String getPackageName(String className)
 	{
 		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement", "InvocableSEPAElement"};
-		String[] graphClasses = {"SEC", "SEP", "SEPA", "SEPAInvocationGraph", "SECInvocationGraph"};
+		String[] graphClasses = {"SecDescription", "SepDescription", "SepaDescription", "SepaInvocation", "SecInvocation"};
 		String[] modelClasses = {"MatchingStaticProperty",
 				"Domain", 
 				"EventGrounding", 
@@ -100,7 +100,9 @@ public class ModelUtils {
 				"EventPropertyNested", 
 				"EventPropertyList", 
 				"MappingPropertyUnary",
-				"MappingPropertyNary"};
+				"MappingPropertyNary",
+				"JmsTransportProtocol",
+				"KafkaTransportProtocol"};
 		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
 		
 		if (contains(className, abstractClasses)) 

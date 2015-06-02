@@ -21,17 +21,17 @@ import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.Option;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
-public class SEPAUtils {
+public class SepaUtils {
 
 	public static StaticProperty getStaticPropertyByName(ConsumableSEPAElement sepa, String name)
 	{
 		return getStaticPropertyByName(sepa.getStaticProperties(), name);
 	}
 	
-	public static String getFreeTextStaticPropertyValue(SEPAInvocationGraph graph, String name)
+	public static String getFreeTextStaticPropertyValue(SepaInvocation graph, String name)
 	{
 		StaticProperty staticProperty = getStaticPropertyByName(graph, name);
 		if (staticProperty instanceof FreeTextStaticProperty)
@@ -39,12 +39,12 @@ public class SEPAUtils {
 		return null;
 	}
 	
-	public static StaticProperty getStaticPropertyByName(SEPAInvocationGraph seg, String name)
+	public static StaticProperty getStaticPropertyByName(SepaInvocation seg, String name)
 	{
 		return getStaticPropertyByName(seg.getStaticProperties(), name);
 	}
 	
-	public static StaticProperty getStaticPropertyByName(SECInvocationGraph sec, String name)
+	public static StaticProperty getStaticPropertyByName(SecInvocation sec, String name)
 	{
 		return getStaticPropertyByName(sec.getStaticProperties(), name);
 	}

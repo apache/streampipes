@@ -3,31 +3,24 @@ package de.fzi.cep.sepa.model.impl.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
 import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SECInvocationGraph")
 @Entity
-public class SECInvocationGraph extends InvocableSEPAElement{
+public class SecInvocation extends InvocableSEPAElement{
 
 	
 	List<String> domains;
 	
-	public SECInvocationGraph(SEC sec)
+	public SecInvocation(SecDescription sec)
 	{
 		super();
 		this.setName(sec.getName());
@@ -40,13 +33,13 @@ public class SECInvocationGraph extends InvocableSEPAElement{
 		this.setUri(belongsTo +"/" +elementId);
 	}
 	
-	public SECInvocationGraph(SEC sec, String domId)
+	public SecInvocation(SecDescription sec, String domId)
 	{
 		this(sec);
 		this.setDomId(domId);
 	}
 	
-	public SECInvocationGraph()
+	public SecInvocation()
 	{
 		super();
 		inputStreams = new ArrayList<EventStream>();

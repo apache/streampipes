@@ -45,5 +45,4 @@ public class TransportFormat extends UnnamedSEPAElement {
 		this.rdfType = rdfType;
 	}
 
-	
 }

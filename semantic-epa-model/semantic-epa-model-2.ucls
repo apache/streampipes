@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="false" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="de.fzi.cep.sepa.model.InvocableSEPAElement" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/InvocableSEPAElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="158" x="1103" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.fzi.cep.sepa.model.AbstractSEPAElement" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/AbstractSEPAElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="149" x="1500" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="de.fzi.cep.sepa.model.ConsumableSEPAElement" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/ConsumableSEPAElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="175" x="706" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="de.fzi.cep.sepa.model.NamedSEPAElement" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/NamedSEPAElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="144" x="645" y="130"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="de.fzi.cep.sepa.model.UnnamedSEPAElement" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/UnnamedSEPAElement.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="158" x="1500" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="de.fzi.cep.sepa.model.impl.AnyStaticProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/AnyStaticProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="127" x="1679" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="de.fzi.cep.sepa.model.impl.OneOfStaticProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/OneOfStaticProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="142" x="1846" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="de.fzi.cep.sepa.model.impl.MatchingStaticProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/MatchingStaticProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="158" x="2191" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="de.fzi.cep.sepa.model.impl.EventProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="721" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="de.fzi.cep.sepa.model.impl.EventGrounding" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventGrounding.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="1108" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="de.fzi.cep.sepa.model.impl.EventSchema" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventSchema.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="368" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="de.fzi.cep.sepa.model.impl.FreeTextStaticProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/FreeTextStaticProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="155" x="2389" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="de.fzi.cep.sepa.model.impl.Option" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/Option.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="1763" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="de.fzi.cep.sepa.model.impl.EventPropertyPrimitive" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventPropertyPrimitive.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="154" x="905" y="688"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="de.fzi.cep.sepa.model.impl.EventPropertyNested" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventPropertyNested.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="144" x="721" y="688"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="de.fzi.cep.sepa.model.impl.MappingPropertyUnary" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/MappingPropertyUnary.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="154" x="1931" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="de.fzi.cep.sepa.model.impl.StaticProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/StaticProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="1679" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="de.fzi.cep.sepa.model.impl.EventSource" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventSource.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="436" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="de.fzi.cep.sepa.model.impl.EventPropertyList" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventPropertyList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="125" x="203" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="de.fzi.cep.sepa.model.impl.EventStream" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventStream.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="666" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="de.fzi.cep.sepa.model.impl.MappingProperty" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/MappingProperty.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="123" x="2028" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="de.fzi.cep.sepa.model.impl.EventQuality" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/EventQuality.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="122" x="41" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="de.fzi.cep.sepa.model.impl.MappingPropertyNary" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/MappingPropertyNary.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="147" x="2125" y="595"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="de.fzi.cep.sepa.model.impl.graph.SecInvocation" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/graph/SecInvocation.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="148" x="1312" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="de.fzi.cep.sepa.model.impl.graph.SepaDescription" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/graph/SepaDescription.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="148" x="894" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="de.fzi.cep.sepa.model.impl.graph.SepDescription" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/graph/SepDescription.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="148" x="476" y="223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="de.fzi.cep.sepa.model.impl.graph.SecDescription" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/graph/SecDescription.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="148" x="706" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="de.fzi.cep.sepa.model.impl.graph.SepaInvocation" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/graph/SepaInvocation.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="148" x="1103" y="316"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy" 
+    project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/CustomOutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="154" x="721" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="de.fzi.cep.sepa.model.impl.output.ListOutputStrategy" 
+    project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/ListOutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="151" x="1270" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="de.fzi.cep.sepa.model.impl.output.OutputStrategy" project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/OutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="151" x="1049" y="409"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy" 
+    project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/AppendOutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="153" x="915" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy" 
+    project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/RenameOutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="157" x="1461" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy" 
+    project="semantic-epa-model" 
+    file="/semantic-epa-model/src/main/java/de/fzi/cep/sepa/model/impl/output/FixedOutputStrategy.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="53" width="151" x="530" y="502"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <generalization id="35">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <association id="36">    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="37" name="eventProperties"/>      
+      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="39">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <association id="40">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="41" name="eventProperties"/>      
+      <multiplicity id="42" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="43">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="44">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="21"/>  
+  </generalization>  
+  <association id="45">    
+    <bendpoint x="588" y="316"/>    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="46" name="eventStreams"/>      
+      <multiplicity id="47" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="48">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="49">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="50">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="51" name="outputStrategies"/>      
+      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="53">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="54">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="55">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="56" name="eventQuality"/>      
+      <multiplicity id="57" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="58">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="59">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="60">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="61">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="62">    
+    <bendpoint x="445" y="223"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="63">    
+    <bendpoint x="1509" y="223"/>    
+    <bendpoint x="1509" y="130"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <association id="64">    
+    <bendpoint x="1072" y="316"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="65" name="inputStreams"/>      
+      <multiplicity id="66" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="67">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="68">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="69">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="70">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="71" name="eventGrounding"/>      
+      <multiplicity id="72" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="73">    
+    <bendpoint x="1688" y="316"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="74" name="staticProperties"/>      
+      <multiplicity id="75" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="76">    
+    <bendpoint x="654" y="316"/>    
+    <bendpoint x="654" y="223"/>    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="77">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="78" name="outputStrategies"/>      
+      <multiplicity id="79" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="31" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="80">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="81" name="eventProperties"/>      
+      <multiplicity id="82" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="83">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="84" name="outputStream"/>      
+      <multiplicity id="85" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="86">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="87">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="88" name="eventSchema"/>      
+      <multiplicity id="89" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="90">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="91">    
+    <bendpoint x="1648" y="502"/>    
+    <bendpoint x="1648" y="409"/>    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="93">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="94">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <association id="95">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="96" name="eventProperties"/>      
+      <multiplicity id="97" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="99">    
+    <bendpoint x="1313" y="409"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="100">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="101" name="options"/>      
+      <multiplicity id="102" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="103">    
+    <bendpoint x="675" y="316"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="104" name="eventStreams"/>      
+      <multiplicity id="105" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="106">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="21"/>  
+  </generalization>  
+  <generalization id="107">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="108">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="109">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="110">    
+    <bendpoint x="943" y="409"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="111">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="112" name="eventSource"/>      
+      <multiplicity id="113" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="114">    
+    <end type="SOURCE" refId="32" navigable="false">      
+      <attribute id="115" name="eventProperties"/>      
+      <multiplicity id="116" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="117">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="118" name="options"/>      
+      <multiplicity id="119" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="120">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="121" name="eventProperties"/>      
+      <multiplicity id="122" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="123">    
+    <bendpoint x="1281" y="316"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="124" name="staticProperties"/>      
+      <multiplicity id="125" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="false" package="false" protected="false" private="false" static="false"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="false"/>
+</class-diagram>

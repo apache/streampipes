@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.model.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,61 +22,43 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class EventGrounding extends UnnamedSEPAElement {
 
-	
-	private TransportProtocol transportProtocol;
-	
-	@RdfProperty("sepa:hasPort")
-	private int port;
-	
-	@RdfProperty("sepa:hasUri")
-	private String uri;
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:hasProtocol")
+	private List<TransportProtocol> transportProtocols;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:transportFormat")
 	private List<TransportFormat> transportFormats;
 	
-	@RdfProperty("sepa:hasTopic")
-	private String topicName;
-	
 	public EventGrounding()
 	{
 		super();
 	}
 	
-	public EventGrounding(TransportProtocol transportProtocol, int port, String uri, TransportFormat transportFormat)
+	public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat)
 	{
 		this.transportFormats = new ArrayList<>();
 		this.transportFormats.add(transportFormat);
-		this.transportProtocol = transportProtocol;
-		this.uri = uri;
-		this.port = port;
+		this.transportProtocols = Arrays.asList(transportProtocol);
 	}
 
-	public TransportProtocol getTransportProtocol() {
-		return transportProtocol;
+	public List<TransportProtocol> getTransportProtocols() {
+		return transportProtocols;
+	}
+
+	public void setTransportProtocols(List<TransportProtocol> transportProtocols) {
+		this.transportProtocols = transportProtocols;
 	}
 
 	public void setTransportProtocol(TransportProtocol transportProtocol) {
-		this.transportProtocol = transportProtocol;
+		this.transportProtocols = Arrays.asList(transportProtocol);
 	}
-
-	public int getPort() {
-		return port;
+	
+	public TransportProtocol getTransportProtocol() {
+		return transportProtocols.get(0);
 	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
+	
 	public List<TransportFormat> getTransportFormats() {
 		return transportFormats;
 	}
@@ -83,15 +66,5 @@ public class EventGrounding extends UnnamedSEPAElement {
 	public void setTransportFormats(List<TransportFormat> transportFormats) {
 		this.transportFormats = transportFormats;
 	}
-
-	public String getTopicName() {
-		return topicName;
-	}
-
-	public void setTopicName(String topicName) {
-		this.topicName = topicName;
-	}
-	
-	
 	
 }

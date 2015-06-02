@@ -14,18 +14,16 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.util.SEPAUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SEPAInvocationGraph")
 @Entity
-public class SEPAInvocationGraph extends InvocableSEPAElement {
+public class SepaInvocation extends InvocableSEPAElement {
 	
 	@OneToOne (fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -41,7 +39,7 @@ public class SEPAInvocationGraph extends InvocableSEPAElement {
 	String pathName;
 	List<String> domains;
 	
-	public SEPAInvocationGraph(SEPA sepa)
+	public SepaInvocation(SepaDescription sepa)
 	{
 		super();
 		this.setName(sepa.getName());
@@ -56,19 +54,19 @@ public class SEPAInvocationGraph extends InvocableSEPAElement {
 		this.setUri(belongsTo +"/" +elementId);		
 	}
 
-	public SEPAInvocationGraph(SEPA sepa, String domId)
+	public SepaInvocation(SepaDescription sepa, String domId)
 	{
 		this(sepa);
 		this.domId = domId;
 	}
 	
-	public SEPAInvocationGraph()
+	public SepaInvocation()
 	{
 		super();
 		inputStreams = new ArrayList<EventStream>();
 	}
 	
-	public SEPAInvocationGraph(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties)
+	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
@@ -77,7 +75,7 @@ public class SEPAInvocationGraph extends InvocableSEPAElement {
 		//this.domains = domains;
 	}
 	
-	public SEPAInvocationGraph(String uri, String name, String description, String iconUrl, String pathName, List<Domain> domains)
+	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName, List<Domain> domains)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;

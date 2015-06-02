@@ -24,8 +24,8 @@ import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import com.clarkparsia.empire.util.EmpireUtil;
 
-import de.fzi.cep.sepa.commons.Configuration;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
+import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public enum EmpireManager {
 
@@ -76,8 +76,8 @@ public enum EmpireManager {
 	
 	private void fixTempEmpire()
 	{
-		 List<SEP> list = EmpireUtil.all(tempStorageManager, 
-				 SEP.class); 
+		 List<SepDescription> list = EmpireUtil.all(tempStorageManager, 
+				 SepDescription.class); 
 	}
 	
 	public boolean clearRepository() {

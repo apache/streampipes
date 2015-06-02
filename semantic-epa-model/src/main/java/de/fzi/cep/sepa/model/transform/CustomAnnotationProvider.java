@@ -29,14 +29,14 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.EventPropertyNested.class, 
 				de.fzi.cep.sepa.model.impl.EventPropertyPrimitive.class, 
 				de.fzi.cep.sepa.model.impl.MatchingStaticProperty.class, 
-				de.fzi.cep.sepa.model.impl.graph.SEC.class, 
-				de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph.class, 
+				de.fzi.cep.sepa.model.impl.graph.SecDescription.class, 
+				de.fzi.cep.sepa.model.impl.graph.SepaInvocation.class, 
 				de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy.class, 
 				de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy.class, 
 				de.fzi.cep.sepa.model.impl.EventStream.class, 
 				de.fzi.cep.sepa.model.impl.EventGrounding.class, 
-				de.fzi.cep.sepa.model.impl.graph.SEP.class, 
-				de.fzi.cep.sepa.model.impl.graph.SEPA.class, 
+				de.fzi.cep.sepa.model.impl.graph.SepDescription.class, 
+				de.fzi.cep.sepa.model.impl.graph.SepaDescription.class, 
 				de.fzi.cep.sepa.model.impl.output.OutputStrategy.class, 
 				de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy.class,
 				de.fzi.cep.sepa.model.impl.StaticProperty.class, 
@@ -45,8 +45,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.FreeTextStaticProperty.class, 
 				de.fzi.cep.sepa.model.impl.Option.class, 
 				de.fzi.cep.sepa.model.impl.MappingProperty.class, 
-				de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph.class,
-				de.fzi.cep.sepa.model.impl.TransportFormat.class
+				de.fzi.cep.sepa.model.impl.graph.SecInvocation.class,
+				de.fzi.cep.sepa.model.impl.TransportFormat.class,
+				de.fzi.cep.sepa.model.impl.JmsTransportProtocol.class,
+				de.fzi.cep.sepa.model.impl.KafkaTransportProtocol.class,
+				de.fzi.cep.sepa.model.impl.TransportProtocol.class
 		);
 	}
 

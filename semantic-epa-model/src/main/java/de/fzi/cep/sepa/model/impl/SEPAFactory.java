@@ -3,13 +3,13 @@ package de.fzi.cep.sepa.model.impl;
 import java.net.URI;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
 public class SEPAFactory {
 
-	public static SEPA createSEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
+	public static SepaDescription createSEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
 	{
-		return new SEPA(uri, name, description, iconUrl, pathName, domains);
+		return new SepaDescription(uri, name, description, iconUrl, pathName, domains);
 	}
 	
 	
