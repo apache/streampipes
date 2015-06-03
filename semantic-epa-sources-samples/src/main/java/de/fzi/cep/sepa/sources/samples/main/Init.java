@@ -28,12 +28,12 @@ public class Init implements Runnable {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-//		declarers.add(new TwitterStreamProducer());
-//		declarers.add(new DDMProducer());
-//		declarers.add(new DrillBitProducer());
-//		declarers.add(new EnrichedEventProducer());
-//		declarers.add(new RamProducer());
-//		declarers.add(new MobileStreamProducer());
+		declarers.add(new TwitterStreamProducer());
+		declarers.add(new DDMProducer());
+		declarers.add(new DrillBitProducer());
+		declarers.add(new EnrichedEventProducer());
+		declarers.add(new RamProducer());
+		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
 		declarers.add(new NYCTaxiProducer());
 		//declarers.add(new ProveITEventProducer());
@@ -42,8 +42,8 @@ public class Init implements Runnable {
 		//String zooKeeper = "kalmar39.fzi.de:2181";
 		String groupId = "groupId";
 		String[] topic = {
-//				AkerVariables.DrillingRPM.topic(), 
-//				AkerVariables.DrillingTorque.topic(), 
+				AkerVariables.DrillingRPM.topic(), 
+				AkerVariables.DrillingTorque.topic(), 
 //				AkerVariables.GearLubeOilTemperature.topic(), 
 //				AkerVariables.HookLoad.topic(), 
 //				AkerVariables.SwivelOilTemperature.topic(), 
