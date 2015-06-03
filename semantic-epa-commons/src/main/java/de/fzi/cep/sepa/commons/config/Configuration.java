@@ -52,4 +52,9 @@ public class Configuration {
 		
 		return writer;
 	}
+	
+	public static final BrokerConfig getBrokerConfig()
+	{
+		return BrokerConfig.NISSATECH;
+	}
 }

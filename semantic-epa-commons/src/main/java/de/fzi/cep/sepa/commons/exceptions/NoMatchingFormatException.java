@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.commons.exceptions;
 
-public class NoMatchingGroundingException extends Exception {
+public class NoMatchingFormatException extends Exception {
 
 	/**
 	 * 
