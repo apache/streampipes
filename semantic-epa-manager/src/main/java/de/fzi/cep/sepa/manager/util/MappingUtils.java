@@ -5,11 +5,11 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
 public class MappingUtils {
 
-	public static List<StaticProperty> getMappingProperty(SEPA sepa, List<StaticProperty> staticProperties) throws Exception
+	public static List<StaticProperty> getMappingProperty(SepaDescription sepa, List<StaticProperty> staticProperties) throws Exception
 	{
 		List<StaticProperty> result = new ArrayList<StaticProperty>();		
 		for(de.fzi.cep.sepa.model.impl.StaticProperty p : sepa.getStaticProperties())

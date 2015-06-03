@@ -5,38 +5,39 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
-import com.rits.cloning.Cloner;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
-import de.fzi.cep.sepa.manager.matching.output.SchemaOutputCalculator;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
-import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class InvocationGraphBuilder {
 
 	private GenericTree<NamedSEPAElement> tree;
 	private List<GenericTreeNode<NamedSEPAElement>> postOrder;
-	private Cloner cloner = new Cloner();
-
+	
 	List<InvocableSEPAElement> graphs;
 
 	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree,
@@ -51,11 +52,11 @@ public class InvocationGraphBuilder {
 
 	private void prepare() {
 		for (GenericTreeNode<NamedSEPAElement> node : postOrder) {
-			if (node.getData() instanceof SEPA) {
-				node.setData(new SEPAInvocationGraph((SEPA) node.getData()));
+			if (node.getData() instanceof SepaDescription) {
+				node.setData(new SepaInvocation((SepaDescription) node.getData()));
 			}
-			if (node.getData() instanceof SEC) {
-				node.setData(new SECInvocationGraph((SEC) node.getData()));
+			if (node.getData() instanceof SecDescription) {
+				node.setData(new SecInvocation((SecDescription) node.getData()));
 			}
 		}
 	}
@@ -64,33 +65,31 @@ public class InvocationGraphBuilder {
 		Iterator<GenericTreeNode<NamedSEPAElement>> it = postOrder.iterator();
 		while (it.hasNext()) {
 			GenericTreeNode<NamedSEPAElement> node = it.next();
-			Object element = node.getData();
-			if (element instanceof SEP) {
+			NamedSEPAElement element = node.getData();
+			if (element instanceof SepDescription) {
 				
 			} else if (element instanceof InvocableSEPAElement) {
 				String outputTopic = TopicGenerator.generateRandomTopic();
-				if (element instanceof SEPAInvocationGraph) {
-					SEPAInvocationGraph thisGraph = (SEPAInvocationGraph) element;
-					thisGraph = (SEPAInvocationGraph) buildSEPAElement(
+				if (element instanceof SepaInvocation) {
+					SepaInvocation thisGraph = (SepaInvocation) element;
+					thisGraph = (SepaInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
 					EventSchema outputSchema;
 					EventStream outputStream = new EventStream();
 					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
 							.toString()));
 					EventGrounding grounding = new EventGrounding();
-					grounding.setPort(61616);
-					grounding.setUri("tcp://localhost");
-					grounding.setTopicName(outputTopic);
+					
 					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(thisGraph.getOutputStrategies()).getOuputSchemaGenerator();
-					if (thisGraph.getInputStreams().size() == 1) {
+					if (thisGraph.getInputStreams().size() == 1) 
 						outputSchema = schemaGenerator.buildFromOneStream(thisGraph.getInputStreams().get(0));
-						//thisGraph.setOutputStrategies(Utils.createList(calc
-						//		.getOutputStrategy()));
-					} else
-					{
+					else
 						outputSchema = schemaGenerator.buildFromTwoStreams(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1));
-						//thisGraph.setOutputStrategies(Utils.createList(calc.getOutputStrategy()));
-					}
+			
+					//grounding.setTransportProtocol(thisGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocols().get(0));
+					if (node.getParent() != null)
+						grounding.setTransportProtocol(getPreferredTransportProtocol(thisGraph, node.getParent().getData(), outputTopic));
+					
 					grounding
 							.setTransportFormats(Utils
 									.createList(getPreferredTransportFormat(thisGraph)));
@@ -100,8 +99,8 @@ public class InvocationGraphBuilder {
 					thisGraph.setOutputStream(outputStream);
 					graphs.add(thisGraph);
 				} else {
-					SECInvocationGraph thisGraph = (SECInvocationGraph) element;
-					thisGraph = (SECInvocationGraph) buildSEPAElement(
+					SecInvocation thisGraph = (SecInvocation) element;
+					thisGraph = (SecInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
 					graphs.add(thisGraph);
 				}
@@ -111,7 +110,7 @@ public class InvocationGraphBuilder {
 	}
 
 	private TransportFormat getPreferredTransportFormat(
-			SEPAInvocationGraph thisGraph) {
+			SepaInvocation thisGraph) {
 		try {
 			if (thisGraph.getInputStreams().get(0).getEventGrounding()
 					.getTransportFormats() == null)
@@ -127,6 +126,25 @@ public class InvocationGraphBuilder {
 		}
 		// TODO
 		return new TransportFormat(MessageFormat.Json);
+	}
+	
+	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, NamedSEPAElement nextElement, String outputTopic)
+	{
+
+		InvocableSEPAElement nextInvocable = (InvocableSEPAElement) nextElement;
+		if (nextInvocable.getSupportedGrounding() == null) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+		List<TransportProtocol> matchedProtocols = thisGraph.getSupportedGrounding().getTransportProtocols()
+			.stream()
+			.filter(previousProtocol -> nextInvocable
+				.getSupportedGrounding()
+				.getTransportProtocols()
+				.stream()
+				.anyMatch(nextProtocol -> nextProtocol
+						.getClass()
+						.getCanonicalName()
+						.equals(previousProtocol.getClass().getCanonicalName()))).collect(Collectors.toList());
+		if (matchedProtocols.stream().anyMatch(protocol -> protocol instanceof KafkaTransportProtocol)) return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
+		else return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
 	}
 
 	private InvocableSEPAElement buildSEPAElement(
@@ -152,7 +170,7 @@ public class InvocationGraphBuilder {
 						.setEventGrounding(thisStream.getEventGrounding());
 
 			} else {
-				SEPAInvocationGraph childSEPA = (SEPAInvocationGraph) child;
+				SepaInvocation childSEPA = (SepaInvocation) child;
 				thisGraph
 						.getInputStreams()
 						.get(i)

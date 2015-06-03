@@ -23,8 +23,8 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.util.Utils;
 
@@ -41,18 +41,18 @@ public class TestCompletePipeline {
 		for(InvocableSEPAElement element : graphs)
 		{
 			
-			if (element instanceof SECInvocationGraph)
+			if (element instanceof SecInvocation)
 			{
 				String test = de.fzi.cep.sepa.commons.Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), element));
 				System.out.println(test);
-				SECInvocationGraph testGraph = Transformer.fromJsonLd(SECInvocationGraph.class, test);
+				SecInvocation testGraph = Transformer.fromJsonLd(SecInvocation.class, test);
 				System.out.println(testGraph.getDescription());
 			}
 			
-			if (element instanceof SEPAInvocationGraph)
+			if (element instanceof SepaInvocation)
 			{
 				String test = de.fzi.cep.sepa.commons.Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), element));
-				SEPAInvocationGraph testGraph = Transformer.fromJsonLd(SEPAInvocationGraph.class, test);
+				SepaInvocation testGraph = Transformer.fromJsonLd(SepaInvocation.class, test);
 			}
 		}
 		//new GraphSubmitter(graphs).invokeGraphs();

@@ -19,7 +19,7 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 /**
@@ -55,8 +55,8 @@ public class Operations {
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		
-		SECInvocationGraph sec = getSECInvocationGraph(graphs);
-		RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getInputStreams().get(0).getEventGrounding().getTopicName(), sec.getDescription(), sec.getName());
+		SecInvocation sec = getSECInvocationGraph(graphs);
+		RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), sec.getDescription(), sec.getName());
 		StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 		storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 		new GraphSubmitter(graphs).invokeGraphs();
@@ -87,10 +87,10 @@ public class Operations {
 		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
 	}
 	
-	private static SECInvocationGraph getSECInvocationGraph(List<InvocableSEPAElement> graphs)
+	private static SecInvocation getSECInvocationGraph(List<InvocableSEPAElement> graphs)
 	{
 		for (InvocableSEPAElement graph : graphs)
-			if (graph instanceof SECInvocationGraph) return (SECInvocationGraph) graph;
+			if (graph instanceof SecInvocation) return (SecInvocation) graph;
 		throw new IllegalArgumentException("No action element available");
 	}
 

@@ -21,7 +21,7 @@ import org.openrdf.model.impl.GraphImpl;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.util.Transformer;
 
 public class HttpRequestBuilder {
@@ -69,7 +69,7 @@ public class HttpRequestBuilder {
 		    params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
 		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		    HttpClient httpclient = new DefaultHttpClient(params);
-		    HttpDelete httpdelete = new HttpDelete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTopicName());
+		    HttpDelete httpdelete = new HttpDelete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName());
 		        		    
 		    HttpResponse response = httpclient.execute(httpdelete);
 		    HttpEntity entity = response.getEntity();

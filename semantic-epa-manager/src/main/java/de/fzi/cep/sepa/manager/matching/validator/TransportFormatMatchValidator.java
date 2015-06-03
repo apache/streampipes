@@ -5,22 +5,23 @@ import java.util.List;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 
-public class GroundingMatchValidator implements Validator<EventGrounding> {
+public class TransportFormatMatchValidator implements Validator<EventGrounding> {
 
 	@Override
 	public boolean validate(EventGrounding left,
 			EventGrounding right) {
-		boolean match = false;
-		
+		boolean formatMatch = false;
+	
 		if (left == null || right == null) 
 			return true;
 		else
 		{
 			List<TransportFormat> rightFormats = right.getTransportFormats();
 			List<TransportFormat> leftFormats = left.getTransportFormats();
-			match = rightFormats.stream().anyMatch(rightFormat -> leftFormats.stream().anyMatch(leftFormat -> rightFormat.getRdfType().containsAll(leftFormat.getRdfType())));
+			
+			formatMatch = rightFormats.stream().anyMatch(rightFormat -> leftFormats.stream().anyMatch(leftFormat -> rightFormat.getRdfType().containsAll(leftFormat.getRdfType())));
 		}
-		return match;
+		return formatMatch;
 	}
 
 	@Override

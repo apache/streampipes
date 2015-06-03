@@ -25,9 +25,14 @@ public class ConnectionValidator {
 		return new QualityMatchValidator().validate(left, right);
 	}
 	
-	public static boolean validateGrounding(EventGrounding left, EventGrounding right)
+	public static boolean validateTransportFormat(EventGrounding left, EventGrounding right)
 	{
-		return new GroundingMatchValidator().validate(left, right);
+		return new TransportFormatMatchValidator().validate(left, right);
+	}
+	
+	public static boolean validateTransportProtocol(EventGrounding left, EventGrounding right)
+	{
+		return new TransportProtocolMatchValidator().validate(left, right);
 	}
 
 	public static boolean validateSchema(List<EventSchema> firstLeft, List<EventSchema> secondLeft, List<EventSchema> firstRight, List<EventSchema> secondRight)
@@ -42,7 +47,19 @@ public class ConnectionValidator {
 	
 	public static boolean validateGrounding(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
 	{
-		return new GroundingMatchValidator().validate(firstLeft, secondLeft, right, right);
+		return new TransportFormatMatchValidator().validate(firstLeft, secondLeft, right, right);
 	}
+	
+	public static boolean validateTransportFormat(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
+	{
+		return new TransportFormatMatchValidator().validate(firstLeft, secondLeft, right, right);
+	}
+	
+	public static boolean validateTransportProtocol(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
+	{
+		return new TransportProtocolMatchValidator().validate(firstLeft, secondLeft, right, right);
+	}
+
+	
 	
 }

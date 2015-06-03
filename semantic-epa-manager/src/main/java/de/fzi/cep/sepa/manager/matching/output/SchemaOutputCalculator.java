@@ -20,6 +20,7 @@ import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 
+@Deprecated
 public class SchemaOutputCalculator {
 
 	private OutputStrategy outputStrategy;

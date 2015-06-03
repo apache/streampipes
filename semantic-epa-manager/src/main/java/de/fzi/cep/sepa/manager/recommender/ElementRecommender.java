@@ -8,7 +8,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import com.rits.cloning.Cloner;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
@@ -20,7 +21,7 @@ import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
@@ -46,8 +47,8 @@ public class ElementRecommender {
 		} catch (NoSepaInPipelineException e) {
 			connectedTo = pipeline.getStreams().get(0).getDOM();
 		}
-		List<SEPA> sepas = getAllSepas();
-		for(SEPA sepa : sepas)
+		List<SepaDescription> sepas = getAllSepas();
+		for(SepaDescription sepa : sepas)
 		{
 			try {
 				Pipeline tempPipeline = cloner.deepClone(pipeline);
@@ -56,7 +57,8 @@ public class ElementRecommender {
 				addRecommendation(sepa);
 				tempPipeline.setSepas(new ArrayList<>());
 			} catch (NoMatchingSchemaException e) {
-			} catch (NoMatchingGroundingException e) {
+			} catch (NoMatchingFormatException e) {
+			} catch (NoMatchingProtocolException e) {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -66,7 +68,7 @@ public class ElementRecommender {
 		else return recommendationMessage;
 	}
 	
-	private SEPAClient generateSepaClient(SEPA sepa, String connectedTo)
+	private SEPAClient generateSepaClient(SepaDescription sepa, String connectedTo)
 	{
 		SEPAClient sepaClient = ClientModelTransformer.toSEPAClientModel(sepa);
 		sepaClient.setConnectedTo(Utils.createList(connectedTo));
@@ -74,11 +76,11 @@ public class ElementRecommender {
 		return sepaClient;
 	}
 	
-	private void addRecommendation(SEPA sepa) {
+	private void addRecommendation(SepaDescription sepa) {
 		recommendationMessage.addRecommendation(new ElementRecommendation(sepa.getRdfId().toString(), sepa.getName(), sepa.getDescription()));
 	}
 
-	private List<SEPA> getAllSepas()
+	private List<SepaDescription> getAllSepas()
 	{
 		return StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
 	}

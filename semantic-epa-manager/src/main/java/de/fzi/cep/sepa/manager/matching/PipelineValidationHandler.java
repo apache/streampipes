@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.rits.cloning.Cloner;
-
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.manager.matching.validator.ConnectionValidator;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
@@ -37,8 +36,8 @@ import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 
 public class PipelineValidationHandler {
@@ -81,14 +80,16 @@ public class PipelineValidationHandler {
 	/**
 	 * 
 	 * @return
-	 * @throws NoMatchingGroundingException 
+	 * @throws NoMatchingFormatException 
 	 * @throws NoMatchingSchemaException 
+	 * @throws NoMatchingProtocolException 
 	 */
 	public PipelineValidationHandler validateConnection()
-			throws NoMatchingGroundingException, NoMatchingSchemaException {
+			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException {
 		// determines if root element and current ancestor can be matched
 		boolean schemaMatch = false;
-		boolean groundingMatch = false;
+		boolean formatMatch = false;
+		boolean protocolMatch = false;
 
 		// current root element can be either an action or a SEPA
 		de.fzi.cep.sepa.model.ConsumableSEPAElement rightElement = ClientModelUtils.transformConsumable(clientRootElement);
@@ -110,19 +111,20 @@ public class PipelineValidationHandler {
 				leftEventGrounding = leftEventStream.getEventGrounding();
 			} else {
 				invocationGraphs = makeInvocationGraphs(element);
-				SEPAInvocationGraph ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+				SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
 				EventStream ancestorOutputStream = ancestor.getOutputStream();
 				leftEventSchema = asList(ancestorOutputStream.getEventSchema());
-				leftEventGrounding = ancestorOutputStream.getEventGrounding();
+				leftEventGrounding = ancestor.getSupportedGrounding();
 			}
 			schemaMatch = ConnectionValidator.validateSchema(
 					leftEventSchema,
 					asList(rightEventSchema));
 			
-			groundingMatch = ConnectionValidator.validateGrounding(leftEventGrounding, rightEventGrounding);
+			formatMatch = ConnectionValidator.validateTransportFormat(leftEventGrounding, rightEventGrounding);
+			protocolMatch = ConnectionValidator.validateTransportProtocol(leftEventGrounding, rightEventGrounding);
 		} else if (connectedTo.size() == 2) {
 			
-			SEPA sepa = (SEPA) rightElement;
+			SepaDescription sepa = (SepaDescription) rightElement;
 			Iterator<String> it = connectedTo.iterator();
 			List<EventStream> incomingStreams = new ArrayList<>();
 			while(it.hasNext())
@@ -133,7 +135,7 @@ public class PipelineValidationHandler {
 				else
 				{
 					invocationGraphs.addAll(makeInvocationGraphs(element));
-					SEPAInvocationGraph ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+					SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
 					incomingStreams.add(ancestor.getOutputStream());
 				}			
 			}
@@ -146,12 +148,16 @@ public class PipelineValidationHandler {
 					asList(sepa.getEventStreams().get(1)
 							.getEventSchema()));
 			
-			groundingMatch = ConnectionValidator.validateGrounding(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
+			formatMatch = ConnectionValidator.validateTransportFormat(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
+			protocolMatch = ConnectionValidator.validateTransportProtocol(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
+			
 		}
 		if (!schemaMatch)
 			throw new NoMatchingSchemaException();
-		if (!groundingMatch)
-			throw new NoMatchingGroundingException();
+		if (!formatMatch)
+			throw new NoMatchingFormatException();
+		if (!protocolMatch)
+			throw new NoMatchingProtocolException();
 
 		return this;
 	}
@@ -185,7 +191,7 @@ public class PipelineValidationHandler {
 					
 					if (element instanceof SEPAClient) {
 						
-						SEPAInvocationGraph ancestor = (SEPAInvocationGraph) TreeUtils.findByDomId(
+						SepaInvocation ancestor = (SepaInvocation) TreeUtils.findByDomId(
 								connectedTo.get(i), invocationGraphs);
 					
 						currentStaticProperties = updateStaticProperties(currentStaticProperties, currentSEPA, ancestor.getOutputStream(), i);	
@@ -273,7 +279,7 @@ public class PipelineValidationHandler {
 
 			} else if (clientStaticProperty.getType() == StaticPropertyType.CUSTOM_OUTPUT)
 			{
-				SEPA convertedSepaElement = (SEPA) currentSEPA;
+				SepaDescription convertedSepaElement = (SepaDescription) currentSEPA;
 				if (convertedSepaElement.getOutputStrategies().get(0) instanceof CustomOutputStrategy)
 				{
 					List<Option> options = ((CheckboxInput) clientStaticProperty.getInput()).getOptions();
@@ -359,9 +365,9 @@ public class PipelineValidationHandler {
 		return new InvocationGraphBuilder(tree, true).buildGraph();
 	}
 	
-	private SEPAInvocationGraph findInvocationGraph(List<InvocableSEPAElement> graphs, String domId)
+	private SepaInvocation findInvocationGraph(List<InvocableSEPAElement> graphs, String domId)
 	{
-		return (SEPAInvocationGraph) TreeUtils.findByDomId(domId, invocationGraphs);
+		return (SepaInvocation) TreeUtils.findByDomId(domId, invocationGraphs);
 	}
 	
 	private <T> List<T> asList(T object)

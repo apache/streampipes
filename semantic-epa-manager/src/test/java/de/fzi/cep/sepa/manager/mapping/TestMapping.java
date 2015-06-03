@@ -15,8 +15,8 @@ import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
@@ -27,8 +27,8 @@ public class TestMapping {
 	public static void main(String[] args) throws Exception
 	{
 		StorageRequests requests = StorageManager.INSTANCE.getStorageAPI();
-		SEP sep = requests.getSEPById("http://localhost:8089/twitter");
-		SEPA sepa = requests.getSEPAById("http://localhost:8090/sepa/movement");
+		SepDescription sep = requests.getSEPById("http://localhost:8089/twitter");
+		SepaDescription sepa = requests.getSEPAById("http://localhost:8090/sepa/movement");
 		
 		SEPAClient sepaClient = ClientModelTransformer.toSEPAClientModel(sepa);
 		StreamClient streamClient = ClientModelTransformer.toStreamClientModel(sep, sep.getEventStreams().get(1));

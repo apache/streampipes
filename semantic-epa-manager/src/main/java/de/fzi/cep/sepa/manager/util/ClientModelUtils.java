@@ -13,8 +13,8 @@ import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 
@@ -106,12 +106,12 @@ public class ClientModelUtils {
 		throw new IllegalArgumentException();
 	}
 	
-	public static SEC transformAction(SEPAElement element)
+	public static SecDescription transformAction(SEPAElement element)
 	{
 		return ClientModelTransformer.fromSECClientModel(((ActionClient) element));
 	}
 	
-	public static SEPA transformSEPA(SEPAElement element)
+	public static SepaDescription transformSEPA(SEPAElement element)
 	{
 		return ClientModelTransformer.fromSEPAClientModel(((SEPAClient) element));
 	}

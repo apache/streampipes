@@ -21,8 +21,8 @@ import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPAInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
@@ -32,7 +32,7 @@ public class TestANDPipeline {
 	public static void main(String[] args) throws URISyntaxException
 	{
 		StorageRequests req = StorageManager.INSTANCE.getStorageAPI();
-		SEP sep = req.getSEPById("http://localhost:8089/twitter");
+		SepDescription sep = req.getSEPById("http://localhost:8089/twitter");
 		StreamClient stream1 = ClientModelTransformer.toStreamClientModel(sep, sep.getEventStreams().get(0));	
 		StreamClient stream2 = ClientModelTransformer.toStreamClientModel(sep, sep.getEventStreams().get(1));
 		

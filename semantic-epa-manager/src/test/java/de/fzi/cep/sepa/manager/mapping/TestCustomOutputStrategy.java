@@ -19,8 +19,8 @@ import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
@@ -31,9 +31,11 @@ public class TestCustomOutputStrategy {
 	public static void main(String[] args) throws NoValidConnectionException, Exception
 	{
 		StorageRequests requests = StorageManager.INSTANCE.getStorageAPI();
-		SEP sep = requests.getSEPById("http://localhost:8089/taxi");
-		SEPA sepa = requests.getSEPAById("http://localhost:8090/sepa/project");
-		SEPA sepa2 = requests.getSEPAById("http://localhost:8090/sepa/project");
+		SepDescription sep = requests.getSEPById("http://localhost:8089/taxi");
+		SepaDescription sepa = requests.getSEPAById("http://localhost:8090/sepa/project");
+		SepaDescription sepa2 = requests.getSEPAById("http://localhost:8090/sepa/project");
+		
+		System.out.println(Utils.getGson().toJson(sep));
 		
 		SEPAClient sepaClient = ClientModelTransformer.toSEPAClientModel(sepa);
 		sepaClient = updateSepaClient(sepaClient, sep.getEventStreams().get(0).getEventSchema().getEventProperties().get(0));

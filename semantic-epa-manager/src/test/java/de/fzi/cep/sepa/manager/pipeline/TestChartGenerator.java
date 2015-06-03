@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.impl.graph.SECInvocationGraph;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
 
