@@ -12,16 +12,16 @@ import com.rits.cloning.Cloner;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 
 public class InMemoryStorage implements StorageRequests {
 	
-	private Map<String, SEC> inMemorySECStorage;
-	private Map<String, SEP> inMemorySEPStorage;
-	private Map<String, SEPA> inMemorySEPAStorage;
+	private Map<String, SecDescription> inMemorySECStorage;
+	private Map<String, SepDescription> inMemorySEPStorage;
+	private Map<String, SepaDescription> inMemorySEPAStorage;
 	private Map<String, EventStream> inMemoryEventStreamStorage;
 	private StorageRequests sesameStorage;
 	private Cloner cloner;
@@ -47,19 +47,19 @@ public class InMemoryStorage implements StorageRequests {
 	
 	private void initializeSECStorage()	{
 		inMemorySECStorage.clear();
-		List<SEC> secs = sesameStorage.getAllSECs();
+		List<SecDescription> secs = sesameStorage.getAllSECs();
 		secs.forEach(sec -> inMemorySECStorage.put(sec.getRdfId().toString(), sec));
 	}
 	
 	private void initializeSEPAStorage() {
 		inMemorySEPAStorage.clear();
-		List<SEPA> sepas = sesameStorage.getAllSEPAs();
+		List<SepaDescription> sepas = sesameStorage.getAllSEPAs();
 		sepas.forEach(sepa -> inMemorySEPAStorage.put(sepa.getRdfId().toString(), sepa));
 	}
 	
 	private void initializeSEPStorage() {
 		inMemorySEPStorage.clear();
-		List<SEP> seps = sesameStorage.getAllSEPs();
+		List<SepDescription> seps = sesameStorage.getAllSEPs();
 		seps.forEach(sep -> inMemorySEPStorage.put(sep.getRdfId().toString(), sep));
 		seps.forEach(sep -> sep.getEventStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getRdfId().toString(), eventStream)));
 	}
@@ -70,7 +70,7 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public boolean storeSEP(SEP sep) {
+	public boolean storeSEP(SepDescription sep) {
 		boolean success = sesameStorage.storeSEP(sep);
 		initializeSEPStorage();
 		return success;
@@ -84,7 +84,7 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public boolean storeSEPA(SEPA sepa) {
+	public boolean storeSEPA(SepaDescription sepa) {
 		boolean success = sesameStorage.storeSEPA(sepa);
 		initializeSEPAStorage();
 		return success;
@@ -98,49 +98,49 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public SEP getSEPById(URI rdfId) {
+	public SepDescription getSEPById(URI rdfId) {
 		return cloner.deepClone(inMemorySEPStorage.get(rdfId.toString()));
 	}
 
 	@Override
-	public SEP getSEPById(String rdfId) throws URISyntaxException {
+	public SepDescription getSEPById(String rdfId) throws URISyntaxException {
 		return cloner.deepClone(inMemorySEPStorage.get(rdfId));
 	}
 
 	@Override
-	public SEPA getSEPAById(String rdfId) throws URISyntaxException {
+	public SepaDescription getSEPAById(String rdfId) throws URISyntaxException {
 		return cloner.deepClone(inMemorySEPAStorage.get(rdfId));
 	}
 
 	@Override
-	public SEPA getSEPAById(URI rdfId) {
+	public SepaDescription getSEPAById(URI rdfId) {
 		return cloner.deepClone(inMemorySEPAStorage.get(rdfId.toString()));
 	}
 
 	@Override
-	public SEC getSECById(String rdfId) throws URISyntaxException {
+	public SecDescription getSECById(String rdfId) throws URISyntaxException {
 		return cloner.deepClone(inMemorySECStorage.get(rdfId));
 	}
 
 	@Override
-	public SEC getSECById(URI rdfId) {
+	public SecDescription getSECById(URI rdfId) {
 		return cloner.deepClone(inMemorySECStorage.get(rdfId.toString()));
 	}
 
 	@Override
-	public List<SEP> getAllSEPs() {
-		return new ArrayList<SEP>(inMemorySEPStorage.values());
+	public List<SepDescription> getAllSEPs() {
+		return new ArrayList<SepDescription>(inMemorySEPStorage.values());
 	}
 
 	@Override
-	public List<SEPA> getAllSEPAs() {
-		return new ArrayList<SEPA>(inMemorySEPAStorage.values());
+	public List<SepaDescription> getAllSEPAs() {
+		return new ArrayList<SepaDescription>(inMemorySEPAStorage.values());
 	}
 
 	@Override
-	public List<SEP> getSEPsByDomain(String domain) {
-		List<SEP> result = new ArrayList<>();
-		for(SEP sep : getAllSEPs())
+	public List<SepDescription> getSEPsByDomain(String domain) {
+		List<SepDescription> result = new ArrayList<>();
+		for(SepDescription sep : getAllSEPs())
 		{
 			if (sep.getDomains().contains(domain)) result.add(cloner.deepClone(sep));
 		}
@@ -148,9 +148,9 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public List<SEPA> getSEPAsByDomain(String domain) {
-		List<SEPA> result = new ArrayList<>();
-		for(SEPA sepa : getAllSEPAs())
+	public List<SepaDescription> getSEPAsByDomain(String domain) {
+		List<SepaDescription> result = new ArrayList<>();
+		for(SepaDescription sepa : getAllSEPAs())
 		{
 			if (sepa.getDomains().contains(domain)) result.add(cloner.deepClone(sepa));
 		}
@@ -158,7 +158,7 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public boolean deleteSEP(SEP sep) {
+	public boolean deleteSEP(SepDescription sep) {
 		boolean success = sesameStorage.deleteSEP(sep);
 		initializeSEPStorage();
 		return success;
@@ -172,7 +172,7 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public boolean deleteSEPA(SEPA sepa) {
+	public boolean deleteSEPA(SepaDescription sepa) {
 		boolean success = sesameStorage.deleteSEPA(sepa);
 		initializeSEPAStorage();
 		return success;
@@ -186,58 +186,58 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
-	public boolean exists(SEP sep) {
+	public boolean exists(SepDescription sep) {
 		return inMemorySEPStorage.containsKey(sep.getRdfId().toString());
 	}
 
 	@Override
-	public boolean exists(SEPA sepa) {
+	public boolean exists(SepaDescription sepa) {
 		return inMemorySEPAStorage.containsKey(sepa.getRdfId().toString());
 	}
 
 	@Override
-	public boolean update(SEP sep) {
+	public boolean update(SepDescription sep) {
 		boolean success = sesameStorage.update(sep);
 		initializeSEPStorage();
 		return success;
 	}
 
 	@Override
-	public boolean update(SEPA sepa) {
+	public boolean update(SepaDescription sepa) {
 		boolean success = sesameStorage.update(sepa);
 		initializeSEPAStorage();
 		return success;
 	}
 
 	@Override
-	public boolean exists(SEC sec) {
+	public boolean exists(SecDescription sec) {
 		return inMemorySECStorage.containsKey(sec.getRdfId().toString());
 	}
 
 	@Override
-	public boolean update(SEC sec) {
+	public boolean update(SecDescription sec) {
 		boolean success = sesameStorage.update(sec);
 		initializeSECStorage();
 		return success;
 	}
 
 	@Override
-	public boolean deleteSEC(SEC sec) {
+	public boolean deleteSEC(SecDescription sec) {
 		boolean success = sesameStorage.deleteSEC(sec);
 		initializeSECStorage();
 		return success;
 	}
 
 	@Override
-	public boolean storeSEC(SEC sec) {
+	public boolean storeSEC(SecDescription sec) {
 		boolean success = sesameStorage.storeSEC(sec);
 		initializeSECStorage();
 		return success;
 	}
 
 	@Override
-	public List<SEC> getAllSECs() {
-		return new ArrayList<SEC>(inMemorySECStorage.values());
+	public List<SecDescription> getAllSECs() {
+		return new ArrayList<SecDescription>(inMemorySECStorage.values());
 	}
 
 	@Override

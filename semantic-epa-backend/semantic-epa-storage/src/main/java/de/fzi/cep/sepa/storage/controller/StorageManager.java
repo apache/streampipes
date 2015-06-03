@@ -20,7 +20,7 @@ import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;

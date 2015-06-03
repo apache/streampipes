@@ -17,9 +17,9 @@ import com.clarkparsia.empire.impl.RdfQuery;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
@@ -39,16 +39,16 @@ public class SesameStorageRequests implements StorageRequests {
 	//TODO: exception handling
 	
 	@Override
-	public boolean storeSEP(SEP sep) {
+	public boolean storeSEP(SepDescription sep) {
 		entityManager.persist(sep);
 		return true;
 	}
 
 	@Override
 	public boolean storeSEP(String jsonld) {
-		SEP sep;
+		SepDescription sep;
 		try {
-			sep = Transformer.fromJsonLd(SEP.class, jsonld);
+			sep = Transformer.fromJsonLd(SepDescription.class, jsonld);
 			return storeSEP(sep);
 		} catch (RDFParseException e) {
 			// TODO Auto-generated catch block
@@ -67,16 +67,16 @@ public class SesameStorageRequests implements StorageRequests {
 	}
 
 	@Override
-	public boolean storeSEPA(SEPA sepa) {
+	public boolean storeSEPA(SepaDescription sepa) {
 		entityManager.persist(sepa);
 		return true;
 	}
 
 	@Override
 	public boolean storeSEPA(String jsonld) {
-		SEPA sepa;
+		SepaDescription sepa;
 		try {
-			sepa = Transformer.fromJsonLd(SEPA.class, jsonld);
+			sepa = Transformer.fromJsonLd(SepaDescription.class, jsonld);
 			return storeSEPA(sepa);
 		} catch (RDFParseException e) {
 			// TODO Auto-generated catch block
@@ -95,33 +95,33 @@ public class SesameStorageRequests implements StorageRequests {
 	}
 
 	@Override
-	public SEP getSEPById(URI rdfId) {
-		return entityManager.find(SEP.class, rdfId);
+	public SepDescription getSEPById(URI rdfId) {
+		return entityManager.find(SepDescription.class, rdfId);
 	}
 
 	@Override
-	public SEP getSEPById(String rdfId) throws URISyntaxException {
+	public SepDescription getSEPById(String rdfId) throws URISyntaxException {
 		return getSEPById(new URI(rdfId));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SEP> getAllSEPs() {
+	public List<SepDescription> getAllSEPs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPQuery());
-		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEP.class);
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SepDescription.class);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SEPA> getAllSEPAs() {
+	public List<SepaDescription> getAllSEPAs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSEPAQuery());
-		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEPA.class);
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SepaDescription.class);
 		return query.getResultList();
 	}
 
 	@Override
-	public boolean deleteSEP(SEP sep) {
+	public boolean deleteSEP(SepDescription sep) {
 		entityManager.remove(sep);
 		
 		return true;
@@ -129,112 +129,112 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean deleteSEP(String rdfId) {
-		SEP sep = entityManager.find(SEP.class, rdfId);
+		SepDescription sep = entityManager.find(SepDescription.class, rdfId);
 		entityManager.remove(sep);
 		return true;
 	}
 
 	@Override
-	public boolean deleteSEPA(SEPA sepa) {
+	public boolean deleteSEPA(SepaDescription sepa) {
 		entityManager.remove(sepa);
 		return true;
 	}
 
 	@Override
 	public boolean deleteSEPA(String rdfId) {
-		SEPA sepa = entityManager.find(SEPA.class, rdfId);
+		SepaDescription sepa = entityManager.find(SepaDescription.class, rdfId);
 		return deleteSEPA(sepa);
 	}
 
 	@Override
-	public boolean exists(SEP sep) {
-		SEP storedSEP = entityManager.find(SEP.class, sep.getRdfId());
+	public boolean exists(SepDescription sep) {
+		SepDescription storedSEP = entityManager.find(SepDescription.class, sep.getRdfId());
 		return storedSEP != null ? true : false;
 	}
 
 	@Override
-	public boolean exists(SEPA sepa) {
-		SEPA storedSEPA = entityManager.find(SEPA.class, sepa.getRdfId());
+	public boolean exists(SepaDescription sepa) {
+		SepaDescription storedSEPA = entityManager.find(SepaDescription.class, sepa.getRdfId());
 		return storedSEPA != null ? true : false;
 	}
 
 	@Override
-	public boolean update(SEP sep) {
+	public boolean update(SepDescription sep) {
 		return deleteSEP(sep) && storeSEP(sep);
 	}
 
 	@Override
-	public boolean update(SEPA sepa) {
+	public boolean update(SepaDescription sepa) {
 		return deleteSEPA(sepa) && storeSEPA(sepa);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SEP> getSEPsByDomain(String domain) {
+	public List<SepDescription> getSEPsByDomain(String domain) {
 		Query query = entityManager.createQuery(QueryBuilder.buildSEPByDomainQuery(domain));
-		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEP.class);
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SepDescription.class);
 		System.out.println(query.toString());
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SEPA> getSEPAsByDomain(String domain) {
+	public List<SepaDescription> getSEPAsByDomain(String domain) {
 		Query query = entityManager.createQuery(QueryBuilder.buildSEPAByDomainQuery(domain));
-		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEPA.class);
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SepaDescription.class);
 		System.out.println(query.toString());
 		return query.getResultList();
 	}
 
 	@Override
-	public SEPA getSEPAById(String rdfId) throws URISyntaxException {
+	public SepaDescription getSEPAById(String rdfId) throws URISyntaxException {
 		return getSEPAById(new URI(rdfId));
 	}
 
 	@Override
-	public SEPA getSEPAById(URI rdfId) {
-		return entityManager.find(SEPA.class, rdfId);
+	public SepaDescription getSEPAById(URI rdfId) {
+		return entityManager.find(SepaDescription.class, rdfId);
 	}
 
 	@Override
-	public SEC getSECById(String rdfId) throws URISyntaxException {
+	public SecDescription getSECById(String rdfId) throws URISyntaxException {
 		return getSECById(new URI(rdfId));
 	}
 
 	@Override
-	public SEC getSECById(URI rdfId) {
-		return entityManager.find(SEC.class, rdfId);
+	public SecDescription getSECById(URI rdfId) {
+		return entityManager.find(SecDescription.class, rdfId);
 	}
 
 	@Override
-	public boolean exists(SEC sec) {
-		SEC storedSEC = entityManager.find(SEC.class, sec.getRdfId());
+	public boolean exists(SecDescription sec) {
+		SecDescription storedSEC = entityManager.find(SecDescription.class, sec.getRdfId());
 		return storedSEC != null ? true : false;
 	}
 
 	@Override
-	public boolean update(SEC sec) {
+	public boolean update(SecDescription sec) {
 		return deleteSEC(sec) && storeSEC(sec);
 		
 	}
 
 	@Override
-	public boolean deleteSEC(SEC sec) {
+	public boolean deleteSEC(SecDescription sec) {
 		entityManager.remove(sec);
 		return true;
 	}
 
 	@Override
-	public boolean storeSEC(SEC sec) {
+	public boolean storeSEC(SecDescription sec) {
 		entityManager.persist(sec);
 		return true;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SEC> getAllSECs() {
+	public List<SecDescription> getAllSECs() {
 		Query query = entityManager.createQuery(QueryBuilder.buildListSECQuery());
-		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SEC.class);
+		query.setHint(RdfQuery.HINT_ENTITY_CLASS, SecDescription.class);
 		return query.getResultList();
 	}
 

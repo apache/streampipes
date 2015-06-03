@@ -27,9 +27,9 @@ import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SEC;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -41,26 +41,26 @@ public class ClientModelTransformer {
 	 * @return
 	 */
 	
-	public static List<StreamClient> toStreamClientModel(SEP sep)
+	public static List<StreamClient> toStreamClientModel(SepDescription sep)
 	{
 		List<StreamClient> result = new ArrayList<StreamClient>();
 		sep.getEventStreams().forEach((stream) -> result.add(toStreamClientModel(sep, stream)));
 		return result;
 	}
 
-	public static List<StreamClient> toStreamClientModel(List<SEP> seps)
+	public static List<StreamClient> toStreamClientModel(List<SepDescription> seps)
 	{		
 		List<StreamClient> result = new ArrayList<StreamClient>();
 		seps.forEach((sep) -> result.addAll(toStreamClientModel(sep)));
 		return result;
 	}
 
-	public static SEP fromSourceClientModel(SourceClient client)
+	public static SepDescription fromSourceClientModel(SourceClient client)
 	{
 		return StorageManager.INSTANCE.getStorageAPI().getSEPById(URI.create(client.getElementId()));
 	}
 
-	public static SourceClient toSourceClientModel(SEP sep)
+	public static SourceClient toSourceClientModel(SepDescription sep)
 	{
 		SourceClient client = new SourceClient(sep.getName(), sep.getDescription(), sep.getDomains());
 		client.setIconUrl(sep.getIconUrl());
@@ -68,7 +68,7 @@ public class ClientModelTransformer {
 		return client;
 	}
 
-	public static List<SourceClient> toSourceClientModel(List<SEP> seps)
+	public static List<SourceClient> toSourceClientModel(List<SepDescription> seps)
 	{
 		List<SourceClient> result = new ArrayList<SourceClient>();
 		seps.forEach((sep) -> result.add(toSourceClientModel(sep)));
@@ -81,7 +81,7 @@ public class ClientModelTransformer {
 		return StorageManager.INSTANCE.getStorageAPI().getEventStreamById(client.getElementId());
 	}
 
-	public static StreamClient toStreamClientModel(SEP sep, EventStream stream)
+	public static StreamClient toStreamClientModel(SepDescription sep, EventStream stream)
 	{
 		StreamClient client = new StreamClient(stream.getName(), stream.getDescription(), sep.getRdfId().toString());
 		client.setIconUrl(stream.getIconUrl());
@@ -89,12 +89,12 @@ public class ClientModelTransformer {
 		return client;
 	}
 
-	public static SourceClient toSEPClientModel(SEP sep)
+	public static SourceClient toSEPClientModel(SepDescription sep)
 	{
 		return null;
 	}
 
-	public static SEPAClient toSEPAClientModel(SEPA sepa)
+	public static SEPAClient toSEPAClientModel(SepaDescription sepa)
 	{
 		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getDomains());
 		client.setInputNodes(sepa.getEventStreams().size());
@@ -133,9 +133,9 @@ public class ClientModelTransformer {
 	}
 
 
-	public static SEPA fromSEPAClientModel(SEPAClient sepaClient)
+	public static SepaDescription fromSEPAClientModel(SEPAClient sepaClient)
 	{
-		SEPA sepa = StorageManager.INSTANCE.getStorageAPI().getSEPAById(URI.create(sepaClient.getElementId()));
+		SepaDescription sepa = StorageManager.INSTANCE.getStorageAPI().getSEPAById(URI.create(sepaClient.getElementId()));
 			
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
 		sepa.setStaticProperties(convertStaticProperties(sepa, clientProperties));
@@ -187,12 +187,12 @@ public class ClientModelTransformer {
 		return sepa;
 	}
 	
-	private static List<StaticProperty> convertStaticProperties(SEC sec, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
+	private static List<StaticProperty> convertStaticProperties(SecDescription sec, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
 	{
 		return convertStaticProperties(sec.getStaticProperties(), clientProperties);
 	}
 	
-	private static List<StaticProperty> convertStaticProperties(SEPA sepa, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
+	private static List<StaticProperty> convertStaticProperties(SepaDescription sepa, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
 	{
 		return convertStaticProperties(sepa.getStaticProperties(), clientProperties);
 	}
@@ -305,10 +305,10 @@ public class ClientModelTransformer {
 		return p;
 	}
 
-	public static List<SEPAClient> toSEPAClientModel(List<SEPA> sepas)
+	public static List<SEPAClient> toSEPAClientModel(List<SepaDescription> sepas)
 	{
 		List<SEPAClient> result = new ArrayList<SEPAClient>();
-		for(SEPA sepa : sepas) result.add(toSEPAClientModel(sepa));
+		for(SepaDescription sepa : sepas) result.add(toSEPAClientModel(sepa));
 		return result;
 	}
 
@@ -385,14 +385,14 @@ public class ClientModelTransformer {
 		return clientProperty;
 	}
 
-	public static SEC fromSECClientModel(ActionClient element) {
-		SEC sec = StorageManager.INSTANCE.getStorageAPI().getSECById(URI.create(element.getElementId()));
+	public static SecDescription fromSECClientModel(ActionClient element) {
+		SecDescription sec = StorageManager.INSTANCE.getStorageAPI().getSECById(URI.create(element.getElementId()));
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = element.getStaticProperties();
 		sec.setStaticProperties(convertStaticProperties(sec, clientProperties));
 		return sec;
 	}
 	
-	public static ActionClient toSECClientModel(SEC sec)
+	public static ActionClient toSECClientModel(SecDescription sec)
 	{
 		ActionClient client = new ActionClient(sec.getName(), sec.getDescription());
 		client.setElementId(sec.getRdfId().toString());
@@ -402,9 +402,9 @@ public class ClientModelTransformer {
 		return client;
 	}
 
-	public static List<ActionClient> toActionClientModel(List<SEC> secs) {
+	public static List<ActionClient> toActionClientModel(List<SecDescription> secs) {
 		List<ActionClient> result = new ArrayList<ActionClient>();
-		for(SEC sec : secs)
+		for(SecDescription sec : secs)
 		{
 			result.add(toSECClientModel(sec));
 		}

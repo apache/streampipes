@@ -4,45 +4,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SEP;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
 
 public enum SEPAManager {
 	
 	INSTANCE;
 
-	List<SEPA> storedSEPAs;
-	List<SEP> storedSEPs;
+	List<SepaDescription> storedSEPAs;
+	List<SepDescription> storedSEPs;
 	List<EventStream> storedEventStreams;
 	
 	
 	SEPAManager()
 	{
-		this.storedSEPAs = new ArrayList<SEPA>();
-		this.storedSEPs = new ArrayList<SEP>();
+		this.storedSEPAs = new ArrayList<SepaDescription>();
+		this.storedSEPs = new ArrayList<SepDescription>();
 		this.storedEventStreams = new ArrayList<EventStream>();
 	}
 	
-	public List<SEPA> getStoredSEPAs() {
+	public List<SepaDescription> getStoredSEPAs() {
 		return storedSEPAs;
 	}
-	public void setStoredSEPAs(List<SEPA> storedSEPAs) {
+	public void setStoredSEPAs(List<SepaDescription> storedSEPAs) {
 		this.storedSEPAs = storedSEPAs;
 	}
-	public List<SEP> getStoredSEPs() {
+	public List<SepDescription> getStoredSEPs() {
 		return storedSEPs;
 	}
-	public void setStoredSEPs(List<SEP> storedSEPs) {
+	public void setStoredSEPs(List<SepDescription> storedSEPs) {
 		this.storedSEPs = storedSEPs;
 	}
 	
-	public boolean addSEPA(SEPA SEPA)
+	public boolean addSEPA(SepaDescription SEPA)
 	{
 		return storedSEPAs.add(SEPA);
 	}
 	
-	public boolean addSEP(SEP SEP)
+	public boolean addSEP(SepDescription SEP)
 	{
 		return storedSEPs.add(SEP);
 	}
@@ -55,10 +55,10 @@ public enum SEPAManager {
 		this.storedEventStreams = storedEventStreams;
 	}
 	
-	public List<SEP> getSEPById(String id)
+	public List<SepDescription> getSEPById(String id)
 	{
-		List<SEP> result = new ArrayList<SEP>();
-		for(SEP s : storedSEPs)
+		List<SepDescription> result = new ArrayList<SepDescription>();
+		for(SepDescription s : storedSEPs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);
@@ -66,10 +66,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SEPA> getSEPAById(String id)
+	public List<SepaDescription> getSEPAById(String id)
 	{
-		List<SEPA> result = new ArrayList<SEPA>();
-		for(SEPA s : storedSEPAs)
+		List<SepaDescription> result = new ArrayList<SepaDescription>();
+		for(SepaDescription s : storedSEPAs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);

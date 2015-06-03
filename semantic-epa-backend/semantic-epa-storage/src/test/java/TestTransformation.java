@@ -13,7 +13,7 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.graph.SEPA;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -21,14 +21,14 @@ public class TestTransformation {
 
 	public static void main(String[] args)
 	{
-		List<SEPA> sepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
+		List<SepaDescription> sepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
 		
 		Graph graph;
 		try {
 			graph = new JsonLdTransformer().toJsonLd(sepas.get(0));
 			System.out.println(Utils.asString(graph));
 			
-			SEPA sepa = new JsonLdTransformer().fromJsonLd(Utils.asString(graph), SEPA.class);
+			SepaDescription sepa = new JsonLdTransformer().fromJsonLd(Utils.asString(graph), SepaDescription.class);
 			System.out.println(sepa.getElementId());
 			
 		} catch (IllegalAccessException e) {
