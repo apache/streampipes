@@ -117,7 +117,6 @@ function getCoordinates(ui) {
 }
 
 function createNewAssemblyElement(json, coordinates) {
-    console.log(coordinates);
     var $newState = $('<span>')
         .data("JSON", $.extend(true, {}, json))
         .appendTo('#assembly');
@@ -306,7 +305,7 @@ function addElementToPartialPipeline(element, pipelinePart) {
 
 
     addToPipeline(element, pipelinePart);
-    if (jsPlumb.getConnections({target: element}) != null && jsPlumb.getConnections({target: element}) != undefined) {
+    if (jsPlumb.getConnections({target: element}) != null && jsPlumb.getConnections({target: element}) !== "undefined") {
         for (var i = 0, con; con = jsPlumb.getConnections({target: element})[i]; i++) {
             addElementToPartialPipeline(con.source, pipelinePart);
         }
@@ -419,7 +418,7 @@ function savePipelineName() {
         toastRightTop("error", "Please enter all parameters");
         return false;
     }
-    console.log(pipelineName);
+
     state.currentPipeline.name = pipelineName[0].value;
     state.currentPipeline.description = pipelineName[1].value;
 
@@ -585,8 +584,6 @@ function saveInStaticProperties(options) {
             case "CHECKBOX" :
                 for (var j = 0; j < state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++) {
                     if ($("#" + options[i].value + " #checkboxes-" + i + "-" + j).is(':checked')) {
-                        console.log("Val: " + options[i].value);
-                        console.log("checked");
                         state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
                     } else {
                         state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
@@ -610,7 +607,7 @@ function prepareCustomizeModal(element) {
 
     if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
         var staticPropertiesArray = element.data("JSON").staticProperties;
-        console.log(staticPropertiesArray);
+
         var textInputCount = 0;
         var radioInputCount = 0;
         var selectInputCount = 0;
@@ -675,10 +672,10 @@ function getRecommendations(partialPipeline) {
 
 
 function populateRecommendedList($element, recs) {
-    console.log(recs);
+
     var el;
     for (var i = 0; i < recs.length; i++) {
-        //console.log(el);
+
         el = recs[i];
         var recommendedElement = getElementByElementId(el.elementId);
         if (typeof recommendedElement !== "undefined") {
@@ -692,12 +689,10 @@ function populateRecommendedList($element, recs) {
             }).appendTo($('ul', $element));
             $('ul', $element).circleMenu('init');
         } else {
-            console.log(i)
+
         }
     }
-    $('.recommended-item').on('click', function (e) {
-        createAndConnect(this);
-    })
+
     initTooltips();
 }
 

@@ -125,13 +125,17 @@ jsPlumb.ready(function (e) {
 
     $('a[data-toggle="tab"]')
         .on('hide.bs.tab', function (e) {
-            console.log("hide");
             clearTab(e);
         })
         .on('show.bs.tab', function (e) {
             toTab(e);
         });
 
+    $('#assembly').on('click',".recommended-item", function (e) {
+        console.log(e);
+        e.stopPropagation();
+        createAndConnect(this);
+    })
 
 });
 
@@ -506,19 +510,19 @@ function ContextMenuClickHandler(type) {
                 $invokedOn.remove();
 
                 if (!$('#assembly').children().hasClass('stream')) {
-                    $('#sepas').children().hide();
-                    $('#sepas').fadeTo(300, 0);
-                    $('#sepaCollapse').attr("data-toggle", "");
-                    $('#sepaCollapse').addClass("disabled");
-                    $('#actionCollapse').attr("data-toggle", "");
-                    $('#actionCollapse').addClass("disabled");
+                    $('#sepas').children().hide().fadeTo(300, 0);
+                    //$('#sepas').fadeTo(300, 0);
+                    $('#sepaCollapse').attr("data-toggle", "").addClass("disabled");
+                    //$('#sepaCollapse').addClass("disabled");
+                    $('#actionCollapse').attr("data-toggle", "").addClass("disabled");
+                    //$('#actionCollapse').addClass("disabled");
                     $('#collapseOne').collapse('show');
 
                 } else if (!$('#assembly').children().hasClass('sepa')) {
-                    $('#actions').children().hide();
-                    $('#actions').fadeTo(300, 0);
-                    $('#actionCollapse').attr("data-toggle", "");
-                    $('#actionCollapse').addClass("disabled");
+                    $('#actions').children().hide().fadeTo(300, 0);
+                    //$('#actions').fadeTo(300, 0);
+                    $('#actionCollapse').attr("data-toggle", "").addClass("disabled");
+                    //$('#actionCollapse').addClass("disabled");
                     $('#collapseTwo').collapse('show');
                 } else if (!$('#assembly').children().hasClass('action')) {
                     $('#collapseThree').collapse('show');
@@ -1073,7 +1077,7 @@ function getParentWithJSONData($element) { //TODO umschreiben auf $.parents
 }
 
 function prepareJsonLDModal(json){
-    console.log(json);
+
     var path ="";
     if (state.currentElement.hasClass("stream")){
         path = "streams/";
@@ -1086,7 +1090,6 @@ function prepareJsonLDModal(json){
     //var url = "http://localhost:8080/semantic-epa-backend/api/actions/http%3A%2F%2Flocalhost%3A8091%2Ftable/jsonld";
 
     $.ajax({url : url, type : "GET", success : function(data){
-        console.log(data);
         $("#modal-jsonld").text(data);
     }, error : function(data){
         $("#modal-jsonld").text("");
