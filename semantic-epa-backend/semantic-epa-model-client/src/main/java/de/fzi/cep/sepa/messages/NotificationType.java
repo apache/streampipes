@@ -11,8 +11,10 @@ public enum NotificationType {
 	PIPELINE_STOP_SUCCESS("Stopped", "Pipeline stopped successfully"),
 	NO_VALID_CONNECTION("Not a valid connection", "Expected input event type does not match computed output type"),
 	NO_SEPA_FOUND("No element found", "Could not find any element that matches the output of this element."), 
-	NO_MATCHING_GROUNDING_CONNECTION("Not a valid connection", "No supported input grounding matches provided output grounding");
+	NO_MATCHING_FORMAT_CONNECTION("Not a valid connection", "No supported input format matches produced output format"),
+	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol");
 
+	
 	private final String title;
 	private final String description;
 	

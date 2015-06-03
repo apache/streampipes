@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.model.client.ontology;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.Configuration;
+import de.fzi.cep.sepa.commons.config.Configuration;
 
 public class OntologyNode {
 
