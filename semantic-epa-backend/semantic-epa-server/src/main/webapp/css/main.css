@@ -117,7 +117,7 @@ body {
 	margin-left: 14%;
 	position: absolute;	
 }
-.container-fluid {
+.navbar .container-fluid  {
 	padding-right: 5%;
 	padding-left: 5%;
 }

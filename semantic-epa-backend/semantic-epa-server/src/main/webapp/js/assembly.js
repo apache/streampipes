@@ -136,6 +136,11 @@ function createNewAssemblyElement(json, coordinates) {
             } else {
                 $('#customize, #division ').show();
             }
+            if ($(this).hasClass('ui-selected') && isConnected(this)){
+                $('#blockButton, #division1 ').show();
+            } else {
+                $('#blockButton, #division1 ').hide();
+            }
             $('#assemblyContextMenu')
                 .data("invokedOn", $(e.target))
                 .show()
@@ -305,7 +310,7 @@ function addElementToPartialPipeline(element, pipelinePart) {
 
 
     addToPipeline(element, pipelinePart);
-    if (jsPlumb.getConnections({target: element}) != null && jsPlumb.getConnections({target: element}) !== "undefined") {
+    if (jsPlumb.getConnections({target: element}) != null && jsPlumb.getConnections({target: element}) !== "undefined" ) {
         for (var i = 0, con; con = jsPlumb.getConnections({target: element})[i]; i++) {
             addElementToPartialPipeline(con.source, pipelinePart);
         }
