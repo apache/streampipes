@@ -12,7 +12,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.JsonSyntaxException;
 
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingGroundingException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.manager.operations.Operations;
@@ -119,8 +120,10 @@ public class Pipeline extends AbstractRestInterface {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch(NoMatchingSchemaException e) {
 			return constructErrorMessage(new Notification(NotificationType.NO_VALID_CONNECTION.title(), NotificationType.NO_VALID_CONNECTION.description(), e.getMessage()));
-		} catch(NoMatchingGroundingException e) {
-			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_GROUNDING_CONNECTION.title(), NotificationType.NO_MATCHING_GROUNDING_CONNECTION.description(), e.getMessage()));
+		} catch(NoMatchingFormatException e) {
+			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION.title(), NotificationType.NO_MATCHING_FORMAT_CONNECTION.description(), e.getMessage()));
+		} catch(NoMatchingProtocolException e) {
+			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
