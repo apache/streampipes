@@ -117,7 +117,10 @@ body {
 	margin-left: 14%;
 	position: absolute;	
 }
-
+.container-fluid {
+	padding-right: 5%;
+	padding-left: 5%;
+}
 .canvas{
 	position: relative;
 	overflow: visible;
