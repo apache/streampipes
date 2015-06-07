@@ -29,7 +29,7 @@ public class Utils {
 	
 	public static CouchDbClient getCouchDBClient()
 	{
-		CouchDbClient dbClient = new CouchDbClient();
+		CouchDbClient dbClient = new CouchDbClient("couchdb-pipeline.properties");
 		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
 		return dbClient;
 	}

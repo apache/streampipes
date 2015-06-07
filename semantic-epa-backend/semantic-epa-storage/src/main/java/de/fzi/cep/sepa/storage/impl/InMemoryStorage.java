@@ -150,9 +150,12 @@ public class InMemoryStorage implements StorageRequests {
 	@Override
 	public List<SepaDescription> getSEPAsByDomain(String domain) {
 		List<SepaDescription> result = new ArrayList<>();
+
 		for(SepaDescription sepa : getAllSEPAs())
 		{
-			if (sepa.getDomains().contains(domain)) result.add(cloner.deepClone(sepa));
+			if (sepa.getDomains() != null) {
+				if (sepa.getDomains().contains(domain)) result.add(cloner.deepClone(sepa));
+			}
 		}
 		return result;
 	}

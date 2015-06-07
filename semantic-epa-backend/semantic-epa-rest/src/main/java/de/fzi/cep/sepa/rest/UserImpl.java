@@ -34,13 +34,13 @@ public class UserImpl extends AbstractRestInterface implements User{
     Logger LOG = LoggerFactory.getLogger(UserImpl.class);
 
     StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
+    CouchDbClient dbClient = new CouchDbClient("couchdb-users.propertie");
     String username;
 
 
     List<String> sources;
     List<String> actions;
     List<String> streams;
-
 
 
     @Override
@@ -50,7 +50,6 @@ public class UserImpl extends AbstractRestInterface implements User{
      * Store user in database.
      */
     public String doRegisterUser(@FormParam("username") String username, @FormParam("password") String password) {
-        CouchDbClient dbClient = new CouchDbClient();
 
         if (dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class).size() != 0) {
             return "Username already exists. Sorry choose another one";
@@ -59,6 +58,8 @@ public class UserImpl extends AbstractRestInterface implements User{
         JsonObject user =  new JsonObject();
         user.addProperty("username", username);
         user.addProperty("password", password);
+        //TODO change to real role management
+        user.addProperty("roles", "user");
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
@@ -68,7 +69,6 @@ public class UserImpl extends AbstractRestInterface implements User{
             e.printStackTrace();
         }
         dbClient.save(user);
-        dbClient.shutdown();
 
         return  "Registered user";
     }
@@ -82,7 +82,6 @@ public class UserImpl extends AbstractRestInterface implements User{
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) return "Already logged in. Please log out to change user";
 
-        CouchDbClient dbClient = new CouchDbClient();
         JsonObject user =  new JsonObject();
         user.addProperty("username", username);
         user.addProperty("password", password);
@@ -95,8 +94,6 @@ public class UserImpl extends AbstractRestInterface implements User{
             e.printStackTrace();
         }
 
-        //dbClient.save(user);
-        dbClient.shutdown();
 
         this.username = username;
 
@@ -125,8 +122,6 @@ public class UserImpl extends AbstractRestInterface implements User{
     @GET
     public String getAllSources() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
-            CouchDbClient dbClient = new CouchDbClient();
-
             return "Secret sources";
         }
         return "Leider keinen Zugriff";
