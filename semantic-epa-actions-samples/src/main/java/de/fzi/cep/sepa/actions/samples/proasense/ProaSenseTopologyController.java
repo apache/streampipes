@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -48,7 +49,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 
 	@Override
 	public String invokeRuntime(SecInvocation sec) {
-		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getUri() + ":" +sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getPort();
+		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 	
 		consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);

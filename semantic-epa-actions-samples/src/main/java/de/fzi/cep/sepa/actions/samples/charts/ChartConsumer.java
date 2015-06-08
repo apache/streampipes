@@ -67,7 +67,7 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public String invokeRuntime(SecInvocation graph) {
-		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getUri().replace("tcp",  "ws") + ":61614";
+		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 		
 		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
 		String title = ((FreeTextStaticProperty) (SepaUtils

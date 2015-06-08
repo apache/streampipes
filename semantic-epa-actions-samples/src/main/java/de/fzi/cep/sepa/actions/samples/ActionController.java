@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 
@@ -14,7 +15,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String createWebsocketUri(SecInvocation sec)
 	{
-		return getEventGrounding(sec).getTransportProtocol().getUri().replace("tcp",  "ws") + ":61614";
+		return getEventGrounding(sec).getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 	}
 	
 	protected String extractTopic(SecInvocation sec)
@@ -24,7 +25,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String createJmsUri(SecInvocation sec)
 	{
-		return getEventGrounding(sec).getTransportProtocol().getUri() + ":" +getEventGrounding(sec).getTransportProtocol().getPort();
+		return getEventGrounding(sec).getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)getEventGrounding(sec).getTransportProtocol()).getPort();
 	}
 	
 	private EventGrounding getEventGrounding(SecInvocation sec)

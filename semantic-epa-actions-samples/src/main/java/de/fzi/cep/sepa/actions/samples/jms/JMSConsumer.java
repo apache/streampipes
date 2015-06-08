@@ -15,6 +15,7 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -62,7 +63,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 	@Override
 	public String invokeRuntime(SecInvocation sec) {
 		System.out.println("invoke");
-		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getUri() + ":" +sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getPort();
+		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
 		String destinationUri = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "uri")).getValue();
