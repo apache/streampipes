@@ -28,6 +28,7 @@
 	<script type="text/javascript" src="js/utilObjects.js"></script>
 	<script type="text/javascript" src="js/ContextMenuHandler.js"></script>
 	<script type="text/javascript" src="js/Block.js"></script>
+	<script type="text/javascript" src="js/auth.js"></script>
 
 	<link rel="stylesheet" href="css/jsplumb.css"/>
 	<link rel="stylesheet" href="css/toastr.css"/>
@@ -120,29 +121,18 @@
 				</li>
 
 				<li id="login" class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a>
-					<ul id="login-form-dropdown" class="dropdown-menu" role="menu">
-						<form id="login-form">
-							<div class="form-group">
-								<label for="exampleInputEmail1">Email address</label>
-								<input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputPassword1">Password</label>
-								<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-							</div>
-
-						</form>
-						<button type="submit" class="btn btn-default pull-right" onclick="attemptLogin()">
-							Submit
-						</button>
-
-						<button type="submit" class="btn btn-default pull-right" onclick="registerUser()">
-							Register
-						</button>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><div id="login-label">Login</div> <b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="#" onclick="attemptLogout()">Logout</a>
+						</li>
+					</ul>
 
 					</ul>
 				</li>
+				<script type="text/javascript">
+					getPrincipalName();
+				</script>
 			</ul>
 
 		</div><!-- /.navbar-collapse -->

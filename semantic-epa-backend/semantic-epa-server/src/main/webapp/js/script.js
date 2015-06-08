@@ -46,11 +46,11 @@ function init(type) {
             state.sources = data;
             initSources(data);
         },
-        error: function (data) {
-            displayErrors(data);
-        }
-
-
+		statusCode: {
+			403: function() {
+			  window.location="login.html";
+			}
+		}
     });
 
 
@@ -1037,43 +1037,7 @@ function openJsonLDModal(){
     $("#jsonldModal").modal('show');
 }
 
-function attemptLogin() {
-    console.log($("#login-form").serializeArray());
-    $.ajax({
-        url: standardUrl + "user/login",
-        data: "username="+$('#exampleInputEmail1').val()+"&password="+$('#exampleInputPassword1').val(),
-        type: 'POST',
-        success: function(ret) {
-            console.log(ret);
-        }
-    })
-}
 
-function registerUser() {
-    console.log($("#login-form").serializeArray());
-    $.ajax({
-        url: standardUrl + "user/register",
-        data: "username="+$('#exampleInputEmail1').val()+"&password="+$('#exampleInputPassword1').val(),
-        type: 'POST',
-        success: function(ret) {
-            console.log(ret); }
-    })
-}
-
-//See: https://stackoverflow.com/questions/14220321/how-to-return-the-response-from-an-asynchronous-call
-function isUserAuthenticated() {
-    $.ajax({
-        url: standardUrl + "user/authc",
-        type: 'GET',
-        success: function(ret) {
-            if (ret == "true)") {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    })
-}
 
 function showTutorial() {
     $("#tutorialModal").modal('show');
