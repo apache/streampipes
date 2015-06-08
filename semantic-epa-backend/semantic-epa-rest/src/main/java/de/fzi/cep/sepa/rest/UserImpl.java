@@ -1,19 +1,27 @@
 package de.fzi.cep.sepa.rest;
 
+import de.fzi.cep.sepa.messages.ErrorMessage;
+import de.fzi.cep.sepa.messages.Notification;
+import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.User;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
 import org.lightcouch.CouchDbClient;
+
 import com.google.gson.JsonObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +29,15 @@ import java.security.MessageDigest;
 
 
 
+
+
+
+
+
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
 import java.util.List;
 
 /**
@@ -34,7 +50,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     Logger LOG = LoggerFactory.getLogger(UserImpl.class);
 
     StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
-    CouchDbClient dbClient = new CouchDbClient("couchdb-users.propertie");
+    CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
     String username;
 
 
@@ -46,6 +62,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Override
     @POST
     @Path("/register")
+    @Produces(MediaType.APPLICATION_JSON)
     /**
      * Store user in database.
      */
@@ -67,14 +84,16 @@ public class UserImpl extends AbstractRestInterface implements User{
             user.addProperty("hashedPassword", new String(input));
         } catch (Exception e) {
             e.printStackTrace();
+            return toJson(new ErrorMessage(NotificationType.REGISTRATION_FAILED.uiNotification()));
         }
         dbClient.save(user);
 
-        return  "Registered user";
+        return  toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     }
 
     @Override
     @Path("/login")
+    @Produces(MediaType.APPLICATION_JSON)
     @POST
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
         LOG.info(SecurityUtils.getSecurityManager().toString());
@@ -103,18 +122,19 @@ public class UserImpl extends AbstractRestInterface implements User{
             subject.login(token);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return "Could not login. Wrong password or username";
+            return toJson(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
         }
-        return "Successfully logged in" + username;
+        return toJson(new SuccessMessage(NotificationType.LOGIN_SUCCESS.uiNotification()));
     }
 
     @Override
     @GET
     @Path("/logout")
+    @Produces(MediaType.APPLICATION_JSON)
     public String doLogoutUser() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return "Logged out";
+        return toJson(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
     }
 
     @Override
@@ -163,11 +183,14 @@ public class UserImpl extends AbstractRestInterface implements User{
 
     @GET
     @Path("/authc")
+    @Produces(MediaType.APPLICATION_JSON)
     public String isAuthenticated() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
-            return SecurityUtils.getSubject().getPrincipal().toString();
+            //return SecurityUtils.getSubject().getPrincipal().toString();
+        	Notification notification = new Notification(SecurityUtils.getSubject().getPrincipal().toString(), "");
+        	return toJson(new SuccessMessage(notification));
         }
-        return "false";
+        return toJson(new ErrorMessage(NotificationType.NOT_LOGGED_IN.uiNotification()));
         //return Boolean.toString(SecurityUtils.getSubject().isAuthenticated());
     }
 
