@@ -12,9 +12,16 @@ public enum NotificationType {
 	NO_VALID_CONNECTION("Not a valid connection", "Expected input event type does not match computed output type"),
 	NO_SEPA_FOUND("No element found", "Could not find any element that matches the output of this element."), 
 	NO_MATCHING_FORMAT_CONNECTION("Not a valid connection", "No supported input format matches produced output format"),
-	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol");
+	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol"),
+	LOGIN_FAILED("Login failed", "Please re-enter your password"),
+	LOGIN_SUCCESS("Login success", ""),
+	REGISTRATION_FAILED("Registration failed", "Please re-enter your password"),
+	REGISTRATION_SUCCESS("Registered user successfully", ""),
+	ALREADY_LOGGED_IN("User already logged in", ""),
+	NOT_LOGGED_IN("User not logged in", ""),
+	LOGOUT_SUCCESS("Successfully logged out", "");
 
-	
+
 	private final String title;
 	private final String description;
 	
