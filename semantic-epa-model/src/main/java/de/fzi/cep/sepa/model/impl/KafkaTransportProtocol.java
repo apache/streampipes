@@ -18,11 +18,15 @@ public class KafkaTransportProtocol extends TransportProtocol {
 	@RdfProperty("sepa:zookeeperPort")
 	private int zookeeperPort;
 	
+	@RdfProperty("sepa:kafkaPort")
+	private int kafkaPort;
+	
 	public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost, int zookeeperPort)
 	{
-		super(kafkaHost, kafkaPort, topic);
+		super(kafkaHost, topic);
 		this.zookeeperHost = zookeeperHost;
 		this.zookeeperPort = zookeeperPort;
+		this.kafkaPort = kafkaPort;
 	}
 	
 	public KafkaTransportProtocol()
@@ -44,6 +48,14 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
 	public void setZookeeperPort(int zookeeperPort) {
 		this.zookeeperPort = zookeeperPort;
+	}
+
+	public int getKafkaPort() {
+		return kafkaPort;
+	}
+
+	public void setKafkaPort(int kafkaPort) {
+		this.kafkaPort = kafkaPort;
 	}
 	
 }

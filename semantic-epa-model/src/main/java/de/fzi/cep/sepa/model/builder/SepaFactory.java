@@ -1,11 +1,19 @@
-package de.fzi.cep.sepa.model.impl;
+package de.fzi.cep.sepa.model.builder;
 
 import java.net.URI;
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
-public class SEPAFactory {
+public class SepaFactory {
 
 	public static SepaDescription createSEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
 	{
@@ -27,10 +35,10 @@ public class SEPAFactory {
 		return new EventPropertyPrimitive(propertyType, name, measurementUnit, subClassOf);
 	}
 	
-	public static StaticProperty createStaticProperty(String name, String description, StaticPropertytype type)
+	public static StaticProperty createStaticProperty(String name, String description, StaticPropertyType type)
 	{
-		if (type.equals(StaticPropertytype.Any)) return new AnyStaticProperty(name, description);
-		else if (type.equals(StaticPropertytype.FreeText)) return new FreeTextStaticProperty(name, description);
+		if (type.equals(StaticPropertyType.Any)) return new AnyStaticProperty(name, description);
+		else if (type.equals(StaticPropertyType.FreeText)) return new FreeTextStaticProperty(name, description);
 		else return new OneOfStaticProperty(name, description);
 	}
 	

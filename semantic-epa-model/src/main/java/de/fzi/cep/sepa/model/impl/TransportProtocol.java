@@ -15,41 +15,29 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 @MappedSuperclass
 public abstract class TransportProtocol extends UnnamedSEPAElement {
-
-	@RdfProperty("sepa:hasPort")
-	private int port;
 	
-	@RdfProperty("sepa:hasUri")
-	private String uri;
+	@RdfProperty("sepa:brokerHostname")
+	private String brokerHostname;
 	
-	@RdfProperty("sepa:hasTopic")
+	@RdfProperty("sepa:topic")
 	private String topicName;
 	
 	public TransportProtocol() {
 		super();
 	}
 	
-	public TransportProtocol(String uri, int port, String topicName)
+	public TransportProtocol(String uri, String topicName)
 	{
-		this.uri = uri;
-		this.port = port;
+		this.brokerHostname = uri;
 		this.topicName = topicName;
 	}
-	
-	public int getPort() {
-		return port;
+
+	public String getBrokerHostname() {
+		return brokerHostname;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setBrokerHostname(String uri) {
+		this.brokerHostname = uri;
 	}
 	
 	public String getTopicName() {

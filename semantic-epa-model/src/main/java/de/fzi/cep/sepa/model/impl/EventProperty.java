@@ -42,7 +42,7 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
-	@RdfProperty("rdf:type")
+	@RdfProperty("sepa:domainProperty")
 	protected List<URI> subClassOf;
 	
 	public EventProperty()
