@@ -20,6 +20,7 @@ import de.fzi.cep.sepa.model.impl.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQConsumer;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
@@ -70,7 +71,8 @@ public class ProveITEventStream implements EventStreamDeclarer {
 		stream.setDescription(senslet.getHeader().getSensletType().toString());
 		stream.setUri(sep.getUri() + "/" +senslet.getHeader().getSensletType().toString());
 		
-		this.brokerUrl = standardGrounding.getTransportProtocol().getUri() + ":" +standardGrounding.getTransportProtocol().getPort();
+		int port = ((JmsTransportProtocol) standardGrounding.getTransportProtocol()).getPort();
+		this.brokerUrl = standardGrounding.getTransportProtocol().getBrokerHostname() + ":" +port;
 		this.destinationTopic = standardGrounding.getTransportProtocol().getTopicName();
 		this.sourceTopic = "ProveIT.*." +senslet.getHeader().getSensletType().toString();
 		

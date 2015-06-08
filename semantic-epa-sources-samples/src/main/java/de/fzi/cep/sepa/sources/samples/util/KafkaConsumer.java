@@ -20,7 +20,7 @@ public class KafkaConsumer implements Runnable {
         while (it.hasNext())
         {
            System.out.println("Thread " + m_threadNumber + ": " + new String(it.next().message()));
-            publisher.send(new String(it.next().message()));
+            //publisher.send(new String(it.next().message()));
         }
         System.out.println("Shutting down Thread: " + m_threadNumber);
     }
