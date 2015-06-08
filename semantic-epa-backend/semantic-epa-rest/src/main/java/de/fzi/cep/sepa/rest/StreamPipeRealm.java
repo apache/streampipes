@@ -55,9 +55,7 @@ public  class StreamPipeRealm implements Realm {
      * So far we only support UsernamePasswordToken.
      */
     public boolean supports(AuthenticationToken authenticationToken) {
-        if (authenticationToken instanceof UsernamePasswordToken) {
-            return true;
-        } else return false;
+        return authenticationToken instanceof UsernamePasswordToken;
     }
 
     @Override
@@ -77,7 +75,7 @@ public  class StreamPipeRealm implements Realm {
 
                 SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
                 SimplePrincipalCollection principals = new SimplePrincipalCollection();
-                principals.add("username", username);
+                principals.add(username, this.getName());
 
                 LOG.info(principals.toString());
 
