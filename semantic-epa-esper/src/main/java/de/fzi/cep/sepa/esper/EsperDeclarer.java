@@ -16,6 +16,9 @@ import com.google.gson.Gson;
 import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.EPEngine;
@@ -52,7 +55,10 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 			GroundingConfig outputGroundingConfig;
 			
 			EventGrounding outputEventGrounding = sepa.getOutputStream().getEventGrounding();
-			String outputBrokerUrl = outputEventGrounding.getTransportProtocol().getUri()+":" +outputEventGrounding.getTransportProtocol().getPort();
+			TransportProtocol outputProtocol = outputEventGrounding.getTransportProtocol();
+			int outputPort = outputProtocol instanceof JmsTransportProtocol ? ((JmsTransportProtocol) outputProtocol).getPort() : ((KafkaTransportProtocol) outputProtocol).getKafkaPort();
+			
+			String outputBrokerUrl = outputEventGrounding.getTransportProtocol().getBrokerHostname()+":" +outputPort;
 			logger.info("OutputBrokerUrl is " +outputBrokerUrl);
 			if (brokerAliases.containsKey(outputBrokerUrl)) outputGroundingConfig = brokerAliases.get(outputBrokerUrl);
 			else
@@ -69,7 +75,9 @@ public abstract class EsperDeclarer<B extends BindingParameters> implements Sema
 			for(EventStream stream : sepa.getInputStreams())
 			{
 				EventGrounding inputEventGrounding = stream.getEventGrounding();
-				String inputBrokerUrl = inputEventGrounding.getTransportProtocol().getUri()+":" +inputEventGrounding.getTransportProtocol().getPort();
+				TransportProtocol protocol = inputEventGrounding.getTransportProtocol();
+				int port = protocol instanceof JmsTransportProtocol ? ((JmsTransportProtocol) protocol).getPort() : ((KafkaTransportProtocol) protocol).getKafkaPort();
+				String inputBrokerUrl = inputEventGrounding.getTransportProtocol().getBrokerHostname()+":" +port;
 				GroundingConfig inputGroundingConfig;
 				
 				if (brokerAliases.containsKey(inputBrokerUrl)) inputGroundingConfig = brokerAliases.get(inputBrokerUrl);

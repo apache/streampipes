@@ -24,7 +24,6 @@ public class GroundingConfig {
 	}
 	
 	private void prepareConfig() {
-		System.out.println("Grounding: " +grounding.getTransportProtocol().getPort());
 		if (grounding.getTransportProtocol() instanceof KafkaTransportProtocol)
 			prepareKafkaConfig();
 		else if (grounding.getTransportProtocol() instanceof JmsTransportProtocol)
@@ -34,16 +33,16 @@ public class GroundingConfig {
 	}
 
 	private void prepareJmsConfig() {
-		this.camelConfig = new CamelConfig.ActiveMQ(brokerAlias, grounding.getTransportProtocol().getUri() +":" +grounding.getTransportProtocol().getPort());
+		this.camelConfig = new CamelConfig.ActiveMQ(brokerAlias, grounding.getTransportProtocol().getBrokerHostname() +":" +((JmsTransportProtocol)grounding.getTransportProtocol()).getPort());
 		this.endpointUri = brokerAlias + ":topic:";
 	}
 
 	private void prepareKafkaConfig() {
 		KafkaTransportProtocol protocol = (KafkaTransportProtocol) grounding.getTransportProtocol();
 		//this.camelConfig = new CamelConfig.Kafka(brokerAlias, grounding.getUri(), grounding.getPort());
-		this.camelConfig = new CamelConfig.Kafka(brokerAlias, protocol.getUri(), protocol.getZookeeperPort());
+		this.camelConfig = new CamelConfig.Kafka(brokerAlias, protocol.getBrokerHostname(), protocol.getZookeeperPort());
 		//this.endpointUri = brokerAlias + ":topic:";
-		this.endpointUri = brokerAlias +":" +protocol.getUri() +":" +protocol.getPort() +"?zookeeperHost=" +protocol.getUri() +"&zookeeperPort=" +protocol.getZookeeperPort() +"&groupId=group1&topic=";
+		this.endpointUri = brokerAlias +":" +protocol.getBrokerHostname() +":" +protocol.getKafkaPort() +"?zookeeperHost=" +protocol.getBrokerHostname() +"&zookeeperPort=" +protocol.getZookeeperPort() +"&groupId=group1&topic=";
 	}
 
 	public CamelConfig getCamelConfig()
@@ -63,11 +62,8 @@ public class GroundingConfig {
 	
 	public String getBrokerUrl()
 	{
-		return grounding.getTransportProtocol().getUri();
+		return grounding.getTransportProtocol().getBrokerHostname();
 	}
 	
-	public String getBrokerUrlWithPort()
-	{
-		return grounding.getTransportProtocol().getUri() +":" +grounding.getTransportProtocol().getPort();
-	}
+	
 }
