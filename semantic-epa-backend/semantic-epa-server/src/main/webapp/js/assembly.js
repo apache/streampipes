@@ -32,6 +32,7 @@ var leftTargetPointOptions = {
     isTarget: true
 };
 
+var textInputFields = new Array();
 
 /**
  * Handles everything that has to do with the assembly area, and elements in it
@@ -502,6 +503,9 @@ function sendPipeline(fullPipeline, overWrite, info) {
                                 return;
                             }
                             $('#customize-content').html(prepareCustomizeModal($(id)));
+							$(textInputFields).each(function (index, value) {
+								addAutoComplete(value.fieldName, value.propertyName);
+							});
                             var string = "Customize " + sepa.name;
                             $('#customizeTitle').text(string);
                             $('#customizeModal').modal('show');
@@ -609,7 +613,7 @@ function prepareCustomizeModal(element) {
     var string = "";
     // $('#savedOptions').children().not('strong').remove();
     // if (element.data("modal") == null) {
-
+	textInputFields.length = 0;
     if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
         var staticPropertiesArray = element.data("JSON").staticProperties;
 
@@ -621,6 +625,13 @@ function prepareCustomizeModal(element) {
         for (var i = 0; i < staticPropertiesArray.length; i++) {
             switch (staticPropertiesArray[i].input.properties.elementType) {
                 case "TEXT_INPUT":
+					var textInput = {};
+					if (staticPropertiesArray[i].input.properties.datatype != undefined)
+					{
+						textInput.fieldName = "textinput" +i;
+						textInput.propertyName = staticPropertiesArray[i].input.properties.datatype;
+						textInputFields.push(textInput);
+					}
                     string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount, staticPropertiesArray[i].input.properties.value);
                     textInputCount++;
                     continue;
@@ -750,5 +761,27 @@ function isConnected(element) {
 
 function isFullyConnected(element) {
     return $(element).data("JSON").inputNodes == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputNodes;
+}
+
+function addAutoComplete(input, datatype) {
+	 console.log(input);
+	    $("#" +input).autocomplete({
+	    source: function(request, response) {
+			$.ajax({
+            url: standardUrl +'autocomplete?propertyName=' +encodeURIComponent(datatype),
+            dataType: "json",
+            data: "term=" + request.term,
+            success: function (data) {
+				var suggestion = new Array();
+				$(data.result).each(function(index, value) {
+					var item = {};
+					item.label = value.label;
+					item.value = value.value;
+					suggestion.push(item);
+				});
+                response(suggestion);
+            }});
+		},	
+	});
 }
 
