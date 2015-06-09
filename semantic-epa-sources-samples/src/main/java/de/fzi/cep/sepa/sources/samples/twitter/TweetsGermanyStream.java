@@ -8,6 +8,7 @@ import javax.jms.JMSException;
 import org.codehaus.jettison.json.JSONObject;
 
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
@@ -45,7 +46,7 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/text")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "text", "", de.fzi.cep.sepa.commons.Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "latitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/latitude")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "longitude", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/longitude")));
