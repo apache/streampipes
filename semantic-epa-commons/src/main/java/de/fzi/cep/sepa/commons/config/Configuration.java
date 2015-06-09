@@ -19,9 +19,13 @@ public class Configuration {
 	
 	public static final int ESPER_PORT = 8090;
 	
+	public static final int ALGORITHM_PORT = 8092;
+	
 	public static final int SOURCES_PORT = 8089;
 	
 	public static final int WEBAPP_PORT = 8080;
+	
+	public static final String ALGORITHM_BASE_URL = SERVER_URL +":" +ALGORITHM_PORT;
 	
 	public static final String ESPER_BASE_URL = SERVER_URL + ":" + ESPER_PORT;
 	
