@@ -7,6 +7,7 @@ public class TextInput extends FormInput {
 
 	private String value;
 	private String humanDescription;
+	private String datatype;
 	
 	public TextInput(String humanDescription, String value) {
 		super(ElementType.TEXT_INPUT);
@@ -35,7 +36,13 @@ public class TextInput extends FormInput {
 	public void setHumanDescription(String humanDescription) {
 		this.humanDescription = humanDescription;
 	}
-	
-	
 
+	public String getDatatype() {
+		return datatype;
+	}
+
+	public void setDatatype(String datatype) {
+		this.datatype = datatype;
+	}
+	
 }
