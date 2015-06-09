@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -25,7 +25,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
-public class DebsChallenge2Controller extends EsperDeclarer<DebsChallenge2Parameters>{
+public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameters>{
 
 	private EventProperty xCellProperty;
 	private EventProperty yCellProperty;

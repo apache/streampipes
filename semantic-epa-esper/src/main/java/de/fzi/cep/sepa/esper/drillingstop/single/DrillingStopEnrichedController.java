@@ -10,9 +10,8 @@ import org.openrdf.rio.RDFHandlerException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -29,8 +28,9 @@ import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class DrillingStopEnrichedController extends EsperDeclarer<DrillingStopEnrichedParameters>{
+public class DrillingStopEnrichedController extends EpDeclarer<DrillingStopEnrichedParameters>{
 
 	@Override
 	public boolean invokeRuntime(SepaInvocation sepa) {

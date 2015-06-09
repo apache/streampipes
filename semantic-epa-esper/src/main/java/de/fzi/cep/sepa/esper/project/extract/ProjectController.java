@@ -3,9 +3,8 @@ package de.fzi.cep.sepa.esper.project.extract;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -17,8 +16,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class ProjectController extends EsperDeclarer<ProjectParameter>{
+public class ProjectController extends EpDeclarer<ProjectParameter>{
 
 	@Override
 	public SepaDescription declareModel() {

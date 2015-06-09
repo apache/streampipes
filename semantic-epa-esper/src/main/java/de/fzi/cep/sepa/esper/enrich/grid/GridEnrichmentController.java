@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
@@ -15,9 +14,11 @@ import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.graph.*;
 import de.fzi.cep.sepa.model.impl.output.*;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParameter> {
+public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter> {
 
 	@Override
 	public SepaDescription declareModel() {
@@ -66,8 +67,8 @@ public class GridEnrichmentController extends EsperDeclarer<GridEnrichmentParame
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
 			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters"));
-			staticProperties.add(new FreeTextStaticProperty("startingLatitude", "The latitude value of the center of the first cell"));
-			staticProperties.add(new FreeTextStaticProperty("startingLongitude", "The longitude value of the center of the first cell"));
+			staticProperties.add(new FreeTextStaticProperty("startingLatitude", "The latitude value of the center of the first cell", Geo.lat));
+			staticProperties.add(new FreeTextStaticProperty("startingLongitude", "The longitude value of the center of the first cell", Geo.lng));
 			
 			// Mapping properties
 			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));

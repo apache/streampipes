@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -29,9 +28,10 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 
-public class TextFilterController extends EsperDeclarer<TextFilterParameter> {
+public class TextFilterController extends EpDeclarer<TextFilterParameter> {
 	
 	@Override
 	public SepaDescription declareModel() {

@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.esper.EsperDeclarer;
+import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.aggregate.count.Count;
 import de.fzi.cep.sepa.esper.aggregate.count.CountParameter;
 import de.fzi.cep.sepa.esper.aggregate.count.TimeScale;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.util.StandardTransportFormat;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -31,8 +30,9 @@ import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class TopXController extends EsperDeclarer<TopXParameter>{
+public class TopXController extends EpDeclarer<TopXParameter>{
 
 	@Override
 	public SepaDescription declareModel() {
