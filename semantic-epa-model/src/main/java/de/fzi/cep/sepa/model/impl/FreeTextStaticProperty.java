@@ -26,6 +26,12 @@ public class FreeTextStaticProperty extends StaticProperty {
 	{
 		super(name, description);
 	}
+	
+	public FreeTextStaticProperty(String name, String description, String type)
+	{
+		super(name, description);
+		this.type = type;
+	}
 
 	public String getValue() {
 		return value;
