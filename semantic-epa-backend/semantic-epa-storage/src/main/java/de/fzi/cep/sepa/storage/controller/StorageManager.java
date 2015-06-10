@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.storage.controller;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +10,7 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.memory.MemoryStore;
+import org.openrdf.repository.sparql.SPARQLRepository;
 
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.config.ConfigKeys;
@@ -41,6 +39,7 @@ public enum StorageManager {
 	private EntityManager storageManager;
 
 	private RepositoryConnection conn;
+	private RepositoryConnection dbpediaConn;
 	
 	private Repository repository;
 	
@@ -52,6 +51,7 @@ public enum StorageManager {
 	StorageManager() {
 		initStorage();
 		initEmpire();
+		//initDbPediaEndpoint();
 		initBackgroundKnowledgeStorage();
 	}
 
@@ -77,6 +77,18 @@ public enum StorageManager {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	private boolean initDbPediaEndpoint() {
+		SPARQLRepository repo = new SPARQLRepository("http://dbpedia.org/sparql");
+		try {
+			repo.initialize();
+			dbpediaConn = repo.getConnection();
+			return true;
+		} catch (RepositoryException e) {
+			e.printStackTrace();
+			return false;
+		}		  
 	}
 
 	private boolean initEmpire() {
@@ -109,6 +121,10 @@ public enum StorageManager {
 
 	public RepositoryConnection getConnection() {
 		return conn;
+	}
+	
+	public RepositoryConnection getDbpediaConnection() {
+		return dbpediaConn;
 	}
 
 	public StorageRequests getStorageAPI() {

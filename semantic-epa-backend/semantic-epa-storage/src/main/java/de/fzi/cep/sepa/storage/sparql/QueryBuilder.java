@@ -5,6 +5,7 @@ public class QueryBuilder {
 	public static final String RDFS_SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf";
 	public static final String RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 	public static final String RDFS_CLASS = "http://www.w3.org/2000/01/rdf-schema#Class";
+	public static final String SEPA = "http://sepa.event-processing.org/sepa#";
 	
 	public static String buildListSEPQuery() {
 		StringBuilder builder = new StringBuilder();
@@ -15,7 +16,7 @@ public class QueryBuilder {
 
 	private static String getPrefix() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX sepa:<http://event-processing.org/sepa#>\n")
+		builder.append("PREFIX sepa:<http://sepa.event-processing.org/sepa#>\n")
 				.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n");
 
 		return builder.toString();
@@ -93,6 +94,16 @@ public class QueryBuilder {
 	public static String getInstances(String className) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() + " select ?s where {?s <" +RDF_TYPE +"> <" +className +">}");
+		return builder.toString();
+	}
+	
+	public static String getAutocompleteSuggestion(String propertyName) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() + " select ?label ?value where {?s <" +RDF_TYPE +"> sepa:DomainConcept ."
+				+ "?s <" +propertyName +"> ?value ."
+				+ "?s rdfs:label ?label ."
+				+ "}"
+				);
 		return builder.toString();
 	}
 

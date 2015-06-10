@@ -316,6 +316,7 @@ public class ClientModelTransformer {
 			FreeTextStaticProperty p) {
 		TextInput input = new TextInput();
 		input.setValue("");
+		if (p.getType() != null) input.setDatatype(p.getType());
 		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 
