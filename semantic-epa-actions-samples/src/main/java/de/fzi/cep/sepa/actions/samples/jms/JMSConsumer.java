@@ -9,7 +9,7 @@ import javax.jms.JMSException;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -61,7 +61,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 	}
 
 	@Override
-	public String invokeRuntime(SecInvocation sec) {
+	public boolean invokeRuntime(SecInvocation sec) {
 		System.out.println("invoke");
 		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
@@ -78,11 +78,11 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 			e.printStackTrace();
 		}
 		
-		return "success";
+		return true;
 	}
 
 	@Override
-	public boolean detachRuntime(SecInvocation sec) {
+	public boolean detachRuntime() {
 		try {
 			consumer.close();
 		} catch (JMSException e) {
@@ -90,6 +90,17 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isVisualizable() {
+		return false;
+	}
+
+	@Override
+	public String getHtml(SecInvocation graph) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

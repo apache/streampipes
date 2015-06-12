@@ -7,7 +7,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
@@ -59,7 +59,24 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 	}
 
 	@Override
-	public String invokeRuntime(SecInvocation graph) {
+	public boolean invokeRuntime(SecInvocation graph) {
+		return true;
+	}
+
+	@Override
+	public boolean detachRuntime() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isVisualizable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getHtml(SecInvocation graph) {
 		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 		
 		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
@@ -70,12 +87,6 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 		GaugeParameters lineChart = new GaugeParameters("/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName, min, max);
 		
 		return new GaugeGenerator(lineChart).generateHtml();
-	}
-
-	@Override
-	public boolean detachRuntime(SecInvocation sec) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

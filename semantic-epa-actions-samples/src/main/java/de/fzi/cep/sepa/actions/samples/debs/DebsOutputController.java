@@ -49,7 +49,7 @@ public class DebsOutputController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SecInvocation sec) {
+	public boolean invokeRuntime(SecInvocation sec) {
 		String brokerUrl = createJmsUri(sec);
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
@@ -60,13 +60,25 @@ public class DebsOutputController extends ActionController {
 		
 		new Thread(new FileWriter(fileParameters)).start();
 		
-		return "";
+		return true;
 	}
 
 	@Override
-	public boolean detachRuntime(SecInvocation sec) {
+	public boolean detachRuntime() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean isVisualizable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getHtml(SecInvocation invocation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

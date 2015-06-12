@@ -59,7 +59,18 @@ public class MapsController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SecInvocation sec) {
+	public boolean invokeRuntime(SecInvocation sec) {
+		return true;
+	}
+
+	@Override
+	public boolean isVisualizable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getHtml(SecInvocation sec) {
 		
 		String newUrl = createWebsocketUri(sec);
 		String inputTopic = extractTopic(sec);
@@ -74,11 +85,9 @@ public class MapsController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SecInvocation sec) {
+	public boolean detachRuntime() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
 
 }

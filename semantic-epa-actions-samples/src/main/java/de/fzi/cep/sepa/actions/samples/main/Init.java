@@ -8,7 +8,6 @@ import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.gauge.GaugeController;
 import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
-import de.fzi.cep.sepa.actions.samples.histogram.HistogramController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
@@ -16,7 +15,7 @@ import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 
 public class Init implements Runnable {
 

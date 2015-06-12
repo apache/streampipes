@@ -55,8 +55,18 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public String invokeRuntime(SecInvocation sec) {
-		
+	public boolean invokeRuntime(SecInvocation sec) {
+		return true;
+	}
+
+	@Override
+	public boolean isVisualizable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getHtml(SecInvocation sec) {
 		String brokerUrl = createJmsUri(sec);
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
@@ -77,9 +87,11 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public boolean detachRuntime(SecInvocation sec) {
+	public boolean detachRuntime() {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
 
 }
