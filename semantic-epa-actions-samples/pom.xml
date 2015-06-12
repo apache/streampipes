@@ -12,6 +12,12 @@
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
 			<version>0.3-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpcomponents-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>

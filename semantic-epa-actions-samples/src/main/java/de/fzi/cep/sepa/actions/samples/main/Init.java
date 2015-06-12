@@ -6,7 +6,9 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.samples.charts.ChartConsumer;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.file.FileController;
+import de.fzi.cep.sepa.actions.samples.gauge.GaugeController;
 import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
+import de.fzi.cep.sepa.actions.samples.histogram.HistogramController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
@@ -36,6 +38,8 @@ public class Init implements Runnable {
 		consumers.add(new DebsOutputController());
 		consumers.add(new HeatmapController());
 		consumers.add(new ProaSenseTopologyController());
+		consumers.add(new GaugeController());
+		//consumers.add(new HistogramController());
 		
 		try {
 			ModelSubmitter.submitConsumer(consumers, Configuration.ACTION_BASE_URL, 8091);
