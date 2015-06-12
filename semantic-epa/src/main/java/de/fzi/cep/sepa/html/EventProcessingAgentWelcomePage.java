@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.html;
 import java.net.URI;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 
 public class EventProcessingAgentWelcomePage extends WelcomePage<SemanticEventProcessingAgentDeclarer> {
 

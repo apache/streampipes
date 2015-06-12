@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.desc;
+package de.fzi.cep.sepa.desc.declarer;
 
 import java.util.List;
 

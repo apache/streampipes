@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.desc;
+package de.fzi.cep.sepa.desc.declarer;
 
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 

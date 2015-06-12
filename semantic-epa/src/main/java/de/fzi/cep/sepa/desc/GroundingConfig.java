@@ -5,9 +5,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.runtime.param.CamelConfig;
-import de.fzi.cep.sepa.runtime.param.CamelConfig.Kafka;
 
 public class GroundingConfig {
 

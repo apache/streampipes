@@ -67,13 +67,9 @@ public interface CamelConfig { // every config that cannot be made with the simp
         //kafka:server:port[?options]
 
     	private final String brokerAlias;
-    	private final String zookeeperHost;
-    	private final int zookeeperPort;
     	
         public Kafka(String brokerAlias, String zookeeperHost, int zookeeperPort) {
         	this.brokerAlias = brokerAlias;
-        	this.zookeeperHost = zookeeperHost;
-        	this.zookeeperPort = zookeeperPort;
         }
 
         @Override

@@ -4,8 +4,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 
 public class EventProducerWelcomePage extends WelcomePage<SemanticEventProducerDeclarer> {
 

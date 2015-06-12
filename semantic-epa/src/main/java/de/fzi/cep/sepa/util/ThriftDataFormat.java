@@ -2,19 +2,14 @@ package de.fzi.cep.sepa.util;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.spi.DataFormat;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
-import eu.proasense.internal.VariableType;
 
 public class ThriftDataFormat implements DataFormat {
 
