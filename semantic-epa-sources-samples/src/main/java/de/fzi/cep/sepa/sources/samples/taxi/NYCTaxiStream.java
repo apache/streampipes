@@ -24,7 +24,7 @@ import de.fzi.cep.sepa.model.vocabulary.XSD;
 import twitter4j.Status;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;

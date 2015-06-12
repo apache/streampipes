@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyNested;

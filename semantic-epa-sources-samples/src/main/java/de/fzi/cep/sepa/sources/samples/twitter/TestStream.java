@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.twitter;
 
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 

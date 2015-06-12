@@ -62,10 +62,10 @@ public class Utils {
                 "}";
 
         try {
-            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
-                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
-                    .execute().returnResponse();
-            return response.toString();
+           // HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
+           //         .bodyString(json.toString(), ContentType.APPLICATION_JSON)
+           //         .execute().returnResponse();
+            //return response.toString();
         	
         } catch (Exception e) {
             e.printStackTrace();

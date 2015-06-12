@@ -11,7 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 import de.fzi.proveit.senslet.model.Senslet;
 

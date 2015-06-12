@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
@@ -28,14 +28,14 @@ public class Init implements Runnable {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-		declarers.add(new TwitterStreamProducer());
+//		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new EnrichedEventProducer());
-		declarers.add(new RamProducer());
-		declarers.add(new MobileStreamProducer());
-		declarers.add(new RandomDataProducer());
-		declarers.add(new NYCTaxiProducer());
+//		declarers.add(new RamProducer());
+//		declarers.add(new MobileStreamProducer());
+//		declarers.add(new RandomDataProducer());
+//		declarers.add(new NYCTaxiProducer());
 		//declarers.add(new ProveITEventProducer());
 		
 		String zooKeeper = "89.216.116.44:2181";
@@ -55,11 +55,11 @@ public class Init implements Runnable {
 //				AkerVariables.RamVelocitySetPoint.topic()
 				};
 		int threads = 1;
-
+/*
 		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
 				topic);
 		example.run(threads);
-		
+*/		
 		try {
 			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
 		} catch (Exception e) {

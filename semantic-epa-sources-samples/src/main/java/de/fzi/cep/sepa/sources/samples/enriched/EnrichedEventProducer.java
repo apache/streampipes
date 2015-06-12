@@ -3,8 +3,8 @@ package de.fzi.cep.sepa.sources.samples.enriched;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSource;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;

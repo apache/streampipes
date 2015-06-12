@@ -68,6 +68,10 @@
           <artifactId>cloning</artifactId>
           <groupId>uk.com.robust-it</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>fluent-hc</artifactId>
+          <groupId>org.apache.httpcomponents</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
   </dependencies>
