@@ -5,22 +5,25 @@ import java.util.List;
 
 public class RecommendationMessage {
 
+	private List<ElementRecommendation> possibleElements;
 	private List<ElementRecommendation> recommendedElements;
+	
 	boolean success;
 	
 	public RecommendationMessage()
 	{
+		this.possibleElements = new ArrayList<>();
 		this.recommendedElements = new ArrayList<>();
 		this.success = true;
 	}
 
-	public List<ElementRecommendation> getRecommendedElements() {
-		return recommendedElements;
+	public List<ElementRecommendation> getPossibleElements() {
+		return possibleElements;
 	}
 
-	public void addRecommendation(ElementRecommendation recommendation)
+	public void addPossibleElement(ElementRecommendation recommendation)
 	{
-		recommendedElements.add(recommendation);
+		possibleElements.add(recommendation);
 	}
 
 	public boolean isSuccess() {
@@ -31,9 +34,18 @@ public class RecommendationMessage {
 		this.success = success;
 	}
 
+	public List<ElementRecommendation> getRecommendedElements() {
+		return recommendedElements;
+	}
+
 	public void setRecommendedElements(
 			List<ElementRecommendation> recommendedElements) {
 		this.recommendedElements = recommendedElements;
 	}
+
+	public void setPossibleElements(List<ElementRecommendation> possibleElements) {
+		this.possibleElements = possibleElements;
+	}
+	
 	
 }
