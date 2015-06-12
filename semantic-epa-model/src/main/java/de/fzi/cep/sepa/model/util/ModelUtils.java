@@ -104,7 +104,7 @@ public class ModelUtils {
 				"JmsTransportProtocol",
 				"KafkaTransportProtocol"};
 		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
-		String[] qualityClasses = {"Frequency", "Latency"};
+		String[] qualityClasses = {"Frequency", "Latency", "Accuracy", "EventPropertyQuality", "EventStreamQuality", "MeasurementProperty", "MeasurementRange", "Precision", "RequiredEventPropertyQuality", "RequiredEventStreamQuality", "Resolution"};
 		
 		if (contains(className, abstractClasses)) 
 			{
