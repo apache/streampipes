@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.manager.matching.validator;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventQuality;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 
 /**
@@ -20,11 +19,6 @@ public class ConnectionValidator {
 		return new SchemaMatchValidator().validate(left, right);
 	}
 	
-	public static boolean validateQuality(List<EventQuality> left, List<EventQuality> right)
-	{
-		return new QualityMatchValidator().validate(left, right);
-	}
-	
 	public static boolean validateTransportFormat(EventGrounding left, EventGrounding right)
 	{
 		return new TransportFormatMatchValidator().validate(left, right);
@@ -38,11 +32,6 @@ public class ConnectionValidator {
 	public static boolean validateSchema(List<EventSchema> firstLeft, List<EventSchema> secondLeft, List<EventSchema> firstRight, List<EventSchema> secondRight)
 	{
 		return new SchemaMatchValidator().validate(firstLeft, secondLeft, firstRight, secondRight);
-	}
-	
-	public static boolean validateQuality(List<EventQuality> firstLeft, List<EventQuality> secondLeft, List<EventQuality> right)
-	{
-		return new QualityMatchValidator().validate(firstLeft, secondLeft, right);
 	}
 	
 	public static boolean validateGrounding(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
