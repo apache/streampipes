@@ -15,6 +15,7 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
 import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -38,10 +39,17 @@ public class EventPropertyPrimitive extends EventProperty {
 	{
 		super(subClassOf);
 	}
-	
+
 	public EventPropertyPrimitive(String propertyType, String propertyName,
 			String measurementUnit, List<URI> subClassOf) {
 		super(propertyName, subClassOf);
+		this.propertyType = propertyType;
+		this.measurementUnit = measurementUnit;
+	}
+
+	public EventPropertyPrimitive(String propertyType, String propertyName,
+			String measurementUnit, List<URI> subClassOf, List<EventPropertyQuality> qualities) {
+		super(propertyName, subClassOf, qualities);
 		this.propertyType = propertyType;
 		this.measurementUnit = measurementUnit;
 	}

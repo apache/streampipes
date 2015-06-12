@@ -16,6 +16,8 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -45,6 +47,13 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	@RdfProperty("sepa:domainProperty")
 	protected List<URI> subClassOf;
 	
+
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@RdfProperty("sepa:hasPropertyQuality")
+	List<EventPropertyQuality> eventPropertyQualities;
+	
+
 	public EventProperty()
 	{
 		super(prefix + UUID.randomUUID().toString());
@@ -63,6 +72,13 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.subClassOf = subClassOf;
 	}
 	
+	public EventProperty(String propertyName, List<URI> subClassOf, List<EventPropertyQuality> eventPropertyQualities) {
+		this();
+		this.runtimeName = propertyName;		
+		this.subClassOf = subClassOf;
+		this.eventPropertyQualities = eventPropertyQualities;
+	}
+
 	public EventProperty(String propertyName) {
 		this();
 		this.runtimeName = propertyName;		
@@ -115,9 +131,19 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.description = humanReadableDescription;
 	}
 
+	public List<EventPropertyQuality> getEventPropertyQualities() {
+		return eventPropertyQualities;
+	}
+
+	public void setEventPropertyQualities(
+			List<EventPropertyQuality> eventPropertyQualities) {
+		this.eventPropertyQualities = eventPropertyQualities;
+	}
+
 	public static String getPrefix() {
 		return prefix;
 	}
+
 
 	public abstract Map<String, Object> getRuntimeFormat();
 	

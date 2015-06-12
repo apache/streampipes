@@ -13,6 +13,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -22,8 +23,8 @@ public class EventStream extends NamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:hasQuality")
-	List<EventQuality> eventQuality;
+	@RdfProperty("sepa:hasStreamQuality")
+	List<EventStreamQuality> eventStreamQualities;
 	
 	@OneToOne(fetch = FetchType.EAGER,
 		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -35,11 +36,11 @@ public class EventStream extends NamedSEPAElement {
 	EventSchema eventSchema;
 	
 	
-	public EventStream(String uri, String name, String description, String iconUrl, List<EventQuality> eventQuality,
+	public EventStream(String uri, String name, String description, String iconUrl, List<EventStreamQuality> eventStreamQualities,
 			EventGrounding eventGrounding, 
 			EventSchema eventSchema) {
 		super(uri, name, description, iconUrl);
-		this.eventQuality = eventQuality;
+		this.eventStreamQualities = eventStreamQualities;
 		this.eventGrounding = eventGrounding;
 		this.eventSchema = eventSchema;
 	}
@@ -55,13 +56,17 @@ public class EventStream extends NamedSEPAElement {
 		super();
 	}
 
-	public List<EventQuality> getEventQuality() {
-		return eventQuality;
+	public List<EventStreamQuality> getEventStreamQualities() {
+		return eventStreamQualities;
 	}
 
-	public void setEventQuality(List<EventQuality> eventQuality) {
-		this.eventQuality = eventQuality;
+
+	public void setEventStreamQualities(
+			List<EventStreamQuality> eventStreamQualities) {
+		this.eventStreamQualities = eventStreamQualities;
 	}
+	
+	
 
 	public EventSchema getEventSchema() {
 		return eventSchema;

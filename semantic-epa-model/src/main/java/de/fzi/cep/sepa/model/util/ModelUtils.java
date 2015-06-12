@@ -104,6 +104,7 @@ public class ModelUtils {
 				"JmsTransportProtocol",
 				"KafkaTransportProtocol"};
 		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
+		String[] qualityClasses = {"Frequency", "Latency"};
 		
 		if (contains(className, abstractClasses)) 
 			{
@@ -120,6 +121,10 @@ public class ModelUtils {
 		else if (contains(className, modelClasses)) 
 			{
 				return "de.fzi.cep.sepa.model.impl.";
+			}
+		else if (contains(className, qualityClasses))
+			{
+				return "de.fzi.cep.sepa.model.impl.quality.";
 			}
 		else 
 			{
