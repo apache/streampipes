@@ -8,18 +8,17 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
-@RdfsClass("ssn:Latency")
+@RdfsClass("ssn:Resolution")
 @Entity
-public class Latency extends EventPropertyQuality {
-
+public class Resolution extends EventPropertyQuality {
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 
-	public Latency() {
+	public Resolution() {
 		super();
 	}
 	
-	public Latency(float quantityValue) {
+	public Resolution(float quantityValue) {
 		this.quantityValue = quantityValue;
 	}
 	
@@ -30,6 +29,4 @@ public class Latency extends EventPropertyQuality {
 	public void setQuantityValue(float quantityValue) {
 		this.quantityValue = quantityValue;
 	}
-	
-	
 }
