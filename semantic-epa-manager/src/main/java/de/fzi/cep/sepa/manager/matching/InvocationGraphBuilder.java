@@ -1,13 +1,18 @@
 package de.fzi.cep.sepa.manager.matching;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openrdf.rio.RDFHandlerException;
+
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
+import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
@@ -16,6 +21,7 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
+import de.fzi.cep.sepa.manager.matching.output.OutputStrategyRewriter;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -31,6 +37,9 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class InvocationGraphBuilder {
@@ -61,6 +70,7 @@ public class InvocationGraphBuilder {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<InvocableSEPAElement> buildGraph() {
 		Iterator<GenericTreeNode<NamedSEPAElement>> it = postOrder.iterator();
 		while (it.hasNext()) {
@@ -76,17 +86,19 @@ public class InvocationGraphBuilder {
 							thisGraph, node, outputTopic);
 					EventSchema outputSchema;
 					EventStream outputStream = new EventStream();
+					List<OutputStrategy> supportedStrategies = thisGraph.getOutputStrategies();
 					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
 							.toString()));
 					EventGrounding grounding = new EventGrounding();
+					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(supportedStrategies).getOuputSchemaGenerator();
 					
-					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(thisGraph.getOutputStrategies()).getOuputSchemaGenerator();
 					if (thisGraph.getInputStreams().size() == 1) 
 						outputSchema = schemaGenerator.buildFromOneStream(thisGraph.getInputStreams().get(0));
 					else
 						outputSchema = schemaGenerator.buildFromTwoStreams(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1));
-			
-					//grounding.setTransportProtocol(thisGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocols().get(0));
+					
+					thisGraph.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(supportedStrategies.get(0))));
+
 					if (node.getParent() != null)
 						grounding.setTransportProtocol(getPreferredTransportProtocol(thisGraph, node.getParent().getData(), outputTopic));
 					
@@ -115,6 +127,7 @@ public class InvocationGraphBuilder {
 			if (thisGraph.getInputStreams().get(0).getEventGrounding()
 					.getTransportFormats() == null)
 				return new TransportFormat(MessageFormat.Json);
+			if (thisGraph.getInputStreams().get(0).getEventGrounding().getTransportFormats().contains(MessageFormat.Json)) return new TransportFormat(MessageFormat.Json);
 			for (TransportFormat format : thisGraph.getInputStreams().get(0)
 					.getEventGrounding().getTransportFormats()) {
 				if (thisGraph.getSupportedGrounding().getTransportFormats()

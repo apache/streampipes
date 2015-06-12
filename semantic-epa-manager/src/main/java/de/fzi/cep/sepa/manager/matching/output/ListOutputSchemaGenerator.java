@@ -10,8 +10,9 @@ import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 
-public class ListOutputSchemaGenerator implements OutputSchemaGenerator {
+public class ListOutputSchemaGenerator implements OutputSchemaGenerator<ListOutputStrategy> {
 
 	private String propertyName;
 	
@@ -39,6 +40,12 @@ public class ListOutputSchemaGenerator implements OutputSchemaGenerator {
 		EventSchema schema = new EventSchema();
 		schema.setEventProperties(Utils.createList(list));
 		return schema;
+	}
+
+	@Override
+	public ListOutputStrategy getModifiedOutputStrategy(
+			ListOutputStrategy strategy) {
+		return strategy;
 	}
 
 }

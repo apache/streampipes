@@ -24,6 +24,7 @@ import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
@@ -39,6 +40,8 @@ import de.fzi.cep.sepa.model.impl.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+
 
 public class PipelineValidationHandler {
 
@@ -103,15 +106,15 @@ public class PipelineValidationHandler {
 			List<EventSchema> leftEventSchema;
 			EventGrounding leftEventGrounding;
 			
-			SEPAElement element = TreeUtils.findSEPAElement(connectedTo.get(0), pipeline.getSepas(), pipeline
+			SEPAElement leftRootElement = TreeUtils.findSEPAElement(connectedTo.get(0), pipeline.getSepas(), pipeline
 					.getStreams());
-			if (element instanceof StreamClient) {
-				EventStream leftEventStream = ClientModelUtils.transformStream(element);
+			if (leftRootElement instanceof StreamClient) {
+				EventStream leftEventStream = ClientModelUtils.transformStream(leftRootElement);
 				leftEventSchema = asList(leftEventStream.getEventSchema());
 				leftEventGrounding = leftEventStream.getEventGrounding();
 			} else {
-				invocationGraphs = makeInvocationGraphs(element);
-				SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+				invocationGraphs = makeInvocationGraphs(leftRootElement);
+				SepaInvocation ancestor = findInvocationGraph(invocationGraphs, leftRootElement.getDOM());
 				EventStream ancestorOutputStream = ancestor.getOutputStream();
 				leftEventSchema = asList(ancestorOutputStream.getEventSchema());
 				leftEventGrounding = ancestor.getSupportedGrounding();
@@ -219,40 +222,13 @@ public class PipelineValidationHandler {
 		return this;
 	}
 	
-	private static List<Option> convertCustomOutput(List<EventProperty> eventProperties, List<Option> options) {
+	public PipelineValidationHandler storeConnection() {
+		String fromId = clientRootElement.getConnectedTo().get(clientRootElement.getConnectedTo().size() -1);
+		SEPAElement sepaElement = TreeUtils.findSEPAElement(fromId, pipeline.getSepas(), pipeline.getStreams());
 		
-		for(EventProperty p : eventProperties)
-		{
-			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
-			else if (p instanceof EventPropertyList) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
-			else if (p instanceof EventPropertyNested) 
-				{
-					options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
-					options.addAll(convertCustomOutput(((EventPropertyNested) p).getEventProperties(), new ArrayList<Option>()));
-				}
-		}
-		return options;
-	}
-	
-
-	private List<StaticProperty> clearOptions(
-			List<StaticProperty> currentStaticProperties) {
-		Iterator<StaticProperty> it = currentStaticProperties.iterator();
-		while(it.hasNext())
-		{
-			StaticProperty p = (StaticProperty) it.next();
-			if (p.getType() == StaticPropertyType.MAPPING_PROPERTY)
-			{
-				SelectInput input = (SelectInput) p.getInput();
-				input.setOptions(new ArrayList<>());
-			}
-			else if ((p.getType() == StaticPropertyType.CUSTOM_OUTPUT))
-			{
-				CheckboxInput input = (CheckboxInput) p.getInput();
-				input.setOptions(new ArrayList<Option>());
-			}
-		}
-		return currentStaticProperties;
+		Connection connection = new Connection(sepaElement.getElementId(), clientRootElement.getElementId());
+		StorageManager.INSTANCE.getConnectionStorageApi().addConnection(connection);
+		return this;
 	}
 
 	public PipelineValidationHandler computeMatchingProperties() {
@@ -291,6 +267,26 @@ public class PipelineValidationHandler {
 		} 
 		
 		return newStaticProperties;
+	}
+	
+	private List<StaticProperty> clearOptions(
+			List<StaticProperty> currentStaticProperties) {
+		Iterator<StaticProperty> it = currentStaticProperties.iterator();
+		while(it.hasNext())
+		{
+			StaticProperty p = (StaticProperty) it.next();
+			if (p.getType() == StaticPropertyType.MAPPING_PROPERTY)
+			{
+				SelectInput input = (SelectInput) p.getInput();
+				input.setOptions(new ArrayList<>());
+			}
+			else if ((p.getType() == StaticPropertyType.CUSTOM_OUTPUT))
+			{
+				CheckboxInput input = (CheckboxInput) p.getInput();
+				input.setOptions(new ArrayList<Option>());
+			}
+		}
+		return currentStaticProperties;
 	}
 
 	private de.fzi.cep.sepa.model.client.StaticProperty updateStaticProperty(de.fzi.cep.sepa.model.client.StaticProperty currentStaticProperty, List<Option> newOption)
@@ -373,6 +369,21 @@ public class PipelineValidationHandler {
 	private <T> List<T> asList(T object)
 	{
 		return Utils.createList(object);
+	}
+	
+	private List<Option> convertCustomOutput(List<EventProperty> eventProperties, List<Option> options) {
+		
+		for(EventProperty p : eventProperties)
+		{
+			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+			else if (p instanceof EventPropertyList) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+			else if (p instanceof EventPropertyNested) 
+				{
+					options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+					options.addAll(convertCustomOutput(((EventPropertyNested) p).getEventProperties(), new ArrayList<Option>()));
+				}
+		}
+		return options;
 	}
 
 }

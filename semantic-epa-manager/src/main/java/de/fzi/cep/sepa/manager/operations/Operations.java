@@ -40,6 +40,7 @@ public class Operations {
 		.validateConnection()
 		.computeMappingProperties()
 		.computeMatchingProperties()
+		.storeConnection()
 		.getPipelineModificationMessage();
 	}
 	

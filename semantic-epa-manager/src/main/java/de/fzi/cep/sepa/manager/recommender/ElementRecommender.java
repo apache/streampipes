@@ -16,7 +16,6 @@ import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.messages.ElementRecommendation;
-import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -41,11 +40,14 @@ public class ElementRecommender {
 	public RecommendationMessage findRecommendedElements() throws NoSuitableSepasAvailableException
 	{
 		String connectedTo;
+		String rootNodeElementId;
 		try {
 			ConsumableSEPAElement sepaElement = getRootNode();
+			rootNodeElementId = sepaElement.getElementId();
 			connectedTo = sepaElement.getDOM();
 		} catch (NoSepaInPipelineException e) {
 			connectedTo = pipeline.getStreams().get(0).getDOM();
+			rootNodeElementId = pipeline.getStreams().get(0).getElementId();
 		}
 		List<SepaDescription> sepas = getAllSepas();
 		for(SepaDescription sepa : sepas)
@@ -54,7 +56,7 @@ public class ElementRecommender {
 				Pipeline tempPipeline = cloner.deepClone(pipeline);
 				tempPipeline.getSepas().add(generateSepaClient(sepa, connectedTo));
 				new PipelineValidationHandler(tempPipeline, true).validateConnection().getPipelineModificationMessage();
-				addRecommendation(sepa);
+				addPossibleElements(sepa);
 				tempPipeline.setSepas(new ArrayList<>());
 			} catch (NoMatchingSchemaException e) {
 			} catch (NoMatchingFormatException e) {
@@ -64,8 +66,12 @@ public class ElementRecommender {
 			}
 		}
 		
-		if (recommendationMessage.getRecommendedElements().size() == 0) throw new NoSuitableSepasAvailableException();
-		else return recommendationMessage;
+		if (recommendationMessage.getPossibleElements().size() == 0) throw new NoSuitableSepasAvailableException();
+		else 
+			{
+				recommendationMessage.setRecommendedElements(StorageManager.INSTANCE.getConnectionStorageApi().getRecommendedElements(rootNodeElementId));
+				return recommendationMessage;
+			}
 	}
 	
 	private SEPAClient generateSepaClient(SepaDescription sepa, String connectedTo)
@@ -76,8 +82,8 @@ public class ElementRecommender {
 		return sepaClient;
 	}
 	
-	private void addRecommendation(SepaDescription sepa) {
-		recommendationMessage.addRecommendation(new ElementRecommendation(sepa.getRdfId().toString(), sepa.getName(), sepa.getDescription()));
+	private void addPossibleElements(SepaDescription sepa) {
+		recommendationMessage.addPossibleElement(new ElementRecommendation(sepa.getRdfId().toString(), sepa.getName(), sepa.getDescription()));
 	}
 
 	private List<SepaDescription> getAllSepas()
