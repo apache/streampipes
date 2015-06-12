@@ -48,6 +48,8 @@ public class Configuration {
 		RDFWriter writer = Rio.createWriter(RDF_FORMAT, stream);
 		
 		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
+		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
 		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
 		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
 		

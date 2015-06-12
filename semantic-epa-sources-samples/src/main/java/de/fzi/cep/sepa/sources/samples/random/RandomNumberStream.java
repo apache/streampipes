@@ -28,6 +28,10 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
+import de.fzi.cep.sepa.model.impl.quality.Frequency;
+import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
@@ -51,9 +55,15 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+
+		List<EventPropertyQuality> qualities = new ArrayList<EventPropertyQuality>();
+		qualities.add(new Latency(10));
+		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"), qualities));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "randomString", "", de.fzi.cep.sepa.commons.Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "count", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		
+		List<EventStreamQuality> eventStreamQualities = new ArrayList<EventStreamQuality>();
+		eventStreamQualities.add(new Frequency(1));
 		
 		
 		EventGrounding grounding = new EventGrounding();
@@ -63,6 +73,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
+		stream.setEventStreamQualities(eventStreamQualities);
 		stream.setName("Random Number Stream");
 		stream.setDescription("Random Number Stream Description");
 		stream.setUri(sep.getUri() + "/number");
