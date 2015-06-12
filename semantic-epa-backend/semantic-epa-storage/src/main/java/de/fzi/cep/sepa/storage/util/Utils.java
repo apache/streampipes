@@ -33,4 +33,10 @@ public class Utils {
 		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
 		return dbClient;
 	}
+	
+	public static CouchDbClient getCouchDbConnectionClient()
+	{
+		CouchDbClient dbClient = new CouchDbClient("couchdb-connection.properties");
+		return dbClient;
+	}
 }

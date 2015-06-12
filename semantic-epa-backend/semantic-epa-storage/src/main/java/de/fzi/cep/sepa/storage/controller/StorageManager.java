@@ -22,9 +22,11 @@ import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
+import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
+import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
 import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
 import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
@@ -153,6 +155,10 @@ public enum StorageManager {
 	
 	public BackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
 		return this.backgroundKnowledgeStorage;
+	}
+	
+	public ConnectionStorage getConnectionStorageApi() {
+		return new ConnectionStorageImpl();
 	}
 	
 }
