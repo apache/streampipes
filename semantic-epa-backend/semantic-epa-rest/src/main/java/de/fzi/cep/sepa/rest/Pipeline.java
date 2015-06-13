@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.rest;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.DELETE;
@@ -10,6 +11,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
@@ -22,10 +26,15 @@ import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.lightcouch.CouchDbClient;
 
 @Path("/pipelines")
 public class Pipeline extends AbstractRestInterface {
-	
+
+	CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+
 	/**
 	 * 
 	 * @return a JSON representation of all available pipelines or an empty JSON list
@@ -51,8 +60,26 @@ public class Pipeline extends AbstractRestInterface {
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		serverPipeline.setRunning(false);
-		pipelineStorage.store(serverPipeline);	
-		
+		pipelineStorage.store(serverPipeline);
+
+		if (SecurityUtils.getSubject().isRemembered()) {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			List<JsonObject> users = dbClient.view("users/usernames").key(username).includeDocs(true).query(JsonObject.class);
+			if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
+			JsonObject user = users.get(0);
+			if (user.has("pipelines")) {
+				JsonArray storedPipelines = user.getAsJsonArray("pipelines");
+				JsonPrimitive newPipeline = new JsonPrimitive(pipeline);
+				storedPipelines.add(newPipeline);
+				user.add("pipelines", storedPipelines);
+			} else {
+				JsonArray storedPipelines = new JsonArray();
+				JsonPrimitive newPipeline = new JsonPrimitive(pipeline);
+				storedPipelines.add(newPipeline);
+				user.add("pipelines", storedPipelines);
+			}
+			dbClient.update(user);
+		}
 		return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 	}
 	
