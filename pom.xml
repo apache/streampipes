@@ -8,7 +8,9 @@
 	<artifactId>semantic-epa-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
+	<properties>
+		<sesame.version>2.7.15</sesame.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -21,6 +23,56 @@
 				<groupId>javax.persistence</groupId>
 				<artifactId>persistence-api</artifactId>
 				<version>1.0.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-queryresultio-api</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-queryparser-sparql</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-api</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-datatypes</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-turtle</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-repository-http</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-sail-memory</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-queryrender</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-repository-sail</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-queryresultio-sparqljson</artifactId>
+				<version>${sesame.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -37,6 +89,7 @@
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
 		<!-- <module>semantic-epa-storm</module> -->
+		<module>semantic-epa-algorithms-samples</module>
 	</modules>
 
 	<!-- Build Settings -->
