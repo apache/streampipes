@@ -1,9 +1,5 @@
 package de.fzi.cep.sepa.manager.matching.output;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;

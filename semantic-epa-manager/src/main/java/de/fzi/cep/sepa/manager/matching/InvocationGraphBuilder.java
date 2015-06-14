@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.manager.matching;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -9,10 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.openrdf.rio.RDFHandlerException;
-
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
-import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
