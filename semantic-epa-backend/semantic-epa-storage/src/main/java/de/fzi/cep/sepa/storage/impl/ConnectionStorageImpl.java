@@ -6,16 +6,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.http.client.fluent.Request;
 import org.lightcouch.CouchDbClient;
 
+import com.google.common.net.UrlEscapers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import de.fzi.cep.sepa.messages.ElementRecommendation;
+import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
@@ -35,19 +35,17 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 		// doesn't work as required object array is not created by lightcouch
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
-		try {
-			query = buildQuery(dbClient, from);
-			Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
-			if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
-			else return Collections.emptyList();
-		} catch (URIException e) {
-			e.printStackTrace();
-			return Collections.emptyList();
-		}
+		query = buildQuery(dbClient, from);
+		System.out.println(query);
+		Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
+		if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
+		else return Collections.emptyList();
+		
 	}
 	
-	private String buildQuery(CouchDbClient dbClient, String from) throws URIException {
-			return URIUtil.encodeQuery(dbClient.getDBUri() +"_design/connection/_view/frequent?startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
+	private String buildQuery(CouchDbClient dbClient, String from)  {
+			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
+			return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
 
 	private List<ElementRecommendation> handleResponse(JsonObject jsonObject) {
@@ -59,7 +57,8 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 
 	public static void main(String[] args)
 	{
-		new ConnectionStorageImpl().getRecommendedElements("http://localhost:8089/taxi/sample");
+		List<ElementRecommendation> recs = new ConnectionStorageImpl().getRecommendedElements("http://localhost:8089/taxi/sample");
+		recs.forEach(rec -> System.out.println(rec.getElementId()));
 	}
 	
 	private Optional<JsonObject> getFrequentConnections(String query) {
