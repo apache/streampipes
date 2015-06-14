@@ -11,9 +11,13 @@ import org.openrdf.rio.helpers.JSONLDSettings;
 
 public class Configuration {
 
-	public static final String SERVER_URL = "http://localhost";
+	private static final String HOSTNAME ="localhost";
 	
-	public static final String TCP_SERVER_URL = "tcp://localhost";
+	public static final String SERVER_URL = "http://" +HOSTNAME;
+	
+	public static final String TCP_SERVER_URL = "tcp://" +HOSTNAME;
+	
+	public static final int TCP_SERVER_PORT = 61616;
 	
 	public static final int ACTION_PORT = 8091;
 	
