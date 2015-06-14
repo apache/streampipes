@@ -7,9 +7,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-epa-commons</artifactId>
-	<properties>
-		<sesame.version>2.7.15</sesame.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -90,12 +87,10 @@
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-sail</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-queryresultio-sparqljson</artifactId>
-			<version>${sesame.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jackson-core</artifactId>
@@ -106,42 +101,35 @@
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-queryresultio-api</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-queryparser-sparql</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-api</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-datatypes</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-rio-turtle</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-repository-http</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-sail-memory</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-queryrender</artifactId>
-			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.complexible.common</groupId>
@@ -184,7 +172,7 @@
 		<dependency>
 			<groupId>com.github.jsonld-java</groupId>
 			<artifactId>jsonld-java-sesame</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.openrdf.sesame</groupId>
@@ -198,11 +186,6 @@
 					<groupId>org.openrdf.sesame</groupId>
 					<artifactId>sesame-rio-api</artifactId>
 				</exclusion>
-				<!-- <exclusion> -->
-				<!-- <groupId>org.apache.httpcomponents</groupId> -->
-				<!-- <artifactId>httpclient</artifactId> -->
-				<!-- </exclusion><exclusion> <artifactId>jackson-core</artifactId> <groupId>com.fasterxml.jackson.core</groupId> 
-					</exclusion> -->
 			</exclusions>
 		</dependency>
 	</dependencies>
