@@ -20,11 +20,13 @@ public class NYCTaxiProducer implements SemanticEventProducerDeclarer{
 		return sep;
 	}
 
-	
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
 		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
 		streams.add(new NYCTaxiStream());
+		streams.add(new NycTest01Stream());
+		streams.add(new NycTest02Stream());
+		streams.add(new NycTest03Stream());
 		
 		return streams;
 	}

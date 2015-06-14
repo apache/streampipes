@@ -10,9 +10,6 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
-import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
-import de.fzi.cep.sepa.sources.samples.proveit.ProveITEventProducer;
-import de.fzi.cep.sepa.sources.samples.ram.RamProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
@@ -25,7 +22,6 @@ public class Init implements Runnable {
 	public static void  main(String[] args) 
 	{
 		if ((args.length > 0) && args[0].equals("true")) subscribeToKafka = true;
-		System.out.println(subscribeToKafka);
 		new Init().declare();
 	}
 	
@@ -39,7 +35,7 @@ public class Init implements Runnable {
 //		declarers.add(new RamProducer());
 //		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
-//		declarers.add(new NYCTaxiProducer());
+		declarers.add(new NYCTaxiProducer());
 		//declarers.add(new ProveITEventProducer());
 		
 		String zooKeeper = "89.216.116.44:2181";
