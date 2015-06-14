@@ -34,7 +34,20 @@
                 <transformer>
                   <mainClass>de.fzi.cep.sepa.actions.samples.main.Init</mainClass>
                 </transformer>
+                <transformer />
               </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java/pom.xml</exclude>
+                    <exclude>META-INF/maven/com.github.jsonld-java/jsonld-java-sesame/pom.xml</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
