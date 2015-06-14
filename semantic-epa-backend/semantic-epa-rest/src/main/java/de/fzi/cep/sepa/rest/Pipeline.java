@@ -29,9 +29,13 @@ import de.fzi.sepa.model.client.util.Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.lightcouch.CouchDbClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/pipelines")
 public class Pipeline extends AbstractRestInterface {
+
+	Logger LOG = LoggerFactory.getLogger(Pipeline.class);
 
 	CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
 
@@ -56,17 +60,18 @@ public class Pipeline extends AbstractRestInterface {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipelines(String pipeline)
-	{	
+	{
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		serverPipeline.setRunning(false);
 		pipelineStorage.store(serverPipeline);
 
-		if (SecurityUtils.getSubject().isRemembered()) {
+		if (SecurityUtils.getSubject().isRemembered() || SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
-			List<JsonObject> users = dbClient.view("users/usernames").key(username).includeDocs(true).query(JsonObject.class);
+			List<JsonObject> users = dbClient.view("users/username").key(username).includeDocs(true).query(JsonObject.class);
 			if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
 			JsonObject user = users.get(0);
+			LOG.info("User is: " + user.get("username").getAsString());
 			if (user.has("pipelines")) {
 				JsonArray storedPipelines = user.getAsJsonArray("pipelines");
 				JsonPrimitive newPipeline = new JsonPrimitive(pipeline);

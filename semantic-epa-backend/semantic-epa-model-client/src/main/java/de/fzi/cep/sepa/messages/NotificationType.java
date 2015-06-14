@@ -19,7 +19,9 @@ public enum NotificationType {
 	REGISTRATION_SUCCESS("Registered user successfully", ""),
 	ALREADY_LOGGED_IN("User already logged in", ""),
 	NOT_LOGGED_IN("User not logged in", ""),
-	LOGOUT_SUCCESS("Successfully logged out", "");
+	LOGOUT_SUCCESS("Successfully logged out", ""),
+	NOT_REMEMBERED("User not remembered", ""),
+	REMEMBERED("User remembered", "");
 
 
 	private final String title;

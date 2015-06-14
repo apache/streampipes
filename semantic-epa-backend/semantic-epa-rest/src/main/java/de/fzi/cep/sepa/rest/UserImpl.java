@@ -27,14 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 
-
-
-
-
-
-
-
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -152,8 +144,9 @@ public class UserImpl extends AbstractRestInterface implements User{
     public String isRemembered() {
 
         if (SecurityUtils.getSubject().isRemembered()) {
-            return "You are remembered";
-        } else return "You are a stranger";
+            return toJson(new SuccessMessage(NotificationType.REMEMBERED.uiNotification()));
+        }
+        return toJson(new ErrorMessage(NotificationType.NOT_REMEMBERED.uiNotification()));
     }
 
     @Override
@@ -186,12 +179,10 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Produces(MediaType.APPLICATION_JSON)
     public String isAuthenticated() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
-            //return SecurityUtils.getSubject().getPrincipal().toString();
         	Notification notification = new Notification(SecurityUtils.getSubject().getPrincipal().toString(), "");
         	return toJson(new SuccessMessage(notification));
         }
         return toJson(new ErrorMessage(NotificationType.NOT_LOGGED_IN.uiNotification()));
-        //return Boolean.toString(SecurityUtils.getSubject().isAuthenticated());
     }
 
 

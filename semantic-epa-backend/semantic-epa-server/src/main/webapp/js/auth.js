@@ -43,6 +43,20 @@ function isUserAuthenticated() {
     });
 }
 
+function isUserRemembered() {
+	$.ajax({
+		url: authUrl + "user/remember",
+		type: 'GET',
+	}).done(function(ret) {
+		console.log(ret);
+		if (ret.success) {
+			window.location="index.html";
+		} else {
+			return false;
+		}
+	});
+}
+
 function getPrincipalName() {
     $.ajax({
         url: authUrl + "user/authc",
