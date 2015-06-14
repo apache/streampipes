@@ -20,8 +20,12 @@ import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
 public class Init implements Runnable {
 
+	public static boolean subscribeToKafka = false;
+	
 	public static void  main(String[] args) 
 	{
+		if ((args.length > 0) && args[0].equals("true")) subscribeToKafka = true;
+		System.out.println(subscribeToKafka);
 		new Init().declare();
 	}
 	
@@ -34,7 +38,7 @@ public class Init implements Runnable {
 		declarers.add(new EnrichedEventProducer());
 //		declarers.add(new RamProducer());
 //		declarers.add(new MobileStreamProducer());
-//		declarers.add(new RandomDataProducer());
+		declarers.add(new RandomDataProducer());
 //		declarers.add(new NYCTaxiProducer());
 		//declarers.add(new ProveITEventProducer());
 		

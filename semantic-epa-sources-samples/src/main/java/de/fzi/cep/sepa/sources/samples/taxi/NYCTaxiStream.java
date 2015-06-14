@@ -50,9 +50,15 @@ public class NYCTaxiStream implements EventStreamDeclarer {
 	//public static String FILENAME = "/home/fzi/Downloads/sorted_data.csv";
 	//public static final String FILENAME = "/home/robin/FZI/CEP/sorted_data.csv";
 
-	public NYCTaxiStream() throws JMSException {
-		publisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.NYC.Taxi");
-		timePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "FZI.Timer");
+	public NYCTaxiStream() {
+		try {
+			publisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.NYC.Taxi");
+			timePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "FZI.Timer");
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Override

@@ -9,11 +9,7 @@ import javax.jms.JMSException;
  */
 public class TestTaxiActiveMQ {
     public static void main(String args[]) {
-        try {
             NYCTaxiStream stream = new NYCTaxiStream();
             stream.executeStream();
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
     }
 }

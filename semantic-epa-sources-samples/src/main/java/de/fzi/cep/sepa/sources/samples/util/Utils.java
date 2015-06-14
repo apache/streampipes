@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import de.fzi.cep.sepa.sources.samples.main.Init;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -62,10 +63,13 @@ public class Utils {
                 "}";
 
         try {
-           // HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
-           //         .bodyString(json.toString(), ContentType.APPLICATION_JSON)
-           //         .execute().returnResponse();
-            //return response.toString();
+        	if (Init.subscribeToKafka)
+        	{
+	            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
+	                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
+	                    .execute().returnResponse();
+	            return response.toString();
+        	}
         	
         } catch (Exception e) {
             e.printStackTrace();
