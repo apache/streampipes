@@ -52,7 +52,7 @@ public class TaxiDataInputProvider implements Runnable {
 	public static final String PROFITABILITY = "profitability";
 
 	//public static String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data.csv\\sorted_data.csv";
-	public static String FILENAME = "/home/fzi/Downloads/sorted_data.csv";
+	public static String FILENAME = "C:\\Users\\riemer\\Downloads\\debs-dc\\test01\\test_01.csv";
 	
 	//Complete dataset
 	//public static final String FILENAME = "C:\\Users\\riemer\\Downloads\\sorted_data_complete.csv\\sorted_data.csv";
