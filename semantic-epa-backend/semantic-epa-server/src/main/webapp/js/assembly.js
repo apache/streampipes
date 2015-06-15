@@ -444,7 +444,7 @@ function sendPipeline(fullPipeline, overWrite, info) {
     if (fullPipeline) {
 
         return $.ajax({
-            url: "http://localhost:8080/semantic-epa-backend/api/pipelines",
+            url: standardUrl +"pipelines",
             data: JSON.stringify(state.currentPipeline),
             processData: false,
             type: 'POST',
@@ -489,7 +489,7 @@ function sendPipeline(fullPipeline, overWrite, info) {
     } else {
 
         return $.ajax({
-            url: "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
+            url: standardUrl +"pipelines/update",
             data: JSON.stringify(state.currentPipeline),
             processData: false,
             type: 'POST',
