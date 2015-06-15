@@ -44,7 +44,7 @@ public class NYCTaxiStream extends AbstractNycStream {
 	@Override
 	public void executeStream() {	
 		File file = new File(NycSettings.completeDatasetFilename);
-		new Thread(new TaxiStreamGenerator(file, SimulationSettings.REALTIME, publisher)).start();
+		executeReplay(file);
 	}
 
 	@Override
