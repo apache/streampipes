@@ -162,6 +162,12 @@
 			<id>apache</id>
 			<url>https://repository.apache.org/content/repositories/releases/</url>
 		</repository>
+		
+		<repository>    
+            <id>archiva.public</id>
+            <name>Nissatech Public Repository</name>
+            <url>http://maven.nissatech.com/repository/public/</url>
+        </repository>
 	</repositories>
 
 	<distributionManagement>
