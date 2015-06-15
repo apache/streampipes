@@ -19,28 +19,29 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import de.fzi.cep.sepa.actions.messaging.jms.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseConfig;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
 import eu.proasense.internal.VariableType;
 
-public class ProaSenseTopologyPublisher implements IMessageListener{
+public class ProaSenseTopologyPublisher implements IMessageListener {
 
 	private ProaSenseInternalProducer producer;
 	private SecInvocation graph;
 	private static final String DEFAULT_PROASENSE_TOPIC = "eu.proasense.internal.sp.internal.incoming";
 	private TSerializer serializer;
 	
+	static String testJson =  "{\"ram_pos_measured\":21016.4,\"ram_vel_setpoint\":0.0,\"ram_pos_setpoint\":16510.2,\"ram_vel_measured\":-53.34777,\"pressure_gearbox\":3.423385,\"mru_vel\":-82.86029500000001,\"hook_load\":109.9758,\"mru_pos\":-179.9121,\"torque\":5.354475000000001,\"oil_temp_gearbox\":13.1959,\"wob\":-0.2115,\"ibop\":1.0,\"hoist_press_B\":112.839,\"oil_temp_swivel\":14.7423,\"rpm\":42.0743,\"hoist_press_A\":18.5644,\"eventName\":\"EnrichedEvent\",\"temp_ambient\":12.37,\"timestamp\":1387559130232}";
+	   
 	private static final Logger logger = LoggerFactory.getLogger(ProaSenseTopologyPublisher.class);
 
 	private int i = 0;
 	
-	
 	public ProaSenseTopologyPublisher(SecInvocation graph) {
-		this.producer = new ProaSenseInternalProducer(ProaSenseConfig.BROKER_URL, DEFAULT_PROASENSE_TOPIC);
 		this.graph = graph;
+		this.producer = new ProaSenseInternalProducer(Configuration.getBrokerConfig().getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 	}
 	
@@ -48,10 +49,12 @@ public class ProaSenseTopologyPublisher implements IMessageListener{
 	public void onEvent(String json) {
 		System.out.println("Sending event " +i +", " +json);
 		i++;
-		producer.send(buildDerivedEvent(json));
+		Optional<byte[]> bytesMessage = buildDerivedEvent(json);
+		if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
+		else System.out.println("empty event");
 	}
 
-	private byte[] buildDerivedEvent(String json) {
+	private Optional<byte[]> buildDerivedEvent(String json) {
 		DerivedEvent event = new DerivedEvent();
 		
 		event.setComponentId("CEP");
@@ -84,7 +87,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener{
 			e.printStackTrace();
 		}
 		event.setEventProperties(values);
-		return serialize(event).get();
+		return serialize(event);
 	}
 
 	private ComplexValue convert(JsonElement jsonElement) throws Exception {
@@ -115,5 +118,14 @@ public class ProaSenseTopologyPublisher implements IMessageListener{
 		}
     	return Optional.empty();
     }
+	
+	public static void main(String[] args)
+	{
+		ProaSenseTopologyPublisher publisher = new ProaSenseTopologyPublisher(null);
+		long currentTime = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i++) publisher.onEvent(testJson);
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime - currentTime);
+	}
 
 }

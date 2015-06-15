@@ -11,11 +11,15 @@
 		<dependency>
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<version>0.4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpcomponents-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
