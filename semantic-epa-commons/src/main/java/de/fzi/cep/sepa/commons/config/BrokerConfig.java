@@ -3,7 +3,9 @@ package de.fzi.cep.sepa.commons.config;
 public enum BrokerConfig {
 
 	LOCAL("localhost", 9092, "localhost", 2181, "tcp://localhost", 61616),
-	NISSATECH("89.216.116.44", 9092, "89.216.116.44", 2181, "tcp://localhost", 61616);
+	KALMAR("kalmar39.fzi.de", 9092, "kalmar39.fzi.de", 2181, "tcp://localhost", 61616),
+	NISSATECH_EXTERNAL("89.216.116.44", 9092, "89.216.116.44", 2181, "tcp://localhost", 61616),
+	NISSATECH_INTERNAL("192.168.1.111", 9092, "192.168.1.111", 2181, "tcp://localhost", 61616);
 	
 	private String kafkaHost;
 	private int kafkaPort;
@@ -33,6 +35,11 @@ public enum BrokerConfig {
 		return kafkaPort;
 	}
 	
+	public String getKafkaUrl()
+	{
+		return kafkaHost +":" +kafkaPort;
+	}
+	
 	public int getZookeeperPort()
 	{
 		return zookeeperPort;
@@ -41,6 +48,11 @@ public enum BrokerConfig {
 	public String getZookeeperHost()
 	{
 		return zookeeperHost;
+	}
+	
+	public String getZookeeperUrl()
+	{
+		return zookeeperHost + ":" +zookeeperPort;
 	}
 	
 	public String getJmsHost()

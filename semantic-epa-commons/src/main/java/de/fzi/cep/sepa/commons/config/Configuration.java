@@ -65,6 +65,6 @@ public class Configuration {
 	
 	public static final BrokerConfig getBrokerConfig()
 	{
-		return BrokerConfig.NISSATECH;
+		return BrokerConfig.KALMAR;
 	}
 }
