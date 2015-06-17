@@ -9,6 +9,11 @@
 	<artifactId>semantic-epa-actions-samples</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.1</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
 			<version>0.4</version>

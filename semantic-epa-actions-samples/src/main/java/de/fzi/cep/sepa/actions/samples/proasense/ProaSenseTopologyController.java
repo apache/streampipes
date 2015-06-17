@@ -1,22 +1,31 @@
 package de.fzi.cep.sepa.actions.samples.proasense;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jms.JMSException;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
+import de.fzi.cep.sepa.actions.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.BrokerConfig;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class ProaSenseTopologyController implements SemanticEventConsumerDeclarer {
 
@@ -44,16 +53,27 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		desc.setStaticProperties(staticProperties);
 		
+		EventGrounding grounding = new EventGrounding();
+		BrokerConfig config = Configuration.getBrokerConfig();
+		grounding.setTransportProtocol(new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), "", config.getZookeeperHost(), config.getZookeeperPort()));
+		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
+		desc.setSupportedGrounding(grounding);
+		
+		
 		return desc;
 	}
 
 	@Override
 	public boolean invokeRuntime(SecInvocation sec) {
-		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
+		//String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 	
-		consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
-		consumer.setListener(new ProaSenseTopologyPublisher(sec));
+		//consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getBrokerConfig().getZookeeperUrl(), consumerTopic,
+				new String[] {consumerTopic}, new ProaSenseTopologyPublisher(sec));
+		kafkaConsumerGroup.run(1);
+		
+		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		
 		return true;
 	}

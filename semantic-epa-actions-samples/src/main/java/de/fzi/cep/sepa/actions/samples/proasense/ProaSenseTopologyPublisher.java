@@ -47,8 +47,9 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	
 	@Override
 	public void onEvent(String json) {
-		System.out.println("Sending event " +i +", " +json);
+		//System.out.println("Sending event " +i +", " +json);
 		i++;
+		if (i % 500 == 0) System.out.println("Sending, " +i);
 		Optional<byte[]> bytesMessage = buildDerivedEvent(json);
 		if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
 		else System.out.println("empty event");
