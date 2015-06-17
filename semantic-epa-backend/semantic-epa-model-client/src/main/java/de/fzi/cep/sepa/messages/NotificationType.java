@@ -20,8 +20,15 @@ public enum NotificationType {
 	ALREADY_LOGGED_IN("User already logged in", ""),
 	NOT_LOGGED_IN("User not logged in", ""),
 	LOGOUT_SUCCESS("Successfully logged out", ""),
+	
+	PARSE_ERROR("Parse Exception", "Could not parse element description"),
+	WARNING_NO_ICON("Icon missing", ""),
+	WARNING_NO_NAME("Name missing", ""),
+	WARNING_NO_LABEL("Description missing", ""),
+
 	NOT_REMEMBERED("User not remembered", ""),
 	REMEMBERED("User remembered", "");
+
 
 
 	private final String title;
