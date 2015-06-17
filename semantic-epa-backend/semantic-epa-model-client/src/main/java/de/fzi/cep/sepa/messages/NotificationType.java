@@ -21,6 +21,8 @@ public enum NotificationType {
 	NOT_LOGGED_IN("User not logged in", ""),
 	LOGOUT_SUCCESS("Successfully logged out", ""),
 	
+	VIRTUAL_SENSOR_STORAGE_SUCCESS("Success", "Pipeline block stored successfully"),
+	
 	PARSE_ERROR("Parse Exception", "Could not parse element description"),
 	WARNING_NO_ICON("Icon missing", ""),
 	WARNING_NO_NAME("Name missing", ""),
