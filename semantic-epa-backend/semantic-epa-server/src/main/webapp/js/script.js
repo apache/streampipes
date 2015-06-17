@@ -783,7 +783,7 @@ function debugCircleMenuConsole(){
 function add() {
     var url;
     var type = $('input[name="type-radios"]:checked').val();
-    switch (type) {
+    /*switch (type) {
         case "1":
             url = standardUrl + "sources";
             break;
@@ -792,7 +792,8 @@ function add() {
             break;
         case "3":
             url = standardUrl + "actions";
-    }
+    }*/
+    url = standardUrl +"element";
 
     var str = $('#addText').val();
     if (str == "") {
