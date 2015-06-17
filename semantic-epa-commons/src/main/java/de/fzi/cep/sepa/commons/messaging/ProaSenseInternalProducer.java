@@ -12,15 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ProaSenseInternalProducer {
+public class ProaSenseInternalProducer implements IMessagePublisher {
 
     private static final Logger log = LoggerFactory.getLogger(ProaSenseInternalProducer.class);
 
     private final String producerTopic;
     
+    private static int i = 0;
+    
     private KafkaProducer<String, byte[]> kafkaProducer;
 
     public ProaSenseInternalProducer(String brokerUrl, String producerTopic) {
+    	System.out.println("Connection to " +brokerUrl);
     	this.producerTopic = producerTopic;
     	
         HashMap<String, Object> kafkaConfig = new HashMap<>();
@@ -32,10 +35,9 @@ public class ProaSenseInternalProducer {
     public void send(byte[] byteMsg)
     {	
     	try {
-    	System.out.println("send");
     	ProducerRecord<String, byte[]> record = new ProducerRecord<String, byte[]>(producerTopic, byteMsg);
-    	Arrays.toString(record.value());
-    	
+    	i++;
+    	if (i % 500 == 0) System.out.println(i +"events sent."); 
     	kafkaProducer.send(record);
     	} catch(Exception e) { e.printStackTrace();}
     }
@@ -44,6 +46,11 @@ public class ProaSenseInternalProducer {
         if (kafkaProducer != null)
             kafkaProducer.close();
     }
+
+	@Override
+	public void onEvent(String message) {
+		send(message.getBytes());
+	}
 
 }
 
