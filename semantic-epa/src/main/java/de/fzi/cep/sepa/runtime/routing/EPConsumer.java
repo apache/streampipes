@@ -38,6 +38,7 @@ public class EPConsumer extends DefaultConsumer implements Consumer<Object> {
 	public void accept(Object event) {
 		Exchange exchange = endpoint.createExchange(ExchangePattern.InOnly);
 		exchange.getIn().setBody(event);
+		exchange.getIn().getHeaders().put("kafka.PARTITION_KEY", "4");
 		try {
 			getProcessor().process(exchange);
 		} catch (Exception e) {
