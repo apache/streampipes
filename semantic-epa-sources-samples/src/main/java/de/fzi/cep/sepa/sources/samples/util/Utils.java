@@ -1,10 +1,15 @@
 package de.fzi.cep.sepa.sources.samples.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
@@ -19,6 +24,10 @@ import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
 
 public class Utils {
+	
+	public static final String QUOTATIONMARK = "\"";
+	public static final String COMMA = ",";
+	public static final String COLON = ":";
 	
 	public static List<String> createDomain(Domain...domains)
 	{
@@ -94,4 +103,21 @@ public class Utils {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     	return sdf.format(new Date(Long.parseLong(timestamp)));
     }
+    
+    public static Optional<BufferedReader> getReader(File file) {
+		try {
+			return Optional.of(new BufferedReader(new FileReader(file)));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return Optional.empty();
+		}
+	}
+    
+    public static String toJsonstr(String key, Object value) {
+		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).append(COMMA).toString();
+	}
+	
+	public static String toJsonstr(String key, Object value, boolean last) {
+		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).toString();
+	}
 }

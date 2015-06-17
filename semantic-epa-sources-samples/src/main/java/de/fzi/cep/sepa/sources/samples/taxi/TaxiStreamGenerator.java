@@ -13,7 +13,8 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import de.fzi.cep.sepa.sources.samples.activemq.IMessagePublisher;
+import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class TaxiStreamGenerator implements Runnable{
 
@@ -36,24 +37,17 @@ public class TaxiStreamGenerator implements Runnable{
 	public static final String TOTAL_AMOUNT = "total_amount";
 	public static final String READ_DATETIME = "read_datetime";
 	
-	public static final String QUOTATIONMARK = "\"";
-	public static final String COMMA = ",";
-	public static final String COLON = ":";
-	
 	private final File file;
 	private final SimulationSettings settings;
 	private IMessagePublisher publisher;
 	private IMessagePublisher timePublisher;
 	private boolean publishCurrentTime;
-	private Gson gson;
 		
 	public TaxiStreamGenerator(final File file, final SimulationSettings settings, IMessagePublisher publisher)
 	{
 		this.file = file;
 		this.settings = settings;
-		this.publisher = publisher;
-		this.gson = new Gson();
-		
+		this.publisher = publisher;		
 	}
 	
 	public TaxiStreamGenerator(final File file, final SimulationSettings settings, IMessagePublisher publisher, IMessagePublisher timePublisher)
@@ -67,7 +61,7 @@ public class TaxiStreamGenerator implements Runnable{
 	public void run() {
 		long previousDropoffTime = -1;
 		
-		Optional<BufferedReader> readerOpt = getReader(file);
+		Optional<BufferedReader> readerOpt = Utils.getReader(file);
 		long start = System.currentTimeMillis();
 		if (readerOpt.isPresent())
 		{
@@ -96,14 +90,9 @@ public class TaxiStreamGenerator implements Runnable{
 										Thread.sleep(diff/settings.getSpeedupFactor());
 									}
 								previousDropoffTime = currentDropOffTime;
-							}
-							//TaxiData data = new TaxiData(records);
-							//publisher.onEvent(gson.toJson(data));
+							}				
 							String json = buildJsonString(records);
-							//publisher.onEvent(buildJsonString(records));
-							//JsonObject obj = buildJson(records);
-							//System.out.println(counter + ", " +obj.toString());
-							//if (obj.get("pickup_latitude").getAsDouble() > 0) publisher.onEvent(obj.toString());
+							publisher.onEvent(json);
 							if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));
 							if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
 						} catch (Exception e) { e.printStackTrace(); }
@@ -119,15 +108,6 @@ public class TaxiStreamGenerator implements Runnable{
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("Took: " +(end-start));
-	}
-	
-	private Optional<BufferedReader> getReader(File file2) {
-		try {
-			return Optional.of(new BufferedReader(new FileReader(file)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return Optional.empty();
-		}
 	}
 
 	private long toTimestamp(String formattedDate) 
@@ -185,37 +165,26 @@ public class TaxiStreamGenerator implements Runnable{
 		StringBuilder json = new StringBuilder();
 		json.append("{");
 		
-			json.append(toJsonstr(MEDALLION, line[0]));
-			json.append(toJsonstr(HACK_LICENSE, line[1]));
-			json.append(toJsonstr(PICKUP_DATETIME, toTimestamp(line[2])));
-			json.append(toJsonstr(DROPOFF_DATETIME, toTimestamp(line[3])));
-			json.append(toJsonstr(TRIP_TIME_IN_SECS, Integer.parseInt(line[4])));
-			json.append(toJsonstr(TRIP_DISTANCE, toDouble(line[5])));
-			json.append(toJsonstr(PICKUP_LONGITUDE, toDouble(line[6])));
-			json.append(toJsonstr(PICKUP_LATITUDE, toDouble(line[7])));
-			json.append(toJsonstr(DROPOFF_LONGITUDE, toDouble(line[8])));
-			json.append(toJsonstr(DROPOFF_LATITUDE, toDouble(line[9])));
-			json.append(toJsonstr(PAYMENT_TYPE, line[10]));
-			json.append(toJsonstr(FARE_AMOUNT, toDouble(line[11])));
-			json.append(toJsonstr(SURCHARGE, toDouble(line[12])));
-			json.append(toJsonstr(MTA_TAX, toDouble(line[13])));
-			json.append(toJsonstr(TIP_AMOUNT, toDouble(line[14])));
-			json.append(toJsonstr(TOLLS_AMOUNT, toDouble(line[15])));
-			json.append(toJsonstr(TOTAL_AMOUNT, toDouble(line[16])));
+			json.append(Utils.toJsonstr(MEDALLION, line[0]));
+			json.append(Utils.toJsonstr(HACK_LICENSE, line[1]));
+			json.append(Utils.toJsonstr(PICKUP_DATETIME, toTimestamp(line[2])));
+			json.append(Utils.toJsonstr(DROPOFF_DATETIME, toTimestamp(line[3])));
+			json.append(Utils.toJsonstr(TRIP_TIME_IN_SECS, Integer.parseInt(line[4])));
+			json.append(Utils.toJsonstr(TRIP_DISTANCE, toDouble(line[5])));
+			json.append(Utils.toJsonstr(PICKUP_LONGITUDE, toDouble(line[6])));
+			json.append(Utils.toJsonstr(PICKUP_LATITUDE, toDouble(line[7])));
+			json.append(Utils.toJsonstr(DROPOFF_LONGITUDE, toDouble(line[8])));
+			json.append(Utils.toJsonstr(DROPOFF_LATITUDE, toDouble(line[9])));
+			json.append(Utils.toJsonstr(PAYMENT_TYPE, line[10]));
+			json.append(Utils.toJsonstr(FARE_AMOUNT, toDouble(line[11])));
+			json.append(Utils.toJsonstr(SURCHARGE, toDouble(line[12])));
+			json.append(Utils.toJsonstr(MTA_TAX, toDouble(line[13])));
+			json.append(Utils.toJsonstr(TIP_AMOUNT, toDouble(line[14])));
+			json.append(Utils.toJsonstr(TOLLS_AMOUNT, toDouble(line[15])));
+			json.append(Utils.toJsonstr(TOTAL_AMOUNT, toDouble(line[16])));
 
-			json.append(toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
+			json.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
 			json.append("}");		
 		return json.toString();
 	}
-
-	private String toJsonstr(String key, Object value) {
-		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).append(COMMA).toString();
-	}
-	
-	private String toJsonstr(String key, Object value, boolean last) {
-		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).toString();
-	}
-	
-	
-
 }

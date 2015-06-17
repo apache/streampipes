@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.config;
 
-import de.fzi.cep.sepa.commons.config.ProaSenseConfig;
-import de.fzi.cep.sepa.commons.config.SampleConfig;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
@@ -11,18 +10,18 @@ public class SampleSettings {
 	public static TransportProtocol kafkaProtocol(String topicName)
 	{
 		KafkaTransportProtocol protocol = new KafkaTransportProtocol(
-				ProaSenseConfig.kafkaHost, 
-				ProaSenseConfig.kafkaPort, 
+				Configuration.getBrokerConfig().getKafkaHost(), 
+				Configuration.getBrokerConfig().getKafkaPort(), 
 				topicName, 
-				ProaSenseConfig.zookeeperHost, 
-				ProaSenseConfig.zookeeperPort);
+				Configuration.getBrokerConfig().getZookeeperHost(), 
+				Configuration.getBrokerConfig().getZookeeperPort());
 		return protocol;
 	}
 	
 	public static TransportProtocol jmsProtocol(String topicName)
 	{
 		JmsTransportProtocol protocol = new JmsTransportProtocol(
-				SampleConfig.jmsHost, SampleConfig.jmsPort, topicName);
+				Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), topicName);
 		return protocol;
 	}
 }

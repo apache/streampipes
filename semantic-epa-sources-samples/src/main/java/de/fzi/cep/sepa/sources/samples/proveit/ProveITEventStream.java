@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -24,7 +25,6 @@ import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQConsumer;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
-import de.fzi.cep.sepa.sources.samples.activemq.IMessageListener;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.proveit.senslet.model.Header;
 import de.fzi.proveit.senslet.model.Senslet;

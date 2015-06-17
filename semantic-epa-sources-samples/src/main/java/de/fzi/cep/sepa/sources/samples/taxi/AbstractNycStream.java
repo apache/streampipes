@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.sources.samples.taxi;
 
 import java.io.File;
 
+import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.sources.samples.activemq.IMessagePublisher;
 
 public abstract class AbstractNycStream implements EventStreamDeclarer{
 

@@ -7,13 +7,13 @@ import javax.jms.JMSException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
-import de.fzi.cep.sepa.sources.samples.activemq.IMessagePublisher;
 
 public class NycTaxiUtils {
 

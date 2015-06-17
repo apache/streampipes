@@ -4,6 +4,8 @@ import javax.jms.*;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+
 
 public class ActiveMQPublisher implements IMessagePublisher {
 	private Connection connection;
