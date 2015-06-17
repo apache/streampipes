@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.http.client.ClientProtocolException;
-import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -15,6 +14,7 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.Message;
@@ -40,7 +40,7 @@ public abstract class AbstractRestInterface {
 	protected <T> String toJsonLd(T object)
 	{
 		try {
-			return de.fzi.cep.sepa.commons.Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), object));
+			return de.fzi.cep.sepa.commons.Utils.asString(new JsonLdTransformer().toJsonLd(object));
 		} catch (RDFHandlerException | IllegalArgumentException
 				| IllegalAccessException | SecurityException | InvocationTargetException | ClassNotFoundException | InvalidRdfException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
