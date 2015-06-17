@@ -7,14 +7,20 @@ import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
+import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
+import de.fzi.cep.sepa.manager.verification.ElementVerifier;
+import de.fzi.cep.sepa.manager.verification.extractor.StatementBuilder;
+import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
+import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
+import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -42,6 +48,11 @@ public class Operations {
 		.computeMatchingProperties()
 		.storeConnection()
 		.getPipelineModificationMessage();
+	}
+	
+	public static Message verifyAndAddElement(String graphData) throws SepaParseException
+	{
+		return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd();
 	}
 	
 	public static RecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
