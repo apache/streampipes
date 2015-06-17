@@ -8,7 +8,7 @@ import java.util.List;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.SampleConfig;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -57,7 +57,7 @@ public class TestAggregation {
 		outputStream.setEventSchema(outputSchema);
 		
 		EventGrounding outputGrounding = new EventGrounding();
-		outputGrounding.setTransportProtocol(new JmsTransportProtocol(SampleConfig.jmsHost, SampleConfig.jmsPort, "FZI.Test"));
+		outputGrounding.setTransportProtocol(new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), "FZI.Test"));
 		
 		outputStream.setEventGrounding(outputGrounding);
 		

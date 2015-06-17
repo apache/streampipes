@@ -32,6 +32,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private AbstractQueueRunnable<EventBean[]> queue;
 	private List<String> eventTypeNames = new ArrayList<>();
 	
+	private static int i = 0;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	
 	@Override
@@ -120,8 +122,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		logger.info("New event: {}", event);
-		logger.info("New source: {}", sourceInfo);
+		if (i % 500 == 0) System.out.println("New event" +i);
+		i++;
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
 
