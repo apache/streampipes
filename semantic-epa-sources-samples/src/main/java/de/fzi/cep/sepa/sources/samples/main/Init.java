@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.sources.samples.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.commons.config.BrokerConfig;
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
@@ -17,7 +19,7 @@ import de.fzi.cep.sepa.sources.samples.util.KafkaConsumerGroup;
 
 public class Init implements Runnable {
 
-	public static boolean subscribeToKafka = false;
+	public static boolean subscribeToKafka = true;
 	
 	public static void  main(String[] args) 
 	{
@@ -30,18 +32,20 @@ public class Init implements Runnable {
 
 //		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
-		declarers.add(new DrillBitProducer());
-		declarers.add(new EnrichedEventProducer());
+//		declarers.add(new DrillBitProducer());
+//		declarers.add(new EnrichedEventProducer());
 //		declarers.add(new RamProducer());
 //		declarers.add(new MobileStreamProducer());
-		declarers.add(new RandomDataProducer());
-		declarers.add(new NYCTaxiProducer());
+//		declarers.add(new RandomDataProducer());
+//		declarers.add(new NYCTaxiProducer());
 		//declarers.add(new ProveITEventProducer());
 		
-		String zooKeeper = "89.216.116.44:2181";
-		//String zooKeeper = "kalmar39.fzi.de:2181";
+		//String zooKeeper = Configuration.getBrokerConfig().getZookeeperUrl();
+		String zooKeeper = "kalmar39.fzi.de:2181";
 		String groupId = "groupId";
 		String[] topic = {
+				"eu.proasense.internal.sp.internal.incoming",
+				"eu.proasense.internal.sp.internal.outgoing.10000",
 				AkerVariables.DrillingRPM.topic(), 
 				AkerVariables.DrillingTorque.topic(), 
 //				AkerVariables.GearLubeOilTemperature.topic(), 
@@ -55,11 +59,11 @@ public class Init implements Runnable {
 //				AkerVariables.RamVelocitySetPoint.topic()
 				};
 		int threads = 1;
-/*
+
 		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
 				topic);
 		example.run(threads);
-*/		
+	
 		try {
 			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
 		} catch (Exception e) {

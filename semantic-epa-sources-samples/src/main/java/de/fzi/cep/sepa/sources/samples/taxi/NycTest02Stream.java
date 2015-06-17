@@ -25,7 +25,7 @@ public class NycTest02Stream extends AbstractNycStream {
 		EventSchema schema = NycTaxiUtils.getEventSchema();
 
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(SampleSettings.jmsProtocol(NycSettings.test02Topic));
+		grounding.setTransportProtocol(SampleSettings.kafkaProtocol(NycSettings.test02Topic));
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		stream.setEventGrounding(grounding);
