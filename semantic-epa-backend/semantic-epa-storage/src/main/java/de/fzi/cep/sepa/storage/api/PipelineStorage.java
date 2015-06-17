@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
+import de.fzi.cep.sepa.model.client.VirtualSensor;
 
 public interface PipelineStorage {
 
@@ -24,4 +25,8 @@ public interface PipelineStorage {
 	public void deletePipeline(String pipelineId);
 	
 	public <T> void store(T object);
+	
+	public void storeVirtualSensor(VirtualSensor virtualSensor);
+	
+	public List<VirtualSensor> getVirtualSensors();
 }

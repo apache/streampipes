@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.storage;
 
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
+import de.fzi.cep.sepa.model.client.VirtualSensor;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
@@ -114,5 +115,21 @@ public class PipelineStorageImpl implements PipelineStorage {
 	        }
 	        return;
 		
+	}
+
+	@Override
+	public void storeVirtualSensor(VirtualSensor virtualSensor) {
+		 CouchDbClient dbClient = Utils.getCouchDBClient();
+		 dbClient.save(virtualSensor);
+	     dbClient.shutdown();
+	}
+
+	@Override
+	public List<VirtualSensor> getVirtualSensors() {
+		CouchDbClient dbClient = Utils.getCouchDBClient();
+		List<VirtualSensor> virtualSensors = dbClient.view("_all_docs")
+   			  .includeDocs(true)
+   			  .query(VirtualSensor.class);
+		return virtualSensors;
 	}
 }
