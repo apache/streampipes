@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
@@ -81,7 +82,9 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 	}
 	
 	private Message successMessage() {
-		return new SuccessMessage(collectNotifications());
+		List<Notification> notifications = collectNotifications();
+		notifications.add(NotificationType.STORAGE_SUCCESS.uiNotification());
+		return new SuccessMessage(notifications);
 	}
 	
 	private List<Notification> collectNotifications()
