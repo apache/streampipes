@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
+import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -20,15 +21,11 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
-import de.fzi.cep.sepa.storage.PipelineStorageImpl;
+import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
-import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
-import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
-import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
-import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
 public enum StorageManager {
@@ -160,5 +157,8 @@ public enum StorageManager {
 	public ConnectionStorage getConnectionStorageApi() {
 		return new ConnectionStorageImpl();
 	}
-	
+
+	public UserStorage getUserStorageAPI() { return new UserStorage(); }
+
+
 }

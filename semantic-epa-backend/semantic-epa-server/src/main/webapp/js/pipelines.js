@@ -4,6 +4,7 @@ function refreshPipelines(){
 
 	$("#pipelineTableBody").children().remove();
 	var url = standardUrl + "pipelines";
+	//var url = standardUrl + "user/streams";
 	pipelines = $.getJSON(url, listPipelines);
 	
 }

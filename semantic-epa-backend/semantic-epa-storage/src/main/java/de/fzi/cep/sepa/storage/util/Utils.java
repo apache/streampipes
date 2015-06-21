@@ -39,4 +39,12 @@ public class Utils {
 		CouchDbClient dbClient = new CouchDbClient("couchdb-connection.properties");
 		return dbClient;
 	}
+
+	public static CouchDbClient getCouchDbUserClient()
+	{
+		CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+		return dbClient;
+	}
+
+
 }

@@ -1,14 +1,17 @@
 package de.fzi.cep.sepa.rest;
 
+import com.google.gson.JsonArray;
 import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.client.user.Role;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.User;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
+import de.fzi.cep.sepa.storage.impl.UserStorage;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -22,6 +25,7 @@ import org.lightcouch.CouchDbClient;
 
 import com.google.gson.JsonObject;
 
+import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +34,15 @@ import java.security.MessageDigest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
+ * User REST-Interface.
+ *
  * Created by robin on 04.05.15.
  */
 @Path("/user")
@@ -41,14 +51,7 @@ public class UserImpl extends AbstractRestInterface implements User{
 
     Logger LOG = LoggerFactory.getLogger(UserImpl.class);
 
-    StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
     CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
-    String username;
-
-
-    List<String> sources;
-    List<String> actions;
-    List<String> streams;
 
 
     @Override
@@ -60,26 +63,14 @@ public class UserImpl extends AbstractRestInterface implements User{
      */
     public String doRegisterUser(@FormParam("username") String username, @FormParam("password") String password) {
 
-        if (dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class).size() != 0) {
-            return "Username already exists. Sorry choose another one";
-        }
-
-        JsonObject user =  new JsonObject();
-        user.addProperty("username", username);
-        user.addProperty("password", password);
-        //TODO change to real role management
-        user.addProperty("roles", "user");
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            byte[] input = digest.digest(password.getBytes("UTF-8"));
-            user.addProperty("hashedPassword", new String(input));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (StorageManager.INSTANCE.getUserStorageAPI().checkUser(username)) {
             return toJson(new ErrorMessage(NotificationType.REGISTRATION_FAILED.uiNotification()));
         }
-        dbClient.save(user);
 
+        Set<Role> roles = new HashSet<Role>();
+        List<String> pipelines = new ArrayList<>();
+        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(username, "", password, roles, pipelines);
+        userStorage.storeUser(user);
         return  toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     }
 
@@ -88,25 +79,9 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
-        LOG.info(SecurityUtils.getSecurityManager().toString());
 
         Subject subject = SecurityUtils.getSubject();
-        if (subject.isAuthenticated()) return "Already logged in. Please log out to change user";
-
-        JsonObject user =  new JsonObject();
-        user.addProperty("username", username);
-        user.addProperty("password", password);
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            byte[] input = digest.digest(password.getBytes("UTF-8"));
-            user.addProperty("hashedPassword", new String(input));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        this.username = username;
+        if (SecurityUtils.getSubject().isAuthenticated()) return "Already logged in. Please log out to change user";
 
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         token.setRememberMe(true);
@@ -129,6 +104,7 @@ public class UserImpl extends AbstractRestInterface implements User{
         return toJson(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
     }
 
+
     @Override
     @Path("/sources")
     @GET
@@ -142,35 +118,66 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Path("/remember")
     @GET
     public String isRemembered() {
-
         if (SecurityUtils.getSubject().isRemembered()) {
             return toJson(new SuccessMessage(NotificationType.REMEMBERED.uiNotification()));
         }
         return toJson(new ErrorMessage(NotificationType.NOT_REMEMBERED.uiNotification()));
     }
 
+    /*public static void main(String[] args) {
+        //String streams = new UserImpl().getAllStreams();
+        //System.out.println(streams);
+        String username = "user";
+        CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+        JsonArray pipelineIds = dbClient.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
+        System.out.println((pipelineIds));
+    }*/
+
+
     @Override
+    @GET
+    @Path("/streams")
+    /**
+     * Returns IDs from all Pipelines the user added
+     */
     public String getAllStreams() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            JsonArray pipelineIds = dbClient.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
+            return toJson(pipelineIds);
+        }
         return null;
     }
 
     @Override
     public String getAllActions() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+        }
         return null;
     }
 
     @Override
     public String getSelectedSources() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+        }
         return null;
     }
 
     @Override
     public String getSelectedStreams() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+        }
         return null;
     }
 
     @Override
     public String getSelectedActions() {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+        }
         return null;
     }
 

@@ -1,13 +1,19 @@
-package de.fzi.cep.sepa.storage;
+package de.fzi.cep.sepa.storage.impl;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
+import org.apache.shiro.SecurityUtils;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +23,8 @@ import java.util.List;
  */
 public class PipelineStorageImpl implements PipelineStorage {
 
+	//CouchDbClient dbClient = Utils.getCouchDBClient();
+	Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     @Override
     public List<Pipeline> getAllPipelines() {
@@ -30,6 +38,33 @@ public class PipelineStorageImpl implements PipelineStorage {
     		if (p.getAction() != null) result.add(p);
     	 return result;
     }
+
+	public List<Pipeline> getAllUserPipelines() {
+		CouchDbClient dbClientUser = Utils.getCouchDbUserClient();
+		CouchDbClient dbClientPipeline = Utils.getCouchDBClient();
+		List<Pipeline> pipelines = new ArrayList<>();
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			JsonArray pipelineIds = dbClientUser.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
+			for (JsonElement id : pipelineIds) {
+				pipelines.add(dbClientPipeline.find(Pipeline.class, id.getAsString()));
+			}
+		}
+		return pipelines;
+	}
+
+	/*public static void main(String[] args) {
+		CouchDbClient dbClientUser = Utils.getCouchDbUserClient();
+		CouchDbClient dbClientPipeline = Utils.getCouchDBClient();
+		String username = "user";
+		List<Pipeline> pipelines = new ArrayList<>();
+		JsonArray pipelineIds = dbClientUser.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
+		System.out.println(pipelineIds);
+		for (JsonElement id : pipelineIds) {
+			pipelines.add(dbClientPipeline.find(Pipeline.class, id.getAsString()));
+		}
+		System.out.println(pipelines);
+	}*/
 
     @Override
     public void storePipeline(Pipeline pipeline) {
@@ -55,17 +90,18 @@ public class PipelineStorageImpl implements PipelineStorage {
             dbClient.shutdown();
             return pipeline;
         } catch (NoDocumentException e) {
+			LOG.error("No pipeline wit ID %s found", pipelineId);
             return null;
         }
     }
 
     @Override
     public void deletePipeline(String pipelineId) {
-        CouchDbClient dbClient = Utils.getCouchDBClient();
+        CouchDbClient dbClientPipeline = Utils.getCouchDBClient();
         try {
-            Pipeline removePipeline = dbClient.find(Pipeline.class, pipelineId);
-            dbClient.remove(removePipeline);
-            dbClient.shutdown();
+            Pipeline removePipeline = dbClientPipeline.find(Pipeline.class, pipelineId);
+            dbClientPipeline.remove(removePipeline);
+            dbClientPipeline.shutdown();
         } catch (NoDocumentException e) {
             e.printStackTrace();
         }

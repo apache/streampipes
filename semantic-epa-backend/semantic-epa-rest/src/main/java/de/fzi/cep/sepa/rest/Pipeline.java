@@ -32,6 +32,9 @@ import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Pipeline REST interface.
+ */
 @Path("/pipelines")
 public class Pipeline extends AbstractRestInterface {
 
@@ -48,7 +51,8 @@ public class Pipeline extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getPipelines()
 	{
-		return toJson(pipelineStorage.getAllPipelines());
+		return toJson(pipelineStorage.getAllUserPipelines());
+		//return toJson(pipelineStorage.getAllPipelines());
 	}
 	
 	/**
@@ -56,35 +60,22 @@ public class Pipeline extends AbstractRestInterface {
 	 * @param pipeline a JSON representation of a pipeline
 	 * @return a JSON representation of a success message or an error message otherwise
 	 */
-	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipelines(String pipeline)
 	{
+		//Store in pipeline database
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		serverPipeline.setRunning(false);
 		pipelineStorage.store(serverPipeline);
 
-		if (SecurityUtils.getSubject().isRemembered() || SecurityUtils.getSubject().isAuthenticated()) {
+
+		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
-			List<JsonObject> users = dbClient.view("users/username").key(username).includeDocs(true).query(JsonObject.class);
-			if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
-			JsonObject user = users.get(0);
-			LOG.info("User is: " + user.get("username").getAsString());
-			if (user.has("pipelines")) {
-				JsonArray storedPipelines = user.getAsJsonArray("pipelines");
-				JsonPrimitive newPipeline = new JsonPrimitive(pipeline);
-				storedPipelines.add(newPipeline);
-				user.add("pipelines", storedPipelines);
-			} else {
-				JsonArray storedPipelines = new JsonArray();
-				JsonPrimitive newPipeline = new JsonPrimitive(pipeline);
-				storedPipelines.add(newPipeline);
-				user.add("pipelines", storedPipelines);
-			}
-			dbClient.update(user);
+			userStorage.addPipeline(username, serverPipeline.getPipelineId());
 		}
+
 		return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 	}
 	
@@ -94,7 +85,10 @@ public class Pipeline extends AbstractRestInterface {
 	public String deletePipeline(@PathParam("pipelineId") String pipelineId)
 	{
 		try {
-			pipelineStorage.deletePipeline(pipelineId);
+			//TODO you probably just want to delete the reference on the current user otherwise you have ot find all references
+			//pipelineStorage.deletePipeline(pipelineId);
+			if (getCurrentUsername() != null) userStorage.deletePipeline(getCurrentUsername(), pipelineId);
+
 			return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 		} catch (Exception e)
 		{

@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import de.fzi.cep.sepa.storage.impl.UserStorage;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.shiro.SecurityUtils;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -31,6 +33,7 @@ public abstract class AbstractRestInterface {
 
 	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
 	protected static PipelineStorage pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
+	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();
 	
 	protected <T> String toJson(T object)
 	{
@@ -72,6 +75,13 @@ public abstract class AbstractRestInterface {
 	private String constructMessage(Message message)
 	{
 		return toJson(message);
+	}
+
+	protected String getCurrentUsername() {
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			return SecurityUtils.getSubject().getPrincipal().toString();
+		}
+		return null;
 	}
 	
 }

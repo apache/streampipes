@@ -9,6 +9,8 @@ import de.fzi.cep.sepa.model.client.VirtualSensor;
 public interface PipelineStorage {
 
 	public List<Pipeline> getAllPipelines();
+
+	public List<Pipeline> getAllUserPipelines();
 	
 	public List<RunningVisualization> getRunningVisualizations();
 	

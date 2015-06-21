@@ -1,22 +1,30 @@
 package de.fzi.cep.sepa.model.client.user;
 
+import com.google.gson.annotations.SerializedName;
+
+import javax.persistence.Entity;
+import java.util.List;
 import java.util.Set;
 
+@Entity
 public class User {
 
-	private String userId;
-	private String username;
-	private String email;
-	private String password;
+	protected @SerializedName("_id") String userId;
+	protected @SerializedName("_rev") String rev;
+	protected String username;
+	protected String email;
+	protected String password;
+	protected List<String> pipelines;
 	
 	private Set<Role> roles;	
 	
-	public User(String username, String email, String password, Set<Role> roles) {
+	public User(String username, String email, String password, Set<Role> roles, List<String> pipelines) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
+		this.pipelines = pipelines;
 	}
 
 	public String getUsername() {
@@ -58,7 +66,21 @@ public class User {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
-	
-	
+
+
+	public List<String> getPipelines() {
+		return pipelines;
+	}
+
+	public void setPipelines(List<String> pipelines) {
+		this.pipelines = pipelines;
+	}
+
+	public void addPipeline(String pipelineId) {
+		this.pipelines.add(pipelineId);
+	}
+
+	public void deletePipeline(String pipelineId) {
+		pipelines.remove(pipelineId);
+	}
 }
