@@ -46,7 +46,7 @@ function createPipelineTableRowData(i, $row){
 
 		}
 		$("<td>").append(getGlyphIconButton("glyphicon glyphicon-remove", true, function(e){e.stopPropagation(); deletePipeline(getParentWithJSONData($(this)).data("JSON")._id, getParentWithJSONData($(this)));})).appendTo($row); //Delete
-	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", true, function(e){e.stopPropagation(); adjustPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
+	$("<td>").append(getGlyphIconButton("glyphicon glyphicon-wrench", true, function(e){e.stopPropagation(); adjustSavedPipeline(getParentWithJSONData($(this)).data("JSON"));})).appendTo($row); //Modify
 	
 	
 }
@@ -130,8 +130,6 @@ function stopPipeline(pipelineId){
 	$.ajax({
 		url : url,
 		success : function(data){
-			console.log("success");
-			console.log(data);
 			if (data.success){
 				displaySuccess(data);
 				changePipelineStatus(data, pipelineId);
@@ -149,7 +147,6 @@ function stopPipeline(pipelineId){
 
 function displayPipeline(json){
 	console.log("displayPipeline()");
-	console.log(jsPlumb.getContainer());
 	for (var i = 0, stream; stream = json.streams[i]; i++){		
 		createPreviewElement("stream", stream, i, json);
 	}
@@ -238,36 +235,21 @@ function createPreviewElement(type, element, i, json){
 
 function connectPipelineElements(json, detachable){
 	console.log("connectPipelineElements()");
-	console.log(jsPlumb.getContainer());
 	var source, target;
-	var sourceOptions = {
-		endpoint: ["Dot", {radius: 5}],
-		paintStyle: {fillStyle: "grey"},
-		connectorStyle : {strokeStyle: "grey", lineWidth: 4},
-		connector: "Straight",
-		anchor: "Right",
-		connectorOverlays: [ 
-		    [ "Arrow", { width:25, length:20, location:.5, id:"arrow" } ],   
-	  	]
-	};
-	var targetOptions = {
-		endpoint: "Rectangle",
-		paintStyle: {fillStyle: "grey"},
-		anchor: "Left",
-		isTarget: true
-	};
+
 	jsPlumb.setSuspendDrawing(true);
-	
-	//Action --> Sepas----------------------//
+	if (!$.isEmptyObject(json.action)) {
+		//Action --> Sepas----------------------//
 		target = json.action.DOM;
-	
-		for (var i = 0, connection; connection = json.action.connectedTo[i]; i++){
+
+		for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
 			source = connection;
 
 			var sourceEndpoint = jsPlumb.addEndpoint(source, sepaEndpointOptions);
 			var targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
-			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
+			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
 		}
+	}
 	//Sepas --> Streams---------------------//
 		for (var i = 0, sepa; sepa = json.sepas[i]; i++){
 			for (var j = 0, connection; connection = sepa.connectedTo[j]; j++){
@@ -288,17 +270,21 @@ function connectPipelineElements(json, detachable){
 	
 }
 
-function adjustPipeline(json){
-	var type = "Proa"; //TODO ändern auf jeweiligen Use-Case
+function adjustSavedPipeline(json){
 	console.log(json);
 	state.adjustingPipelineState = true;
 	clearPipelineDisplay();
-	//jsPlumb.setContainer($("#assembly"));
 	$("#tabs").find("a[href='#editor']").tab('show');
 	showAdjustingPipelineState(json.name);
-	
-	// refresh(type);
-	
+	state.adjustingPipeline = json;
+	displayPipelineInAssembly(json);
+}
+
+
+function displayPipelineInAssembly(json){
+
+	jsPlumb.setContainer($("#assembly"));
+
 	var currentx = 50;
 	var currenty = 50;
 	for (var i = 0, stream; stream = json.streams[i]; i++){
@@ -313,12 +299,16 @@ function adjustPipeline(json){
 			
 	}
 	currentx += 200;
-	handleDroppedAction(createNewAssemblyElement(json.action, {'x':currentx, 'y':currenty})
-		.data("options", true));
-	state.adjustingPipeline = json;
+	if (!$.isEmptyObject(json.action)) {
+		handleDroppedAction(createNewAssemblyElement(json.action, {'x': currentx, 'y': currenty})
+			.data("options", true));
+
+	}
+
 	
 	connectPipelineElements(json, true);
-	jsPlumb.repaintEverything(true);
+	console.log(json);
+	jsPlumb.repaintEverything();
 	
 }
 

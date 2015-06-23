@@ -190,7 +190,7 @@ body {
 	cursor: pointer;
 	position: absolute;
 	left: 70%;
-	top: 0px;
+	top: 0;
 	height: 40%;
 	width: 40%;
 	background-color: #33DD33;
@@ -393,7 +393,34 @@ textarea{
 	text-align: center;
 }
 
+.block {
+	position: absolute;
+	cursor: pointer;
+	height: 180px;
+	width: 150px;
+	background: linear-gradient(to bottom, #fff 0%,#eee 100%);
+	border-radius: 5px;
+	box-shadow: -2px 2px 5px rgb(153, 153, 153);
+	border: 1px solid rgb(153, 153, 153);
 
+}
+.block-name {
+	font-size: 20px;
+	/*height: 30px;*/
+	vertical-align: middle;
+	text-align: center;
+	border-bottom: 1px solid #cccccc;
+}
+.block-img-container {
+	height: 150px;
+	width: 150px;
+	padding: 25px;
+	/*border-top: 3px solid rgb(51, 51, 51);*/
+}
+.block-img {
+	height: 100px;
+	width: 100px;
+}
 .ui-autocomplete-input {
   border: none; 
   font-size: 14px;

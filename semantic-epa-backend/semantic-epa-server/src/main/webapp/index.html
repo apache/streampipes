@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="js/pipelines.js"></script>
 	<script type="text/javascript" src="js/buttons.js"></script>
 	<script type="text/javascript" src="js/md5.js"></script>
-	<script type="text/javascript" src="js/pipelineFactory.js"></script>
+	<script type="text/javascript" src="js/flowtype.js"></script>
 	<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
@@ -434,7 +434,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
 						</button>
-						<h4 class="modal-title">Pipeline Name</h4>
+						<h4 class="modal-title">Block Name</h4>
 					</div>
 					<div class="modal-body">
 
@@ -452,12 +452,17 @@
 
 								</div>
 							</div>
+							<div id="saveBlockCheckbox" class="checkbox">
+								<label>
+									<input name="save" type="checkbox"> Save to Blocks
+								</label>
+							</div>
 						</form>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal" >
 								Close
 							</button>
-							<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createBlock()">
+							<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="blockElements()">
 								Create
 							</button>
 						</div>
@@ -768,7 +773,14 @@
 		</div>
 	</div>
 	<div class="tab-pane" id="testTab">
-
+		<div class="block">
+			<div class="block-name">
+				TestBlock
+			</div>
+			<div class="block-img-container">
+				<img src="img/And_Icon_HQ.png" class="block-img">
+			</div>
+		</div>
 	</div>
 </div>
 </body>

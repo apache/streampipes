@@ -55,9 +55,8 @@ function initAssembly() {
                 //Droppable Streams
                 if (ui.draggable.hasClass('stream')) {
                     handleDroppedStream($newState, true);
-                    //addRecommendedButton($newState);
-                    var tempPipeline = {streams: [], sepas: [], action: {}};
-                    addToPipeline($newState[0], tempPipeline);
+                    var tempPipeline = new Pipeline();
+                    tempPipeline.addElement($newState[0]);
                     initRecs(tempPipeline, $newState);
 
                     //$newState.hover(showRecButton, hideRecButton);
@@ -88,14 +87,6 @@ function addRecommendedButton($element) {
             $recList.circleMenu('open');
         })
         .appendTo($element);
-    $element.append($("<span><ul>").addClass("recommended-list"));
-    $("ul", $element)
-        .circleMenu({
-            direction: "right-half",
-            item_diameter: 50,
-            circle_radius: 150,
-            trigger: 'none'
-        });
 }
 
 function showRecButton(e) {
@@ -111,7 +102,7 @@ function getCoordinates(ui) {
     var newPos = ui.helper.position();
     var newTop = getDropPosition(ui.helper);
 
-    return coord = {
+    return {
         'x': newPos.left,
         'y': newTop
     };
@@ -121,7 +112,7 @@ function createNewAssemblyElement(json, coordinates) {
     var $newState = $('<span>')
         .data("JSON", $.extend(true, {}, json))
         .appendTo('#assembly');
-    if (state.adjustingPipelineState) {
+    if (typeof json.DOM != "undefined") { //TODO TESTTEST
         $newState.attr("id", json.DOM);
         $newState.addClass('a'); //Flag so customize modal won't get triggered
     }
@@ -138,6 +129,7 @@ function createNewAssemblyElement(json, coordinates) {
                 $('#customize, #division ').show();
             }
             if ($(this).hasClass('ui-selected') && isConnected(this)){
+                $('#blockButton').text("Create Block from Selected");
                 $('#blockButton, #division1 ').show();
             } else {
                 $('#blockButton, #division1 ').hide();
@@ -220,7 +212,7 @@ function handleDroppedSepa($newState, endpoints) {
     $('#actions').fadeTo(100, 1);
     $newState
         .addClass('connectable sepa');
-    if ($newState.data("JSON").staticProperties != null && !state.adjustingPipelineState) {
+    if ($newState.data("JSON").staticProperties != null && !state.adjustingPipelineState && !$newState.data("options")) {
         $newState
             .addClass('disabled');
     }
@@ -293,14 +285,8 @@ function clearAssembly() {
 }
 
 function createPartialPipeline(info) {
-    var pipelinePart = {};
-    pipelinePart.streams = [];
-    pipelinePart.sepas = [];
-    pipelinePart.action = {};
-
-
+    var pipelinePart = new Pipeline();
     var element = info.target;
-
 
     addElementToPartialPipeline(element, pipelinePart);
     state.currentPipeline = pipelinePart;
@@ -309,13 +295,15 @@ function createPartialPipeline(info) {
 
 function addElementToPartialPipeline(element, pipelinePart) {
 
-
-    addToPipeline(element, pipelinePart);
-    if (jsPlumb.getConnections({target: element}) != null && jsPlumb.getConnections({target: element}) !== "undefined" ) {
-        for (var i = 0, con; con = jsPlumb.getConnections({target: element})[i]; i++) {
+    pipelinePart.addElement(element);
+    //addToPipeline(element, pipelinePart);
+    var connections = jsPlumb.getConnections({target: element});
+    if (connections.length > 0) {
+        for (var i = 0, con; con = connections[i]; i++) {
             addElementToPartialPipeline(con.source, pipelinePart);
         }
     }
+
 }
 
 function showAdjustingPipelineState(pipelineName) {
@@ -332,49 +320,46 @@ function hideAdjustingPipelineState() {
  */
 function submit() {
     var error = false;
-    var pipeline = {};
-    var streams = [];
-    var sepas = [];
-    var action = {};
+    var pipelineNew = new Pipeline();
     var streamPresent = false;
     var sepaPresent = false;
     var actionPresent = false;
 
-    pipeline.streams = streams;
-    pipeline.sepas = sepas;
-    pipeline.action = action;
 
-    $('#assembly>span.connectable').each(function (i, element) {
+
+    $('#assembly').find('.connectable, .block').each(function (i, element) {
+        var $element = $(element);
+
         if (!isConnected(element)) {
             error = true;
 
             toastRightTop("error", "All elements must be connected", "Submit Error");
         }
 
-        if ($(element).hasClass('sepa')) {
+        if ($element.hasClass('sepa')) {
             sepaPresent = true;
-            if ($(element).data("options")) {
-                addToPipeline(element, pipeline);
+            if ($element.data("options")) {
+                pipelineNew.addElement(element);
 
-            } else if ($(element).data("JSON").staticProperties != null) {
+            } else if ($element.data("JSON").staticProperties != null) {
                 toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                 ;
                 error = true;
 
             }
-        } else if ($(element).hasClass('stream')) {
+        } else if ($element.hasClass('stream')) {
             streamPresent = true;
-            addToPipeline(element, pipeline);
+            pipelineNew.addElement(element);
 
-        } else if ($(element).hasClass('action')) {
+
+        } else if ($element.hasClass('action')) {
             if (actionPresent) {
                 error = true;
                 toastRightTop("error", "More than one action element present in pipeline", "Submit Error");
             } else {
                 actionPresent = true;
-                if ($(element).data("JSON").staticProperties == null || $(element).data("options")) {
-
-                    addToPipeline(element, pipeline);
+                if ($element.data("JSON").staticProperties == null || $element.data("options")) {
+                    pipelineNew.addElement(element);
                 } else {
                     toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                     ;
@@ -382,6 +367,10 @@ function submit() {
 
                 }
             }
+        } else if ($element.hasClass('block')) {
+            streamPresent = true;
+            sepaPresent = true;
+            pipelineNew.addElement(element);
         }
     });
     if (!streamPresent) {
@@ -398,7 +387,7 @@ function submit() {
     }
     if (!error) {
 
-        state.currentPipeline = pipeline;
+        state.currentPipeline = pipelineNew;
         openPipelineNameModal();
 
 
@@ -435,107 +424,106 @@ function savePipelineName() {
     } else {
         overWrite = false;
     }
-
-    sendPipeline(true, overWrite);
+    state.currentPipeline.send(overWrite);
+    //sendPipeline(true, overWrite);
 }
 
-function sendPipeline(fullPipeline, overWrite, info) {
-
-    if (fullPipeline) {
-
-        return $.ajax({
-            url: standardUrl +"pipelines",
-            data: JSON.stringify(state.currentPipeline),
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                if (data.success) {			//TODO Objekt im Backend ändern
-                    // toastTop("success", "Pipeline sent to server");
-                    displaySuccess(data);
-                    if (state.adjustingPipelineState && overWrite) {
-                        var pipelineId = state.adjustingPipeline._id;
-                        var url = standardUrl + "pipelines/" + pipelineId;
-                        $.ajax({
-                            url: url,
-                            success: function (data) {
-                                if (data.success) {
-                                    state.adjustingPipelineState = false;
-                                    $("#overwriteCheckbox").css("display", "none");
-                                    refresh("Proa");
-                                } else {
-                                    displayErrors(data);
-                                }
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            },
-                            type: 'DELETE',
-                            processData: false
-                        });
-                    }
-                    refresh("Proa");
-
-
-                } else {
-                    displayErrors(data);
-                }
-            },
-            error: function (data) {
-                toastRightTop("error", "Could not fulfill request", "Connection Error");
-            }
-        });
-
-
-    } else {
-
-        return $.ajax({
-            url: standardUrl +"pipelines/update",
-            data: JSON.stringify(state.currentPipeline),
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                if (data.success) {			//TODO Objekt im Backend ändern
-                    modifyPipeline(data.pipelineModifications);
-                    for (var i = 0, sepa; sepa = state.currentPipeline.sepas[i]; i++) {
-                        var id = "#" + sepa.DOM;
-                        if ($(id).data("options") != true) {
-                            if (!isFullyConnected(id)) {
-                                return;
-                            }
-                            $('#customize-content').html(prepareCustomizeModal($(id)));
-							$(textInputFields).each(function (index, value) {
-								addAutoComplete(value.fieldName, value.propertyName);
-							});
-                            var string = "Customize " + sepa.name;
-                            $('#customizeTitle').text(string);
-                            $('#customizeModal').modal('show');
-
-                        }
-
-                    }
-                    if (!$.isEmptyObject(state.currentPipeline.action)) {
-                        var id = "#" + state.currentPipeline.action.DOM;
-                        if (!isFullyConnected(id)) {
-                            return;
-                        }
-                        $('#customize-content').html(prepareCustomizeModal($(id)));
-                        var string = "Customize " + state.currentPipeline.action.name;
-                        $('#customizeTitle').text(string);
-                        $('#customizeModal').modal('show');
-                    }
-
-                } else {
-                    jsPlumb.detach(info.connection);
-                    displayErrors(data);
-                }
-
-            },
-            error: function (data) {
-                toastRightTop("error", "Could not fulfill request", "Connection Error");
-            }
-        });
-    }
-}
+//function sendPipeline(fullPipeline, overWrite, info) {
+//
+//    if (fullPipeline) {
+//
+//        return $.ajax({
+//            url: "http://localhost:8080/semantic-epa-backend/api/pipelines",
+//            data: JSON.stringify(state.currentPipeline),
+//            processData: false,
+//            type: 'POST',
+//            success: function (data) {
+//                if (data.success) {			//TODO Objekt im Backend ändern
+//                    // toastTop("success", "Pipeline sent to server");
+//                    displaySuccess(data);
+//                    if (state.adjustingPipelineState && overWrite) {
+//                        var pipelineId = state.adjustingPipeline._id;
+//                        var url = standardUrl + "pipelines/" + pipelineId;
+//                        $.ajax({
+//                            url: url,
+//                            success: function (data) {
+//                                if (data.success) {
+//                                    state.adjustingPipelineState = false;
+//                                    $("#overwriteCheckbox").css("display", "none");
+//                                    refresh("Proa");
+//                                } else {
+//                                    displayErrors(data);
+//                                }
+//                            },
+//                            error: function (data) {
+//                                console.log(data);
+//                            },
+//                            type: 'DELETE',
+//                            processData: false
+//                        });
+//                    }
+//                    refresh("Proa");
+//
+//
+//                } else {
+//                    displayErrors(data);
+//                }
+//            },
+//            error: function (data) {
+//                toastRightTop("error", "Could not fulfill request", "Connection Error");
+//            }
+//        });
+//
+//
+//    } else {
+//
+//        return $.ajax({
+//            url: "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
+//            data: JSON.stringify(state.currentPipeline),
+//            processData: false,
+//            type: 'POST',
+//            success: function (data) {
+//                if (data.success) {			//TODO Objekt im Backend ändern
+//                    modifyPipeline(data.pipelineModifications);
+//                    for (var i = 0, sepa; sepa = state.currentPipeline.sepas[i]; i++) {
+//                        var id = "#" + sepa.DOM;
+//                        if ($(id) !== "undefined") {
+//                            if ($(id).data("options") != true) {
+//                                if (!isFullyConnected(id)) {
+//                                    return;
+//                                }
+//                                $('#customize-content').html(prepareCustomizeModal($(id)));
+//                                var string = "Customize " + sepa.name;
+//                                $('#customizeTitle').text(string);
+//                                $('#customizeModal').modal('show');
+//
+//                            }
+//                        }
+//
+//                    }
+//                    if (!$.isEmptyObject(state.currentPipeline.action)) {
+//                        var id = "#" + state.currentPipeline.action.DOM;
+//                        if (!isFullyConnected(id)) {
+//                            return;
+//                        }
+//                        $('#customize-content').html(prepareCustomizeModal($(id)));
+//                        var string = "Customize " + state.currentPipeline.action.name;
+//                        $('#customizeTitle').text(string);
+//                        $('#customizeModal').modal('show');
+//                    }
+//
+//                } else {
+//                    jsPlumb.detach(info.connection);
+//                    displayErrors(data);
+//                }
+//
+//            },
+//            error: function (data) {
+//                toastRightTop("error", "Could not fulfill request", "Connection Error");
+//            }
+//        });
+//    }
+//}
 
 
 function modifyPipeline(pipelineModifications) {
@@ -543,8 +531,9 @@ function modifyPipeline(pipelineModifications) {
 
     for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
         id = "#" + modification.domId;
-        $(id).data("JSON").staticProperties = modification.staticProperties;
-
+        if ($(id) !== "undefined") {
+            $(id).data("JSON").staticProperties = modification.staticProperties;
+        }
         //clearCurrentElement();
     }
 
@@ -662,9 +651,17 @@ function initRecs(pipeline, $element) {
     $.when(getRecommendations(pipeline))
         .then(function (data) {
             if (data.success) {
-                addRecommendedButton($element);
+                $element.append($("<span><ul>").addClass("recommended-list"));
+                $("ul", $element)
+                    .circleMenu({
+                        direction: "right-half",
+                        item_diameter: 50,
+                        circle_radius: 150,
+                        trigger: 'none'
+                    });
                 $element.hover(showRecButton, hideRecButton);
                 populateRecommendedList($element, data.recommendedElements);
+                addRecommendedButton($element);
 
             }else{
                 console.log(data);
@@ -694,7 +691,7 @@ function populateRecommendedList($element, recs) {
 
         el = recs[i];
         var recommendedElement = getElementByElementId(el.elementId);
-        if (typeof recommendedElement !== "undefined") {
+        if (typeof recommendedElement != "undefined") {
 
             var recEl = new recElement(recommendedElement);
             $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
@@ -705,7 +702,7 @@ function populateRecommendedList($element, recs) {
             }).appendTo($('ul', $element));
             $('ul', $element).circleMenu('init');
         } else {
-
+            console.log(i);
         }
     }
 

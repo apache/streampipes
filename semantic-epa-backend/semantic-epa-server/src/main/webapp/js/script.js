@@ -62,7 +62,9 @@ jsPlumb.ready(function (e) {
         var $target = $(info.target);
         if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
             createPartialPipeline(info);
-            $.when(sendPipeline(false, false, info)).then(function(data){
+            $.when(
+                state.currentPipeline.update(info)
+            ).then(function(data){
                 if (data.success) {
                     if ($target.hasClass('sepa')) {
                         initRecs(state.currentPipeline, $target);

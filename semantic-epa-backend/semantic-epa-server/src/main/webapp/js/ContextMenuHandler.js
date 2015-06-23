@@ -1,6 +1,7 @@
 /**
  * Created by Cuddl3s on 03.06.2015.
  */
+
 /**
  * Handles clicks in the contextmenu
  * @param {Object} type
@@ -18,11 +19,18 @@ function ContextMenuClickHandler(type) {
 
             }
             if ($selected.get(0) === $('#blockButton').get(0)){
-                $('#blockNameModal').modal('show');
+                if ($invokedOn.hasClass("block")){
+                    console.log({json: JSON.stringify($invokedOn.data("block").pipeline)});
+                    displayPipelineInAssembly($.extend({}, $invokedOn.data("block").pipeline));
+                    handleDeleteOption($invokedOn);
+                    //$invokedOn.remove();
+                }else{
+                    $('#blockNameModal').modal('show');
+                }
             }
             else if ($selected.get(0) === $('#delete').get(0)) {
 
-                handleDelete($invokedOn);
+                handleDeleteOption($invokedOn);
 
             } else if ($selected.get(0) === $('#customize').get(0)) {//Customize clicked
 
@@ -30,13 +38,7 @@ function ContextMenuClickHandler(type) {
                 $('#customizeModal').modal('show');
 
             } else {
-                var json = $invokedOn.data("JSON");
-                $('#description-title').text(json.name);
-                if (json.description) {$('#modal-description').text(json.description);}
-                else {$('#modal-description').text("No description available");}
-                $('#descrModal').modal('show');
-                state.currentElement = $invokedOn;
-                prepareJsonLDModal(json)
+                handleJsonLDOption($invokedOn)
             }
         });
     } else if (type === "static") {
@@ -54,7 +56,7 @@ function ContextMenuClickHandler(type) {
     }
 }
 
-function handleDelete($element){
+function handleDeleteOption($element){
     jsPlumb.removeAllEndpoints($element);
 
     $element.remove();
@@ -77,4 +79,14 @@ function handleDelete($element){
     } else if (!$('#assembly').children().hasClass('action')) {
         $('#collapseThree').collapse('show');
     }
+}
+
+function handleJsonLDOption($element) {
+    var json = $element.data("JSON");
+    $('#description-title').text(json.name);
+    if (json.description) {$('#modal-description').text(json.description);}
+    else {$('#modal-description').text("No description available");}
+    $('#descrModal').modal('show');
+    state.currentElement = $element;
+    prepareJsonLDModal(json)
 }
