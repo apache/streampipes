@@ -397,6 +397,7 @@ public class ClientModelTransformer {
 	{
 		ActionClient client = new ActionClient(sec.getName(), sec.getDescription());
 		client.setElementId(sec.getRdfId().toString());
+		client.setIconUrl(sec.getIconUrl());
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
 		sec.getStaticProperties().forEach((p) -> clientStaticProperties.add(convertStaticProperty(p)));			
 		client.setStaticProperties(clientStaticProperties);	
