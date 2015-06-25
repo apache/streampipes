@@ -25,6 +25,20 @@ public class Matcher {
 		return allMatchingProperties;
 	}
 	
+	public List<EventProperty> matchesPropertiesList(EventProperty right,
+			List<EventProperty> left) {
+		List<EventProperty> matchingProperties = new ArrayList<>();
+		for (EventProperty l : left) {
+			if (l instanceof EventPropertyList)
+			{
+				for(EventProperty sp : ((EventPropertyList) l).getEventProperties())
+					if (matches(right, sp))
+						matchingProperties.add(sp);
+			}
+		}
+		return allMatchingProperties;
+	}
+	
 	public boolean matches(EventProperty right, List<EventProperty> left)
 	{
 		boolean match = false;
@@ -36,6 +50,7 @@ public class Matcher {
 	}
 	
 	public boolean matches(EventProperty right, EventProperty left) {
+		
 		boolean match = true;
 		//if (right.getClass() != left.getClass()) return false;
 		if (right instanceof EventPropertyPrimitive)
@@ -90,6 +105,7 @@ public class Matcher {
 	{
 		List<URI> relevantSubclasses = new ArrayList<>();
 		boolean match = true;
+		if (rightSubClasses == null) return match;
 		for (URI uri : rightSubClasses) {
 			if (!uri.toString().startsWith(sepaPrefix) && !uri.toString().startsWith(rdfPrefix))
 				relevantSubclasses.add(uri);

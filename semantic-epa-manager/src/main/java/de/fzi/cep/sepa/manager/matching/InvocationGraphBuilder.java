@@ -95,8 +95,8 @@ public class InvocationGraphBuilder {
 					
 					thisGraph.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(supportedStrategies.get(0))));
 
-					//if (node.getParent() != null)
-						grounding.setTransportProtocol(getPreferredTransportProtocol(thisGraph, null, outputTopic));
+					if (node.getParent() != null)
+					grounding.setTransportProtocol(getPreferredTransportProtocol(thisGraph, node, outputTopic));
 					
 					grounding
 							.setTransportFormats(Utils
@@ -137,23 +137,27 @@ public class InvocationGraphBuilder {
 		return new TransportFormat(MessageFormat.Json);
 	}
 	
-	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, NamedSEPAElement nextElement, String outputTopic)
+	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
 	{
-
-		//InvocableSEPAElement nextInvocable = (InvocableSEPAElement) nextElement;
-		//if (nextInvocable.getSupportedGrounding() == null) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
-		/*List<TransportProtocol> matchedProtocols = thisGraph.getSupportedGrounding().getTransportProtocols()
-			.stream()
-			.filter(previousProtocol -> nextInvocable
-				.getSupportedGrounding()
-				.getTransportProtocols()
-				.stream()
-				.anyMatch(nextProtocol -> nextProtocol
-						.getClass()
-						.getCanonicalName()
-						.equals(previousProtocol.getClass().getCanonicalName()))).collect(Collectors.toList());
-		/*if (matchedProtocols.stream().anyMatch(protocol -> protocol instanceof KafkaTransportProtocol))*/ return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
-		//else return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+		if (Configuration.isDemoMode()) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+		try {
+		if (node.getParent().getData() instanceof InvocableSEPAElement)
+		{
+			InvocableSEPAElement invocable = (InvocableSEPAElement) node.getParent().getData();
+			System.out.println(invocable.getName());
+			if (invocable.getSupportedGrounding().getTransportProtocols().stream().anyMatch(g -> g instanceof KafkaTransportProtocol))
+			{
+				System.out.println("selected kafka");
+				return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
+			}
+			else
+			{
+				System.out.println("selected jms");
+				return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+			}
+		}
+		} catch (Exception e) { return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic); }
+		return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
 	}
 
 	private InvocableSEPAElement buildSEPAElement(

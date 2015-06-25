@@ -20,7 +20,6 @@ public class SchemaMatchValidator implements Validator<List<EventSchema>> {
 			if (schema.getEventProperties() == null) return true;
 			for(EventProperty rightProperty : schema.getEventProperties())
 			{
-				rightProperty.getSubClassOf().forEach(property -> System.out.print(property.toASCIIString() +", "));
 				if (!new Matcher().matches(rightProperty, left.get(0).getEventProperties())) match = false;
 			}
 		}

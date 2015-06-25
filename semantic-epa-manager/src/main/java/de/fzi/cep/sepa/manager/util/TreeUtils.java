@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -62,6 +63,13 @@ public class TreeUtils {
 		{
 			for(EventProperty p : stream.getEventSchema().getEventProperties())
 			{
+				if (p instanceof EventPropertyList)
+				{
+					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
+					{
+						if (sp.getRdfId().toString().equals(uri)) return sp;
+					}
+				}
 				if (p.getRdfId().toString().equals(uri))
 					return p;
 			}

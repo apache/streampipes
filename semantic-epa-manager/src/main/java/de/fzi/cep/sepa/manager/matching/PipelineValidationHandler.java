@@ -305,7 +305,6 @@ public class PipelineValidationHandler {
 	}
 	
 	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream leftStream, int i) {
-			
 		MappingProperty mp = TreeUtils.findMappingProperty(
 				clientStaticProperty.getElementId(), sepa);
 		List<Option> options = new ArrayList<>();
@@ -314,9 +313,11 @@ public class PipelineValidationHandler {
 			EventProperty rightProperty = TreeUtils
 					.findEventProperty(mp.getMapsFrom()
 							.toString(), sepa.getEventStreams());
-		
+
+			
 			if (sepa.getEventStreams().get(i).getEventSchema().getEventProperties().contains(rightProperty))
 			{
+				
 				List<EventProperty> leftMatchingProperties = new Matcher().matchesProperties(
 						rightProperty, leftStream.getEventSchema()
 								.getEventProperties());
@@ -327,6 +328,19 @@ public class PipelineValidationHandler {
 							matchedStreamProperty.getRuntimeName()));
 				}
 			}
+			else
+			{
+				List<EventProperty> leftMatchingProperties = new Matcher().matchesPropertiesList(
+						rightProperty, leftStream.getEventSchema()
+								.getEventProperties());
+	
+				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
+					options.add(new Option(matchedStreamProperty
+							.getRdfId().toString(),
+							matchedStreamProperty.getRuntimeName()));
+				}
+			}
+			
 		} else {
 			for (EventProperty streamProperty : leftStream
 					.getEventSchema().getEventProperties()) {
