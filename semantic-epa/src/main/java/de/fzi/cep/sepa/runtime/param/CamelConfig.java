@@ -53,7 +53,7 @@ public interface CamelConfig { // every config that cannot be made with the simp
 	        
 	        //context.addComponent(brokerAlias, activeMQComponent);
 			
-			context.addComponent(brokerAlias, activeMQComponent);
+			context.addComponent(brokerAlias, JmsComponent.jmsComponentAutoAcknowledge(factory));
 		}
 
 		@Override
