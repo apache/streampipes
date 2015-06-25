@@ -50,7 +50,7 @@ public class DebsOutputController extends ActionController {
 
 	@Override
 	public boolean invokeRuntime(SecInvocation sec) {
-		String brokerUrl = createJmsUri(sec);
+		String brokerUrl = createKafkaUri(sec);
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
 		String path = ((FreeTextStaticProperty) (SepaUtils
@@ -58,7 +58,7 @@ public class DebsOutputController extends ActionController {
 		
 		DebsParameters fileParameters = new DebsParameters(inputTopic, brokerUrl, path);
 		
-		new Thread(new FileWriter(fileParameters)).start();
+		//new Thread(new FileWriter(fileParameters)).start();
 		
 		return true;
 	}

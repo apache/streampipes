@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.actions.samples.maps;
+package de.fzi.cep.sepa.actions.samples.route;
 
 import static org.rendersnake.HtmlAttributesFactory.id;
 import static org.rendersnake.HtmlAttributesFactory.onClick;
@@ -11,11 +11,9 @@ import org.rendersnake.StringResource;
 
 import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
 
-import static org.rendersnake.HtmlAttributesFactory.*;
+public class RouteGenerator extends HtmlGenerator<RouteParameters>{
 
-public class MapsGenerator extends HtmlGenerator<MapsParameters>{
-
-	public MapsGenerator(MapsParameters actionParameters) {
+	public RouteGenerator(RouteParameters actionParameters) {
 		super(actionParameters);
 	}
 
@@ -26,18 +24,15 @@ public class MapsGenerator extends HtmlGenerator<MapsParameters>{
 			canvas.div()
 			   .script(type("text/javascript"))
 					.render(new StringResource("stomp.js",false))
-			   		.render(new StringResource("gMaps.js",false))
+			   		.render(new StringResource("route/route.js",false))
 			   ._script()
 			   .button(onClick("buildGoogleMap('" +actionParameters.getUrl() +"', '" +actionParameters.getTopic() +"', '" +actionParameters.getLatitudeName() +"', '" +actionParameters.getLongitudeName() +"', '" +actionParameters.getLabelName() +"')").style("btn btn-danger")).write("Load")._button()   
 			   .div(id("container").style("min-width: 310px; height: 700px; margin: 0 auto"))._div()
 			._div();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return canvas;
 	}
-
-	
 
 }

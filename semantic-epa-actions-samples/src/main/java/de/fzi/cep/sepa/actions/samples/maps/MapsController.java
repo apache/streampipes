@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
+import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventProperty;
@@ -54,6 +55,7 @@ public class MapsController extends ActionController {
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
+		sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());
 		
 		return sec;
 	}

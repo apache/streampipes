@@ -56,6 +56,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	}
 
 	private Optional<byte[]> buildDerivedEvent(String json) {
+		System.out.println(json);
 		DerivedEvent event = new DerivedEvent();
 		
 		event.setComponentId("CEP");
@@ -72,12 +73,13 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 				
 				for(Map.Entry<String,JsonElement> entry : entries){
 					{
-						if (entry.getKey().equals("timestamp")) 
+						if (entry.getKey().equals("time")) 
 							{
 							try {
-								event.setTimestamp(obj.get(entry.getKey()).getAsLong());
+							
+								event.setTimestamp(obj.get("time").getAsLong());
 								System.out.println("Timestamp, " +event.getTimestamp());
-							} catch (Exception e) { e.printStackTrace();}
+							} catch (Exception e) { /*e.printStackTrace();*/}
 							}
 						else values.put(entry.getKey(), convert(obj.get(entry.getKey())));
 					}

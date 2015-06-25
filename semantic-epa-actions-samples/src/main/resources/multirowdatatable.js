@@ -23,7 +23,9 @@ var t;
 				var str = "";
 				var j = jQuery.parseJSON(message.body);
 				console.log(message.body);
-				$(j).each(function(index, v) {
+				var obj = j[listProperty];
+				console.log(obj);
+				$(j.list).each(function(index, v) {
 					str += "<tr>";
 					$(columnNames).each(function(index, value) {
 						str = str +"<td>" +v[value] +"</td>";

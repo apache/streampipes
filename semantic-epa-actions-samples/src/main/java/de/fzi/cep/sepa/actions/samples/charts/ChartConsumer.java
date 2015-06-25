@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -61,6 +62,8 @@ public class ChartConsumer implements SemanticEventConsumerDeclarer {
 			e.printStackTrace();
 		}
 		sec.setStaticProperties(staticProperties);
+		sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());
+		
 		
 		return sec;
 	}

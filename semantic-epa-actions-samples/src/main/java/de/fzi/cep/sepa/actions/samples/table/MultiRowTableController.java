@@ -24,7 +24,7 @@ public class MultiRowTableController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/table/multirow", "Multi-Row Table", "", "");
+		SecDescription sec = new SecDescription("/multirow", "Multi-Row Table", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -84,7 +84,6 @@ public class MultiRowTableController extends ActionController {
 		
 		String listProperty = SepaUtils.getMappingPropertyName(sec,
 				"list");
-		
 		for(EventProperty p : sec.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			if (p.getRuntimeName().equals(listProperty))

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -42,6 +43,8 @@ public class HistogramController implements SemanticEventConsumerDeclarer{
 		sec.addEventStream(stream1);
 	
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());
+		
 		
 		try {
 			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping"));

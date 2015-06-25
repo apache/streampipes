@@ -1,31 +1,35 @@
-package de.fzi.cep.sepa.actions.samples.heatmap;
+package de.fzi.cep.sepa.actions.samples.route;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
-import de.fzi.cep.sepa.actions.samples.ActionController;
-import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 
-public class HeatmapController extends ActionController {
+public class RouteController implements SemanticEventConsumerDeclarer{
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
-		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
+		SecDescription sec = new SecDescription("/route", "Routes", "Displays routes of moving location-based events", "");
+		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
@@ -33,9 +37,11 @@ public class HeatmapController extends ActionController {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));
 		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI("http://test.de/longitude"));
+		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI(SO.Text));
 		
 		eventProperties.add(e1);
 		eventProperties.add(e2);
+		eventProperties.add(e3);
 		
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
@@ -48,18 +54,28 @@ public class HeatmapController extends ActionController {
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property"));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property"));
-		staticProperties.add(new FreeTextStaticProperty("points", "Max number of points"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "label", "Select Label"));
+
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
-		sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());
-		
+		EventGrounding grounding = new EventGrounding();
+		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
+		grounding.setTransportProtocol(new JmsTransportProtocol());
+		sec.setSupportedGrounding(grounding);
 		
 		return sec;
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
-		return true;
+	public boolean invokeRuntime(SecInvocation invocationGraph) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean detachRuntime() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
@@ -69,32 +85,16 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public String getHtml(SecInvocation sec) {
-		String brokerUrl = createJmsUri(sec);
-		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
+	public String getHtml(SecInvocation graph) {
+		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 		
-		String newUrl = createWebsocketUri(sec);
-		String websocketTopic = "/topic/heatmap.websocket";
+		String labelName = SepaUtils.getMappingPropertyName(graph, "label");
+		String latitudeName = SepaUtils.getMappingPropertyName(graph, "latitude");
+		String longitudeName = SepaUtils.getMappingPropertyName(graph, "longitude");
 		
-		String latitudeName = SepaUtils.getMappingPropertyName(sec, "latitude");
-		String longitudeName = SepaUtils.getMappingPropertyName(sec, "longitude");
-		int maxPoints = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sec, "points"))).getValue());
+		RouteParameters routeParams = new RouteParameters("/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, latitudeName, longitudeName, labelName);
 		
-		HeatmapParameters mapsParameters = new HeatmapParameters(websocketTopic, newUrl, latitudeName, longitudeName, maxPoints);
-		
-		Thread consumer = new Thread(new HeatmapListener(brokerUrl, "heatmap.websocket", inputTopic));
-		consumer.start();
-		
-		return new Heatmap(mapsParameters).generateHtml();
+		return new RouteGenerator(routeParams).generateHtml();
 	}
-
-	@Override
-	public boolean detachRuntime() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
 
 }
