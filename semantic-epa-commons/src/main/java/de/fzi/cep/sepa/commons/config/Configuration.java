@@ -65,6 +65,11 @@ public class Configuration {
 	
 	public static final BrokerConfig getBrokerConfig()
 	{
-		return BrokerConfig.KALMAR;
+		return BrokerConfig.LOCAL;
+	}
+	
+	public static final boolean isDemoMode()
+	{
+		return true;
 	}
 }
