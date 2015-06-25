@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.esper.debs.c1;
 
-public class CellData implements Comparable<CellData>{
+public class CellData {
 
 	private String startCellId;
 	private String endCellId;
@@ -61,19 +61,5 @@ public class CellData implements Comparable<CellData>{
 
 	public void setDropoff_datetime(long dropoff_datetime) {
 		this.dropoff_datetime = dropoff_datetime;
-	}
-
-	@Override
-	public int compareTo(CellData o) {
-		if (count < o.getCount()) return -1;
-		else if (count == o.getCount()) 
-			{
-				if (dropoff_datetime < o.getDropoff_datetime()) return -1;
-				else if (dropoff_datetime == o.getDropoff_datetime()) return 0;
-				else return 1;
-			}
-		else return 1;
-	}
-	
-	
+	}	
 }

@@ -68,7 +68,7 @@ public class TaxiDataInputProvider implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
@@ -106,19 +106,21 @@ public class TaxiDataInputProvider implements Runnable {
 					Map<String, Object> obj = buildMap(records);
 					
 					long currentDropOffTime = (long) obj.get(DROPOFF_DATETIME);
-					if (currentDropOffTime > previousDropoffTime)
-					{
-						CurrentTimeEvent timeEvent = new CurrentTimeEvent(currentDropOffTime);
-						runtime.sendEvent(timeEvent);
-						previousDropoffTime = currentDropOffTime;
-					}
+					
 					
 					if (((double)obj.get(PICKUP_LATITUDE)) != 0.0) 
 					{
 						if (((double)obj.get(DROPOFF_LATITUDE)) != 0.0) 
 						{
+							//System.out.println(obj.toString());
 							sender.sendEvent(obj);
 						}
+					}
+					if (currentDropOffTime > previousDropoffTime)
+					{
+						CurrentTimeEvent timeEvent = new CurrentTimeEvent(currentDropOffTime);
+						runtime.sendEvent(timeEvent);
+						previousDropoffTime = currentDropOffTime;
 					}
 					
 				} catch (Exception e)
@@ -127,7 +129,9 @@ public class TaxiDataInputProvider implements Runnable {
 				}
 				if (counter % 100000 == 0) System.out.println(counter +" Events sent.");
 			}
+			System.out.println("Finished");
 			runtime.sendEvent(new StatusEvent(false, System.nanoTime(), counter));
+			runtime.sendEvent(new CurrentTimeEvent(System.currentTimeMillis()));
 			br.close();
 		
 		} catch (EPException e) {
@@ -170,6 +174,11 @@ public class TaxiDataInputProvider implements Runnable {
 	{
 		Date date = sdf.parse(formattedDate);
 		return date.getTime();
+	}
+	
+	public static void main(String[] args)
+	{
+		new Thread(new TaxiDataInputProvider("taxi")).start();
 	}
 
 }

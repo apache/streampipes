@@ -51,10 +51,10 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 			
 			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellX", "http://schema.org/Number").build());
 			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellY", "http://schema.org/Number").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeNW", "http://schema.org/latitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeNW", "http://schema.org/longitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeSE", "http://schema.org/latitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeSE", "http://schema.org/longitude").build());
+			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeNW", "http://test.de/latitude").build());
+			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeNW", "http://test.de/longitude").build());
+			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeSE", "http://test.de/latitude").build());
+			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeSE", "http://test.de/longitude").build());
 			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellSize", "http://schema.org/Number").build());
 		
 			EventProperty cellProperties = new EventPropertyNested("cellOptions", nestedProperties);

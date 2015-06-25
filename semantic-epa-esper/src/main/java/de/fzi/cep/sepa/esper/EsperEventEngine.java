@@ -109,6 +109,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			epStatement.start();
 			
 		}
+		
 	}
 	
 	private void toEpStatement(List<String> statements)
@@ -118,6 +119,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		{
 			epStatements.add(epService.getEPAdministrator().createEPL(statement));
 		}
+		epStatements.add(epService.getEPAdministrator().createEPL("select * from StatusEvent"));
 	}
 
 	@Override
@@ -156,7 +158,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 				try {
-					queue.add(newEvents);
+					if (newEvents != null) queue.add(newEvents);
+					else queue.add(oldEvents);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

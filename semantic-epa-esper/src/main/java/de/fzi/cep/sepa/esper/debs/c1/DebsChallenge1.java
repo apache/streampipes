@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.esper.debs.c1;
 
-import static com.espertech.esper.client.soda.Expressions.property;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,21 +15,19 @@ import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.OrderByElement;
 import com.espertech.esper.client.soda.SelectClause;
+import com.espertech.esper.client.soda.Stream;
 import com.espertech.esper.client.soda.View;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
-import de.fzi.cep.sepa.esper.Writer;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Parameters;
 import de.fzi.cep.sepa.esper.enrich.grid.CellOption;
 import de.fzi.cep.sepa.esper.enrich.grid.GridCalculator;
 import de.fzi.cep.sepa.esper.output.topx.OrderDirection;
-import de.fzi.cep.sepa.runtime.OutputCollector;
 
 public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 
 	private static final Logger logger = Logger.getAnonymousLogger();
-	private static String C1_FILENAME = "c:\\users\\riemer\\desktop\\debs-output-short-c1.txt";
 	
 	private static final double LAT = 41.474937;
 	private static final double LON = -74.913585;
@@ -48,11 +44,12 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		statements.add(generateTopXStatement(params));
 		
 		//remove
-		statements.add(generateTopXDistinctStatement(params));
+		//statements.add(generateTopXDistinctStatement(params));
 		
 		//statements.add("select * from StatusEvent");
 
-		statements.addAll(addChallenge2Queries(params));
+		//TODO: remove
+		//statements.addAll(addChallenge2Queries(params));
 		
 		return statements;
 	}
@@ -80,12 +77,12 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		
 		//remove if not topxdistinct
-		model.insertInto(InsertIntoClause.create("TopXWindow"));
+		//model.insertInto(InsertIntoClause.create("TopXWindow"));
 		
 		model.selectClause(makeTopXSelectClause(params));
 		
 		FilterStream stream = FilterStream.create("CountStatement", "allCounts");
-		stream.setFilter(Filter.create("CountStatement", Expressions.gt("countValue", 1)));
+		//stream.setFilter(Filter.create("CountStatement", Expressions.gt("countValue", 1)));
 		
 		List<Expression> uniqueProperties = new ArrayList<>();
 //		uniqueProperties.add(Expressions.property("cellOptions.cellX"));
@@ -129,13 +126,13 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		
 		//model.whereClause(Expressions.Expressions.eq(Expressions.property("istream()"), Expressions.property("true")));
 		
-		logger.info("Generated EPL: " +model.toEPL());
+		System.out.println("Generated EPL: " +model.toEPL());
 		
 		return model.toEPL();
 	}
 
 	private String generateCountStatement(DebsChallenge1Parameters params) {
-		String statement = "insert into CountStatement select " 
+		String statement = "insert into CountStatement select irstream " 
 				+getSelectClause(params) 
 				//+"*, " 
 				+" count(*) as countValue from AppendTwo" 
@@ -196,31 +193,35 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 		{
 			clause.add(property);
 		}
+		
+		Double ret = (Math.abs(LON - longitude)/ EASTDIFF);
+	        return ret.intValue() +1;
+	        
 		*/
 		clause.addWildcard();
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property(lngPropertyName)) 
-				), Expressions.constant(EASTDIFF)), "int"), "cellXPickup");
+				Expressions.minus(Expressions.constant(LON), Expressions.property("pickup_longitude")) 
+				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXPickup");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property(latPropertyName))  
-				), Expressions.constant(SOUTHDIFF)), "int"), "cellYPickup");
+				Expressions.minus(Expressions.constant(LAT), Expressions.property("pickup_latitude"))  
+				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYPickup");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property(lngPropertyName)) 
-				), Expressions.constant(EASTDIFF)), "int"), "cellXDropoff");
+				Expressions.minus(Expressions.constant(LON), Expressions.property("dropoff_longitude")) 
+				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXDropoff");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property(latPropertyName))  
-				), Expressions.constant(SOUTHDIFF)), "int"), "cellYDropoff");
+				Expressions.minus(Expressions.constant(LAT), Expressions.property("dropoff_latitude"))  
+				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYDropoff");
 		
 		/*
 		clause.add(Expressions.staticMethod(
@@ -254,7 +255,8 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 	
 	private SelectClause makeTopXSelectClause(DebsChallenge1Parameters params) {
 		SelectClause clause = SelectClause.create();
-		clause.add("distinct window(*) as list");
+		
+		clause.add("irstream window(*) as list");
 		/*
 		clause.add(Expressions.staticMethod(
 				DebsChallenge1.class.getName(),
@@ -289,12 +291,28 @@ public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters>{
 	*/
 	public static boolean isInArray(Map<String, Object> lastEvent, Map<String, Object>[] lastWindow)
 	{
-		for(Map<String, Object> windowItem : lastWindow)
+		try {
+		for(int i = 0; i < lastWindow.length; i++)
 		{
-			if (windowItem.equals(lastEvent)) 
-					return true;
+			if (lastWindow[i] == null) return false;
+			else
+			{
+				Map<String, Object> windowItem = lastWindow[i];
+				if (windowItem.equals(lastEvent)) 
+						return true;
+			}
 		}
+		} catch (Exception e) { return false; }
 		return false;
+	}
+	
+	public static void main(String[] args)
+	{
+		CellOption data = computeCells(40.712784, -74.005941, 500, LAT, LON);
+		System.out.println(data.getCellX() +", " +data.getCellY());
+		
+		System.out.println("new google.maps.LatLng(" +data.getLatitudeNW() +"," +data.getLongitudeNW() +"),");
+	    System.out.println("new google.maps.LatLng(" +data.getLatitudeSE() +"," +data.getLongitudeSE() +"))");
 	}
 
 }

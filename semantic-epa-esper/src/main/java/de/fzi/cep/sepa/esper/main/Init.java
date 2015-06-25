@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.esper.compose.ComposeController;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
+import de.fzi.cep.sepa.esper.distribution.DistributionController;
 import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnrichedController;
 import de.fzi.cep.sepa.esper.drillingstop.single.DrillingStopEnrichedController;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
@@ -58,6 +59,7 @@ public class Init implements Runnable {
 		declarers.add(new ComposeController());
 		declarers.add(new DrillingStartEnrichedController());
 		declarers.add(new DrillingStopEnrichedController());
+		declarers.add(new DistributionController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

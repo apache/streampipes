@@ -21,6 +21,6 @@ public class EsperConfig {
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)
 	{
 		return new SEPAWriter(collector);
-		//return new Challenge1FileWriter(new DebsOutputParameters("c:\\users\\riemer\\desktop"), OutputType.PRINT);
+		//return new Challenge1FileWriter(new DebsOutputParameters("c:\\users\\riemer\\desktop\\debs22"), OutputType.PERSIST);
 	}
 }

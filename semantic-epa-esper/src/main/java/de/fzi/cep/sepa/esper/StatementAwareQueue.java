@@ -21,7 +21,7 @@ public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{
 	protected void doNext(EventBean[] newEvents) throws Exception {
 		currentTimestamp = System.currentTimeMillis();
 		counter++;
-		if (counter % 100000 == 0) System.out.println(counter + " Events processed.");
+		if (counter % 100000 == 0) System.out.println(counter + " Events received.");
 		writer.onEvent(newEvents[0]);
 	}
 

@@ -8,6 +8,7 @@ import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.metric.EngineMetric;
 import com.espertech.esper.client.metric.StatementMetric;
+import com.espertech.esper.client.soda.StreamSelector;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
 import de.fzi.cep.sepa.esper.debs.c1.StatusEvent;
@@ -28,8 +29,10 @@ public class EsperEngineSettings implements Runnable, IMessageListener {
 //		config.getEngineDefaults().getThreading().setThreadPoolOutbound(true);
 //		config.getEngineDefaults().getThreading().setThreadPoolOutboundNumThreads(5);
 		//config.setMetricsReportingEnabled();
-//		config.addEventType(StatusEvent.class);
-		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+		config.addEventType(StatusEvent.class);
+//		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+		config.getEngineDefaults().getStreamSelection()
+	    .setDefaultStreamSelector(StreamSelector.RSTREAM_ISTREAM_BOTH);
 		epService = EPServiceProviderManager.getDefaultProvider(config);
 //		epService.getEPRuntime().sendEvent(new CurrentTimeEvent(initialTime));
 		//enableMetrics();

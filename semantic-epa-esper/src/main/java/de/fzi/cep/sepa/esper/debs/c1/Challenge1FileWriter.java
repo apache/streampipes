@@ -55,8 +55,11 @@ public class Challenge1FileWriter implements Writer {
 	double delayC2 = 0;
 	double overallDelay = 0;
 	
-	long previousDateTimeSumC1 = 0;
+//	long previousDateTimeSumC1 = 0;
 	long previousDateTimeSumC2 = 0;
+	
+	private List<CellData> previousCellDataC1;
+	private List<CellDataBest> previousCellDataC2;
 
 	final OutputType outputType;
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -108,21 +111,29 @@ public class Challenge1FileWriter implements Writer {
 	
 	
 		Object object = bean.getUnderlying();
+		
 		if (object instanceof java.util.HashMap)
 		{
+			
 			c++;
 			Map<String, Object> map = (Map<String, Object>) object;
 			
 			if (map.containsKey(TaxiDataInputProvider.LIST))
 			{
 				Map<String, Object>[] list = (Map<String, Object>[]) map.get(TaxiDataInputProvider.LIST);
+				
 				//int generalCounter = (int) map.get("generalCounter");
 				int generalCounter = 0;
 				if (list != null && list.length > 0)
 				{
 					try {
 						String output = makeDebsOutput(list, generalCounter);
-						if (outputType == OutputType.PERSIST) writerc1.write(output);
+						
+						if (outputType == OutputType.PERSIST) 
+							{
+								//System.out.println(output);
+								writerc1.write(output);
+							}
 						else if (outputType == OutputType.PRINT)
 							{
 								out.write(output);
@@ -139,17 +150,20 @@ public class Challenge1FileWriter implements Writer {
 			else if (map.containsKey(TaxiDataInputProvider.BEST_CELLS))
 			{
 				Map<String, Object>[] bestCells = (Map<String, Object>[]) map.get(TaxiDataInputProvider.BEST_CELLS);
-				if (bestCells.length > 0)
+				if (bestCells != null)
 				{
-					try {
-						String output = makeDebsOutputC2(bestCells);
-						if (outputType == OutputType.PERSIST) writerc2.write(output);//builderC2.append(output);
-						else if (outputType == OutputType.PRINT)
-						{
-							out.write(output);
+					if (bestCells.length > 0)
+					{
+						try {
+							String output = makeDebsOutputC2(bestCells);
+							if (outputType == OutputType.PERSIST) writerc2.write(output);//builderC2.append(output);
+							else if (outputType == OutputType.PRINT)
+							{
+								out.write(output);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
 				}
 			}
@@ -157,6 +171,7 @@ public class Challenge1FileWriter implements Writer {
 		}
 		else if (object instanceof StatusEvent)
 		{
+			System.out.println("Status event received");
 			StatusEvent statusEvent = (StatusEvent) object;
 			if (!statusEvent.isStart())
 			{
@@ -192,6 +207,12 @@ public class Challenge1FileWriter implements Writer {
 				System.out.println("Delay (sum ms): " +overallDelay);
 				System.out.println("Delay (avg ms): " +(avgDelay));
 				
+				writerc1.close();
+				writerc2.close();
+				statisticsWriter.close();
+				statisticsWriterc1.close();
+				statisticsWriterc2.close();
+				
 			}
 			else
 			{
@@ -210,8 +231,8 @@ public class Challenge1FileWriter implements Writer {
 		if (newValue)
 		{	
 			counterC2++;
-			sb.append(output.getPickup_time() +", ");
-			sb.append(output.getDropoff_time() +", ");
+			sb.append(sdf.format(new Date(output.getPickup_time())) +", ");
+			sb.append(sdf.format(new Date(output.getDropoff_time())) +", ");
 			
 			for(int i = 0; i < output.getCellData().size(); i++)
 			{
@@ -349,7 +370,7 @@ public class Challenge1FileWriter implements Writer {
 		debsOutput.setDropoff_time(recentData.getDropoff_datetime());
 		debsOutput.setPickup_time(recentData.getPickup_datetime());
 	
-		Collections.sort(cellDataset, Collections.reverseOrder());
+		Collections.sort(cellDataset, new CellDataComparator());
 		debsOutput.setCellData(cellDataset);
 	
 		return debsOutput;
@@ -387,33 +408,45 @@ public class Challenge1FileWriter implements Writer {
 	}
 	
 	private boolean isNew(DebsOutput output) {
-		long dateTimeSum = 0;
-		for(CellData cd : output.getCellData())
+		boolean newValue = false;
+		if (previousCellDataC1 == null) 
+			newValue = true;
+		else if (output.getCellData().size() != previousCellDataC1.size()) 
+				newValue = true;
+		else {
+			for(int i = 0; i < output.getCellData().size(); i++)
 			{
-				dateTimeSum += cd.getReadDatetime();
+				if (!
+					(
+						(output.getCellData().get(i).getStartCellId().equals(previousCellDataC1.get(i).getStartCellId()))
+						&& 
+						(output.getCellData().get(i).getEndCellId().equals(previousCellDataC1.get(i).getEndCellId()))
+					)
+					) 
+					newValue = true;;
 			}
-		if (dateTimeSum == previousDateTimeSumC1)
-			return false;
-		else 
-			{
-				previousDateTimeSumC1 = dateTimeSum;
-				return true;
-			}
+		}
+		this.previousCellDataC1 = output.getCellData();
+		return newValue;
 	}
 	
 	private boolean isNew(DebsOutputC2 output) {
-		long dateTimeSum = 0;
-		for(CellDataBest cd : output.getCellData())
+		boolean newValue = false;
+		if (previousCellDataC2 == null) 
+			newValue = true;
+		else if (output.getCellData().size() != previousCellDataC2.size()) 
+				newValue = true;
+		else {
+			for(int i = 0; i < output.getCellData().size(); i++)
 			{
-				dateTimeSum += cd.getReadDatetime();
+				if (!
+						(output.getCellData().get(i).getCellId().equals(previousCellDataC2.get(i).getCellId()))
+					) 
+					newValue = true;;
 			}
-		if (dateTimeSum == previousDateTimeSumC2)
-			return false;
-		else 
-			{
-				previousDateTimeSumC2 = dateTimeSum;
-				return true;
-			}
+		}
+		this.previousCellDataC2 = output.getCellData();
+		return newValue;
 	}
 	
 	private void writeStatistics() {

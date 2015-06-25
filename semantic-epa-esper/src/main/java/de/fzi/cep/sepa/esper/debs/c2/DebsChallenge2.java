@@ -58,7 +58,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		statements.add(generateProfitabilityStatementFast(params));
 		
 		statements.add(generateBestCellsStatement(params));
-		statements.add(generateBestCellsDistinctStatement(params));
+		//statements.add(generateBestCellsDistinctStatement(params));
 		/*
 		statements.add(generateCountStatement(params));
 		statements.add(generateTopXStatement(params));
@@ -76,7 +76,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 
 	// insert into ProfitabilityWindow 
 	private String generateBestCellsStatement(DebsChallenge2Parameters params) {
-		String statement = "insert into ProfitabilityWindow select window(*) as bestCells from Profitability.win:time(15 min).ext:rank(cellX, cellY, 10, profitability desc, read_datetime desc)";
+		String statement = "select window(*) as bestCells from Profitability.win:time(15 min).ext:rank(cellX, cellY, 10, profitability desc, read_datetime desc)";
 		return statement;
 	}
 
@@ -184,29 +184,29 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		}
 		*/
 		clause.addWildcard();
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property(lngPropertyName)) 
-				), Expressions.constant(EASTDIFF)), "int"), "cellXPickup");
+				Expressions.minus(Expressions.constant(LON), Expressions.property("pickup_longitude")) 
+				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXPickup");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property(latPropertyName))  
-				), Expressions.constant(SOUTHDIFF)), "int"), "cellYPickup");
+				Expressions.minus(Expressions.constant(LAT), Expressions.property("pickup_latitude"))  
+				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYPickup");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property(lngPropertyName)) 
-				), Expressions.constant(EASTDIFF)), "int"), "cellXDropoff");
+				Expressions.minus(Expressions.constant(LON), Expressions.property("dropoff_longitude")) 
+				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXDropoff");
 		
-		clause.add(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
 				"Math",
 				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property(latPropertyName))  
-				), Expressions.constant(SOUTHDIFF)), "int"), "cellYDropoff");
+				Expressions.minus(Expressions.constant(LAT), Expressions.property("dropoff_latitude"))  
+				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYDropoff");
 		/*
 		clause.add(Expressions.staticMethod(
 				DebsChallenge2.class.getName(),
@@ -243,5 +243,11 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 					return true;
 		}
 		return false;
+	}
+	
+	public static void main(String[] args)
+	{
+		CellOption data = computeCells(41.474937, -74.913585, 250, LAT, LON);
+		System.out.println(data.getCellX() +", " +data.getCellY());
 	}
 }
