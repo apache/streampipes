@@ -7,8 +7,6 @@ function Block(name, description, pipeline){
             break;
         }
     }
-
-
     this.name = name;
     this.description = description;
     this.outputIndex = oi;
@@ -27,6 +25,9 @@ function Block(name, description, pipeline){
             )
             .append($('<div>').addClass("block-img-container")
                 .append($('<img>').addClass('block-img').attr("src", this.pipeline.streams[0].iconUrl)));
+    }
+    this.breakBlock = function(){
+        displayPipelineInAssembly($.extend({}, this.pipeline));
     }
 }
 
@@ -64,14 +65,15 @@ function blockElements(){
             });
         ContextMenuClickHandler("assembly");
         return false;
-    })
+    });
 
     //CLEANUP
     $selectedElements.each(function(i, element){
-        jsPlumb.removeAllEndpoints(element);
-    })
-    $selectedElements.remove();
-    jsPlumb.deleteEveryEndpoint();
+        jsPlumb.remove(element);
+    });
+    //jsPlumb.remove($selectedElements);
+    //$selectedElements.remove();
+    //jsPlumb.deleteEveryEndpoint();
     jsPlumb.addEndpoint($block, sepaEndpointOptions);
 
 

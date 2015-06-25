@@ -214,6 +214,7 @@ function State(){
 }
 
 function recElement(json){
+    console.log(json);
     this.json = json;
     this.name = json.name;
     this.getjQueryElement = function(){

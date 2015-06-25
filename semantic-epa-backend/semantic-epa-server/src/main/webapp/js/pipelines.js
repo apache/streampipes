@@ -250,16 +250,24 @@ function connectPipelineElements(json, detachable){
 			jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
 		}
 	}
-	//Sepas --> Streams---------------------//
+	//Sepas --> Streams / Sepas --> Sepas---------------------//
 		for (var i = 0, sepa; sepa = json.sepas[i]; i++){
 			for (var j = 0, connection; connection = sepa.connectedTo[j]; j++){
 				
 				source = connection;
 				target = sepa.DOM;
-				// console.log(source);
-				// console.log(target);
-				
-				var sourceEndpoint = jsPlumb.addEndpoint(source, streamEndpointOptions);
+
+
+				var options;
+				var id = "#" + source;
+				console.log($(id));
+				if ($(id).hasClass("sepa")){
+					options = sepaEndpointOptions;
+				}else{
+					options = streamEndpointOptions;
+				}
+
+				var sourceEndpoint = jsPlumb.addEndpoint(source, options);
 				var targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
 				jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
 			}
@@ -294,9 +302,11 @@ function displayPipelineInAssembly(json){
 	currenty = 50;
 	for (var i = 0, sepa; sepa = json.sepas[i]; i++){
 		currentx += 200;
-		handleDroppedSepa(createNewAssemblyElement(sepa, {'x':currentx, 'y':currenty})
+		var $sepa = handleDroppedSepa(createNewAssemblyElement(sepa, {'x':currentx, 'y':currenty})
 		.data("options", true));
-			
+		if (jsPlumb.getConnections({source :sepa.DOM}).length == 0){ //Output Element
+			jsPlumb.addEndpoint($sepa, sepaEndpointOptions);
+		}
 	}
 	currentx += 200;
 	if (!$.isEmptyObject(json.action)) {

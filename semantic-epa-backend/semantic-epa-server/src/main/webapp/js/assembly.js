@@ -248,6 +248,7 @@ function handleDroppedAction($newState, endpoints) {
     if (endpoints) {
         jsPlumb.addEndpoint($newState, leftTargetPointOptions);
     }
+    return $newState;
 
 }
 
@@ -726,12 +727,18 @@ function getElementByElementId(elId) {
 }
 
 function createAndConnect(target) {
+    console.log(target);
     var json = $("a", $(target)).data("recObject").json;
     var $parentElement = $(target).parents(".connectable");
     var x = $parentElement.position().left;
     var y = $parentElement.position().top;
     var coord = {'x': x + 200, 'y': y};
-    var $target = handleDroppedSepa(createNewAssemblyElement(json, coord), true);
+    var $target;
+    if (json.elementId.indexOf("sepa") > 0) { //Sepa Element
+        $target = handleDroppedSepa(createNewAssemblyElement(json, coord), true);
+    }else{
+        $target = handleDroppedAction(createNewAssemblyElement(json, coord),true);
+    }
 
     var options;
     if ($parentElement.hasClass("stream")) {
@@ -739,8 +746,20 @@ function createAndConnect(target) {
     } else {
         options = sepaEndpointOptions;
     }
-    var sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
+    var sourceEndPoint;
+    if(jsPlumb.selectEndpoints({source : $parentElement}).length > 0){
+
+        if(!(jsPlumb.selectEndpoints({source : $parentElement}).get(0).isFull())){
+            sourceEndPoint = jsPlumb.selectEndpoints({source : $parentElement}).get(0)
+        }else{
+            sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
+        }
+    }else{
+        sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
+    }
+
     var targetEndPoint = jsPlumb.selectEndpoints({target: $target}).get(0);
+    //console.log(targetEndPoint);
 
     jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
     jsPlumb.repaintEverything();

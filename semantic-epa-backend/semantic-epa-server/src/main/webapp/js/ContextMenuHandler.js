@@ -20,8 +20,7 @@ function ContextMenuClickHandler(type) {
             }
             if ($selected.get(0) === $('#blockButton').get(0)){
                 if ($invokedOn.hasClass("block")){
-                    console.log({json: JSON.stringify($invokedOn.data("block").pipeline)});
-                    displayPipelineInAssembly($.extend({}, $invokedOn.data("block").pipeline));
+                    $invokedOn.data("block").breakBlock();
                     handleDeleteOption($invokedOn);
                     //$invokedOn.remove();
                 }else{

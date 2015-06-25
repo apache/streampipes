@@ -88,8 +88,6 @@ jsPlumb.ready(function (e) {
     $("#assembly")
         .selectable({
             selected: function (event, ui) {
-                console.log("selectable test");
-                console.log(ui);
             },
             filter: ".connectable.stream,.connectable.sepa:not('.disabled')",
             delay: 150
