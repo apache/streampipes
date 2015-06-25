@@ -97,6 +97,16 @@ public class SepaUtils {
 						else 
 								result.add(prefix + p.getRuntimeName());
 					}
+				if (p instanceof EventPropertyList)
+				{
+					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
+					{
+						if (sp.getRdfId().toString().equals(propertyURI.toString()))
+						{
+							result.add(p.getRuntimeName() + "," +sp.getRuntimeName());
+						}
+					}
+				}
 			}
 			else if (p instanceof EventPropertyNested)
 			{

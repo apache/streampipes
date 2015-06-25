@@ -28,6 +28,7 @@ public class SecInvocation extends InvocableSEPAElement{
 		this.setDomains(sec.getDomains());
 		this.setIconUrl(sec.getIconUrl());
 		this.setInputStreams(sec.getEventStreams());
+		this.setSupportedGrounding(sec.getSupportedGrounding());
 		this.setStaticProperties(sec.getStaticProperties());
 		this.setBelongsTo(sec.getRdfId().toString());
 		this.setUri(belongsTo +"/" +elementId);
