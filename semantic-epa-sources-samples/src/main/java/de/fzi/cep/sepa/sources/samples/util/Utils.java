@@ -114,7 +114,13 @@ public class Utils {
 	}
     
     public static String toJsonstr(String key, Object value) {
-		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).append(COMMA).toString();
+    	StringBuilder builder = new StringBuilder();
+		builder.append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON);
+		if (value.getClass().getCanonicalName().equals("java.lang.String"))builder.append(QUOTATIONMARK).append(value).append(QUOTATIONMARK);
+		else builder.append(value);
+		builder.append(COMMA);
+		
+		return builder.toString();
 	}
 	
 	public static String toJsonstr(String key, Object value, boolean last) {
