@@ -19,7 +19,7 @@ public class AnyStaticProperty extends StaticProperty {
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasOptions")
+	@RdfProperty("sepa:hasOption")
 	List<Option> options;
 	
 	

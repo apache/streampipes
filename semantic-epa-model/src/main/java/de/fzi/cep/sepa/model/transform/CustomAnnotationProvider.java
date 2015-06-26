@@ -37,6 +37,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.quality.EventStreamQuality.class, 
 				de.fzi.cep.sepa.model.impl.quality.Frequency.class, 
 				de.fzi.cep.sepa.model.impl.quality.Latency.class, 
+				de.fzi.cep.sepa.model.impl.quality.Precision.class, 
 				de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality.class, 
 				de.fzi.cep.sepa.model.impl.EventGrounding.class, 
 				de.fzi.cep.sepa.model.impl.graph.SepDescription.class, 

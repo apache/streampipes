@@ -14,31 +14,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>4.4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient-cache</artifactId>
-				<version>4.4</version>
-			</dependency>
-<!-- 			<dependency> -->
-<!-- 				<groupId>org.apache.httpcomponents</groupId> -->
-<!-- 				<artifactId>httpcore</artifactId> -->
-<!-- 				<version>4.4</version> -->
-<!-- 			</dependency> -->
-<!-- 			<dependency> -->
-<!-- 				<groupId>org.apache.httpcomponents</groupId> -->
-<!-- 				<artifactId>httpclient</artifactId> -->
-<!-- 				<version>4.4</version> -->
-<!-- 			</dependency> -->
-			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>3.8.1</version>
@@ -114,7 +89,7 @@
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
 		<!-- <module>semantic-epa-storm</module> -->
-		<!-- <module>semantic-epa-algorithms-samples</module> -->
+<!-- 		<module>semantic-epa-algorithms-samples</module> -->
 	</modules>
 
 	<!-- Build Settings -->
@@ -187,12 +162,12 @@
 			<id>apache</id>
 			<url>https://repository.apache.org/content/repositories/releases/</url>
 		</repository>
-
-		<repository>
-			<id>archiva.public</id>
-			<name>Nissatech Public Repository</name>
-			<url>http://maven.nissatech.com/repository/public/</url>
-		</repository>
+		
+		<repository>    
+            <id>archiva.public</id>
+            <name>Nissatech Public Repository</name>
+            <url>http://maven.nissatech.com/repository/public/</url>
+        </repository>
 	</repositories>
 
 	<distributionManagement>

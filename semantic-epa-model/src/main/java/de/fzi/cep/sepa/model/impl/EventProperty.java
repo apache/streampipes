@@ -18,6 +18,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
+import de.fzi.cep.sepa.model.impl.quality.RequiresEventPropertyQuality;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -50,9 +51,14 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:hasPropertyQuality")
+	@RdfProperty("sepa:hasEventPropertyQuality")
 	List<EventPropertyQuality> eventPropertyQualities;
-	
+
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@RdfProperty("sepa:requiresEventPropertyQuality")
+	List<RequiresEventPropertyQuality> requiresEventPropertyQualities;
+
 
 	public EventProperty()
 	{
@@ -84,6 +90,16 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.runtimeName = propertyName;		
 	}
 	
+	
+	public List<RequiresEventPropertyQuality> getRequiresEventPropertyQualities() {
+		return requiresEventPropertyQualities;
+	}
+
+	public void setRequiresEventPropertyQualities(
+			List<RequiresEventPropertyQuality> requiresEventPropertyQualities) {
+		this.requiresEventPropertyQualities = requiresEventPropertyQualities;
+	}
+
 	public String getRuntimeName() {
 		return runtimeName;
 	}

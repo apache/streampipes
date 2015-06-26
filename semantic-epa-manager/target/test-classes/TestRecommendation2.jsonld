@@ -1,0 +1,1 @@
+{"streams":[{"name":"NYC Taxi Sample Stream","iconUrl":"http://localhost:8080/semantic-epa-backend/img/Taxi_Icon_2_HQ.png","description":"NYC Taxi Sample Stream Description","elementId":"http://localhost:8089/taxi/sample", "DOM" : "d1"}],"sepas":[],"action":{}}

@@ -73,7 +73,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
-		stream.setEventStreamQualities(eventStreamQualities);
+		stream.setHasEventStreamQualities(eventStreamQualities);
 		stream.setName("Random Number Stream");
 		stream.setDescription("Random Number Stream Description");
 		stream.setUri(sep.getUri() + "/number");

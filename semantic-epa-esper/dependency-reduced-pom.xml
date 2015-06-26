@@ -85,6 +85,14 @@
           <artifactId>fluent-hc</artifactId>
           <groupId>org.apache.httpcomponents</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>shiro-core</artifactId>
+          <groupId>org.apache.shiro</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>shiro-web</artifactId>
+          <groupId>org.apache.shiro</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
   </dependencies>

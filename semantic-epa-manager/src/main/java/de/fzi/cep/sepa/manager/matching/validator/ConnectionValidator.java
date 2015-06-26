@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
 
 /**
  * 
@@ -19,6 +20,7 @@ public class ConnectionValidator {
 		return new SchemaMatchValidator().validate(left, right);
 	}
 	
+
 	public static boolean validateTransportFormat(EventGrounding left, EventGrounding right)
 	{
 		return new TransportFormatMatchValidator().validate(left, right);
@@ -34,6 +36,7 @@ public class ConnectionValidator {
 		return new SchemaMatchValidator().validate(firstLeft, secondLeft, firstRight, secondRight);
 	}
 	
+
 	public static boolean validateGrounding(EventGrounding firstLeft, EventGrounding secondLeft, EventGrounding right)
 	{
 		return new TransportFormatMatchValidator().validate(firstLeft, secondLeft, right, right);

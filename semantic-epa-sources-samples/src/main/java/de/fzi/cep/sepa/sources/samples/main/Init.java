@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
 import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
+import de.fzi.cep.sepa.sources.samples.proveit.ProveITEventProducer;
 import de.fzi.cep.sepa.sources.samples.ram.RamProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
@@ -40,7 +41,7 @@ public class Init implements Runnable {
 		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
 		declarers.add(new NYCTaxiProducer());
-		//declarers.add(new ProveITEventProducer());
+//		declarers.add(new ProveITEventProducer());
 		
 		//String zooKeeper = Configuration.getBrokerConfig().getZookeeperUrl();
 		String zooKeeper = "kalmar39.fzi.de:2181";

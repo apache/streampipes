@@ -23,6 +23,11 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.quality.Frequency;
+import de.fzi.cep.sepa.model.impl.quality.Latency;
+import de.fzi.cep.sepa.model.impl.quality.Precision;
+import de.fzi.cep.sepa.model.impl.quality.RequiresEventPropertyQuality;
+import de.fzi.cep.sepa.model.impl.quality.RequiresEventStreamQuality;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -38,6 +43,11 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 	
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI("http://schema.org/Number"));
+		
+		List<RequiresEventPropertyQuality> requiresPropertyQualities = new ArrayList<RequiresEventPropertyQuality>();
+		requiresPropertyQualities.add(new RequiresEventPropertyQuality(new Precision(1), new Precision(10)));
+		requiresPropertyQualities.add(new RequiresEventPropertyQuality(null, new Latency(200)));
+		e1.setRequiresEventPropertyQualities(requiresPropertyQualities);
 		eventProperties.add(e1);
 		
 		EventSchema schema1 = new EventSchema();
@@ -50,6 +60,12 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		
+		// add constraints to the event stream
+		List<RequiresEventStreamQuality> requiredStreamQualities = new ArrayList<RequiresEventStreamQuality>();
+		requiredStreamQualities.add(new RequiresEventStreamQuality(new Frequency(10), new Frequency(100)));
+		stream1.setRequiresEventStreamQualities(requiredStreamQualities);
+		
 		desc.addEventStream(stream1);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
