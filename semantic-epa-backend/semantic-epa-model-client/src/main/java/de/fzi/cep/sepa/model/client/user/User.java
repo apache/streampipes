@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.model.client.user;
 import com.google.gson.annotations.SerializedName;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -15,16 +16,22 @@ public class User {
 	protected String email;
 	protected String password;
 	protected List<String> pipelines;
+	protected List<String> sources;
+	protected List<String> sepas;
+	protected List<String> actions;
 	
 	private Set<Role> roles;	
 	
-	public User(String username, String email, String password, Set<Role> roles, List<String> pipelines) {
+	public User(String username, String email, String password, Set<Role> roles, List<String> pipelines, List<String> sources, List<String> sepas, List<String> actions) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
 		this.pipelines = pipelines;
+		this.sources = sources;
+		this.sepas = sepas;
+		this.actions = actions;
 	}
 
 	public String getUsername() {
@@ -77,10 +84,37 @@ public class User {
 	}
 
 	public void addPipeline(String pipelineId) {
+		if (this.pipelines == null) return;
 		this.pipelines.add(pipelineId);
 	}
 
 	public void deletePipeline(String pipelineId) {
 		pipelines.remove(pipelineId);
+	}
+
+	public List<String> getSources() {
+		return sources;
+	}
+
+	public void addSource(String source) {
+		if (this.sources == null) return;
+		this.sources.add(source);
+	}
+
+	public List<String> getSepas() {
+		return sepas;
+	}
+
+	public void addSepa(String sepa) {
+		if (this.sepas == null) return;
+		this.sepas.add(sepa);
+	}
+
+	public List<String> getActions() {
+		return actions;
+	}
+
+	public void addAction(String action) {
+		this.actions.add(action);
 	}
 }

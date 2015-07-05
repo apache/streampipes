@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.shiro.SecurityUtils;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -40,6 +41,7 @@ public class SesameStorageRequests implements StorageRequests {
 	
 	@Override
 	public boolean storeSEP(SepDescription sep) {
+		if (exists(sep)) return false;
 		entityManager.persist(sep);
 		return true;
 	}
@@ -68,6 +70,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean storeSEPA(SepaDescription sepa) {
+		if (exists(sepa)) return false;
 		entityManager.persist(sepa);
 		return true;
 	}
@@ -226,6 +229,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean storeSEC(SecDescription sec) {
+		if (exists(sec)) return false;
 		entityManager.persist(sec);
 		return true;
 	}

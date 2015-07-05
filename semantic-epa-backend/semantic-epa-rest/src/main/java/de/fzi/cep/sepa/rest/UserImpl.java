@@ -69,7 +69,11 @@ public class UserImpl extends AbstractRestInterface implements User{
 
         Set<Role> roles = new HashSet<Role>();
         List<String> pipelines = new ArrayList<>();
-        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(username, "", password, roles, pipelines);
+        List<String> sources= new ArrayList<>();
+        List<String> actions = new ArrayList<>();
+        List<String> sepas = new ArrayList<>();
+
+        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(username, "", password, roles, pipelines, sources, sepas, actions);
         userStorage.storeUser(user);
         return  toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     }

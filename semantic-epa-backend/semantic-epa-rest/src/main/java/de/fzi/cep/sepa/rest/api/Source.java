@@ -5,6 +5,8 @@ public interface Source {
 	String postSource(String uri);
 	
 	String getAllSources(String domain);
+
+	String getAllUserSources();
 	
 	String getStreamsBySource(String sourceId);
 	

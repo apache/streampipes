@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.rest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
@@ -15,7 +16,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.shiro.SecurityUtils;
+import org.lightcouch.CouchDbClient;
 import org.openrdf.model.impl.GraphImpl;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
@@ -26,21 +32,50 @@ import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.manager.SEPAManager;
 import de.fzi.sepa.model.client.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/sepas")
 public class ProcessorImpl extends AbstractRestInterface implements Processor {
 
+	Logger LOG = LoggerFactory.getLogger(ProcessorImpl.class);
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	/**
+	 * Returns all sepa elements from a user, or all sepa elements if no user is passed.
+	 */
 	public String getAllProcessors(@DefaultValue("1") @QueryParam("domains") String domain)
 	{
+		LOG.info("Get all Processors with domain: " + domain);
 		List<SepaDescription> sepas;
 		if (domain.equals("1")) sepas = requestor.getAllSEPAs();
 		else sepas = requestor.getSEPAsByDomain(domain);
-		
+
+		if (sepas == null) {
+			LOG.info("sepas are null. Exiting");
+			return "";
+		}
 		return toJson(ClientModelTransformer.toSEPAClientModel(sepas));
 	}
+
+	public String getAllUserProcessors() {
+		CouchDbClient dbClientUser = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
+		List<SepaDescription> sepas = new ArrayList<>();
+		if (SecurityUtils.getSubject().isAuthenticated()) {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			JsonArray sepaIds = dbClientUser.view("users/seoas").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
+			try {
+				for (JsonElement sepaId : sepaIds) {
+					sepas.add(requestor.getSEPAById(sepaId.getAsString()));
+				}
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+		return toJson(ClientModelTransformer.toSEPAClientModel(sepas));
+	}
+
 	
 	@Path("{sepaId}")
 	@GET

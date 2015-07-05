@@ -48,6 +48,33 @@ public class UserStorage {
 
     }
 
+    public void addSource(String username, String elementId) {
+        CouchDbClient dbClient = Utils.getCouchDbUserClient();
+        if (!checkUser(username)) return;
+        User user = getUser(username);
+        user.addSource(elementId);
+        dbClient.update(user);
+        dbClient.shutdown();
+    }
+
+    public void addAction(String username, String elementId) {
+        CouchDbClient dbClient = Utils.getCouchDbUserClient();
+        if (!checkUser(username)) return;
+        User user = getUser(username);
+        user.addAction(elementId);
+        dbClient.update(user);
+        dbClient.shutdown();
+    }
+
+    public void addSepa(String username, String elementId) {
+        CouchDbClient dbClient = Utils.getCouchDbUserClient();
+        if (!checkUser(username)) return;
+        User user = getUser(username);
+        user.addSepa(elementId);
+        dbClient.update(user);
+        dbClient.shutdown();
+    }
+
     public User getUser(String username) {
         CouchDbClient dbClient = Utils.getCouchDbUserClient();
         List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
