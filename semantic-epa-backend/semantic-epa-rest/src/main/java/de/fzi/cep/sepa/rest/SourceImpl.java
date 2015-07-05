@@ -63,7 +63,8 @@ public class SourceImpl extends AbstractRestInterface implements Source {
 			JsonArray sepIds = dbClientUser.view("users/sources").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
 			try {
 				for (JsonElement sepaId : sepIds) {
-					seps.add(requestor.getSEPById(sepaId.getAsString()));
+					SepDescription sep = requestor.getSEPById(sepaId.getAsString());
+					if (sep != null) seps.add(sep);
 				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();

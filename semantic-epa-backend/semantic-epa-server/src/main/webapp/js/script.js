@@ -570,6 +570,7 @@ function showManage() {
             });
         } else {
             var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
+            // var url = standardUrl + "sources/user";
             var $origSrc = $(this);
 
             $.getJSON(url).then(function (data) {
@@ -602,6 +603,8 @@ function showManage() {
         .appendTo("#sepaList");
     if (!state.sepas) {
         var url = standardUrl + "sepas?domains=" + domain;
+        //var url = standardUrl + "sepas/user"; //for user-specific elements
+
         $.getJSON(url).then(function (data) {
             state.sepas = data;
             $.each(data, function (i, json) {
@@ -611,7 +614,6 @@ function showManage() {
                     .text(json.name)
                     .appendTo("#sepaList");
                 addButtons($el, "sepas");
-
             });
         });
     } else {
@@ -643,6 +645,7 @@ function showManage() {
     var $el;
     if (!state.actions) {
         var url = standardUrl + "actions";
+        // var url = standardUrl + "actions/user"; for user-sepcific elements
         $.getJSON(url).then(function (data) {
             state.actions = data;
             $.each(data, function (i, json) {
@@ -837,6 +840,8 @@ function addElements(url, uris, i, type) {
         uri = encodeURIComponent(uri);
 
         var id = "#sse" + i;
+        console.log(url);
+        console.log(uri);
         $.ajax({
             url: url,
             data: "uri=" + uri,

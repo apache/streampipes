@@ -67,7 +67,8 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 			JsonArray sepaIds = dbClientUser.view("users/seoas").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
 			try {
 				for (JsonElement sepaId : sepaIds) {
-					sepas.add(requestor.getSEPAById(sepaId.getAsString()));
+					SepaDescription sepa = requestor.getSEPAById(sepaId.getAsString());
+					if (sepa != null) sepas.add(sepa);
 				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();

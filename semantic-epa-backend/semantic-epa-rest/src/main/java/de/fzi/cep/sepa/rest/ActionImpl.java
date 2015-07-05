@@ -64,7 +64,8 @@ public class ActionImpl extends AbstractRestInterface implements Action {
 			JsonArray secIds = dbClientUser.view("users/actions").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
 			try {
 				for (JsonElement secId : secIds) {
-					secs.add(requestor.getSECById(secId.getAsString()));
+					SecDescription sec = requestor.getSECById(secId.getAsString());
+					if (sec != null) secs.add(sec);
 				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
