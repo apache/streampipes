@@ -13,7 +13,7 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	@RdfProperty("sepa:hasName")
 	protected String name;
 	
-	@RdfProperty("sepa:hasDescription")
+	@RdfProperty("rdfs:description")
 	protected String description;
 	
 	@RdfProperty("sepa:hasIconUrl")
