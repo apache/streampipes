@@ -1,6 +1,8 @@
-package de.fzi.cep.sepa.model.impl;
+package de.fzi.cep.sepa.model.impl.staticproperty;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,24 +15,24 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
-@RdfsClass("sepa:AnyStaticProperty")
+@RdfsClass("sepa:OneOfStaticProperty")
 @Entity
-public class AnyStaticProperty extends StaticProperty {
-	
+public class OneOfStaticProperty extends StaticProperty {
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOption")
 	List<Option> options;
 	
 	
-	public AnyStaticProperty() {
+	public OneOfStaticProperty() {
 		super();
-		// TODO Auto-generated constructor stub
+		options = new ArrayList<Option>();
 	}
 
-	public AnyStaticProperty(String name, String description) {
+	public OneOfStaticProperty(String name, String description) {
 		super(name, description);
-		// TODO Auto-generated constructor stub
+		options = new ArrayList<Option>();
 	}
 
 	public List<Option> getOptions() {
@@ -40,4 +42,9 @@ public class AnyStaticProperty extends StaticProperty {
 	public void setOptions(List<Option> options) {
 		this.options = options;
 	}	
+	
+	public boolean addOption(Option option)
+	{
+		return options.add(option);
+	}
 }

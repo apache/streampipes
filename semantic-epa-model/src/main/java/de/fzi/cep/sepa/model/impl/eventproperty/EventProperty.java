@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.model.impl;
+package de.fzi.cep.sepa.model.impl.eventproperty;
 
 import java.net.URI;
 import java.util.List;

@@ -1,8 +1,9 @@
 package de.fzi.cep.sepa.model.util;
 
 import java.util.List;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;

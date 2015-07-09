@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.model.builder;
 
-import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 
 public abstract class PropertyBuilder {
 

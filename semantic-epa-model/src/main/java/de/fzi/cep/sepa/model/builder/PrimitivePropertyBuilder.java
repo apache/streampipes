@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.model.builder;
 import java.net.URI;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 
 public class PrimitivePropertyBuilder {
 

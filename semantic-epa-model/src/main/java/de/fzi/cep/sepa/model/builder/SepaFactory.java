@@ -3,15 +3,15 @@ package de.fzi.cep.sepa.model.builder;
 import java.net.URI;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public class SepaFactory {
 
