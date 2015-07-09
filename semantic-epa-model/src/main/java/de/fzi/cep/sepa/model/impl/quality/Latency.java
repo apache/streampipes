@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:Latency")
 @Entity
-public class Latency extends EventPropertyQuality {
+public class Latency extends EventPropertyQualityDefinition {
 
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;

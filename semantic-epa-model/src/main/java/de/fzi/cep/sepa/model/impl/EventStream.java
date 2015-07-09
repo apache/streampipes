@@ -13,8 +13,8 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
-import de.fzi.cep.sepa.model.impl.quality.RequiresEventStreamQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -24,13 +24,13 @@ public class EventStream extends NamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:hasEventStreamQuality")
-	List<EventStreamQuality> hasEventStreamQualities;
+	@RdfProperty("sepa:hasEventStreamQualityDefinition")
+	List<EventStreamQualityDefinition> hasEventStreamQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:requiresEventStreamQuality")
-	List<RequiresEventStreamQuality> requiresEventStreamQualities;
+	List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
 	@OneToOne(fetch = FetchType.EAGER,
 		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -42,7 +42,7 @@ public class EventStream extends NamedSEPAElement {
 	EventSchema eventSchema;
 	
 	
-	public EventStream(String uri, String name, String description, String iconUrl, List<EventStreamQuality> hasEventStreamQualities,
+	public EventStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
 			EventGrounding eventGrounding, 
 			EventSchema eventSchema) {
 		super(uri, name, description, iconUrl);
@@ -63,26 +63,26 @@ public class EventStream extends NamedSEPAElement {
 	}
 
 
-	public List<EventStreamQuality> getHasEventStreamQualities() {
+	public List<EventStreamQualityDefinition> getHasEventStreamQualities() {
 		return hasEventStreamQualities;
 	}
 
 
 	public void setHasEventStreamQualities(
-			List<EventStreamQuality> hasEventStreamQualities) {
+			List<EventStreamQualityDefinition> hasEventStreamQualities) {
 		this.hasEventStreamQualities = hasEventStreamQualities;
 	}
 	
 	
 
 	
-	public List<RequiresEventStreamQuality> getRequiresEventStreamQualities() {
+	public List<EventStreamQualityRequirement> getRequiresEventStreamQualities() {
 		return requiresEventStreamQualities;
 	}
 
 
 	public void setRequiresEventStreamQualities(
-			List<RequiresEventStreamQuality> requiresEventStreamQualities) {
+			List<EventStreamQualityRequirement> requiresEventStreamQualities) {
 		this.requiresEventStreamQualities = requiresEventStreamQualities;
 	}
 

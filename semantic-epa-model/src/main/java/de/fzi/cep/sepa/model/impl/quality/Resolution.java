@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:Resolution")
 @Entity
-public class Resolution extends EventPropertyQuality {
+public class Resolution extends EventPropertyQualityDefinition {
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 

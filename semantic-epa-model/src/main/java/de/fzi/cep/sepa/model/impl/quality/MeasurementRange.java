@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:MeasurementRange")
 @Entity
-public class MeasurementRange extends EventPropertyQuality {
+public class MeasurementRange extends EventPropertyQualityDefinition {
 	@RdfProperty("sepa:hasMeasurementPropertyMinValue")
 	float minValue;
 

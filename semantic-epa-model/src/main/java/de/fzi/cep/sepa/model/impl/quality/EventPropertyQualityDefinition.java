@@ -8,11 +8,11 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
-@RdfsClass("sepa:EventPropertyQuality")
+@RdfsClass("sepa:EventPropertyQualityDefinition")
 @MappedSuperclass
 @Entity
-public class EventPropertyQuality extends MeasurementProperty {
-	public EventPropertyQuality() {
+public class EventPropertyQualityDefinition extends MeasurementProperty {
+	public EventPropertyQualityDefinition() {
 		super();
 	}
 

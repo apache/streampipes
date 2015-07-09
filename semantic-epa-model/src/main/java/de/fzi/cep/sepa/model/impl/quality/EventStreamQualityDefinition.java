@@ -8,13 +8,13 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
-@RdfsClass("sepa:EventStreamQuality")
+@RdfsClass("sepa:EventStreamQualityDefinition")
 @MappedSuperclass
 @Entity
-public class EventStreamQuality extends MeasurementProperty {
+public class EventStreamQualityDefinition extends MeasurementProperty {
 
 
-	public EventStreamQuality() {
+	public EventStreamQualityDefinition() {
 		super();
 	}
 

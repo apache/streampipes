@@ -13,47 +13,47 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
-@RdfsClass("sepa:RequiresEventPropertyQuality")
+@RdfsClass("sepa:EventPropertyQualityRequirement")
 @MappedSuperclass
 @Entity
-public class RequiresEventPropertyQuality extends UnnamedSEPAElement {
+public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventPropertyQuality")
-	EventPropertyQuality minimumPropertyQuality;
+	EventPropertyQualityDefinition minimumPropertyQuality;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:maximumEventPropertyQuality")
-	EventPropertyQuality maximumPropertyQuality;
+	EventPropertyQualityDefinition maximumPropertyQuality;
 	
-	public RequiresEventPropertyQuality() {
+	public EventPropertyQualityRequirement() {
 		super();
 	}
 
-	public RequiresEventPropertyQuality(
-			EventPropertyQuality minimumPropertyQuality,
-			EventPropertyQuality  maximumPropertyQuality) {
+	public EventPropertyQualityRequirement(
+			EventPropertyQualityDefinition minimumPropertyQuality,
+			EventPropertyQualityDefinition  maximumPropertyQuality) {
 		
 		super();
 		this.minimumPropertyQuality = minimumPropertyQuality;
 		this.maximumPropertyQuality = maximumPropertyQuality;
 	}
 
-	public EventPropertyQuality getMinimumPropertyQuality() {
+	public EventPropertyQualityDefinition getMinimumPropertyQuality() {
 		return minimumPropertyQuality;
 	}
 
 	public void setMinimumPropertyQuality(
-			EventPropertyQuality minimumPropertyQuality) {
+			EventPropertyQualityDefinition minimumPropertyQuality) {
 		this.minimumPropertyQuality = minimumPropertyQuality;
 	}
 
-	public EventPropertyQuality getMaximumPropertyQuality() {
+	public EventPropertyQualityDefinition getMaximumPropertyQuality() {
 		return maximumPropertyQuality;
 	}
 
 	public void setMaximumPropertyQuality(
-			EventPropertyQuality maximumPropertyQuality) {
+			EventPropertyQualityDefinition maximumPropertyQuality) {
 		this.maximumPropertyQuality = maximumPropertyQuality;
 	}
 	

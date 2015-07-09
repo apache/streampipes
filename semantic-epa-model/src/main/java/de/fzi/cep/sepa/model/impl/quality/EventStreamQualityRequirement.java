@@ -13,21 +13,21 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
-@RdfsClass("sepa:RequiresEventStreamQuality")
+@RdfsClass("sepa:EventStreamQualityRequirement")
 @MappedSuperclass
 @Entity
-public class RequiresEventStreamQuality extends UnnamedSEPAElement {
+public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventStreamQuality")
-	EventStreamQuality minimumStreamQuality;
+	EventStreamQualityDefinition minimumStreamQuality;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:maximumEventStreamQuality")
-	EventStreamQuality maximumStreamQuality;
+	EventStreamQualityDefinition maximumStreamQuality;
 
-	public RequiresEventStreamQuality(EventStreamQuality minimumStreamQuality,
-			EventStreamQuality maximumStreamQuality) {
+	public EventStreamQualityRequirement(EventStreamQualityDefinition minimumStreamQuality,
+			EventStreamQualityDefinition maximumStreamQuality) {
 		super();
 		//TODO check that minimum and maximum have the same type
 
@@ -35,23 +35,23 @@ public class RequiresEventStreamQuality extends UnnamedSEPAElement {
 		this.maximumStreamQuality = maximumStreamQuality;
 	}
 	
-	public RequiresEventStreamQuality() {
+	public EventStreamQualityRequirement() {
 		super();
 	}
 
-	public EventStreamQuality getMinimumStreamQuality() {
+	public EventStreamQualityDefinition getMinimumStreamQuality() {
 		return minimumStreamQuality;
 	}
 
-	public void setMinimumStreamQuality(EventStreamQuality minimumStreamQuality) {
+	public void setMinimumStreamQuality(EventStreamQualityDefinition minimumStreamQuality) {
 		this.minimumStreamQuality = minimumStreamQuality;
 	}
 
-	public EventStreamQuality getMaximumStreamQuality() {
+	public EventStreamQualityDefinition getMaximumStreamQuality() {
 		return maximumStreamQuality;
 	}
 
-	public void setMaximumStreamQuality(EventStreamQuality maximumStreamQuality) {
+	public void setMaximumStreamQuality(EventStreamQualityDefinition maximumStreamQuality) {
 		this.maximumStreamQuality = maximumStreamQuality;
 	}
 }

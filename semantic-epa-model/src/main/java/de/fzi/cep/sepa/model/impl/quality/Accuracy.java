@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:Accuracy")
 @Entity
-public class Accuracy extends EventPropertyQuality {
+public class Accuracy extends EventPropertyQualityDefinition {
 	
 	public Accuracy() {
 		super();

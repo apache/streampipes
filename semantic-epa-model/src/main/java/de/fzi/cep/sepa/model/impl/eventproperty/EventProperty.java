@@ -16,9 +16,9 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
-import de.fzi.cep.sepa.model.impl.quality.RequiresEventPropertyQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -51,13 +51,13 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:hasEventPropertyQuality")
-	List<EventPropertyQuality> eventPropertyQualities;
+	@RdfProperty("sepa:hasEventPropertyQualityDefinition")
+	List<EventPropertyQualityDefinition> eventPropertyQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:requiresEventPropertyQuality")
-	List<RequiresEventPropertyQuality> requiresEventPropertyQualities;
+	List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
 
 	public EventProperty()
@@ -78,7 +78,7 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.subClassOf = subClassOf;
 	}
 	
-	public EventProperty(String propertyName, List<URI> subClassOf, List<EventPropertyQuality> eventPropertyQualities) {
+	public EventProperty(String propertyName, List<URI> subClassOf, List<EventPropertyQualityDefinition> eventPropertyQualities) {
 		this();
 		this.runtimeName = propertyName;		
 		this.subClassOf = subClassOf;
@@ -91,12 +91,12 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	}
 	
 	
-	public List<RequiresEventPropertyQuality> getRequiresEventPropertyQualities() {
+	public List<EventPropertyQualityRequirement> getRequiresEventPropertyQualities() {
 		return requiresEventPropertyQualities;
 	}
 
 	public void setRequiresEventPropertyQualities(
-			List<RequiresEventPropertyQuality> requiresEventPropertyQualities) {
+			List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
 		this.requiresEventPropertyQualities = requiresEventPropertyQualities;
 	}
 
@@ -147,12 +147,12 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.description = humanReadableDescription;
 	}
 
-	public List<EventPropertyQuality> getEventPropertyQualities() {
+	public List<EventPropertyQualityDefinition> getEventPropertyQualities() {
 		return eventPropertyQualities;
 	}
 
 	public void setEventPropertyQualities(
-			List<EventPropertyQuality> eventPropertyQualities) {
+			List<EventPropertyQualityDefinition> eventPropertyQualities) {
 		this.eventPropertyQualities = eventPropertyQualities;
 	}
 

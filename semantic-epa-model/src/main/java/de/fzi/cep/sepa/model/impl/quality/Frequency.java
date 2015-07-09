@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:Frequency")
 @Entity
-public class Frequency extends EventStreamQuality {
+public class Frequency extends EventStreamQualityDefinition {
 
 	public Frequency() {
 		super();
