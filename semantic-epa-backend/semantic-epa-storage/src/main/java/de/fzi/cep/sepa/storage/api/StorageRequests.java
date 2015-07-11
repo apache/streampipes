@@ -5,8 +5,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;

@@ -15,18 +15,18 @@ import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
-import de.fzi.cep.sepa.model.impl.AnyStaticProperty;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyNested;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
-import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.MatchingStaticProperty;
-import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
@@ -254,7 +254,7 @@ public class ClientModelTransformer {
 
 	private static StaticProperty convertAnyStaticProperty(AnyStaticProperty p,
 			CheckboxInput input) {
-		for(de.fzi.cep.sepa.model.impl.Option sepaOption : p.getOptions())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.Option sepaOption : p.getOptions())
 		{
 			Option clientOption = Utils.getOptionById(input.getOptions(), sepaOption.getRdfId().toString());
 				if (clientOption.isSelected())
@@ -265,7 +265,7 @@ public class ClientModelTransformer {
 	
 	private static StaticProperty convertOneOfStaticProperty(OneOfStaticProperty p,
 			RadioInput input) {
-		for(de.fzi.cep.sepa.model.impl.Option sepaOption : p.getOptions())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.Option sepaOption : p.getOptions())
 		{
 			Option clientOption = Utils.getOptionById(input.getOptions(), sepaOption.getRdfId().toString());
 				if (clientOption.isSelected())
@@ -323,7 +323,7 @@ public class ClientModelTransformer {
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
 			OneOfStaticProperty p) {
 		List<Option> options = new ArrayList<Option>();
-		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.Option option : p.getOptions())
 		{
 			Option thisOption = new Option(option.getRdfId().toString(), option.getName());
 			options.add(thisOption);
@@ -335,7 +335,7 @@ public class ClientModelTransformer {
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
 			AnyStaticProperty p) {
 		List<Option> options = new ArrayList<Option>();
-		for(de.fzi.cep.sepa.model.impl.Option option : p.getOptions())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.Option option : p.getOptions())
 		{
 			options.add(new Option(option.getElementId(), option.getName()));
 		}

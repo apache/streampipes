@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import de.fzi.cep.sepa.model.client.StaticProperty;
 import org.apache.shiro.SecurityUtils;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
@@ -17,7 +18,6 @@ import com.clarkparsia.empire.impl.RdfQuery;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
