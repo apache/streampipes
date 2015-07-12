@@ -65,7 +65,7 @@ public  class StreamPipeRealm implements Realm {
     public AuthenticationInfo getAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
         if (authenticationToken instanceof  UsernamePasswordToken) {
-            CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+            CouchDbClient dbClient = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
             try {
                 String username = ((UsernamePasswordToken) authenticationToken).getUsername();
                 List<JsonObject> users = dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class);

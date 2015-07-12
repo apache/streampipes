@@ -40,7 +40,7 @@ public class Pipeline extends AbstractRestInterface {
 
 	Logger LOG = LoggerFactory.getLogger(Pipeline.class);
 
-	CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+	CouchDbClient dbClient = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
 
 	/**
 	 * 

@@ -1,13 +1,8 @@
 import com.google.common.io.Resources;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-
-import org.apache.commons.io.Charsets;
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

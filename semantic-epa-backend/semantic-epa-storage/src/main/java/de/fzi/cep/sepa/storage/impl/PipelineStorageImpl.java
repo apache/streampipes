@@ -28,7 +28,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public List<Pipeline> getAllPipelines() {
-    	 CouchDbClient dbClient = Utils.getCouchDBClient();
+    	 CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
     	 List<Pipeline> pipelines = dbClient.view("_all_docs")
     			  .includeDocs(true)
     			  .query(Pipeline.class);
@@ -41,7 +41,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
 	public List<Pipeline> getAllUserPipelines() {
 		CouchDbClient dbClientUser = Utils.getCouchDbUserClient();
-		CouchDbClient dbClientPipeline = Utils.getCouchDBClient();
+		CouchDbClient dbClientPipeline = Utils.getCouchDbPipelineClient();
 		List<Pipeline> pipelines = new ArrayList<>();
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
@@ -68,7 +68,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public void storePipeline(Pipeline pipeline) {
-        CouchDbClient dbClient = Utils.getCouchDBClient();
+        CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
         dbClient.save(pipeline);
         //dbClient.update(pipeline);
 
@@ -77,14 +77,14 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public void updatePipeline(Pipeline pipeline) {
-        CouchDbClient dbClient = Utils.getCouchDBClient();
+        CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
         dbClient.update(pipeline);
         dbClient.shutdown();
     }
 
     @Override
     public Pipeline getPipeline(String pipelineId) {
-        CouchDbClient dbClient = Utils.getCouchDBClient();
+        CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
         try {
             Pipeline pipeline = dbClient.find(Pipeline.class, pipelineId);
             dbClient.shutdown();
@@ -97,7 +97,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public void deletePipeline(String pipelineId) {
-        CouchDbClient dbClientPipeline = Utils.getCouchDBClient();
+        CouchDbClient dbClientPipeline = Utils.getCouchDbPipelineClient();
         try {
             Pipeline removePipeline = dbClientPipeline.find(Pipeline.class, pipelineId);
             dbClientPipeline.remove(removePipeline);
@@ -110,14 +110,14 @@ public class PipelineStorageImpl implements PipelineStorage {
 
     @Override
     public <T> void store(T object) {
-        CouchDbClient dbClient = Utils.getCouchDBClient();
+        CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
         dbClient.save(object);
         dbClient.shutdown();
     }
 
 	@Override
 	public List<RunningVisualization> getRunningVisualizations() {
-		 CouchDbClient dbClient = Utils.getCouchDBClient();
+		 CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
     	 List<RunningVisualization> visualizations = dbClient.view("_all_docs")
     			  .includeDocs(true)
     			  .query(RunningVisualization.class);
@@ -129,7 +129,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 
 	@Override
 	public void storeVisualization(RunningVisualization visualization) {
-		CouchDbClient dbClient = Utils.getCouchDBClient();
+		CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
         dbClient.save(visualization);
         dbClient.shutdown();
 		
@@ -138,7 +138,7 @@ public class PipelineStorageImpl implements PipelineStorage {
 	@Override
 	public void deleteVisualization(String pipelineId) {
 					
-		CouchDbClient dbClient = Utils.getCouchDBClient();
+		CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
 	        try {
 	        	List<RunningVisualization> currentVisualizations = getRunningVisualizations();
 	    		for(RunningVisualization viz : currentVisualizations)
@@ -155,14 +155,14 @@ public class PipelineStorageImpl implements PipelineStorage {
 
 	@Override
 	public void storeVirtualSensor(VirtualSensor virtualSensor) {
-		 CouchDbClient dbClient = Utils.getCouchDBClient();
+		 CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
 		 dbClient.save(virtualSensor);
 	     dbClient.shutdown();
 	}
 
 	@Override
 	public List<VirtualSensor> getVirtualSensors() {
-		CouchDbClient dbClient = Utils.getCouchDBClient();
+		CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
 		List<VirtualSensor> virtualSensors = dbClient.view("_all_docs")
    			  .includeDocs(true)
    			  .query(VirtualSensor.class);

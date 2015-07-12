@@ -51,7 +51,7 @@ public class UserImpl extends AbstractRestInterface implements User{
 
     Logger LOG = LoggerFactory.getLogger(UserImpl.class);
 
-    CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+    CouchDbClient dbClient = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
 
 
     @Override
@@ -132,7 +132,7 @@ public class UserImpl extends AbstractRestInterface implements User{
         //String streams = new UserImpl().getAllStreams();
         //System.out.println(streams);
         String username = "user";
-        CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+        CouchDbClient dbClient = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
         JsonArray pipelineIds = dbClient.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
         System.out.println((pipelineIds));
     }*/
@@ -183,6 +183,41 @@ public class UserImpl extends AbstractRestInterface implements User{
             String username = SecurityUtils.getSubject().getPrincipal().toString();
         }
         return null;
+    }
+
+
+    public String removeAction(String id) {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            de.fzi.cep.sepa.model.client.user.User user = StorageManager.INSTANCE.getUserStorageAPI().getUser(username);
+            user.removeAction(id);
+            StorageManager.INSTANCE.getUserStorageAPI().updateUser(user);
+            return toJson(new SuccessMessage(NotificationType.REMOVED_ACTION.uiNotification()));
+        }
+        return toJson(new ErrorMessage(NotificationType.NOT_REMOVED.uiNotification()));
+
+    }
+
+    public String removeSepa(String id) {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            de.fzi.cep.sepa.model.client.user.User user = StorageManager.INSTANCE.getUserStorageAPI().getUser(username);
+            user.removeSepa(id);
+            StorageManager.INSTANCE.getUserStorageAPI().updateUser(user);
+            return toJson(new SuccessMessage(NotificationType.REMOVED_SEPA.uiNotification()));
+        }
+        return toJson(new ErrorMessage(NotificationType.NOT_REMOVED.uiNotification()));
+    }
+
+    public String removeSource(String id) {
+        if (SecurityUtils.getSubject().isAuthenticated()) {
+            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            de.fzi.cep.sepa.model.client.user.User user = StorageManager.INSTANCE.getUserStorageAPI().getUser(username);
+            user.removeSource(id);
+            StorageManager.INSTANCE.getUserStorageAPI().updateUser(user);
+            return toJson(new SuccessMessage(NotificationType.REMOVED_SOURCE.uiNotification()));
+        }
+        return toJson(new ErrorMessage(NotificationType.NOT_REMOVED.uiNotification()));
     }
 
     @GET
