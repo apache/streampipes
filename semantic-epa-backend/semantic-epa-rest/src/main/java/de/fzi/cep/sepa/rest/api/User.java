@@ -21,5 +21,11 @@ public interface User {
 	public String getSelectedStreams();
 	
 	public String getSelectedActions();
-	
+
+	public String removeSource(String uri);
+
+	public String removeAction(String uri);
+
+	public String removeSepa(String uri);
+
 }

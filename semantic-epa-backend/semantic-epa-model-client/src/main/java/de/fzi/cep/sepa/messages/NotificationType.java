@@ -29,7 +29,13 @@ public enum NotificationType {
 	WARNING_NO_LABEL("Description missing", ""),
 
 	NOT_REMEMBERED("User not remembered", ""),
-	REMEMBERED("User remembered", "");
+	REMEMBERED("User remembered", ""),
+
+	NOT_REMOVED("Could not remove element", ""),
+	REMOVED_ACTION("Action removed", ""),
+	REMOVED_SOURCE("Source removed", ""),
+	REMOVED_SEPA("Sepa removed", "");
+
 
 
 

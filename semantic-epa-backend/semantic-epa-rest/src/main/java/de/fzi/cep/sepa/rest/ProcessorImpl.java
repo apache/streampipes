@@ -39,8 +39,9 @@ import org.slf4j.LoggerFactory;
 public class ProcessorImpl extends AbstractRestInterface implements Processor {
 
 	Logger LOG = LoggerFactory.getLogger(ProcessorImpl.class);
-	
-	@GET
+
+	@Path("user")
+	@GET 
 	@Produces(MediaType.APPLICATION_JSON)
 	/**
 	 * Returns all sepa elements from a user, or all sepa elements if no user is passed.

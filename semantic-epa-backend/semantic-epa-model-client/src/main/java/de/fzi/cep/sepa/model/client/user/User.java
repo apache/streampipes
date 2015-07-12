@@ -117,4 +117,17 @@ public class User {
 	public void addAction(String action) {
 		this.actions.add(action);
 	}
+
+	public void removeAction(String action) {
+		this.actions.remove(action);
+	}
+
+	public void removeSepa(String sepa) {
+		this.sepas.remove(sepa);
+	}
+
+	public void removeSource(String source) {
+		this.sources.remove(source);
+	}
+
 }

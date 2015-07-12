@@ -6,8 +6,7 @@ import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.user.Role;
-import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
-import de.fzi.cep.sepa.rest.api.User;
+import de.fzi.cep.sepa.rest.api.*;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -163,26 +162,21 @@ public class UserImpl extends AbstractRestInterface implements User{
 
     @Override
     public String getSelectedSources() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-        }
-        return null;
+        Source source = new SourceImpl();
+        return source.getAllUserSources();
+
     }
 
     @Override
     public String getSelectedStreams() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-        }
-        return null;
+        Processor processor = new ProcessorImpl();
+        return processor.getAllUserProcessors();
     }
 
     @Override
     public String getSelectedActions() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-        }
-        return null;
+        Action action = new ActionImpl();
+        return action.getAllUserActions();
     }
 
 
