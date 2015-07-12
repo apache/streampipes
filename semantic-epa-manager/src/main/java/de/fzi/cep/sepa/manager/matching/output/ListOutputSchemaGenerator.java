@@ -6,8 +6,8 @@ import java.util.List;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;

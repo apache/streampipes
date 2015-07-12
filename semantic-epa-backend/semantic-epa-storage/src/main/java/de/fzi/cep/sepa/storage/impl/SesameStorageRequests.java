@@ -8,8 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import de.fzi.cep.sepa.model.client.StaticProperty;
-import org.apache.shiro.SecurityUtils;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;

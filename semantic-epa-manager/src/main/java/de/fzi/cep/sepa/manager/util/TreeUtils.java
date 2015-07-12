@@ -8,10 +8,10 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StreamClient;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class TreeUtils {
@@ -79,7 +79,7 @@ public class TreeUtils {
 	
 	public static MappingProperty findMappingProperty(String elementId, ConsumableSEPAElement sepa)
 	{
-		for(de.fzi.cep.sepa.model.impl.StaticProperty sp : sepa.getStaticProperties())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty sp : sepa.getStaticProperties())
 		{
 			if (sp.getRdfId().toString().equals(elementId)) return (MappingProperty) sp;
 		}
@@ -88,7 +88,7 @@ public class TreeUtils {
 
 	public static MappingProperty findMappingProperty(String elementId,
 			SepaInvocation sepa) {
-		for(de.fzi.cep.sepa.model.impl.StaticProperty sp : sepa.getStaticProperties())
+		for(de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty sp : sepa.getStaticProperties())
 		{
 			if (sp.getRdfId().toString().equals(elementId)) return (MappingProperty) sp;
 		}

@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.manager.matching.validator;
 import java.util.List;
 
 import de.fzi.cep.sepa.manager.matching.Matcher;
-import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 
 public class SchemaMatchValidator implements Validator<List<EventSchema>> {

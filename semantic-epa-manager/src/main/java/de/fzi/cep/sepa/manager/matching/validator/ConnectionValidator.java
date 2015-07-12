@@ -4,7 +4,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
 
 /**
  * 

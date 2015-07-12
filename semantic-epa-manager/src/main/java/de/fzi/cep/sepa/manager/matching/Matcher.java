@@ -4,10 +4,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyList;
-import de.fzi.cep.sepa.model.impl.EventPropertyNested;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 
 public class Matcher {
 

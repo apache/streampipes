@@ -18,7 +18,7 @@ import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
-import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.api.StorageRequests;

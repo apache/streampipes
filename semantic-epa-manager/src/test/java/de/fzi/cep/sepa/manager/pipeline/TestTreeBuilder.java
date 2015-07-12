@@ -21,7 +21,7 @@ import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.TextInput;
-import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;

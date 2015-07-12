@@ -22,14 +22,14 @@ import twitter4j.Status;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQuality;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
@@ -56,13 +56,13 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
 
-		List<EventPropertyQuality> qualities = new ArrayList<EventPropertyQuality>();
+		List<EventPropertyQualityDefinition> qualities = new ArrayList<EventPropertyQualityDefinition>();
 		qualities.add(new Latency(10));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"), qualities));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "randomString", "", de.fzi.cep.sepa.commons.Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "count", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
 		
-		List<EventStreamQuality> eventStreamQualities = new ArrayList<EventStreamQuality>();
+		List<EventStreamQualityDefinition> eventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
 		eventStreamQualities.add(new Frequency(1));
 		
 		
