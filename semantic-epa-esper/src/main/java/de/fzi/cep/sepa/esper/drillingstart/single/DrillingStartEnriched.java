@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
-import de.fzi.cep.sepa.model.impl.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 
 public class DrillingStartEnriched extends EsperEventEngine<DrillingStartEnrichedParameters>{
 

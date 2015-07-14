@@ -8,17 +8,17 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.MappingProperty;
-import de.fzi.cep.sepa.model.impl.MappingPropertyNary;
-import de.fzi.cep.sepa.model.impl.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.Option;
-import de.fzi.cep.sepa.model.impl.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.Option;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
@@ -26,8 +26,8 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.impl.quality.Precision;
-import de.fzi.cep.sepa.model.impl.quality.RequiresEventPropertyQuality;
-import de.fzi.cep.sepa.model.impl.quality.RequiresEventStreamQuality;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -44,9 +44,9 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI("http://schema.org/Number"));
 		
-		List<RequiresEventPropertyQuality> requiresPropertyQualities = new ArrayList<RequiresEventPropertyQuality>();
-		requiresPropertyQualities.add(new RequiresEventPropertyQuality(new Precision(1), new Precision(10)));
-		requiresPropertyQualities.add(new RequiresEventPropertyQuality(null, new Latency(200)));
+		List<EventPropertyQualityRequirement> requiresPropertyQualities = new ArrayList<EventPropertyQualityRequirement>();
+		requiresPropertyQualities.add(new EventPropertyQualityRequirement(new Precision(1), new Precision(10)));
+		requiresPropertyQualities.add(new EventPropertyQualityRequirement(null, new Latency(200)));
 		e1.setRequiresEventPropertyQualities(requiresPropertyQualities);
 		eventProperties.add(e1);
 		
@@ -62,8 +62,8 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		
 		// add constraints to the event stream
-		List<RequiresEventStreamQuality> requiredStreamQualities = new ArrayList<RequiresEventStreamQuality>();
-		requiredStreamQualities.add(new RequiresEventStreamQuality(new Frequency(10), new Frequency(100)));
+		List<EventStreamQualityRequirement> requiredStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+		requiredStreamQualities.add(new EventStreamQualityRequirement(new Frequency(10), new Frequency(100)));
 		stream1.setRequiresEventStreamQualities(requiredStreamQualities);
 		
 		desc.addEventStream(stream1);
