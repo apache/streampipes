@@ -46,12 +46,8 @@ public class JsonLdTransformer implements RdfTransformer {
 			Graph temp = RdfGenerator.asRdf(element);
 			graph = appendGraph(graph, temp);
 
-			final String packageName = ModelUtils.getPackageName(element.getClass().getSimpleName().replace("Impl", ""));
-			final String className = element.getClass().getSimpleName()
-					.replace("Impl", "");
-
 			Method[] ms;
-			ms = Class.forName(packageName + className).getMethods();
+			ms = Class.forName(element.getClass().getName()).getMethods();
 
 			for (Method m : ms) {
 				if (m.getName().startsWith("get")) {

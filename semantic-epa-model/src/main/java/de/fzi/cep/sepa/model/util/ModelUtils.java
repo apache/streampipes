@@ -71,67 +71,7 @@ public class ModelUtils {
 		return result;
 	}
 	
-	public static String getPackageName(String className)
-	{
-		String[] abstractClasses = {"AbstractSEPAElement", "NamedSEPAElement", "UnnamedSEPAElement", "InvocableSEPAElement"};
-		String[] graphClasses = {"SecDescription", "SepDescription", "SepaDescription", "SepaInvocation", "SecInvocation"};
-		String[] modelClasses = {"MatchingStaticProperty",
-				"Domain", 
-				"EventGrounding", 
-				"EventProperty", 
-				"EventQuality", 
-				"EventSchema", 
-				"EventSource", 
-				"EventStream", 
-				"MeasurementUnit", 
-				"Namespace", 
-				"Pipeline", 
-				"PipelineElement", 
-				"SEPAFactory", 
-				"StaticProperty", 
-				"TransportFormat", 
-				"TransportProtocol", 
-				"OneOfStaticProperty", 
-				"FreeTextStaticProperty", 
-				"AnyStaticProperty", 
-				"Option", 
-				"MappingProperty", 
-				"EventPropertyPrimitive", 
-				"EventPropertyNested", 
-				"EventPropertyList", 
-				"MappingPropertyUnary",
-				"MappingPropertyNary",
-				"JmsTransportProtocol",
-				"KafkaTransportProtocol"};
-		String[] outputClasses = {"ListOutputStrategy", "AppendOutputStrategy", "OutputStrategy", "OutputStrategyParameter", "OutputStrategyType", "RenameOutputStrategy", "CustomOutputStrategy", "FixedOutputStrategy"};
-		String[] qualityClasses = {"Frequency", "Latency", "Accuracy", "EventPropertyQuality", "EventStreamQuality", "MeasurementProperty", "MeasurementRange", "Precision", "RequiresEventPropertyQuality", "RequiresEventStreamQuality", "Resolution"};
-		
-		if (contains(className, abstractClasses)) 
-			{
-				return "de.fzi.cep.sepa.model.";
-			}
-		else if (contains(className, graphClasses)) 
-			{
-				return "de.fzi.cep.sepa.model.impl.graph.";
-			}
-		else if (contains(className, outputClasses)) 
-			{
-				return "de.fzi.cep.sepa.model.impl.output.";
-			}
-		else if (contains(className, modelClasses)) 
-			{
-				return "de.fzi.cep.sepa.model.impl.";
-			}
-		else if (contains(className, qualityClasses))
-			{
-				return "de.fzi.cep.sepa.model.impl.quality.";
-			}
-		else 
-			{
-				System.out.println("MISSING: " +className);
-				throw new IllegalArgumentException();
-			}
-	}
+
 	
 	private static boolean contains(String value, String[] list)
 	{
