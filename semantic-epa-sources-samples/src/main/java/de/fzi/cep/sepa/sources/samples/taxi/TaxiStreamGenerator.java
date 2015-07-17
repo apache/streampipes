@@ -92,6 +92,7 @@ public class TaxiStreamGenerator implements Runnable{
 								previousDropoffTime = currentDropOffTime;
 							}				
 							String json = buildJsonString(records);
+							System.out.println(json);
 							publisher.onEvent(json);
 							if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));
 							if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
@@ -164,24 +165,24 @@ public class TaxiStreamGenerator implements Runnable{
 	{
 		StringBuilder json = new StringBuilder();
 		json.append("{");
-		
-			json.append(Utils.toJsonstr(MEDALLION, line[0]));
-			json.append(Utils.toJsonstr(HACK_LICENSE, line[1]));
-			json.append(Utils.toJsonstr(PICKUP_DATETIME, toTimestamp(line[2])));
-			json.append(Utils.toJsonstr(DROPOFF_DATETIME, toTimestamp(line[3])));
-			json.append(Utils.toJsonstr(TRIP_TIME_IN_SECS, Integer.parseInt(line[4])));
-			json.append(Utils.toJsonstr(TRIP_DISTANCE, toDouble(line[5])));
-			json.append(Utils.toJsonstr(PICKUP_LONGITUDE, toDouble(line[6])));
-			json.append(Utils.toJsonstr(PICKUP_LATITUDE, toDouble(line[7])));
-			json.append(Utils.toJsonstr(DROPOFF_LONGITUDE, toDouble(line[8])));
-			json.append(Utils.toJsonstr(DROPOFF_LATITUDE, toDouble(line[9])));
-			json.append(Utils.toJsonstr(PAYMENT_TYPE, line[10]));
-			json.append(Utils.toJsonstr(FARE_AMOUNT, toDouble(line[11])));
-			json.append(Utils.toJsonstr(SURCHARGE, toDouble(line[12])));
-			json.append(Utils.toJsonstr(MTA_TAX, toDouble(line[13])));
-			json.append(Utils.toJsonstr(TIP_AMOUNT, toDouble(line[14])));
-			json.append(Utils.toJsonstr(TOLLS_AMOUNT, toDouble(line[15])));
-			json.append(Utils.toJsonstr(TOTAL_AMOUNT, toDouble(line[16])));
+		//new RdfProducer(line[0]).toRdf();
+			json.append(Utils.toJsonString(MEDALLION, line[0]));
+			json.append(Utils.toJsonString(HACK_LICENSE, line[1]));
+			json.append(Utils.toJsonNumber(PICKUP_DATETIME, toTimestamp(line[2])));
+			json.append(Utils.toJsonNumber(DROPOFF_DATETIME, toTimestamp(line[3])));
+			json.append(Utils.toJsonNumber(TRIP_TIME_IN_SECS, Integer.parseInt(line[4])));
+			json.append(Utils.toJsonNumber(TRIP_DISTANCE, toDouble(line[5])));
+			json.append(Utils.toJsonNumber(PICKUP_LONGITUDE, toDouble(line[6])));
+			json.append(Utils.toJsonNumber(PICKUP_LATITUDE, toDouble(line[7])));
+			json.append(Utils.toJsonNumber(DROPOFF_LONGITUDE, toDouble(line[8])));
+			json.append(Utils.toJsonNumber(DROPOFF_LATITUDE, toDouble(line[9])));
+			json.append(Utils.toJsonString(PAYMENT_TYPE, line[10]));
+			json.append(Utils.toJsonNumber(FARE_AMOUNT, toDouble(line[11])));
+			json.append(Utils.toJsonNumber(SURCHARGE, toDouble(line[12])));
+			json.append(Utils.toJsonNumber(MTA_TAX, toDouble(line[13])));
+			json.append(Utils.toJsonNumber(TIP_AMOUNT, toDouble(line[14])));
+			json.append(Utils.toJsonNumber(TOLLS_AMOUNT, toDouble(line[15])));
+			json.append(Utils.toJsonNumber(TOTAL_AMOUNT, toDouble(line[16])));
 
 			json.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
 			json.append("}");		
