@@ -31,7 +31,7 @@ public class SepaUtils {
 		return getStaticPropertyByName(sepa.getStaticProperties(), name);
 	}
 	
-	public static String getFreeTextStaticPropertyValue(SepaInvocation graph, String name)
+	public static String getFreeTextStaticPropertyValue(InvocableSEPAElement graph, String name)
 	{
 		StaticProperty staticProperty = getStaticPropertyByName(graph, name);
 		if (staticProperty instanceof FreeTextStaticProperty)
@@ -39,7 +39,7 @@ public class SepaUtils {
 		return null;
 	}
 	
-	public static StaticProperty getStaticPropertyByName(SepaInvocation seg, String name)
+	public static StaticProperty getStaticPropertyByName(InvocableSEPAElement seg, String name)
 	{
 		return getStaticPropertyByName(seg.getStaticProperties(), name);
 	}

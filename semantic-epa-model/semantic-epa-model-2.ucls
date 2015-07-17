@@ -346,301 +346,293 @@
     </display>  
   </class>  
   <generalization id="35">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="31"/>  
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
   </generalization>  
-  <association id="36">    
-    <end type="SOURCE" refId="19" navigable="false">      
-      <attribute id="37" name="eventProperties"/>      
-      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="39">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="9"/>  
-  </generalization>  
-  <association id="40">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="41" name="eventProperties"/>      
-      <multiplicity id="42" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="43">    
-    <end type="SOURCE" refId="24"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <generalization id="44">    
-    <end type="SOURCE" refId="23"/>    
-    <end type="TARGET" refId="21"/>  
-  </generalization>  
-  <association id="45">    
-    <bendpoint x="588" y="316"/>    
-    <end type="SOURCE" refId="26" navigable="false">      
-      <attribute id="46" name="eventStreams"/>      
-      <multiplicity id="47" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="20" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="48">    
-    <end type="SOURCE" refId="29"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="49">    
-    <end type="SOURCE" refId="27"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
-  <association id="50">    
-    <end type="SOURCE" refId="28" navigable="false">      
-      <attribute id="51" name="outputStrategies"/>      
-      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="31" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="53">    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
-  <generalization id="54">    
-    <end type="SOURCE" refId="31"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <association id="55">    
-    <end type="SOURCE" refId="20" navigable="false">      
-      <attribute id="56" name="eventQuality"/>      
-      <multiplicity id="57" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="22" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="58">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="59">    
-    <end type="SOURCE" refId="26"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="60">    
-    <end type="SOURCE" refId="12"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="61">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="62">    
+  <generalization id="36">    
     <bendpoint x="445" y="223"/>    
     <end type="SOURCE" refId="18"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <generalization id="63">    
-    <bendpoint x="1509" y="223"/>    
-    <bendpoint x="1509" y="130"/>    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="2"/>  
+  <generalization id="37">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="17"/>  
   </generalization>  
-  <association id="64">    
-    <bendpoint x="1072" y="316"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="65" name="inputStreams"/>      
-      <multiplicity id="66" minimum="0" maximum="2147483647"/>    
+  <association id="38">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="39" name="eventProperties"/>      
+      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <association id="42">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="43" name="outputStream"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="20" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="67">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="68">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <generalization id="69">    
-    <end type="SOURCE" refId="28"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="70">    
-    <end type="SOURCE" refId="20" navigable="false">      
-      <attribute id="71" name="eventGrounding"/>      
-      <multiplicity id="72" minimum="0" maximum="1"/>    
+  <association id="45">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="46" name="outputStrategies"/>      
+      <multiplicity id="47" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="31" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="73">    
-    <bendpoint x="1688" y="316"/>    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="74" name="staticProperties"/>      
-      <multiplicity id="75" minimum="0" maximum="2147483647"/>    
+  <generalization id="48">    
+    <bendpoint x="1313" y="409"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="49">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="21"/>  
+  </generalization>  
+  <association id="50">    
+    <bendpoint x="675" y="316"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="51" name="eventStreams"/>      
+      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="53">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="54" name="eventProperties"/>      
+      <multiplicity id="55" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="56">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="57">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="58">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="59">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="60">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="61">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <association id="62">    
+    <bendpoint x="588" y="316"/>    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="63" name="eventStreams"/>      
+      <multiplicity id="64" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="65">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="21"/>  
+  </generalization>  
+  <generalization id="66">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <association id="67">    
+    <bendpoint x="1281" y="316"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="68" name="staticProperties"/>      
+      <multiplicity id="69" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="17" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="76">    
+  <generalization id="70">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="71">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="72" name="eventProperties"/>      
+      <multiplicity id="73" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="74">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="75" name="eventSource"/>      
+      <multiplicity id="76" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="77">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="79">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="80">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="81">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="82" name="eventSchema"/>      
+      <multiplicity id="83" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="84">    
     <bendpoint x="654" y="316"/>    
     <bendpoint x="654" y="223"/>    
     <end type="SOURCE" refId="20"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <association id="77">    
-    <end type="SOURCE" refId="25" navigable="false">      
-      <attribute id="78" name="outputStrategies"/>      
-      <multiplicity id="79" minimum="0" maximum="2147483647"/>    
+  <generalization id="85">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="86">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <association id="87">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="88" name="options"/>      
+      <multiplicity id="89" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="31" navigable="true"/>    
+    <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="80">    
-    <end type="SOURCE" refId="29" navigable="false">      
-      <attribute id="81" name="eventProperties"/>      
-      <multiplicity id="82" minimum="0" maximum="2147483647"/>    
+  <association id="90">    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="91" name="eventProperties"/>      
+      <multiplicity id="92" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="83">    
+  <association id="93">    
     <end type="SOURCE" refId="28" navigable="false">      
-      <attribute id="84" name="outputStream"/>      
-      <multiplicity id="85" minimum="0" maximum="1"/>    
+      <attribute id="94" name="outputStrategies"/>      
+      <multiplicity id="95" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="20" navigable="true"/>    
+    <end type="TARGET" refId="31" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="86">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="17"/>  
+  <generalization id="96">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="3"/>  
   </generalization>  
-  <association id="87">    
+  <generalization id="97">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="99">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="100">    
+    <bendpoint x="1688" y="316"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="101" name="staticProperties"/>      
+      <multiplicity id="102" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="103">    
+    <bendpoint x="1509" y="223"/>    
+    <bendpoint x="1509" y="130"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="104">    
+    <bendpoint x="943" y="409"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <association id="105">    
     <end type="SOURCE" refId="20" navigable="false">      
-      <attribute id="88" name="eventSchema"/>      
-      <multiplicity id="89" minimum="0" maximum="1"/>    
+      <attribute id="106" name="eventGrounding"/>      
+      <multiplicity id="107" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="90">    
-    <end type="SOURCE" refId="21"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="91">    
+  <generalization id="108">    
     <bendpoint x="1648" y="502"/>    
     <bendpoint x="1648" y="409"/>    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="5"/>  
   </generalization>  
-  <generalization id="92">    
-    <end type="SOURCE" refId="30"/>    
-    <end type="TARGET" refId="31"/>  
+  <generalization id="109">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="5"/>  
   </generalization>  
-  <generalization id="93">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="17"/>  
+  <generalization id="110">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="5"/>  
   </generalization>  
-  <generalization id="94">    
-    <end type="SOURCE" refId="32"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <association id="95">    
-    <end type="SOURCE" refId="34" navigable="false">      
-      <attribute id="96" name="eventProperties"/>      
-      <multiplicity id="97" minimum="0" maximum="2147483647"/>    
+  <association id="111">    
+    <end type="SOURCE" refId="29" navigable="false">      
+      <attribute id="112" name="eventProperties"/>      
+      <multiplicity id="113" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="98">    
-    <end type="SOURCE" refId="33"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="99">    
-    <bendpoint x="1313" y="409"/>    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <association id="100">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="101" name="options"/>      
-      <multiplicity id="102" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="103">    
-    <bendpoint x="675" y="316"/>    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="104" name="eventStreams"/>      
-      <multiplicity id="105" minimum="0" maximum="2147483647"/>    
+  <association id="114">    
+    <bendpoint x="1072" y="316"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="115" name="inputStreams"/>      
+      <multiplicity id="116" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="20" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="106">    
-    <end type="SOURCE" refId="16"/>    
-    <end type="TARGET" refId="21"/>  
-  </generalization>  
-  <generalization id="107">    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="9"/>  
-  </generalization>  
-  <generalization id="108">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="9"/>  
-  </generalization>  
-  <generalization id="109">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="110">    
-    <bendpoint x="943" y="409"/>    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="5"/>  
-  </generalization>  
-  <association id="111">    
-    <end type="SOURCE" refId="26" navigable="false">      
-      <attribute id="112" name="eventSource"/>      
-      <multiplicity id="113" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="114">    
-    <end type="SOURCE" refId="32" navigable="false">      
-      <attribute id="115" name="eventProperties"/>      
-      <multiplicity id="116" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="117">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="118" name="options"/>      
+    <end type="SOURCE" refId="32" navigable="false">      
+      <attribute id="118" name="eventProperties"/>      
       <multiplicity id="119" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="13" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="120">    
-    <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="121" name="eventProperties"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="121" name="options"/>      
       <multiplicity id="122" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="123">    
-    <bendpoint x="1281" y="316"/>    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="124" name="staticProperties"/>      
-      <multiplicity id="125" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="17" navigable="true"/>    
+    <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
