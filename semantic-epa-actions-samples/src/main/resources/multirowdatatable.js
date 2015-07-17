@@ -26,11 +26,17 @@ var t;
 				var obj = j[listProperty];
 				console.log(obj);
 				$(j.list).each(function(index, v) {
-					str += "<tr>";
-					$(columnNames).each(function(index, value) {
-						str = str +"<td>" +v[value] +"</td>";
-					});
-					str += "</tr>";
+					if (v["pickup_latitude"] > 0)
+					{
+						str += "<tr>";
+						$(columnNames).each(function(index, value) {
+							if (!(typeof(v[value]) === 'object')) str = str +"<td>" +v[value] +"</td>";
+							else {
+								str = str +"<td>" +v[value].cellX +", " +v[value].cellY +"</td>";
+							}
+						});
+						str += "</tr>";
+					}
 					
 				});		
 				$("#liveTable tbody").html(str);

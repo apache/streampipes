@@ -33,69 +33,72 @@ function connectStomp(brokerUrl, inputTopic, latitudeNw, longitudeNw, latitudeSe
 				
 				var j = jQuery.parseJSON(message.body);
 				console.log(message.body);
-				var latNw = j.cellOptions[latitudeNw];
-				var lngNw = j.cellOptions[longitudeNw];
-				var latSe = j.cellOptions[latitudeSe];
-				var lngSe = j.cellOptions[longitudeSe];
 				
-				var cellX = j.cellOptions.cellX;
-				var cellY = j.cellOptions.cellY;
+				var obj = j["bestCells"];
 				
-				var description = j[description2];
-				console.log(latNw);
-				console.log(lngNw);
-				console.log(latSe);
-				console.log(lngSe);
-				
-				console.log(description);
-				
-				var countValue = {};
-				
-				if (areas[cellX] != undefined)
-					{
-						console.log(areas[cellX][cellY]);
-						if (areas[cellX][cellY] != undefined)
-							{
-								areas[cellX][cellY].maps.setMap(null);
-								if (areas[cellX][cellY].label != undefined) areas[cellX][cellY].label.setMap(null);
-							}
-					}
-				else areas[cellX] = new Array(500);
-					areas[cellX][cellY] = {};
-					areas[cellX][cellY].maps = new google.maps.Rectangle({
-						    strokeColor: '#FF0000',
-						    strokeOpacity: getOpacity(description),
-						    strokeWeight: 2,
-						    fillColor: '#FF0000',
-						    fillOpacity: getOpacity(description),
-						    map: map,
-						    bounds: new google.maps.LatLngBounds(
-						      new google.maps.LatLng(latNw, lngNw),
-						      new google.maps.LatLng(latSe, lngSe))
-						  });
-					countValue.cellx = cellX;
-					countValue.celly = cellY;
+				$(obj).each(function() {		
+					var latNw = this.cellOptions1.latitudeNW;
+					var lngNw = this.cellOptions1.longitudeNW;
+					var latSe = this.cellOptions1.latitudeSE;
+					var lngSe = this.cellOptions1.longitudeSE;
 					
-					count.push(countValue);
+					var cellX = this.cellOptions1.cellX;
+					var cellY = this.cellOptions1.cellY;
 					
-					if (count.length > 300)
+					var description = this.profitability;
+					console.log(latNw);
+					console.log(lngNw);
+					console.log(latSe);
+					console.log(lngSe);
+					
+					console.log(description);
+					
+					var countValue = {};
+					
+					if (areas[cellX] != undefined)
 						{
-							areas[count[0].cellx][count[0].celly].maps.setMap(null);
-							if (areas[cellX][cellY].label != undefined) areas[count[0].cellx][count[0].celly].label.setMap(null);
-							count.shift();
+							console.log(areas[cellX][cellY]);
+							if (areas[cellX][cellY] != undefined)
+								{
+									areas[cellX][cellY].maps.setMap(null);
+									if (areas[cellX][cellY].label != undefined) areas[cellX][cellY].label.setMap(null);
+								}
 						}
-					
-					
-					areas[cellX][cellY].label = new MapLabel({
-				          text: Math.round(description * 100) / 100,
-				          position: new google.maps.LatLng(latNw,lngNw),
-				          map: map,
-				          fontSize: 8,
-				          align: 'left'
-				        });
-				       // mapLabel.set('position', new google.maps.LatLng(latNw,lngNw));
-				        		
-					
+					else areas[cellX] = new Array(500);
+						areas[cellX][cellY] = {};
+						areas[cellX][cellY].maps = new google.maps.Rectangle({
+							    strokeColor: '#FF0000',
+							    strokeOpacity: getOpacity(description),
+							    strokeWeight: 2,
+							    fillColor: '#FF0000',
+							    fillOpacity: getOpacity(description),
+							    map: map,
+							    bounds: new google.maps.LatLngBounds(
+							      new google.maps.LatLng(latNw, lngNw),
+							      new google.maps.LatLng(latSe, lngSe))
+							  });
+						countValue.cellx = cellX;
+						countValue.celly = cellY;
+						
+						count.push(countValue);
+						
+						if (count.length > 300)
+							{
+								areas[count[0].cellx][count[0].celly].maps.setMap(null);
+								if (areas[cellX][cellY].label != undefined) areas[count[0].cellx][count[0].celly].label.setMap(null);
+								count.shift();
+							}
+						
+						
+						areas[cellX][cellY].label = new MapLabel({
+					          text: Math.round(description * 100) / 100,
+					          position: new google.maps.LatLng(latNw,lngNw),
+					          map: map,
+					          fontSize: 8,
+					          align: 'left'
+					        });
+						
+				});
 			});			
 		};
 		
@@ -139,7 +142,7 @@ ready = function() {
 };
 
 function getOpacity(description) {
-	return 0.05*description;
+	return 0.2*description;
 }
 
 function getRandomColor() {

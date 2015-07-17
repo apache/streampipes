@@ -61,7 +61,16 @@ function connectStomp(brokerUrl, inputTopic, listPropertyName, key, value) {
 			  barData[index].values.push(dobj);
 			  barData[index].label = element.key;
 			}); 
-			 $("#legend").text(barData[0].label);
+			if (marray.length < 3)
+				{
+					for(var i = 0; i < (3-marray.length);i++)
+						{
+						  var dobj = {};
+						  dobj.time = currentTime;
+						  dobj.y = 0;
+						  barData[2].values.push(dobj);
+						}
+				}
 			//chart.push(newData);	
 			chart.update(barData);
 		});			

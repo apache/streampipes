@@ -1,14 +1,13 @@
-package de.fzi.cep.sepa.actions.samples.proasense;
+package de.fzi.cep.sepa.actions.samples.proasense.kpi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.jms.JMSException;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
-import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.actions.messaging.kafka.KafkaConsumerGroup;
+import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
+import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyViewer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.BrokerConfig;
 import de.fzi.cep.sepa.commons.config.Configuration;
@@ -18,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
@@ -25,14 +25,12 @@ import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class ProaSenseTopologyController implements SemanticEventConsumerDeclarer {
+public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 
-	ActiveMQConsumer consumer;
-	private ProaSenseEventNotifier eventNotifier;
+	private ProaSenseEventNotifier notifier;
 	
 	@Override
 	public SecDescription declareModel() {
-		
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -44,12 +42,14 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("/storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("/proasensekpi", "ProaSense KPI", "Store as ProaSense KPI", "");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		
+		staticProperties.add(new FreeTextStaticProperty("kpi", "KPI name"));
 		desc.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();
@@ -64,28 +64,18 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 
 	@Override
 	public boolean invokeRuntime(SecInvocation sec) {
-		//String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
-		this.eventNotifier = new ProaSenseEventNotifier(consumerTopic);
-		System.out.println(consumerTopic);
-		//consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
+		this.notifier = new ProaSenseEventNotifier(consumerTopic);
 		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getBrokerConfig().getZookeeperUrl(), consumerTopic,
-				new String[] {consumerTopic}, new ProaSenseTopologyPublisher(sec, eventNotifier));
+				new String[] {consumerTopic}, new ProaSenseKpiPublisher(sec, notifier));
 		kafkaConsumerGroup.run(1);
-		
-		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		
 		return true;
 	}
 
 	@Override
 	public boolean detachRuntime() {
-		try {
-			consumer.close();
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -97,11 +87,6 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 
 	@Override
 	public String getHtml(SecInvocation graph) {
-		return new ProaSenseTopologyViewer(null, eventNotifier).generateHtml();
-	}
-	
-	public String getClonedHtml(SecInvocation graph)
-	{
-		return new ProaSenseTopologyViewer(null, eventNotifier).generateHtml();
+		return new ProaSenseTopologyViewer(null, notifier).generateHtml();
 	}
 }

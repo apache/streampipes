@@ -1,7 +1,8 @@
-package de.fzi.cep.sepa.actions.samples.maparea;
+package de.fzi.cep.sepa.actions.samples.maparealist;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
@@ -10,6 +11,7 @@ import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -38,6 +40,7 @@ public class MapAreaController extends ActionController {
 		String longitudeSe = SepaUtils.getMappingPropertyName(sec, "longitudeSe");
 		String labelName = SepaUtils.getMappingPropertyName(sec, "label");
 		
+		System.out.println(latitudeNw);
 		MapAreaParameters mapsParameters = new MapAreaParameters(inputTopic, newUrl, latitudeNw, longitudeNw, latitudeSe, longitudeSe, labelName);
 		
 		return new MapAreaGenerator(mapsParameters).generateHtml();
@@ -45,11 +48,14 @@ public class MapAreaController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/maparea", "Map area view", "", "");
+		SecDescription sec = new SecDescription("/maparealist", "Map area view (list input)", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
+		
+	
+		EventPropertyList listProperty = new EventPropertyList();
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));
@@ -64,8 +70,10 @@ public class MapAreaController extends ActionController {
 		eventProperties.add(e4);
 		eventProperties.add(e5);
 		
+		listProperty.setEventProperties(eventProperties);
+		
 		EventSchema schema1 = new EventSchema();
-		schema1.setEventProperties(eventProperties);
+		schema1.setEventProperties(Arrays.asList(listProperty));
 		
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);		
