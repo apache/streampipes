@@ -16,11 +16,12 @@ public class SecVerifier extends ElementVerifier<SecDescription> {
 
 	@Override
 	protected void store() {
+		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			StorageManager.INSTANCE.getUserStorageAPI().addAction(username, elementDescription.getElementId());
 		}
-
+*/
 		storageApi.storeSEC(elementDescription);
 	}
 

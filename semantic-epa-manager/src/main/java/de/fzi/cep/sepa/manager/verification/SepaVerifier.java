@@ -20,11 +20,12 @@ public class SepaVerifier extends ElementVerifier<SepaDescription>{
 
 	@Override
 	protected void store() {
+		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			StorageManager.INSTANCE.getUserStorageAPI().addSepa(username, elementDescription.getElementId());
 		}
-
+*/
 		storageApi.storeSEPA(elementDescription);
 	}
 
