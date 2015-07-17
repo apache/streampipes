@@ -51,8 +51,8 @@ public class Pipeline extends AbstractRestInterface {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getPipelines()
 	{
-		return toJson(pipelineStorage.getAllUserPipelines());
-		//return toJson(pipelineStorage.getAllPipelines());
+		//return toJson(pipelineStorage.getAllUserPipelines());
+		return toJson(pipelineStorage.getAllPipelines());
 	}
 	
 	/**
@@ -70,12 +70,12 @@ public class Pipeline extends AbstractRestInterface {
 		serverPipeline.setRunning(false);
 		pipelineStorage.store(serverPipeline);
 
-
+/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			userStorage.addPipeline(username, serverPipeline.getPipelineId());
 		}
-
+*/
 		return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 	}
 	
@@ -86,8 +86,8 @@ public class Pipeline extends AbstractRestInterface {
 	{
 		try {
 			//TODO you probably just want to delete the reference on the current user otherwise you have ot find all references
-			//pipelineStorage.deletePipeline(pipelineId);
-			if (getCurrentUsername() != null) userStorage.deletePipeline(getCurrentUsername(), pipelineId);
+			pipelineStorage.deletePipeline(pipelineId);
+			//if (getCurrentUsername() != null) userStorage.deletePipeline(getCurrentUsername(), pipelineId);
 
 			return constructSuccessMessage(NotificationType.PIPELINE_STORAGE_SUCCESS.uiNotification());
 		} catch (Exception e)
