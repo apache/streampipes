@@ -127,8 +127,13 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		else if (aggregateOperation.equals("Min")) aggregationType = AggregationType.MIN;
 		else aggregationType = AggregationType.MAX;
 		
+		List<String> selectProperties = new ArrayList<>();
+		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
+		{
+			selectProperties.add(p.getRuntimeName());
+		}
 		
-		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy, aggregate, timeWindowSize);
+		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy, aggregate, timeWindowSize, selectProperties);
 		
 		
 		try {

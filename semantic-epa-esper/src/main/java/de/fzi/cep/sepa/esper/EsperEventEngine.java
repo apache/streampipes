@@ -33,6 +33,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private List<String> eventTypeNames = new ArrayList<>();
 	
 	private static int i = 0;
+	private long lastTimestamp = 0;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	

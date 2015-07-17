@@ -13,8 +13,8 @@ public class GridCalculator {
 	
 	public CellOption computeCellsNaive(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
 	{
-		this.SOUTHDIFF = (cellSize/500)*SOUTHDIFF;
-		this.EASTDIFF = (cellSize/500)*EASTDIFF;
+		this.SOUTHDIFF = (cellSize/500.0)*SOUTHDIFF;
+		this.EASTDIFF = (cellSize/500.0)*EASTDIFF;
 		LatLng startLocation = new LatLng(latitudeStart, longitudeStart);
 		
 		int cellX = calculateXCoordinate(longitude);
@@ -22,7 +22,7 @@ public class GridCalculator {
          
         //LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
 	    //LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
- 		
+ 		System.out.println("x=" +cellX+ " y=" +cellY);
  		//return new CellOption(cellX, cellY, 0, 0, 0, 0, 500);
  		//return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), cellSize);
  		return new CellOption(cellX, cellY, LAT-(cellY*SOUTHDIFF), LON+(cellX*EASTDIFF), LAT-((cellY+1)*SOUTHDIFF), LON + ((cellX+1)*EASTDIFF), cellSize);
@@ -40,7 +40,7 @@ public class GridCalculator {
 	
 		LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
 		LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
-		System.out.println("x= " +cellX +" y=" +cellY);
+		
 		/*
 		System.out.println("nw lat " +nw.getLatitude());
 		System.out.println("nw lng " +nw.getLongitude());

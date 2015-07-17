@@ -12,14 +12,16 @@ public class AggregationParameter extends BindingParameters {
 	private int timeWindowSize;
 	private String aggregate;
 	private List<String> groupBy;
+	private List<String> selectProperties;
 	
-	public AggregationParameter(SepaInvocation graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize) {
+	public AggregationParameter(SepaInvocation graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize, List<String> selectProperties) {
 		super(graph);
 		this.aggregationType = aggregationType;
 		this.outputEvery = outputEvery;
 		this.groupBy = groupBy;
 		this.timeWindowSize = timeWindowSize;
 		this.aggregate = aggregate;
+		this.selectProperties = selectProperties;
 	}
 
 	public AggregationType getAggregationType() {
@@ -60,8 +62,14 @@ public class AggregationParameter extends BindingParameters {
 
 	public void setAggregate(String aggregate) {
 		this.aggregate = aggregate;
+	}
+
+	public List<String> getSelectProperties() {
+		return selectProperties;
+	}
+
+	public void setSelectProperties(List<String> selectProperties) {
+		this.selectProperties = selectProperties;
 	}	
-	
-	
 
 }

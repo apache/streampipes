@@ -20,7 +20,9 @@ import de.fzi.cep.sepa.esper.debs.c1.Challenge1FileWriter;
 import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
 import de.fzi.cep.sepa.esper.debs.c1.OutputType;
 import de.fzi.cep.sepa.esper.enrich.grid.CellOption;
+import de.fzi.cep.sepa.esper.enrich.grid.GridCalculator;
 import de.fzi.cep.sepa.esper.enrich.grid.GridCalculator2;
+import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 
 public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
@@ -47,12 +49,12 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		
 		List<String> statements = new ArrayList<String>();
 		
-		//statements.add(generateAppend1Statement(params));
+		statements.add(generateAppend1Statement(params));
 		statements.add(generateAppend2Statement(params));
 		statements.add(generateAreaProfitStatement(params));
 		
-		//statements.add(generateEmptyTaxiStatement(params));
-		//statements.add(generateProfitabilityStatement(params));
+//		statements.add(generateEmptyTaxiStatement(params));
+//		statements.add(generateProfitabilityStatement(params));
 		
 		statements.add(generateEmptyTaxiStatementFast(params));
 		statements.add(generateProfitabilityStatementFast(params));
@@ -84,21 +86,21 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		String statement = "insert into Profitability "
 				+ "select taxiPerArea.pickup_datetime as pickup_datetime, "
 				+ "taxiPerArea.dropoff_datetime as dropoff_datetime, taxiPerArea.read_datetime as read_datetime, "
-				+ "areaProfit.cellX as cellX, areaProfit.cellY as cellY, taxiPerArea.countValue as emptyTaxis, areaProfit.medianFare as medianFare, (areaProfit.medianFare / taxiPerArea.countValue) as profitability "
+				+ "areaProfit.cellOptions.cellX as cellX, areaProfit.cellOptions.cellY as cellY, taxiPerArea.countValue as emptyTaxis, areaProfit.medianFare as medianFare, (areaProfit.medianFare / taxiPerArea.countValue) as profitability "
 				+ "from TaxiPerArea(countValue>0).win:time(30 min).std:unique(cellX, cellY) as taxiPerArea, "
-				+ "AreaProfitStatement(medianFare > 0).win:time(15 min).std:unique(cellX, cellY) as areaProfit"
-				+ " where taxiPerArea.cellX = areaProfit.cellX "
-				+ "and taxiPerArea.cellY = areaProfit.cellY";
+				+ "AreaProfitStatement(medianFare > 0).win:time(15 min).std:unique(cellOptions.cellX, cellOptions.cellY) as areaProfit"
+				+ " where taxiPerArea.cellX = areaProfit.cellOptions.cellX "
+				+ "and taxiPerArea.cellY = areaProfit.cellOptions.cellY";
 		return statement;
 	}
 	
 	private String generateProfitabilityStatementFast(DebsChallenge2Parameters params) {
 		String statement = "insert into Profitability "
-				+ "select pickup_datetime as pickup_datetime, "
+				+ "select irstream pickup_latitude, pickup_longitude, cellOptions, cellOptions1, pickup_datetime as pickup_datetime, "
 				+ "dropoff_datetime as dropoff_datetime, read_datetime as read_datetime, "
-				//+ "cellOptions1.cellX as cellX, cellOptions1.cellY as cellY, countValue as emptyTaxis, medianFare as medianFare, (medianFare / countValue) as profitability "
-				+ "cellXDropoff as cellX, cellYDropoff as cellY, countValue as emptyTaxis, medianFare as medianFare, (medianFare / countValue) as profitability "
-				+ "from TaxiPerArea(countValue>0, medianFare > 0)";//.win:time(30 min).std:unique(cellXDropoff, cellYDropoff)";
+				+ "cellOptions1.cellX as cellX, cellOptions1.cellY as cellY, countValue as emptyTaxis, medianFare as medianFare, (medianFare / countValue) as profitability "
+				//+ "cellXDropoff as cellX, cellYDropoff as cellY, countValue as emptyTaxis, medianFare as medianFare, (medianFare / countValue) as profitability "
+				+ "from TaxiPerArea(countValue>0, medianFare > 0).win:time(30 min).std:unique(cellOptions1.cellX,  cellOptions1.cellY)";
 		return statement;
 	}
 
@@ -117,7 +119,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 				+ "select *, "
 				+ "count(*) as countValue "
 				+ "from AreaProfitStatement.std:unique(medallion).win:time(30 min) "
-				+ "group by cellXDropoff, cellYDropoff";
+				+ "group by cellOptions1.cellX, cellOptions1.cellY";
 		return statement;
 	}
 
@@ -127,7 +129,7 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 				+" median((fare_amount+tip_amount)) as medianFare "
 				+ "from C2AppendTwo(fare_amount >= 0, tip_amount >= 0)" 
 				+".win:time(15 min) "
-				+"group by cellXPickup, cellYPickup";
+				+"group by cellOptions.cellX, cellOptions.cellY";
 		
 		logger.info("Generated EPL: " +statement);
 		
@@ -149,10 +151,10 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 	private String generateAppend2Statement(DebsChallenge2Parameters params) {
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		model.insertInto(new InsertIntoClause("C2AppendTwo")); // out name
-		model.selectClause(makeSelectClause(params, false));//.add("cellOptions"));
+		model.selectClause(makeSelectClause(params, false).add("cellOptions"));
 		
-		//model.fromClause(new FromClause().add(FilterStream.create("C2AppendOne"))); // in name
-		model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
+		model.fromClause(new FromClause().add(FilterStream.create("C2AppendOne"))); // in name
+		//model.fromClause(new FromClause().add(FilterStream.create(fixEventName(params.getInputStreamParams().get(0).getInName())))); // in name
 		
 		
 		logger.info("Generated EPL: " +model.toEPL());
@@ -177,39 +179,39 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 		}
 		
 		SelectClause clause = SelectClause.create();
-		/*
+		
 		for(String property : params.getPropertyNames())
 		{
 			clause.add(property);
 		}
-		*/
-		clause.addWildcard();
-		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
-				"Math",
-				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property("pickup_longitude")) 
-				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXPickup");
 		
-		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
-				"Math",
-				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property("pickup_latitude"))  
-				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYPickup");
+//		clause.addWildcard();
+//		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+//				"Math",
+//				"abs", 
+//				Expressions.minus(Expressions.constant(LON), Expressions.property("pickup_longitude")) 
+//				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXPickup");
+//		
+//		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+//				"Math",
+//				"abs", 
+//				Expressions.minus(Expressions.constant(LAT), Expressions.property("pickup_latitude"))  
+//				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYPickup");
+//		
+//		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+//				"Math",
+//				"abs", 
+//				Expressions.minus(Expressions.constant(LON), Expressions.property("dropoff_longitude")) 
+//				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXDropoff");
+//		
+//		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
+//				"Math",
+//				"abs", 
+//				Expressions.minus(Expressions.constant(LAT), Expressions.property("dropoff_latitude"))  
+//				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYDropoff");
 		
-		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
-				"Math",
-				"abs", 
-				Expressions.minus(Expressions.constant(LON), Expressions.property("dropoff_longitude")) 
-				), Expressions.constant(EASTDIFF)), "int"), Expressions.constant(1)), "cellXDropoff");
-		
-		clause.add(Expressions.plus(Expressions.cast(Expressions.divide(Expressions.staticMethod(
-				"Math",
-				"abs", 
-				Expressions.minus(Expressions.constant(LAT), Expressions.property("dropoff_latitude"))  
-				), Expressions.constant(SOUTHDIFF)), "int"), Expressions.constant(1)), "cellYDropoff");
-		/*
 		clause.add(Expressions.staticMethod(
-				DebsChallenge2.class.getName(),
+				GridEnrichment.class.getName(),
 				"computeCells", 
 				property(latPropertyName), 
 				property(lngPropertyName), 
@@ -217,23 +219,23 @@ public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 				Expressions.constant(params.getStartingLatitude()),
 				Expressions.constant(params.getStartingLongitude())), 
 				cellOptionsName);
-		*/
+		
 		return clause;
 	}
 	
-	public static CellOption computeCells(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
+	public static synchronized CellOption computeCells(double latitude, double longitude, int cellSize, double latitudeStart, double longitudeStart)
 	{
-		return new GridCalculator2().computeCellsNaive(latitude, longitude, cellSize, latitudeStart, longitudeStart);
+		return new GridCalculator().computeCellsNaive(latitude, longitude, cellSize, latitudeStart, longitudeStart);
 	}
 	
-	@Override
-	public Writer getWriter(OutputCollector collector, DebsChallenge2Parameters params)
-	{
-		DebsOutputParameters outputParams = new DebsOutputParameters(C2_FILENAME);	
-		Challenge1FileWriter writer = new Challenge1FileWriter(outputParams, OutputType.HIDE);
-		
-		return writer;
-	}
+//	@Override
+//	public Writer getWriter(OutputCollector collector, DebsChallenge2Parameters params)
+//	{
+//		DebsOutputParameters outputParams = new DebsOutputParameters(C2_FILENAME);	
+//		Challenge1FileWriter writer = new Challenge1FileWriter(outputParams, OutputType.HIDE);
+//		
+//		return writer;
+//	}
 	
 	public static boolean isInArray(Map<String, Object> lastEvent, Map<String, Object>[] lastWindow)
 	{

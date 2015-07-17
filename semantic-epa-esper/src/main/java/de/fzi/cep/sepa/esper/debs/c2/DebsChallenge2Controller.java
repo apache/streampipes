@@ -185,7 +185,7 @@ public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameter
 			e.printStackTrace();
 		}
 		
-		new Thread(new TaxiDataInputProvider(inName)).start();
+		//new Thread(new TaxiDataInputProvider(inName)).start();
 		return false;
 	}
 }

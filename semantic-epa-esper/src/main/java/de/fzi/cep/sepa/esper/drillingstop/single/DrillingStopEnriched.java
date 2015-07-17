@@ -17,38 +17,43 @@ public class DrillingStopEnriched extends EsperEventEngine<DrillingStopEnrichedP
 		List<String> statements = new ArrayList<>();
 		String eventInName = fixEventName(bindingParameters.getInputStreamParams().get(0).getInName());
 		String selectClause = makeSelectClause(bindingParameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties());
-		String pattern = selectClause +" from pattern[every ((s1=" +eventInName 
-				+"(" 
-				+bindingParameters.getRpmPropertyName() 
-				+">" 
-				+bindingParameters.getMinRpm() 
-				+", "
-				+bindingParameters.getTorquePropertyName()
-				+">"
-				+bindingParameters.getMinTorque()
-				+"))"
-				
-				+"-> (s2=" 
-				+eventInName 
-				+"(" 
-				+bindingParameters.getRpmPropertyName() 
-				+"<=" 
-				+bindingParameters.getMinRpm() 
-				+", " 
-				+bindingParameters.getTorquePropertyName() 
-				+" <= " 
-				+bindingParameters.getMinTorque() 
-				+")))"
-				+"]";
+//		String pattern = selectClause +" from pattern[every ((s1=" +eventInName 
+//				+"(" 
+//				+bindingParameters.getRpmPropertyName() 
+//				+">" 
+//				+bindingParameters.getMinRpm() 
+//				+", "
+//				+bindingParameters.getTorquePropertyName()
+//				+">"
+//				+bindingParameters.getMinTorque()
+//				+"))"
+//				
+//				+"-> (s2=" 
+//				+eventInName 
+//				+"(" 
+//				+bindingParameters.getRpmPropertyName() 
+//				+"<=" 
+//				+bindingParameters.getMinRpm() 
+//				+", " 
+//				+bindingParameters.getTorquePropertyName() 
+//				+" <= " 
+//				+bindingParameters.getMinTorque() 
+//				+")))"
+//				+"]";
+//		
+//		System.out.println(pattern);
+		String pattern = selectClause + " from pattern [every (s1=" +eventInName +" -> s2=" +eventInName +")] ";
+		pattern += " where (s2." +bindingParameters.getTorquePropertyName() +" < 5 and s2." +bindingParameters.getRpmPropertyName() +" < 5) and ";
+		pattern += "(s1." +bindingParameters.getTorquePropertyName() +" >= 5 or s1." +bindingParameters.getRpmPropertyName() +" >= 5) and ";
+		pattern +="((s1." +bindingParameters.getTorquePropertyName() +" != s2." +bindingParameters.getTorquePropertyName() +") and (s1." +bindingParameters.getRpmPropertyName() +" != s2." +bindingParameters.getRpmPropertyName() +"))";
 		
-		System.out.println(pattern);
 		statements.add(pattern);
 		return statements;
 	}
 	
 	private String makeSelectClause(List<EventProperty> eventProperties)
 	{
-		String selectClause = "select '1' as drillingStatus, ";
+		String selectClause = "select '0' as drillingStatus, ";
 		for(int i = 0; i < eventProperties.size(); i++)
 		{
 			EventProperty p = eventProperties.get(i);

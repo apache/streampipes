@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.esper;
 
 import com.espertech.esper.client.EventBean;
+import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.runtime.OutputCollector;
 
@@ -14,6 +15,7 @@ public class SEPAWriter implements Writer {
 	
 	@Override
 	public void onEvent(EventBean bean) {
+		//System.out.println(new Gson().toJson(bean.getUnderlying()));
 		collector.send(bean.getUnderlying());
 	}
 
