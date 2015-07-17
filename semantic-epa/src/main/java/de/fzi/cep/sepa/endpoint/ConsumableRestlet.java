@@ -48,7 +48,7 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 		} catch (RDFParseException | UnsupportedRDFormatException
 				| RepositoryException | IOException e) {
 			sendStatus(resp);
-		}
+		} 
 	}
 	
 	protected void createInstanceEndpoint(I graph) {
