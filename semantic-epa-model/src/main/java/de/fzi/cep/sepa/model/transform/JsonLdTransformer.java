@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 
@@ -35,6 +36,8 @@ import de.fzi.cep.sepa.model.util.ModelUtils;
 
 public class JsonLdTransformer implements RdfTransformer {
 
+	private final static Logger logger = Logger.getLogger(JsonLdTransformer.class.getName());
+	
 	@Override
 	public <T> Graph toJsonLd(T element) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, ClassNotFoundException, InvalidRdfException {
 		return toJsonLd(new GraphImpl(), element);
@@ -47,12 +50,15 @@ public class JsonLdTransformer implements RdfTransformer {
 			graph = appendGraph(graph, temp);
 
 			Method[] ms;
-			ms = Class.forName(element.getClass().getName()).getMethods();
-
+			String className = element.getClass().getName();
+			String fixedClassName = fixClassName(className);
+			ms = Class.forName(fixedClassName).getMethods();
+			System.out.println(element.getClass().getName());
 			for (Method m : ms) {
 				if (m.getName().startsWith("get")) {
 					if (Collection.class
 							.isAssignableFrom(m.getReturnType())) {
+						System.out.println(m.getName() +", " +m.getGenericReturnType().getTypeName());
 						String genericClassName = ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0].getTypeName();
 						if(!(genericClassName.startsWith("java.lang.")))
 						{
@@ -92,6 +98,11 @@ public class JsonLdTransformer implements RdfTransformer {
 		return graph;
 	}
 	
+	private String fixClassName(String className) {
+		int index = className.lastIndexOf("impl.");
+		return new StringBuilder(className).replace(index, index+5,"").toString().replace("Impl", "");
+	}
+
 	private Graph appendGraph(Graph originalGraph, Graph appendix) {
 		Iterator<Statement> it = appendix.iterator();
 
