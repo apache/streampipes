@@ -115,7 +115,7 @@ function Pipeline(){
             processData: false,
             type: 'POST',
             success: function (data) {
-                if (data.success) {			//TODO Objekt im Backend ändern
+                if (data.success) {			//TODO Objekt im Backend ï¿½ndern
                     modifyPipeline(data.pipelineModifications);
                     for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++) {
                         var id = "#" + sepa.DOM;
@@ -125,8 +125,12 @@ function Pipeline(){
                                     return;
                                 }
                                 $('#customize-content').html(prepareCustomizeModal($(id)));
-                                var string = "Customize " + sepa.name;
-                                $('#customizeTitle').text(string);
+                                $(textInputFields).each(function (index, value) {
+                                    addAutoComplete(value.fieldName, value.propertyName);
+                                });
+                                var iwbUri = "https://localhost:8443/resource/?uri=" +sepa.elementId;
+                                var string = "Customize " + sepa.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
+                                $('#customizeTitle').html(string);
                                 $('#customizeModal').modal('show');
 
                             }
@@ -139,8 +143,10 @@ function Pipeline(){
                             return;
                         }
                         $('#customize-content').html(prepareCustomizeModal($(id)));
-                        var string = "Customize " + pipeline.action.name;
-                        $('#customizeTitle').text(string);
+                        var iwbUri = "https://localhost:8443/resource/?uri=" +pipeline.action.elementId;
+                        var string = "Customize " + pipeline.action.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
+                               ;
+                        $('#customizeTitle').html(string);
                         $('#customizeModal').modal('show');
                     }
 
