@@ -26,6 +26,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementRange;
+import de.fzi.cep.sepa.model.impl.quality.Resolution;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
@@ -43,7 +46,15 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		
 		List<EventProperty> propertyRestrictions = new ArrayList<>();
 		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://schema.org/Number").build();
+		
+		List<EventPropertyQualityRequirement> numberQualities = new ArrayList<EventPropertyQualityRequirement>();
+		numberQualities.add(new EventPropertyQualityRequirement(new MeasurementRange(-50, 0), null));
+		numberQualities.add(new EventPropertyQualityRequirement(new Resolution((float) 0.01), new Resolution(10)));
+		e1.setRequiresEventPropertyQualities(numberQualities);
+		
+		
 		propertyRestrictions.add(e1);
+
 		
 		
 		//EventSchema schema1 = new EventSchema();

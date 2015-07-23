@@ -26,6 +26,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.impl.quality.Precision;
+import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -40,102 +41,105 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());
-	
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
+
+		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI("http://schema.org/Number"));
-		
-		List<EventPropertyQualityRequirement> requiresPropertyQualities = new ArrayList<EventPropertyQualityRequirement>();
-		requiresPropertyQualities.add(new EventPropertyQualityRequirement(new Precision(1), new Precision(10)));
-		requiresPropertyQualities.add(new EventPropertyQualityRequirement(null, new Latency(200)));
-		e1.setRequiresEventPropertyQualities(requiresPropertyQualities);
+
+		List<EventPropertyQualityRequirement> numberQualities = new ArrayList<EventPropertyQualityRequirement>();
+		numberQualities.add(new EventPropertyQualityRequirement(new Latency(1), new Latency(50)));
+		numberQualities.add(new EventPropertyQualityRequirement(null, new Accuracy(20)));
+
+		e1.setRequiresEventPropertyQualities(numberQualities);
 		eventProperties.add(e1);
-		
+
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
-		
+
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
-		
-		SepaDescription desc = new SepaDescription("/sepa/aggregation", "Aggregation", "Performs different aggregation functions", "", "/sepa/aggregation", domains);
+
+		SepaDescription desc = new SepaDescription("/sepa/aggregation", "Aggregation",
+				"Performs different aggregation functions", "", "/sepa/aggregation", domains);
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
-		//TODO check if needed
-		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
-		
-		// add constraints to the event stream
-		List<EventStreamQualityRequirement> requiredStreamQualities = new ArrayList<EventStreamQualityRequirement>();
-		requiredStreamQualities.add(new EventStreamQualityRequirement(new Frequency(10), new Frequency(100)));
-		stream1.setRequiresEventStreamQualities(requiredStreamQualities);
-		
+		// TODO check if needed
+		stream1.setUri(EsperConfig.serverUrl + desc.getElementId());
+
+		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+		Frequency minFrequency = new Frequency(2);
+		eventStreamQualities.add(new EventStreamQualityRequirement(minFrequency, null));
+		stream1.setRequiresEventStreamQualities(eventStreamQualities);
+
 		desc.addEventStream(stream1);
-		
+
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		
-		EventProperty outputProperty = new EventPropertyPrimitive(XSD._double.toString(),
-				"averageValue", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
+
+		EventProperty outputProperty = new EventPropertyPrimitive(XSD._double.toString(), "averageValue", "",
+				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
 		AppendOutputStrategy outputStrategy = new AppendOutputStrategy(Utils.createList(outputProperty));
 		strategies.add(outputStrategy);
 		desc.setOutputStrategies(strategies);
-		
+
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		
+
 		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation");
 		operation.addOption(new Option("Average"));
 		operation.addOption(new Option("Sum"));
 		operation.addOption(new Option("Min"));
 		operation.addOption(new Option("Max"));
 		staticProperties.add(operation);
-		
+
 		MappingProperty mp = new MappingPropertyNary("groupBy", "group stream by: ");
-		MappingProperty agg = new MappingPropertyUnary(URI.create(e1.getElementName()), "aggregate", "aggregate property: ");
+		MappingProperty agg = new MappingPropertyUnary(URI.create(e1.getElementName()), "aggregate",
+				"aggregate property: ");
 		staticProperties.add(mp);
 		staticProperties.add(agg);
-		
+
 		staticProperties.add(new FreeTextStaticProperty("outputEvery", "output values every (seconds)"));
 		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size (seconds)"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		
+
 		return desc;
 	}
 
 	@Override
 	public boolean invokeRuntime(SepaInvocation sepa) {
-		
-		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
-				"groupBy", true);
-		
-		String aggregate = SepaUtils.getMappingPropertyName(sepa,
-				"aggregate");
-		
-		System.out.println("AGG: " +aggregate);
-		
-		int outputEvery = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
-		
-		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
-	
-		String aggregateOperation = SepaUtils.getOneOfProperty(sepa,
-				"operation");
-		
-		System.out.println("AGGOP: " +aggregateOperation);
-		
+
+		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa, "groupBy", true);
+
+		String aggregate = SepaUtils.getMappingPropertyName(sepa, "aggregate");
+
+		System.out.println("AGG: " + aggregate);
+
+		int outputEvery = Integer.parseInt(
+				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
+
+		int timeWindowSize = Integer.parseInt(
+				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
+
+		String aggregateOperation = SepaUtils.getOneOfProperty(sepa, "operation");
+
+		System.out.println("AGGOP: " + aggregateOperation);
+
 		AggregationType aggregationType;
-		
-		if (aggregateOperation.equals("Average")) aggregationType = AggregationType.AVG;
-		else if (aggregateOperation.equals("Sum")) aggregationType = AggregationType.SUM;
-		else if (aggregateOperation.equals("Min")) aggregationType = AggregationType.MIN;
-		else aggregationType = AggregationType.MAX;
-		
+
+		if (aggregateOperation.equals("Average"))
+			aggregationType = AggregationType.AVG;
+		else if (aggregateOperation.equals("Sum"))
+			aggregationType = AggregationType.SUM;
+		else if (aggregateOperation.equals("Min"))
+			aggregationType = AggregationType.MIN;
+		else
+			aggregationType = AggregationType.MAX;
+
 		List<String> selectProperties = new ArrayList<>();
-		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
-		{
+		for (EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());
 		}
-		
-		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy, aggregate, timeWindowSize, selectProperties);
-		
-		
+
+		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy,
+				aggregate, timeWindowSize, selectProperties);
+
 		try {
 			return invokeEPRuntime(staticParam, Aggregation::new, sepa);
 		} catch (Exception e) {

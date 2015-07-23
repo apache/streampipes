@@ -21,6 +21,8 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
@@ -45,6 +47,13 @@ public class CountController extends EpDeclarer<CountParameter>{
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		
+		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+		Frequency minFrequency = new Frequency(5);
+		Frequency maxFrequency = new Frequency(20);
+		eventStreamQualities.add(new EventStreamQualityRequirement(minFrequency, maxFrequency));
+		stream1.setRequiresEventStreamQualities(eventStreamQualities);
+		
 		desc.addEventStream(stream1);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();

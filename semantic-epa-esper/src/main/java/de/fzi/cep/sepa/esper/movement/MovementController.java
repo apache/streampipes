@@ -24,7 +24,13 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.quality.Accuracy;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.Frequency;
+import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
@@ -47,16 +53,33 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 
 			EventSchema schema1 = new EventSchema();
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
+			
+			List<EventPropertyQualityRequirement> latitudeQualities = new ArrayList<EventPropertyQualityRequirement>();
+			latitudeQualities.add(new EventPropertyQualityRequirement(new Accuracy(5), null));
+			
 			EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/latitude"));
+					SO.Latitude));
+			e1.setRequiresEventPropertyQualities(latitudeQualities);
+
+			List<EventPropertyQualityRequirement> longitudeQualities = new ArrayList<EventPropertyQualityRequirement>();
+			longitudeQualities.add(new EventPropertyQualityRequirement(new Accuracy(10), new Accuracy(30)));
+	
 			EventProperty e2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/longitude"));
+					SO.Longitude));
+			e2.setRequiresEventPropertyQualities(longitudeQualities);
+			
 			eventProperties.add(e1);
 			eventProperties.add(e2);
 
 			schema1.setEventProperties(eventProperties);
 			stream1.setEventSchema(schema1);
 			stream1.setUri("http://localhost:8090/" + desc.getElementId());
+
+			List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+			Frequency maxFrequency = new Frequency((float) 0.5);
+			eventStreamQualities.add(new EventStreamQualityRequirement(null, maxFrequency));
+			stream1.setRequiresEventStreamQualities(eventStreamQualities);
+
 			desc.addEventStream(stream1);
 
 			List<OutputStrategy> outputStrategies = new ArrayList<OutputStrategy>();
@@ -86,6 +109,7 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 			staticProperties.add(new MappingPropertyNary("group by", "Group elements by"));
 			desc.setStaticProperties(staticProperties);
 
+						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
