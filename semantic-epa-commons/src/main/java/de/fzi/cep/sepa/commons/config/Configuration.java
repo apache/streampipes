@@ -41,7 +41,7 @@ public class Configuration {
 	
 	public static final String SESAME_URI = "http://localhost:8080/openrdf-sesame";
 	
-	public static final String SESAME_REPOSITORY_ID = "test-7";
+	public static final String SESAME_REPOSITORY_ID = "test-6";
 	
 	public static final String CONTEXT_PATH = "/semantic-epa-backend";
 	
