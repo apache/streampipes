@@ -14,8 +14,8 @@ public class EsperConfig {
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = Configuration.ESPER_BASE_URL;
-		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		serverUrl = Configuration.getInstance().ESPER_BASE_URL;
+		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
 	}
 	
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)

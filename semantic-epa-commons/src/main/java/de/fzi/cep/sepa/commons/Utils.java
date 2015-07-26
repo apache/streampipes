@@ -63,7 +63,7 @@ public class Utils {
 	{
 		OutputStream stream = new ByteArrayOutputStream();
 		
-		RDFWriter writer = Configuration.getRioWriter(stream);
+		RDFWriter writer = Configuration.getInstance().getRioWriter(stream);
 		
 		//RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 //		RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, stream);

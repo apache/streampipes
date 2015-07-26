@@ -11,8 +11,8 @@ public class SourcesConfig {
 	public final static String topicPrefixRam;
 	
 	static {
-		serverUrl = Configuration.SOURCES_BASE_URL;
-		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		serverUrl = Configuration.getInstance().SOURCES_BASE_URL;
+		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
 		eventReplayURI = "http://89.216.116.44:8084";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";

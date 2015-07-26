@@ -18,7 +18,7 @@ public class StatementBuilder {
 	public static Model extractStatements(String graphData) throws SepaParseException
 	{
 		try {
-			return Rio.parse(getGraphDataAsStream(graphData), "", Configuration.RDF_FORMAT);
+			return Rio.parse(getGraphDataAsStream(graphData), "", Configuration.getInstance().RDF_FORMAT);
 		} catch (RDFParseException | UnsupportedRDFormatException | IOException e) {
 			throw new SepaParseException();
 		}

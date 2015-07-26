@@ -36,7 +36,7 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 	ActiveMQPublisher publisher;
 	
 	public TweetsGermanyStream() throws JMSException {
-		publisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.Twitter.Germany");
+		publisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL +":61616", "SEPA.SEP.Twitter.Germany");
 	}
 	
 	@Override

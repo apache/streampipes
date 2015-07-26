@@ -47,7 +47,7 @@ public class NycTaxiUtils {
 	public static IMessagePublisher streamPublisher(String topicName)
 	{
 		try {
-			return new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":" +Configuration.TCP_SERVER_PORT, topicName);
+			return new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL +":" +Configuration.getInstance().TCP_SERVER_PORT, topicName);
 		} catch (JMSException e) {
 			e.printStackTrace();
 			return null;

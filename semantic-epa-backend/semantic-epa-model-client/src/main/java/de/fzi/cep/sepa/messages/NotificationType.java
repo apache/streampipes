@@ -34,7 +34,10 @@ public enum NotificationType {
 	NOT_REMOVED("Could not remove element", ""),
 	REMOVED_ACTION("Action removed", ""),
 	REMOVED_SOURCE("Source removed", ""),
-	REMOVED_SEPA("Sepa removed", "");
+	REMOVED_SEPA("Sepa removed", ""),
+
+	ADDED_CONFIGURATION("Configuration added", "");
+
 
 
 

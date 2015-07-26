@@ -30,7 +30,7 @@ public class NestedListRandomNumberStream implements EventStreamDeclarer {
 
 	public NestedListRandomNumberStream() throws JMSException
 	{
-		samplePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL +":61616", "SEPA.SEP.Random.NestedNumber");
+		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL +":61616", "SEPA.SEP.Random.NestedNumber");
 	}
 	
 	@Override

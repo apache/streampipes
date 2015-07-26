@@ -45,7 +45,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 	ActiveMQPublisher samplePublisher;
 
 	public RandomNumberStream() throws JMSException {
-		samplePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL + ":61616", "SEPA.SEP.Random.Number");
+		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Random.Number");
 	}
 
 	@Override

@@ -8,7 +8,7 @@ public class ActionConfig {
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = Configuration.ACTION_BASE_URL;
-		iconBaseUrl = Configuration.WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		serverUrl = Configuration.getInstance().ACTION_BASE_URL;
+		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
 	}
 }

@@ -120,7 +120,7 @@ public class JsonLdTransformer implements RdfTransformer {
 		InputStream stream = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
 		Model statements;
-		statements = Rio.parse(stream, "", Configuration.RDF_FORMAT);
+		statements = Rio.parse(stream, "", Configuration.getInstance().RDF_FORMAT);
 
 		Iterator<Statement> st = statements.iterator();
 

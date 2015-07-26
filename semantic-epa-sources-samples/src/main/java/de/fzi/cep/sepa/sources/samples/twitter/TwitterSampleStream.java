@@ -44,8 +44,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 	ActiveMQPublisher geoPublisher;
 
 	public TwitterSampleStream() throws JMSException {
-		samplePublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Sample");
-		geoPublisher = new ActiveMQPublisher(Configuration.TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Geo");
+		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Sample");
+		geoPublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Geo");
 	}
 
 	@Override

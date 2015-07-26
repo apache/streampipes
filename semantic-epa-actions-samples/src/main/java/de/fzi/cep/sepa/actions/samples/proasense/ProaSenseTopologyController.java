@@ -53,7 +53,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		desc.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();
-		BrokerConfig config = Configuration.getBrokerConfig();
+		BrokerConfig config = Configuration.getInstance().getInstance().getBrokerConfig();
 		grounding.setTransportProtocol(new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), "", config.getZookeeperHost(), config.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		desc.setSupportedGrounding(grounding);
@@ -69,7 +69,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		this.eventNotifier = new ProaSenseEventNotifier(consumerTopic);
 		System.out.println(consumerTopic);
 		//consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getBrokerConfig().getZookeeperUrl(), consumerTopic,
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getInstance().getBrokerConfig().getZookeeperUrl(), consumerTopic,
 				new String[] {consumerTopic}, new ProaSenseTopologyPublisher(sec, eventNotifier));
 		kafkaConsumerGroup.run(1);
 		

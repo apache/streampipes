@@ -32,8 +32,8 @@ public enum StorageManager {
 
 	INSTANCE;
 
-	private String SERVER = Configuration.SESAME_URI;
-	private String REPOSITORY_ID = Configuration.SESAME_REPOSITORY_ID;
+	private String SERVER = Configuration.getInstance().SESAME_URI;
+	private String REPOSITORY_ID = Configuration.getInstance().SESAME_REPOSITORY_ID;
 	
 	private EntityManager storageManager;
 

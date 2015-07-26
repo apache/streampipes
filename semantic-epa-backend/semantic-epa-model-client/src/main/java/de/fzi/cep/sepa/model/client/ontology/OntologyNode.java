@@ -1,9 +1,10 @@
 package de.fzi.cep.sepa.model.client.ontology;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.model.client.ontology.NodeType;
 
 public class OntologyNode {
 
@@ -22,7 +23,8 @@ public class OntologyNode {
 	
 	private String toIconUrl(NodeType nodeType)
 	{
-		return Configuration.WEBAPP_BASE_URL +Configuration.CONTEXT_PATH +"/img/" +nodeType.name() +".png";
+		return "Test";
+		//return Configuration.getInstance().WEBAPP_BASE_URL + Configuration.getInstance().CONTEXT_PATH + "/img/" +nodeType.name() +".png";
 	}
 	
 	public String getId() {

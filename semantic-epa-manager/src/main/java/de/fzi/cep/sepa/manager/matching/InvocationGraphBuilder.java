@@ -139,7 +139,7 @@ public class InvocationGraphBuilder {
 	
 	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
 	{
-		if (Configuration.isDemoMode()) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+		if (Configuration.getInstance().isDemoMode()) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
 		try {
 		if (node.getParent().getData() instanceof InvocableSEPAElement)
 		{
