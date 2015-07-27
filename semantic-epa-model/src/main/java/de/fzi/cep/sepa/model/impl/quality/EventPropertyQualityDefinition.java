@@ -11,9 +11,6 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @RdfsClass("sepa:EventPropertyQualityDefinition")
 @MappedSuperclass
 @Entity
-public class EventPropertyQualityDefinition extends MeasurementProperty {
-	public EventPropertyQualityDefinition() {
-		super();
-	}
-
+public abstract class EventPropertyQualityDefinition extends MeasurementProperty implements Comparable<EventPropertyQualityDefinition>{
+	
 }

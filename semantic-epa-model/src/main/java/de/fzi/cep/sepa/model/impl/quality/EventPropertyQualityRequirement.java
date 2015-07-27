@@ -57,5 +57,33 @@ public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 		this.maximumPropertyQuality = maximumPropertyQuality;
 	}
 	
+	private String getType() {
+		if (this.maximumPropertyQuality != null) {
+			return this.getMaximumPropertyQuality().getClass().getSimpleName();
+		} else {
+			return this.getMaximumPropertyQuality().getClass().getSimpleName();
+		}
+	}
+
+	public boolean fulfilled(EventPropertyQualityDefinition qualityDefinition) {
+		boolean result = true;
+		
+		if (qualityDefinition.getClass().getSimpleName() == getType()) {
+			if (this.minimumPropertyQuality != null) {
+				if (this.minimumPropertyQuality.compareTo(qualityDefinition) > 0) {
+					result = false;
+				}
+			}
+			
+			if (this.maximumPropertyQuality != null) {
+				if (this.maximumPropertyQuality.compareTo(qualityDefinition) < 0 ) {
+					result = false;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	
 }

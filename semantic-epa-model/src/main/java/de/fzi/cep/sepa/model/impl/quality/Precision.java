@@ -30,4 +30,19 @@ public class Precision extends EventPropertyQualityDefinition {
 	public void setQuantityValue(float quantityValue) {
 		this.quantityValue = quantityValue;
 	}
+	
+
+	@Override
+	public int compareTo(EventPropertyQualityDefinition o) {
+		Precision other = (Precision) o;
+		if (other.getQuantityValue() == this.getQuantityValue()) {
+			return 0;
+			
+		} else if ((other).getQuantityValue() > this.getQuantityValue()) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
 }

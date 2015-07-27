@@ -65,8 +65,7 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		stream1.setUri(EsperConfig.serverUrl + desc.getElementId());
 
 		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
-		Frequency minFrequency = new Frequency(2);
-		eventStreamQualities.add(new EventStreamQualityRequirement(minFrequency, null));
+		eventStreamQualities.add(new EventStreamQualityRequirement(new Frequency(2), null));
 		stream1.setRequiresEventStreamQualities(eventStreamQualities);
 
 		desc.addEventStream(stream1);

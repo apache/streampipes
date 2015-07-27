@@ -31,4 +31,18 @@ public class Accuracy extends EventPropertyQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 
+	@Override
+	public int compareTo(EventPropertyQualityDefinition o) {
+		Accuracy other = (Accuracy) o;
+		if (other.getQuantityValue() == this.getQuantityValue()) {
+			return 0;
+			
+		} else if ((other).getQuantityValue() > this.getQuantityValue()) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+
 }

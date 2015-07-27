@@ -43,6 +43,19 @@ public class MeasurementRange extends EventPropertyQualityDefinition {
 		this.maxValue = maxValue;
 	}
 	
-	
+
+	@Override
+	public int compareTo(EventPropertyQualityDefinition o) {
+		MeasurementRange other = (MeasurementRange) o;
+		
+		//TODO not sure if this is correct
+		if (this.minValue <= other.minValue && this.maxValue >= other.maxValue) {
+			return 0;
+		} else {
+			return 1;
+		}
+
+	}
+
 
 }

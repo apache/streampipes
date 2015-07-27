@@ -99,8 +99,12 @@ public class JsonLdTransformer implements RdfTransformer {
 	}
 	
 	private String fixClassName(String className) {
-		int index = className.lastIndexOf("impl.");
-		return new StringBuilder(className).replace(index, index+5,"").toString().replace("Impl", "");
+		int index = className.lastIndexOf("Impl.");
+		if (index != -1) {
+			return new StringBuilder(className).replace(index, index+5,"").toString().replace("Impl", "");
+		} else {
+			return className;
+		}
 	}
 
 	private Graph appendGraph(Graph originalGraph, Graph appendix) {
