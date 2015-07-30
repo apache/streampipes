@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>StreamPipes GUI</title>
+	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
+	<script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/ModalBuilder.js"></script>
+	<script type="text/javascript" src="js/auth.js"></script>
+
+	<script type="text/javascript" src="js/buttons.js"></script>
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
+	
+	<link rel="stylesheet" href="css/toastr.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="css/themes/default/style.min.css" />
+	<link href="css/signin.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- NAVBAR  -->
+
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a id="logo-home" class="navbar-brand" href="#">StreamPipes</a>
+		</div>
+	</div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+
+	  
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Sign in</h2>
+		<div id="messages">
+	  
+		</div>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" id="login">Sign in</button>
+        <a href="register.html">Create new account</a>
+      </form>
+
+    </div> <!-- /container -->
+	<script type="text/javascript">
+		if (isUserAuthenticated()) window.location="index.html";
+		$('#login').click(function() {
+			attemptLogin()
+		    event.preventDefault();	
+		});
+	</script>
+</body>
+</html>
