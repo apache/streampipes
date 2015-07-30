@@ -1,0 +1,787 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>StreamPipes GUI</title>
+	<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script> -->
+	<script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.jsPlumb-1.7.5.js"></script>
+	<script type="text/javascript" src="js/ModalBuilder.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script type="text/javascript" src="js/assembly.js"></script>
+	<script type="text/javascript" src="js/AccordionBuilder.js"></script>
+	<script type="text/javascript" src="js/pipelines.js"></script>
+	<script type="text/javascript" src="js/buttons.js"></script>
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/flowtype.js"></script>
+	<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
+	<script type="text/javascript" src="js/jQuery.circleMenu.js"></script>
+	<script type="text/javascript" src="js/jstree.min.js"></script>
+	<script type="text/javascript" src="js/utilObjects.js"></script>
+	<script type="text/javascript" src="js/ContextMenuHandler.js"></script>
+	<script type="text/javascript" src="js/Block.js"></script>
+	<script type="text/javascript" src="js/auth.js"></script>
+
+	<link rel="stylesheet" href="css/jsplumb.css"/>
+	<link rel="stylesheet" href="css/toastr.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="css/themes/default/style.min.css" />
+
+	<script type="text/javascript">
+		var domain = "";
+		var standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
+		var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
+		var currentTutorialPage;
+		var state = new State();
+		var debug = false;
+
+		$(init("Proa"));
+
+	</script>
+	<script type="text/javascript" src="js/ontology.js"></script>
+</head>
+
+<body>
+<!-- NAVBAR  -->
+
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a id="logo-home" class="navbar-brand" href="#" onclick='refresh("Proa", true)'>StreamPipes</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav" id="tabs" role="tablist">
+				<li class="active">
+					<a href="#editor" role="tab" data-toggle="tab">Editor</a>
+				</li>
+				<li >
+					<a href="#pipelines" role="tab" data-toggle="tab" onclick="refreshPipelines()">Pipelines</a>
+				</li>
+				<li >
+					<a href="#visualizations" role="tab" data-toggle="tab" onclick="updateViz()">Visualizations</a>
+				</li>
+				<li>
+					<a href="#ontology" role="tab" data-toggle="tab">Ontology Editor</a>
+				</li>
+				<li id="debugTestTab" style="display : none" >
+					<a href="#testTab" role="tab"  data-toggle="tab">Tests</a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav">
+
+				<li id="options" class=" dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="#" onclick="showAdd()">Add...</a>
+						</li>
+						<li>
+							<a href="#" onclick="showManage()">Manage...</a>
+						</li>
+					</ul>
+
+				</li>
+				<p class="navbar-text"><strong>Use-Case:</strong></p>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="typeChange">Proasense <b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="#" onclick=refresh("Proa")>Proasense</a>
+						</li>
+						<li>
+							<a href="#" onclick=refresh("PA")>Personal Assistant</a>
+						</li>
+						<!-- <li class="divider"></li> -->
+
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right ">
+				<li id="tutorial" class="nav navbar-nav">
+					<a href="#" onclick="showTutorial()">Tutorial</a>
+				</li>
+
+				<li id="login" class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><div id="login-label">Login</div> <b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="#" onclick="attemptLogout()">Logout</a>
+						</li>
+					</ul>
+
+					</ul>
+				</li>
+				<script type="text/javascript">
+					getPrincipalName();
+				</script>
+			</ul>
+
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+<!-- END NAVBAR  -->
+
+<div class="tab-content content-padding">
+	<div class="tab-pane active" id="editor">
+		<!--<div id="uc-dropdown">
+            <ul>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="#" onclick=refresh("Proa")>Proasense</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick=refresh("PA")>Personal Assistant</a>
+                    </li>
+                     <li class="divider"></li>
+
+                </ul>
+            </li>
+            </ul>
+        </div>-->
+		<div id ="sources" align="center" class="alpha"></div>
+		<div class="panel-group" id="accordion">
+
+			<div class="panel panel-default">
+				<div class="panel-heading panel-streams">
+					<h4 class="panel-title"><a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne"> Streams </a><!-- <span class="btngroup pull-right">
+							<button type="button" class="btn btn-default btn-xs" onclick=addTo("stream")>
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button type="button" class="btn btn-default btn-xs" onclick=manage("stream")>
+							<span class="glyphicon glyphicon-cog"></span>
+							</button>
+							</span> --></h4>
+				</div>
+				<div id="collapseOne" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div id="streams" align="center" class="icon-stands alpha panel-body-streams">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading panel-sepas">
+					<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a></h4>
+				</div>
+				<div id="collapseTwo" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading panel-actions">
+					<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a></h4>
+				</div>
+				<div id="collapseThree" class="panel-collapse collapse ">
+					<div class="panel-body">
+						<div id="actions" align="center" class="icon-stands alpha panel-body-actions">
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="assembly" class="canvas">
+
+			<span id="clear" class="glyphicon glyphicon-remove"></span>
+			<button type="button" id="submit" class="btn btn-default btn-sm shadow" onclick=submit()>
+				<span class="glyphicon glyphicon-ok"></span> Submit
+			</button>
+
+		</div>
+
+		<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
+			<li>
+				<a id="blockButton" tabindex="-1" href="#">Create Block from Selected</a>
+			</li>
+			<li id='division1' class="divider"></li>
+			<li>
+				<a id="customize" tabindex="-1" href="#">Customize</a>
+			</li>
+			<li>
+				<a id="adescription" tabindex="-1" href="#">Description</a>
+			</li>
+			<li id='division' class="divider"></li>
+			<li>
+				<a id="delete" tabindex="-1" href="#">Delete</a>
+			</li>
+		</ul>
+		<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
+			<li>
+				<a id="sdescription" tabindex="-1" href="#">Description</a>
+			</li>
+		</ul>
+
+		<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+			<div class="modal-dialog">
+				<div id="modal-content" class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="customizeTitle">Customize</h4>
+					</div>
+					<div class="modal-body">
+
+						<form id="modalForm" class="form-horizontal">
+							<fieldset id ="customize-content">
+
+							</fieldset>
+
+						</form>
+						<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
+
+                        </div> -->
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>
+							Close
+						</button>
+						<button type="button" class="btn btn-primary"  onclick=save()>
+							Save
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="description-title"></h4>
+					</div>
+					<div class="modal-body">
+						<p id ="modal-description"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="jsonldModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="jsonld-title"></h4>
+					</div>
+					<div class="modal-body">
+						<p id ="modal-jsonld"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Add...</h4>
+					</div>
+					<div class="modal-body">
+						<div class="wrapper">
+							<div style="text-align: center">
+								<p>
+									<strong>Please enter the new element's URI</strong>
+								</p>
+								<div id="addTextInput"  class="input-group">
+									<input id="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
+
+									<!-- <textarea id="addText" type="text" placeholder="http://www.example.com/element" class="form-control" rows="3">
+                                     </textarea>  -->
+												<span class="input-group-btn">
+													<button class="btn btn-default" type="button" onclick=add()>
+														Add
+													</button> 
+												</span>
+
+								</div><!-- /input-group -->
+							</div><!-- /.col-lg-6 -->
+							<div id="sses" style="text-align: center; margin-top: 10px">
+
+							</div>
+
+						</div>
+						<div class="modal-footer">
+							<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >
+								Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Manage</h4>
+					</div>
+					<div class="modal-body">
+
+						<div id="elementList">
+
+						</div>
+
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" >
+								Close
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id ="pipelineNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Pipeline Name</h4>
+					</div>
+					<div class="modal-body">
+
+						<form id="pipelineNameForm" class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="nameInput" class="col-sm-2 control-label">Name</label>
+								<div class="col-sm-6">
+									<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
+								<div class="col-sm-6">
+									<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
+
+								</div>
+							</div>
+						</form>
+						<div id="overwriteCheckbox" class="checkbox" style="display: none">
+							<label>
+								<input name="overwrite" type="checkbox"> Overwrite
+							</label>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" >
+								Close
+							</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal" onclick=savePipelineName()>
+								Save
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id ="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Block Name</h4>
+					</div>
+					<div class="modal-body">
+
+						<form id="blockNameForm" class="form-horizontal" role="form">
+							<div class="form-group">
+								<label for="nameInput" class="col-sm-2 control-label">Name</label>
+								<div class="col-sm-6">
+									<input name="name" type="text" class="form-control"  placeholder="Please name the Block">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
+								<div class="col-sm-6">
+									<input name="description" type="text" class="form-control"  placeholder="Description">
+
+								</div>
+							</div>
+							<div id="saveBlockCheckbox" class="checkbox">
+								<label>
+									<input name="save" type="checkbox"> Save to Blocks
+								</label>
+							</div>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" >
+								Close
+							</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="blockElements()">
+								Create
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title">Tutorial</h4>
+					</div>
+					<div class="modal-body">
+						<div id="tutorial-content">
+							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval=false>
+								<!-- Indicators -->
+								<ol class="carousel-indicators">
+									<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="3"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="4"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="5"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="6"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="7"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="8"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="9"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="10"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="11"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="12"></li>
+								</ol>
+
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner" role="listbox">
+									<div class="item active">
+										<img src="img/tut1/blank.png" >
+										<div class="carousel-caption">
+											<h3>Welcome!</h3>
+											<p>This tutorial will give you a quick introduction to the editor and will teach you how to create your first pipeline.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/1.png" >
+										<div class="carousel-caption">
+											<h3>Use-Case Selection</h3>
+											<p>Use the dropdown menu to select the desired use-case.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/2.png" >
+										<div class="carousel-caption">
+											<h3>Source Selection</h3>
+											<p>Choose one of the provided sources. Additional informaton can be displayed by pressing the right mouse button and choosing "Description".</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/3.png" >
+										<div class="carousel-caption">
+											<h3>Stream Selection</h3>
+											<p>Streams will be available once you select a source.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/4.png" >
+										<div class="carousel-caption">
+											<h3>Drag'n'drop</h3>
+											<p>Drag the desired stream to the indicated assembly area.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/5.png" >
+										<div class="carousel-caption">
+											<h3>Sepas</h3>
+											<p>Category "Sepas" (eg filter elements) will be available once you dropped a stream element into the assembly area.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/6.png" >
+										<div class="carousel-caption">
+											<h3></h3>
+											<p>Sepas are draggable too. </p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/7.png" >
+										<div class="carousel-caption">
+											<h3>Connections</h3>
+											<p>Drag the little knob from the stream element to create a connection. Connect the stream and sepa elements.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/8.png" >
+										<div class="carousel-caption">
+											<h3>Customizing</h3>
+											<p>Once a valid connection is established, a window pops up that let's you customize the sepa element. After customizing, click save. </p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/9.png" >
+										<div class="carousel-caption">
+											<h3>Pipelines</h3>
+											<p>Repeat this procedure with an action element. You can have any number of stream and sepa elements in your pipeline, but only one action element. When you're done, click "Submit" in the bottom right corner.</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/10.png" >
+										<div class="carousel-caption">
+											<h3></h3>
+											<p>Name your pipeline and enter a short description to make it easier to understand what it does. Click Save. Congratulations, you've just created your very first pipeline!</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/11.png" >
+										<div class="carousel-caption">
+											<h3>Other features</h3>
+											<p><b>Pipelines</b> shows all your saved pipelines and lets you inspect, run, modify and delete them.<br>
+												<b>Visualizations</b> lets you view your pipelines output in different ways. <br>
+												<b>Options</b> lets you manage your existing elements or add new ones.
+											</p>
+										</div>
+									</div>
+									<div class="item">
+										<img src="img/tut1/blank.png" >
+										<div class="carousel-caption">
+											<h3>Thank you!</h3>
+											<p></p>
+										</div>
+									</div>
+								</div>
+
+								<!-- Controls -->
+								<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+									<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+									<span class="sr-only">Previous</span>
+								</a>
+								<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+									<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+									<span class="sr-only">Next</span>
+								</a>
+							</div>
+						</div>
+
+
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">
+								Close
+							</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="tab-pane" id="pipelines" onactivate=getPipelines()>
+		<div class="container-fluid">
+			<div class="row">
+				<h1 class="col-md-4 ">Saved Pipelines</h1>
+			</div>
+			<div class="row">
+				<!-- <ul id="pipelineList" class="list-group col-md-6">
+                <li class="list-group-item">TestItem1</li>
+                <li class="list-group-item">TestItem2</li>
+                <li class="list-group-item">TestItem3</li>
+                </ul> -->
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<td><b>#</b></td>
+						<td><b>Pipeline Name</b></td>
+						<td><b>Validation</b></td>
+						<td><b>Status</b></td>
+						<td><b>Options</b></td>
+						<td><b>Delete</b></td>
+						<td><b>Modify</b></td>
+
+					</tr>
+					</thead>
+					<tbody id="pipelineTableBody">
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="pipelineDisplay" class="">
+			<div id="streamDisplay"></div>
+			<div id="sepaDisplay"></div>
+			<div id="actionDisplay"></div>
+		</div>
+	</div>
+	<!-- <div class="tab-pane" id="visualizations">
+    <div class="container-fluid">
+    <div class="row">
+    <h1 class="col-md-4 ">Visualizations</h1>
+    </div>
+    <div class="row">
+    <div id="vis">
+    <div class="form-group">
+    <label for="brokerUrl">URL</label>
+    <input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
+    </div>
+    <div class="form-group">
+    <label for="brokerTopic">Topic</label>
+    <input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
+    </div>
+    <button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
+    <button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
+    <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
+    </div>
+    <!--
+    <script type="text/javascript">
+    $("#vis").load("http://localhost:8091/test");
+    </script>
+
+    </div>
+    </div>
+    </div> -->
+	<div class="tab-pane" id="visualizations">
+		<div class="container-fluid">
+			<div class="row">
+				<h1 class="col-md-4 ">Visualizations</h1>
+			</div>
+			<div class="row">
+				<script type="text/javascript">
+					var viz;
+					var url = standardUrl + "visualizations";
+
+					updateViz();
+					function updateViz() {
+						$('#vizControl').empty();
+						$.ajax({
+							dataType : "json",
+							url : url,
+							success : function(data) {
+								var sel = $("<select class='form-control' style='width:100%;font-size:18pt;height:50px;'>").appendTo($('#vizControl'));
+								sel.append($("<option>").text("(Select visualization)"));
+								$(data).each(function() {
+									sel.append($("<option>").attr('value', this.consumerUrl).text(this.pipelineName));
+								});
+								$('select').change(function() {
+									loadViz($(this).children(":selected").attr('value'));
+								});
+
+							},
+							error : function(data) {
+								displayErrors(data);
+							}
+						});
+					}
+
+					function loadViz(vizUrl) {
+						if (vizUrl != 'undefined')
+							$("#vis").load(vizUrl);
+					}
+
+				</script>
+				<div class="row">
+					<div class="col-md-12">
+						<div id="vizControl"></div>
+					</div>
+				</div>
+			</div>
+			<div id="vis"></div>
+		</div>
+	</div>
+	<div class="tab-pane" id="ontology">
+		<div class="container-fluid">
+			<div class="row">
+				<h1 class="col-md-4 ">Background Knowledge</h1>
+			</div>
+			<div class="row"  style="background-color: white; padding:10px;">
+				<ul id="tabs-1" class="nav nav-tabs" data-tabs="tabs">
+					<li class="active"><a href="#types" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/types', 'typeHierarchy')">Types</a></li>
+					<li><a href="#properties" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/properties', 'propertyHierarchy')">Properties</a></li>
+				</ul>
+
+				<div id="my-tab-content" class="tab-content">
+					<div class="tab-pane active" id="types">
+						<div class="col-md-4">
+							<h3>Hierarchy</h3>
+							<div id="typeHierarchy"></div>
+						</div>
+						<div class="col-md-6">
+							<h3>Details</h3>
+							<div id="typeHierarchyDetails"></div>
+						</div>
+
+					</div>
+					<div class="tab-pane" id="properties">
+						<div class="col-md-4">
+							<h3>Hierarchy</h3>
+							<div id="propertyHierarchy"></div>
+						</div>
+						<div class="col-md-6">
+							<h3>Details</h3>
+							<div id="propertyHierarchyDetails"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tab-pane" id="testTab">
+		<div class="block">
+			<div class="block-name">
+				TestBlock
+			</div>
+			<div class="block-img-container">
+				<img src="img/And_Icon_HQ.png" class="block-img">
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
