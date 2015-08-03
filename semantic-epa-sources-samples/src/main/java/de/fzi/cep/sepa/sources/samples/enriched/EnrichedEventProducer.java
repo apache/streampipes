@@ -23,7 +23,7 @@ public class EnrichedEventProducer implements SemanticEventProducerDeclarer{
 		List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
 		
 		eventStreams.add(new EnrichedStream());
-		//eventStreams.add(new EnrichedStreamReplay());
+		eventStreams.add(new EnrichedStreamReplay());
 		
 		return eventStreams;
 	}

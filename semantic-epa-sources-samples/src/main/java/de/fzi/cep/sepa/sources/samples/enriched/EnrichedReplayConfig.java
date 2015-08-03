@@ -6,7 +6,7 @@ public class EnrichedReplayConfig {
 	
 	public static final String filenamePrefix = "drilling-2015-";
 	
-	public static final int firstFileId = 0;
+	public static final int firstFileId = 1;
 	
 	public static final int lastFileId = 30;
 	

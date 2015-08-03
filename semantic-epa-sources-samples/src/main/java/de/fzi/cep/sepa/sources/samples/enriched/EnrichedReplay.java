@@ -20,7 +20,7 @@ public class EnrichedReplay implements Runnable {
 	@Override
 	public void run() {
 	
-		for(int i = EnrichedReplayConfig.firstFileId; i <= 0; i++)
+		for(int i = EnrichedReplayConfig.firstFileId; i <= 1; i++)
 		{
 			Optional<BufferedReader> readerOpt = Utils.getReader(makeFile(i));
 			if (readerOpt.isPresent())
@@ -32,13 +32,12 @@ public class EnrichedReplay implements Runnable {
 					long counter = 0;
 					
 					while ((line = br.readLine()) != null)  {
-						if (counter > 0)
+						if (counter > -1)
 						{
 							try {
 								String[] records = line.split(",");
-								
+								//System.out.println(line);
 								String json = buildJsonString(records);
-								//System.out.println(counter);
 								publisher.onEvent(json);
 								if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
 							} catch (Exception e) { e.printStackTrace(); }
