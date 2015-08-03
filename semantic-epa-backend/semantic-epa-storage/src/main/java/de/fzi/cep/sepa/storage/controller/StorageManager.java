@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
 import de.fzi.cep.sepa.storage.impl.*;
+
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -24,6 +25,7 @@ import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
+import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
@@ -160,6 +162,10 @@ public enum StorageManager {
 
 	public UserStorage getUserStorageAPI() { return new UserStorage(); }
 
+	public MonitoringDataStorage getMonitoringDataStorageApi()
+	{
+		return new MonitoringDataStorageImpl();
+	}
 
 
 }
