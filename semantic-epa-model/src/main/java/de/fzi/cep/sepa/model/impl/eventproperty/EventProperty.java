@@ -160,7 +160,6 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		return prefix;
 	}
 
-
 	public abstract Map<String, Object> getRuntimeFormat();
 	
 	public abstract Map<String, Object> getUntypedRuntimeFormat();

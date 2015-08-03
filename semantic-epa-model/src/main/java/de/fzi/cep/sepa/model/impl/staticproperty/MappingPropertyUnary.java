@@ -39,4 +39,8 @@ public class MappingPropertyUnary extends MappingProperty{
 	public void setMapsTo(URI mapsTo) {
 		this.mapsTo = mapsTo;
 	}
+	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}	
 }

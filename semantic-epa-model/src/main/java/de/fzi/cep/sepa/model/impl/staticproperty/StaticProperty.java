@@ -61,4 +61,6 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+	
+	//public abstract void accept(StaticPropertyVisitor visitor);
 }

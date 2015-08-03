@@ -44,4 +44,8 @@ public class MappingPropertyNary extends MappingProperty {
 	public void setMapsTo(List<URI> mapsTo) {
 		this.mapsTo = mapsTo;
 	}
+	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}	
 }

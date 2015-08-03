@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,4 +48,8 @@ public class OneOfStaticProperty extends StaticProperty {
 	{
 		return options.add(option);
 	}
+	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}	
 }

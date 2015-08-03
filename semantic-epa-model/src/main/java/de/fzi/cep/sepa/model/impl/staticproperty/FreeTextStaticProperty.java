@@ -49,5 +49,8 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.type = type;
 	}
 	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}	
 	
 }

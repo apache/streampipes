@@ -39,5 +39,9 @@ public class AnyStaticProperty extends StaticProperty {
 
 	public void setOptions(List<Option> options) {
 		this.options = options;
+	}
+
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
 	}	
 }

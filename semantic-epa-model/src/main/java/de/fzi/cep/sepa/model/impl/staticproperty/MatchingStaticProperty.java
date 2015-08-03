@@ -52,5 +52,8 @@ public class MatchingStaticProperty extends StaticProperty{
 		this.matchRight = matchRight;
 	}
 	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}	
 	
 }
