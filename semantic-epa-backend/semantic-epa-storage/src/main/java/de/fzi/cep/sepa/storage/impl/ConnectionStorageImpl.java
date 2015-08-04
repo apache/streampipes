@@ -35,7 +35,6 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
 		query = buildQuery(dbClient, from);
-		System.out.println(query);
 		Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
 		if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
 		else return Collections.emptyList();
