@@ -40,7 +40,6 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 
 	Logger LOG = LoggerFactory.getLogger(ProcessorImpl.class);
 
-	@Path("user")
 	@GET 
 	@Produces(MediaType.APPLICATION_JSON)
 	/**
