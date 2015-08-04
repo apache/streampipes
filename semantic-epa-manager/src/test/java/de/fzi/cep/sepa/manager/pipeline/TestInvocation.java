@@ -2,12 +2,15 @@ package de.fzi.cep.sepa.manager.pipeline;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.exceptions.NoValidConnectionException;
 import de.fzi.cep.sepa.manager.execution.http.GraphSubmitter;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
+import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -40,7 +43,10 @@ public class TestInvocation {
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
-		new GraphSubmitter(graphs).invokeGraphs();
+		PipelineOperationStatus status = new GraphSubmitter(pipelineId, graphs).invokeGraphs();
+		System.out.println(new Gson().toJson(status));
+		PipelineOperationStatus status2 = new GraphSubmitter(pipelineId, graphs).detachGraphs();
+		System.out.println(new Gson().toJson(status2));
 		
 		/*
 		PipelineValidationHandler handler;

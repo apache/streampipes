@@ -1,87 +1,68 @@
 package de.fzi.cep.sepa.manager.execution.http;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
-import org.openrdf.model.impl.GraphImpl;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.messages.PipelineElementStatus;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.storage.util.Transformer;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 
 public class HttpRequestBuilder {
 
-	
-	InvocableSEPAElement payload;
+	private InvocableSEPAElement payload;
 	
 	public HttpRequestBuilder(InvocableSEPAElement payload)
 	{
 		this.payload = payload;
 	}
 	
-	public boolean invoke()
+	public PipelineElementStatus invoke()
 	{
 		try {
-		    HttpParams params = new BasicHttpParams();
-		    params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
-		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		    HttpClient httpclient = new DefaultHttpClient(params);
-		    HttpPost httppost = new HttpPost(payload.getBelongsTo());
-		        
-		    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-		    nameValuePairs.add(new BasicNameValuePair("json", Utils.asString(Transformer.generateCompleteGraph(new GraphImpl(), payload))));
-		    
-		    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-		    
-		    HttpResponse response = httpclient.execute(httppost);
-		    HttpEntity entity = response.getEntity();
-		    if (entity != null)
-		    {
-		      System.out.println(EntityUtils.toString(entity));
-		    }
+			Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
+			return handleResponse(httpResp);			
 		} catch(Exception e)
 		{
 			e.printStackTrace();
+			return new PipelineElementStatus(payload.getBelongsTo(), false, e.getMessage());
 		}
-		return true;
 	}
 	
-	
-	public boolean detach()
+	public PipelineElementStatus detach()
 	{
 		try {
-		    HttpParams params = new BasicHttpParams();
-		    params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
-		    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		    HttpClient httpclient = new DefaultHttpClient(params);
-		    HttpDelete httpdelete = new HttpDelete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName());
-		        		    
-		    HttpResponse response = httpclient.execute(httpdelete);
-		    HttpEntity entity = response.getEntity();
-		    if (entity != null)
-		    {
-		      System.out.println(EntityUtils.toString(entity));
-		    }
+			Response httpResp = Request.Delete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName()).execute();
+			return handleResponse(httpResp);
 		} catch(Exception e)
 		{
 			e.printStackTrace();
+			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), false, e.getMessage());
 		}
-		
-		return true;
+	}
+	
+	private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException
+	{
+		String resp = httpResp.returnContent().asString();
+		System.out.println(resp);
+		de.fzi.cep.sepa.model.impl.Response streamPipesResp = new Gson().fromJson(resp, de.fzi.cep.sepa.model.impl.Response.class);
+		return convert(streamPipesResp);
+	}
+	
+	private String jsonLd() throws Exception
+	{
+		return Utils.asString(new JsonLdTransformer().toJsonLd(payload));
+	}
+	
+	private PipelineElementStatus convert(de.fzi.cep.sepa.model.impl.Response response)
+	{
+		return new PipelineElementStatus(response.getElementId(), response.isSuccess(), response.getOptionalMessage());
 	}
 }

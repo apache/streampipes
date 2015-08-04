@@ -2,34 +2,39 @@ package de.fzi.cep.sepa.manager.execution.http;
 
 import java.util.List;
 
+import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 
 public class GraphSubmitter {
 
 	private List<InvocableSEPAElement> graphs;
+	private String pipelineId;
 	
-	public GraphSubmitter(List<InvocableSEPAElement> graphs)
+	public GraphSubmitter(String pipelineId, List<InvocableSEPAElement> graphs)
 	{
 		this.graphs = graphs;
+		this.pipelineId = pipelineId;
 	}
 	
-	public boolean invokeGraphs()
+	public PipelineOperationStatus invokeGraphs()
 	{
-		for(InvocableSEPAElement graph : graphs)
-		{
-			new HttpRequestBuilder(graph).invoke();
-		}
+		PipelineOperationStatus status = new PipelineOperationStatus();
+		status.setPipelineId(pipelineId);
 		
-		return true;
+		graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g).invoke()));
+		status.setSuccess(!status.getElementStatus().stream().anyMatch(s -> !s.isSuccess()));
+		
+		return status;
 	}
 	
-	public boolean detachGraphs()
+	public PipelineOperationStatus detachGraphs()
 	{
-		for(InvocableSEPAElement graph : graphs)
-		{
-			new HttpRequestBuilder(graph).detach();
-		}
+		PipelineOperationStatus status = new PipelineOperationStatus();
+		status.setPipelineId(pipelineId);
 		
-		return true;
+		graphs.forEach(g -> status.addPipelineElementStatus(new HttpRequestBuilder(g).detach()));
+		status.setSuccess(!status.getElementStatus().stream().anyMatch(s -> !s.isSuccess()));
+		
+		return status;
 	}
 }

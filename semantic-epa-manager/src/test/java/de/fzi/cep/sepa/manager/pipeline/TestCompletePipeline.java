@@ -37,7 +37,7 @@ public class TestCompletePipeline {
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
-		new GraphSubmitter(graphs).invokeGraphs();
+		new GraphSubmitter(pipeline.getPipelineId(), graphs).invokeGraphs();
 		for(InvocableSEPAElement element : graphs)
 		{
 			

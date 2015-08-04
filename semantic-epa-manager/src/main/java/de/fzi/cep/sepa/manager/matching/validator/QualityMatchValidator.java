@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.manager.matching.validator;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.manager.matching.QualityMatcher;
+//import de.fzi.cep.sepa.manager.matching.QualityMatcher;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 
