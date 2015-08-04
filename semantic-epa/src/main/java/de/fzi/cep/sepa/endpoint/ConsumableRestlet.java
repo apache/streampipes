@@ -44,10 +44,12 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 		try {
 			I graph = Transformer.fromJsonLd(clazz, payload);
 			createInstanceEndpoint(graph);
-			declarer.invokeRuntime(graph);
+			de.fzi.cep.sepa.model.impl.Response streamPipesResp = declarer.invokeRuntime(graph);
+			if (streamPipesResp == null) streamPipesResp = new de.fzi.cep.sepa.model.impl.Response(graph.getElementId(), true);
+			sendStatus(resp, streamPipesResp);
 		} catch (RDFParseException | UnsupportedRDFormatException
 				| RepositoryException | IOException e) {
-			sendStatus(resp);
+			sendStatus(resp, new de.fzi.cep.sepa.model.impl.Response("", false, e.getMessage()));
 		} 
 	}
 	

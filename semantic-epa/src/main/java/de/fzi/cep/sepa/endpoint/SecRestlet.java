@@ -1,11 +1,7 @@
 package de.fzi.cep.sepa.endpoint;
 
-import java.io.IOException;
 import java.util.concurrent.ConcurrentMap;
 
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
 import org.restlet.Message;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -15,12 +11,10 @@ import org.restlet.data.Method;
 import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
-import com.rits.cloning.Cloner;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.transform.Transformer;
 
 public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation> {
 
@@ -58,6 +52,7 @@ public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation>
 				if (request.getMethod().equals(Method.DELETE))
 				{
 					Server.INSTANCE.getComponent().getDefaultHost().detach(this);
+					sendStatus(response, new de.fzi.cep.sepa.model.impl.Response(desc.getElementId(), true));
 				}
 			}
 		};

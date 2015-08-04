@@ -23,8 +23,8 @@ public class SepaRestlet extends ConsumableRestlet<SepaDescription, SepaInvocati
 			{
 				if (request.getMethod().equals(Method.DELETE))
 				{
-					declarer.detachRuntime();
 					Server.INSTANCE.getComponent().getDefaultHost().detach(this);
+					sendStatus(response, declarer.detachRuntime());
 				}
 			}	
 		};	

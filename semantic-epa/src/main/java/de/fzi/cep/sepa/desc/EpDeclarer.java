@@ -18,6 +18,7 @@ import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
@@ -42,10 +43,10 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 	
 	protected EPRuntime runtime;
 	
-	public boolean invokeEPRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, SepaInvocation sepa)
-	{
-		try {
-					
+	protected String elementId;
+	
+	public void invokeEPRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, SepaInvocation sepa) throws Exception
+	{					
 			EndpointInfo destination;
 			List<CamelConfig> config = new ArrayList<CamelConfig>();
 			List<EndpointInfo> source = new ArrayList<EndpointInfo>();
@@ -100,14 +101,9 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 					supplier, engineParams, config, destination, source);
 			//context.getManagementStrategy().addEventNotifier(new LoggingEventNotifer());
 			runtime = new EPRuntime(context, runtimeParameters);
+			this.elementId = sepa.getElementId();
 			
 			context.start();
-			
-		} catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return true;
 	}
 	
 	private DataType getMessageFormat(EventGrounding inputEventGrounding) {
@@ -115,10 +111,10 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 		else return DataType.JSON;
 	}
 	
-	public boolean detachRuntime() 
+	public Response detachRuntime() 
 	{
 		brokerAliases.clear();
 		runtime.discard();
-		return true;
+		return new Response(elementId, true);
 	}
 }

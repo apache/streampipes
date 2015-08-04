@@ -9,8 +9,10 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
+import org.restlet.representation.StringRepresentation;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
+import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -30,9 +32,10 @@ public abstract class AbstractRestlet<D extends NamedSEPAElement> extends Restle
 		return Utils.asString(graph);
 	}
 	
-	protected void sendStatus(Response resp)
+	protected void sendStatus(Response httpResp, de.fzi.cep.sepa.model.impl.Response streamPipesResp)
 	{
-		resp.setStatus(new Status(500));
+		httpResp.setEntity(new StringRepresentation(new Gson().toJson(streamPipesResp), MediaType.APPLICATION_JSON));
+		httpResp.setStatus(new Status(200));
 	}
 	
 	@Override
@@ -45,7 +48,7 @@ public abstract class AbstractRestlet<D extends NamedSEPAElement> extends Restle
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | SecurityException
 				| ClassNotFoundException | InvalidRdfException | RDFHandlerException e) {
-			sendStatus(resp);
+			resp.setStatus(new Status(200));
 		}	
 	}	
 }
