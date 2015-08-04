@@ -14,6 +14,7 @@ import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -61,7 +62,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
+	public Response invokeRuntime(SecInvocation sec) {
 		System.out.println("invoke");
 		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
@@ -78,18 +79,18 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 			e.printStackTrace();
 		}
 		
-		return true;
+		return null;
 	}
 
 	@Override
-	public boolean detachRuntime() {
+	public Response detachRuntime() {
 		try {
 			consumer.close();
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return null;
 	}
 
 	@Override

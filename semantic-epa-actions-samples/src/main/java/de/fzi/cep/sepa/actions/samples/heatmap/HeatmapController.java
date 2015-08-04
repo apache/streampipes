@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -58,8 +59,15 @@ public class HeatmapController extends ActionController {
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
-		return true;
+	public Response invokeRuntime(SecInvocation invocationGraph) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response detachRuntime() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -88,13 +96,5 @@ public class HeatmapController extends ActionController {
 		
 		return new Heatmap(mapsParameters).generateHtml();
 	}
-
-	@Override
-	public boolean detachRuntime() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
 
 }

@@ -14,6 +14,7 @@ import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -63,20 +64,20 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
+	public Response invokeRuntime(SecInvocation sec) {
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		this.notifier = new ProaSenseEventNotifier(consumerTopic);
 		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getBrokerConfig().getZookeeperUrl(), consumerTopic,
 				new String[] {consumerTopic}, new ProaSenseKpiPublisher(sec, notifier));
 		kafkaConsumerGroup.run(1);
 		
-		return true;
+		return null;
 	}
 
 	@Override
-	public boolean detachRuntime() {
+	public Response detachRuntime() {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override

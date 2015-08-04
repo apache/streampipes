@@ -19,6 +19,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
@@ -63,7 +64,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
+	public Response invokeRuntime(SecInvocation sec) {
 		//String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		this.eventNotifier = new ProaSenseEventNotifier(consumerTopic);
@@ -75,18 +76,18 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		
 		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		
-		return true;
+		return null;
 	}
 
 	@Override
-	public boolean detachRuntime() {
+	public Response detachRuntime() {
 		try {
 			consumer.close();
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return null;
 	}
 
 	@Override

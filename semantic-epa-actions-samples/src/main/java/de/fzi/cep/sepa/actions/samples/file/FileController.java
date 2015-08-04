@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
@@ -49,7 +50,7 @@ public class FileController extends ActionController {
 	}
 
 	@Override
-	public boolean invokeRuntime(SecInvocation sec) {
+	public Response invokeRuntime(SecInvocation sec) {
 		String brokerUrl = createJmsUri(sec);
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
@@ -60,13 +61,13 @@ public class FileController extends ActionController {
 		
 		new Thread(new FileWriter(fileParameters)).start();
 		
-		return true;
+		return null;
 	}
 
 	@Override
-	public boolean detachRuntime() {
+	public Response detachRuntime() {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override
