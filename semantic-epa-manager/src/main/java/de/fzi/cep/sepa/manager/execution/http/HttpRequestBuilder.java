@@ -51,7 +51,6 @@ public class HttpRequestBuilder {
 	private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException
 	{
 		String resp = httpResp.returnContent().asString();
-		System.out.println(resp);
 		de.fzi.cep.sepa.model.impl.Response streamPipesResp = new Gson().fromJson(resp, de.fzi.cep.sepa.model.impl.Response.class);
 		return convert(streamPipesResp);
 	}
