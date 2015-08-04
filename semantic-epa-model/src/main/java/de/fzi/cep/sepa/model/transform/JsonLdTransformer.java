@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,9 +19,7 @@ import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -32,7 +29,6 @@ import com.clarkparsia.empire.annotation.RdfGenerator;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
-import de.fzi.cep.sepa.model.util.ModelUtils;
 
 public class JsonLdTransformer implements RdfTransformer {
 
@@ -51,14 +47,12 @@ public class JsonLdTransformer implements RdfTransformer {
 
 			Method[] ms;
 			String className = element.getClass().getName();
-			String fixedClassName = fixClassName(className);
+			String fixedClassName = fixClassName(className, element.getClass().getSimpleName());
 			ms = Class.forName(fixedClassName).getMethods();
-			System.out.println(element.getClass().getName());
 			for (Method m : ms) {
 				if (m.getName().startsWith("get")) {
 					if (Collection.class
 							.isAssignableFrom(m.getReturnType())) {
-						System.out.println(m.getName() +", " +m.getGenericReturnType().getTypeName());
 						String genericClassName = ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0].getTypeName();
 						if(!(genericClassName.startsWith("java.lang.")))
 						{
@@ -98,13 +92,31 @@ public class JsonLdTransformer implements RdfTransformer {
 		return graph;
 	}
 	
-	private String fixClassName(String className) {
-		int index = className.lastIndexOf("Impl.");
-		if (index != -1) {
+	private String fixClassName(String className, String simpleName) {
+		int index = className.lastIndexOf("impl." +simpleName);
+		if (index != -1 && count(className) > 1) {
 			return new StringBuilder(className).replace(index, index+5,"").toString().replace("Impl", "");
 		} else {
 			return className;
 		}
+	}
+	
+	private int count(String className)
+	{
+		String substr = "impl.";
+		int lastIndex = 0;
+		int count = 0;
+
+		while(lastIndex != -1){
+
+		    lastIndex = className.indexOf(substr,lastIndex);
+
+		    if(lastIndex != -1){
+		        count ++;
+		        lastIndex += substr.length();
+		    }
+		}
+		return count;
 	}
 
 	private Graph appendGraph(Graph originalGraph, Graph appendix) {
