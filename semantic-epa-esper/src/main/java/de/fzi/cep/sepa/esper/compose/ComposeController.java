@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -52,7 +53,7 @@ public class ComposeController extends EpDeclarer<ComposeParameters>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 	
 		try {
 			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
@@ -66,12 +67,12 @@ public class ComposeController extends EpDeclarer<ComposeParameters>{
 		
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 		
-	
 		try {
-			return invokeEPRuntime(staticParam, Compose::new, sepa);
+			invokeEPRuntime(staticParam, Compose::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 

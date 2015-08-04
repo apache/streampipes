@@ -11,12 +11,14 @@ import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
+import de.fzi.cep.sepa.esper.compose.Compose;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -33,32 +35,7 @@ import de.fzi.cep.sepa.util.StandardTransportFormat;
 public class DrillingStartEnrichedController extends EpDeclarer<DrillingStartEnrichedParameters>{
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
-		
-		try {
-			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
-		} catch (RDFHandlerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvocationTargetException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidRdfException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
@@ -75,10 +52,12 @@ public class DrillingStartEnrichedController extends EpDeclarer<DrillingStartEnr
 				lngPropertyName);
 	
 		try {
-			return invokeEPRuntime(staticParam, DrillingStartEnriched::new, sepa);
+			invokeEPRuntime(staticParam, DrillingStartEnriched::new, sepa);
+			new Thread(new EnrichedDataSimulator(staticParam.getInputStreamParams().get(0).getInName())).start();
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 	

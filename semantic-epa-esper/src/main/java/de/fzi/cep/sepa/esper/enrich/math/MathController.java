@@ -8,11 +8,13 @@ import org.openrdf.rio.RDFHandlerException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
+import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
@@ -90,7 +92,7 @@ public class MathController extends EpDeclarer<MathParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		String operation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
@@ -125,11 +127,11 @@ public class MathController extends EpDeclarer<MathParameter>{
 				appendPropertyName);	
 		
 		try {
-			return invokeEPRuntime(staticParam, Math::new, sepa);
+			invokeEPRuntime(staticParam, Math::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

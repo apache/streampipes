@@ -14,6 +14,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
@@ -28,9 +29,9 @@ import de.fzi.cep.sepa.util.StandardTransportFormat;
 public class MeetsController extends EpDeclarer<PatternParameters>{
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 	@Override

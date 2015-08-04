@@ -88,7 +88,7 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {		
+	public Response invokeRuntime(SepaInvocation sepa) {		
 		
 		int cellSize = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
 		double startingLatitude = Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "startingLatitude"));
@@ -116,10 +116,11 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 				selectProperties);
 	
 		try {
-			return invokeEPRuntime(staticParam, GridEnrichment::new, sepa);
+			invokeEPRuntime(staticParam, GridEnrichment::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 }

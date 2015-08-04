@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
@@ -102,7 +103,7 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa, "groupBy", true);
 
@@ -140,11 +141,11 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 				aggregate, timeWindowSize, selectProperties);
 
 		try {
-			return invokeEPRuntime(staticParam, Aggregation::new, sepa);
+			invokeEPRuntime(staticParam, Aggregation::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

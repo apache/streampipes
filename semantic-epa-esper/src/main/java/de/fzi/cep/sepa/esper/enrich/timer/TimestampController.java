@@ -1,30 +1,20 @@
 package de.fzi.cep.sepa.esper.enrich.timer;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
-import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentParameter;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -77,7 +67,7 @@ public class TimestampController extends EpDeclarer<TimestampParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
@@ -95,11 +85,11 @@ public class TimestampController extends EpDeclarer<TimestampParameter>{
 				selectProperties);
 	
 		try {
-			return invokeEPRuntime(staticParam, TimestampEnrichment::new, sepa);
+			invokeEPRuntime(staticParam, TimestampEnrichment::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

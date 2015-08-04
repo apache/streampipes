@@ -8,6 +8,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
@@ -17,6 +18,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
@@ -98,7 +100,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		String threshold = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "value"))).getValue();
@@ -121,12 +123,11 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Integer.parseInt(threshold), NumericalOperator.valueOf(operation), filterProperty);
 		
 		try {
-			
-			return invokeEPRuntime(staticParam, NumericalFilter::new, sepa);
+			invokeEPRuntime(staticParam, NumericalFilter::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

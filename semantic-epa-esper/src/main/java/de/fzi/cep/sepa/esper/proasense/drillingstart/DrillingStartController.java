@@ -7,6 +7,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentParameter;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -14,6 +15,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -29,7 +31,7 @@ import de.fzi.cep.sepa.util.StandardTransportFormat;
 public class DrillingStartController extends EpDeclarer<DrillingStartParameters>{
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		System.out.println(sepa.getBelongsTo());
 		
@@ -48,10 +50,11 @@ public class DrillingStartController extends EpDeclarer<DrillingStartParameters>
 				lngPropertyName);
 	
 		try {
-			return invokeEPRuntime(staticParam, DrillingStart::new, sepa);
+			invokeEPRuntime(staticParam, DrillingStart::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 	

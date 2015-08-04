@@ -10,11 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
@@ -118,7 +120,7 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 					
 		String epsgProperty = null;
 		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
@@ -136,7 +138,13 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 				Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
 				yProperty, 8000L); // TODO reduce param overhead
 
-		return invokeEPRuntime(staticParam, MovementAnalysis::new, sepa);
+		try {
+			invokeEPRuntime(staticParam, MovementAnalysis::new, sepa);
+			return new Response(sepa.getElementId(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
+		}
 
 	}
 }

@@ -6,12 +6,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.aggregate.count.Count;
-import de.fzi.cep.sepa.esper.aggregate.count.CountParameter;
-import de.fzi.cep.sepa.esper.aggregate.count.TimeScale;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -25,7 +22,6 @@ import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -83,7 +79,7 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 				
 		String sortBy = SepaUtils.getMappingPropertyName(sepa,
 				"sortBy", true);
@@ -112,11 +108,11 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
 		
 		try {
-			return invokeEPRuntime(staticParam, TopX::new, sepa);
+			invokeEPRuntime(staticParam, TopX::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

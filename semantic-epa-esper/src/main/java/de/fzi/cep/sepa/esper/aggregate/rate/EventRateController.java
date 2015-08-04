@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
@@ -64,7 +65,7 @@ public class EventRateController extends EpDeclarer<EventRateParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 	
 		String avgRate = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "rate"))).getValue();
@@ -75,13 +76,12 @@ public class EventRateController extends EpDeclarer<EventRateParameter> {
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
 		
-		
 		try {
-			return invokeEPRuntime(staticParam, EventRate::new, sepa);
+			invokeEPRuntime(staticParam, EventRate::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		return false;
 	}
 }

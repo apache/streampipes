@@ -1,12 +1,7 @@
 package de.fzi.cep.sepa.esper.enrich.fixed;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.openrdf.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
@@ -16,13 +11,13 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -31,32 +26,7 @@ import de.fzi.cep.sepa.util.StandardTransportFormat;
 public class StaticValueEnricherController extends EpDeclarer<StaticValueEnricherParameters>{
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
-		
-		try {
-			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
-		} catch (RDFHandlerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvocationTargetException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvalidRdfException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		String value = SepaUtils.getFreeTextStaticPropertyValue(sepa, "value");
 		
@@ -65,10 +35,11 @@ public class StaticValueEnricherController extends EpDeclarer<StaticValueEnriche
 				"drillingStatus", value);
 	
 		try {
-			return invokeEPRuntime(staticParam, StaticValueEnricher::new, sepa);
+			invokeEPRuntime(staticParam, StaticValueEnricher::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 	

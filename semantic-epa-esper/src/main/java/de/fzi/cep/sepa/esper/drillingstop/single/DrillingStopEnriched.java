@@ -45,7 +45,7 @@ public class DrillingStopEnriched extends EsperEventEngine<DrillingStopEnrichedP
 		String pattern = selectClause + " from pattern [every (s1=" +eventInName +" -> s2=" +eventInName +")] ";
 		pattern += " where (s2." +bindingParameters.getTorquePropertyName() +" < 5 and s2." +bindingParameters.getRpmPropertyName() +" < 5) and ";
 		pattern += "(s1." +bindingParameters.getTorquePropertyName() +" >= 5 or s1." +bindingParameters.getRpmPropertyName() +" >= 5) and ";
-		pattern +="((s1." +bindingParameters.getTorquePropertyName() +" != s2." +bindingParameters.getTorquePropertyName() +") and (s1." +bindingParameters.getRpmPropertyName() +" != s2." +bindingParameters.getRpmPropertyName() +"))";
+		pattern +="((s1." +bindingParameters.getTorquePropertyName() +" != s2." +bindingParameters.getTorquePropertyName() +") or (s1." +bindingParameters.getRpmPropertyName() +" != s2." +bindingParameters.getRpmPropertyName() +"))";
 		
 		statements.add(pattern);
 		return statements;

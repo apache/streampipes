@@ -6,9 +6,11 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
+import de.fzi.cep.sepa.esper.compose.Compose;
 import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
@@ -132,7 +134,7 @@ public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameter
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		EventStream inputStream = sepa.getInputStreams().get(0);
 		
@@ -180,12 +182,10 @@ public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameter
 	
 		try {
 			invokeEPRuntime(staticParam, DebsChallenge2::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
-		
-		//new Thread(new TaxiDataInputProvider(inName)).start();
-		return false;
 	}
 }

@@ -8,8 +8,8 @@ import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -22,9 +22,9 @@ import de.fzi.cep.sepa.util.StandardTransportFormat;
 public class PatternController extends EpDeclarer<PatternParameters>{
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 	
 	@Override

@@ -8,9 +8,11 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -82,30 +84,29 @@ public class TextFilterController extends EpDeclarer<TextFilterParameter> {
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation sepa) {
+	public Response invokeRuntime(SepaInvocation sepa) {
 			
-			String keyword = ((FreeTextStaticProperty) (SepaUtils
-					.getStaticPropertyByName(sepa, "keyword"))).getValue();
-			String operation = SepaUtils.getOneOfProperty(sepa,
-					"operation");
-			String filterProperty = SepaUtils.getMappingPropertyName(sepa,
-					"text");
-			
-			logger.info("Text Property: " +filterProperty);
+		String keyword = ((FreeTextStaticProperty) (SepaUtils
+				.getStaticPropertyByName(sepa, "keyword"))).getValue();
+		String operation = SepaUtils.getOneOfProperty(sepa,
+				"operation");
+		String filterProperty = SepaUtils.getMappingPropertyName(sepa,
+				"text");
 		
-			TextFilterParameter staticParam = new TextFilterParameter(sepa, 
-					keyword, 
-					StringOperator.valueOf(operation), 
-					filterProperty);
-			
-			
-			try {
-				
-				return invokeEPRuntime(staticParam, TextFilter::new, sepa);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return false;
+		logger.info("Text Property: " +filterProperty);
+	
+		TextFilterParameter staticParam = new TextFilterParameter(sepa, 
+				keyword, 
+				StringOperator.valueOf(operation), 
+				filterProperty);
+		
+		
+		try {
+			invokeEPRuntime(staticParam, TextFilter::new, sepa);
+			return new Response(sepa.getElementId(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
+		}
 	}
 }

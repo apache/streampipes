@@ -7,12 +7,14 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
+import de.fzi.cep.sepa.esper.compose.Compose;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -71,21 +73,22 @@ public class DistributionController extends EpDeclarer<DistributionParameters>{
 	}
 
 	@Override
-	public boolean invokeRuntime(SepaInvocation invocationGraph) {
-		int timeWindow = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "batchWindow"));
+	public Response invokeRuntime(SepaInvocation sepa) {
+		int timeWindow = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "batchWindow"));
 		
-		String mapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping");
+		String mapping = SepaUtils.getMappingPropertyName(sepa, "mapping");
 		
 		DistributionParameters staticParam = new DistributionParameters(
-				invocationGraph, 
+				sepa, 
 				timeWindow,
 				mapping);
 	
 		try {
-			return invokeEPRuntime(staticParam, Distribution::new, invocationGraph);
+			invokeEPRuntime(staticParam, Distribution::new, sepa);
+			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
 
