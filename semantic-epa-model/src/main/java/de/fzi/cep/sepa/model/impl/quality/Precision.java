@@ -32,7 +32,7 @@ public class Precision extends EventPropertyQualityDefinition {
 	}
 	
 
-	@Override
+	//@Override
 	public int compareTo(EventPropertyQualityDefinition o) {
 		Precision other = (Precision) o;
 		if (other.getQuantityValue() == this.getQuantityValue()) {

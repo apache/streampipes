@@ -30,7 +30,7 @@ public class Resolution extends EventPropertyQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 	
-	@Override
+	//@Override
 	public int compareTo(EventPropertyQualityDefinition o) {
 		Resolution other = (Resolution) o;
 		if (other.getQuantityValue() == this.getQuantityValue()) {

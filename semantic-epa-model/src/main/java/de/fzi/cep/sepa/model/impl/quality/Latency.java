@@ -32,7 +32,7 @@ public class Latency extends EventPropertyQualityDefinition {
 	}
 	
 
-	@Override
+	//@Override
 	public int compareTo(EventPropertyQualityDefinition o) {
 		Latency other = (Latency) o;
 		if (other.getQuantityValue() == this.getQuantityValue()) {

@@ -44,7 +44,7 @@ public class MeasurementRange extends EventPropertyQualityDefinition {
 	}
 	
 
-	@Override
+	//@Override
 	public int compareTo(EventPropertyQualityDefinition o) {
 		MeasurementRange other = (MeasurementRange) o;
 		

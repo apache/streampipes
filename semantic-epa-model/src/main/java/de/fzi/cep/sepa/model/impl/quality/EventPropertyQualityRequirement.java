@@ -64,7 +64,7 @@ public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 			return this.getMaximumPropertyQuality().getClass().getSimpleName();
 		}
 	}
-
+/*
 	public boolean fulfilled(EventPropertyQualityDefinition qualityDefinition) {
 		boolean result = true;
 		
@@ -84,6 +84,6 @@ public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 		
 		return result;
 	}
-	
+*/	
 	
 }
