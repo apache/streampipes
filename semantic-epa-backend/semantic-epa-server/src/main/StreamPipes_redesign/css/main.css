@@ -484,3 +484,6 @@ textarea{
     width: 500px;
 }
 
+md-button.md-icon-button {
+	line-height: normal;
+}

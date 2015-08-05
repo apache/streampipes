@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="EN" ng-app="test" dir="ltr" xmlns="http://www.w3.org/1999/xhtml" >
 
 
 <head>
@@ -30,12 +30,23 @@
 	<script type="text/javascript" src="js/Block.js"></script>
 	<script type="text/javascript" src="js/auth.js"></script>
 
+	<script type="text/javascript" src="js/angular.js"></script>
+	<script type="text/javascript" src="js/angular-animate.js"></script>
+	<script type="text/javascript" src="js/angular-aria.js"></script>
+	<script type="text/javascript" src="js/angular-material-icons.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		  rel="stylesheet">
 	<link rel="stylesheet" href="css/jsplumb.css"/>
 	<link rel="stylesheet" href="css/toastr.css"/>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
-	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" href="css/themes/default/style.min.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" />
 
 	<script type="text/javascript">
 		var domain = "";
@@ -45,6 +56,7 @@
 		var state = new State();
 		var debug = false;
 
+
 		$(init("Proa"));
 
 	</script>
@@ -52,93 +64,123 @@
 </head>
 
 <body>
-<!-- NAVBAR  -->
+	<!-- Toolbar -->
+	<div ng-controller="AppCtrl">
+		<md-content>
+			<md-toolbar>
+				<div class="md-toolbar-tools">
+					<md-button  class="md-icon-button" aria-label="Settings">
+						<i class="material-icons md-36">menu</i>
+					</md-button>
+					<md-button>
+					<a href="#">StreamStory</a>
+					</md-button>
+					<md-button>
+					<a href="#">StreamPipes</a>
+					</md-button>
+					<md-button>
+					<a href="#">PANDDA</a>
+					</md-button>
+					<md-button>
+					<a href="#">HIPPO</a>
+					</md-button>
 
-<nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a id="logo-home" class="navbar-brand" href="#" onclick='refresh("Proa", true)'>StreamPipes</a>
-		</div>
+					<span flex></span>
+				</div>
+			</md-toolbar>
+		</md-content>
+	</div>
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav" id="tabs" role="tablist">
-				<li class="active">
-					<a href="#editor" role="tab" data-toggle="tab">Editor</a>
-				</li>
-				<li >
-					<a href="#pipelines" role="tab" data-toggle="tab" onclick="refreshPipelines()">Pipelines</a>
-				</li>
-				<li >
-					<a href="#visualizations" role="tab" data-toggle="tab" onclick="updateViz()">Visualizations</a>
-				</li>
-				<li>
-					<a href="#ontology" role="tab" data-toggle="tab">Ontology Editor</a>
-				</li>
-				<li id="debugTestTab" style="display : none" >
-					<a href="#testTab" role="tab"  data-toggle="tab">Tests</a>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav">
 
-				<li id="options" class=" dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu">
-						<li>
-							<a href="#" onclick="showAdd()">Add...</a>
-						</li>
-						<li>
-							<a href="#" onclick="showManage()">Manage...</a>
-						</li>
-					</ul>
 
-				</li>
-				<p class="navbar-text"><strong>Use-Case:</strong></p>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="typeChange">Proasense <b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu">
-						<li>
-							<a href="#" onclick=refresh("Proa")>Proasense</a>
-						</li>
-						<li>
-							<a href="#" onclick=refresh("PA")>Personal Assistant</a>
-						</li>
-						<!-- <li class="divider"></li> -->
+	<!-- NAVBAR  -->
 
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right ">
-				<li id="tutorial" class="nav navbar-nav">
-					<a href="#" onclick="showTutorial()">Tutorial</a>
-				</li>
 
-				<li id="login" class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><div id="login-label">Login</div> <b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu">
-						<li>
-							<a href="#" onclick="attemptLogout()">Logout</a>
-						</li>
-					</ul>
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a id="logo-home" class="navbar-brand" href="#" onclick='refresh("Proa", true)'>StreamPipes</a>
+			</div>
 
-					</ul>
-				</li>
-				<script type="text/javascript">
-					getPrincipalName();
-				</script>
-			</ul>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav" id="tabs" role="tablist">
+					<li class="active">
+						<a href="#editor" role="tab" data-toggle="tab">Editor</a>
+					</li>
+					<li >
+						<a href="#pipelines" role="tab" data-toggle="tab" onclick="refreshPipelines()">Pipelines</a>
+					</li>
+					<li >
+						<a href="#visualizations" role="tab" data-toggle="tab" onclick="updateViz()">Visualizations</a>
+					</li>
+					<li>
+						<a href="#ontology" role="tab" data-toggle="tab">Ontology Editor</a>
+					</li>
+					<li id="debugTestTab" style="display : none" >
+						<a href="#testTab" role="tab"  data-toggle="tab">Tests</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav">
 
-		</div><!-- /.navbar-collapse -->
-	</div><!-- /.container-fluid -->
-</nav>
-<!-- END NAVBAR  -->
+					<li id="options" class=" dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#" onclick="showAdd()">Add...</a>
+							</li>
+							<li>
+								<a href="#" onclick="showManage()">Manage...</a>
+							</li>
+						</ul>
+
+					</li>
+					<p class="navbar-text"><strong>Use-Case:</strong></p>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="typeChange">Proasense <b class="caret"></b></a>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#" onclick=refresh("Proa")>Proasense</a>
+							</li>
+							<li>
+								<a href="#" onclick=refresh("PA")>Personal Assistant</a>
+							</li>
+							<!-- <li class="divider"></li> -->
+
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right ">
+					<li id="tutorial" class="nav navbar-nav">
+						<a href="#" onclick="showTutorial()">Tutorial</a>
+					</li>
+
+					<li id="login" class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><div id="login-label">Login</div> <b class="caret"></b></a>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#" onclick="attemptLogout()">Logout</a>
+							</li>
+						</ul>
+
+						</ul>
+					</li>
+					<script type="text/javascript">
+						getPrincipalName();
+					</script>
+				</ul>
+
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+	<!-- END NAVBAR  -->
 
 <div class="tab-content content-padding">
 	<div class="tab-pane active" id="editor">
