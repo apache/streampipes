@@ -90,10 +90,10 @@ function addRecommendedButton($element) {
 }
 
 function showRecButton(e) {
-    $("span:not(.recommended-list,.recommended-item)", this).show();
+    $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).show();
 }
 function hideRecButton(e) {
-    $("span:not(.recommended-list,.recommended-item)", this).hide();
+    $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).hide();
 }
 
 
@@ -109,6 +109,8 @@ function getCoordinates(ui) {
 }
 
 function createNewAssemblyElement(json, coordinates) {
+    var urlInvalid = false;
+
     var $newState = $('<span>')
         .data("JSON", $.extend(true, {}, json))
         .appendTo('#assembly');
@@ -145,25 +147,38 @@ function createNewAssemblyElement(json, coordinates) {
             ContextMenuClickHandler("assembly");
             return false;
         });
-    if ($newState.data('JSON').iconUrl == null) { //Kein icon in JSON angegeben
-        var md5 = CryptoJS.MD5(json.elementId);
-        // var md5 = ui.draggable.data("JSON").elementId.replace("-", "");
-        var $ident = $('<p>')
-            .text(md5)
-            .appendTo($newState);
-        $ident.identicon5({size: 79});
-        $ident.children().addClass("connectable-img tt")
-            .attr(
-            {
-                "data-toggle": "tooltip",
-                "data-placement": "top",
-                "data-delay": '{"show": 1000, "hide": 100}',
-                title: json.name
-            })
-            .data("JSON", $.extend(true, {}, json));
+
+    $("<img>")
+        .attr({
+            src: $newState.data('JSON').iconUrl
+        })
+        .error(function(){
+            $(".connectable-img", $newState).remove();
+            addTextIconToElement($newState, $newState.data("JSON").name);
+        });
+
+
+    if ($newState.data('JSON').iconUrl == null || urlInvalid) { //Kein icon in JSON angegeben
+
+        addTextIconToElement($newState, $newState.data('JSON').name);
+
+        //var md5 = CryptoJS.MD5(json.elementId);
+        //// var md5 = ui.draggable.data("JSON").elementId.replace("-", "");
+        //var $ident = $('<p>')
+        //    .text(md5)
+        //    .appendTo($newState);
+        //$ident.identicon5({size: 79});
+        //$ident.children().addClass("connectable-img tt")
+        //    .attr(
+        //    {
+        //        "data-toggle": "tooltip",
+        //        "data-placement": "top",
+        //        "data-delay": '{"show": 1000, "hide": 100}',
+        //        title: json.name
+        //    })
+        //    .data("JSON", $.extend(true, {}, json));
     } else {
         $('<img>')
-            .addClass('connectable-img tt')
             .attr({
                 src: json.iconUrl,
                 "data-toggle": "tooltip",
@@ -171,6 +186,8 @@ function createNewAssemblyElement(json, coordinates) {
                 "data-delay": '{"show": 1000, "hide": 100}',
                 title: json.name
             })
+            .addClass('connectable-img tt')
+
             .appendTo($newState)
 
             .data("JSON", $.extend(true, {}, json));
@@ -178,6 +195,25 @@ function createNewAssemblyElement(json, coordinates) {
 
     return $newState;
 }
+
+function addTextIconToElement($element, name, small){
+    var $span = $("<span>")
+        .text(getElementIconText(name) || "NA")
+        .attr(
+        {"data-toggle": "tooltip",
+            "data-placement": "top",
+            "data-delay": '{"show": 1000, "hide": 100}',
+            title: name
+        })
+        .appendTo($element);
+
+    if (small){
+        $span.addClass("element-text-icon-small")
+    }else{
+        $span.addClass("element-text-icon")
+    }
+}
+
 
 function handleDroppedStream($newState, endpoints) {
 
@@ -201,6 +237,17 @@ function handleDroppedStream($newState, endpoints) {
         $('#actionCollapse').attr("data-toggle", "collapse");
         $('#actionCollapse').removeClass("disabled");
     }
+
+}
+
+function getElementIconText(string){
+    var result ="";
+
+    var words = string.split(" ");
+    words.forEach(function(word, i){
+        result += word.charAt(0);
+    });
+    return result.toUpperCase();
 
 }
 
@@ -428,104 +475,6 @@ function savePipelineName() {
     state.currentPipeline.send(overWrite);
     //sendPipeline(true, overWrite);
 }
-
-//function sendPipeline(fullPipeline, overWrite, info) {
-//
-//    if (fullPipeline) {
-//
-//        return $.ajax({
-//            url: "http://localhost:8080/semantic-epa-backend/api/pipelines",
-//            data: JSON.stringify(state.currentPipeline),
-//            processData: false,
-//            type: 'POST',
-//            success: function (data) {
-//                if (data.success) {			//TODO Objekt im Backend ändern
-//                    // toastTop("success", "Pipeline sent to server");
-//                    displaySuccess(data);
-//                    if (state.adjustingPipelineState && overWrite) {
-//                        var pipelineId = state.adjustingPipeline._id;
-//                        var url = standardUrl + "pipelines/" + pipelineId;
-//                        $.ajax({
-//                            url: url,
-//                            success: function (data) {
-//                                if (data.success) {
-//                                    state.adjustingPipelineState = false;
-//                                    $("#overwriteCheckbox").css("display", "none");
-//                                    refresh("Proa");
-//                                } else {
-//                                    displayErrors(data);
-//                                }
-//                            },
-//                            error: function (data) {
-//                                console.log(data);
-//                            },
-//                            type: 'DELETE',
-//                            processData: false
-//                        });
-//                    }
-//                    refresh("Proa");
-//
-//
-//                } else {
-//                    displayErrors(data);
-//                }
-//            },
-//            error: function (data) {
-//                toastRightTop("error", "Could not fulfill request", "Connection Error");
-//            }
-//        });
-//
-//
-//    } else {
-//
-//        return $.ajax({
-//            url: "http://localhost:8080/semantic-epa-backend/api/pipelines/update",
-//            data: JSON.stringify(state.currentPipeline),
-//            processData: false,
-//            type: 'POST',
-//            success: function (data) {
-//                if (data.success) {			//TODO Objekt im Backend ändern
-//                    modifyPipeline(data.pipelineModifications);
-//                    for (var i = 0, sepa; sepa = state.currentPipeline.sepas[i]; i++) {
-//                        var id = "#" + sepa.DOM;
-//                        if ($(id) !== "undefined") {
-//                            if ($(id).data("options") != true) {
-//                                if (!isFullyConnected(id)) {
-//                                    return;
-//                                }
-//                                $('#customize-content').html(prepareCustomizeModal($(id)));
-//                                var string = "Customize " + sepa.name;
-//                                $('#customizeTitle').text(string);
-//                                $('#customizeModal').modal('show');
-//
-//                            }
-//                        }
-//
-//                    }
-//                    if (!$.isEmptyObject(state.currentPipeline.action)) {
-//                        var id = "#" + state.currentPipeline.action.DOM;
-//                        if (!isFullyConnected(id)) {
-//                            return;
-//                        }
-//                        $('#customize-content').html(prepareCustomizeModal($(id)));
-//                        var string = "Customize " + state.currentPipeline.action.name;
-//                        $('#customizeTitle').text(string);
-//                        $('#customizeModal').modal('show');
-//                    }
-//
-//                } else {
-//                    jsPlumb.detach(info.connection);
-//                    displayErrors(data);
-//                }
-//
-//            },
-//            error: function (data) {
-//                toastRightTop("error", "Could not fulfill request", "Connection Error");
-//            }
-//        });
-//    }
-//}
-
 
 function modifyPipeline(pipelineModifications) {
     var id;

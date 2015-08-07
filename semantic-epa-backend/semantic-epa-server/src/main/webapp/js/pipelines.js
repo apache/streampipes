@@ -166,19 +166,9 @@ function createPreviewElement(type, element, i, json){
 		.attr("id", element.DOM)
 		.data("JSON", $.extend(true, {}, element));
 	if (element.iconUrl == null){ //Kein icon in JSON angegeben
-		var md5 = CryptoJS.MD5(element.elementId);
-		var $ident = $('<p>')
-			.text(md5)
-			.appendTo($state);
-		$ident.identicon5({size:79});
-		$ident.children().addClass("connectable-img tt")
-		.attr(
-			{"data-toggle": "tooltip",
-			"data-placement": "top",
-			"data-delay": '{"show": 1000, "hide": 100}',
-			title: element.name
-			})
-		.data("JSON", $.extend(true, {},element));
+		addTextIconToElement($state, $state.data("JSON").name);
+
+		//.data("JSON", $.extend(true, {},element));
 	}else{
 		$('<img>')
 			.addClass('connectable-img tt')
@@ -190,6 +180,10 @@ function createPreviewElement(type, element, i, json){
 				"data-delay": '{"show": 1000, "hide": 100}',
 				title: element.name
 				})
+			.error(function(){
+				addTextIconToElement($state, $state.data("JSON").name);
+				$(this).remove();
+			})
 			.appendTo($state)
 			
 			.data("JSON", $.extend(true, {},element));

@@ -49,15 +49,17 @@ body {
 	display: inline-block;
 	height: 90px;
 	width: 90px;
+	line-height: 90px;
 	margin-left: 3%;
 	margin-right: 3%;
 	/*padding: .5vh;*/
-	vertical-align: top;
+	vertical-align: middle;
 	cursor: pointer;
+	text-align: center;
 }
 
 .clickable-img{
-	margin-top: 14%;
+	/*margin-top: 14%;*/
 	/*margin-right: auto;*/
 	height: 80px;
 	width: 80px;
@@ -80,9 +82,11 @@ body {
 	display: inline-block;
 	height: 90px;
 	width: 90px;
+	line-height: 90px;
 	margin-left: 4%;
 	margin-top: 5px;
 	box-shadow: 1px 1px 2px #555;
+	text-align: center;
 }
 .stream{
 	border-radius: 50%;
@@ -92,29 +96,29 @@ body {
 }
 
 .draggable-img{
-	font-size: 60px;
-	margin-top: 14%;
+	/*font-size: 60px;*/
+	/*margin-top: 14%;*/
 	height: 60px;
 	width: 60px;
-	margin-bottom: 0;
+	/*margin-bottom: 0;*/
 	color: #d22;
 }
 .sepa>.draggable-img{
 	height: 80px;
 	width: 80px;
-	margin-top: 5px;
+	/*margin-top: 5px;*/
 }
 .sepa>p>.draggable-img{
 	height: 80px;
 	width: 80px;
-	margin-top: 5px;
+	/*margin-top: 5px;*/
 }
 
 .ui-selectable-helper {background: rgba(51, 200, 51, 0.5);}
 .ui-selected {box-shadow: 0 0 10px #33DD33 !important}
 
 .draggable-img-dragging{
-	margin-left: 14%;
+	/*margin-left: 14%;*/
 	position: absolute;	
 }
 .navbar .container-fluid  {
@@ -168,24 +172,29 @@ body {
 	display: inline-block;
 	vertical-align: middle;
 	background-color: white;
+	line-height: 110px;
+	text-align: center;
+	font-size: 24px;
+	font-family: RobotoDraft;
 }
 
 .connectable-img{
 	color: #d22;
 	font-size: 80px;
-	margin-top: 14%;
-	margin-left: 14%;
-	margin-right: auto;
+	/*margin-top: 14%;*/
+	/*margin-left: 14%;*/
+	/*margin-right: auto;*/
 	height: 72%;
+	width: 72%;
 }
-.action>.connectable-img {
-	margin-top: 8.5%;
-	margin-left: 8.5%;
-}
-.action>p>.connectable-img {
-	margin-top: 10.5%;
-	margin-left: 10.5%;
-}
+/*.action>.connectable-img {*/
+	/*margin-top: 8.5%;*/
+	/*margin-left: 8.5%;*/
+/*}*/
+/*.action>p>.connectable-img {*/
+	/*margin-top: 10.5%;*/
+	/*margin-left: 10.5%;
+}*/
 .recommended-button {
 	cursor: pointer;
 	position: absolute;
@@ -333,10 +342,7 @@ h4.panel-title{
 	/*margin-left: 5%;*/
 }
 
-h1{
-	color: #666;
 
-}
 td {
 	vertical-align:middle !important;
 }
@@ -484,3 +490,24 @@ textarea{
     width: 500px;
 }
 
+button.md-button.md-icon-button {
+	line-height: normal;
+}
+
+.toolbar-icon{
+	height: 48px;
+	width: 48px;
+	margin-left:10px;
+}
+
+md-list .md-button {
+	width: 100%;
+	/*text-align: start;*/
+}
+
+.element-text-icon{
+	font-size: 24px;
+}
+.element-text-icon-small{
+	font-size: 18px;
+}

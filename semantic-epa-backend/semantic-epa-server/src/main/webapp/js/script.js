@@ -197,15 +197,13 @@ function initSources(data) {
             .appendTo('#sources');
 
         if (json.iconUrl == null) {//No Icon Path found in JSON
-            var md5 = CryptoJS.MD5(json.elementId);
-            // var md5 = json.elementId.replace("-", "");
-            var $ident = $('<p>').text(md5).appendTo($newSource);
-            $ident.identicon5({
-                size: 150
-            });
-            $ident.children().addClass("clickable-img").data("JSON", json);
+            addTextIconToElement($newSource, $newSource.data("JSON").name);
         } else {//Icon Path
-            $('<img>').attr("src", json.iconUrl).addClass('clickable-img').data("JSON", json).appendTo($newSource);
+            $('<img>').attr("src", json.iconUrl).addClass('clickable-img').data("JSON", json).appendTo($newSource)
+                .error(function(){
+                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+                    $(this).remove();
+                });
         }
 
     });
@@ -257,19 +255,19 @@ function createStreams(data) {
             .on("contextmenu", staticContextMenu)
             .appendTo('#streams').show();
         if (json.iconUrl == null) {
-            var md5 = CryptoJS.MD5(json.elementId);
-            // var md5 = json.elementId.replace("-", "");
-            var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu)
-                // .data("JSON", json)
-                .appendTo($newStream);
-            $ident.identicon5({
-                size: 150
-            });
-            $ident.children().addClass("draggable-img").data("JSON", json);
+            addTextIconToElement($newStream, $newStream.data("JSON").name);
         } else {
-            $('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
-                // .data("JSON", json)
-                .appendTo($newStream);
+            $('<img>').attr("src", json.iconUrl).addClass('draggable-img').on("contextmenu", staticContextMenu)
+                .data("JSON", json)
+                .appendTo($newStream)
+                .error(function(){
+                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+                    $(this).remove();
+                });
+
+            //$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
+            //    // .data("JSON", json)
+            //    .appendTo($newStream);
         }
     });
     makeDraggable("stream");
@@ -308,15 +306,14 @@ function createSepas(data) {
                 title: json.name
             }).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
             if (json.iconUrl == null) {
-                var md5 = CryptoJS.MD5(json.elementId);
-                // var md5 = json.elementId.replace("-", "");
-                var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
-                $ident.identicon5({
-                    size: 180
-                });
-                $ident.children().addClass("draggable-img").data("JSON", json);
+                addTextIconToElement($newSepa, $newSepa.data("JSON").name);
             } else {
-                $('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newSepa);
+                $('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json)
+                    .error(function(){
+                        addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+                        $(this).remove();
+                    })
+                    .appendTo($newSepa);
             }
         }
     });
@@ -358,19 +355,17 @@ function createActions(data) {
             .appendTo('#actions')
             .show();
         if (json.iconUrl == null) {
-            var md5 = CryptoJS.MD5(json.elementId);
-            // var md5 = json.elementId.replace("-", "");
-            var $ident = $('<p>').text(md5).on("contextmenu", staticContextMenu).data("JSON", json).appendTo($newAction);
-            $ident.identicon5({
-                size: 180
-            });
-            $ident.children().addClass("draggable-img").data("JSON", json);
+            addTextIconToElement($newAction, $newAction.data("JSON").name);
         } else {
             $('<img>')
                 .attr("src", json.iconUrl)
                 .addClass("draggable-img")
                 .on("contextmenu", staticContextMenu)
                 .data("JSON", json)
+                .error(function(){
+                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+                    $(this).remove();
+                })
                 .appendTo($newAction);
         }
     });
