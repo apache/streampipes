@@ -196,23 +196,7 @@ function createNewAssemblyElement(json, coordinates) {
     return $newState;
 }
 
-function addTextIconToElement($element, name, small){
-    var $span = $("<span>")
-        .text(getElementIconText(name) || "NA")
-        .attr(
-        {"data-toggle": "tooltip",
-            "data-placement": "top",
-            "data-delay": '{"show": 1000, "hide": 100}',
-            title: name
-        })
-        .appendTo($element);
 
-    if (small){
-        $span.addClass("element-text-icon-small")
-    }else{
-        $span.addClass("element-text-icon")
-    }
-}
 
 
 function handleDroppedStream($newState, endpoints) {
@@ -237,17 +221,6 @@ function handleDroppedStream($newState, endpoints) {
         $('#actionCollapse').attr("data-toggle", "collapse");
         $('#actionCollapse').removeClass("disabled");
     }
-
-}
-
-function getElementIconText(string){
-    var result ="";
-
-    var words = string.split(" ");
-    words.forEach(function(word, i){
-        result += word.charAt(0);
-    });
-    return result.toUpperCase();
 
 }
 

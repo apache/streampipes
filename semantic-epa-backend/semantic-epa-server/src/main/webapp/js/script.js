@@ -925,6 +925,41 @@ function manage(type) {
     $('#manageModal').modal('show');
 }
 
+function addTextIconToElement($element, name, small){
+    var $span = $("<span>")
+        .text(getElementIconText(name) || "NA")
+        .attr(
+        {"data-toggle": "tooltip",
+            "data-placement": "top",
+            "data-delay": '{"show": 1000, "hide": 100}',
+            title: name
+        })
+        .appendTo($element);
+
+    if (small){
+        $span.addClass("element-text-icon-small")
+    }else{
+        $span.addClass("element-text-icon")
+    }
+}
+
+function getElementIconText(string){
+    var result ="";
+    if (string.length <= 4){
+        result = string;
+    }else {
+        var words = string.split(" ");
+        words.forEach(function(word, i){
+            result += word.charAt(0);
+        });
+    }
+
+
+    return result.toUpperCase();
+
+}
+
+
 function toastTop(type, message, title, timeout) {
 
     if (!timeout) {
