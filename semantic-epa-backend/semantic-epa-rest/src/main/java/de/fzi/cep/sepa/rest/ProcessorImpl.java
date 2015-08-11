@@ -141,15 +141,21 @@ public class ProcessorImpl extends AbstractRestInterface implements Processor {
 		}
 	}
 
-	@Path("{sepaId}/check")
-	@GET
 	@Override
 	public String checkBinding(String subPipeline) {
-		// create pipeline
-		de.fzi.cep.sepa.model.client.Pipeline pipeline = Utils.getGson().fromJson(subPipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
-		
-		// compute SEPA payload
-		
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+//	@Path("{sepaId}/check")
+//	@GET
+//	@Override
+//	public String checkBinding(String subPipeline) {
+//		// create pipeline
+//		de.fzi.cep.sepa.model.client.Pipeline pipeline = Utils.getGson().fromJson(subPipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
+//		
+//		// compute SEPA payload
+//		
+//		return null;
+//	}
 }

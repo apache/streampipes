@@ -29,7 +29,7 @@ public class EventStream extends NamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:requiresEventStreamQuality")
+	@RdfProperty("sepa:hasEventStreamQualityRequirement")
 	List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
 	@OneToOne(fetch = FetchType.EAGER,

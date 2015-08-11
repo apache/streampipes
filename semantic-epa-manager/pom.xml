@@ -8,6 +8,13 @@
 	</parent>
 	<artifactId>semantic-epa-manager</artifactId>
 
+	<repositories>
+		<repository>
+			<id>org.topbraid</id>
+			<url>http://topquadrant.com/repository/spin</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
@@ -38,6 +45,11 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.topbraid</groupId>
+			<artifactId>spin</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
 </project>

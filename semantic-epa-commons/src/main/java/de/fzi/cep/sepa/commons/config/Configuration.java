@@ -120,7 +120,7 @@ public class Configuration {
 
 	public static final BrokerConfig getBrokerConfig()
 	{
-		return BrokerConfig.KALMAR;
+		return BrokerConfig.LOCAL;
 	}
 
 	public final boolean isDemoMode()

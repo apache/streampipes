@@ -15,7 +15,20 @@ public class ActiveMQPublisher implements IMessagePublisher {
 	public ActiveMQPublisher(String url, String topic) throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
-		this.connection = connectionFactory.createConnection();
+		// TODO fix this 
+		// it works but we need a better solution
+		// we should retry to connect when the service is not available immediately 
+		boolean co = false;
+		do {
+			try {
+				this.connection = connectionFactory.createConnection();
+				co = true;
+			} catch (JMSException e) {
+				System.out.println("Trying to connect");
+			
+			}
+		} while (!co);
+
 		this.session = connection
 				.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		this.producer = session.createProducer(session.createTopic(topic));

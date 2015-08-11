@@ -33,7 +33,7 @@ public class Init implements Runnable {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-		declarers.add(new TwitterStreamProducer());
+//		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new EnrichedEventProducer());
@@ -43,8 +43,8 @@ public class Init implements Runnable {
 		declarers.add(new NYCTaxiProducer());
 //		declarers.add(new ProveITEventProducer());
 		
-		//String zooKeeper = Configuration.getBrokerConfig().getZookeeperUrl();
-		String zooKeeper = "kalmar39.fzi.de:2181";
+		String zooKeeper = Configuration.getBrokerConfig().getZookeeperUrl();
+//		String zooKeeper = "kalmar39.fzi.de:2181";
 		String groupId = "groupId";
 		String[] topic = {
 				"eu.proasense.internal.sp.internal.incoming",
@@ -63,9 +63,9 @@ public class Init implements Runnable {
 				};
 		int threads = 1;
 
-//		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
-//				topic);
-//		example.run(threads);
+		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
+				topic);
+		example.run(threads);
 //	
 		try {
 			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);

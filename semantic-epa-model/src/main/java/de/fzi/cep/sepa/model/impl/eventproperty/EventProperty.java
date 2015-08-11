@@ -56,7 +56,7 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@RdfProperty("sepa:requiresEventPropertyQuality")
+	@RdfProperty("sepa:hasEventPropertyQualityRequirement")
 	List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
 

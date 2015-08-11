@@ -21,8 +21,8 @@ public class EsperConfig {
 	
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)
 	{
-		//return new SEPAWriter(collector);
-		return new TestDrillingWriter();
+		return new SEPAWriter(collector);
+//		return new TestDrillingWriter();
 		//return new Challenge1FileWriter(new DebsOutputParameters("c:\\users\\riemer\\desktop\\debs22"), OutputType.PERSIST);
 	}
 }
