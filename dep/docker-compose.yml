@@ -1,26 +1,26 @@
 backend: 
-  build: backend/
+  build: semantic-epa-backend/
   net: "host"
   ports: 
     - "8080:8080"
   #volumes:
     #- ".:backend"
 sources:
-  build: sources/
+  build: semantic-epa-sources-samples/
   net: "host"
   ports:
     - "8089:8089"
   #volumes:
     #- ".:sources"
 esper:
-  build: esper/
+  build: semantic-epa-esper/
   net: "host"
   ports:
     - "8090:8090"
   #volumes:
     #- ".:esper"
 actions:
-  build: actions/
+  build: semantic-epa-actions-samples/
   net: "host"
   ports:
     - "8091:8091"
