@@ -34,7 +34,7 @@ public class PipelineElement extends AbstractRestInterface {
 	{
 		try {
 			String payload = parseURIContent(uri);
-			return toJson(Operations.verifyAndAddElement(payload));
+			return toJson(Operations.verifyAndAddElement(payload, null));
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));

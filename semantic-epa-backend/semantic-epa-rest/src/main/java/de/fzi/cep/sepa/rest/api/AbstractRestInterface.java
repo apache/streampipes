@@ -6,8 +6,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import de.fzi.cep.sepa.storage.impl.UserStorage;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
@@ -26,6 +28,7 @@ import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.util.Utils;
 
@@ -34,6 +37,8 @@ public abstract class AbstractRestInterface {
 	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
 	protected static PipelineStorage pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
 	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();
+	
+	protected static UserService userService = StorageManager.INSTANCE.getUserService();
 	
 	protected <T> String toJson(T object)
 	{
@@ -77,11 +82,20 @@ public abstract class AbstractRestInterface {
 		return toJson(message);
 	}
 
-	protected String getCurrentUsername() {
+	protected String getCurrentUsername() throws AuthenticationException {
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			return SecurityUtils.getSubject().getPrincipal().toString();
 		}
-		return null;
+		throw new AuthenticationException("Not authenticated");
+	}
+	
+	protected boolean authorized(String username)
+	{
+		return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
+	}
+	
+	protected boolean isAuthenticated() {
+		return SecurityUtils.getSubject().isAuthenticated();
 	}
 	
 }

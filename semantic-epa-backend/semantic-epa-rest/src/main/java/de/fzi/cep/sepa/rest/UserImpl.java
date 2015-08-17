@@ -1,16 +1,18 @@
 package de.fzi.cep.sepa.rest;
 
 import com.google.gson.JsonArray;
+
 import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.client.user.Element;
 import de.fzi.cep.sepa.model.client.user.Role;
 import de.fzi.cep.sepa.rest.api.*;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-
 import de.fzi.cep.sepa.storage.impl.UserStorage;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -32,7 +34,6 @@ import java.security.MessageDigest;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,12 +68,8 @@ public class UserImpl extends AbstractRestInterface implements User{
         }
 
         Set<Role> roles = new HashSet<Role>();
-        List<String> pipelines = new ArrayList<>();
-        List<String> sources= new ArrayList<>();
-        List<String> actions = new ArrayList<>();
-        List<String> sepas = new ArrayList<>();
-
-        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(username, "", password, roles, pipelines, sources, sepas, actions);
+  
+        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(username, "", password, roles);
         userStorage.storeUser(user);
         return  toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
     }
@@ -217,7 +214,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     @GET
     @Path("/authc")
     @Produces(MediaType.APPLICATION_JSON)
-    public String isAuthenticated() {
+    public String userAuthenticated() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
         	Notification notification = new Notification(SecurityUtils.getSubject().getPrincipal().toString(), "");
         	return toJson(new SuccessMessage(notification));
