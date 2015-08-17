@@ -25,5 +25,15 @@ public class MonitoringJobTest {
 	{
 //		SepaMonitoringJob monitoringJob = new SepaMonitoringJob(sepaDescription);
 //		JobManager.INSTANCE.addJob(monitoringJob);
+		JobManager.INSTANCE.prepareMonitoring();
+		System.out.println(JobManager.INSTANCE.getCurrentJobs().size());
+		for(;;)
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 	}
 }

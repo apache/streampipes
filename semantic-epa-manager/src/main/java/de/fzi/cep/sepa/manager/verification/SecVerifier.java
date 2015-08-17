@@ -15,7 +15,7 @@ public class SecVerifier extends ElementVerifier<SecDescription> {
 
 
 	@Override
-	protected void store() {
+	protected void store(String username, boolean publicElement) {
 		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
@@ -23,6 +23,7 @@ public class SecVerifier extends ElementVerifier<SecDescription> {
 		}
 */
 		storageApi.storeSEC(elementDescription);
+		userService.addOwnAction(username, elementDescription.getUri(), publicElement);
 	}
 
 	@Override

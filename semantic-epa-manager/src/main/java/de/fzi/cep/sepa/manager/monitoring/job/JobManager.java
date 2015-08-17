@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -13,16 +16,18 @@ public enum JobManager {
 
 	private List<MonitoringJob<?>> currentJobs;
 	
+	private final ScheduledExecutorService scheduler;
+	
 	JobManager()
 	{
 		this.currentJobs = new ArrayList<>();
+		this.scheduler = Executors.newScheduledThreadPool(2);
 	}
 	
 	public void addJob(MonitoringJob<?> job)
 	{
 		currentJobs.add(job);
-		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new MonitoringJobExecutor(job), new Date().getTime(), job.repeatAfter);
+		scheduler.scheduleAtFixedRate(new MonitoringJobExecutor(job), 0, 10, TimeUnit.SECONDS);
 	}
 	
 	public void removeJob(MonitoringJob<?> job)
@@ -30,9 +35,14 @@ public enum JobManager {
 		currentJobs.remove(job);
 	}
 	
+	public List<MonitoringJob<?>> getCurrentJobs()
+	{
+		return currentJobs;
+	}
+	
 	public void prepareMonitoring() {
-		StorageManager.INSTANCE.getStorageAPI().getAllSEPAs().forEach(s -> currentJobs.add(new SepaMonitoringJob(s)));
-		StorageManager.INSTANCE.getStorageAPI().getAllSECs().forEach(s -> currentJobs.add(new SecMonitoringJob(s)));
+		StorageManager.INSTANCE.getStorageAPI().getAllSEPAs().forEach(s -> addJob(new SepaMonitoringJob(s)));
+		StorageManager.INSTANCE.getStorageAPI().getAllSECs().forEach(s -> addJob(new SecMonitoringJob(s)));
 		//TODO: add seps StorageManager.INSTANCE.getStorageAPI().getAllSECs().forEach(s -> currentJobs.add(new SecMonitoringJob(s)));
 	}
 }

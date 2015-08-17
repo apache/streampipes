@@ -23,14 +23,14 @@ public abstract class MonitoringJob<T extends ConsumableSEPAElement> {
 		this.monitoredObject = monitoredObject;
 		this.tasks = new ArrayList<>();
 		this.repeatAfter = repeatAfter;
-		this.elementId = monitoredObject.getElementId();
+		this.elementId = monitoredObject.getUri();
 	}
 	
 	public MonitoringJob(T monitoredObject)
 	{
 		this.monitoredObject = monitoredObject;
 		this.tasks = new ArrayList<>();
-		this.repeatAfter = 600000;
+		this.repeatAfter = 6000;
 	}
 	
 	protected void getDefinedTasks()

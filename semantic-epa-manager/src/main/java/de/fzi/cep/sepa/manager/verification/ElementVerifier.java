@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
@@ -24,6 +23,7 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.service.UserService;
 
 public abstract class ElementVerifier<T extends NamedSEPAElement> {
 
@@ -37,6 +37,7 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 	protected List<Verifier> validators;
 	
 	protected StorageRequests storageApi = StorageManager.INSTANCE.getStorageAPI();
+	protected UserService userService = StorageManager.INSTANCE.getUserService();
 	
 	public ElementVerifier(String graphData, Class<T> elementClass)
 	{
@@ -51,7 +52,7 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		validators.add(new GeneralVerifier<T>(elementDescription));		
 	}
 	
-	protected abstract void store();
+	protected abstract void store(String username, boolean publicElement);
 	
 	protected void verify()
 	{
@@ -59,7 +60,7 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		validators.forEach(validator -> validationResults.addAll(validator.validate()));
 	}
 	
-	public Message verifyAndAdd() throws SepaParseException
+	public Message verifyAndAdd(String username, boolean publicElement) throws SepaParseException
 	{
 		try {
 			this.elementDescription = transform();
@@ -70,7 +71,7 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		verify();
 		if (isVerifiedSuccessfully())
 		{
-			store();
+			store(username, publicElement);
 			return successMessage();
 		}
 		else return errorMessage();

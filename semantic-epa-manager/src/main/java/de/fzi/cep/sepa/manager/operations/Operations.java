@@ -34,9 +34,14 @@ public class Operations {
 		.getPipelineModificationMessage();
 	}
 	
-	public static Message verifyAndAddElement(String graphData) throws SepaParseException
+	public static Message verifyAndAddElement(String graphData, String username) throws SepaParseException
 	{
-		return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd();
+		return verifyAndAddElement(graphData, username, false);
+	}
+	
+	public static Message verifyAndAddElement(String graphData, String username, boolean publicElement) throws SepaParseException
+	{
+		return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd(username, publicElement);
 	}
 	
 	public static RecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException

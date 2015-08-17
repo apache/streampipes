@@ -44,10 +44,10 @@ public class GetDescriptionTask extends TaskDefinition {
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			return errorMsg(TASK_NAME, "Client Protocol Exception");
+			return errorMsg(TASK_NAME, e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
-			return errorMsg(TASK_NAME, "");
+			return errorMsg(TASK_NAME, e.getMessage());
 		}
 	}
 }
