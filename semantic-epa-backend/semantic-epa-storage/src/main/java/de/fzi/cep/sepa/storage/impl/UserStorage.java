@@ -1,9 +1,8 @@
 package de.fzi.cep.sepa.storage.impl;
 
-import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.user.User;
 import de.fzi.cep.sepa.storage.util.Utils;
+
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,60 +18,14 @@ import java.util.List;
 public class UserStorage {
 
     Logger LOG = LoggerFactory.getLogger(UserStorage.class);
-
-
-    /**
-     * Remove pipeline reference from user.
-     * @param username
-     * @param pipelineId
-     */
-    public void deletePipeline(String username, String pipelineId) {
-        if (checkUser(username)) {
-            User user = getUser(username);
-            user.deletePipeline(pipelineId);
-            updateUser(user);
-        }
-    }
-
-    /**
-     * Adding reference to user pipelines for given pipeline id.
-     * @param pipelineId
-     */
-    public void addPipeline(String username, String pipelineId) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        if (!checkUser(username)) return;
-        User user = getUser(username);
-        user.addPipeline(pipelineId);
-        dbClient.update(user);
-        dbClient.shutdown();
-
-    }
-
-    public void addSource(String username, String elementId) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        if (!checkUser(username)) return;
-        User user = getUser(username);
-        user.addSource(elementId);
-        dbClient.update(user);
-        dbClient.shutdown();
-    }
-
-    public void addAction(String username, String elementId) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        if (!checkUser(username)) return;
-        User user = getUser(username);
-        user.addAction(elementId);
-        dbClient.update(user);
-        dbClient.shutdown();
-    }
-
-    public void addSepa(String username, String elementId) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        if (!checkUser(username)) return;
-        User user = getUser(username);
-        user.addSepa(elementId);
-        dbClient.update(user);
-        dbClient.shutdown();
+    
+    public List<User> getAllUsers()
+    {
+    	CouchDbClient dbClient = Utils.getCouchDbUserClient();
+    	List<User> users = dbClient.view("_all_docs")
+   			  .includeDocs(true)
+   			  .query(User.class);
+    	return users;
     }
 
     public User getUser(String username) {
@@ -94,24 +47,24 @@ public class UserStorage {
         dbClient.update(user);
         dbClient.shutdown();
     }
-
+    
     /**
-     *
-     * @param username
-     * @return True if user exists exactly once, false otherwise
-     */
-    public boolean checkUser(String username) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
-        return users.size() == 1;
-    }
-
-    public static void main(String[] args) {
-        UserStorage stor = new UserStorage();
-        User user = stor.getUser("user");
-        user.deletePipeline("f0471513-7d17-468c-a2fc-8a32aa8b126d");
-        stor.updateUser(user);
-
-    }
+    *
+    * @param username
+    * @return True if user exists exactly once, false otherwise
+    */
+   public boolean checkUser(String username) {
+       CouchDbClient dbClient = Utils.getCouchDbUserClient();
+       List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
+       return users.size() == 1;
+   }
+   
+   public static void main(String[] args) {
+       UserStorage stor = new UserStorage();
+       //User user = stor.getUser("user");
+       //user.deletePipeline("f0471513-7d17-468c-a2fc-8a32aa8b126d");
+       //stor.updateUser(user);
+       System.out.println(stor.getUser("riemer@fzi.de").getUsername());
+   }
 
 }

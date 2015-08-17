@@ -28,6 +28,7 @@ import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
 public enum StorageManager {
@@ -161,6 +162,10 @@ public enum StorageManager {
 	}
 
 	public UserStorage getUserStorageAPI() { return new UserStorage(); }
+	
+	public UserService getUserService() {
+		return new UserService(getUserStorageAPI());
+	}
 
 	public MonitoringDataStorage getMonitoringDataStorageApi()
 	{
