@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.manager.verification;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+
 import org.apache.shiro.SecurityUtils;
 
 public class SecVerifier extends ElementVerifier<SecDescription> {
@@ -29,6 +30,12 @@ public class SecVerifier extends ElementVerifier<SecDescription> {
 	@Override
 	protected void collectValidators() {
 		super.collectValidators();
+	}
+
+
+	@Override
+	protected void update(String username) {
+		storageApi.update(elementDescription);
 	}
 
 }

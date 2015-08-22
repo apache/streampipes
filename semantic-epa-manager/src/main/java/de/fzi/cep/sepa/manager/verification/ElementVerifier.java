@@ -54,6 +54,8 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 	
 	protected abstract void store(String username, boolean publicElement);
 	
+	protected abstract void update(String username);
+	
 	protected void verify()
 	{
 		collectValidators();
@@ -72,6 +74,24 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		if (isVerifiedSuccessfully())
 		{
 			store(username, publicElement);
+			return successMessage();
+		}
+		else return errorMessage();
+		
+	}
+	
+	public Message verifyAndUpdate(String username) throws SepaParseException
+	{
+		try {
+			this.elementDescription = transform();
+		} catch (RDFParseException | UnsupportedRDFormatException
+				| RepositoryException | IOException e) {
+			return new ErrorMessage(NotificationType.UNKNOWN_ERROR.uiNotification());
+		}
+		verify();
+		if (isVerifiedSuccessfully())
+		{
+			update(username);
 			return successMessage();
 		}
 		else return errorMessage();
