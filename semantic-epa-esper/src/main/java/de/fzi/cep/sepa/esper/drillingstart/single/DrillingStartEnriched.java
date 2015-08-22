@@ -30,21 +30,25 @@ public class DrillingStartEnriched extends EsperEventEngine<DrillingStartEnriche
 //		pattern2 +="((s1." +bindingParameters.getTorquePropertyName() +" != s2." +bindingParameters.getTorquePropertyName() +") or (s1." +bindingParameters.getRpmPropertyName() +" != s2." +bindingParameters.getRpmPropertyName() +"))";
 //		
 		
-		String avgRpmTorquePattern = "insert into AvgRpmTorque select avg(rpm*torque) as averageTorque from " +eventInName  +".win:time(5 min)";
+		String avgRpmTorquePattern = "insert into AvgRpmTorque select avg(rpm*torque) as averageTorque from " +eventInName  +".win:time(5 sec)";
 		String lastAvgAfterDrillingStart = "insert into LastAvgRpmTorque select a3.averageTorque as averageTorque from pattern [every d1=DrillingStartDetection -> timer:interval(2 sec)] unidirectional, AvgRpmTorque.std:lastevent() as a3";
 		
 		String selectClauseStop = makeSelectClauseDrillingStop(bindingParameters.getGraph().getInputStreams().get(0).getEventSchema().getEventProperties());
-		String patternDrillingStop = selectClauseStop + " from pattern [ (every (s1=" +eventInName +" -> s2=" +eventInName +"(wob < 1)))] unidirectional, LastAvgRpmTorque.std:lastevent() as s3  "
-				+" where (s1.ram_pos_setpoint > s2.ram_pos_setpoint) and ((s2.rpm*s2.torque) < (s3.averageTorque*0.8))";
+		String patternDrillingStop = "insert into DrillingStopDetection " +selectClauseStop + " from pattern [ (every (s1=" +eventInName +" -> s2=" +eventInName +"(wob < 3)))] unidirectional, LastAvgRpmTorque.std:lastevent() as s3, DrillingStatus.std:lastevent() as s4  "
+				+" where (s1.ram_pos_setpoint > s2.ram_pos_setpoint) and ((s2.rpm*s2.torque) < (s3.averageTorque*0.8)) and s4.drilling=true";
 		
+		String selectDrillingStart = "select * from DrillingStartDetection";
+		String selectDrillingStop = "select * from DrillingStopDetection";
 		
-		String selectDrillingStart = "select * from LastAvgRpmTorque";
-		
+		statements.add("create schema DrillingStatus as (drilling boolean)");
 		statements.add(pattern);
 		statements.add(avgRpmTorquePattern);
 		statements.add(lastAvgAfterDrillingStart);
-		//statements.add(patternDrillingStop);
+		statements.add(patternDrillingStop);
+		statements.add("insert into DrillingStatus select true as drilling from DrillingStartDetection");
+		statements.add("insert into DrillingStatus select false as drilling from DrillingStopDetection");
 		statements.add(selectDrillingStart);
+		statements.add(selectDrillingStop);
 		
 		//statements.add(pattern2);
 		return statements;

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.esper;
+package de.fzi.cep.sepa.esper.writer;
 
 import com.espertech.esper.client.EventBean;
 

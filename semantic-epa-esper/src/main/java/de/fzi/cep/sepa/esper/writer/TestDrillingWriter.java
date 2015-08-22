@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.esper.drillingstart.single;
+package de.fzi.cep.sepa.esper.writer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,6 @@ import java.util.Map;
 import org.apache.commons.collections.MapUtils;
 
 import com.espertech.esper.client.EventBean;
-
-import de.fzi.cep.sepa.esper.Writer;
 
 public class TestDrillingWriter implements Writer {
 

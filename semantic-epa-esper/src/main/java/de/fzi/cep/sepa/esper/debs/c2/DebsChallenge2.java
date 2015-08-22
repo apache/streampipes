@@ -15,14 +15,14 @@ import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
-import de.fzi.cep.sepa.esper.Writer;
-import de.fzi.cep.sepa.esper.debs.c1.Challenge1FileWriter;
 import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
 import de.fzi.cep.sepa.esper.debs.c1.OutputType;
 import de.fzi.cep.sepa.esper.enrich.grid.CellOption;
 import de.fzi.cep.sepa.esper.enrich.grid.GridCalculator;
 import de.fzi.cep.sepa.esper.enrich.grid.GridCalculator2;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichment;
+import de.fzi.cep.sepa.esper.writer.Challenge1FileWriter;
+import de.fzi.cep.sepa.esper.writer.Writer;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 
 public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{

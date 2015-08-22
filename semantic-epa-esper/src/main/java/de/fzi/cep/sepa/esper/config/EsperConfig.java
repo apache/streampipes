@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.esper.config;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
-import de.fzi.cep.sepa.esper.SEPAWriter;
-import de.fzi.cep.sepa.esper.Writer;
-import de.fzi.cep.sepa.esper.debs.c1.Challenge1FileWriter;
 import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
 import de.fzi.cep.sepa.esper.debs.c1.OutputType;
-import de.fzi.cep.sepa.esper.drillingstart.single.TestDrillingWriter;
+import de.fzi.cep.sepa.esper.writer.Challenge1FileWriter;
+import de.fzi.cep.sepa.esper.writer.SEPAWriter;
+import de.fzi.cep.sepa.esper.writer.TestDrillingWriter;
+import de.fzi.cep.sepa.esper.writer.Writer;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 
 public class EsperConfig {

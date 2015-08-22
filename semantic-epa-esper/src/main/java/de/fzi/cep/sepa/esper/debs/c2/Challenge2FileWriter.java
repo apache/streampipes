@@ -3,8 +3,8 @@ package de.fzi.cep.sepa.esper.debs.c2;
 import com.espertech.esper.client.EventBean;
 import com.google.gson.Gson;
 
-import de.fzi.cep.sepa.esper.Writer;
 import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
+import de.fzi.cep.sepa.esper.writer.Writer;
 
 public class Challenge2FileWriter implements Writer {
 

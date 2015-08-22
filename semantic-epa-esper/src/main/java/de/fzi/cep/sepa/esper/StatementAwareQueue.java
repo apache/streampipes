@@ -2,6 +2,8 @@ package de.fzi.cep.sepa.esper;
 
 import com.espertech.esper.client.EventBean;
 
+import de.fzi.cep.sepa.esper.writer.Writer;
+
 public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{
 
 	private int counter = 0;

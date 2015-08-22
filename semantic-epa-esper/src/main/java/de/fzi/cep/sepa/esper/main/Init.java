@@ -67,7 +67,7 @@ public class Init implements Runnable {
 		new Thread(new EsperEngineSettings()).start();
 		
 		try {
-			ModelSubmitter.submitAgent(declarers, EsperConfig.serverUrl, 8090);
+			ModelSubmitter.submitAgent(declarers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

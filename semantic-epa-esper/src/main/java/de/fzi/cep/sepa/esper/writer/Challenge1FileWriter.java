@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.esper.debs.c1;
+package de.fzi.cep.sepa.esper.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,13 @@ import org.apache.commons.io.FileUtils;
 import com.espertech.esper.client.EventBean;
 import com.google.gson.Gson;
 
-import de.fzi.cep.sepa.esper.Writer;
+import de.fzi.cep.sepa.esper.debs.c1.CellData;
+import de.fzi.cep.sepa.esper.debs.c1.CellDataComparator;
+import de.fzi.cep.sepa.esper.debs.c1.DebsOutput;
+import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
+import de.fzi.cep.sepa.esper.debs.c1.OutputType;
+import de.fzi.cep.sepa.esper.debs.c1.StatusEvent;
+import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
 import de.fzi.cep.sepa.esper.debs.c2.CellDataBest;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2;
 import de.fzi.cep.sepa.esper.debs.c2.DebsOutputC2;

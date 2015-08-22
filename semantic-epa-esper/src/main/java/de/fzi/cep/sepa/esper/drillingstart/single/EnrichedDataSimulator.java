@@ -86,7 +86,7 @@ public class EnrichedDataSimulator implements Runnable {
 						long nextTime = ((long) obj.get("time") / 1000);
 						if (nextTime > currentTime)
 						{
-							//runtime.sendEvent(new CurrentTimeEvent(nextTime));
+							runtime.sendEvent(new CurrentTimeEvent(nextTime));
 							currentTime = nextTime;
 						}
 						sender.sendEvent(obj);
