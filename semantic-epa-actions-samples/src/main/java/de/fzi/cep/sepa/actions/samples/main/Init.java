@@ -50,7 +50,7 @@ public class Init implements Runnable {
 		//consumers.add(new HistogramController());
 		
 		try {
-			ModelSubmitter.submitConsumer(consumers, Configuration.getInstance().ACTION_BASE_URL, 8091);
+			ModelSubmitter.submitConsumer(consumers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
