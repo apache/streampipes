@@ -1,10 +1,14 @@
 package de.fzi.cep.sepa.desc;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
@@ -27,9 +31,9 @@ public class ModelSubmitter {
 	private static List<RestletConfig> config = config();
 	
 	public static boolean submitProducer(
-			List<SemanticEventProducerDeclarer> producers, String baseUri,
-			int port) throws Exception {
-					
+			List<SemanticEventProducerDeclarer> producers) throws Exception {
+		
+		String baseUri = getBaseUri(Configuration.getInstance().SOURCES_PORT);
 		addConfig("", new EventProducerWelcomePage(baseUri, producers));
 
 		for (SemanticEventProducerDeclarer producer : producers) {
@@ -46,13 +50,12 @@ public class ModelSubmitter {
 			addConfig(currentPath, new SepRestlet(sep));
 		}
 
-		return start(port);
+		return start(Configuration.getInstance().SOURCES_PORT);
 	}
 
 	public static boolean submitAgent(
-			List<SemanticEventProcessingAgentDeclarer> declarers,
-			String baseUri, int port) throws Exception {
-		
+			List<SemanticEventProcessingAgentDeclarer> declarers) throws Exception {
+		String baseUri = getUrl() +Configuration.getInstance().ESPER_PORT;
 		addConfig("", new EventProcessingAgentWelcomePage(baseUri, declarers));
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
@@ -61,12 +64,12 @@ public class ModelSubmitter {
 			addConfig(sepa.getPathName(), new SepaRestlet(sepa, declarer));
 		}
 
-		return start(port);
+		return start(Configuration.getInstance().ESPER_PORT);
 	}
 
 	public static boolean submitConsumer(
-			List<SemanticEventConsumerDeclarer> declarers, String baseUri,
-			int port) throws Exception {
+			List<SemanticEventConsumerDeclarer> declarers) throws Exception {
+		String baseUri = getBaseUri(Configuration.getInstance().ACTION_PORT);
 		addConfig("", new EventConsumerWelcomePage(baseUri, declarers));
 
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
@@ -77,7 +80,22 @@ public class ModelSubmitter {
 			addConfig(pathName, new SecRestlet(sec, declarer));
 		}
 
-		return start(port);
+		return start(Configuration.getInstance().ACTION_PORT);
+	}
+	
+	private static String getUrl() {
+		InetAddress addr;
+		try {
+			addr = InetAddress.getLocalHost();
+			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
+		} catch (UnknownHostException e) {
+			return "http://localhost:";
+		}	
+	}
+	
+	private static String getBaseUri(int port)
+	{
+		return getUrl() +port;
 	}
 	
 	private static List<RestletConfig> config()
