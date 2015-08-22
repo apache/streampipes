@@ -16,6 +16,8 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.SepaElementOperation;
@@ -31,8 +33,9 @@ public class SepaImpl extends AbstractRestInterface implements SepaElementOperat
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String getAvailable(@PathParam("username") String username) {
-		List<SepaDescription> secs = Filter.byUri(requestor.getAllSEPAs(), userService.getAvailableSepaUris(username));
-		return toJson(ClientModelTransformer.toSEPAClientModel(secs));
+		List<SepaDescription> sepas = Filter.byUri(requestor.getAllSEPAs(), userService.getAvailableSepaUris(username));
+		List<SEPAClient> sepaClientElements = ClientModelTransformer.toSEPAClientModel(sepas);
+		return toJson(Filter.addFavorites(sepaClientElements,userService.getFavoriteSepaUris(username)));
 	}
 	
 	@GET
@@ -51,8 +54,9 @@ public class SepaImpl extends AbstractRestInterface implements SepaElementOperat
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String getOwn(@PathParam("username") String username) {
-		List<SepaDescription> secs = Filter.byUri(requestor.getAllSEPAs(), userService.getOwnSepaUris(username));
-		return toJson(ClientModelTransformer.toSEPAClientModel(secs));
+		List<SepaDescription> sepas = Filter.byUri(requestor.getAllSEPAs(), userService.getOwnSepaUris(username));
+		List<SEPAClient> sepaClientElements = ClientModelTransformer.toSEPAClientModel(sepas);
+		return toJson(Filter.addFavorites(sepaClientElements, userService.getFavoriteSepaUris(username)));
 	}
 
 	@POST
@@ -60,8 +64,8 @@ public class SepaImpl extends AbstractRestInterface implements SepaElementOperat
 	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String addFavorite(@PathParam("username") String username, @FormParam("elementUri") String elementUri) {
-		userService.addSepaAsFavorite(username, elementUri);
+	public String addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
+		userService.addSepaAsFavorite(username, decode(elementUri));
 		return toJson(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -71,7 +75,7 @@ public class SepaImpl extends AbstractRestInterface implements SepaElementOperat
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		userService.removeSepaFromFavorites(username, elementUri);
+		userService.removeSepaFromFavorites(username, decode(elementUri));
 		return toJson(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	

@@ -17,6 +17,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.SepaElementOperation;
@@ -33,7 +34,8 @@ public class SourceImpl extends AbstractRestInterface implements SepaElementOper
 	@Override
 	public String getAvailable(@PathParam("username") String username) {
 		List<SepDescription> seps = Filter.byUri(requestor.getAllSEPs(), userService.getAvailableSourceUris(username));
-		return toJson(ClientModelTransformer.toSourceClientModel(seps));
+		List<SourceClient> sourceClientElements = ClientModelTransformer.toSourceClientModel(seps);
+		return toJson(Filter.addFavorites(sourceClientElements, userService.getFavoriteSourceUris(username)));
 	}
 	
 	@GET
@@ -53,7 +55,8 @@ public class SourceImpl extends AbstractRestInterface implements SepaElementOper
 	@Override
 	public String getOwn(@PathParam("username") String username) {
 		List<SepDescription> seps = Filter.byUri(requestor.getAllSEPs(), userService.getOwnSourceUris(username));
-		return toJson(ClientModelTransformer.toSourceClientModel(seps));
+		List<SourceClient> sourceClientElements = ClientModelTransformer.toSourceClientModel(seps);
+		return toJson(Filter.addFavorites(sourceClientElements, userService.getFavoriteSourceUris(username)));
 	}
 
 	@POST
@@ -61,8 +64,8 @@ public class SourceImpl extends AbstractRestInterface implements SepaElementOper
 	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String addFavorite(@PathParam("username") String username, @FormParam("elementUri") String elementUri) {
-		userService.addSourceAsFavorite(username, elementUri);
+	public String addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
+		userService.addSourceAsFavorite(username, decode(elementUri));
 		return toJson(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -72,7 +75,7 @@ public class SourceImpl extends AbstractRestInterface implements SepaElementOper
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		userService.removeSourceFromFavorites(username, elementUri);
+		userService.removeSourceFromFavorites(username, decode(elementUri));
 		return toJson(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	

@@ -77,6 +77,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Override
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public String doLoginUser(@FormParam("username") String username, @FormParam("password") String password) {
 

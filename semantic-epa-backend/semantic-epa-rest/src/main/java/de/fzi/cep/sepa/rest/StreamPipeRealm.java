@@ -67,15 +67,15 @@ public  class StreamPipeRealm implements Realm {
         if (authenticationToken instanceof  UsernamePasswordToken) {
             CouchDbClient dbClient = de.fzi.cep.sepa.storage.util.Utils.getCouchDbUserClient();
             try {
-                String username = ((UsernamePasswordToken) authenticationToken).getUsername();
-                List<JsonObject> users = dbClient.view("users/password").key(username).includeDocs(true).query(JsonObject.class);
+                String email = ((UsernamePasswordToken) authenticationToken).getUsername();
+                List<JsonObject> users = dbClient.view("users/password").key(email).includeDocs(true).query(JsonObject.class);
                 if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
                 JsonObject user = users.get(0);
                 String password = user.get("password").getAsString();
 
                 SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
                 SimplePrincipalCollection principals = new SimplePrincipalCollection();
-                principals.add(username, this.getName());
+                principals.add(email, this.getName());
 
                 LOG.info(principals.toString());
 

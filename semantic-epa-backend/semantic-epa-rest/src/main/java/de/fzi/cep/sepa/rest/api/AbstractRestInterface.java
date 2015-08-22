@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 import de.fzi.cep.sepa.storage.impl.UserStorage;
 
@@ -39,6 +40,11 @@ public abstract class AbstractRestInterface {
 	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();
 	
 	protected static UserService userService = StorageManager.INSTANCE.getUserService();
+	
+	protected <T> T fromJson(String payload, Class<T> clazz)
+	{
+		return Utils.getGson().fromJson(payload, clazz);
+	}
 	
 	protected <T> String toJson(T object)
 	{
@@ -96,6 +102,10 @@ public abstract class AbstractRestInterface {
 	
 	protected boolean isAuthenticated() {
 		return SecurityUtils.getSubject().isAuthenticated();
+	}
+	
+	protected String decode(String encodedString) {
+		return URLDecoder.decode(encodedString);
 	}
 	
 }
