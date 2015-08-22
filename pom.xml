@@ -71,6 +71,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-repository-manager</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-queryresultio-sparqljson</artifactId>
 				<version>${sesame.version}</version>
 			</dependency>
@@ -89,7 +94,7 @@
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>
 		<!-- <module>semantic-epa-storm</module> -->
-<!-- 		<module>semantic-epa-algorithms-samples</module> -->
+		<!-- <module>semantic-epa-algorithms-samples</module> -->
 	</modules>
 
 	<!-- Build Settings -->
@@ -162,12 +167,12 @@
 			<id>apache</id>
 			<url>https://repository.apache.org/content/repositories/releases/</url>
 		</repository>
-		
-		<repository>    
-            <id>archiva.public</id>
-            <name>Nissatech Public Repository</name>
-            <url>http://maven.nissatech.com/repository/public/</url>
-        </repository>
+
+		<repository>
+			<id>archiva.public</id>
+			<name>Nissatech Public Repository</name>
+			<url>http://maven.nissatech.com/repository/public/</url>
+		</repository>
 	</repositories>
 
 	<distributionManagement>
