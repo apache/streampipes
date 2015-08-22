@@ -6,7 +6,8 @@ public enum BrokerConfig {
 	KALMAR("kalmar39.fzi.de", 9092, "kalmar39.fzi.de", 2181, "tcp://localhost", 61616),
 	NISSATECH_EXTERNAL("89.216.116.44", 9092, "89.216.116.44", 2181, "tcp://localhost", 61616),
 	NISSATECH_INTERNAL("192.168.1.111", 9092, "192.168.1.111", 2181, "tcp://localhost", 61616),
-	ALEKSANDAR_UNINOVA("10.172.67.55", 9092, "10.172.67.55", 2181, "tcp://localhost", 61616);
+	ALEKSANDAR_UNINOVA("10.172.67.55", 9092, "10.172.67.55", 2181, "tcp://localhost", 61616),
+	CONFIGURED(Configuration.getInstance().KAFKA_HOST, Configuration.getInstance().KAFKA_PORT, Configuration.getInstance().ZOOKEEPER_HOST, Configuration.getInstance().ZOOKEEPER_PORT, Configuration.getInstance().JMS_PROTOCOL +"://" +Configuration.getInstance().JMS_HOST, Configuration.getInstance().JMS_PORT);
 	
 	private String kafkaHost;
 	private int kafkaPort;
