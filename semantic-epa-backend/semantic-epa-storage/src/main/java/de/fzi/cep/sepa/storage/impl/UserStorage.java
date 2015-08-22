@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User Storage.
@@ -25,7 +26,7 @@ public class UserStorage {
     	List<User> users = dbClient.view("_all_docs")
    			  .includeDocs(true)
    			  .query(User.class);
-    	return users;
+    	return users.stream().filter(u -> (u.getUsername() != null)).collect(Collectors.toList());
     }
 
     public User getUser(String username) {

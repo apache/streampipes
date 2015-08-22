@@ -3,7 +3,9 @@ package de.fzi.cep.sepa.storage.util;
 import java.util.List;
 
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.input.Option;
 
@@ -29,26 +31,35 @@ public class Utils {
 	
 	public static CouchDbClient getCouchDbPipelineClient()
 	{
-		CouchDbClient dbClient = new CouchDbClient("couchdb-pipeline.properties");
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_PIPELINE_DB));
 		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbConnectionClient()
 	{
-		CouchDbClient dbClient = new CouchDbClient("couchdb-connection.properties");
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_CONNECTION_DB));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbUserClient()
 	{
-		CouchDbClient dbClient = new CouchDbClient("couchdb-users.properties");
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_USER_DB));
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbMonitoringClient()
 	{
-		CouchDbClient dbClient = new CouchDbClient("couchdb-monitoring.properties");
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_MONITORING_DB));
 		return dbClient;
+	}
+	
+	private static CouchDbProperties props(Configuration cfg, String dbname)
+	{
+		return new CouchDbProperties(dbname, true, cfg.COUCHDB_PROTOCOL, cfg.COUCHDB_HOSTNAME, cfg.COUCHDB_PORT, null, null);	
 	}
 }

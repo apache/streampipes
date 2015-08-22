@@ -191,13 +191,14 @@ public class UserService {
     	return userStorage.getUser(username).getPreferredActions();
     }
     
-    public List<String> getAvailableActionUris(String username)
+    public List<String> getAvailableActionUris(String email)
     {
-    	List<String> actions = new ArrayList<>(getOwnActionUris(username));
+    	List<String> actions = new ArrayList<>(getOwnActionUris(email));
+    	System.out.println(userStorage.getAllUsers().size());
 		userStorage
 				.getAllUsers()
 				.stream()
-				.filter(u -> !(u.getUsername().equals(username)))
+				.filter(u -> !(u.getEmail().equals(email)))
 				.map(u -> u.getOwnActions().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(actions::addAll); 
 		return actions;
     }
@@ -255,7 +256,7 @@ public class UserService {
    
    public static void main(String[] args)
    {
-	   System.out.println(new UserService(StorageManager.INSTANCE.getUserStorageAPI()).getOwnActionUris("riemer@fzi.de"));
+	   System.out.println(new UserService(StorageManager.INSTANCE.getUserStorageAPI()).getAvailableActionUris("riemer@fzi.de"));
    }
 
 }
