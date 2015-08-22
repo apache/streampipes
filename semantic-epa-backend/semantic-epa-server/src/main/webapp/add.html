@@ -1,0 +1,35 @@
+<div flex layout="row" layout-align="center center">
+	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
+		class="md-whiteframe-z2">
+		<md-content class="md-padding">
+		<h1>Add Elements</h1>
+		<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+			<form name="addElementForm" ng-submit="add()" role="form">
+				<md-input-container> <label>One or more URLs, seperated by blank</label> <textarea
+					columns="1" ng-model="elements" required></textarea> </md-input-container>
+					<md-input-container flex> <md-checkbox 
+					ng-model="marketplace"> Add element to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
+				<div class="form-actions">
+				<md-button class="md-accent md-raised" type="submit"
+					ng-disabled="addElementForm.$pristine || addElementForm.$invalid || loading">Add Element</md-button>
+				</div>
+			</form>
+		</div>
+		</md-content>
+	</div>
+</div>
+<div flex layout="row" layout-align="center center" ng-repeat = "result in results">
+	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
+		class="md-whiteframe-z2">
+		
+		<md-content class="md-padding">
+		<div flex layout="row">{{result.elementId}} <md-progress-circular class="md-accent" style="width:24px;height:24px;" md-mode="indeterminate" ng-show="result.loading"></md-progress-circular>
+		<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="!result.loading && result.success"></md-icon>
+		<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!result.loading && !(result.success)"></md-icon>
+			    		
+		</div>
+		<div ng-show="!result.loading">{{result.msg}}</div>
+		</md-content>
+	</div>
+	</div>
+

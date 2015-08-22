@@ -45,12 +45,7 @@ function init(type) {
         success: function (data) {
             state.sources = data;
             initSources(data);
-        },
-		statusCode: {
-			403: function() {
-			  window.location="login.html";
-			}
-		}
+        }
     });
 
 
@@ -113,19 +108,7 @@ jsPlumb.ready(function (e) {
             .animate("200");
     });
 
-    //Bind click handler--------------------------------
-    $("#pipelineTableBody").on("click", "tr", function () {
-        if (!$(this).data("active") || $(this).data("active") == undefined) {
-            $(this).data("active", true);
-            $(this).addClass("info");
-            $("#pipelineTableBody").children().not(this).removeClass("info");
-            $("#pipelineTableBody").children().not(this).data("active", false);
-            clearPipelineDisplay();
-            displayPipeline($(this).data("JSON"));
-        } else {
-
-        }
-    });
+    
 
     $('a[data-toggle="tab"]')
         .on('hide.bs.tab', function (e) {
@@ -195,7 +178,7 @@ function initSources(data) {
             .click(displayStreams)
             .on("contextmenu", staticContextMenu)
             .appendTo('#sources');
-
+       
         if (json.iconUrl == null) {//No Icon Path found in JSON
             addTextIconToElement($newSource, $newSource.data("JSON").name);
         } else {//Icon Path
@@ -778,91 +761,9 @@ function debugCircleMenuConsole(){
     console.log($el.data('plugin_circleMenu-pos-x'));
 }
 
-function add() {
-    var url;
-    var type = $('input[name="type-radios"]:checked').val();
-    /*switch (type) {
-        case "1":
-            url = standardUrl + "sources";
-            break;
-        case "2":
-            url = standardUrl + "sepas";
-            break;
-        case "3":
-            url = standardUrl + "actions";
-    }*/
-    url = standardUrl +"element";
-
-    var str = $('#addText').val();
-    if (str == "") {
-        toastRightTop("error", "Please enter a URI");
-    } else {
-        var uris = str.split(" ");
-
-        addElements(url, uris, 0, type);
-        // for (var i = 0, uri; uri = uris[i]; i++){
-        // if (i+1 == uris.length){
-        // addElement(url, uri, i, type, true);
-        // }else{
-        // addElement(url, uri, i, type, false);
-        // }
-        // }
-    }
-}
-
-function addElements(url, uris, i, type) {
-    if (i == uris.length) {
-
-        switch (type) {
-            case "1":
-                refresh("Proa");
-                break;
-            case "2":
-                refreshSepas();
-                break;
-            case "3":
-                refreshActions();
-        }
-        return;
-    } else {
-        var uri = uris[i];
-        var id = "sse" + i;
-        $("<div>")
-            .attr("id", id)
-            .text(uri)
-            .addClass("sse-working")
-            .appendTo("#sses");
-        uri = encodeURIComponent(uri);
-
-        var id = "#sse" + i;
-        console.log(url);
-        console.log(uri);
-        $.ajax({
-            url: url,
-            data: "uri=" + uri,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-
-                $(id)
-                    .removeClass("sse-working")
-                    .addClass("sse-success");
-                toastRightTop("success", data.notifications[0].description);
 
 
-            },
-            error: function (data) {
-                $(id)
-                    .removeClass("sse-working")
-                    .addClass("sse-error");
-                toastRightTop("error", data.notifications[0].description);
-            }
-        }).then(function () {
-            addElements(url, uris, ++i, type);
-        });
-    }
 
-}
 
 
 function manage(type) {
@@ -953,10 +854,7 @@ function getElementIconText(string){
             result += word.charAt(0);
         });
     }
-
-
     return result.toUpperCase();
-
 }
 
 

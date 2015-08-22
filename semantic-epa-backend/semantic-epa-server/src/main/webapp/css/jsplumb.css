@@ -118,15 +118,14 @@ body {
 }
 
  #main {  
-  margin-top: 106px;  
-  font-size: 80%;    
-  width: 80%;
+  margin-top: 30px;  
+  font-size: 100%;    
+  width: 90%;
   margin-left:auto;
   margin-right: auto;  
   height: 600px;
-  text-align: center;
   position: relative;
-  max-width: 1200px;
+  max-width: 1600px;
   max-height: 1000px;
 }
 

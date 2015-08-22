@@ -22,24 +22,28 @@
 	<script type="text/javascript" src="js/flowtype.js"></script>
 	<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="http://francisshanahan.com/identicon5/jquery.identicon5.js"></script>
 	<script type="text/javascript" src="js/jQuery.circleMenu.js"></script>
 	<script type="text/javascript" src="js/jstree.min.js"></script>
 	<script type="text/javascript" src="js/utilObjects.js"></script>
 	<script type="text/javascript" src="js/ContextMenuHandler.js"></script>
 	<script type="text/javascript" src="js/Block.js"></script>
-	<script type="text/javascript" src="js/auth.js"></script>
 
 	<!-- Angular Material Dependencies -->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-aria.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-aria.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-cookies.js"></script>
+	<script type="text/javascript" src="js/loading-bar.min.js"></script>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 
 	<link rel="stylesheet" href="css/jsplumb.css"/>
 	<link rel="stylesheet" href="css/toastr.css"/>
+	<link rel="stylesheet" href="css/loading-bar.min.css"/>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -48,6 +52,7 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic" />
+	
 
 	<script type="text/javascript">
 		var domain = "";
@@ -56,406 +61,81 @@
 		var currentTutorialPage;
 		var state = new State();
 		var debug = false;
-
-		$(init("Proa"));
-
 	</script>
 	<script type="text/javascript" src="js/ontology.js"></script>
 </head>
 
 <body ng-controller="AppCtrl" layout="row">
-<!-- Toolbar -->
-<md-sidenav ng-hide="true" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-lg')">
-	<md-toolbar class="md-default-theme ">
-		<div layout="row" layout-align="start center">
-			<span class="toolbar-icon-container">
-				<img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon">
-			</span>
-			<h1 class="md-toolbar-tools">StreamPipes</h1> <!--{{selectedmodule}}-->
-		</div>
-
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" id ="topDiv">
+	<md-toolbar layout="row" class="md-whiteframe-z1 md-toolbar-tools">
+			<md-button>
+				<a href="#">StreamStory</a>
+			</md-button>
+			<md-button>
+				<a href="#">StreamPipes</a>
+			</md-button>
+			<md-button>
+				<a href="#">PANDDA</a>
+			</md-button>
+			<md-button>
+				<a href="#">HIPPO</a>
+			</md-button>
+			<span flex></span>
 	</md-toolbar>
-	<md-content layout-padding ng-controller="LeftCtrl">
-		<md-list>
-			<md-list-item>
-				<md-button>
-					TEST
-				</md-button>
-			</md-list-item>
-			<md-list-item>
-				<md-button>
-					TEST2
-				</md-button>
-			</md-list-item>
-		</md-list>
-
-	</md-content>
-</md-sidenav>
-<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
-
-		<md-toolbar layout="row" class="md-whiteframe-z1 md-toolbar-tools">
-
-				<md-button hide-gt-lg class="md-icon-button menu" aria-label="Settings" ng-click="toggleLeft()">
-					<i class="material-icons md-36" >menu</i>
-				</md-button>
-				<md-button>
-					<a href="#">StreamStory</a>
-				</md-button>
-				<md-button>
-					<a href="#">StreamPipes</a>
-				</md-button>
-				<md-button>
-					<a href="#">PANDDA</a>
-				</md-button>
-				<md-button>
-					<a href="#">HIPPO</a>
-				</md-button>
-
-				<span flex></span>
-
-		</md-toolbar>
+	<md-toolbar class="md-primary md-hue-3">
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()" ng-show="authenticated">
+          <i class="material-icons md-36" >menu</i>
+        </md-button>
+        <img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon">
+        <h1 class="md-toolbar-tools">StreamPipes</h1>
+      </div>
+    </md-toolbar>	
+		
 	<md-content flex id="content">
-		<!-- NAVBAR  -->
-
-		<nav class="navbar navbar-default" role="navigation">
-			<div class="container-fluid">
-				<!-- Brand and toggle get grouped for better mobile display -->
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a id="logo-home" class="navbar-brand" href="#" onclick='refresh("Proa", true)'>StreamPipes</a>
-				</div>
-
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav" id="tabs" role="tablist">
-						<li class="active">
-							<a href="#editor" role="tab" data-toggle="tab">Editor</a>
-						</li>
-						<li >
-							<a href="#pipelines" role="tab" data-toggle="tab" onclick="refreshPipelines()">Pipelines</a>
-						</li>
-						<li >
-							<a href="#visualizations" role="tab" data-toggle="tab" onclick="updateViz()">Visualizations</a>
-						</li>
-						<li>
-							<a href="#ontology" role="tab" data-toggle="tab">Ontology Editor</a>
-						</li>
-						<li id="debugTestTab" style="display : none" >
-							<a href="#testTab" role="tab"  data-toggle="tab">Tests</a>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav">
-
-						<li id="options" class=" dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a href="#" onclick="showAdd()">Add...</a>
-								</li>
-								<li>
-									<a href="#" onclick="showManage()">Manage...</a>
-								</li>
-							</ul>
-
-						</li>
-						<p class="navbar-text"><strong>Use-Case:</strong></p>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" id="typeChange">Proasense <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a href="#" onclick=refresh("Proa")>Proasense</a>
-								</li>
-								<li>
-									<a href="#" onclick=refresh("PA")>Personal Assistant</a>
-								</li>
-								<!-- <li class="divider"></li> -->
-
-							</ul>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right ">
-						<li id="tutorial" class="nav navbar-nav">
-							<a href="#" onclick="showTutorial()">Tutorial</a>
-						</li>
-
-						<li id="login" class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><div id="login-label">Login</div> <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li>
-									<a href="#" onclick="attemptLogout()">Logout</a>
-								</li>
-							</ul>
-
-					</ul>
-					</li>
-					<script type="text/javascript">
-						getPrincipalName();
-					</script>
-					</ul>
-
-				</div><!-- /.navbar-collapse -->
-			</div><!-- /.container-fluid -->
-		</nav>
-		<!-- END NAVBAR  -->
-
-		<div class="tab-content content-padding">
-			<div class="tab-pane active" id="editor">
-				<!--<div id="uc-dropdown">
-                    <ul>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong id="typeChange">Proasense <b class="caret"></b></strong> </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="#" onclick=refresh("Proa")>Proasense</a>
-                            </li>
-                            <li>
-                                <a href="#" onclick=refresh("PA")>Personal Assistant</a>
-                            </li>
-                             <li class="divider"></li>
-
-                        </ul>
-                    </li>
-                    </ul>
-                </div>-->
-				<div id ="sources" align="center" class="alpha"></div>
-				<div class="panel-group" id="accordion">
-
-					<div class="panel panel-default">
-						<div class="panel-heading panel-streams">
-							<h4 class="panel-title"><a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne"> Streams </a><!-- <span class="btngroup pull-right">
-							<button type="button" class="btn btn-default btn-xs" onclick=addTo("stream")>
-							<span class="glyphicon glyphicon-plus"></span>
-							</button>
-							<button type="button" class="btn btn-default btn-xs" onclick=manage("stream")>
-							<span class="glyphicon glyphicon-cog"></span>
-							</button>
-							</span> --></h4>
-						</div>
-						<div id="collapseOne" class="panel-collapse collapse">
-							<div class="panel-body">
-								<div id="streams" align="center" class="icon-stands alpha panel-body-streams">
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading panel-sepas">
-							<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a></h4>
-						</div>
-						<div id="collapseTwo" class="panel-collapse collapse">
-							<div class="panel-body">
-								<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">
-
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading panel-actions">
-							<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a></h4>
-						</div>
-						<div id="collapseThree" class="panel-collapse collapse ">
-							<div class="panel-body">
-								<div id="actions" align="center" class="icon-stands alpha panel-body-actions">
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<div id="assembly" class="canvas">
-
-					<span id="clear" class="glyphicon glyphicon-remove"></span>
-					<button type="button" id="submit" class="btn btn-default btn-sm shadow" onclick=submit()>
-						<span class="glyphicon glyphicon-ok"></span> Submit
-					</button>
-
-				</div>
-
-			</div>
-			<div class="tab-pane" id="pipelines" onactivate=getPipelines()>
-				<div class="container-fluid">
-					<div class="row">
-						<h1 class="col-md-4 ">Saved Pipelines</h1>
-					</div>
-					<div class="row">
-						<!-- <ul id="pipelineList" class="list-group col-md-6">
-                        <li class="list-group-item">TestItem1</li>
-                        <li class="list-group-item">TestItem2</li>
-                        <li class="list-group-item">TestItem3</li>
-                        </ul> -->
-						<table class="table table-hover">
-							<thead>
-							<tr>
-								<td><b>#</b></td>
-								<td><b>Pipeline Name</b></td>
-								<td><b>Validation</b></td>
-								<td><b>Status</b></td>
-								<td><b>Options</b></td>
-								<td><b>Delete</b></td>
-								<td><b>Modify</b></td>
-
-							</tr>
-							</thead>
-							<tbody id="pipelineTableBody">
-
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div id="pipelineDisplay" class="">
-					<div id="streamDisplay"></div>
-					<div id="sepaDisplay"></div>
-					<div id="actionDisplay"></div>
-				</div>
-			</div>
-			<!-- <div class="tab-pane" id="visualizations">
-            <div class="container-fluid">
-            <div class="row">
-            <h1 class="col-md-4 ">Visualizations</h1>
-            </div>
-            <div class="row">
-            <div id="vis">
-            <div class="form-group">
-            <label for="brokerUrl">URL</label>
-            <input type="text" class="form-control" id="brokerUrl" placeholder="Broker URL"/>
-            </div>
-            <div class="form-group">
-            <label for="brokerTopic">Topic</label>
-            <input type="text" class="form-control" id="brokerTopic" placeholder="Topic"/>
-            </div>
-            <button id="brokerSubmit" onclick="connect()" type="submit" class="btn btn-default">Subscribe</button>
-            <button id="clearTextarea" onclick="$('#brokerMessages').val('')" type="submit" class="btn btn-default">Clear</button>
-            <textarea id="brokerMessages" class="form-control" rows="20"></textarea>
-            </div>
-            <!--
-            <script type="text/javascript">
-            $("#vis").load("http://localhost:8091/test");
-            </script>
-
-            </div>
-            </div>
-            </div> -->
-			<div class="tab-pane" id="visualizations">
-				<div class="container-fluid">
-					<div class="row">
-						<h1 class="col-md-4 ">Visualizations</h1>
-					</div>
-					<div class="row">
-						<script type="text/javascript">
-							var viz;
-							var url = standardUrl + "visualizations";
-
-							updateViz();
-							function updateViz() {
-								$('#vizControl').empty();
-								$.ajax({
-									dataType : "json",
-									url : url,
-									success : function(data) {
-										var sel = $("<select class='form-control' style='width:100%;font-size:18pt;height:50px;'>").appendTo($('#vizControl'));
-										sel.append($("<option>").text("(Select visualization)"));
-										$(data).each(function() {
-											sel.append($("<option>").attr('value', this.consumerUrl).text(this.pipelineName));
-										});
-										$('select').change(function() {
-											loadViz($(this).children(":selected").attr('value'));
-										});
-
-									},
-									error : function(data) {
-										displayErrors(data);
-									}
-								});
-							}
-
-							function loadViz(vizUrl) {
-								$("#vis").empty();
-								if (vizUrl != 'undefined')
-									$("#vis").load(vizUrl);
-							}
-
-						</script>
-						<div class="row">
-							<div class="col-md-12">
-								<div id="vizControl"></div>
-							</div>
-						</div>
-					</div>
-					<div id="vis"></div>
-				</div>
-			</div>
-			<div class="tab-pane" id="ontology">
-				<div class="container-fluid">
-					<div class="row">
-						<h1 class="col-md-4 ">Background Knowledge</h1>
-					</div>
-					<div class="row"  style="background-color: white; padding:10px;">
-						<ul id="tabs-1" class="nav nav-tabs" data-tabs="tabs">
-							<li class="active"><a href="#types" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/types', 'typeHierarchy')">Types</a></li>
-							<li><a href="#properties" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/properties', 'propertyHierarchy')">Properties</a></li>
-						</ul>
-
-						<div id="my-tab-content" class="tab-content">
-							<div class="tab-pane active" id="types">
-								<div class="col-md-4">
-									<h3>Hierarchy</h3>
-									<div id="typeHierarchy"></div>
-								</div>
-								<div class="col-md-6">
-									<h3>Details</h3>
-									<div id="typeHierarchyDetails"></div>
-								</div>
-
-							</div>
-							<div class="tab-pane" id="properties">
-								<div class="col-md-4">
-									<h3>Hierarchy</h3>
-									<div id="propertyHierarchy"></div>
-								</div>
-								<div class="col-md-6">
-									<h3>Details</h3>
-									<div id="propertyHierarchyDetails"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane" id="testTab">
-				<div class="block">
-					<div class="block-name">
-						TestBlock
-					</div>
-					<div class="block-img-container">
-						<img src="img/And_Icon_HQ.png" class="block-img">
-					</div>
-				</div>
-			</div>
-
-
-
-
-
-		</div>
-
+		<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" ng-show="authenticated">
+		  <md-toolbar class="md-tall md-hue-3">
+		    <span flex></span>
+		    <div layout="column" class="md-toolbar-tools-bottom inset">
+		      <user-avatar></user-avatar>
+		      <span></span>
+		      <div>{{username}}</div>
+		      <md-button class="md-accent" ng-click="logout()">Logout</md-button>
+		    </div>
+		  </md-toolbar>
+		  <md-list>
+	        <md-list-item class="md-2-line" ng-repeat="item in menu" role="link" md-ink-ripple ng-click="$parent.go(item.link)">
+	        
+	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>     
+	          <div class="md-list-item-text">         
+	            <span class="md-body-2">{{item.title}}</span>
+	          </div>
+	       
+	        </md-list-item>
+	        <md-divider></md-divider>
+	        <md-subheader  class="md-no-sticky">Management</md-subheader>
+	        <md-list-item class="md-2-line" ng-repeat="item in admin" role="link" md-ink-ripple ng-click="$parent.go(item.link)">
+	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
+	          <div class="md-list-item-text">	        
+	            <span class="md-body-2">{{item.title}}</span>
+	          </div>
+	        </md-list-item>
+	        <md-divider></md-divider>
+	        <md-subheader  class="md-no-sticky">Help</md-subheader>
+	        <md-list-item class="md-2-line" role="link" md-ink-ripple ng-click="$parent.go(tutorial)">
+		        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Tutorial"></md-icon>
+		        <div class="md-list-item-text">
+		            <span class="md-body-2">Tutorial</span>
+		        </div>
+	        </md-list-item>
+		      </md-list>
+	  	</md-sidenav>
+	  	<div id="main">
+	      <div ng-view>
+	      </div>
+	    </div>
 	</md-content>
-
-	</div>
-
-
-
-
-
-
+</div>
 
 
 <ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
@@ -850,9 +530,6 @@
 						</a>
 					</div>
 				</div>
-
-
-
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">
 						Close
