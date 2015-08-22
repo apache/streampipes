@@ -40,5 +40,8 @@ public class JobReport {
 	public String getElementId() {
 		return elementId;
 	}
-	
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}	
 }

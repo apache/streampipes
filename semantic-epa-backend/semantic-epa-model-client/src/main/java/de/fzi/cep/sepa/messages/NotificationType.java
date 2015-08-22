@@ -13,13 +13,18 @@ public enum NotificationType {
 	NO_SEPA_FOUND("No element found", "Could not find any element that matches the output of this element."), 
 	NO_MATCHING_FORMAT_CONNECTION("Not a valid connection", "No supported input format matches produced output format"),
 	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol"),
+	
 	LOGIN_FAILED("Login failed", "Please re-enter your password"),
 	LOGIN_SUCCESS("Login success", ""),
 	REGISTRATION_FAILED("Registration failed", "Please re-enter your password"),
 	REGISTRATION_SUCCESS("Registered user successfully", ""),
+	UNAUTHORIZED("Not authorized", ""),
+	
 	ALREADY_LOGGED_IN("User already logged in", ""),
 	NOT_LOGGED_IN("User not logged in", ""),
 	LOGOUT_SUCCESS("Successfully logged out", ""),
+	
+	OPERATION_SUCCESS("Success", ""),
 	
 	VIRTUAL_SENSOR_STORAGE_SUCCESS("Success", "Pipeline block stored successfully"),
 	
@@ -36,10 +41,11 @@ public enum NotificationType {
 	REMOVED_SOURCE("Source removed", ""),
 	REMOVED_SEPA("Sepa removed", ""),
 
-	ADDED_CONFIGURATION("Configuration added", "");
-
-
-
+	ADDED_CONFIGURATION("Configuration added", ""), 
+	INSTALLATION_SUCCESSFUL("Installation successful", ""), 
+	
+	PROPERTY_FILE_WRITTEN("Writing properties file...", ""), 
+	ADMIN_USER_CREATED("Creating admin user...", "");
 
 
 	private final String title;

@@ -14,6 +14,8 @@ public class Pipeline extends ElementComposition {
 	private boolean running;
 	private long startedAt;
 	
+	private boolean publicElement;
+	
 	public ActionClient getAction() {
 		return action;
 	}
@@ -38,6 +40,14 @@ public class Pipeline extends ElementComposition {
 		this.startedAt = startedAt;
 	}
 	
+	public boolean isPublicElement() {
+		return publicElement;
+	}
+
+	public void setPublicElement(boolean publicElement) {
+		this.publicElement = publicElement;
+	}
+
 	public Pipeline clone()
 	{
 		Pipeline pipeline = new Pipeline();

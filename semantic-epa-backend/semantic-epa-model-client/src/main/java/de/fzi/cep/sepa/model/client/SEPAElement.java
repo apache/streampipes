@@ -19,6 +19,8 @@ public abstract class SEPAElement {
 	protected String elementId;
 	List<String> connectedTo;
 	
+	protected boolean favorite;
+	
 	public SEPAElement()
 	{
 		// gson
@@ -93,9 +95,13 @@ public abstract class SEPAElement {
 	public void setDOM(String dOM) {
 		DOM = dOM;
 	}
-	
-	
-	
 
-	
+	public boolean isFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
+	}
+		
 }
