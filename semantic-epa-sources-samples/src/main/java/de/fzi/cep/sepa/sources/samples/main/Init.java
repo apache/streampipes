@@ -68,7 +68,7 @@ public class Init implements Runnable {
 		example.run(threads);
 //	
 		try {
-			ModelSubmitter.submitProducer(declarers, SourcesConfig.serverUrl, 8089);
+			ModelSubmitter.submitProducer(declarers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
