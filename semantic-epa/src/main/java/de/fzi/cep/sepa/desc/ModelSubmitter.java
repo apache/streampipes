@@ -29,7 +29,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 public class ModelSubmitter {
 	
 	private static List<RestletConfig> config = config();
-	
+		
 	public static boolean submitProducer(
 			List<SemanticEventProducerDeclarer> producers) throws Exception {
 		

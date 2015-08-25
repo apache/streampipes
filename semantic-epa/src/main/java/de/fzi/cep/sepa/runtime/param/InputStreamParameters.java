@@ -1,13 +1,16 @@
 package de.fzi.cep.sepa.runtime.param;
 
+import java.io.Serializable;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 
-public class InputStreamParameters {
+public class InputStreamParameters implements Serializable {
 
+	private static final long serialVersionUID = -240772928651344246L;
+	
 	private EventGrounding eventGrounding;
 	private EventSchema eventSchema;
 	private String inName;

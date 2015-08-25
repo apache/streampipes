@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.runtime.param;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,9 @@ import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
-public abstract class BindingParameters {
+public abstract class BindingParameters implements Serializable {
+
+	private static final long serialVersionUID = 7716492945641719007L;
 
 	protected SepaInvocation graph;
 	
@@ -48,4 +51,5 @@ public abstract class BindingParameters {
 	{
 		return outputStream.getEventSchema().toPropertyList();
 	}
+	
 }
