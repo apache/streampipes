@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.rest.v2;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import de.fzi.cep.sepa.messages.Notification;
@@ -19,6 +22,7 @@ import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.util.JsonSchemaGenerator;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.SepaElementOperation;
 import de.fzi.cep.sepa.storage.filter.Filter;
@@ -104,6 +108,21 @@ public class SourceImpl extends AbstractRestInterface implements SepaElementOper
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
+	}
+	
+	@Path("/jsonschema")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAsJsonSchema() {
+			//return new JsonSchemaGenerator().getJsonSchema(SepDescription.class);
+	
+			try {
+				return FileUtils.readFileToString(new File("c:\\users\\riemer\\.streampipes\\sepa.jsonschema"), "UTF-8");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
 	}
 	
 	@Path("/{elementUri}")

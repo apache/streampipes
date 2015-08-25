@@ -1,14 +1,15 @@
 package de.fzi.cep.sepa.rest.api.v2;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
 
-public interface PipelineOperation extends SepaElementOperation{
+public interface PipelineOperation extends SepaElementOperation {
 	
-	public String start(String pipelineId);
+	public String addPipeline(String username, String pipeline);
 	
-	public String stop(String pipelineId);
+	public String start(String username, String pipelineId);
 	
-	public String recommend(Pipeline pipeline);
+	public String stop(String username, String pipelineId);
 	
-	public String update(Pipeline pipeline);
+	public String recommend(String pipeline);
+	
+	public String update(String pipeline);
 }
