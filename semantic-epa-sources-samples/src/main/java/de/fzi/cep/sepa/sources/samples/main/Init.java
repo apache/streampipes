@@ -63,9 +63,9 @@ public class Init implements Runnable {
 				};
 		int threads = 1;
 
-		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
-				topic);
-		example.run(threads);
+//		KafkaConsumerGroup example = new KafkaConsumerGroup(zooKeeper, groupId,
+//				topic);
+//		example.run(threads);
 //	
 		try {
 			ModelSubmitter.submitProducer(declarers);
