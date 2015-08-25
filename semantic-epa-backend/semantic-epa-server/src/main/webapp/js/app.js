@@ -975,6 +975,37 @@ angular
 	    restApi.updateConfiguration = function(config) {
 	    	return $http.put(apiConstants.contextPath +apiConstants.api +"/setup/configuration", config);
 	    }
+	    
+	    restApi.getOwnPipelines = function() {
+	    	return $http.get(urlBase() +"/pipelines");
+	    }
+	    
+	    restApi.storePipeline = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines", pipeline);
+	    }
+	    
+	    restApi.deleteOwnPipeline = function(pipelineId) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/pipelines/" +pipelineId
+	    	})
+	    }
+	    
+	    restApi.recommendPipelineElement = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines/recommend", pipeline);
+	    }
+	    
+	    restApi.updatePartialPipeline = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines/update", pipeline);
+	    }
+	    
+	    restApi.startPipeline = function(pipelineId) {
+	    	return $http.get(urlBase() +"/pipelines" +pipelineId +"/start");
+	    }
+	    
+	    restApi.stopPipeline = function(pipelineId) {
+	    	return $http.get(urlBase() +"/pipelines" +pipelineId +"/stop");
+	    }
 	
 	    return restApi;
 	}]);
