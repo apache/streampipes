@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,11 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SEPAInvocationGraph")
 @Entity
-public class SepaInvocation extends InvocableSEPAElement {
-	
+public class SepaInvocation extends InvocableSEPAElement implements Serializable {
+
+	private static final long serialVersionUID = 865870355944824186L;
+
+
 	@OneToOne (fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:produces")

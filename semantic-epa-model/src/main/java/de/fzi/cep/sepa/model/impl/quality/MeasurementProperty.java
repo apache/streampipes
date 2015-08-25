@@ -13,6 +13,9 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @RdfsClass("ssn:MeasurementProperty")
 @Entity
 public class MeasurementProperty extends UnnamedSEPAElement {
+
+	private static final long serialVersionUID = 8527800469513813552L;
+
 	public MeasurementProperty() {
 		super();
 	}

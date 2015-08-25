@@ -8,17 +8,32 @@
 		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
+	<repositories>
+		<repository>
+			<id>JSONschema4-mapper SNAPSHOTS repository</id>
+			<url>https://raw.github.com/wodzuu/JSONschema4-mapper/mvn-repo/</url>
+		</repository>
+	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jsonSchema</artifactId>
+			<version>2.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>pl.zientarski</groupId>
+			<artifactId>JSONschema4-mapper</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

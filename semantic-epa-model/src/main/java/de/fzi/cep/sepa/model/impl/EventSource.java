@@ -13,6 +13,8 @@ import de.fzi.cep.sepa.model.NamedSEPAElement;
 @Entity
 public class EventSource extends NamedSEPAElement {
 	
+	private static final long serialVersionUID = -6144439857250547201L;
+
 	public EventSource()
 	{
 		super();

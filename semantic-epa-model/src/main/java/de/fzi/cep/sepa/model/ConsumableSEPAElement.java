@@ -16,6 +16,9 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 
+	private static final long serialVersionUID = -6617391345752016449L;
+
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:requires")

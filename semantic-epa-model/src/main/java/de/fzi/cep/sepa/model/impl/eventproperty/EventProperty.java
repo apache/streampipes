@@ -27,6 +27,8 @@ import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 @Entity
 public abstract class EventProperty extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = 7079045979946059387L;
+
 	protected static final String prefix = "urn:fzi.de:sepa:";
 	
 	String propertyId;

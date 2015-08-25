@@ -11,6 +11,9 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @RdfsClass("ssn:Resolution")
 @Entity
 public class Resolution extends EventPropertyQualityDefinition {
+
+	private static final long serialVersionUID = -8794648771727880619L;
+	
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 

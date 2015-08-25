@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class Accuracy extends EventPropertyQualityDefinition {
 	
+	private static final long serialVersionUID = -4368302218285302897L;
+
 	public Accuracy() {
 		super();
 	}

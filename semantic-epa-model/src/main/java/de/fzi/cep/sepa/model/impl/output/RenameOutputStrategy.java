@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class RenameOutputStrategy extends OutputStrategy {
 
+	private static final long serialVersionUID = 7643705399683055563L;
+	
 	@RdfProperty("sepa:eventName")
 	String eventName;
 

@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class FreeTextStaticProperty extends StaticProperty {
 
+	private static final long serialVersionUID = 5029422126802713205L;
+
 	@RdfProperty("sepa:hasValue")
 	String value;
 	

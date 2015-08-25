@@ -22,6 +22,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class EventGrounding extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = 3149070517282698799L;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasProtocol")
 	private List<TransportProtocol> transportProtocols;

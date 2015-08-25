@@ -11,6 +11,9 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @RdfsClass("ssn:MeasurementRange")
 @Entity
 public class MeasurementRange extends EventPropertyQualityDefinition {
+
+	private static final long serialVersionUID = 4853190183770515968L;
+
 	@RdfProperty("sepa:hasMeasurementPropertyMinValue")
 	float minValue;
 

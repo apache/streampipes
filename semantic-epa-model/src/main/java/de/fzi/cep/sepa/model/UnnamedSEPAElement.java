@@ -8,6 +8,8 @@ import com.clarkparsia.empire.annotation.RdfId;
  */
 public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	
+	private static final long serialVersionUID = 8051137255998890188L;
+	
 	@RdfId
 	private String elementName;
 	

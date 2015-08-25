@@ -13,6 +13,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @RdfsClass("sepa:Option")
 @Entity
 public class Option extends UnnamedSEPAElement {
+	
+	private static final long serialVersionUID = 8536995294188662931L;
 
 	@RdfProperty("sepa:hasName")
 	String name;

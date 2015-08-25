@@ -16,6 +16,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public abstract class OutputStrategy extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = 1953204905003864143L;
+	
 	@RdfProperty("sepa:hasName")
 	String name;
 	

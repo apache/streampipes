@@ -16,6 +16,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class MappingPropertyNary extends MappingProperty {
 
+	private static final long serialVersionUID = 7570213252902343160L;
+	
 	@RdfProperty("sepa:mapsTo")
 	List<URI> mapsTo;
 	

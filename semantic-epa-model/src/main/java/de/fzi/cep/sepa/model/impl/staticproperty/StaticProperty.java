@@ -16,6 +16,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public abstract class StaticProperty extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = 2509153122084646025L;
+
 	@RdfProperty("rdfs:label")
 	protected String label;
 	

@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class Precision extends EventPropertyQualityDefinition {
 
+	private static final long serialVersionUID = -1090184880089982077L;
+	
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 

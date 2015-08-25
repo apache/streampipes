@@ -20,6 +20,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 @Entity
 public class AppendOutputStrategy extends OutputStrategy {
 
+	private static final long serialVersionUID = 7202888911899551012L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:appendsProperty")

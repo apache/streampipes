@@ -18,6 +18,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = -8173312776233284351L;
+
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventPropertyQuality")
 	EventPropertyQualityDefinition minimumPropertyQuality;

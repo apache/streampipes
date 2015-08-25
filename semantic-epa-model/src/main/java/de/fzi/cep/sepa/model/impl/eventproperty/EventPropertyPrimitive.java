@@ -24,6 +24,8 @@ import de.fzi.cep.sepa.model.util.ModelUtils;
 @Entity
 public class EventPropertyPrimitive extends EventProperty {
 
+	private static final long serialVersionUID = 665989638281665875L;
+
 	@RdfProperty("sepa:hasPropertyType")
 	String propertyType;
 	

@@ -22,6 +22,8 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 @Entity
 public class EventStream extends NamedSEPAElement {
 
+	private static final long serialVersionUID = -5732549347563182863L;
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventStreamQualityDefinition")

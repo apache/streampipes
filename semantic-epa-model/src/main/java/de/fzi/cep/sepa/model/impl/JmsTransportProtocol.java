@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class JmsTransportProtocol extends TransportProtocol{
 
+	private static final long serialVersionUID = -5650426611208789835L;
+	
 	@RdfProperty("sepa:jmsPort")
 	private int port;
 	

@@ -13,6 +13,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class EventStreamQualityDefinition extends MeasurementProperty {
 
+	private static final long serialVersionUID = 6310763356941481868L;
 
 	public EventStreamQualityDefinition() {
 		super();

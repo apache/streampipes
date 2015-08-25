@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.clarkparsia.empire.SupportsRdfId;
@@ -9,9 +10,11 @@ import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
 /**
  * top-level SEPA element 	
  */
-public class AbstractSEPAElement implements SupportsRdfId {
+public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 
-	SupportsRdfIdImpl myId = new SupportsRdfIdImpl();
+	private static final long serialVersionUID = -8593749314663582071L;
+
+	private transient SupportsRdfIdImpl myId;
 	
 	/**
 	 * the elementId, used as @RdfId for unnamed SEPA elements
@@ -21,6 +24,7 @@ public class AbstractSEPAElement implements SupportsRdfId {
 	public AbstractSEPAElement()
 	{
 		this.elementId = UUID.randomUUID().toString();	
+		myId = new SupportsRdfIdImpl();
 	}
 	
 	

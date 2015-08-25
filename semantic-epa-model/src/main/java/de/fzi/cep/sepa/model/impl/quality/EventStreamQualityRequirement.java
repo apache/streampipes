@@ -18,6 +18,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 
+	private static final long serialVersionUID = 1484115035721357275L;
+
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventStreamQuality")
 	EventStreamQualityDefinition minimumStreamQuality;

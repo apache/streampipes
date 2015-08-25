@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class KafkaTransportProtocol extends TransportProtocol {
 
+	private static final long serialVersionUID = -4067982203807146257L;
+
 	@RdfProperty("sepa:zookeeperHost")
 	private String zookeeperHost;
 	

@@ -23,7 +23,8 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 @Entity
 public class SepaDescription extends ConsumableSEPAElement {
 
-	
+	private static final long serialVersionUID = 3995767921861518597L;
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOutputStrategy")

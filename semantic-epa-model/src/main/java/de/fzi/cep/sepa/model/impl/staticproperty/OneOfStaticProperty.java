@@ -20,6 +20,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class OneOfStaticProperty extends StaticProperty {
 
+	private static final long serialVersionUID = 3483290363677184344L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOption")

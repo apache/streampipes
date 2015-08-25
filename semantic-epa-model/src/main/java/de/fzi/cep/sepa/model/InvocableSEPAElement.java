@@ -14,6 +14,8 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
+	private static final long serialVersionUID = 2727573914765473470L;
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:receives")

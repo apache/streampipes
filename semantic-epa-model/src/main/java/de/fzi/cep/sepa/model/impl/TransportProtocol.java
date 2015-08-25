@@ -16,6 +16,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @MappedSuperclass
 public abstract class TransportProtocol extends UnnamedSEPAElement {
 	
+	private static final long serialVersionUID = 7625791395504335184L;
+
 	@RdfProperty("sepa:brokerHostname")
 	private String brokerHostname;
 	

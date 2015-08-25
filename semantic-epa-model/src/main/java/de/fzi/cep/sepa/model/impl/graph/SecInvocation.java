@@ -17,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 @Entity
 public class SecInvocation extends InvocableSEPAElement{
 
+	private static final long serialVersionUID = -2345635798917416757L;
 	
 	List<String> domains;
 	

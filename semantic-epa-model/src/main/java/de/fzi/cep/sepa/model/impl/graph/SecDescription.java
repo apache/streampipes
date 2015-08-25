@@ -20,6 +20,8 @@ import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 @Entity
 public class SecDescription extends ConsumableSEPAElement{
 	
+	private static final long serialVersionUID = -6553066396392585731L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasDomain")

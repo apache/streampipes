@@ -19,6 +19,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 @Entity
 public class FixedOutputStrategy extends OutputStrategy {
 
+	private static final long serialVersionUID = 812840089727019773L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:producesProperty")

@@ -20,6 +20,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class EventPropertyNested extends EventProperty {
 
+	private static final long serialVersionUID = 6565569954878135195L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasEventProperty")

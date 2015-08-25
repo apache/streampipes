@@ -23,6 +23,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 @Entity
 public class EventSchema extends UnnamedSEPAElement{
 
+	private static final long serialVersionUID = -3994041794693686406L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasEventProperty")

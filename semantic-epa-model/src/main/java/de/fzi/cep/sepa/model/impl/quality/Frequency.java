@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class Frequency extends EventStreamQualityDefinition {
 
+	private static final long serialVersionUID = 8196363710990038633L;
+
 	public Frequency() {
 		super();
 	}

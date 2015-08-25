@@ -12,6 +12,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class Latency extends EventPropertyQualityDefinition {
 
+	private static final long serialVersionUID = -9211064635743833555L;
+	
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 

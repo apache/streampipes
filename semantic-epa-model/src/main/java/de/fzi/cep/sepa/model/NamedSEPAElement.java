@@ -10,6 +10,8 @@ import com.clarkparsia.empire.annotation.RdfProperty;
  */
 public abstract class NamedSEPAElement extends AbstractSEPAElement{
 
+	private static final long serialVersionUID = -98951691820519795L;
+
 	@RdfProperty("sepa:hasName")
 	protected String name;
 	

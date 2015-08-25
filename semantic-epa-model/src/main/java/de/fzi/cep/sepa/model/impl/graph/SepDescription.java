@@ -27,6 +27,8 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 @Entity
 public class SepDescription extends NamedSEPAElement {
 	
+	private static final long serialVersionUID = 5607030219013954697L;
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:produces")

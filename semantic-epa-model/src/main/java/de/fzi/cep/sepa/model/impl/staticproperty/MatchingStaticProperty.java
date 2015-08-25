@@ -14,6 +14,8 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class MatchingStaticProperty extends StaticProperty{
 
+	private static final long serialVersionUID = -6033310221105761979L;
+
 	@RdfProperty("sepa:matchLeft")
 	URI matchLeft;
 	

@@ -21,6 +21,8 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class TransportFormat extends UnnamedSEPAElement {
 	
+	private static final long serialVersionUID = -525073244975968386L;
+	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("rdf:type")

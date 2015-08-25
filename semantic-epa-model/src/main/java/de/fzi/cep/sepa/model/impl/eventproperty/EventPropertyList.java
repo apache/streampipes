@@ -25,6 +25,8 @@ import de.fzi.cep.sepa.model.util.ModelUtils;
 @Entity
 public class EventPropertyList extends EventProperty {
 	
+	private static final long serialVersionUID = -2636018143426727534L;
+	
 	@RdfProperty("sepa:hasEventProperty")
 	@OneToOne (fetch = FetchType.EAGER,
 	   cascade = {CascadeType.PERSIST, CascadeType.MERGE})

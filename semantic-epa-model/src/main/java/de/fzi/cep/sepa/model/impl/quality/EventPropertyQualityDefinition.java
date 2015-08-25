@@ -12,5 +12,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @MappedSuperclass
 @Entity
 public abstract class EventPropertyQualityDefinition extends MeasurementProperty /*implements Comparable<EventPropertyQualityDefinition>*/{
+
+	private static final long serialVersionUID = -3849772043514528797L;
 	
 }
