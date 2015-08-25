@@ -37,6 +37,12 @@
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-cookies.js"></script>
 	<script type="text/javascript" src="js/loading-bar.min.js"></script>
+	<script type="text/javascript" src="js/useravatar.js"></script>
+	<script type="text/javascript" src="js/ObjectPath.js"></script>
+	<script type="text/javascript" src="js/tv4.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-sanitize.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-schema-form/0.8.8/schema-form.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-schema-form/0.8.8/bootstrap-decorator.min.js"></script>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
@@ -61,6 +67,7 @@
 		var currentTutorialPage;
 		var state = new State();
 		var debug = false;
+		
 	</script>
 	<script type="text/javascript" src="js/ontology.js"></script>
 </head>
@@ -97,10 +104,13 @@
 		  <md-toolbar class="md-tall md-hue-3">
 		    <span flex></span>
 		    <div layout="column" class="md-toolbar-tools-bottom inset">
-		      <user-avatar></user-avatar>
-		      <span></span>
-		      <div>{{username}}</div>
-		      <md-button class="md-accent" ng-click="logout()">Logout</md-button>
+		    <div layout layout-sm="column">
+		      <div class="useravatar" user="userInfo"></div> 
+		      <div style="margin-left:10px;margin-right:10px;">{{username}}</div>
+		      </div>
+		      <div style="margin-top:20px;">
+		       <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="logout()">Logout</md-button>
+		       </div>
 		    </div>
 		  </md-toolbar>
 		  <md-list>
@@ -215,69 +225,7 @@
 		</div>
 	</div>
 </div>
-<div id="jsonldModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="jsonld-title"></h4>
-			</div>
-			<div class="modal-body">
-				<p id ="modal-jsonld"></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					Close
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
 
-<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="myModalLabel">Add...</h4>
-			</div>
-			<div class="modal-body">
-				<div class="wrapper">
-					<div style="text-align: center">
-						<p>
-							<strong>Please enter the new element's URI</strong>
-						</p>
-						<div id="addTextInput"  class="input-group">
-							<input id="addText" type="text" placeholder="http://www.example.com/element" class="form-control">
-
-							<!-- <textarea id="addText" type="text" placeholder="http://www.example.com/element" class="form-control" rows="3">
-                             </textarea>  -->
-												<span class="input-group-btn">
-													<button class="btn btn-default" type="button" onclick=add()>
-														Add
-													</button>
-												</span>
-
-						</div><!-- /input-group -->
-					</div><!-- /.col-lg-6 -->
-					<div id="sses" style="text-align: center; margin-top: 10px">
-
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal" >
-						Close
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">

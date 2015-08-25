@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar'])
+    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -87,11 +87,19 @@ angular
                 templateUrl : 'settings.html',
                 controller  : 'SettingsCtrl'
             })
+            .when('/create', {
+                templateUrl : 'create.html',
+                controller  : 'CreateCtrl'
+            })
 	})
     .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi) {
        
     	$scope.toggleLeft = buildToggler('left');
     	
+    	$scope.userInfo = {
+    			Name : "Dominik",
+    			Avatar : null
+    	};
     	    	
 		$rootScope.authenticated = function() {
 			$http.get("/semantic-epa-backend/api/v2/admin/authc")
@@ -176,7 +184,12 @@ angular
                link : '/add',
                title: 'Add element',
                icon: 'content:ic_add_24px'
-             },
+           },
+           {
+               link : '/create',
+               title: 'Create element',
+               icon: 'content:ic_add_24px'
+           },
            {
                link : '/ontology',
                title: 'Ontology Editor',
@@ -730,6 +743,71 @@ angular
 	   };	
 	   
 	   $scope.loadConfig();
+		
+	})
+	.controller('CreateCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
+		
+		$scope.schema = {};
+		
+		
+		
+		$scope.loadSchema = function() {
+			$http.get("http://localhost:8080/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/sources/jsonschema")
+	        .then(
+	          function(response) {
+	        	  $scope.schema = response.data;
+	        	  console.log($scope.schema);
+	          })
+		};
+		
+		$scope.form = [
+		               "name",
+		               "description",
+		               "iconUrl",
+		               {
+		            	   "title" : "Event Streams",
+		            	   "type" : "array",
+		            	   "add" : "Add Event Stream",
+		            	   "key": "eventStreams",
+		            	   "items": [
+		            	             "eventStreams[].name",
+		            	             "eventStreams[].description",
+		            	             "eventStreams[].iconUrl",
+		            	            
+		            	             {
+		            	            	 "title" : "Event Grounding",
+		            	            	 "type": "array",
+		            	            	 "key" : "eventStreams[].eventGrounding",
+		            	            	 "add": "Add Event Grounding",
+		            	                 "remove": "Remove Event Grounding",
+		            	            	 "items" : [
+		            	            	           
+		            	            	            	         "eventStreams[].eventGrounding[].elementName"
+		            	            	            	         
+		            	            	           ]
+		            	            
+		            	             
+		    		               },
+		    		               {
+		            	            	 "title" : "Event Properties",
+		            	            	 "type": "array",
+		            	            	 "key" : "eventStreams[].eventSchema.eventProperties",
+		            	            	 "add": "Add Event Properties",
+		            	                 "remove": "Remove Event Property",
+		            	            	 "items" : [
+		            	            	           
+		            	            	            	         "eventStreams[].eventSchema.eventProperties[].propertyType"
+
+		            	            	           ]
+		            	                         
+		    		               }
+		            	            ]
+		               },
+		               
+	];
+
+		$scope.model = {};
+		$scope.loadSchema();
 		
 	})
     .directive('userAvatar', function() {
