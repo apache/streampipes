@@ -618,8 +618,20 @@ angular
 	.controller('AddCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
 		
 		$scope.elements;
+		$scope.endpointUrl;
+		$scope.endpointData;
 		$scope.results = [];
 		$scope.loading = false;
+		$scope.marketplace = false;
+		
+		$scope.addFromEndpoint = function () {
+			$scope.loading = true;		
+			restApi.addBatch($scope.endpointUrl, true)
+            .success(function (data) {
+            	$scope.loading = false;
+            	console.log(data);
+            })
+		}
 		
 		$scope.add = function () {
 			$scope.loading = true;
@@ -942,6 +954,15 @@ angular
 	    	    method: 'POST',
 	    	    url: urlBase() + "/element",
 	    	    data: $.param({uri: elementUri, publicElement: ispublic}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.addBatch = function(elementUris, ispublic) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/element/batch",
+	    	    data: $.param({uri: elementUris, publicElement: ispublic}),
 	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
 	    }

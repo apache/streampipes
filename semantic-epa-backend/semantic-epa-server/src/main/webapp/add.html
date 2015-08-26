@@ -3,18 +3,35 @@
 		class="md-whiteframe-z2">
 		<md-content class="md-padding">
 		<h1>Add Elements</h1>
-		<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
-			<form name="addElementForm" ng-submit="add()" role="form">
-				<md-input-container> <label>One or more URLs, seperated by blank</label> <textarea
-					columns="1" ng-model="elements" required></textarea> </md-input-container>
-					<md-input-container flex> <md-checkbox 
-					ng-model="marketplace"> Add element to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
-				<div class="form-actions">
-				<md-button class="md-accent md-raised" type="submit"
-					ng-disabled="addElementForm.$pristine || addElementForm.$invalid || loading">Add Element</md-button>
+		<md-tabs md-border-bottom>
+			<md-tab label="Import from Endpoint"> 
+					<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+						<form name="addFromEndpointForm" ng-submit="addFromEndpoint()" role="form">
+							<md-input-container> <label>Endpoint URL</label> <input
+								type="text" ng-model="$parent.endpointUrl" required></input> </md-input-container>
+								<md-input-container flex> <md-checkbox 
+								ng-model="$parent.marketplace"> Add elements to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
+							<div class="form-actions">
+							<md-button class="md-accent md-raised" type="submit"
+								ng-disabled="addFromEndpointForm.$pristine || addFromEndpointForm.$invalid || loading">Add Elements</md-button>
+							</div>
+						</form>
+					</div>
+			</md-tab>
+			<md-tab label="Import from URL"> 
+				<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+					<form name="addElementForm" ng-submit="add()" role="form">
+						<md-input-container> <label>One or more URLs, seperated by blank</label> <textarea
+							columns="1" ng-model="$parent.elements" required></textarea> </md-input-container>
+							<md-input-container flex> <md-checkbox 
+							ng-model="$parent.marketplace"> Add element to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
+						<div class="form-actions">
+						<md-button class="md-accent md-raised" type="submit"
+							ng-disabled="addElementForm.$pristine || addElementForm.$invalid || loading">Add Element</md-button>
+						</div>
+					</form>
 				</div>
-			</form>
-		</div>
+			</md-tab>
 		</md-content>
 	</div>
 </div>

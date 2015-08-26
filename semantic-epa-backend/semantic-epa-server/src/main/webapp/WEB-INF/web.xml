@@ -12,6 +12,10 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>de.fzi.cep.sepa.rest</param-value>
 		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+			<param-value>de.fzi.cep.sepa.rest.filter.LoggingFilter</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -19,7 +23,7 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
- 
+
 	<listener>
 		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 	</listener>
@@ -43,9 +47,9 @@
 		<filter-name>CORS</filter-name>
 		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
 		<init-param>
-                <param-name>cors.supportedMethods</param-name>
-                <param-value>GET, POST, HEAD, PUT, DELETE</param-value>
-        </init-param>
+			<param-name>cors.supportedMethods</param-name>
+			<param-value>GET, POST, HEAD, PUT, DELETE</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>CORS</filter-name>
