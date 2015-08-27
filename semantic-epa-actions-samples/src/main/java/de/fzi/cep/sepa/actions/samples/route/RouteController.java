@@ -29,7 +29,7 @@ public class RouteController implements SemanticEventConsumerDeclarer{
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/route", "Routes", "Displays routes of moving location-based events", "");
+		SecDescription sec = new SecDescription("route", "Routes", "Displays routes of moving location-based events", "");
 		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

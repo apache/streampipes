@@ -28,7 +28,7 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/gauge", "Gauge", "Monitors numeric values", "http://localhost:8080/img");
+		SecDescription sec = new SecDescription("gauge", "Gauge", "Monitors numeric values", "http://localhost:8080/img");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

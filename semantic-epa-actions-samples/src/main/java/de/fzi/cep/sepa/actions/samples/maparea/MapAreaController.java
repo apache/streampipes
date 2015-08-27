@@ -46,7 +46,7 @@ public class MapAreaController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/maparea", "Map area view", "", "");
+		SecDescription sec = new SecDescription("maparea", "Map area view", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

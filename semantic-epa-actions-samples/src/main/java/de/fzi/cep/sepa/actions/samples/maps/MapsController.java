@@ -26,7 +26,7 @@ public class MapsController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		
-		SecDescription sec = new SecDescription("/maps", "Map view", "Displays location-based events on a map", "");
+		SecDescription sec = new SecDescription("maps", "Map view", "Displays location-based events on a map", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

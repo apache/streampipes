@@ -25,7 +25,7 @@ public class HeatmapController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
+		SecDescription sec = new SecDescription("maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

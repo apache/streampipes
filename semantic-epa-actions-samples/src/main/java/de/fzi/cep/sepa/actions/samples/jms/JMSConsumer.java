@@ -40,7 +40,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("/jms", "JMS Consumer", "Desc", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("jms", "JMS Consumer", "Desc", "http://localhost:8080/img");
 		
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());

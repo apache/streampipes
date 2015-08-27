@@ -45,7 +45,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("/storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);

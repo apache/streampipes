@@ -22,7 +22,7 @@ public class FileController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		
-		SecDescription sec = new SecDescription("/file", "File Output", "", "");
+		SecDescription sec = new SecDescription("file", "File Output", "", "");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

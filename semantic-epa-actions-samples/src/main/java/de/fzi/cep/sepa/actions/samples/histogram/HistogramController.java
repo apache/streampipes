@@ -26,7 +26,7 @@ public class HistogramController implements SemanticEventConsumerDeclarer{
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/histogram", "Histogram", "Generates a histogram for time-series data", "http://localhost:8080/img");
+		SecDescription sec = new SecDescription("histogram", "Histogram", "Generates a histogram for time-series data", "http://localhost:8080/img");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

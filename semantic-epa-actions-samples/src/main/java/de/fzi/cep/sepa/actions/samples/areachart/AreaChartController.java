@@ -30,7 +30,7 @@ public class AreaChartController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/area", "Area chart", "Real-Time area chart", "");
+		SecDescription sec = new SecDescription("area", "Area chart", "Real-Time area chart", "");
 		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

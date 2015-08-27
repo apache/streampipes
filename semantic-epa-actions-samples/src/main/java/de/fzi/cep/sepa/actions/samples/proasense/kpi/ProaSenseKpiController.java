@@ -43,7 +43,7 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("/proasensekpi", "ProaSense KPI", "Store as ProaSense KPI", "");
+		SecDescription desc = new SecDescription("proasensekpi", "ProaSense KPI", "Store as ProaSense KPI", "");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);

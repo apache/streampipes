@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
-import de.fzi.cep.sepa.actions.samples.charts.ChartConsumer;
+import de.fzi.cep.sepa.actions.samples.charts.ChartController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.gauge.GaugeController;
@@ -33,7 +33,7 @@ public class Init implements Runnable {
 		List<SemanticEventConsumerDeclarer> consumers = new ArrayList<>();
 		
 		consumers.add(new JMSConsumer());
-		consumers.add(new ChartConsumer());
+		consumers.add(new ChartController());
 		consumers.add(new MapsController());
 		consumers.add(new TableViewController());
 		consumers.add(new FileController());

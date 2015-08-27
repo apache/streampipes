@@ -30,7 +30,7 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/bar", "Bar charts", "Real-Time bar chart", "");
+		SecDescription sec = new SecDescription("bar", "Bar charts", "Real-Time bar chart", "");
 		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

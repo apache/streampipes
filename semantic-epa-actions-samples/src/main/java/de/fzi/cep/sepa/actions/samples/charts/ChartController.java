@@ -23,11 +23,11 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
-public class ChartConsumer implements SemanticEventConsumerDeclarer {
+public class ChartController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("/chart", "Line Chart", "Generates a line chart", "http://localhost:8080/img");
+		SecDescription sec = new SecDescription("chart", "Line Chart", "Generates a line chart");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
