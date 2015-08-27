@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm'])
+    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -40,7 +40,7 @@ angular
                 controller  : 'PipelineCtrl'
             })
             .when('/', {
-                templateUrl : 'editor.html',
+                templateUrl : 'modules/editor/editor.html',
                 controller  : 'EditorCtrl'
             })
             .when('/visualizations', {
@@ -205,25 +205,19 @@ angular
         function buildToggler(navID) {
             var debounceFn =  $mdUtil.debounce(function(){
                 $mdSidenav(navID)
-                    .toggle()
-                    .then(function () {
-                        $log.debug("toggle " + navID + " is done");
-                    });
+                    .toggle();
             },300);
             return debounceFn;
         }
     })
     .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
         $scope.close = function () {
-            $mdSidenav('left').close()
-                .then(function () {
-                    $log.debug("close LEFT is done");
-                });
+            $mdSidenav('left').close();
         };
     })
-    .controller('EditorCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
-		$(init("Proa"));
-	})
+    //.controller('EditorCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+	//	$(init("Proa"));
+	//})
 	.controller('RegisterCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $http) {
 
 		$scope.register = function() {
@@ -888,7 +882,7 @@ angular
 	    restApi.removePreferredAction = function(elementUri) {
 	    	return $http({
 	    	    method: 'DELETE',
-	    	    url: urlBase() + "/actions/favorites/" +encodeURIComponent(elementUri),
+	    	    url: urlBase() + "/actions/favorites/" +encodeURIComponent(elementUri)
 	    	})
 	    }
 	    
@@ -948,6 +942,11 @@ angular
 	    	    url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri),
 	    	})
 	    }
+
+		restApi.getOwnStreams = function(source){
+			return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.elementId) + "/streams");
+
+		};
 	    
 	    restApi.add = function(elementUri, ispublic) {
 	    	return $http({

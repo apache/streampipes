@@ -5,7 +5,7 @@ var standardDraggableOptions = {
     start: function (e, ui) {
         $('.alpha').fadeTo(300, .2);
         $('#assembly').css('border', '3px dashed grey');
-        ui.helper.appendTo('body');
+        ui.helper.appendTo('#content');
         // ui.helper.children().addClass("draggable-img-dragging");
     },
     stop: function (e, ui) {
@@ -52,6 +52,7 @@ function init(type) {
 }
 //Initiate assembly and jsPlumb functionality-------
 jsPlumb.ready(function (e) {
+    console.log("jsPlumb Ready");
     state.plumbReady = true;
     jsPlumb.bind("connection", function (info, originalEvent) {
         var $target = $(info.target);
@@ -236,7 +237,7 @@ function createStreams(data) {
                 title: json.name
             }).data("JSON", json)
             .on("contextmenu", staticContextMenu)
-            .appendTo('#streams').show();
+            .appendTo('#editor-icon-stand');
         if (json.iconUrl == null) {
             addTextIconToElement($newStream, $newStream.data("JSON").name);
         } else {
@@ -379,9 +380,9 @@ function makeDraggable(type) {
                 ui.helper.children().addClass("draggable-img-dragging");
                 if ($('#sepas').css("opacity") === "0") {
                     $('.alpha').not('#sepas').fadeTo(300, .2);
-                    ui.helper.appendTo('body');
+                    ui.helper.appendTo('#content');
                 } else {
-                    ui.helper.appendTo('body');
+                    ui.helper.appendTo('#content');
 
                 }
 
