@@ -33,7 +33,7 @@ public class Init implements Runnable {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-//		declarers.add(new TwitterStreamProducer());
+		declarers.add(new TwitterStreamProducer());
 		declarers.add(new DDMProducer());
 		declarers.add(new DrillBitProducer());
 		declarers.add(new EnrichedEventProducer());

@@ -4,16 +4,13 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventSource;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class ProveITEventProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("/proveit", "ProveIT Logistics", "Several streams produced by a logistics service provider", "", Utils.createDomain(Domain.DOMAIN_PERSONAL_ASSISTANT), new EventSource());
+		SepDescription sep = new SepDescription("sourc/proveit", "ProveIT Logistics", "Several streams produced by a logistics service provider");
 		return sep;
 	}
 
