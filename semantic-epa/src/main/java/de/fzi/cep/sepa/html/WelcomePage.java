@@ -9,6 +9,8 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.representation.StringRepresentation;
 
+import de.fzi.cep.sepa.util.CorsHeaders;
+
 public abstract class WelcomePage<T> extends Restlet {
 
 	protected List<Description> producers;
@@ -23,8 +25,14 @@ public abstract class WelcomePage<T> extends Restlet {
 	
 	 @Override
      public void handle(Request request, Response response) {
-        response.setEntity(new StringRepresentation(
-               new HTMLGenerator(producers).buildHtml(),
-                MediaType.TEXT_HTML));
+		 if (request.getClientInfo().getAcceptedMediaTypes().stream().anyMatch(p -> p.getMetadata() == MediaType.APPLICATION_JSON))
+		 {
+			response.setEntity(new StringRepresentation(new JSONGenerator(producers).buildJson(), MediaType.APPLICATION_JSON));
+			new CorsHeaders().make(response);	
+		 }
+		 else
+		 {
+			 response.setEntity(new StringRepresentation(new HTMLGenerator(producers).buildHtml(), MediaType.TEXT_HTML));
+		 }
     }
 }
