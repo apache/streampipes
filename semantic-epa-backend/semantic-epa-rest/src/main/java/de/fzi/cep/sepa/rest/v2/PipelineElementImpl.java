@@ -19,18 +19,43 @@ import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 
-import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 @Path("/v2/users/{username}/element")
 public class PipelineElementImpl extends AbstractRestInterface {
 
 	static Logger  LOG = LoggerFactory.getLogger(PipelineElementImpl.class);
 
+	@POST
+	@Path("/batch")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String addBatch(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
+	{
+		try {
+			uri = URLDecoder.decode(uri, "UTF-8");
+			JsonElement element = new JsonParser().parse(parseURIContent(uri, "application/json"));
+			JsonArray response = new JsonArray();
+			if (element.isJsonArray())
+			{
+				for(JsonElement jsonObj : element.getAsJsonArray())
+				{
+					 response.add(new JsonParser().parse(addElement(username, jsonObj.getAsString(), publicElement)));
+				}
+			}
+			return response.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
+		}
+	}
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)

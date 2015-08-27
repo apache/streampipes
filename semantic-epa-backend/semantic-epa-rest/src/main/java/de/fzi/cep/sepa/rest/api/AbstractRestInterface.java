@@ -63,8 +63,13 @@ public abstract class AbstractRestInterface {
 	
 	protected String parseURIContent(String payload) throws URISyntaxException, ClientProtocolException, IOException
 	{
+		return parseURIContent(payload, null);
+	}
+	
+	protected String parseURIContent(String payload, String mediaType) throws URISyntaxException, ClientProtocolException, IOException
+	{
 		URI uri = new URI(payload);
-		return HttpJsonParser.getContentFromUrl(uri);
+		return HttpJsonParser.getContentFromUrl(uri, mediaType);
 	}
 	
 	protected <T extends NamedSEPAElement> T parseObjectContent(Class<T> clazz, String payload) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException

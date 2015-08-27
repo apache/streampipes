@@ -22,7 +22,6 @@ import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.model.client.SourceClient;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.util.JsonSchemaGenerator;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.SepaElementOperation;
 import de.fzi.cep.sepa.storage.filter.Filter;
@@ -31,6 +30,22 @@ import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 @Path("/v2/users/{username}/sources")
 public class SourceImpl extends AbstractRestInterface implements SepaElementOperation {
 
+	@Path("/{sourceId}/streams")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getStreamsBySource(@PathParam("username") String username, @PathParam("sourceId") String sourceId)
+	{
+		try {
+			return toJson(ClientModelTransformer.toStreamClientModel(requestor.getSEPById(sourceId)));
+		} catch (URISyntaxException e) {
+			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(), NotificationType.URIOFFLINE.description(), e.getMessage()));
+		} catch (Exception e)
+		{
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+		}
+		
+	}
+	
 	@GET
 	@Path("/available")
 	@RequiresAuthentication
