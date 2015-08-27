@@ -142,7 +142,7 @@ public class InMemoryStorage implements StorageRequests {
 		List<SepDescription> result = new ArrayList<>();
 		for(SepDescription sep : getAllSEPs())
 		{
-			if (sep.getDomains().contains(domain)) result.add(cloner.deepClone(sep));
+			result.add(cloner.deepClone(sep));
 		}
 		return result;
 	}
@@ -153,9 +153,7 @@ public class InMemoryStorage implements StorageRequests {
 
 		for(SepaDescription sepa : getAllSEPAs())
 		{
-			if (sepa.getDomains() != null) {
-				if (sepa.getDomains().contains(domain)) result.add(cloner.deepClone(sepa));
-			}
+			result.add(cloner.deepClone(sepa));
 		}
 		return result;
 	}

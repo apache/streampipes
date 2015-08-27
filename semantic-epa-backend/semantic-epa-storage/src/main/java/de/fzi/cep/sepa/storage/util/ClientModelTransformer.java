@@ -62,7 +62,7 @@ public class ClientModelTransformer {
 
 	public static SourceClient toSourceClientModel(SepDescription sep)
 	{
-		SourceClient client = new SourceClient(sep.getName(), sep.getDescription(), sep.getDomains());
+		SourceClient client = new SourceClient(sep.getName(), sep.getDescription());
 		client.setIconUrl(sep.getIconUrl());
 		client.setElementId(sep.getRdfId().toString());
 		return client;
@@ -96,7 +96,7 @@ public class ClientModelTransformer {
 
 	public static SEPAClient toSEPAClientModel(SepaDescription sepa)
 	{
-		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getDomains());
+		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription());
 		client.setInputNodes(sepa.getEventStreams().size());
 		client.setElementId(sepa.getRdfId().toString());
 		client.setIconUrl(sepa.getIconUrl());
