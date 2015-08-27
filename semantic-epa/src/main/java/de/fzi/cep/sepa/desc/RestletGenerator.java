@@ -62,7 +62,7 @@ public class RestletGenerator {
 					sepa.setUri(baseUri +sepa.getPathName());
 				}
 			else sepa.setUri(baseUri +"/" +sepa.getPathName());
-			addConfig(sepa.getUri(), new SepaRestlet(sepa, declarer));
+			addConfig(sepa.getPathName(), new SepaRestlet(sepa, declarer));
 		}
 		return this;
 	}
@@ -90,7 +90,7 @@ public class RestletGenerator {
 				if (declarer.isExecutable())
 					declarer.executeStream();
 			}
-			addConfig(sep.getUri(), new SepRestlet(sep));
+			addConfig(currentPath, new SepRestlet(sep));
 		}
 		
 		return this;
@@ -113,8 +113,7 @@ public class RestletGenerator {
 				pathName = sec.getUri();
 			}
 			sec.setUri(baseUri + pathName);
-			System.out.println(pathName);
-			addConfig(sec.getUri(), new SecRestlet(sec, declarer));
+			addConfig(pathName, new SecRestlet(sec, declarer));
 		}
 
 		return this;
