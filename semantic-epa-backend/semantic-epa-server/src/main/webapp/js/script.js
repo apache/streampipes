@@ -28,104 +28,104 @@ function init(type) {
     state.adjustingPipelineState = false;
     state.adjustingPipeline = {};
 
-    if (state.plumbReady) {
-        clearPipelineDisplay();
-    }
-
-    // Get and inititate sources------------------------
-    if (type == "Proa") {
-        domain = "DOMAIN_PROASENSE";
-    } else if (type == "PA") {
-        domain = "DOMAIN_PERSONAL_ASSISTANT";
-    }
-    var url = standardUrl + "sources?domain=" + domain;
-    $.ajax({
-        dataType: "json",
-        url: url,
-        success: function (data) {
-            state.sources = data;
-            initSources(data);
-        }
-    });
+    //if (state.plumbReady) {
+    //    clearPipelineDisplay();
+    //}
+    //
+    //// Get and inititate sources------------------------
+    //if (type == "Proa") {
+    //    domain = "DOMAIN_PROASENSE";
+    //} else if (type == "PA") {
+    //    domain = "DOMAIN_PERSONAL_ASSISTANT";
+    //}
+    //var url = standardUrl + "sources?domain=" + domain;
+    //$.ajax({
+    //    dataType: "json",
+    //    url: url,
+    //    success: function (data) {
+    //        state.sources = data;
+    //        initSources(data);
+    //    }
+    //});
 
 
 }
 //Initiate assembly and jsPlumb functionality-------
-jsPlumb.ready(function (e) {
-    console.log("jsPlumb Ready");
-    state.plumbReady = true;
-    jsPlumb.bind("connection", function (info, originalEvent) {
-        var $target = $(info.target);
-        if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
-            createPartialPipeline(info);
-            $.when(
-                state.currentPipeline.update(info)
-            ).then(function(data){
-                if (data.success) {
-                    if ($target.hasClass('sepa')) {
-                        initRecs(state.currentPipeline, $target);
-                    }
-                }
-            });
-
-        }
-    });
-
-    if (debug){
-        $('#debugTestTab').show();
-    }
-
-
-    window.onresize = function (event) {
-        jsPlumb.repaintEverything(true);
-    };
-
-    initAssembly();
-    $("#assembly")
-        .selectable({
-            selected: function (event, ui) {
-            },
-            filter: ".connectable.stream,.connectable.sepa:not('.disabled')",
-            delay: 150
-
-        });
-    jsPlumb.Defaults.Container = "assembly";
-    //Inititate accordion functionality-----------------
-    $('#accordion').on('show.bs.collapse', function () {
-        $('#accordion').find('.in').collapse('hide');
-    });
-    $('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
-
-    $(document).click(function () {
-        $('#assemblyContextMenu').hide();
-        $('#staticContextMenu').hide();
-        $('.circleMenu-open').circleMenu('close');
-    });
-    $('#sources').on('change', function () {
-        $(this)
-            .css("background-color", "#044")
-            .animate("200")
-            .css("background-color", "")
-            .animate("200");
-    });
-
-    
-
-    $('a[data-toggle="tab"]')
-        .on('hide.bs.tab', function (e) {
-            clearTab(e);
-        })
-        .on('show.bs.tab', function (e) {
-            toTab(e);
-        });
-
-    $('#assembly').on('click',".recommended-item", function (e) {
-        console.log(e);
-        e.stopPropagation();
-        createAndConnect(this);
-    })
-
-});
+//jsPlumb.ready(function (e) {
+//    console.log("jsPlumb Ready");
+//    state.plumbReady = true;
+//    jsPlumb.bind("connection", function (info, originalEvent) {
+//        var $target = $(info.target);
+//        if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
+//            createPartialPipeline(info);
+//            $.when(
+//                state.currentPipeline.update(info)
+//            ).then(function(data){
+//                if (data.success) {
+//                    if ($target.hasClass('sepa')) {
+//                        initRecs(state.currentPipeline, $target);
+//                    }
+//                }
+//            });
+//
+//        }
+//    });
+//
+//    if (debug){
+//        $('#debugTestTab').show();
+//    }
+//
+//
+//    window.onresize = function (event) {
+//        jsPlumb.repaintEverything(true);
+//    };
+//
+//    initAssembly();
+//    $("#assembly")
+//        .selectable({
+//            selected: function (event, ui) {
+//            },
+//            filter: ".connectable.stream,.connectable.sepa:not('.disabled')",
+//            delay: 150
+//
+//        });
+//    jsPlumb.Defaults.Container = "assembly";
+//    //Inititate accordion functionality-----------------
+//    $('#accordion').on('show.bs.collapse', function () {
+//        $('#accordion').find('.in').collapse('hide');
+//    });
+//    $('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
+//
+//    $(document).click(function () {
+//        $('#assemblyContextMenu').hide();
+//        $('#staticContextMenu').hide();
+//        $('.circleMenu-open').circleMenu('close');
+//    });
+//    $('#sources').on('change', function () {
+//        $(this)
+//            .css("background-color", "#044")
+//            .animate("200")
+//            .css("background-color", "")
+//            .animate("200");
+//    });
+//
+//
+//
+//    $('a[data-toggle="tab"]')
+//        .on('hide.bs.tab', function (e) {
+//            clearTab(e);
+//        })
+//        .on('show.bs.tab', function (e) {
+//            toTab(e);
+//        });
+//
+//    $('#assembly').on('click',".recommended-item", function (e) {
+//        console.log(e);
+//        e.stopPropagation();
+//        createAndConnect(this);
+//    })
+//
+//});
 
 function clearTab(e){
 
@@ -224,138 +224,138 @@ function displayStreams(e) {
 
 }
 
-function createStreams(data) {
-
-    $.each(data, function (i, json) {
-        var idString = "stream" + i;
-        var $newStream = $('<span>')//<img>
-            .attr({
-                id: idString,
-                class: "draggable-icon stream tt",
-                "data-toggle": "tooltip",
-                "data-placement": "top",
-                title: json.name
-            }).data("JSON", json)
-            .on("contextmenu", staticContextMenu)
-            .appendTo('#editor-icon-stand');
-        if (json.iconUrl == null) {
-            addTextIconToElement($newStream, $newStream.data("JSON").name);
-        } else {
-            $('<img>').attr("src", json.iconUrl).addClass('draggable-img').on("contextmenu", staticContextMenu)
-                .data("JSON", json)
-                .appendTo($newStream)
-                .error(function(){
-                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
-                    $(this).remove();
-                });
-
-            //$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
-            //    // .data("JSON", json)
-            //    .appendTo($newStream);
-        }
-    });
-    makeDraggable("stream");
-    initTooltips();
-}
+//function createStreams(data) {
+//
+//    $.each(data, function (i, json) {
+//        var idString = "stream" + i;
+//        var $newStream = $('<span>')//<img>
+//            .attr({
+//                id: idString,
+//                class: "draggable-icon stream tt",
+//                "data-toggle": "tooltip",
+//                "data-placement": "top",
+//                title: json.name
+//            }).data("JSON", json)
+//            .on("contextmenu", staticContextMenu)
+//            .appendTo('#editor-icon-stand');
+//        if (json.iconUrl == null) {
+//            addTextIconToElement($newStream, $newStream.data("JSON").name);
+//        } else {
+//            $('<img>').attr("src", json.iconUrl).addClass('draggable-img').on("contextmenu", staticContextMenu)
+//                .data("JSON", json)
+//                .appendTo($newStream)
+//                .error(function(){
+//                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+//                    $(this).remove();
+//                });
+//
+//            //$('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu)
+//            //    // .data("JSON", json)
+//            //    .appendTo($newStream);
+//        }
+//    });
+//    makeDraggable("stream");
+//    initTooltips();
+//}
 
 
 /**
  * Gets and displays Sepas
  */
-function displaySepas(e) {
-    $('#sepaCollapse').attr("data-toggle", "collapse");
-    $('#sepaCollapse').removeClass("disabled");
-    $('#sepas').children().remove();
-    var url = standardUrl + "sepas?domains=" + domain;
-    if (!state.sepas) {
-        $.getJSON(url).then(function (data) {
-            createSepas(data);
-            state.sepas = data;
-        });
-    } else {
-        createSepas(state.sepas);
-    }
+//function displaySepas(e) {
+//    $('#sepaCollapse').attr("data-toggle", "collapse");
+//    $('#sepaCollapse').removeClass("disabled");
+//    $('#sepas').children().remove();
+//    var url = standardUrl + "sepas?domains=" + domain;
+//    if (!state.sepas) {
+//        $.getJSON(url).then(function (data) {
+//            createSepas(data);
+//            state.sepas = data;
+//        });
+//    } else {
+//        createSepas(state.sepas);
+//    }
+//
+//}
 
-}
-
-function createSepas(data) {
-    $.each(data, function (i, json) {
-        if (($.inArray(domain, json.domains) != -1) || ($.inArray("DOMAIN_INDEPENDENT", json.domains) != -1)) {
-            var idString = "sepa" + i;
-            var $newSepa = $('<span>').attr({
-                id: idString,
-                class: "draggable-icon sepa tt",
-                "data-toggle": "tooltip",
-                "data-placement": "top",
-                title: json.name
-            }).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
-            if (json.iconUrl == null) {
-                addTextIconToElement($newSepa, $newSepa.data("JSON").name);
-            } else {
-                $('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json)
-                    .error(function(){
-                        addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
-                        $(this).remove();
-                    })
-                    .appendTo($newSepa);
-            }
-        }
-    });
-    makeDraggable("sepa");
-    initTooltips();
-}
+//function createSepas(data) {
+//    $.each(data, function (i, json) {
+//        if (($.inArray(domain, json.domains) != -1) || ($.inArray("DOMAIN_INDEPENDENT", json.domains) != -1)) {
+//            var idString = "sepa" + i;
+//            var $newSepa = $('<span>').attr({
+//                id: idString,
+//                class: "draggable-icon sepa tt",
+//                "data-toggle": "tooltip",
+//                "data-placement": "top",
+//                title: json.name
+//            }).data("JSON", json).on("contextmenu", staticContextMenu).appendTo('#sepas').show();
+//            if (json.iconUrl == null) {
+//                addTextIconToElement($newSepa, $newSepa.data("JSON").name);
+//            } else {
+//                $('<img>').attr("src", json.iconUrl).addClass("draggable-img").on("contextmenu", staticContextMenu).data("JSON", json)
+//                    .error(function(){
+//                        addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+//                        $(this).remove();
+//                    })
+//                    .appendTo($newSepa);
+//            }
+//        }
+//    });
+//    makeDraggable("sepa");
+//    initTooltips();
+//}
 
 
 /**
  * Displays Actions
  */
-function displayActions(e) {
-    $('#actionCollapse').attr("data-toggle", "collapse");
-    $('#actionCollapse').removeClass("disabled");
-    var url = standardUrl + "actions";
+//function displayActions(e) {
+//    $('#actionCollapse').attr("data-toggle", "collapse");
+//    $('#actionCollapse').removeClass("disabled");
+//    var url = standardUrl + "actions";
+//
+//
+//    if (state.actions) {
+//        createActions(state.actions);
+//    } else {
+//        $.getJSON(url).then(function (data) {
+//            createActions(data);
+//            state.actions = data;
+//        });
+//    }
+//}
 
-
-    if (state.actions) {
-        createActions(state.actions);
-    } else {
-        $.getJSON(url).then(function (data) {
-            createActions(data);
-            state.actions = data;
-        });
-    }
-}
-
-function createActions(data) {
-    $.each(data, function (i, json) {
-        var idString = "action" + i;
-        var $newAction = $('<span>').attr({
-            id: idString,
-            class: "draggable-icon action tt",
-            "data-toggle": "tooltip",
-            "data-placement": "top",
-            title: json.name
-        }).data("JSON", json)
-            .on("contextmenu", staticContextMenu)
-            .appendTo('#actions')
-            .show();
-        if (json.iconUrl == null) {
-            addTextIconToElement($newAction, $newAction.data("JSON").name);
-        } else {
-            $('<img>')
-                .attr("src", json.iconUrl)
-                .addClass("draggable-img")
-                .on("contextmenu", staticContextMenu)
-                .data("JSON", json)
-                .error(function(){
-                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
-                    $(this).remove();
-                })
-                .appendTo($newAction);
-        }
-    });
-    makeDraggable("action");
-    initTooltips();
-}
+//function createActions(data) {
+//    $.each(data, function (i, json) {
+//        var idString = "action" + i;
+//        var $newAction = $('<span>').attr({
+//            id: idString,
+//            class: "draggable-icon action tt",
+//            "data-toggle": "tooltip",
+//            "data-placement": "top",
+//            title: json.name
+//        }).data("JSON", json)
+//            .on("contextmenu", staticContextMenu)
+//            .appendTo('#actions')
+//            .show();
+//        if (json.iconUrl == null) {
+//            addTextIconToElement($newAction, $newAction.data("JSON").name);
+//        } else {
+//            $('<img>')
+//                .attr("src", json.iconUrl)
+//                .addClass("draggable-img")
+//                .on("contextmenu", staticContextMenu)
+//                .data("JSON", json)
+//                .error(function(){
+//                    addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+//                    $(this).remove();
+//                })
+//                .appendTo($newAction);
+//        }
+//    });
+//    makeDraggable("action");
+//    initTooltips();
+//}
 
 
 /**

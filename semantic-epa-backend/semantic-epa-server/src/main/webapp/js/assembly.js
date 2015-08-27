@@ -37,46 +37,45 @@ var textInputFields = new Array();
 /**
  * Handles everything that has to do with the assembly area, and elements in it
  */
-function initAssembly() {
-
-    $('#clear').click(clearAssembly);
-
-    $('#assembly').droppable({
-        tolerance: "fit",
-        drop: function (stream, ui) {
-            if (ui.draggable.hasClass('draggable-icon')) {
-                if (ui.draggable.data("JSON") == null) {
-                    alert("No JSON - Data for Dropped element");
-                    return false;
-                }
-                //Neues Container Element für Icon / identicon erstellen
-                var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
-
-                //Droppable Streams
-                if (ui.draggable.hasClass('stream')) {
-                    handleDroppedStream($newState, true);
-                    var tempPipeline = new Pipeline();
-                    tempPipeline.addElement($newState[0]);
-                    initRecs(tempPipeline, $newState);
-
-                    //$newState.hover(showRecButton, hideRecButton);
-
-                    //Droppable Sepas
-                } else if (ui.draggable.hasClass('sepa')) {
-                    handleDroppedSepa($newState, true);
-                    //addRecommendedButton($newState);
-
-                    //Droppable Actions
-                } else if (ui.draggable.hasClass('action')) {
-                    handleDroppedAction($newState, true);
-                }
-                initTooltips();
-            }
-            jsPlumb.repaintEverything(true);
-        }
-
-    }); //End #assembly.droppable()
-}
+//function initAssembly() {
+//
+//    $('#clear').click(clearAssembly);
+//
+//    $('#assembly').droppable({
+//        tolerance: "fit",
+//        drop: function (element, ui) {
+//            if (ui.draggable.hasClass('draggable-icon')) {
+//                if (ui.draggable.data("JSON") == null) {
+//                    alert("No JSON - Data for Dropped element");
+//                    return false;
+//                }
+//                //Neues Container Element für Icon / identicon erstellen
+//                var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+//
+//                //Droppable Streams
+//                if (ui.draggable.hasClass('stream')) {
+//                    handleDroppedStream($newState, true);
+//                    var tempPipeline = new Pipeline();
+//                    tempPipeline.addElement($newState[0]);
+//                    initRecs(tempPipeline, $newState);
+//
+//                    //$newState.hover(showRecButton, hideRecButton);
+//
+//                    //Droppable Sepas
+//                } else if (ui.draggable.hasClass('sepa')) {
+//                    handleDroppedSepa($newState, true);
+//
+//                    //Droppable Actions
+//                } else if (ui.draggable.hasClass('action')) {
+//                    handleDroppedAction($newState, true);
+//                }
+//                initTooltips();
+//            }
+//            jsPlumb.repaintEverything(true);
+//        }
+//
+//    }); //End #assembly.droppable()
+//}
 
 function addRecommendedButton($element) {
     $("<span>")
@@ -199,30 +198,30 @@ function createNewAssemblyElement(json, coordinates) {
 
 
 
-function handleDroppedStream($newState, endpoints) {
-
-    displaySepas();
-    $('#sepas').children().show();
-    $('#sepas').fadeTo(100, 1);
-
-    $newState
-        .addClass('connectable stream');
-
-    if (endpoints) {
-        jsPlumb.addEndpoint($newState, streamEndpointOptions);
-    }
-
-    //$newState.dblclick(function () {
-    //    jsPlumb.addEndpoint($newState, streamEndpointOptions);
-    //});
-
-
-    if ($('#assembly').children().hasClass('sepa')) {
-        $('#actionCollapse').attr("data-toggle", "collapse");
-        $('#actionCollapse').removeClass("disabled");
-    }
-
-}
+//function handleDroppedStream($newState, endpoints) {
+//
+//    displaySepas();
+//    $('#sepas').children().show();
+//    $('#sepas').fadeTo(100, 1);
+//
+//    $newState
+//        .addClass('connectable stream');
+//
+//    if (endpoints) {
+//        jsPlumb.addEndpoint($newState, streamEndpointOptions);
+//    }
+//
+//    //$newState.dblclick(function () {
+//    //    jsPlumb.addEndpoint($newState, streamEndpointOptions);
+//    //});
+//
+//
+//    if ($('#assembly').children().hasClass('sepa')) {
+//        $('#actionCollapse').attr("data-toggle", "collapse");
+//        $('#actionCollapse').removeClass("disabled");
+//    }
+//
+//}
 
 function handleDroppedSepa($newState, endpoints) {
 
@@ -256,8 +255,6 @@ function handleDroppedSepa($newState, endpoints) {
 }
 
 function handleDroppedAction($newState, endpoints) {
-
-    jsPlumb.draggable($newState, {containment: 'parent'});
 
     $newState
         .addClass("connectable action");

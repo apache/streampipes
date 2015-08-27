@@ -8,70 +8,72 @@
 				{{tab.title}}
 				<md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
 			</md-tab-label>
-			<div id="editor-icon-stand" class="icon-stand" style="height: 215px;">
-
-
 
 
 
 				<!--<md-grid-list md-cols-sm="3" md-cols-md="6" md-cols-gt-md="9"-->
-							  <!--md-row-height-gt-md="1:1" md-gutter="12px" md-gutter-gt-sm="8px"-->
-							  <!--md-row-height="fit">-->
+							   <!--md-gutter="12px" md-gutter-gt-sm="8px"-->
+							  <!--md-row-height="fit" md-row-height="1:1">-->
 					<!--<md-grid-tile ng-repeat="element in currentElements">-->
-						<!--<div class="draggable-icon">-->
-						<!-- -->
+						<!--<div class="draggable-icon" ng-class="{{element.type}}">-->
+							<!--<img class="draggable-img" ng-show="(item.iconUrl != null && item.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">-->
+							<!--<span ng-show="(item.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">-->
+								<!--{{elementTextIcon(element.name)}}-->
+							<!--</span>-->
 						<!--</div>-->
 					<!--</md-grid-tile>-->
 				<!--</md-grid-list>-->
-			</div>
+
 		</md-tab>
 
 </md-tabs>
-
-
-
-
-<div id ="sources" align="center" class="alpha"></div>
-<div class="panel-group" id="accordion">
-
-	<div class="panel panel-default">
-		<div class="panel-heading panel-streams">
-			<h4 class="panel-title"><a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne"> Streams </a></h4>
-		</div>
-		<div id="collapseOne" class="panel-collapse collapse">
-			<div class="panel-body">
-				<div id="streams" align="center" class="icon-stands alpha panel-body-streams">
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading panel-sepas">
-			<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a></h4>
-		</div>
-		<div id="collapseTwo" class="panel-collapse collapse">
-			<div class="panel-body">
-				<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">
-
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading panel-actions">
-			<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a></h4>
-		</div>
-		<div id="collapseThree" class="panel-collapse collapse ">
-			<div class="panel-body">
-				<div id="actions" align="center" class="icon-stands alpha panel-body-actions">
-
-				</div>
-			</div>
-		</div>
-	</div>
-
+<div id="editor-icon-stand" class="icon-stand">
 </div>
+
+
+
+
+<!--<div id ="sources" align="center" class="alpha"></div>-->
+<!--<div class="panel-group" id="accordion">-->
+
+	<!--<div class="panel panel-default">-->
+		<!--<div class="panel-heading panel-streams">-->
+			<!--<h4 class="panel-title"><a id="streamCollapse" class="disabled" data-parent="#accordion" href="#collapseOne"> Streams </a></h4>-->
+		<!--</div>-->
+		<!--<div id="collapseOne" class="panel-collapse collapse">-->
+			<!--<div class="panel-body">-->
+				<!--<div id="streams" align="center" class="icon-stands alpha panel-body-streams">-->
+
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--<div class="panel panel-default">-->
+		<!--<div class="panel-heading panel-sepas">-->
+			<!--<h4 class="panel-title"><a id="sepaCollapse" class="disabled" data-parent="#accordion" href="#collapseTwo"> Sepas </a></h4>-->
+		<!--</div>-->
+		<!--<div id="collapseTwo" class="panel-collapse collapse">-->
+			<!--<div class="panel-body">-->
+				<!--<div id="sepas" align="center" class="icon-stands alpha panel-body-sepas">-->
+
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--<div class="panel panel-default">-->
+		<!--<div class="panel-heading panel-actions">-->
+			<!--<h4 class="panel-title"><a id="actionCollapse" class="disabled" data-parent="#accordion" href="#collapseThree"> Actions </a></h4>-->
+		<!--</div>-->
+		<!--<div id="collapseThree" class="panel-collapse collapse ">-->
+			<!--<div class="panel-body">-->
+				<!--<div id="actions" align="center" class="icon-stands alpha panel-body-actions">-->
+
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+
+<!--</div>-->
 
 <div id="assembly" class="canvas">
 

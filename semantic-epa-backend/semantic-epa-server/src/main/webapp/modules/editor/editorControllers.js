@@ -10,7 +10,8 @@ editorControllers
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
-            $scope.currentElements = {};
+            $scope.isActionInAssembly = false;
+            $scope.currentElements = [];
 
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
@@ -26,17 +27,20 @@ editorControllers
             };
 
             $scope.ownSepasAvailable = function(){
-                return restApi.getOwnSepas().length > 0;
+                return restApi.getOwnSepas();
             };
 
             $scope.ownActionsAvailable = function(){
-                return restApi.getOwnActions().length > 0;
+                return restApi.getOwnActions();
             };
 
             $scope.loadCurrentElements = function(type){
+                $scope.currentElements = [];
+                $('#editor-icon-stand').children().remove();
                 if (type == 'block'){
 
                 }else if (type == 'source'){
+
                     $scope.loadSources();
                 }else if (type == 'sepa'){
                     $scope.loadSepas();
@@ -48,41 +52,150 @@ editorControllers
             $scope.loadSources = function(){
                 restApi.getOwnSources()
                     .success(function(sources){
+
                         $.each(sources, function(i, source){
-                           //getStreams for Source
                             restApi.getOwnStreams(source)
                                 .success(function(streams){
-                                    $.each(streams, function(i, stream){
-                                        $scope.currentElements.push(stream);
-                                    });
+
+                                    $scope.createElements(streams, "stream", "#editor-icon-stand");
+
                                 })
                                 .error(function(msg){
                                     console.log(msg);
                                 });
-                           createStreams(data);
+
                         });
 
-                        $scope.currentElements = sources;
+                        //$scope.currentElements = sources;
                         console.log($scope.currentElements);
                     });
             };
+
+            $scope.createElements = function(data, type, containerId){
+                console.log("creating elements")
+                $.each(data, function (i, json) {
+                    var alreadyLoaded = false;
+                    for (var i = 0, el; el = $scope.currentElements[i]; i++){
+                        if (el.name == json.name){
+                            console.log("already loaded " + json.name )
+                            alreadyLoaded = true
+                        }
+                    }
+                    if (alreadyLoaded) return;
+                    $scope.currentElements.push(json);
+
+
+                    var idString = type + i;
+                    var $newElement = $('<span>')//<img>
+                        .attr({
+                            id: idString,
+                            class: "draggable-icon tt",
+                            "data-toggle": "tooltip",
+                            "data-placement": "top",
+                            title: json.name
+                        })
+                        .addClass(type)
+                        .data("JSON", json)
+                        .on("contextmenu", staticContextMenu)
+                        .appendTo(containerId);
+                    if (json.iconUrl == null) {
+                        addTextIconToElement($newElement, $newElement.data("JSON").name);
+                    } else {
+                        $('<img>').attr("src", json.iconUrl).addClass('draggable-img').on("contextmenu", staticContextMenu)
+                            .data("JSON", json)
+                            .appendTo($newElement)
+                            .error(function(){
+                                addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
+                                $(this).remove();
+                            });
+                    }
+
+
+
+
+                });
+                makeDraggable(type);
+                initTooltips();
+            };
+
+
             $scope.loadSepas = function(){
                 restApi.getOwnSepas()
                     .success(function(sepas){
-                        $scope.currentElements = sepas;
+                        console.log(sepas);
+                        $scope.createElements(sepas, "sepa", "#editor-icon-stand")
+                    })
+                    .error(function(msg) {
+                        console.log(msg);
                     });
             };
             $scope.loadActions = function(){
                 restApi.getOwnActions()
                     .success(function(actions){
-                        $scope.currentElements = actions;
+                        $scope.createElements(actions, "action", "#editor-icon-stand")
                     });
             };
 
+            $scope.streamDropped = function($newElement, endpoints){
+                $scope.isStreamInAssembly = true;
+                $newElement.addClass("connectable stream");
+
+                if (endpoints) {
+                    jsPlumb.addEndpoint($newElement, streamEndpointOptions);
+                }
+            };
+            $scope.sepaDropped = function($newElement, endpoints){
+                $scope.isSepaInAssembly = true;
+                $newElement.addClass("connectable sepa");
+
+                if ($newElement.data("JSON").staticProperties != null && !state.adjustingPipelineState && !$newElement.data("options")) {
+                    $newElement
+                        .addClass('disabled');
+                }
+
+
+                if (endpoints) {
+                    if ($newElement.data("JSON").inputNodes < 2) { //1 InputNode
+
+                        jsPlumb.addEndpoint($newElement, leftTargetPointOptions);
+                    } else {
+                        jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.25));
+
+                        jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.75));
+                    }
+                    jsPlumb.addEndpoint($newElement, sepaEndpointOptions);
+                }
+            };
+            $scope.actionDropped = function($newElement, endpoints){
+                $scope.isActionInAssembly = true;
+
+                $newElement
+                    .addClass("connectable action");
+
+                if ($newElement.data("JSON").staticProperties != null && !state.adjustingPipelineState) {
+                    $newElement
+                        .addClass('disabled');
+                }
+                if (endpoints) {
+                    jsPlumb.addEndpoint($newElement, leftTargetPointOptions);
+                }
+            };
+
+            $scope.elementTextIcon = function (string){
+                var result ="";
+                if (string.length <= 4){
+                    result = string;
+                }else {
+                    var words = string.split(" ");
+                    words.forEach(function(word, i){
+                        result += word.charAt(0);
+                    });
+                }
+                return result.toUpperCase();
+            }
+
 
             $scope.tabs = [
-
-
 
                 {
                     title : 'Blocks',
@@ -97,12 +210,12 @@ editorControllers
                 {
                     title : 'Sepas',
                     type: 'sepa',
-                    disabled: !($scope.isStreamInAssembly) || !($scope.ownSepasAvailable())
+                    disabled: !($scope.ownSepasAvailable())
                 },
                 {
                     title : 'Actions',
                     type: 'action',
-                    disabled: !($scope.isSepaInAssembly) || !($scope.ownActionsAvailable())
+                    disabled: !($scope.ownActionsAvailable())
                 }
 
 
@@ -111,6 +224,7 @@ editorControllers
 
             init("Proa");
 
+            //TODO ANGULARIZE
             //Initiate assembly and jsPlumb functionality-------
             jsPlumb.ready(function (e) {
                 console.log("READY");
@@ -136,7 +250,48 @@ editorControllers
                     jsPlumb.repaintEverything(true);
                 };
 
-                initAssembly();
+                (function initAssembly() {
+
+                    $('#clear').click(clearAssembly);
+
+                    $('#assembly').droppable({
+                        tolerance: "fit",
+                        drop: function (element, ui) {
+
+                            if (ui.draggable.hasClass('draggable-icon')) {
+                                if (ui.draggable.data("JSON") == null) {
+                                    alert("No JSON - Data for Dropped element");
+                                    return false;
+                                }
+                                //Neues Container Element für Icon / identicon erstellen
+                                //TODO MOVE TO CONTROLLER
+                                var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+
+                                //Droppable Streams
+                                if (ui.draggable.hasClass('stream')) {
+                                    $scope.streamDropped($newState, true);
+
+                                    var tempPipeline = new Pipeline();
+                                    tempPipeline.addElement($newState[0]);
+                                    initRecs(tempPipeline, $newState);
+
+                                    //$newState.hover(showRecButton, hideRecButton);
+
+                                    //Droppable Sepas
+                                } else if (ui.draggable.hasClass('sepa')) {
+                                    $scope.sepaDropped($newState, true);
+
+                                    //Droppable Actions
+                                } else if (ui.draggable.hasClass('action')) {
+                                    $scope.actionDropped($newState, true);
+                                }
+                                initTooltips();
+                            }
+                            jsPlumb.repaintEverything(true);
+                        }
+
+                    }); //End #assembly.droppable()
+                })();
 
                 $("#assembly")
                     .selectable({
@@ -145,54 +300,44 @@ editorControllers
                         filter: ".connectable.stream,.connectable.sepa:not('.disabled')",
                         delay: 150
 
+                    })
+                    .on('click',".recommended-item", function (e) {
+                        console.log(e);
+                        e.stopPropagation();
+                        createAndConnect(this);
                     });
+
                 jsPlumb.Defaults.Container = "assembly";
-                //Inititate accordion functionality-----------------
-                //$('#accordion').on('show.bs.collapse', function () {
-                //    $('#accordion').find('.in').collapse('hide');
-                //});
-                $('#collapseOne,#collapseTwo,#collapseThree').collapse({toggle: false});
 
                 $(document).click(function () {
                     $('#assemblyContextMenu').hide();
                     $('#staticContextMenu').hide();
                     $('.circleMenu-open').circleMenu('close');
                 });
-                $('#sources').on('change', function () {
-                    $(this)
-                        .css("background-color", "#044")
-                        .animate("200")
-                        .css("background-color", "")
-                        .animate("200");
-                });
 
                 //Bind click handler--------------------------------
-                $("#pipelineTableBody").on("click", "tr", function () {
-                    if (!$(this).data("active") || $(this).data("active") == undefined) {
-                        $(this).data("active", true);
-                        $(this).addClass("info");
-                        $("#pipelineTableBody").children().not(this).removeClass("info");
-                        $("#pipelineTableBody").children().not(this).data("active", false);
-                        clearPipelineDisplay();
-                        displayPipeline($(this).data("JSON"));
-                    } else {
+                //$("#pipelineTableBody").on("click", "tr", function () {
+                //    if (!$(this).data("active") || $(this).data("active") == undefined) {
+                //        $(this).data("active", true);
+                //        $(this).addClass("info");
+                //        $("#pipelineTableBody").children().not(this).removeClass("info");
+                //        $("#pipelineTableBody").children().not(this).data("active", false);
+                //        clearPipelineDisplay();
+                //        displayPipeline($(this).data("JSON"));
+                //    } else {
+                //
+                //    }
+                //});
+                //
+                //$('a[data-toggle="tab"]')
+                //    .on('hide.bs.tab', function (e) {
+                //        clearTab(e);
+                //    })
+                //    .on('show.bs.tab', function (e) {
+                //        toTab(e);
+                //    });
 
-                    }
-                });
 
-                $('a[data-toggle="tab"]')
-                    .on('hide.bs.tab', function (e) {
-                        clearTab(e);
-                    })
-                    .on('show.bs.tab', function (e) {
-                        toTab(e);
-                    });
-
-                $('#assembly').on('click',".recommended-item", function (e) {
-                    console.log(e);
-                    e.stopPropagation();
-                    createAndConnect(this);
-                })
 
             });
 
