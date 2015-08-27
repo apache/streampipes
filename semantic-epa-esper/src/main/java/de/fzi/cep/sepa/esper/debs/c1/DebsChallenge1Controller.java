@@ -33,8 +33,8 @@ public class DebsChallenge1Controller extends EpDeclarer<DebsChallenge1Parameter
 	public SepaDescription declareModel() {
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		SepaDescription desc = new SepaDescription("/sepa/debs/c1", "DEBS Challenge v1",
-				"Solves query 1 of the 2015 Debs Challenge", "", "/sepa/debs/c1", domains);
+		SepaDescription desc = new SepaDescription("sepa/debs/c1", "DEBS Challenge v1",
+				"Solves query 1 of the 2015 Debs Challenge", "");
 		try {
 			EventStream stream1 = new EventStream();
 

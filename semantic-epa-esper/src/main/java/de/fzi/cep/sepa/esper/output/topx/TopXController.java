@@ -7,7 +7,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -32,10 +31,7 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-	
+
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = new EventPropertyPrimitive(XSD._integer.toString(), "", "", Utils.createList(URI.create("http://schema.org/Number")));
 		eventProperties.add(e1);
@@ -45,7 +41,7 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property", "", "/sepa/topX", domains);
+		SepaDescription desc = new SepaDescription("sepa/topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property");
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());

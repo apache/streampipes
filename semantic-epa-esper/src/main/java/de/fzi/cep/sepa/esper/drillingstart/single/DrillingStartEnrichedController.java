@@ -1,19 +1,13 @@
 package de.fzi.cep.sepa.esper.drillingstart.single;
 
-import java.lang.reflect.InvocationTargetException;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openrdf.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.compose.Compose;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -26,7 +20,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -63,9 +56,6 @@ public class DrillingStartEnrichedController extends EpDeclarer<DrillingStartEnr
 	
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
 		EventStream stream1 = new EventStream();
 		
 		EventSchema schema1 = new EventSchema();
@@ -76,7 +66,7 @@ public class DrillingStartEnrichedController extends EpDeclarer<DrillingStartEnr
 		schema1.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("/sepa/drillingstartenriched", "Drilling Start", "Detects start of a drilling process (starting from single event source)", "", "/sepa/drillingstartenriched", domains);
+		SepaDescription desc = new SepaDescription("sepa/drillingstartenriched", "Drilling Start", "Detects start of a drilling process (starting from single event source)");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
 		
 		

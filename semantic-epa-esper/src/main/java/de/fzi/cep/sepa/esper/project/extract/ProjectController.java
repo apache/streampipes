@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -22,9 +21,6 @@ public class ProjectController extends EpDeclarer<ProjectParameter>{
 
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();			
 		EventSchema schema1 = new EventSchema();
@@ -33,7 +29,7 @@ public class ProjectController extends EpDeclarer<ProjectParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/project", "General Project EPA", "Outputs a selectable subset of an input event type", "", "/sepa/project", domains);
+		SepaDescription desc = new SepaDescription("sepa/project", "General Project EPA", "Outputs a selectable subset of an input event type");
 
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);

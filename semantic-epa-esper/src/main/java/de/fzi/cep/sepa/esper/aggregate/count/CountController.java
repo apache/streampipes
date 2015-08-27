@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.aggregate.avg.Aggregation;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -44,7 +43,7 @@ public class CountController extends EpDeclarer<CountParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.", "", "/sepa/count", domains);
+		SepaDescription desc = new SepaDescription("sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Counter_Icon_HQ.png");
 		
 		//TODO check if needed

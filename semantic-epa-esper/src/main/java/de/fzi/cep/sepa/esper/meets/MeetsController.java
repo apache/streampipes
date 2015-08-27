@@ -9,7 +9,6 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.pattern.PatternParameters;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -36,9 +35,6 @@ public class MeetsController extends EpDeclarer<PatternParameters>{
 
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		// 1st location-based stream
 		EventStream stream1 = new EventStream();
@@ -66,7 +62,7 @@ public class MeetsController extends EpDeclarer<PatternParameters>{
 		schema2.setEventProperties(eventProperties2);
 		stream2.setEventSchema(schema2);
 		
-		SepaDescription desc = new SepaDescription("/sepa/meets", "Geospatial distance", "Detects two location-based streams within a given distance", "", "/sepa/meets", domains);
+		SepaDescription desc = new SepaDescription("sepa/meets", "Geospatial distance", "Detects two location-based streams within a given distance");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

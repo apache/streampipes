@@ -33,7 +33,7 @@ public class ComposeController extends EpDeclarer<ComposeParameters>{
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SepaDescription desc = new SepaDescription("/sepa/compose", "Compose EPA", "", "", "/sepa/compose", domains);
+		SepaDescription desc = new SepaDescription("sepa/compose", "Compose EPA", "");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

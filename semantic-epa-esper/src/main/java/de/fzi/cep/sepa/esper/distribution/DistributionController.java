@@ -7,9 +7,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.compose.Compose;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -31,9 +29,6 @@ public class DistributionController extends EpDeclarer<DistributionParameters>{
 
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 			
 		EventStream stream1 = new EventStream();
 		
@@ -41,7 +36,7 @@ public class DistributionController extends EpDeclarer<DistributionParameters>{
 		EventPropertyPrimitive p1 = new EventPropertyPrimitive(Utils.createURI(SO.Text));
 		schema1.addEventProperty(p1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/distribution", "Distribution", "Computes current value distribution", "", "/sepa/distribution", domains);
+		SepaDescription desc = new SepaDescription("sepa/distribution", "Distribution", "Computes current value distribution");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);

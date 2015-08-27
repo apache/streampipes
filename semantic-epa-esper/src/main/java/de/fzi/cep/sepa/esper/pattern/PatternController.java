@@ -6,7 +6,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
@@ -29,14 +28,11 @@ public class PatternController extends EpDeclarer<PatternParameters>{
 	
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+	
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SepaDescription desc = new SepaDescription("/sepa/pattern", "Pattern Detector", "Detects AND/OR/SEQUENCE-based patterns", "", "/sepa/pattern", domains);
+		SepaDescription desc = new SepaDescription("sepa/pattern", "Pattern Detector", "Detects AND/OR/SEQUENCE-based patterns");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

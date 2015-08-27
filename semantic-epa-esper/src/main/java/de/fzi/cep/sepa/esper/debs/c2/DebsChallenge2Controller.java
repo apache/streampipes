@@ -6,10 +6,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.compose.Compose;
-import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
-import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -35,10 +31,8 @@ public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameter
 	@Override
 	public SepaDescription declareModel() {
 		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		SepaDescription desc = new SepaDescription("/sepa/debs/c2", "DEBS Challenge v2",
-				"Solves query 2 of the 2015 Debs Challenge", "", "/sepa/debs/c2", domains);
+		SepaDescription desc = new SepaDescription("sepa/debs/c2", "DEBS Challenge v2",
+				"Solves query 2 of the 2015 Debs Challenge");
 		try {
 			EventStream stream1 = new EventStream();
 
@@ -135,14 +129,7 @@ public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameter
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
-		
-		EventStream inputStream = sepa.getInputStreams().get(0);
-		
-		EventGrounding inputGrounding = inputStream.getEventGrounding();
-		String topicPrefix = "topic://";
-		
-		String inName = topicPrefix + inputGrounding.getTransportProtocol().getTopicName();
-		
+				
 		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByName(sepa, "cellSize"))).getValue());
 		

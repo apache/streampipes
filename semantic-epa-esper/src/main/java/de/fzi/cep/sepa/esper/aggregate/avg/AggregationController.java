@@ -7,7 +7,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -26,12 +25,11 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
-import de.fzi.cep.sepa.model.impl.quality.Precision;
 import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.model.vocabulary.MhWirth;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
@@ -39,12 +37,9 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-
+		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI("http://schema.org/Number"));
+		EventPropertyPrimitive e1 = new EventPropertyPrimitive(Utils.createURI(SO.Number));
 
 		List<EventPropertyQualityRequirement> numberQualities = new ArrayList<EventPropertyQualityRequirement>();
 		numberQualities.add(new EventPropertyQualityRequirement(new Latency(1), new Latency(50)));
@@ -59,8 +54,8 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 
-		SepaDescription desc = new SepaDescription("/sepa/aggregation", "Aggregation",
-				"Performs different aggregation functions", "", "/sepa/aggregation", domains);
+		SepaDescription desc = new SepaDescription("sepa/aggregation", "Aggregation",
+				"Performs different aggregation functions");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
 		// TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl + desc.getElementId());

@@ -5,18 +5,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.distribution.Distribution;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
@@ -38,12 +33,8 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 
 	@Override
 	public SepaDescription declareModel() {
-		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
-		SepaDescription desc = new SepaDescription("/sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description", "", "/sepa/numericalfilter", domains);
+			
+		SepaDescription desc = new SepaDescription("sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
 		
 		List<EventProperty> propertyRestrictions = new ArrayList<>();

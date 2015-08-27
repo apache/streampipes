@@ -7,7 +7,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -29,9 +28,7 @@ public class DrillingStopController extends EpDeclarer<DrillingStopParameters>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
-		
-		System.out.println(sepa.getBelongsTo());
-		
+			
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
 		
@@ -57,9 +54,7 @@ public class DrillingStopController extends EpDeclarer<DrillingStopParameters>{
 	
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+	
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
@@ -72,7 +67,7 @@ public class DrillingStopController extends EpDeclarer<DrillingStopParameters>{
 		schema2.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("/sepa/drillingstop", "Driling Stop", "Detects stop of a drilling process", "", "/sepa/drillingstop", domains);
+		SepaDescription desc = new SepaDescription("sepa/drillingstop", "Driling Stop", "Detects stop of a drilling process");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
 		
 		

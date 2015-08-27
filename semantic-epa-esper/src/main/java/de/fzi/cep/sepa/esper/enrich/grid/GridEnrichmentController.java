@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
@@ -28,8 +27,8 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 	@Override
 	public SepaDescription declareModel() {
 		
-		SepaDescription sepa = new SepaDescription("/sepa/grid", "Grid Cell Grouping",
-				"Groups location-based events into cells of a given size", "", "/sepa/grid", Utils.createList(Domain.DOMAIN_PERSONAL_ASSISTANT.toString()));
+		SepaDescription sepa = new SepaDescription("sepa/grid", "Grid Cell Grouping",
+				"Groups location-based events into cells of a given size");
 		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();

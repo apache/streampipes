@@ -32,11 +32,8 @@ public class MathController extends EpDeclarer<MathParameter>{
 	@Override
 	public SepaDescription declareModel() {
 		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		SepaDescription desc = new SepaDescription("/sepa/math", "Math EPA",
-				"performs simple calculations on event properties", "", "/sepa/math", domains);
+				"performs simple calculations on event properties");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {
 			EventStream stream1 = new EventStream();

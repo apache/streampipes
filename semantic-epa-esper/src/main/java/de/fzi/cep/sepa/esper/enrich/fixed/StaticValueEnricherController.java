@@ -6,7 +6,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -45,9 +44,7 @@ public class StaticValueEnricherController extends EpDeclarer<StaticValueEnriche
 	
 	@Override
 	public SepaDescription declareModel() {
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+	
 		EventStream stream1 = new EventStream();
 		
 		EventSchema schema1 = new EventSchema();
@@ -58,7 +55,7 @@ public class StaticValueEnricherController extends EpDeclarer<StaticValueEnriche
 		schema1.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("/sepa/staticValueEnricher", "Static value enricher", "Static Value Enrichment", "", "/sepa/staticValueEnricher", domains);
+		SepaDescription desc = new SepaDescription("sepa/staticValueEnricher", "Static value enricher", "Static Value Enrichment");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);

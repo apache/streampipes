@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -25,12 +24,7 @@ public class TimestampController extends EpDeclarer<TimestampParameter>{
 
 	@Override
 	public SepaDescription declareModel() {
-		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
-		
+				
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
@@ -38,7 +32,7 @@ public class TimestampController extends EpDeclarer<TimestampParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload", "", "/sepa/enrich/timestamp", domains);
+		SepaDescription desc = new SepaDescription("sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());

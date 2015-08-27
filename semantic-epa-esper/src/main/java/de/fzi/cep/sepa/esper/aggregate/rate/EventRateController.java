@@ -39,7 +39,7 @@ public class EventRateController extends EpDeclarer<EventRateParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("/sepa/eventrate", "Event rate", "Computes current event rate", "", "/sepa/eventrate", domains);
+		SepaDescription desc = new SepaDescription("sepa/eventrate", "Event rate", "Computes current event rate");
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
