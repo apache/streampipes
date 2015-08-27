@@ -8,6 +8,11 @@ angular
         contextPath : "/semantic-epa-backend",
         api : "/api/v2"
     })
+    .run(function($rootScope, $location, authService) {
+	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
+	        authService.authenticated();
+	    });
+    })
     .config(function($mdIconProvider) {
 	
 		$mdIconProvider
@@ -92,54 +97,17 @@ angular
                 controller  : 'CreateCtrl'
             })
 	})
-    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi) {
+    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, confService) {
        
     	$scope.toggleLeft = buildToggler('left');
     	
     	$scope.userInfo = {
-    			Name : "Dominik",
+    			Name : "D",
     			Avatar : null
     	};
-    	    	
-		$rootScope.authenticated = function() {
-			$http.get("/semantic-epa-backend/api/v2/admin/authc")
-	        .then(
-	          function(response) {
-	        	  console.log(response);
-	        	  console.log(response.data.success);
-	        	  
-	        	if (response.data.success == false) 
-	        		{
-	        			$rootScope.authenticated = false;
-	        			$location.path("/login");
-	        		}
-	        	else {
-	        	$rootScope.username = response.data.info.authc.principal.username;
-	        	$rootScope.email = response.data.info.authc.principal.email;
-		        $rootScope.authenticated = true;
-	          }
-	          },
-	          function(response) {
-	        	  $rootScope.username = undefined;
-			      $rootScope.authenticated = false;
-		          $location.path("/login");
-	          });
-		};
-		
-		$scope.configured = restApi.configured().success(function(msg) {
-			if (msg.configured)
-				{
-					$rootScope.authenticated();
-				}
-			else {
-					$rootScope.authenticated = false;
-					$location.path("/setup");
-				}
-		}).error(function() {
-			$location.path("/error");
-		});
-		
-		
+    	
+    	confService.configured();
+    
 		$rootScope.go = function ( path ) {
 			  $location.path( path );
 		};
@@ -246,13 +214,12 @@ angular
 	        }
 	    });
 	})
-	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http) {
+	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, confService) {
 		
 		$scope.loading = false;
-		
+			
 		$scope.logIn = function() {
 	    	  $scope.loading = true;
-	    	  console.log($scope.credentials);
 		      $http.post("/semantic-epa-backend/api/v2/admin/login", $scope.credentials)
 		      .then(
 		          function(response) { // success
@@ -265,11 +232,8 @@ angular
 		            $rootScope.authenticated = false;
 		            return $q.reject("Login failed");
 		          }
-		        )
-		      
-	      };
-
-	      
+		        )      
+	      };    
 	})
 	.controller('MarketplaceCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
 		
@@ -309,7 +273,6 @@ angular
 	    $scope.loadAvailableSepas = function () {
 	        restApi.getAvailableSepas()
 	            .success(function (sepas) {
-	            	console.log(sepas);
 	            	$scope.currentElements = sepas;
 	            })
 	            .error(function (error) {
@@ -328,7 +291,6 @@ angular
 	    }
 	    
 	    $scope.toggleFavorite = function(element, type) {
-			   console.log(type);
 			   if (type == 'action') $scope.toggleFavoriteAction(element, type);
 			   else if (type == 'source') $scope.toggleFavoriteSource(element, type);
 			   else if (type == 'sepa') $scope.toggleFavoriteSepa(element, type);
@@ -356,7 +318,6 @@ angular
 		   }
 		   
 		   $scope.toggleFavoriteSepa = function (sepa, type) {
-			   console.log(sepa);
 			   if (sepa.favorite) {
 				   restApi.removePreferredSepa(sepa.elementId).success(function (msg) {
 					$scope.showToast(msg.notifications[0].title);   
@@ -378,7 +339,6 @@ angular
 		   }
 		   
 		   $scope.toggleFavoriteSource = function (source, type) {
-			   console.log(source);
 			   if (source.favorite) {
 				   restApi.removePreferredSource(source.elementId).success(function (msg) {
 					$scope.showToast(msg.notifications[0].title);   
@@ -492,7 +452,6 @@ angular
 	    }
 	    
 	   $scope.toggleFavorite = function(element, type) {
-		   console.log(type);
 		   if (type == 'action') $scope.toggleFavoriteAction(element, type);
 		   else if (type == 'source') $scope.toggleFavoriteSource(element, type);
 		   else if (type == 'sepa') $scope.toggleFavoriteSepa(element, type);
@@ -542,7 +501,6 @@ angular
 	   }
 	   
 	   $scope.toggleFavoriteSepa = function (sepa, type) {
-		   console.log(sepa);
 		   if (sepa.favorite) {
 			   restApi.removePreferredSepa(sepa.elementId).success(function (msg) {
 				$scope.showToast(msg.notifications[0].title);   
@@ -564,7 +522,6 @@ angular
 	   }
 	   
 	   $scope.toggleFavoriteSource = function (source, type) {
-		   console.log(source);
 		   if (source.favorite) {
 			   restApi.removePreferredSource(source.elementId).success(function (msg) {
 				$scope.showToast(msg.notifications[0].title);   
@@ -623,7 +580,11 @@ angular
 			restApi.addBatch($scope.endpointUrl, true)
             .success(function (data) {
             	$scope.loading = false;
-            	console.log(data);
+            	angular.forEach(data, function(element, index) {
+            		$scope.results[index] = {};
+            		$scope.results[index].success = element.success;
+            		$scope.results[index].msg = element.notifications[0].description;
+            	});
             })
 		}
 		
@@ -849,14 +810,56 @@ angular
 	      }];
 	    return httpInterceptor;
     }])
+    .factory('confService', function($rootScope, $http, restApi, authService) {
+        return {
+            configured: function() {
+            	restApi.configured().success(function(msg) {
+        			if (msg.configured)
+        				{
+        					authService.authenticated();
+        				}
+        			else {
+        					$rootScope.authenticated = false;
+        					$location.path("/setup");
+        				}
+        		}).error(function() {
+        			$location.path("/error");
+        		});
+            }
+        };
+    })
+    .factory('authService', function($http, $rootScope, $location, restApi) {
+        return {
+            authenticated: function() {
+            	$http.get("/semantic-epa-backend/api/v2/admin/authc")
+        	        .then(
+        	          function(response) {
+        	        	if (response.data.success == false) 
+                		{
+                			$rootScope.authenticated = false;
+                			$location.path("/login");
+                		}
+        	        	else {
+        	        	$rootScope.username = response.data.info.authc.principal.username;
+        	        	$rootScope.email = response.data.info.authc.principal.email;
+        		        $rootScope.authenticated = true;
+        	          }
+        	          },
+        	          function(response) {
+        	        	  $rootScope.username = undefined;
+        			      $rootScope.authenticated = false;
+        		          $location.path("/login");
+        	          });
+            }
+        };
+    })
 	.factory('restApi', ['$rootScope', '$http', 'apiConstants', function($rootScope, $http, apiConstants) {
 	    
 	    var restApi = {};
 	    
 	    var urlBase = function() {
 	    	return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;
-	    };
-	    
+	    };   
 	
 	    restApi.getOwnActions = function () {
 	        return $http.get(urlBase() +"/actions/own");

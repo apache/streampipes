@@ -5,14 +5,16 @@ var editorControllers = angular.module('editorControllers', ['ngMaterial','ngMdI
 
 
 editorControllers
-    .controller('EditorCtrl', ['$scope', '$http','restApi',
-        function ($scope, $http, restApi) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$http','restApi',
+        function ($scope, $rootScope, $http, restApi) {
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
-
+            
+           console.log($rootScope.email);
+            
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
             };
@@ -263,7 +265,7 @@ editorControllers
                                     alert("No JSON - Data for Dropped element");
                                     return false;
                                 }
-                                //Neues Container Element für Icon / identicon erstellen
+                                //Neues Container Element fï¿½r Icon / identicon erstellen
                                 //TODO MOVE TO CONTROLLER
                                 var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
 

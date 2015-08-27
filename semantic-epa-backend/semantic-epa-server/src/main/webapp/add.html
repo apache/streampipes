@@ -14,6 +14,7 @@
 							<div class="form-actions">
 							<md-button class="md-accent md-raised" type="submit"
 								ng-disabled="addFromEndpointForm.$pristine || addFromEndpointForm.$invalid || loading">Add Elements</md-button>
+							<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
 							</div>
 						</form>
 					</div>
