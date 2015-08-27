@@ -23,6 +23,11 @@ public class SecDescription extends ConsumableSEPAElement{
 		this.eventStreams = new ArrayList<>();
 	}
 	
+	public SecDescription(String uri, String name, String description)
+	{
+		this(uri, name, description, "");
+	}
+	
 	public SecDescription()
 	{
 		super();
