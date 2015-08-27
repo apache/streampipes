@@ -18,15 +18,12 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 public class SecInvocation extends InvocableSEPAElement{
 
 	private static final long serialVersionUID = -2345635798917416757L;
-	
-	List<String> domains;
-	
+		
 	public SecInvocation(SecDescription sec)
 	{
 		super();
 		this.setName(sec.getName());
 		this.setDescription(sec.getDescription());
-		this.setDomains(sec.getDomains());
 		this.setIconUrl(sec.getIconUrl());
 		this.setInputStreams(sec.getEventStreams());
 		this.setSupportedGrounding(sec.getSupportedGrounding());
@@ -54,15 +51,5 @@ public class SecInvocation extends InvocableSEPAElement{
 	public void setStaticProperties(List<StaticProperty> staticProperties) {
 		this.staticProperties = staticProperties;
 	}
-
-	public List<String> getDomains() {
-		return domains;
-	}
-
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
-	}
-	
-	
 	
 }

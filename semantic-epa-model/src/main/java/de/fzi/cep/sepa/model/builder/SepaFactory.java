@@ -15,11 +15,15 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public class SepaFactory {
 
-	public static SepaDescription createSEPA(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
+	public static SepaDescription createSEPA(String pathName, String name, String description, String iconUrl)
 	{
-		return new SepaDescription(uri, name, description, iconUrl, pathName, domains);
+		return new SepaDescription(pathName, name, description, iconUrl);
 	}
 	
+	public static SepaDescription createSEPA(String pathName, String name, String description)
+	{
+		return new SepaDescription(pathName, name, description);
+	}
 	
 	public static EventStream createEventStream(String uri, String name, String description, List<EventProperty> eventProperties)
 	{

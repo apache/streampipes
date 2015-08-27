@@ -35,26 +35,24 @@ public class SepDescription extends NamedSEPAElement {
 	List<EventStream> eventStreams;	
 	
 	EventSource eventSource;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasDomain")
-	List<String> domains;
 		
 	public SepDescription() {
 		super();
 		eventStreams = new ArrayList<EventStream>();
 	}
 	
-	public SepDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<String> domains, EventSource eventSource)
+	public SepDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams)
 	{
 		super(uri, name, description, iconUrl);
 		this.eventStreams = eventStreams;
-		this.domains = domains;
 	}
 	
-	public SepDescription(String uri, String name2, String description2, String iconUrl, List<String> domains, EventSource eventSource) {
-		this(uri, name2, description2, iconUrl, new ArrayList<EventStream>(), domains, eventSource);
+	public SepDescription(String uri, String name2, String description2, String iconUrl) {
+		this(uri, name2, description2, iconUrl, new ArrayList<EventStream>());
+	}
+	
+	public SepDescription(String uri, String name, String description) {
+		this(uri, name, description, "", new ArrayList<EventStream>());
 	}
 
 	public List<EventStream> getEventStreams() {
@@ -76,16 +74,5 @@ public class SepDescription extends NamedSEPAElement {
 
 	public void setEventSource(EventSource eventSource) {
 		this.eventSource = eventSource;
-	}
-
-	public List<String> getDomains() {
-		return domains;
-	}
-
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
-	}
-	
-	
-			
+	}			
 }

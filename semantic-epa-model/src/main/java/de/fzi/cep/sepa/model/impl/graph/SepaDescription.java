@@ -31,33 +31,34 @@ public class SepaDescription extends ConsumableSEPAElement {
 	List<OutputStrategy> outputStrategies;
 	
 	String pathName;
-	
-	@OneToMany(fetch = FetchType.EAGER,
-			   cascade = {CascadeType.ALL})
-	@RdfProperty("sepa:hasDomain")
-	List<String> domains;
-	
+		
 	public SepaDescription()
 	{
 		super();
 		this.outputStrategies = new ArrayList<>();
 	}
 	
-	public SepaDescription(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
+	public SepaDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
 	{
 		super(uri, name, description, iconUrl);
-		this.pathName = pathName;
+		this.pathName = uri;
 		this.eventStreams = eventStreams;
 		this.staticProperties = staticProperties;
-		this.domains = domains;
 		this.outputStrategies = outputStrategies;
 	}
 	
-	public SepaDescription(String uri, String name, String description, String iconUrl, String pathName, List<String> domains)
+	public SepaDescription(String pathName, String name, String description, String iconUrl)
 	{
-		super(uri, name, description, iconUrl);
+		super(pathName, name, description, iconUrl);
 		this.pathName = pathName;
-		this.domains = domains;
+		eventStreams = new ArrayList<EventStream>();
+		staticProperties = new ArrayList<StaticProperty>();
+	}
+	
+	public SepaDescription(String pathName, String name, String description)
+	{
+		super(pathName, name, description, "");
+		this.pathName = pathName;
 		eventStreams = new ArrayList<EventStream>();
 		staticProperties = new ArrayList<StaticProperty>();
 	}
@@ -69,15 +70,6 @@ public class SepaDescription extends ConsumableSEPAElement {
 
 	public void setPathName(String pathName) {
 		this.pathName = pathName;
-	}
-
-	
-	public List<String> getDomains() {
-		return domains;
-	}
-
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
 	}
 
 	public List<OutputStrategy> getOutputStrategies() {

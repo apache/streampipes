@@ -41,14 +41,12 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 	List<OutputStrategy> outputStrategies;
 	
 	String pathName;
-	List<String> domains;
 	
 	public SepaInvocation(SepaDescription sepa)
 	{
 		super();
 		this.setName(sepa.getName());
 		this.setDescription(sepa.getDescription());
-		this.setDomains(sepa.getDomains());
 		this.setIconUrl(sepa.getIconUrl());
 		this.setInputStreams(sepa.getEventStreams());
 		this.setSupportedGrounding(sepa.getSupportedGrounding());
@@ -70,20 +68,18 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		inputStreams = new ArrayList<EventStream>();
 	}
 	
-	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName, List<String> domains, List<EventStream> eventStreams, List<StaticProperty> staticProperties)
+	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName, List<EventStream> eventStreams, List<StaticProperty> staticProperties)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
 		this.inputStreams = eventStreams;
 		this.staticProperties = staticProperties;
-		//this.domains = domains;
 	}
 	
-	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName, List<Domain> domains)
+	public SepaInvocation(String uri, String name, String description, String iconUrl, String pathName)
 	{
 		super(uri, name, description, iconUrl);
 		this.pathName = pathName;
-		//this.domains = domains;
 		inputStreams = new ArrayList<EventStream>();
 		staticProperties = new ArrayList<StaticProperty>();
 	}
@@ -101,15 +97,6 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 
 	public void setPathName(String pathName) {
 		this.pathName = pathName;
-	}
-
-	
-	public List<String> getDomains() {
-		return domains;
-	}
-
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
 	}
 
 	public EventStream getOutputStream() {
