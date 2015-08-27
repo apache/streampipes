@@ -29,10 +29,10 @@ public class PropertiesFileInstallationStep implements InstallationStep {
 		try {
 			ConfigurationManager.storeWebappConfigurationToProperties(file, pathToFile, settings);
 			
-			return Arrays.asList(Notifications.success(NotificationType.PROPERTY_FILE_WRITTEN));
+			return Arrays.asList(Notifications.success("Writing configuration to file..."));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return Arrays.asList(Notifications.error(NotificationType.PROPERTY_FILE_WRITTEN));
+			return Arrays.asList(Notifications.error("Writing configuration to file..."));
 		}
 	}
 	
