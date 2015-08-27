@@ -16,9 +16,11 @@ import de.fzi.cep.sepa.endpoint.RestletConfig;
 import de.fzi.cep.sepa.endpoint.SecRestlet;
 import de.fzi.cep.sepa.endpoint.SepRestlet;
 import de.fzi.cep.sepa.endpoint.SepaRestlet;
+import de.fzi.cep.sepa.html.Description;
 import de.fzi.cep.sepa.html.EventConsumerWelcomePage;
 import de.fzi.cep.sepa.html.EventProcessingAgentWelcomePage;
 import de.fzi.cep.sepa.html.EventProducerWelcomePage;
+import de.fzi.cep.sepa.html.WelcomePage;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
@@ -27,20 +29,34 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 public class RestletGenerator {
 
 	private List<RestletConfig> restletConfigurations;
+	private List<Description> welcomePageDescriptions;
 	private int port;
+	private String contextPath;
+	private boolean standalone;
+	
+	public RestletGenerator(int port, String contextPath, boolean standalone) {
+		this.restletConfigurations = new ArrayList<>();
+		this.welcomePageDescriptions = new ArrayList<>();
+		this.port = port;
+		this.contextPath = contextPath;
+		this.standalone = standalone;
+	}
 	
 	public RestletGenerator(int port) {
 		this.restletConfigurations = new ArrayList<>();
+		this.welcomePageDescriptions = new ArrayList<>();
 		this.port = port;
+		this.contextPath = "";
+		this.standalone = true;
 	}
 	
-	public RestletGenerator addSepaRestlets(List<SemanticEventProcessingAgentDeclarer> declarers, String contextPath, boolean embedded) {
+	public RestletGenerator addSepaRestlets(List<SemanticEventProcessingAgentDeclarer> declarers) {
 		String baseUri = getUrl() +port +contextPath;
-		addConfig("", new EventProcessingAgentWelcomePage(baseUri +"/", declarers));
+		welcomePageDescriptions.addAll(new EventProcessingAgentWelcomePage(baseUri +"/", declarers).buildUris());
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
 			SepaDescription sepa = declarer.declareModel();
-			if (!embedded) 
+			if (!standalone) 
 				{
 					sepa.setPathName("/" +sepa.getPathName());
 					sepa.setUri(baseUri +sepa.getPathName());
@@ -50,20 +66,16 @@ public class RestletGenerator {
 		}
 		return this;
 	}
-	
-	public RestletGenerator addSepaRestlets(List<SemanticEventProcessingAgentDeclarer> declarers, boolean embedded) {
-		return addSepaRestlets(declarers, "", embedded);
-	}
-	
-	public RestletGenerator addSepRestlets(List<SemanticEventProducerDeclarer> declarers, String contextPath, boolean embedded) {
+		
+	public RestletGenerator addSepRestlets(List<SemanticEventProducerDeclarer> declarers) {
 		String baseUri = getBaseUri(port) +contextPath;
-		addConfig("", new EventProducerWelcomePage(baseUri +"/", declarers));
+		welcomePageDescriptions.addAll(new EventProducerWelcomePage(baseUri +"/", declarers).buildUris());
 
 		for (SemanticEventProducerDeclarer producer : declarers) {
 			SepDescription sep = producer.declareModel();
 			String currentPath;
 			
-			if (!embedded) 
+			if (!standalone) 
 			{
 				currentPath = "/" +sep.getUri();
 			}
@@ -84,18 +96,22 @@ public class RestletGenerator {
 		return this;
 	}
 	
-	public RestletGenerator addSepRestlets(List<SemanticEventProducerDeclarer> declarers, boolean embedded) {
-		return addSepRestlets(declarers, "", embedded);		
-	}
-	
-	public RestletGenerator addSecRestlets(List<SemanticEventConsumerDeclarer> declarers, String contextPath) {	
-		String baseUri = getBaseUri(port);
-		addConfig("", new EventConsumerWelcomePage(baseUri, declarers));
+	public RestletGenerator addSecRestlets(List<SemanticEventConsumerDeclarer> declarers) {	
+		String baseUri = getBaseUri(port) +contextPath;
+		welcomePageDescriptions.addAll(new EventConsumerWelcomePage(baseUri +"/", declarers).buildUris());
 
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
 
 			SecDescription sec = declarer.declareModel();
 			String pathName = sec.getUri();
+			if (!standalone) 
+			{
+				pathName = "/" +sec.getUri();
+			}
+			else
+			{
+				pathName = sec.getUri();
+			}
 			sec.setUri(baseUri + sec.getUri());
 			addConfig(pathName, new SecRestlet(sec, declarer));
 		}
@@ -103,13 +119,9 @@ public class RestletGenerator {
 		return this;
 	}
 	
-	
-	public RestletGenerator addSecRestlets(List<SemanticEventConsumerDeclarer> declarers) {	
-		return addSecRestlets(declarers, "");
-	}
-	
 	public List<RestletConfig> getRestletConfigurations()
 	{
+		addConfig("", new WelcomePage(welcomePageDescriptions));
 		return restletConfigurations;
 	}
 	

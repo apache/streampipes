@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.html;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.restlet.Request;
@@ -11,28 +10,27 @@ import org.restlet.representation.StringRepresentation;
 
 import de.fzi.cep.sepa.util.CorsHeaders;
 
-public abstract class WelcomePage<T> extends Restlet {
+public class WelcomePage extends Restlet {
 
-	protected List<Description> producers;
+	protected List<Description> descriptions;
 	
-	public WelcomePage()
+	public WelcomePage(List<Description> descriptions)
 	{
 		super();
-		this.producers = new ArrayList<>();
+		this.descriptions = descriptions;
 	}
 	
-	protected abstract void buildUris(String baseUri, List<T> declarers);
 	
 	 @Override
      public void handle(Request request, Response response) {
 		 if (request.getClientInfo().getAcceptedMediaTypes().stream().anyMatch(p -> p.getMetadata() == MediaType.APPLICATION_JSON))
 		 {
-			response.setEntity(new StringRepresentation(new JSONGenerator(producers).buildJson(), MediaType.APPLICATION_JSON));
+			response.setEntity(new StringRepresentation(new JSONGenerator(descriptions).buildJson(), MediaType.APPLICATION_JSON));
 			new CorsHeaders().make(response);	
 		 }
 		 else
 		 {
-			 response.setEntity(new StringRepresentation(new HTMLGenerator(producers).buildHtml(), MediaType.TEXT_HTML));
+			 response.setEntity(new StringRepresentation(new HTMLGenerator(descriptions).buildHtml(), MediaType.TEXT_HTML));
 		 }
     }
 }

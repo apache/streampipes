@@ -5,25 +5,23 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 
-public class EventConsumerWelcomePage extends WelcomePage<SemanticEventConsumerDeclarer>{
+public class EventConsumerWelcomePage extends WelcomePageGenerator<SemanticEventConsumerDeclarer>{
 
+	
 	public EventConsumerWelcomePage(String baseUri, List<SemanticEventConsumerDeclarer> declarers)
 	{
-		super();
-		buildUris(baseUri, declarers);
+		super(baseUri, declarers);
 	}
 	
 	@Override
-	protected void buildUris(String baseUri,
-			List<SemanticEventConsumerDeclarer> declarers) {
+	public List<Description> buildUris() {
 		for(SemanticEventConsumerDeclarer declarer : declarers)
 		{
 			Description producer = new AgentDescription();
 			producer.setName(declarer.declareModel().getName());
 			producer.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
-			producers.add(producer);
+			descriptions.add(producer);
 		}
-		
+		return descriptions;	
 	}
-
 }

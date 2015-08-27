@@ -34,6 +34,6 @@ public abstract class EmbeddedModelSubmitter extends Application {
 	
 	private List<RestletConfig> generateSepaRestlets(List<SemanticEventProcessingAgentDeclarer> sepaDeclarers, List<SemanticEventProducerDeclarer> sourceDeclarers, List<SemanticEventConsumerDeclarer> consumerDeclarers, int port, String contextPath)
 	{
-		return new RestletGenerator(port).addSepaRestlets(sepaDeclarers, contextPath, true).addSepRestlets(sourceDeclarers, contextPath, true).addSecRestlets(consumerDeclarers, contextPath).getRestletConfigurations();
+		return new RestletGenerator(port, contextPath, false).addSepaRestlets(sepaDeclarers).addSepRestlets(sourceDeclarers).addSecRestlets(consumerDeclarers).getRestletConfigurations();
 	}
 }

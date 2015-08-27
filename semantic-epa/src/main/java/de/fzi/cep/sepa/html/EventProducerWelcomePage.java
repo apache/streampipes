@@ -7,16 +7,15 @@ import java.util.List;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 
-public class EventProducerWelcomePage extends WelcomePage<SemanticEventProducerDeclarer> {
+public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEventProducerDeclarer> {
 
 	public EventProducerWelcomePage(String baseUri, List<SemanticEventProducerDeclarer> declarers)
 	{
-		super();
-		buildUris(baseUri, declarers);
+		super(baseUri, declarers);
 	}
 	
 	@Override
-	protected void buildUris(String baseUri, List<SemanticEventProducerDeclarer> declarers)
+	public List<Description> buildUris()
 	{
 		for(SemanticEventProducerDeclarer declarer : declarers)
 		{
@@ -34,8 +33,9 @@ public class EventProducerWelcomePage extends WelcomePage<SemanticEventProducerD
 				streams.add(ad);
 			}
 			description.setStreams(streams);
-			producers.add(description);
+			descriptions.add(description);
 		}
+		return descriptions;
 	}
 	
 }

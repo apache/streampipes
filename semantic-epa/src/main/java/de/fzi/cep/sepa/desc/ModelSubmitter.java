@@ -15,7 +15,7 @@ public class ModelSubmitter {
 			List<SemanticEventProducerDeclarer> producers) throws Exception {
 		
 		List<RestletConfig> restletConfigurations = new RestletGenerator(Configuration.getInstance().SOURCES_PORT)
-		.addSepRestlets(producers, false)
+		.addSepRestlets(producers)
 		.getRestletConfigurations();	
 		
 		return start(Configuration.getInstance().SOURCES_PORT, restletConfigurations);
@@ -23,7 +23,7 @@ public class ModelSubmitter {
 
 	public static boolean submitAgent(List<SemanticEventProcessingAgentDeclarer> declarers) throws Exception {
 		List<RestletConfig> restletConfigurations = new RestletGenerator(Configuration.getInstance().ESPER_PORT)
-			.addSepaRestlets(declarers, false)
+			.addSepaRestlets(declarers)
 			.getRestletConfigurations();	
 
 		return start(Configuration.getInstance().ESPER_PORT, restletConfigurations);

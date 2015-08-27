@@ -5,25 +5,24 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 
-public class EventProcessingAgentWelcomePage extends WelcomePage<SemanticEventProcessingAgentDeclarer> {
+public class EventProcessingAgentWelcomePage extends WelcomePageGenerator<SemanticEventProcessingAgentDeclarer> {
 
 	public EventProcessingAgentWelcomePage(String baseUri, List<SemanticEventProcessingAgentDeclarer> declarers)
 	{
-		super();
-		buildUris(baseUri, declarers);
+		super(baseUri, declarers);
 	}
 	
 	@Override
-	protected void buildUris(String baseUri,
-			List<SemanticEventProcessingAgentDeclarer> declarers) {
+	public List<Description> buildUris() {
 		for(SemanticEventProcessingAgentDeclarer declarer : declarers)
 		{
 			AgentDescription producer = new AgentDescription();
 			producer.setName(declarer.declareModel().getName());
 			producer.setDescription(declarer.declareModel().getDescription());
 			producer.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
-			producers.add(producer);
+			descriptions.add(producer);
 		}
+		return descriptions;
 	}
 
 }
