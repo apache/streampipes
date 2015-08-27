@@ -56,13 +56,13 @@ public class RestletGenerator {
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
 			SepaDescription sepa = declarer.declareModel();
-			if (!standalone) 
+			if (standalone) 
 				{
 					sepa.setPathName("/" +sepa.getPathName());
 					sepa.setUri(baseUri +sepa.getPathName());
 				}
 			else sepa.setUri(baseUri +"/" +sepa.getPathName());
-			addConfig(sepa.getPathName(), new SepaRestlet(sepa, declarer));
+			addConfig(sepa.getUri(), new SepaRestlet(sepa, declarer));
 		}
 		return this;
 	}
@@ -75,7 +75,7 @@ public class RestletGenerator {
 			SepDescription sep = producer.declareModel();
 			String currentPath;
 			
-			if (!standalone) 
+			if (standalone) 
 			{
 				currentPath = "/" +sep.getUri();
 			}
@@ -90,7 +90,7 @@ public class RestletGenerator {
 				if (declarer.isExecutable())
 					declarer.executeStream();
 			}
-			addConfig(currentPath, new SepRestlet(sep));
+			addConfig(sep.getUri(), new SepRestlet(sep));
 		}
 		
 		return this;
@@ -104,7 +104,7 @@ public class RestletGenerator {
 
 			SecDescription sec = declarer.declareModel();
 			String pathName = sec.getUri();
-			if (!standalone) 
+			if (standalone) 
 			{
 				pathName = "/" +sec.getUri();
 			}
@@ -112,8 +112,9 @@ public class RestletGenerator {
 			{
 				pathName = sec.getUri();
 			}
-			sec.setUri(baseUri + sec.getUri());
-			addConfig(pathName, new SecRestlet(sec, declarer));
+			sec.setUri(baseUri + pathName);
+			System.out.println(pathName);
+			addConfig(sec.getUri(), new SecRestlet(sec, declarer));
 		}
 
 		return this;
