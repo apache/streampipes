@@ -13,8 +13,6 @@ editorControllers
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
             
-           console.log($rootScope.email);
-            
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
             };
