@@ -364,7 +364,7 @@ angular
             }
         };
     })
-    .factory('authService', function($http, $rootScope, $location, restApi) {
+    .factory('authService', function($http, $rootScope, $location) {
         return {
             authenticated: function() {
             	$http.get("/semantic-epa-backend/api/v2/admin/authc")
@@ -389,7 +389,7 @@ angular
             }
         };
     })
-	.factory('restApi', ['$rootScope', '$http', 'apiConstants', function($rootScope, $http, apiConstants) {
+	.factory('restApi', ['$rootScope', '$http', 'apiConstants', function($rootScope, $http, apiConstants, authService) {
 	    
 	    var restApi = {};
 	    
@@ -536,7 +536,8 @@ angular
 	    };
 	    
 	    restApi.getOwnPipelines = function() {
-	    	return $http.get(urlBase() +"/pipelines/own");
+	    	//return $http.get(urlBase() +"/pipelines/own");
+	    	return $http.get("/semantic-epa-backend/api/pipelines");
 	    };
 	    
 	    restApi.storePipeline = function(pipeline) {
