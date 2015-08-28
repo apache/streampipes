@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.rest.v2;
 
+import java.util.UUID;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -45,7 +47,7 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	@Path("/own")
 	@Override
 	public String getOwn(@PathParam("username") String username) {
-		return toJson(userService.getOwnPipelines(username));
+		return Utils.getGson().toJson(userService.getOwnPipelines(username));
 	}
 
 	@Override
@@ -112,7 +114,10 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipeline(@PathParam("username") String username, String pipeline)
 	{
-		userService.addOwnPipeline(username, fromJson(pipeline, Pipeline.class));
+		Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, Pipeline.class);
+		serverPipeline.setPipelineId(UUID.randomUUID().toString());
+		serverPipeline.setRunning(false);
+		userService.addOwnPipeline(username, serverPipeline);
 		return toJson(Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS));
 	}
 
