@@ -36,9 +36,8 @@ public class SentimentDetectionBolt extends FunctionalSepaBolt<SentimentDetectio
     }
 	
 	@Override
-	protected void performEventAction(Map<String, Object> event) {
-		SentimentDetectionParameters params = getEventSpecificParams((String) event.get("configurationId"));
-		String line = (String) event.get(SepaUtils.getMappingPropertyName(params.getGraph(), "sentimentMapsTo"));
+	protected void performEventAction(Map<String, Object> event, SentimentDetectionParameters parameters, String configurationId) {
+		String line = (String) event.get(SepaUtils.getMappingPropertyName(parameters.getGraph(), "sentimentMapsTo"));
         
         int mainSentiment = 0;
         if (line != null && line.length() > 0) {
