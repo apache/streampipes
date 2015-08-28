@@ -1,0 +1,14 @@
+<archetype xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0 http://maven.apache.org/xsd/archetype-1.0.0.xsd">
+  <id>streampipes-archetype-storm</id>
+  <sources>
+    <source>src/main/java/controller/__classNamePrefix__Controller.java</source>
+    <source>src/main/java/controller/__classNamePrefix__Parameters.java</source>
+    <source>src/main/java/controller/Main.java</source>
+    <source>src/main/java/topology/__classNamePrefix__Bolt.java</source>
+    <source>src/main/java/topology/Main.java</source>
+  </sources>
+  <testSources>
+   
+  </testSources>
+</archetype>
