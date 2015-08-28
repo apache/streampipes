@@ -541,8 +541,8 @@ angular
 	    };
 	    
 	    restApi.getOwnPipelines = function() {
-	    	//return $http.get(urlBase() +"/pipelines/own");
-	    	return $http.get("/semantic-epa-backend/api/pipelines");
+	    	return $http.get(urlBase() +"/pipelines/own");
+	    	//return $http.get("/semantic-epa-backend/api/pipelines");
 	    };
 	    
 	    restApi.storePipeline = function(pipeline) {
