@@ -128,12 +128,14 @@ body {
 .canvas{
 	position: relative;
 	overflow: visible;
-	height: 550px;
+	height: 400px;
 	width: 100%;
 	margin-top: 1%;
 	/*margin-left: 5%;*/
-	box-shadow: inset 0 0 10px #333;
-	background:white;
+	/*box-shadow: inset 0 0 10px #333;*/
+	/*background:white;*/
+	border: 5px dashed #666666;
+	border-radius: 10px;
 	
 }
 
