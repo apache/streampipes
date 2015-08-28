@@ -18,8 +18,8 @@ public abstract class ElementComposition {
 	protected String name;
 	protected String description;
 	
-	protected @SerializedName("_id") String pipelineId;
-	protected @SerializedName("_rev") String rev;
+	protected String pipelineId;
+	//protected String rev;
 	
 	public List<SEPAClient> getSepas() {
 		return sepas;
@@ -61,11 +61,11 @@ public abstract class ElementComposition {
 		this.pipelineId = pipelineId;
 	}
 
-	public String getRev() {
-		return rev;
-	}
-
-	public void setRev(String rev) {
-		this.rev = rev;
-	}
+//	public String getRev() {
+//		return rev;
+//	}
+//
+//	public void setRev(String rev) {
+//		this.rev = rev;
+//	}
 }
