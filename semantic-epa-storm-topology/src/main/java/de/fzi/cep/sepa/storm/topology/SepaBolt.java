@@ -14,12 +14,6 @@ import backtype.storm.tuple.Values;
 
 public abstract class SepaBolt<B extends BindingParameters> extends BaseRichBolt {
 
-	/**
-     * Sink to the next bolt.
-     * These objects cannot be initialized in the constructor since the connections are set up in runtime, when the
-     * objects are deserialized on the Storm cluster. That is when the prepare() method is called and all transient
-     * properties such as the collector are initialized
-     */
 
     protected OutputCollector collector;
 
@@ -55,7 +49,6 @@ public abstract class SepaBolt<B extends BindingParameters> extends BaseRichBolt
 
     @Override
     public void execute(Tuple tuple) {
-System.out.println("received " +this.getId());
         if (tuple.getSourceStreamId().equals(SepaSpout.SEPA_CONFIG_STREAM)) {
         	ConfigurationMessage<B> params = (ConfigurationMessage<B>) tuple.getValueByField("config");
         	performConfigAction(params);
