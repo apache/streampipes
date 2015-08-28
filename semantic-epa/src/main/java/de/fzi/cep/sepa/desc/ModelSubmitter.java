@@ -40,11 +40,11 @@ public class ModelSubmitter {
 	}
 
 	public static boolean submitConsumer(List<SemanticEventConsumerDeclarer> declarers, int port) {
-		List<RestletConfig> restletConfigurations = new RestletGenerator(Configuration.getInstance().ACTION_PORT)
+		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addSecRestlets(declarers)
 		.getRestletConfigurations();	
 		
-		return start(Configuration.getInstance().ACTION_PORT, restletConfigurations);
+		return start(port, restletConfigurations);
 	}
 	
 	public static boolean submitConsumer(
