@@ -48,6 +48,7 @@ public class Utils {
 	{
 		Configuration cfg = Configuration.getInstance();
 		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_USER_DB));
+		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
 		return dbClient;
 	}
 	
