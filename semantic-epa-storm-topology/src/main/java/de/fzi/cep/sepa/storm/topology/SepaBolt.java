@@ -55,7 +55,7 @@ public abstract class SepaBolt<B extends BindingParameters> extends BaseRichBolt
         }
         if (tuple.getSourceStreamId().contentEquals(SepaSpout.SEPA_DATA_STREAM)) {
         	Map<String, Object> payload = (Map<String, Object>) tuple.getValueByField("payload");
-			performEventAction(payload);
+			performEventAction(payload, boltSettings.get(payload.get("configurationId")), (String) payload.get("configurationId"));
         }
 	}
 
@@ -66,7 +66,7 @@ public abstract class SepaBolt<B extends BindingParameters> extends BaseRichBolt
     	else System.out.println("Not supported yet.");
     }
     
-    protected abstract void performEventAction(Map<String, Object> event);
+    protected abstract void performEventAction(Map<String, Object> event, B configParameters, String configurationId);
     
     protected B getEventSpecificParams(String key)
     {
