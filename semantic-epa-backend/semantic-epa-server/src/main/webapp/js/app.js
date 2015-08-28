@@ -10,7 +10,7 @@ angular
     })
     .run(function($rootScope, $location, authService) {
 	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        authService.authenticated();
+	        authService.authenticate();
 	    });
     })
     .config(function($mdIconProvider) {
@@ -352,7 +352,7 @@ angular
             	restApi.configured().success(function(msg) {
         			if (msg.configured)
         				{
-        					authService.authenticated();
+        					authService.authenticate();
         				}
         			else {
         					$rootScope.authenticated = false;
@@ -366,7 +366,7 @@ angular
     })
     .factory('authService', function($http, $rootScope, $location) {
         return {
-            authenticated: function() {
+            authenticate: function() {
             	$http.get("/semantic-epa-backend/api/v2/admin/authc")
         	        .then(
         	          function(response) {
@@ -389,9 +389,14 @@ angular
             }
         };
     })
-	.factory('restApi', ['$rootScope', '$http', 'apiConstants', function($rootScope, $http, apiConstants, authService) {
+	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', function($rootScope, $http, apiConstants, authService) {
 	    
 	    var restApi = {};
+	    
+	    if ($rootScope.email == undefined)
+    	{
+    		authService.authenticate();
+    	}
 	    
 	    var urlBase = function() {
 	    	return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;
