@@ -6,7 +6,7 @@ function refreshPipelines(){
 	var url = standardUrl + "pipelines";
 	//var url = standardUrl + "user/streams";
 	pipelines = $.getJSON(url, listPipelines);
-	
+	console.log(pipelines);
 }
 
 function listPipelines(data){

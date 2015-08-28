@@ -165,7 +165,7 @@ function Pipeline(){
     this.send = function(overWrite){
         var pipeline = this;
         return $.ajax({
-            url: "http://localhost:8080/semantic-epa-backend/api/pipelines",
+            url: "http://localhost:8080/semantic-epa-backend/api/v2/users/floriankaulfersch@gmail.com/pipelines",
             data: JSON.stringify(pipeline),
             processData: false,
             type: 'POST',

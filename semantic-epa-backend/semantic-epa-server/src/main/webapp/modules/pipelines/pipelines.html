@@ -1,0 +1,38 @@
+<div class="container-fluid">
+		<div class="row">
+			<h1 class=".md-display-3">Saved Pipelines</h1>
+		</div>
+		<div class="row">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<td><b>#</b></td>
+					<td><b>Pipeline Name</b></td>
+					<td><b>Validation</b></td>
+					<td><b>Status</b></td>
+					<td><b>Options</b></td>
+					<td><b>Delete</b></td>
+					<td><b>Modify</b></td>
+
+				</tr>
+				</thead>
+				<tbody id="pipelineTableBody">
+					<tr ng-repeat="pipeline in pipelines">
+						<td>{{$index}}</td>
+						<td>{{pipeline.name}}</td>
+						<td>TBD</td>
+						<td>{{pipeline.running == true ? 'Running' : 'Idle'}}</td>
+						<td><md-button ng-click="startPipeline(pipeline._id)">Run</md-button><md-button ng-click="stopPipeline(pipeline._id)">Stop</md-button></td>
+						<td><md-button ng-click="deletePipeline(pipeline._id)">Delete</md-button></td>
+						<td><md-button ng-click="modifyPipeline(pipeline._id)">Modify</md-button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="pipelineDisplay" class="">
+		<div id="streamDisplay"></div>
+		<div id="sepaDisplay"></div>
+		<div id="actionDisplay"></div>
+	</div>
+</div>
