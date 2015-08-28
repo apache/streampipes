@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers', 'spMarketplace', 'spCreate', 'spAdd', 'spMy'])
+    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers', 'spMarketplace', 'spCreate', 'spAdd', 'spMy', 'pipelines'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -41,7 +41,7 @@ angular
 	.config(function($routeProvider) {
         $routeProvider
             .when('/pipelines', {
-                templateUrl : 'pipelines.html',
+                templateUrl : 'modules/pipelines/pipelines.html',
                 controller  : 'PipelineCtrl'
             })
             .when('/', {
@@ -196,23 +196,7 @@ angular
 			$http.post("/semantic-epa-backend/api/v2/admin/register", payload);
 		};
 	})
-	.controller('PipelineCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
-		$(refreshPipelines());
-		
-		//Bind click handler--------------------------------
-	    $("#pipelineTableBody").on("click", "tr", function () {
-	        if (!$(this).data("active") || $(this).data("active") == undefined) {
-	            $(this).data("active", true);
-	            $(this).addClass("info");
-	            $("#pipelineTableBody").children().not(this).removeClass("info");
-	            $("#pipelineTableBody").children().not(this).data("active", false);
-	            clearPipelineDisplay();
-	            displayPipeline($(this).data("JSON"));
-	        } else {
 
-	        }
-	    });
-	})
 	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, confService) {
 		
 		$scope.loading = false;
@@ -549,11 +533,11 @@ angular
 	    
 	    restApi.updateConfiguration = function(config) {
 	    	return $http.put(apiConstants.contextPath +apiConstants.api +"/setup/configuration", config);
-	    }
+	    };
 	    
 	    restApi.getOwnPipelines = function() {
-	    	return $http.get(urlBase() +"/pipelines");
-	    }
+	    	return $http.get(urlBase() +"/pipelines/own");
+	    };
 	    
 	    restApi.storePipeline = function(pipeline) {
 	    	return $http.post(urlBase() +"/pipelines", pipeline);
