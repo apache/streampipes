@@ -64,7 +64,7 @@ public class CouchDbInstallationStep implements InstallationStep {
 			usernameFunction.setMap("function(doc) { if(doc.email) { emit(doc.email, doc); } }");
 			
 			views.put("password", passwordFunction);
-			views.put("username", passwordFunction);
+			views.put("username", usernameFunction);
 			
 			userDocument.setViews(views);
 			Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
