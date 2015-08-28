@@ -97,7 +97,7 @@ public class RestletGenerator {
 	}
 	
 	public RestletGenerator addSecRestlets(List<SemanticEventConsumerDeclarer> declarers) {	
-		String baseUri = getBaseUri(port) +contextPath;
+		String baseUri = getUrl() +port +contextPath;
 		welcomePageDescriptions.addAll(new EventConsumerWelcomePage(baseUri +"/", declarers).buildUris());
 
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
@@ -107,12 +107,14 @@ public class RestletGenerator {
 			if (standalone) 
 			{
 				pathName = "/" +sec.getUri();
+				sec.setUri(baseUri +pathName);
 			}
 			else
 			{
 				pathName = sec.getUri();
+				sec.setUri(baseUri +"/" +pathName);
 			}
-			sec.setUri(baseUri + pathName);
+			
 			addConfig(pathName, new SecRestlet(sec, declarer));
 		}
 

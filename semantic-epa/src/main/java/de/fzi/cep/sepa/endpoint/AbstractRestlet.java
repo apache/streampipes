@@ -43,11 +43,15 @@ public abstract class AbstractRestlet<D extends NamedSEPAElement> extends Restle
 	{
 		Graph rdfGraph;	
 		try {
+			System.out.println(req.getEntityAsText());
+			System.out.println(req.getReferrerRef().toString());
 			rdfGraph = Transformer.toJsonLd(desc);
+			System.out.println(asString(rdfGraph));
 			resp.setEntity(asString(rdfGraph), MediaType.APPLICATION_JSON);
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | SecurityException
 				| ClassNotFoundException | InvalidRdfException | RDFHandlerException e) {
+			e.printStackTrace();
 			resp.setStatus(new Status(200));
 		}	
 	}	

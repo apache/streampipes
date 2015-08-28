@@ -19,6 +19,7 @@ public class EventConsumerWelcomePage extends WelcomePageGenerator<SemanticEvent
 		{
 			Description producer = new AgentDescription();
 			producer.setName(declarer.declareModel().getName());
+			producer.setDescription(declarer.declareModel().getDescription());
 			producer.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
 			descriptions.add(producer);
 		}
