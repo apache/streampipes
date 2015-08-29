@@ -52,7 +52,7 @@ private static final long serialVersionUID = -3694170770048756860L;
     }
 
 	@Override
-	protected void performEventAction(Map event, B parameters, String configurationId) {
+	protected void performEventAction(Map<String, Object> event, B parameters, String configurationId) {
 		try {
 			event.remove("configurationId");
 			kafkaProducers.get(configurationId).send(new ProducerRecord<String, byte[]>(kafkaTopics.get(configurationId), Serializer.serialize(event)));
