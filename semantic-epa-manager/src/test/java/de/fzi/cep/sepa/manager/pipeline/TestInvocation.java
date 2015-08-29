@@ -41,7 +41,7 @@ public class TestInvocation {
 		StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
 		
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, null);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		PipelineOperationStatus status = new GraphSubmitter(pipelineId, graphs).invokeGraphs();
 		System.out.println(new Gson().toJson(status));

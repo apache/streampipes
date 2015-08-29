@@ -35,7 +35,7 @@ public class TestCompletePipeline {
 		Pipeline pipeline = Utils.getGson().fromJson(FileUtils.readFileToString(new File("src/test/resources/TestCompletePipeline.jsonld"), "UTF-8"), Pipeline.class);
 		
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, null);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		new GraphSubmitter(pipeline.getPipelineId(), graphs).invokeGraphs();
 		for(InvocableSEPAElement element : graphs)

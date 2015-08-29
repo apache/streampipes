@@ -100,7 +100,7 @@ public class TestTreeBuilder {
 		
 		System.out.println("*********\n");
 		
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, null);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		System.out.println(graphs.size());
 		
