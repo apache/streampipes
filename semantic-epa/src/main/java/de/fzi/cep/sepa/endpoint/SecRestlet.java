@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.endpoint;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Message;
@@ -10,6 +12,8 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Header;
 import org.restlet.util.Series;
+
+
 
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
@@ -33,20 +37,19 @@ public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation>
 			{
 				if (request.getMethod().equals(Method.GET))
 				{	
+					response.setAccessControlAllowCredentials(true);
+					response.setAccessControlAllowHeaders(new HashSet<String>(Arrays.asList("Content-Type")));
+					response.setAccessControlAllowMethods(new HashSet<>(Arrays.asList(Method.GET, Method.POST, Method.OPTIONS)));
+					response.setAccessControlAllowOrigin("*");
 					response.setEntity(((SemanticEventConsumerDeclarer) declarer).getHtml(graph) , MediaType.TEXT_HTML);
-					getMessageHeaders(response).add("Access-Control-Allow-Origin", "*"); 
-					getMessageHeaders(response).add("Access-Control-Allow-Methods", "POST,OPTIONS,GET");
-					getMessageHeaders(response).add("Access-Control-Allow-Headers", "Content-Type"); 
-					getMessageHeaders(response).add("Access-Control-Allow-Credentials", "true"); 
-					getMessageHeaders(response).add("Access-Control-Max-Age", "60"); 
+					
 				}
 				if (request.getMethod().equals(Method.OPTIONS))
 				{
-					getMessageHeaders(response).add("Access-Control-Allow-Origin", "*"); 
-					getMessageHeaders(response).add("Access-Control-Allow-Methods", "POST,OPTIONS,GET");
-					getMessageHeaders(response).add("Access-Control-Allow-Headers", "Content-Type"); 
-					getMessageHeaders(response).add("Access-Control-Allow-Credentials", "true"); 
-					getMessageHeaders(response).add("Access-Control-Max-Age", "60"); 
+					response.setAccessControlAllowCredentials(true);
+					response.setAccessControlAllowHeaders(new HashSet<String>(Arrays.asList("Content-Type")));
+					response.setAccessControlAllowMethods(new HashSet<>(Arrays.asList(Method.GET, Method.POST, Method.OPTIONS)));
+					response.setAccessControlAllowOrigin("*");
 				}
 				
 				if (request.getMethod().equals(Method.DELETE))
@@ -57,21 +60,4 @@ public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation>
 			}
 		};
 	} 
-	
-	@SuppressWarnings("unchecked")
-	private Series<Header> getMessageHeaders(Message message) {
-
-		ConcurrentMap<String, Object> attrs = message.getAttributes();
-
-		Series<Header> headers = (Series<Header>) attrs.get(HEADERS_KEY);
-		if (headers == null) {
-			headers = new Series<Header>(Header.class);
-			Series<Header> prev = (Series<Header>) attrs.putIfAbsent(
-					HEADERS_KEY, headers);
-			if (prev != null) {
-				headers = prev;
-			}
-		}
-		return headers;
-	}
 }
