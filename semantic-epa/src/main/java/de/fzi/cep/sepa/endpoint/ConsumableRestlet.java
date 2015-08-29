@@ -54,10 +54,12 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	}
 	
 	protected void createInstanceEndpoint(I graph) {
+		String prefix = "";
+		if (!declarer.declareModel().getUri().startsWith("/")) prefix = "/";
 		Server.INSTANCE
 			.getComponent()
 			.getDefaultHost()
-			.attach(declarer.declareModel().getUri() +"/" +graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), instanceRestlet(graph));
+			.attach(prefix +declarer.declareModel().getUri() +"/" +graph.getCorrespondingPipeline(), instanceRestlet(graph));
 	}
 	
 	protected abstract Restlet instanceRestlet(I graph);
