@@ -60,14 +60,13 @@ public class EventStream extends NamedSEPAElement {
 	{
 		//super(uri, name, description);
 		this.eventSchema = eventSchema;
-		this.eventGrounding = new EventGrounding();
 	}
 
 	public EventStream() {
 		super();
-		this.eventGrounding = new EventGrounding();
-		this.hasEventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
-		this.requiresEventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+//		this.eventGrounding = new EventGrounding();
+//		this.hasEventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
+//		this.requiresEventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
 	}
 
 

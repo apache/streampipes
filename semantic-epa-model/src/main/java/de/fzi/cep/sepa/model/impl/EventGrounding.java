@@ -39,11 +39,11 @@ public class EventGrounding extends UnnamedSEPAElement {
 	{
 		super();
 		this.transportFormats = new ArrayList<>();
-		this.transportProtocols = new ArrayList<>();
 	}
 	
 	public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat)
 	{
+		this();
 		this.transportFormats = new ArrayList<>();
 		this.transportFormats.add(transportFormat);
 		this.transportProtocols = Arrays.asList(transportProtocol);

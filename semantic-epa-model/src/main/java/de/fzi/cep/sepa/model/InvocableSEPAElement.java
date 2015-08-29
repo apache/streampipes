@@ -33,6 +33,9 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	
 	protected EventGrounding supportedGrounding;
 	
+	@RdfProperty("sepa:correspondingPipeline")
+	protected String correspondingPipeline;
+	
 	public InvocableSEPAElement() {
 		super();
 	}
@@ -84,6 +87,14 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
 	public void setSupportedGrounding(EventGrounding supportedGrounding) {
 		this.supportedGrounding = supportedGrounding;
+	}
+
+	public String getCorrespondingPipeline() {
+		return correspondingPipeline;
+	}
+
+	public void setCorrespondingPipeline(String correspondingPipeline) {
+		this.correspondingPipeline = correspondingPipeline;
 	}	
-	
+		
 }
