@@ -29,7 +29,7 @@ public class PipelineExecutor {
 	public PipelineOperationStatus startPipeline()
 	{
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false);
+		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, pipeline.getPipelineId());
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		
 		SecInvocation sec = getSECInvocationGraph(graphs);

@@ -372,7 +372,7 @@ public class PipelineValidationHandler {
 	{
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(
 				pipeline, rootElement).generateTree(true);
-		return new InvocationGraphBuilder(tree, true).buildGraph();
+		return new InvocationGraphBuilder(tree, true, null).buildGraph();
 	}
 	
 	private SepaInvocation findInvocationGraph(List<InvocableSEPAElement> graphs, String domId)

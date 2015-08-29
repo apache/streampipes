@@ -42,13 +42,15 @@ public class InvocationGraphBuilder {
 
 	private GenericTree<NamedSEPAElement> tree;
 	private List<GenericTreeNode<NamedSEPAElement>> postOrder;
+	private String pipelineId;
 	
 	List<InvocableSEPAElement> graphs;
 
 	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree,
-			boolean isInvocationGraph) {
+			boolean isInvocationGraph, String pipelineId) {
 		this.graphs = new ArrayList<>();
 		this.tree = tree;
+		this.pipelineId = pipelineId;
 		this.postOrder = this.tree
 				.build(GenericTreeTraversalOrderEnum.POST_ORDER);
 		if (!isInvocationGraph)
@@ -78,6 +80,7 @@ public class InvocationGraphBuilder {
 				String outputTopic = TopicGenerator.generateRandomTopic();
 				if (element instanceof SepaInvocation) {
 					SepaInvocation thisGraph = (SepaInvocation) element;
+					thisGraph.setCorrespondingPipeline(pipelineId);
 					thisGraph = (SepaInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
 					EventSchema outputSchema;
@@ -108,6 +111,7 @@ public class InvocationGraphBuilder {
 					graphs.add(thisGraph);
 				} else {
 					SecInvocation thisGraph = (SecInvocation) element;
+					thisGraph.setCorrespondingPipeline(pipelineId);
 					thisGraph = (SecInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
 					graphs.add(thisGraph);

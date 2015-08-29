@@ -39,18 +39,19 @@ public class HttpRequestBuilder {
 	public PipelineElementStatus detach()
 	{
 		try {
-			Response httpResp = Request.Delete(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName()).execute();
+			Response httpResp = Request.Delete(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline()).execute();
 			return handleResponse(httpResp);
 		} catch(Exception e)
 		{
 			e.printStackTrace();
-			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), false, e.getMessage());
+			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline(), false, e.getMessage());
 		}
 	}
 	
 	private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException
 	{
 		String resp = httpResp.returnContent().asString();
+		System.out.println(resp);
 		de.fzi.cep.sepa.model.impl.Response streamPipesResp = new Gson().fromJson(resp, de.fzi.cep.sepa.model.impl.Response.class);
 		return convert(streamPipesResp);
 	}
