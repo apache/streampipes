@@ -24,6 +24,12 @@ public class MappingPropertyUnary extends MappingProperty{
 		super();
 	}
 	
+	public MappingPropertyUnary(MappingPropertyUnary other)
+	{
+		super(other);
+		this.mapsTo = other.getMapsTo();
+	}
+	
 	public MappingPropertyUnary(URI mapsFrom, String name, String description)
 	{
 		super(mapsFrom, name, description);	

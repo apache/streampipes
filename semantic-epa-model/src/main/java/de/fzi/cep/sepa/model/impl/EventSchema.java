@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -39,6 +41,11 @@ public class EventSchema extends UnnamedSEPAElement{
 	{
 		super();
 		this.eventProperties = new ArrayList<EventProperty>();
+	}
+
+	public EventSchema(EventSchema other) {
+		super(other);
+		this.eventProperties = new Cloner().properties(other.getEventProperties());
 	}
 
 	public List<EventProperty> getEventProperties() {

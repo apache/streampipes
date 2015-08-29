@@ -33,6 +33,15 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 		super();
 	}
 	
+	public StaticProperty(StaticProperty other)
+	{
+		this.description = other.getDescription();
+		this.elementId = other.getElementId();
+		this.elementName = other.getElementName();
+		this.internalName = other.getInternalName();
+		this.label = other.getLabel();
+	}
+	
 	public StaticProperty(String name, String description)
 	{
 		super();

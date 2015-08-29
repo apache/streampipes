@@ -11,6 +11,8 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.util.Cloner;
+
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:AnyStaticProperty")
@@ -28,6 +30,11 @@ public class AnyStaticProperty extends StaticProperty {
 	public AnyStaticProperty() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public AnyStaticProperty(AnyStaticProperty other) {
+		super(other);
+		this.options = new Cloner().options(other.getOptions());
 	}
 
 	public AnyStaticProperty(String name, String description) {

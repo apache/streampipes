@@ -13,6 +13,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 
@@ -47,6 +48,13 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 		this.staticProperties = new ArrayList<>();
 	}
 	
+	public ConsumableSEPAElement(ConsumableSEPAElement other) {
+		super(other);
+		this.eventStreams = new Cloner().streams(other.getEventStreams());
+		this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());	
+	}
+
 	public List<EventStream> getEventStreams() {
 		return eventStreams;
 	}

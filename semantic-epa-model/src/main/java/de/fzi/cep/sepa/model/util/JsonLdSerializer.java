@@ -12,11 +12,12 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
-public class JsonLdSerializer implements JsonDeserializer<AbstractSEPAElement>, JsonSerializer<AbstractSEPAElement>{
+public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T>{
 
 	@Override
-	public AbstractSEPAElement deserialize(JsonElement json, Type typeOfT,
+	public T deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		
 		JsonObject jsonObject = json.getAsJsonObject();
@@ -31,9 +32,8 @@ public class JsonLdSerializer implements JsonDeserializer<AbstractSEPAElement>, 
 	}
 
 	@Override
-	public JsonElement serialize(AbstractSEPAElement src, Type typeOfSrc,
+	public JsonElement serialize(T src, Type typeOfSrc,
 			JsonSerializationContext context) {
-	
 		JsonObject result = new JsonObject();
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
         result.add("properties", context.serialize(src, src.getClass()));

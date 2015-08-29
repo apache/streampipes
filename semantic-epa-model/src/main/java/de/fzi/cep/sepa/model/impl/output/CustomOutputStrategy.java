@@ -13,6 +13,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -31,6 +32,11 @@ public class CustomOutputStrategy extends OutputStrategy {
 	{
 		super();
 		this.eventProperties = new ArrayList<>();
+	}
+	
+	public CustomOutputStrategy(CustomOutputStrategy other) {
+		super(other);
+		this.eventProperties = new Cloner().properties(other.getEventProperties());
 	}
 	
 	public CustomOutputStrategy(List<EventProperty> eventProperties)

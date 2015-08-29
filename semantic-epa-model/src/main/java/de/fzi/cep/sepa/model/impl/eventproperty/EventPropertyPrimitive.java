@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.util.Cloner;
 import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -35,6 +37,13 @@ public class EventPropertyPrimitive extends EventProperty {
 	public EventPropertyPrimitive()
 	{
 		super();
+	}
+	
+	public EventPropertyPrimitive(EventPropertyPrimitive other)
+	{
+		super(other);
+		this.propertyType = other.getPropertyType();
+		this.measurementUnit = other.getMeasurementUnit();
 	}
 	
 	public EventPropertyPrimitive(List<URI> subClassOf)

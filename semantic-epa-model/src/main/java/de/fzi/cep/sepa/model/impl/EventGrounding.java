@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.model.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -36,6 +38,8 @@ public class EventGrounding extends UnnamedSEPAElement {
 	public EventGrounding()
 	{
 		super();
+		this.transportFormats = new ArrayList<>();
+		this.transportProtocols = new ArrayList<>();
 	}
 	
 	public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat)
@@ -43,6 +47,12 @@ public class EventGrounding extends UnnamedSEPAElement {
 		this.transportFormats = new ArrayList<>();
 		this.transportFormats.add(transportFormat);
 		this.transportProtocols = Arrays.asList(transportProtocol);
+	}
+
+	public EventGrounding(EventGrounding other) {
+		super(other);
+		this.transportProtocols = new Cloner().protocols(other.getTransportProtocols());
+		this.transportFormats = new Cloner().transportFormats(other.getTransportFormats());
 	}
 
 	public List<TransportProtocol> getTransportProtocols() {

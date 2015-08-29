@@ -16,15 +16,28 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 
 	private transient SupportsRdfIdImpl myId;
 	
+	protected RdfKey<String> rdfId;
+	
 	/**
 	 * the elementId, used as @RdfId for unnamed SEPA elements
 	 */
 	protected String elementId;
 	
+	protected String rdfIdGson;
+	
 	public AbstractSEPAElement()
 	{
 		this.elementId = UUID.randomUUID().toString();	
 		myId = new SupportsRdfIdImpl();
+	}
+	
+	public AbstractSEPAElement(AbstractSEPAElement other)
+	{
+		this();
+		this.elementId = other.getElementId();
+		this.rdfIdGson = other.getRdfId().toString();
+		System.out.println(this.getClass().getCanonicalName() +", " +other.getRdfId());
+		this.setRdfId(other.getRdfId());
 	}
 	
 	
@@ -40,7 +53,6 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public RdfKey getRdfId() {
-		// TODO Auto-generated method stub
 		return myId.getRdfId();
 	}
 
@@ -48,7 +60,15 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setRdfId(RdfKey arg0) {
-		myId.setRdfId(arg0);
-		
+		myId.setRdfId(arg0);	
 	}
+
+	public String getRdfIdGson() {
+		return rdfIdGson;
+	}
+
+	public void setRdfIdGson(String rdfIdGson) {
+		this.rdfIdGson = rdfIdGson;
+	}
+		
 }

@@ -4,6 +4,8 @@ package de.fzi.cep.sepa.model;
 import com.clarkparsia.empire.annotation.RdfId;
 import com.clarkparsia.empire.annotation.RdfProperty;
 
+import de.fzi.cep.sepa.model.impl.EventStream;
+
 /**
  * named SEPA elements, can be accessed via the URI provided in @RdfId
  *
@@ -39,6 +41,14 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.iconUrl = iconUrl;
 	}
 
+	public NamedSEPAElement(NamedSEPAElement other) {
+		super(other);
+		this.description = other.getDescription();
+		this.name = other.getName();
+		this.iconUrl = other.getIconUrl();
+		this.uri = other.getUri();
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -69,10 +79,5 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 
 	public void setUri(String uri) {
 		this.uri = uri;
-	}
-	
-	
-
-	
-	
+	}	
 }

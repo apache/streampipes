@@ -27,6 +27,11 @@ public class MappingPropertyNary extends MappingProperty {
 		this.mapsTo = new ArrayList<>();
 	}
 	
+	public MappingPropertyNary(MappingPropertyNary other) {
+		super(other);
+		this.mapsTo = other.getMapsTo();
+	}
+	
 	public MappingPropertyNary(URI mapsFrom, String name, String description)
 	{
 		super(mapsFrom, name, description);	

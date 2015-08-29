@@ -19,10 +19,10 @@ public abstract class TransportProtocol extends UnnamedSEPAElement {
 	private static final long serialVersionUID = 7625791395504335184L;
 
 	@RdfProperty("sepa:brokerHostname")
-	private String brokerHostname;
+	protected String brokerHostname;
 	
 	@RdfProperty("sepa:topic")
-	private String topicName;
+	protected String topicName;
 	
 	public TransportProtocol() {
 		super();
@@ -32,6 +32,12 @@ public abstract class TransportProtocol extends UnnamedSEPAElement {
 	{
 		this.brokerHostname = uri;
 		this.topicName = topicName;
+	}
+
+	public TransportProtocol(TransportProtocol other) {
+		super(other);
+		this.brokerHostname = other.getBrokerHostname();
+		this.topicName = other.getTopicName();
 	}
 
 	public String getBrokerHostname() {

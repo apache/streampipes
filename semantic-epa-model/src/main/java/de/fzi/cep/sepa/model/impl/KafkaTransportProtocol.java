@@ -31,6 +31,14 @@ public class KafkaTransportProtocol extends TransportProtocol {
 		this.kafkaPort = kafkaPort;
 	}
 	
+	public KafkaTransportProtocol(KafkaTransportProtocol other)
+	{
+		super(other);
+		this.kafkaPort = other.getKafkaPort();
+		this.zookeeperHost = other.getZookeeperHost();
+		this.zookeeperPort = other.getZookeeperPort();
+	}
+	
 	public KafkaTransportProtocol()
 	{
 		super();

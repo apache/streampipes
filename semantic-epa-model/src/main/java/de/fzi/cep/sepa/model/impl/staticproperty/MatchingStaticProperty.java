@@ -27,6 +27,12 @@ public class MatchingStaticProperty extends StaticProperty{
 		super();
 	}
 	
+	public MatchingStaticProperty(MatchingStaticProperty other) {
+		super(other);
+		this.matchLeft = other.getMatchLeft();
+		this.matchRight = other.getMatchRight();
+	}
+	
 	public MatchingStaticProperty(String name, String description)
 	{
 		super(name, description);

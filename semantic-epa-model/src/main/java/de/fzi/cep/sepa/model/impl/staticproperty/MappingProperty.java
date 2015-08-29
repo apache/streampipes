@@ -19,12 +19,17 @@ public abstract class MappingProperty extends StaticProperty {
 	private static final long serialVersionUID = -7849999126274124847L;
 	
 	@RdfProperty("sepa:mapsFrom")
-	URI mapsFrom;
-	
+	protected URI mapsFrom;
 	
 	protected MappingProperty()
 	{
 		super();
+	}
+	
+	public MappingProperty(MappingProperty other)
+	{
+		super(other);
+		this.mapsFrom = other.getMapsFrom();
 	}
 	
 	protected MappingProperty(URI mapsFrom, String name, String description)

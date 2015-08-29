@@ -18,8 +18,8 @@ public class EventPropertySerializer implements JsonSerializer<EventProperty>, J
     public JsonElement serialize(EventProperty src, Type typeOfSrc, JsonSerializationContext context) {
         
     	JsonObject result = new JsonObject();
-        result.add("type", new JsonPrimitive(src.getClass().getSimpleName()));
-       // result.add("properties", context.serialize(src, src.getClass()));
+        result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
+        result.add("properties", context.serialize(src, src.getClass()));
 
         return result;
     }
@@ -32,7 +32,7 @@ public class EventPropertySerializer implements JsonSerializer<EventProperty>, J
         JsonElement element = jsonObject.get("properties");
  
         try {
-            return context.deserialize(element, Class.forName("java.lang." + type));
+            return context.deserialize(element, Class.forName(type));
         } catch (ClassNotFoundException cnfe) {
             throw new JsonParseException("Unknown element type: " + type, cnfe);
         }

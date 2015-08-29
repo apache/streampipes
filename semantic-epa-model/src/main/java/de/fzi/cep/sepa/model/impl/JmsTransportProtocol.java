@@ -23,6 +23,12 @@ public class JmsTransportProtocol extends TransportProtocol{
 		this.port = port;
 	}
 	
+	public JmsTransportProtocol(JmsTransportProtocol other)
+	{
+		super(other);
+		this.port = other.getPort();
+	}
+	
 	public JmsTransportProtocol() 
 	{
 		super();

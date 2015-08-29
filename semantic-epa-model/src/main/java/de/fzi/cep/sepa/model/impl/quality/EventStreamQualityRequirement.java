@@ -41,6 +41,10 @@ public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 		super();
 	}
 
+	public EventStreamQualityRequirement(EventStreamQualityRequirement s) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public EventStreamQualityDefinition getMinimumStreamQuality() {
 		return minimumStreamQuality;
 	}

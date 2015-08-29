@@ -34,6 +34,12 @@ public class TransportFormat extends UnnamedSEPAElement {
 		this.rdfType.add(URI.create(transportFormatType));
 	}
 	
+	public TransportFormat(TransportFormat other)
+	{
+		super(other);
+		this.rdfType = other.getRdfType();
+	}
+	
 	public TransportFormat()
 	{
 		this.rdfType = new ArrayList<>();

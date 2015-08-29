@@ -40,6 +40,13 @@ public class Option extends UnnamedSEPAElement {
 		this.selected = selected;
 	}
 
+	public Option(Option o) {
+		super(o);
+		this.name = o.getName();
+		this.selected = o.isSelected();
+		
+	}
+
 	public String getName() {
 		return name;
 	}

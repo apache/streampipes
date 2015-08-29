@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.model.impl.eventproperty;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -54,18 +56,33 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventPropertyQualityDefinition")
-	List<EventPropertyQualityDefinition> eventPropertyQualities;
+	protected List<EventPropertyQualityDefinition> eventPropertyQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventPropertyQualityRequirement")
-	List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
+	protected List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
 
 	public EventProperty()
 	{
 		super(prefix + UUID.randomUUID().toString());
 		this.propertyId = UUID.randomUUID().toString();
+		this.requiresEventPropertyQualities = new ArrayList<>();
+		this.eventPropertyQualities = new ArrayList<>();
+	}
+	
+	public EventProperty(EventProperty other)
+	{
+		super(other);
+		this.label = other.getLabel();
+		this.description = other.getDescription();
+		this.propertyId = other.getPropertyId();
+		this.required = other.isRequired();
+		this.requiresEventPropertyQualities = new Cloner().reqEpQualitities(other.getRequiresEventPropertyQualities());
+		this.runtimeName = other.getRuntimeName();
+		this.eventPropertyQualities = new Cloner().provEpQualities(other.getEventPropertyQualities());
+		this.subClassOf = other.getSubClassOf();
 	}
 	
 	public EventProperty(List<URI> subClassOf)

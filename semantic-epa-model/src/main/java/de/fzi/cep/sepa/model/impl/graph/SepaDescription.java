@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.model.impl.graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -31,7 +33,14 @@ public class SepaDescription extends ConsumableSEPAElement {
 	List<OutputStrategy> outputStrategies;
 	
 	String pathName;
-		
+
+	public SepaDescription(SepaDescription other)
+	{
+		super(other);
+		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
+		this.pathName = other.getPathName();
+	}
+	
 	public SepaDescription()
 	{
 		super();
@@ -78,6 +87,5 @@ public class SepaDescription extends ConsumableSEPAElement {
 
 	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
 		this.outputStrategies = outputStrategies;
-	}
-		
+	}		
 }

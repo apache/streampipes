@@ -20,6 +20,11 @@ public class ListOutputStrategy extends OutputStrategy {
 	public ListOutputStrategy() {
 		super();
 	}
+	
+	public ListOutputStrategy(ListOutputStrategy other) {
+		super(other);
+		this.propertyName = other.getPropertyName();
+	}
 
 	public String getPropertyName() {
 		return propertyName;

@@ -11,12 +11,18 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	private static final long serialVersionUID = 8051137255998890188L;
 	
 	@RdfId
-	private String elementName;
+	protected String elementName;
 	
 	public UnnamedSEPAElement()
 	{
 		super();
 		this.elementName = super.getElementId();
+	}
+	
+	public UnnamedSEPAElement(UnnamedSEPAElement other)
+	{
+		super(other);
+		this.elementName = other.getElementName();
 	}
 	
 	public UnnamedSEPAElement(String elementName)
