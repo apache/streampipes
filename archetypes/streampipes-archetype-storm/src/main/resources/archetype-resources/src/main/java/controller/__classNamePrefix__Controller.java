@@ -7,7 +7,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storm.controller.AbstractStormController;
 import de.fzi.cep.sepa.storm.controller.ConfigurationMessage;
 import de.fzi.cep.sepa.storm.controller.Operation;
-import ${package}.controller.TestSentimentParameters;
+import ${package}.controller.${classNamePrefix}Parameters;
 
 public class ${classNamePrefix}Controller extends AbstractStormController<${classNamePrefix}Parameters>{
 
