@@ -22,9 +22,9 @@
 						<td>{{pipeline.name}}</td>
 						<td>TBD</td>
 						<td>{{pipeline.running == true ? 'Running' : 'Idle'}}</td>
-						<td><md-button ng-click="startPipeline(pipeline._id)">Run</md-button><md-button ng-click="stopPipeline(pipeline._id)">Stop</md-button></td>
-						<td><md-button ng-click="deletePipeline(pipeline._id)">Delete</md-button></td>
-						<td><md-button ng-click="modifyPipeline(pipeline._id)">Modify</md-button></td>
+						<td><md-button ng-click="startPipeline(pipeline.pipelineId)">Run</md-button><md-button ng-click="stopPipeline(pipeline.pipelineId)">Stop</md-button></td>
+						<td><md-button ng-click="deletePipeline(pipeline.Id)">Delete</md-button></td>
+						<td><md-button ng-click="modifyPipeline(pipeline.Id)">Modify</md-button></td>
 					</tr>
 				</tbody>
 			</table>
