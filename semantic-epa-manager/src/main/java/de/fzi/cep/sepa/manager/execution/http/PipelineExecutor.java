@@ -33,7 +33,7 @@ public class PipelineExecutor {
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		
 		SecInvocation sec = getSECInvocationGraph(graphs);
-		RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), sec.getDescription(), sec.getName());
+		RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getCorrespondingPipeline(), sec.getDescription(), sec.getName());
 		StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 		storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 		
