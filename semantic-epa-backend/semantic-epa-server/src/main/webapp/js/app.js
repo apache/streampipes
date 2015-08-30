@@ -565,11 +565,11 @@ angular
 	    }
 	    
 	    restApi.startPipeline = function(pipelineId) {
-	    	return $http.get(urlBase() +"/pipelines" +pipelineId +"/start");
+	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/start");
 	    }
 	    
 	    restApi.stopPipeline = function(pipelineId) {
-	    	return $http.get(urlBase() +"/pipelines" +pipelineId +"/stop");
+	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
 	    }
 	
 	    return restApi;

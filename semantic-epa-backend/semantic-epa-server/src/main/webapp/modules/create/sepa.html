@@ -1,0 +1,153 @@
+<md-tabs md-dynamic-height md-border-bottom md-selected="selectedSepaIndex"> 
+<md-tab label="Basics">
+		<md-content class="md-padding">
+		<h3 class="md-display-2">Basics</h3>
+			<md-input-container>
+		        <label>Name</label>
+		        <input ng-model="basic.name" required>
+	      	</md-input-container>
+		    <md-input-container>
+		    	<label>Description</label>
+		        <input ng-model="basic.description" required>
+		    </md-input-container>
+		    <md-input-container>
+		    	<label>Icon URL</label>
+		        <input ng-model="basic.iconUrl">
+		    </md-input-container>
+		     <md-input-container>
+		    	<label>Path Name</label>
+		        <input ng-model="basic.pathName">
+		    </md-input-container>
+		     <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+			      <md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Next</md-button>
+			 </section>
+		</md-content> 
+		</md-tab> 
+		<md-tab label="Stream Restrictions"> 
+			<md-content class="md-padding">
+			<h3 class="md-display-2">Stream Restrictions</h3>
+			<div ng-repeat = "(key, restriction) in streamRestrictions track by $index">
+			<md-whiteframe class="md-whiteframe-z1" layout layout-align="left left" style="padding: 10px;">
+			<div layout="column">
+			<div class="end"> <md-button class="md-raised end"  ng-click="removeStreamRestriction(key)">Remove this restriction</md-button></div>	
+		        <div ng-repeat = "(key2, property) in streamRestrictions[$index].eventProperties track by $index">
+		        	<md-whiteframe class="md-whiteframe-z1" layout layout-align="left left" style="padding: 10px;">
+		        	<div layout="column">
+						<div class="end"> <md-button class="md-raised end"  ng-click="removePropertyRestriction(key, key2)">Remove this restriction</md-button></div>	
+					         <div class="row">
+					         <md-input-container>
+						    	<label>Datatype</label>
+						        <input ng-model="streamRestrictions[$index].eventProperties[$pindex].datatype">
+						    </md-input-container>
+						     <md-input-container>
+						    	<label>Property Type</label>
+						        <input ng-model="streamRestrictions[$index].eventProperties[$pindex].propertyType">
+						    </md-input-container>   
+						    </div>
+						    <md-input-container flex> 
+						    	<md-checkbox ng-model="streamRestrictions[$index].eventProperties[$pindex].mappingProperty">Create Mapping Property for this restriction </md-checkbox>
+						    </md-input-container>
+						    
+					</div>
+					    </md-whiteframe>
+			
+				</div>
+				<md-button class="md-raised md-accent" ng-click="addPropertyRestriction(key)">Add Property Restriction</md-button>
+		    </div>
+		    </md-whiteframe>
+			
+			</div>
+			<md-button class="md-raised md-accent" ng-click="addStreamRestriction()" ng-disabled="streamRestrictions.length >= 2">Add Stream Restriction</md-button>
+			<p></p>
+			<p></p>
+			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(0)">Previous</md-button>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(2)">Next</md-button>
+			</section>
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Static Properties"> 
+			<md-content class="md-padding">
+			<h3 class="md-display-2">Static Properties</h3>
+			<p></p>
+			<p></p>
+			<p></p>
+			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+					<md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Previous</md-button>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(3)">Next</md-button>
+			</section>
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Output Strategy"> 
+			<md-content class="md-padding">
+			<h3 class="md-display-2">Output Strategy</h3>
+			<p></p>
+			<p></p>
+			<p></p>
+			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(2)">Previous</md-button>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(4)">Next</md-button>
+			</section>
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Supported Grounding"> 
+			<md-content class="md-padding">
+			<h3 class="md-display-2">Supported Grounding</h3>
+			<p></p>
+			<p></p>
+			<p></p>
+			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(3)">Previous</md-button>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(5)">Next</md-button>
+			</section>
+			</md-content> 
+		</md-tab> 
+		
+		<md-tab label="Deployment"> <md-content class="md-padding">
+		<h3 class="md-display-2">Deployment</h3>
+		<p></p>
+		<md-whiteframe class="md-whiteframe-z1" layout layout-align="start" style="padding: 10px;">
+		        	<div layout="column" style="width:100%">	
+		        			
+		        			<label>S-EPA type
+							    <md-radio-group ng-model="deployment.sepaType" style="display:inline;">
+								     <md-radio-button value="esper">Esper CEP Runtime</md-radio-button>
+								     <md-radio-button value="algorithm">Online Algorithm</md-radio-button>
+								     <md-radio-button value="storm">Storm Topology Template</md-radio-button>
+								 </md-radio-group> 
+							 </label>
+							 <div ng-show="deployment.sepaType == 'esper' || deployment.sepaType == 'algorithm'">
+							  <label>Deployment Type
+							    <md-radio-group ng-model="deployment.deploymentType" style="display:inline;">
+								     <md-radio-button value="standalone">Standalone</md-radio-button>
+								     <md-radio-button value="embedded">Embedded into servlet container</md-radio-button>
+								 </md-radio-group> 
+							 </label>
+							 </div>
+					         <md-input-container>
+						    	<label>GroupId</label>
+						        <input ng-model="deployment.groupId">
+						    </md-input-container>
+						     <md-input-container>
+						    	<label>ArtifactId</label>
+						        <input ng-model="deployment.artifactId">
+						    </md-input-container>   
+						     <md-input-container>
+						    	<label>Class Prefix</label>
+						        <input ng-model="deployment.classNamePrefix">
+						    </md-input-container>
+						     <md-input-container ng-show="deployment.deploymentType=='standalone' || deployment.sepaType=='storm'">
+						    	<label>Port</label>
+						        <input ng-model="deployment.port">
+						    </md-input-container>  
+						    
+						    <md-input-container flex> 
+						    	<md-button class="md-raised md-accent" ng-click="submitDeployment()">Generate StreamPipes Maven Project</md-button>
+						    </md-input-container>
+					</div>
+		</md-whiteframe>
+		<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+				<md-button class="md-raised md-accent" ng-click="switchSepaTab(4)">Previous</md-button>
+			</section>
+		</md-content> </md-tab>
+</md-tabs>

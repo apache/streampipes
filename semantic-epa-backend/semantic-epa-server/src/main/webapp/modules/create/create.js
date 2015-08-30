@@ -1,8 +1,75 @@
 var spCreate = angular.module('spCreate', ['ngMaterial','ngMdIcons'])
 .controller('CreateCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
 	
+	$scope.typeSelected = "SEP";
+	$scope.selectedSepIndex = 0;
+	$scope.selectedSepaIndex = 0;
+	$scope.selectedSecIndex = 0;
+	
+	$scope.deployment = {};
+	$scope.deployment.deploymentType = "standalone";
+	$scope.deployment.sepaType = "storm";
+	$scope.deployment.groupId = "de.fzi.cep.sepa.test";
+	$scope.deployment.artifactId = "test-project";
+	$scope.deployment.classNamePrefix = "TestProject";
+	$scope.deployment.port = 8093;
+	
+	$scope.submitDeployment = function() {
+		if ($scope.deployment.sepaType == 'storm') $scope.submitStormDeployment();
+		else  $mdToast.show(
+			      $mdToast.simple()
+			        .content('Not yet supported')
+			        .hideDelay(3000)
+			    );
+	};
+	
+	$scope.submitStormDeployment = function() {
+		$http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/storm'}).
+		  success(function(data, status, headers, config) {
+			    $scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");
+		  }).
+		  error(function(data, status, headers, config) {
+		    console.log(data);
+		  });
+	};
+	
+	$scope.openSaveAsDialog = function(filename, content, mediaType) {
+	    var blob = new Blob([content], {type: mediaType});
+	    saveAs(blob, filename);
+	}
+	
+	$scope.streamRestrictions = [];
+	
 	$scope.schema = {};
 	
+	$scope.switchSepTab = function(newIndex) {
+		$scope.selectedSepIndex = newIndex;
+	}
+	
+	$scope.switchSepaTab = function(newIndex) {
+		$scope.selectedSepaIndex = newIndex;
+	}
+	
+	$scope.switchSecTab = function(newIndex) {
+		$scope.selectedSecIndex = newIndex;
+	}
+	
+	$scope.addStreamRestriction = function() {
+		$scope.streamRestrictions.push({"eventProperties" : []});
+	}
+	
+	 $scope.removeStreamRestriction = function(index) {
+		    $scope.streamRestrictions.splice(index, 1);
+	 };
+	 
+	 $scope.addPropertyRestriction = function(index) {
+			if ($scope.streamRestrictions[index].eventProperties == undefined) $scope.streamRestrictions[index].eventProperties = [];
+			 $scope.streamRestrictions[index].eventProperties.push({"datatype" : "abc", "propertyType" : "proptype"});
+		}
+		
+	 $scope.removePropertyRestriction = function(index, propertyIndex) {
+		    $scope.streamRestrictions[index].eventProperties.splice(propertyIndex, 1);
+	 };
 	
 	
 	$scope.loadSchema = function() {
