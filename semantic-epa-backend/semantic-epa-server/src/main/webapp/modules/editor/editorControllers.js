@@ -5,13 +5,15 @@ var editorControllers = angular.module('editorControllers', ['ngMaterial','ngMdI
 
 
 editorControllers
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$http','restApi',
-        function ($scope, $rootScope, $http, restApi) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi',
+        function ($scope, $rootScope,$timeout, $http, restApi) {
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
+
+
             
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
@@ -34,13 +36,14 @@ editorControllers
                 return restApi.getOwnActions();
             };
 
+
+
             $scope.loadCurrentElements = function(type){
                 $scope.currentElements = [];
-                $('#editor-icon-stand').children().remove();
+                $('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
 
                 }else if (type == 'source'){
-
                     $scope.loadSources();
                 }else if (type == 'sepa'){
                     $scope.loadSepas();
@@ -49,73 +52,63 @@ editorControllers
                 }
             };
 
+            $scope.tabs = [
+
+                {
+                    title : 'Blocks',
+                    type: 'block',
+                    disabled: !($scope.ownBlocksAvailable())
+                },
+                {
+                    title : 'Sources',
+                    type: 'source',
+                    disabled: !($scope.ownSourcesAvailable())
+                },
+                {
+                    title : 'Sepas',
+                    type: 'sepa',
+                    disabled: !($scope.ownSepasAvailable())
+                },
+                {
+                    title : 'Actions',
+                    type: 'action',
+                    disabled: !($scope.ownActionsAvailable())
+                }
+
+
+
+            ];
+
+
             $scope.loadSources = function(){
-                restApi.getOwnSources()
+                return restApi.getOwnSources()
                     .success(function(sources){
 
                         $.each(sources, function(i, source){
                             restApi.getOwnStreams(source)
                                 .success(function(streams){
+                                    //console.log(streams);
+                                    angular.forEach(streams, function(stream, i){
+                                        for (var j = 0; j < $scope.currentElements.length; j++){
+                                            if (stream.elementId == $scope.currentElements[j].elementId){
+                                                return;
+                                            }
+                                        }
+                                        stream.type = 'stream';
+                                        $scope.currentElements.push(stream);
 
-                                    $scope.createElements(streams, "stream", "#editor-icon-stand");
-
+                                    });
+                                    //$scope.createElements(streams, "stream", "#editor-icon-stand");
+                                    console.log($scope.currentElements);
+                                    $timeout(function(){
+                                        makeDraggable();
+                                    })
                                 })
                                 .error(function(msg){
                                     console.log(msg);
-                                });
-
+                                })
                         });
-
-                        //$scope.currentElements = sources;
-                        console.log($scope.currentElements);
                     });
-            };
-
-            $scope.createElements = function(data, type, containerId){
-                console.log("creating elements")
-                $.each(data, function (i, json) {
-                    var alreadyLoaded = false;
-                    for (var i = 0, el; el = $scope.currentElements[i]; i++){
-                        if (el.name == json.name){
-                            console.log("already loaded " + json.name )
-                            alreadyLoaded = true
-                        }
-                    }
-                    if (alreadyLoaded) return;
-                    $scope.currentElements.push(json);
-
-
-                    var idString = type + i;
-                    var $newElement = $('<span>')//<img>
-                        .attr({
-                            id: idString,
-                            class: "draggable-icon tt",
-                            "data-toggle": "tooltip",
-                            "data-placement": "top",
-                            title: json.name
-                        })
-                        .addClass(type)
-                        .data("JSON", json)
-                        .on("contextmenu", staticContextMenu)
-                        .appendTo(containerId);
-                    if (json.iconUrl == null) {
-                        addTextIconToElement($newElement, $newElement.data("JSON").name);
-                    } else {
-                        $('<img>').attr("src", json.iconUrl).addClass('draggable-img').on("contextmenu", staticContextMenu)
-                            .data("JSON", json)
-                            .appendTo($newElement)
-                            .error(function(){
-                                addTextIconToElement($(this).parent(), $(this).parent().data("JSON").name );
-                                $(this).remove();
-                            });
-                    }
-
-
-
-
-                });
-                makeDraggable(type);
-                initTooltips();
             };
 
 
@@ -123,7 +116,14 @@ editorControllers
                 restApi.getOwnSepas()
                     .success(function(sepas){
                         console.log(sepas);
-                        $scope.createElements(sepas, "sepa", "#editor-icon-stand")
+                        $.each(sepas, function(i, sepa){
+                           sepa.type = 'sepa';
+                        });
+                        $scope.currentElements = sepas;
+                        $timeout(function(){
+                            makeDraggable();
+                        })
+
                     })
                     .error(function(msg) {
                         console.log(msg);
@@ -132,8 +132,30 @@ editorControllers
             $scope.loadActions = function(){
                 restApi.getOwnActions()
                     .success(function(actions){
-                        $scope.createElements(actions, "action", "#editor-icon-stand")
+                        $.each(actions, function(i, action){
+                            action.type = 'action';
+                        });
+                        $scope.currentElements = actions;
+                        $timeout(function(){
+                            makeDraggable();
+                        })
+
                     });
+            };
+
+            var makeDraggable = function(){
+                $('.draggable-icon').draggable({
+                    revert: 'invalid',
+                    helper: 'clone',
+                    stack: '.draggable-icon',
+                    start: function (stream, ui) {
+                        ui.helper.appendTo('#content');
+                        $('#assembly').css('border-color', 'red');
+                    },
+                    stop: function (stream, ui) {
+                        $('#assembly').css('border-color', '#666666');
+                    }
+                });
             };
 
             $scope.streamDropped = function($newElement, endpoints){
@@ -195,32 +217,7 @@ editorControllers
             }
 
 
-            $scope.tabs = [
 
-                {
-                    title : 'Blocks',
-                    type: 'block',
-                    disabled: !($scope.ownBlocksAvailable())
-                },
-                {
-                    title : 'Sources',
-                    type: 'source',
-                    disabled: !($scope.ownSourcesAvailable())
-                },
-                {
-                    title : 'Sepas',
-                    type: 'sepa',
-                    disabled: !($scope.ownSepasAvailable())
-                },
-                {
-                    title : 'Actions',
-                    type: 'action',
-                    disabled: !($scope.ownActionsAvailable())
-                }
-
-
-
-            ];
 
             init("Proa");
 
@@ -259,6 +256,11 @@ editorControllers
                         drop: function (element, ui) {
 
                             if (ui.draggable.hasClass('draggable-icon')) {
+                                //TODO get data
+                                console.log(ui);
+
+
+
                                 if (ui.draggable.data("JSON") == null) {
                                     alert("No JSON - Data for Dropped element");
                                     return false;
@@ -344,4 +346,13 @@ editorControllers
 
         }
     ])
+    .directive('myDataBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                elem.data("JSON", scope.element)
+            }
+        }
+    })
+
     ;

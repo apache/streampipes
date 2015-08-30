@@ -369,41 +369,41 @@ function initTooltips() {
  * initiates drag and drop functionality for given elements
  * @param {Object} type stream, sepa or action elements
  */
-function makeDraggable(type) {
-
-    if (type === "stream") {
-        $('.draggable-icon.stream').draggable({
-            revert: 'invalid',
-            helper: 'clone',
-            stack: '.draggable-icon',
-            start: function (stream, ui) {
-                ui.helper.children().addClass("draggable-img-dragging");
-                if ($('#sepas').css("opacity") === "0") {
-                    $('.alpha').not('#sepas').fadeTo(300, .2);
-                    ui.helper.appendTo('#content');
-                } else {
-                    ui.helper.appendTo('#content');
-
-                }
-
-                $('#assembly').css('border', '3px dashed grey');
-            },
-            stop: function (stream, ui) {
-                if ($('#sepas').css("opacity") == "0") {
-                    $('.alpha').not('#sepas').fadeTo(300, 1);
-                } else {
-                    $('.alpha').fadeTo(300, 1);
-                }
-                $('#assembly').css('border', '');
-                ui.helper.children().removeClass("draggable-img-dragging");
-            }
-        });
-    } else if (type === "sepa") {
-        $('.draggable-icon.sepa').draggable(standardDraggableOptions);
-    } else {
-        $('.draggable-icon.action').draggable(standardDraggableOptions);
-    }
-}
+//function makeDraggable(type) {
+//
+//    if (type === "stream") {
+//        $('.draggable-icon.stream').draggable({
+//            revert: 'invalid',
+//            helper: 'clone',
+//            stack: '.draggable-icon',
+//            start: function (stream, ui) {
+//                //ui.helper.children().addClass("draggable-img-dragging");
+//                //if ($('#sepas').css("opacity") === "0") {
+//                //    $('.alpha').not('#sepas').fadeTo(300, .2);
+//                    ui.helper.appendTo('#content');
+//                //} else {
+//                //    ui.helper.appendTo('#content');
+//                //
+//                //}
+//
+//                $('#assembly').css('border-color', 'red');
+//            },
+//            stop: function (stream, ui) {
+//                //if ($('#sepas').css("opacity") == "0") {
+//                //    $('.alpha').not('#sepas').fadeTo(300, 1);
+//                //} else {
+//                //    $('.alpha').fadeTo(300, 1);
+//                //}
+//                $('#assembly').css('border-color', '#666666');
+//                //ui.helper.children().removeClass("draggable-img-dragging");
+//            }
+//        });
+//    } else if (type === "sepa") {
+//        $('.draggable-icon.sepa').draggable(standardDraggableOptions);
+//    } else {
+//        $('.draggable-icon.action').draggable(standardDraggableOptions);
+//    }
+//}
 
 /**
  * Shows the contextmenu for given element
