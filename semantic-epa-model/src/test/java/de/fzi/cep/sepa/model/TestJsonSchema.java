@@ -19,7 +19,7 @@ public class TestJsonSchema {
 	public static void main(String[] args)
 	{
 		try {
-			new TestJsonSchema().getJsonSchema(KafkaTransportProtocol.class);
+			new TestJsonSchema().getJsonSchema(SepDescription.class);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

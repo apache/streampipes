@@ -72,10 +72,10 @@ public class EventStream extends NamedSEPAElement {
 
 	public EventStream(EventStream other) {
 		super(other);		
-		if (other.getEventGrounding().getRdfId() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
+		if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
 		this.eventSchema = new EventSchema(other.getEventSchema());
-		this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
-		this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
+		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
+		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
 	}
 
 
