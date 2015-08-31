@@ -1,56 +1,35 @@
 backend: 
   build: semantic-epa-backend/
-  net: "host"
   ports: 
     - "8080:8080"
-  #volumes:
-    #- ".:backend"
+  volumes:
+    - "./config:/root/.streampipes"
+    - "./aduna:/root/.aduna"
 sources:
   build: semantic-epa-sources-samples/
-  net: "host"
   ports:
     - "8089:8089"
-  #volumes:
-    #- ".:sources"
 esper:
   build: semantic-epa-esper/
-  net: "host"
   ports:
     - "8090:8090"
-  #volumes:
-    #- ".:esper"
 actions:
   build: semantic-epa-actions-samples/
-  net: "host"
   ports:
     - "8091:8091"
-  #volumes:
-    #- ".:actions"
 activemq:
   build: activemq/
-  net: "host"
   ports:
     - "61616:61616"
-  #volumes:
-    #- ".:activemq"
 couchdb:
   build: couchDB/
-  net: "host"
   ports:
     - "5984:5984"
-  #volumes:
-    #- ".:couchDB"
 zookeeper:
   build: zookeeper/
-  net: "host"
   ports:
     - "2181:2181"
-  #volumes:
-    #- ".:zookeeper"
 kafka:
   build: kafka/
-  net: "host"
   ports:
     - "9092:9092"
-  #volumes:
-    #- ".:kafka"
