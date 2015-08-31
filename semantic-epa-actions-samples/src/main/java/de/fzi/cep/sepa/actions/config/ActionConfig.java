@@ -9,6 +9,6 @@ public class ActionConfig {
 	
 	static {
 		serverUrl = Configuration.getInstance().ACTION_BASE_URL;
-		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		iconBaseUrl = Configuration.getInstance().getHostname() +"8080" +"/semantic-epa-backend/img";
 	}
 }
