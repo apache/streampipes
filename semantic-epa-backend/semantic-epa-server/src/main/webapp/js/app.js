@@ -8,9 +8,9 @@ angular
         contextPath : "/semantic-epa-backend",
         api : "/api/v2"
     })
-    .run(function($rootScope, $location, confService) {
+    .run(function($rootScope, $location, confService, authService) {
 	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        confService.configured();
+	        authService.authenticate();
 	    });
     })
     .config(function($mdIconProvider) {
@@ -393,10 +393,7 @@ angular
 	    
 	    var restApi = {};
 	    
-	    if ($rootScope.email == undefined)
-    	{
-    		confService.configured();
-    	}
+	    authService.authenticate();
 	    
 	    var urlBase = function() {
 	    	return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;
