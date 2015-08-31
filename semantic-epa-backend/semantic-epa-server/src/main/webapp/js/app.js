@@ -8,9 +8,9 @@ angular
         contextPath : "/semantic-epa-backend",
         api : "/api/v2"
     })
-    .run(function($rootScope, $location, authService) {
+    .run(function($rootScope, $location, confService) {
 	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        authService.authenticate();
+	        confService.configured();
 	    });
     })
     .config(function($mdIconProvider) {
@@ -346,10 +346,10 @@ angular
 	      }];
 	    return httpInterceptor;
     }])
-    .factory('confService', function($rootScope, $http, restApi, authService) {
+    .factory('confService', function($rootScope, $http, authService, $location) {
         return {
             configured: function() {
-            	restApi.configured().success(function(msg) {
+            	$http.get("/semantic-epa-backend/api/v2/setup/configured").success(function(msg) {
         			if (msg.configured)
         				{
         					authService.authenticate();
@@ -389,13 +389,13 @@ angular
             }
         };
     })
-	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', function($rootScope, $http, apiConstants, authService) {
+	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', 'confService', function($rootScope, $http, apiConstants, authService, confService) {
 	    
 	    var restApi = {};
 	    
 	    if ($rootScope.email == undefined)
     	{
-    		authService.authenticate();
+    		confService.configured();
     	}
 	    
 	    var urlBase = function() {
