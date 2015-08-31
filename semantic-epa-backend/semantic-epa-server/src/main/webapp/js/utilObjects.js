@@ -165,7 +165,7 @@ function Pipeline(){
     this.send = function(overWrite){
         var pipeline = this;
         return $.ajax({
-            url: standardUrl +"api/v2/users/riemer@fzi.de/pipelines",
+            url: standardUrl +"v2/users/riemer@fzi.de/pipelines",
             data: JSON.stringify(pipeline),
             processData: false,
             type: 'POST',
