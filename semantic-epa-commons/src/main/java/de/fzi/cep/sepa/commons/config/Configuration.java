@@ -1,11 +1,14 @@
 package de.fzi.cep.sepa.commons.config;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
@@ -197,6 +200,16 @@ public class Configuration {
 			return instance;
 		}
 		return instance;
+	}
+	
+	public String getHostname() {
+		InetAddress addr;
+		try {
+			addr = InetAddress.getLocalHost();
+			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
+		} catch (UnknownHostException e) {
+			return "http://localhost:";
+		}	
 	}
 	
 	public static void update() {
