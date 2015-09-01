@@ -91,6 +91,7 @@ public class ConfigurationManager {
 		properties.put("couchDbPipelineDbName", settings.getCouchDbPipelineDbName());
 		properties.put("couchDbMonitoringDbName", settings.getCouchDbMonitoringDbName());
 		properties.put("couchDbConnectionDbName", settings.getCouchDbConnectionDbName());
+		properties.put("couchDbNotificationDbName", settings.getCouchDbConnectionDbName());
 		
 		properties.put("sesameUrl", settings.getSesameUrl());
 		properties.put("sesameDbName", settings.getSesameDbName());
