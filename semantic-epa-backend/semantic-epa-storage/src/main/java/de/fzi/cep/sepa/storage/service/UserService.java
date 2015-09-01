@@ -34,12 +34,12 @@ public class UserService {
 	
 	public List<Pipeline> getOwnPipelines(String username)
 	{
-		return userStorage.getUser(username).getPipelines();
+		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getCreatedByUser().equals(username)).collect(Collectors.toList());
 	}
 	
 	public Pipeline getPipeline(String username, String pipelineId) throws ElementNotFoundException
 	{
-		return userStorage.getUser(username).getPipelines().stream().filter(p -> p.getPipelineId().equals(pipelineId)).findFirst().orElseThrow(ElementNotFoundException::new);
+		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getPipelineId().equals(pipelineId)).findFirst().orElseThrow(ElementNotFoundException::new);
 	}	
 
     /**
@@ -50,9 +50,10 @@ public class UserService {
     public void addOwnPipeline(String username, Pipeline pipeline) {
      
         if (!checkUser(username)) return;
-        User user = userStorage.getUser(username);
-        user.addOwnPipeline(pipeline);
-        userStorage.updateUser(user);
+//        User user = userStorage.getUser(username);
+//        user.addOwnPipeline(pipeline);
+//        userStorage.updateUser(user);
+        StorageManager.INSTANCE.getPipelineStorageAPI().storePipeline(pipeline);
     }
 
     public void addOwnSource(String username, String elementId, boolean publicElement) {
