@@ -17,6 +17,25 @@ body {
 	background-attachment: fixed;	
 }
 
+
+ .sidebar-badge {
+  display: inline-block;
+  min-width: 24px;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 3px;
+  font-size: 10px;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  right: 16px;
+  top: 25px;
+  color: #ffffff;
+  background-color: rgb(255,64,129);
+  vertical-align:middle;
+  }
+  
+
 .panel-sources {
 	background: #B2DFDB;
 	

@@ -96,6 +96,10 @@ angular
                 templateUrl : 'modules/create/create.html',
                 controller  : 'CreateCtrl'
             })
+            .when('/recommendations', {
+                templateUrl : 'modules/recommendations/recommendations.html',
+                controller  : 'RecommendationCtrl'
+            })
 	})
     .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, confService) {
        

@@ -46,7 +46,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-schema-form/0.8.8/schema-form.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-schema-form/0.8.8/bootstrap-decorator.min.js"></script>
 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angular_material/0.10.1/angular-material.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 
 	<!-- Modules -->
@@ -133,6 +133,12 @@
 	            <span class="md-body-2">{{item.title}}</span>
 	          </div>
 	       
+	        </md-list-item>
+	        <md-list-item class="md-2-line" role="link" md-ink-ripple ng-click="$parent.go('recommendations')">
+		        <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Recommendations"></md-icon>
+		        <div class="md-list-item-text">
+		            <span class="md-body-2">Recommendations  <span class="sidebar-badge">5</span></span>
+		        </div>
 	        </md-list-item>
 	        <md-divider></md-divider>
 	        <md-subheader  class="md-no-sticky">Management</md-subheader>

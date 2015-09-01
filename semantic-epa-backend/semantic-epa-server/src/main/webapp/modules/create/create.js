@@ -14,6 +14,11 @@ var spCreate = angular.module('spCreate', ['ngMaterial','ngMdIcons'])
 	$scope.deployment.classNamePrefix = "TestProject";
 	$scope.deployment.port = 8093;
 	
+	$scope.availableOutputStrategies = [{"name" : "Rename"}, {"name" : "Enrich"}, {"name" : "Custom"}, {"name" : "Fixed"}, {"name" : "List"}];
+	$scope.availableStaticProperties = [{"name" : "Free Text"}, {"name" : "Any Selection"}, {"name" : "OneOf Selection"}, {"name" : "Mapping Property"}, {"name" : "Matching Property"}];
+	
+	
+	
 	$scope.submitDeployment = function() {
 		if ($scope.deployment.sepaType == 'storm') $scope.submitStormDeployment();
 		else  $mdToast.show(

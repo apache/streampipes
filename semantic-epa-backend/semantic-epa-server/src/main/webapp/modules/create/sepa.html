@@ -70,8 +70,12 @@
 			<md-content class="md-padding">
 			<h3 class="md-display-2">Static Properties</h3>
 			<p></p>
-			<p></p>
-			<p></p>
+			<md-input-container>
+			<label>Static Property</label>
+				<md-select ng-model="availableStaticProperties">
+	          		<md-option ng-repeat="property in availableStaticProperties" value="{{property.name}}">{{property.name}}</md-option>
+	        	</md-select>
+        	</md-input-container>
 			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
 					<md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Previous</md-button>
 				<md-button class="md-raised md-accent" ng-click="switchSepaTab(3)">Next</md-button>
@@ -83,7 +87,13 @@
 			<h3 class="md-display-2">Output Strategy</h3>
 			<p></p>
 			<p></p>
-			<p></p>
+			<md-input-container>
+			<label>Output Strategy</label>
+				<md-select ng-model="availableOutputStrategies">
+	          		<md-option ng-repeat="strategy in availableOutputStrategies" value="{{strategy.name}}">{{strategy.name}}</md-option>
+	        	</md-select>
+        	</md-input-container>
+        	<md-button class="md-raised md-accent">Add</md-button>
 			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
 				<md-button class="md-raised md-accent" ng-click="switchSepaTab(2)">Previous</md-button>
 				<md-button class="md-raised md-accent" ng-click="switchSepaTab(4)">Next</md-button>
@@ -93,9 +103,16 @@
 		<md-tab label="Supported Grounding"> 
 			<md-content class="md-padding">
 			<h3 class="md-display-2">Supported Grounding</h3>
-			<p></p>
-			<p></p>
-			<p></p>
+			<h4>Protocols</h4>
+			 		<md-input-container flex> 
+						<md-checkbox ng-model="">Supports Kafka Protocol</md-checkbox>
+						<md-checkbox ng-model="">Supports JMS Protocol</md-checkbox>
+					</md-input-container>
+			<h4>Message Formats</h4>
+					<md-input-container flex> 
+						<md-checkbox ng-model="">Supports JSON format</md-checkbox>
+						<md-checkbox ng-model="">Supports ProaSense Thrift format</md-checkbox>
+					</md-input-container>
 			<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
 				<md-button class="md-raised md-accent" ng-click="switchSepaTab(3)">Previous</md-button>
 				<md-button class="md-raised md-accent" ng-click="switchSepaTab(5)">Next</md-button>
