@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers', 'spMarketplace', 'spCreate', 'spAdd', 'spMy', 'pipelines'])
+    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers', 'spMarketplace', 'spCreate', 'spAdd', 'spMy', 'spRecommendations', 'pipelines'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -96,13 +96,15 @@ angular
                 templateUrl : 'modules/create/create.html',
                 controller  : 'CreateCtrl'
             })
-            .when('/recommendations', {
-                templateUrl : 'modules/recommendations/recommendations.html',
+            .when('/notifications', {
+                templateUrl : 'modules/notifications/notifications.html',
                 controller  : 'RecommendationCtrl'
             })
 	})
     .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, confService) {
        
+    	$rootScope.unreadNotifications = [];
+    	
     	$scope.toggleLeft = buildToggler('left');
     	$rootScope.userInfo = {
     			Name : "D",
@@ -121,8 +123,8 @@ angular
 		        $rootScope.authenticated = false;
 		        $location.path("/login");
 	        });
-	      };
-        
+	      };	      
+	      
         $scope.menu = [
            {
              link : '/',
@@ -383,6 +385,15 @@ angular
         	        	$rootScope.username = response.data.info.authc.principal.username;
         	        	$rootScope.email = response.data.info.authc.principal.email;
         		        $rootScope.authenticated = true;
+        		        $http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
+        			              .success(function(notifications){
+        			                  $rootScope.unreadNotifications = notifications
+        			                  console.log($rootScope.unreadNotifications);
+        			              })
+        			              .error(function(msg){
+        			                  console.log(msg);
+        			              });
+
         	          }
         	          },
         	          function(response) {
@@ -571,6 +582,25 @@ angular
 	    
 	    restApi.stopPipeline = function(pipelineId) {
 	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
+	    }
+	    
+	    restApi.getNotifications = function() {
+	    	return $http.get(urlBase() +"/notifications");
+	    }
+	    
+	    restApi.getUnreadNotifications = function() {
+	    	return $http.get(urlBase() +"/notifications/unread");
+	    }
+	    
+	    restApi.updateNotification = function(notificationId) {
+	    	return $http.put(urlBase() +"/notifications/" +notificationId);
+	    }
+	    
+	    restApi.deleteNotifications = function(notificationId) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/notifications/" +notificationId
+	    	});
 	    }
 	
 	    return restApi;
