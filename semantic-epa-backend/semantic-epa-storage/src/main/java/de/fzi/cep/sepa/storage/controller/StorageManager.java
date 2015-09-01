@@ -26,6 +26,7 @@ import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
+import de.fzi.cep.sepa.storage.api.NotificationStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.service.UserService;
@@ -170,6 +171,11 @@ public enum StorageManager {
 	public MonitoringDataStorage getMonitoringDataStorageApi()
 	{
 		return new MonitoringDataStorageImpl();
+	}
+	
+	public NotificationStorage getNotificationStorageApi()
+	{
+		return new NotificationStorageImpl();
 	}
 
 
