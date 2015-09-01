@@ -57,7 +57,7 @@ public class TestAggregation {
 		outputStream.setEventSchema(outputSchema);
 		
 		EventGrounding outputGrounding = new EventGrounding();
-		outputGrounding.setTransportProtocol(new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), "FZI.Test"));
+		outputGrounding.setTransportProtocol(new JmsTransportProtocol(Configuration.getInstance().getBrokerConfig().getJmsHost(), Configuration.getInstance().getBrokerConfig().getJmsPort(), "FZI.Test"));
 		
 		outputStream.setEventGrounding(outputGrounding);
 		
