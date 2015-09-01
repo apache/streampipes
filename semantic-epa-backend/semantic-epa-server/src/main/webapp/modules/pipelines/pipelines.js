@@ -21,12 +21,14 @@ angular
         $scope.startPipeline = function(pipelineId) {
         	restApi.startPipeline(pipelineId).success(function(data) {
         		console.log("starting pipeline");
+        		$scope.getPipelines();
         	});
         };
         
         $scope.stopPipeline = function(pipelineId) {
         	restApi.stopPipeline(pipelineId).success(function(data) {
         		console.log("stopping pipeline");
+        		$scope.getPipelines();
         	});
         };
 

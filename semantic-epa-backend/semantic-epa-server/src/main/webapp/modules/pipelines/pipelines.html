@@ -22,9 +22,9 @@
 						<td>{{pipeline.name}}<br/>{{pipeline.description}}</td>
 						<td>TBD</td>
 						<td>{{pipeline.running == true ? 'Running' : 'Idle'}}</td>
-						<td><md-button ng-disabled="pipeline.running == true" ng-click="startPipeline(pipeline.pipelineId)" class="md-icon-button md-raised"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button><md-button ng-disabled="pipeline.running == false" class="md-icon-button md-raised" ng-click="stopPipeline(pipeline.pipelineId)"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button></td>
-						<td><md-button ng-click="deletePipeline(pipeline.pipelineId)" class="md-icon-button md-raised"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete" class="md-accent"></md-icon></md-button></td>
-						<td><md-button ng-click="modifyPipeline(pipeline.pipelineId)" class="md-icon-button md-raised"><md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify" class="md-accent"></md-icon></md-button></td>
+						<td><md-button ng-disabled="pipeline.running == true" ng-click="startPipeline(pipeline._id)" class="md-icon-button md-raised"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button><md-button ng-disabled="pipeline.running == false" class="md-icon-button md-raised" ng-click="stopPipeline(pipeline._id)"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button></td>
+						<td><md-button ng-click="deletePipeline(pipeline._id)" class="md-icon-button md-raised"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete" class="md-accent"></md-icon></md-button></td>
+						<td><md-button ng-click="modifyPipeline(pipeline._id)" class="md-icon-button md-raised"><md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify" class="md-accent"></md-icon></md-button></td>
 					</tr>
 				</tbody>
 			</table>
