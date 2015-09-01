@@ -145,10 +145,10 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			}
 		};
 
-		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+		//twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 
-		twitterStream.addListener(listener);
-		twitterStream.sample();
+		//twitterStream.addListener(listener);
+		//twitterStream.sample();
 
 	}
 
