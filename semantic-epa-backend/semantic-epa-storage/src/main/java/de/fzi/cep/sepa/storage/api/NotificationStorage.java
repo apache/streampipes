@@ -10,9 +10,12 @@ public interface NotificationStorage {
 	
 	public List<ProaSenseNotificationMessage> getAllNotifications();
 	
-	public void addNotification(ProaSenseNotificationMessage notification);
+	public List<ProaSenseNotificationMessage> getUnreadNotifications();
 	
-	public void changeNotificationStatus(String notificationId);
+	public boolean addNotification(ProaSenseNotificationMessage notification);
 	
-	public void deleteNotification(String notificationId);
+	public boolean changeNotificationStatus(String notificationId);
+	
+	public boolean deleteNotification(String notificationId);
+
 }
