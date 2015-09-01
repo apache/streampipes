@@ -41,7 +41,7 @@ public class NotificationSubscriber implements IMessageListener {
 	@Override
 	public void onEvent(String json) {
 		try {
-			String output = new Gson().toJson(new ProaSenseNotificationMessage("Test", new Date().getTime(), "Decription"));
+			String output = new Gson().toJson(new ProaSenseNotificationMessage("Test", new Date().getTime(), "Decription", "test-user"));
 			publisher.sendText(output);
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
