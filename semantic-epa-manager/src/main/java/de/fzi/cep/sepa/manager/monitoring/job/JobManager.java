@@ -27,7 +27,7 @@ public enum JobManager {
 	public void addJob(MonitoringJob<?> job)
 	{
 		currentJobs.add(job);
-		scheduler.scheduleAtFixedRate(new MonitoringJobExecutor(job), 0, 10, TimeUnit.SECONDS);
+		scheduler.scheduleAtFixedRate(new MonitoringJobExecutor(job), 10, 10, TimeUnit.MINUTES);
 	}
 	
 	public void removeJob(MonitoringJob<?> job)

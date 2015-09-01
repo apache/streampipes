@@ -36,6 +36,7 @@ public class CouchDbInstallationStep implements InstallationStep {
 			Utils.getCouchDbMonitoringClient();
 			Utils.getCouchDbPipelineClient();
 			Utils.getCouchDbConnectionClient();
+			Utils.getCouchDbNotificationClient();
 			return Arrays.asList(Notifications.success("Creating CouchDB databases..."));
 		} catch (Exception e)
 		{

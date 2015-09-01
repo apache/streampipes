@@ -14,6 +14,7 @@ import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
 import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.BrokerConfig;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
@@ -143,7 +144,8 @@ public class InvocationGraphBuilder {
 	
 	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
 	{
-		if (Configuration.getInstance().isDemoMode()) return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+		BrokerConfig config = Configuration.getInstance().getBrokerConfig();
+		if (Configuration.getInstance().isDemoMode()) return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic);
 		try {
 		if (node.getParent().getData() instanceof InvocableSEPAElement)
 		{
@@ -152,16 +154,16 @@ public class InvocationGraphBuilder {
 			if (invocable.getSupportedGrounding().getTransportProtocols().stream().anyMatch(g -> g instanceof KafkaTransportProtocol))
 			{
 				System.out.println("selected kafka");
-				return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
+				return new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), outputTopic, config.getZookeeperHost(), config.getZookeeperPort());
 			}
 			else
 			{
 				System.out.println("selected jms");
-				return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic);
+				return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic);
 			}
 		}
-		} catch (Exception e) { return new JmsTransportProtocol(Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), outputTopic); }
-		return new KafkaTransportProtocol(Configuration.getBrokerConfig().getKafkaHost(), Configuration.getBrokerConfig().getKafkaPort(), outputTopic, Configuration.getBrokerConfig().getZookeeperHost(), Configuration.getBrokerConfig().getZookeeperPort());
+		} catch (Exception e) { return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic); }
+		return new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), outputTopic, config.getZookeeperHost(), config.getZookeeperPort());
 	}
 
 	private InvocableSEPAElement buildSEPAElement(
