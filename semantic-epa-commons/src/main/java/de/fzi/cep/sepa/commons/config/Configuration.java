@@ -202,6 +202,11 @@ public class Configuration {
 		return instance;
 	}
 	
+	public String getJmsAddress()
+	{
+		return JMS_PROTOCOL +"://" +JMS_HOST +":" +JMS_PORT;
+	}
+	
 	public String getHostname() {
 		InetAddress addr;
 		try {
@@ -241,7 +246,7 @@ public class Configuration {
 		return writer;
 	}
 
-	public static final BrokerConfig getBrokerConfig()
+	public final BrokerConfig getBrokerConfig()
 	{
 		return BrokerConfig.CONFIGURED;
 	}
