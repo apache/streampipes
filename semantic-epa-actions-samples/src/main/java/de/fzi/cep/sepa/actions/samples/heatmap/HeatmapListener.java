@@ -9,7 +9,7 @@ import com.google.gson.JsonParser;
 
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQPublisher;
-import de.fzi.cep.sepa.actions.messaging.jms.IMessageListener;
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
 public class HeatmapListener implements Runnable, IMessageListener{
 

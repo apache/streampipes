@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.actions.samples.jms;
 import javax.jms.JMSException;
 
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQPublisher;
-import de.fzi.cep.sepa.actions.messaging.jms.IMessageListener;
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
 public class JMSPublisher implements IMessageListener {
 

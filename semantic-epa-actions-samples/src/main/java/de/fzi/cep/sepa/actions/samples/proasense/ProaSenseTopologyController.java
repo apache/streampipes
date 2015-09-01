@@ -8,10 +8,10 @@ import javax.jms.JMSException;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
-import de.fzi.cep.sepa.actions.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.BrokerConfig;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -45,7 +45,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("storm", "ProaSense Storm", "Forward to ProaSense component", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("storm", "Online Analytics", "Processes event by Online Analytics", "http://localhost:8080/img");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);

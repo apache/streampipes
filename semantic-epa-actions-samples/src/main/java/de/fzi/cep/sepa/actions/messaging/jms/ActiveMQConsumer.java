@@ -15,6 +15,8 @@ import javax.jms.TextMessage;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.util.ByteSequence;
 
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
+
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements AutoCloseable {
 
 	 private final Session session;

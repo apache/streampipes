@@ -18,8 +18,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import de.fzi.cep.sepa.actions.messaging.jms.IMessageListener;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import eu.proasense.internal.ComplexValue;

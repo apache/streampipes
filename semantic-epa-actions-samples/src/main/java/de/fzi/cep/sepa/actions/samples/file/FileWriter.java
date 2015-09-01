@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
-import de.fzi.cep.sepa.actions.messaging.jms.IMessageListener;
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
 public class FileWriter implements Runnable, IMessageListener {
 
