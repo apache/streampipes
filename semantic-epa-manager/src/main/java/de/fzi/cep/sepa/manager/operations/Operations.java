@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.user.User;
 
 /**
  * class that provides several (partial) pipeline verification methods
@@ -54,12 +55,12 @@ public class Operations {
 		return new ElementRecommender(partialPipeline).findRecommendedElements();
 	}
 
-	public static PipelineOperationStatus startPipeline(
+	public static PipelineOperationStatus startPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
 		return new PipelineExecutor(pipeline).startPipeline();		
 	}
 
-	public static PipelineOperationStatus stopPipeline(
+	public static PipelineOperationStatus stopPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
 		return new PipelineExecutor(pipeline).stopPipeline();
 	}
