@@ -164,6 +164,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		map.put("randomString", value2);
 		map.put("count", value3);
 		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "RandomNumber", map);
+		simpleEvent.setSensorId("RNS");
 		return simpleEvent;
 	}
 
