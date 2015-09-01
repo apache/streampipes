@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<version>0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>

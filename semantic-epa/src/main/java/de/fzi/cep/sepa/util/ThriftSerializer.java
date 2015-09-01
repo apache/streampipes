@@ -49,6 +49,7 @@ public class ThriftSerializer {
 		if (object instanceof java.lang.Double) return VariableType.DOUBLE;
 		else if (object instanceof java.lang.Integer) return VariableType.LONG;
 		else if (object instanceof java.lang.Long) return VariableType.LONG;
+		else if (object instanceof java.lang.Boolean) return VariableType.BOOLEAN;
 		else return VariableType.STRING;
 	}
 	
