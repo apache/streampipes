@@ -4,5 +4,9 @@ public interface Notification {
 
 	public String getNotifications();
 	
-	public String modifyNotifications(String notificationId);
+	public String getUnreadNotifications();
+	
+	public String deleteNotification(String notification);
+	
+	public String modifyNotificationStatus(String notificationId);
 }
