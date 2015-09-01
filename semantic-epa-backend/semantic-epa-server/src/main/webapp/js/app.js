@@ -10,7 +10,7 @@ angular
     })
     .run(function($rootScope, $location, confService, authService) {
 	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        authService.authenticate();
+	        confService.configured();
 	    });
     })
     .config(function($mdIconProvider) {
@@ -408,7 +408,7 @@ angular
 	    
 	    var restApi = {};
 	    
-	    authService.authenticate();
+	    //authService.authenticate();
 	    
 	    var urlBase = function() {
 	    	return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;
