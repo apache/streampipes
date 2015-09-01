@@ -31,6 +31,7 @@ public class Configuration {
 	public String COUCHDB_PIPELINE_DB;
 	public String COUCHDB_MONITORING_DB;
 	public String COUCHDB_CONNECTION_DB; 
+	public String COUCHDB_NOTIFICATION_DB;
 	public String COUCHDB_PROTOCOL;
 	public String COUCHDB_HOSTNAME;
 	public int COUCHDB_PORT = 5984;
@@ -110,6 +111,7 @@ public class Configuration {
 					COUCHDB_PIPELINE_DB = config.getString("couchDbPipelineDbName");
 					COUCHDB_MONITORING_DB = config.getString("couchDbMonitoringDbName");
 					COUCHDB_CONNECTION_DB = config.getString("couchDbConnectionDbName");
+					COUCHDB_NOTIFICATION_DB = config.getString("couchDbNotificationDbName");
 					
 					SESAME_REPOSITORY_ID = config.getString("sesameDbName");
 					CONTEXT_PATH = config.getString("context_path");
@@ -148,6 +150,7 @@ public class Configuration {
 					COUCHDB_PIPELINE_DB = "pipeline";
 					COUCHDB_MONITORING_DB = "monitoring";
 					COUCHDB_CONNECTION_DB = "connection"; 
+					COUCHDB_NOTIFICATION_DB = "notification";
 					COUCHDB_PROTOCOL = "http";
 					COUCHDB_HOSTNAME = "localhost";
 					COUCHDB_PORT = 5984;
