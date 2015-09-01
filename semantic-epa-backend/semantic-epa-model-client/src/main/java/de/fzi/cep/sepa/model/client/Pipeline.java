@@ -4,6 +4,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity
 public class Pipeline extends ElementComposition {
 	
@@ -15,6 +17,11 @@ public class Pipeline extends ElementComposition {
 	private long startedAt;
 	
 	private boolean publicElement;
+	
+	private String createdByUser;
+	
+	private @SerializedName("_id") String pipelineId;
+    private @SerializedName("_rev") String rev;
 	
 	public ActionClient getAction() {
 		return action;
@@ -48,6 +55,33 @@ public class Pipeline extends ElementComposition {
 		this.publicElement = publicElement;
 	}
 
+	
+	public String getCreatedByUser() {
+		return createdByUser;
+	}
+
+	public void setCreatedByUser(String createdByUser) {
+		this.createdByUser = createdByUser;
+	}
+	
+	
+
+	public String getPipelineId() {
+		return pipelineId;
+	}
+
+	public void setPipelineId(String pipelineId) {
+		this.pipelineId = pipelineId;
+	}
+
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+
 	public Pipeline clone()
 	{
 		Pipeline pipeline = new Pipeline();
@@ -56,8 +90,10 @@ public class Pipeline extends ElementComposition {
 		pipeline.setSepas(sepas);
 		pipeline.setStreams(streams);
 		pipeline.setAction(action);
+		pipeline.setCreatedByUser(createdByUser);
 		
 		return pipeline;
 	}
+	
 	
 }
