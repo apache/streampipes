@@ -91,6 +91,7 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 		return constructSuccessMessage(NotificationType.PIPELINE_START_SUCCESS.uiNotification());
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
@@ -117,6 +118,7 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 		Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, Pipeline.class);
 		serverPipeline.setPipelineId(UUID.randomUUID().toString());
 		serverPipeline.setRunning(false);
+		serverPipeline.setCreatedByUser(username);
 		userService.addOwnPipeline(username, serverPipeline);
 		return toJson(Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS));
 	}
