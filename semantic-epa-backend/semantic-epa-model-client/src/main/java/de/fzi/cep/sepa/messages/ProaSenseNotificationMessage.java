@@ -1,16 +1,21 @@
 package de.fzi.cep.sepa.messages;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 public class ProaSenseNotificationMessage {
 
 	private String notificationId;
+	private String targetedUser;
 	private String title;
 	private long timestamp;
 	private String description;
 	private boolean read;
 	
-	public ProaSenseNotificationMessage(String title, long timestamp, String description) {
+	public ProaSenseNotificationMessage(String title, long creationDate, String description, String targetedUser) {
+		this.notificationId = RandomStringUtils.randomAlphanumeric(10);
+		this.targetedUser = targetedUser;
 		this.title = title;
-		this.timestamp = timestamp;
+		this.timestamp = creationDate;
 		this.description = description;
 		this.read = false;
 	}
@@ -46,5 +51,23 @@ public class ProaSenseNotificationMessage {
 	public void setRead(boolean read) {
 		this.read = read;
 	}
+
+	public String getNotificationId() {
+		return notificationId;
+	}
+
+	public void setNotificationId(String notificationId) {
+		this.notificationId = notificationId;
+	}
+
+	public String getTargetedUser() {
+		return targetedUser;
+	}
+
+	public void setTargetedUser(String targetedUser) {
+		this.targetedUser = targetedUser;
+	}
+	
+	
 	
 }
