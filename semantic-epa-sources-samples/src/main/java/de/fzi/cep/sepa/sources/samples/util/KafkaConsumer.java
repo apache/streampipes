@@ -1,5 +1,9 @@
 package de.fzi.cep.sepa.sources.samples.util;
 
+import javax.jms.JMSException;
+
+import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
  
@@ -12,7 +16,12 @@ public class KafkaConsumer implements Runnable {
     public KafkaConsumer(KafkaStream a_stream, int a_threadNumber, String topic) {
         m_threadNumber = a_threadNumber;
         m_stream = a_stream;
-        publisher = new ActiveMQPublisher(topic);
+        try {
+			publisher = new ActiveMQPublisher(Configuration.getInstance().JMS_PROTOCOL, topic);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
  
     public void run() {

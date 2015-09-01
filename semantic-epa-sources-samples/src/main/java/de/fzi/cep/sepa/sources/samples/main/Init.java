@@ -43,7 +43,7 @@ public class Init implements Runnable {
 		declarers.add(new NYCTaxiProducer());
 //		declarers.add(new ProveITEventProducer());
 		
-		String zooKeeper = Configuration.getBrokerConfig().getZookeeperUrl();
+		String zooKeeper = Configuration.getInstance().getBrokerConfig().getZookeeperUrl();
 //		String zooKeeper = "kalmar39.fzi.de:2181";
 		String groupId = "groupId";
 		String[] topic = {

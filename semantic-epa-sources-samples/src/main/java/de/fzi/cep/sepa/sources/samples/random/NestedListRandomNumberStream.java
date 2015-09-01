@@ -12,6 +12,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -21,7 +22,6 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 
 public class NestedListRandomNumberStream implements EventStreamDeclarer {

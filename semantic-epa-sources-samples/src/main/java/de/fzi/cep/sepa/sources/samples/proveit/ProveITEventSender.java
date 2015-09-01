@@ -5,7 +5,7 @@ import javax.jms.JMSException;
 import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.sources.samples.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.proveit.senslet.model.Senslet;
 
 public class ProveITEventSender implements IMessageListener {
@@ -20,7 +20,6 @@ public class ProveITEventSender implements IMessageListener {
 	
 	@Override
 	public void onEvent(String json) {
-		System.out.println(json);
 		Senslet senslet = gson.fromJson(json, Senslet.class);
 		try {
 			publisher.sendText(gson.toJson(ProveITEventConverter.makeFlat(senslet)));

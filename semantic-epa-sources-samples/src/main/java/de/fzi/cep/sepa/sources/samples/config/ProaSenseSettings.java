@@ -9,11 +9,11 @@ public class ProaSenseSettings {
 	public static TransportProtocol standardProtocol(String topicName)
 	{
 		KafkaTransportProtocol protocol = new KafkaTransportProtocol(
-				Configuration.getBrokerConfig().getKafkaHost(), 
-				Configuration.getBrokerConfig().getKafkaPort(), 
+				Configuration.getInstance().getBrokerConfig().getKafkaHost(), 
+				Configuration.getInstance().getBrokerConfig().getKafkaPort(), 
 				topicName, 
-				Configuration.getBrokerConfig().getZookeeperHost(), 
-				Configuration.getBrokerConfig().getZookeeperPort());
+				Configuration.getInstance().getBrokerConfig().getZookeeperHost(), 
+				Configuration.getInstance().getBrokerConfig().getZookeeperPort());
 		return protocol;
 	}
 }

@@ -35,7 +35,7 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 
 	@Override
 	public void executeStream() {
-		ProaSenseInternalProducer producer = new ProaSenseInternalProducer(Configuration.getBrokerConfig().getKafkaUrl(), topicName);
+		ProaSenseInternalProducer producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topicName);
 		new Thread(new EnrichedReplay(producer)).start();
 	}
 

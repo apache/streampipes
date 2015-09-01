@@ -10,18 +10,18 @@ public class SampleSettings {
 	public static TransportProtocol kafkaProtocol(String topicName)
 	{
 		KafkaTransportProtocol protocol = new KafkaTransportProtocol(
-				Configuration.getBrokerConfig().getKafkaHost(), 
-				Configuration.getBrokerConfig().getKafkaPort(), 
+				Configuration.getInstance().getBrokerConfig().getKafkaHost(), 
+				Configuration.getInstance().getBrokerConfig().getKafkaPort(), 
 				topicName, 
-				Configuration.getBrokerConfig().getZookeeperHost(), 
-				Configuration.getBrokerConfig().getZookeeperPort());
+				Configuration.getInstance().getBrokerConfig().getZookeeperHost(), 
+				Configuration.getInstance().getBrokerConfig().getZookeeperPort());
 		return protocol;
 	}
 	
 	public static TransportProtocol jmsProtocol(String topicName)
 	{
 		JmsTransportProtocol protocol = new JmsTransportProtocol(
-				Configuration.getBrokerConfig().getJmsHost(), Configuration.getBrokerConfig().getJmsPort(), topicName);
+				Configuration.getInstance().getBrokerConfig().getJmsHost(), Configuration.getInstance().getBrokerConfig().getJmsPort(), topicName);
 		return protocol;
 	}
 }
