@@ -9,15 +9,15 @@ RUN apk add --update openjdk7-jre wget ca-certificates && \
 	echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 	
 RUN wget http://www.eu.apache.org/dist//activemq/5.12.0/apache-activemq-5.12.0-bin.tar.gz
-RUN	tar -zxvf apache-activemq-5.11.1-bin.tar.gz
+RUN	tar -zxvf apache-activemq-5.12.0-bin.tar.gz
 
 RUN rm /tmp/* /var/cache/apk/* && \
 	apk del wget ca-certificates
 
 
-ADD /activemq.xml ./apache-activemq-5.11.1/conf/activemq.xml
+ADD /activemq.xml ./apache-activemq-5.12.0/conf/activemq.xml
 
 EXPOSE 61616
 
 
-ENTRYPOINT ["./apache-activemq-5.11.1/bin/activemq",  "console"]
+ENTRYPOINT ["./apache-activemq-5.12.0/bin/activemq",  "console"]
