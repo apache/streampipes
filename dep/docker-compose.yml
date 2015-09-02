@@ -26,7 +26,7 @@ couchdb:
   ports:
     - "5984:5984"
   volumes:
-    - "./config/couchdb/data:/data
+    - "./config/couchdb/data:/root/data"
 zookeeper:
   image: laus.fzi.de:5000/fzi/zookeeper
   ports:
