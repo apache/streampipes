@@ -37,6 +37,10 @@ public abstract class BindingParameters implements Serializable {
 	public SepaInvocation getGraph() {
 		return graph;
 	}
+	
+	public void setGraph(SepaInvocation invocation) {
+		this.graph = graph;
+	}
 
 	public String getOutName()
 	{
