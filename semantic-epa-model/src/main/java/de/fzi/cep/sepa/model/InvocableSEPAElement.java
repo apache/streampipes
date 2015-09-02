@@ -11,6 +11,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
@@ -38,6 +39,16 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	
 	public InvocableSEPAElement() {
 		super();
+	}
+	
+	public InvocableSEPAElement(InvocableSEPAElement other)
+	{
+		super(other);
+		this.belongsTo = other.getBelongsTo();
+		this.correspondingPipeline = other.getCorrespondingPipeline();
+		this.inputStreams = new Cloner().streams(other.getInputStreams());
+		this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+		//this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
 	}
 	
 	public InvocableSEPAElement(String uri, String name, String description, String iconUrl) {

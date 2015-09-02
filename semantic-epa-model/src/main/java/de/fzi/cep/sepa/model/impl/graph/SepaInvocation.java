@@ -15,10 +15,10 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -54,6 +54,13 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setBelongsTo(sepa.getRdfId().toString());
 		this.setUri(belongsTo +"/" +elementId);		
+	}
+	
+	public SepaInvocation(SepaInvocation other)
+	{
+		super(other);
+		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
+		this.outputStream = new EventStream(other.getOutputStream());
 	}
 
 	public SepaInvocation(SepaDescription sepa, String domId)
