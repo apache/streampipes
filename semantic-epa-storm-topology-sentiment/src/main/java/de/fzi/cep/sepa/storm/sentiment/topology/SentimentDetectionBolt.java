@@ -6,7 +6,6 @@ import java.util.Properties;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.tuple.Values;
-import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.storm.sentiment.controller.SentimentDetectionParameters;
 import de.fzi.cep.sepa.storm.topology.FunctionalSepaBolt;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -37,7 +36,7 @@ public class SentimentDetectionBolt extends FunctionalSepaBolt<SentimentDetectio
 	
 	@Override
 	protected void performEventAction(Map<String, Object> event, SentimentDetectionParameters parameters, String configurationId) {
-		String line = (String) event.get(SepaUtils.getMappingPropertyName(parameters.getGraph(), "sentimentMapsTo"));
+		String line = parameters.getSentimentMapsTo();
         
         int mainSentiment = 0;
         if (line != null && line.length() > 0) {

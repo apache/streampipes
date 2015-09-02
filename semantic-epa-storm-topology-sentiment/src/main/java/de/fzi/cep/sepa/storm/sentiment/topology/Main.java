@@ -15,7 +15,7 @@ public class Main {
 		Config conf = new Config();
 		conf.setDebug(true);
 		
-		StormTopology sentimentDetectionTopology = SepaTopologyBuilder.buildSimpleTopology(new SentimentDetectionBolt("sentiment"), "kalmar39.fzi.de:2181");
+		StormTopology sentimentDetectionTopology = SepaTopologyBuilder.buildSimpleTopology(new SentimentDetectionBolt("sentiment"), "ipe-koi04.fzi.de:2181");
 		
 		LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology("sentiment-detection", conf, sentimentDetectionTopology);

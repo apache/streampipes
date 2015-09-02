@@ -14,19 +14,21 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.controller.AbstractStormController;
 import de.fzi.cep.sepa.storm.controller.ConfigurationMessage;
 import de.fzi.cep.sepa.storm.controller.Operation;
 import de.fzi.cep.sepa.storm.sentiment.config.StormConfig;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends AbstractStormController<SentimentDetectionParameters>{
 
 	@Override
 	public SepaDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("/storm/sentiment", "Sentiment Analysis",
+		SepaDescription desc = new SepaDescription("storm/sentiment", "Sentiment Analysis",
 				"Sentiment Analysis");
 		
 		desc.setIconUrl(StormConfig.iconBaseUrl + "/Sentiment_Detection_Icon_HQ.png");
@@ -56,6 +58,8 @@ public class SentimentDetectionController extends AbstractStormController<Sentim
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			staticProperties.add(new MappingPropertyUnary("sentimentMapsTo", "Sentiment Mapping"));
 			desc.setStaticProperties(staticProperties);
+			
+			desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,9 +69,9 @@ public class SentimentDetectionController extends AbstractStormController<Sentim
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		String sentimentMapsTo = "test"; //SepaUtils.getMappingPropertyName(invocationGraph, "sentimentMapsTo");
-		
-		SentimentDetectionParameters params = new SentimentDetectionParameters(invocationGraph, sentimentMapsTo);
+		String sentimentMapsTo = SepaUtils.getMappingPropertyName(invocationGraph, "sentimentMapsTo");
+
+		SentimentDetectionParameters params = new SentimentDetectionParameters(new SepaInvocation(invocationGraph), sentimentMapsTo);
 		ConfigurationMessage<SentimentDetectionParameters> msg = new ConfigurationMessage<>(Operation.BIND, params);
 		
 		return prepareTopology(msg);
@@ -75,7 +79,7 @@ public class SentimentDetectionController extends AbstractStormController<Sentim
 
 	@Override
 	protected String getKafkaUrl() {
-		return "kalmar39.fzi.de:9092";
+		return "ipe-koi04.fzi.de:9092";
 	}
 
 }
