@@ -4,7 +4,7 @@ backend:
     - "8080:8080"
   volumes:
     - "./config:/root/.streampipes"
-    - "./aduna:/root/.aduna"
+    - "./config/aduna:/root/.aduna"
 sources:
   image: laus.fzi.de:5000/fzi/semantic-epa-sources-samples
   ports:
