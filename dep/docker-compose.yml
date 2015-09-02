@@ -1,35 +1,35 @@
 backend: 
-  build: semantic-epa-backend/
+  image: laus.fzi.de:5000/fzi/semantic-epa-backend
   ports: 
     - "8080:8080"
   volumes:
     - "./config:/root/.streampipes"
     - "./aduna:/root/.aduna"
 sources:
-  build: semantic-epa-sources-samples/
+  image: laus.fzi.de:5000/fzi/semantic-epa-backend
   ports:
     - "8089:8089"
 esper:
-  build: semantic-epa-esper/
+  image: laus.fzi.de:5000/fzi/semantic-epa-esper
   ports:
     - "8090:8090"
 actions:
-  build: semantic-epa-actions-samples/
+  image: laus.fzi.de:5000/fzi/semantic-epa-actions-samples
   ports:
     - "8091:8091"
 activemq:
-  build: activemq/
+  image: laus.fzi.de:5000/fzi/activemq
   ports:
     - "61616:61616"
 couchdb:
-  build: couchDB/
+  image: laus.fzi.de:5000/fzi/couchdb
   ports:
     - "5984:5984"
 zookeeper:
-  build: zookeeper/
+  image: laus.fzi.de:5000/fzi/zookeeper
   ports:
     - "2181:2181"
 kafka:
-  build: kafka/
+  image: laus.fzi.de:5000/fzi/kafka
   ports:
     - "9092:9092"
