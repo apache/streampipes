@@ -16,10 +16,10 @@ public class SepaTopologyBuilder {
 		  builder.setSpout(sepaSpout.getId(), sepaSpout);
 		  builder.setBolt(bolt.getId(), bolt)
 		  	.shuffleGrouping(sepaSpout.getId(), SepaSpout.SEPA_DATA_STREAM)
-		  	.shuffleGrouping(sepaSpout.getId(), SepaSpout.SEPA_CONFIG_STREAM);
+		  	.allGrouping(sepaSpout.getId(), SepaSpout.SEPA_CONFIG_STREAM);
 		  builder.setBolt(sinkSepaBolt.getId(), sinkSepaBolt)
 		  	.shuffleGrouping(bolt.getId(), SepaSpout.SEPA_DATA_STREAM)
-		  	.shuffleGrouping(bolt.getId(), SepaSpout.SEPA_CONFIG_STREAM);
+		  	.allGrouping(bolt.getId(), SepaSpout.SEPA_CONFIG_STREAM);
 		  
 		  return builder.createTopology();		  
 	}

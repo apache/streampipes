@@ -105,7 +105,6 @@ public class SepaSpout extends BaseRichSpout {
     @Override
     public void nextTuple() {
         if (consumerIterator.hasNext()) {
-        	System.out.println("next");
             MessageAndMetadata<byte[], byte[]> message = consumerIterator.next();
             byte[] messagePayload = message.message();
             if (isDataTopic(message.topic()))
@@ -128,7 +127,6 @@ public class SepaSpout extends BaseRichSpout {
             	ConfigurationMessage<? extends BindingParameters> msg;
 				try {
 					msg = (ConfigurationMessage<? extends BindingParameters>) Serializer.deserialize(messagePayload);
-					System.out.println(msg.getBindingParameters().getGraph().getElementId());
 					collector.emit(SEPA_CONFIG_STREAM, new Values(msg));
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block

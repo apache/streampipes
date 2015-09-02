@@ -49,6 +49,7 @@ public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 	public void discard() {
 		ConfigurationMessage<B> config = new ConfigurationMessage<>(Operation.DETACH, configurationId, null);
 		try {
+			System.out.println("discarding");
 			kafkaConfigProducer.send(Serializer.serialize(config));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
