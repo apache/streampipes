@@ -5,7 +5,8 @@ RUN apk --update add openjdk7-jre	bash  && \
 		rm kafka_2.10-0.8.2.0.tgz  && \
 		apk del wget
 
+ADD /server.properties ./server.properties
 
 EXPOSE 9092
 
-ENTRYPOINT ["./kafka_2.10-0.8.2.0/bin/kafka-server-start.sh", "./kafka_2.10-0.8.2.0/config/server.properties"]
+ENTRYPOINT ["./kafka_2.10-0.8.2.0/bin/kafka-server-start.sh", "./server.properties"]

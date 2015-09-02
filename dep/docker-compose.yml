@@ -35,3 +35,5 @@ kafka:
   image: laus.fzi.de:5000/fzi/kafka
   ports:
     - "9092:9092"
+  links:
+    - zookeeper
