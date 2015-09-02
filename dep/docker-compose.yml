@@ -6,7 +6,7 @@ backend:
     - "./config:/root/.streampipes"
     - "./aduna:/root/.aduna"
 sources:
-  image: laus.fzi.de:5000/fzi/semantic-epa-backend
+  image: laus.fzi.de:5000/fzi/semantic-epa-sources-samples
   ports:
     - "8089:8089"
 esper:
