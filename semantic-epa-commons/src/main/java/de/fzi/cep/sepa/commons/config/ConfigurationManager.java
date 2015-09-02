@@ -13,6 +13,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.google.gson.JsonElement;
 
+import de.fzi.cep.sepa.commons.Utils;
+
 public class ConfigurationManager {
 
 	public static boolean isConfigured() {
@@ -99,9 +101,9 @@ public class ConfigurationManager {
 		properties.put("hippoUrl", settings.getHippoUrl());
 		properties.put("streamStoryUrl", settings.getStreamStoryUrl());
 		
-		properties.put("hostname", "localhost");
-		properties.put("server_url", "http://localhost");
-		properties.put("tcp_server_url", "tcp://localhost");
+		properties.put("hostname", Utils.getHostname());
+		properties.put("server_url", "http://" +Utils.getHostname());
+		properties.put("tcp_server_url", "tcp://" +Utils.getHostname());
 		properties.put("tcp_server_port", "61616");
 		properties.put("action_port", "8091");
 		properties.put("esper_port", "8090");

@@ -2,10 +2,13 @@ package de.fzi.cep.sepa.commons;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;
@@ -78,6 +81,18 @@ public class Utils {
 		//Rio.write(graph, stream, RDFFormat.JSONLD);
 		Rio.write(graph, writer);
 		return stream.toString();
+	}
+	
+	public static String getHostname()
+	{
+		InetAddress addr;
+		try {
+			addr = InetAddress.getLocalHost();
+			System.out.println(addr.getCanonicalHostName());
+			return addr.getCanonicalHostName();
+		} catch (UnknownHostException e) {
+			return "localhost";
+		}	
 	}
 
 }

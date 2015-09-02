@@ -16,6 +16,8 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
 
+import de.fzi.cep.sepa.commons.Utils;
+
 /**
  * Configuration objects containing loads all properties from a file
  * and holds runtime changes.
@@ -152,13 +154,13 @@ public class Configuration {
 					COUCHDB_CONNECTION_DB = "connection"; 
 					COUCHDB_NOTIFICATION_DB = "notification";
 					COUCHDB_PROTOCOL = "http";
-					COUCHDB_HOSTNAME = "localhost";
+					COUCHDB_HOSTNAME = Utils.getHostname();
 					COUCHDB_PORT = 5984;
 					
-					SESAME_URI = "http://localhost:8080/openrdf-sesame";
+					SESAME_URI = "http://" +Utils.getHostname() +":8080/openrdf-sesame";
 					SESAME_REPOSITORY_ID = "test-6";
 					
-					HOSTNAME ="localhost";
+					HOSTNAME =Utils.getHostname();
 					SERVER_URL = "http://" +HOSTNAME;
 					
 					ACTION_PORT = 8091;
@@ -173,11 +175,11 @@ public class Configuration {
 					
 					CONTEXT_PATH = "/semantic-epa-backend";
 					
-					KAFKA_HOST = "localhost";
+					KAFKA_HOST = Utils.getHostname();
 					KAFKA_PROTOCOL = "http";
 					KAFKA_PORT = 9092;
 					
-					JMS_HOST = "localhost";
+					JMS_HOST = Utils.getHostname();
 					JMS_PROTOCOL = "tcp";
 					JMS_PORT = 61616;
 					
@@ -187,7 +189,7 @@ public class Configuration {
 					WEBAPP_PORT = 8080;
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
 					
-					ZOOKEEPER_HOST = "localhost";
+					ZOOKEEPER_HOST = Utils.getHostname();
 					ZOOKEEPER_PORT = 2181;
 					ZOOKEEPER_PROTOCOL = "http";
 					
