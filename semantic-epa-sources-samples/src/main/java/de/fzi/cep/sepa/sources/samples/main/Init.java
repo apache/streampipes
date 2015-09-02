@@ -33,14 +33,14 @@ public class Init implements Runnable {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-		declarers.add(new TwitterStreamProducer());
-		declarers.add(new DDMProducer());
-		declarers.add(new DrillBitProducer());
-		declarers.add(new EnrichedEventProducer());
+//		declarers.add(new TwitterStreamProducer());
+//		declarers.add(new DDMProducer());
+//		declarers.add(new DrillBitProducer());
+//		declarers.add(new EnrichedEventProducer());
 		declarers.add(new RamProducer());
 		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
-		declarers.add(new NYCTaxiProducer());
+//		declarers.add(new NYCTaxiProducer());
 //		declarers.add(new ProveITEventProducer());
 		
 		String zooKeeper = Configuration.getInstance().getBrokerConfig().getZookeeperUrl();

@@ -8,8 +8,6 @@ import java.util.Random;
 
 import javax.jms.JMSException;
 
-import kafka.utils.Utils;
-
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -18,8 +16,8 @@ import org.codehaus.jettison.json.JSONObject;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import twitter4j.Status;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -35,7 +33,6 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
 import eu.proasense.internal.VariableType;
@@ -43,9 +40,11 @@ import eu.proasense.internal.VariableType;
 public class RandomNumberStream implements EventStreamDeclarer {
 
 	ActiveMQPublisher samplePublisher;
+	ProaSenseInternalProducer kafkaProducer;
 
 	public RandomNumberStream() throws JMSException {
 		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Random.Number");
+		kafkaProducer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), "SEPA.SEP.Random.Number");
 	}
 
 	@Override
@@ -72,7 +71,8 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		eventStreamQualities.add(new Frequency(1));
 
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Random.Number"));
+//		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Random.Number"));
+		grounding.setTransportProtocol(SampleSettings.kafkaProtocol("SEPA.SEP.Random.Number"));
 		grounding.setTransportFormats(
 				de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Thrift)));
 
@@ -99,18 +99,12 @@ public class RandomNumberStream implements EventStreamDeclarer {
 				int j = 0;
 				for (;;) {
 					try {
-						// String json = buildJson(System.currentTimeMillis(),
-						// random.nextInt(100)).toString();
-						// System.out.println(json);
-
 						byte[] payload = serializer
 								.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
-						samplePublisher.sendBinary(payload);
+//						samplePublisher.sendBinary(payload);
+						kafkaProducer.send(payload);
 						Thread.sleep(1000);
 						j++;
-					} catch (JMSException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

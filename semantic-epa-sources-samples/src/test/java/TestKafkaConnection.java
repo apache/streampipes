@@ -23,7 +23,7 @@ public class TestKafkaConnection implements IMessageListener {
 	
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi05.fzi.de:", 9092, 2181, "de.fzi.test");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi05.fzi.de:", 9092, 2181, "SEPA.SEP.Random.Number");
 		
 		for(int i = 0; i < MAX_MESSAGES; i++)
 		{
