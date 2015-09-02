@@ -258,7 +258,7 @@ public class Configuration {
 
 	public final boolean isDemoMode()
 	{
-		return true;
+		return false;
 	}
 
 }
