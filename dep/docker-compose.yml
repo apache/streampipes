@@ -37,3 +37,9 @@ kafka:
     - "9092:9092"
   links:
     - zookeeper
+kafka-web-console:
+  image: hwestphal/kafka-web-console
+  ports:
+    - "9000:9000"
+  volumes:
+    - ./config/kafka-web-console:/data hwestphal/kafka-web-console
