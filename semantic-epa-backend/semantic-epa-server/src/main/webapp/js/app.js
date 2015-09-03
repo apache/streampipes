@@ -1,16 +1,28 @@
 'use strict';
 
 angular
-    .module('LandingPage', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'editorControllers', 'spMarketplace', 'spCreate', 'spAdd', 'spMy', 'spRecommendations', 'pipelines'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
         contextPath : "/semantic-epa-backend",
         api : "/api/v2"
     })
-    .run(function($rootScope, $location, confService, authService) {
+    .run(function($rootScope, $location, restApi, authService) {
+    	
+    	restApi.configured().success(function(msg) {
+        			if (msg.configured)
+        				{
+        					authService.authenticate();
+        				}
+        			else {
+        					$rootScope.authenticated = false;
+        					$location.path("/setup");
+        				}
+        });
+    	
 	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        confService.configured();
+	        authService.authenticate();
 	    });
     })
     .config(function($mdIconProvider) {
@@ -40,9 +52,17 @@ angular
     }])
 	.config(function($routeProvider) {
         $routeProvider
+        	.when('/', {
+        		controller: 'AppCtrl',
+    			 resolve:{
+                     'AuthData':function(authService){
+                       return authService.authenticate;
+                     }
+    			 }
+        	})
             .when('/pipelines', {
                 templateUrl : 'modules/pipelines/pipelines.html',
-                controller  : 'PipelineCtrl'
+                controller  : 'PipelineCtrl'         
             })
             .when('/', {
                 templateUrl : 'modules/editor/editor.html',
@@ -101,7 +121,7 @@ angular
                 controller  : 'RecommendationCtrl'
             })
 	})
-    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, confService) {
+    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi) {
        
     	$rootScope.unreadNotifications = [];
     	
@@ -110,9 +130,7 @@ angular
     			Name : "D",
     			Avatar : null
     	};
-    	
-    	confService.configured();
-    
+    	    
 		$rootScope.go = function ( path ) {
 			  $location.path( path );
 		};
@@ -203,7 +221,7 @@ angular
 		};
 	})
 
-	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, confService) {
+	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http) {
 		
 		$scope.loading = false;
 			
@@ -352,63 +370,45 @@ angular
 	      }];
 	    return httpInterceptor;
     }])
-    .factory('confService', function($rootScope, $http, authService, $location) {
-        return {
-            configured: function() {
-            	$http.get("/semantic-epa-backend/api/v2/setup/configured").success(function(msg) {
-        			if (msg.configured)
-        				{
-        					authService.authenticate();
-        				}
-        			else {
-        					$rootScope.authenticated = false;
-        					$location.path("/setup");
-        				}
-        		}).error(function() {
-        			$location.path("/error");
-        		});
-            }
-        };
-    })
-    .factory('authService', function($http, $rootScope, $location) {
-        return {
-            authenticate: function() {
-            	$http.get("/semantic-epa-backend/api/v2/admin/authc")
-        	        .then(
-        	          function(response) {
-        	        	if (response.data.success == false) 
-                		{
-                			$rootScope.authenticated = false;
-                			$location.path("/login");
-                		}
-        	        	else {
-        	        	$rootScope.username = response.data.info.authc.principal.username;
-        	        	$rootScope.email = response.data.info.authc.principal.email;
-        		        $rootScope.authenticated = true;
-        		        $http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
-        			              .success(function(notifications){
-        			                  $rootScope.unreadNotifications = notifications
-        			                  console.log($rootScope.unreadNotifications);
-        			              })
-        			              .error(function(msg){
-        			                  console.log(msg);
-        			              });
+    .service('authService', function($http, $rootScope, $location) {
+    	
+    	var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
+        .then(
+  	          function(response) {
+  	        	if (response.data.success == false) 
+          		{
+          			$rootScope.authenticated = false;
+          			$location.path("/login");
+          		}
+  	        	else {
+  	        	$rootScope.username = response.data.info.authc.principal.username;
+  	        	$rootScope.email = response.data.info.authc.principal.email;
+  		        $rootScope.authenticated = true;
+  		        $http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
+  			              .success(function(notifications){
+  			                  $rootScope.unreadNotifications = notifications
+  			                  console.log($rootScope.unreadNotifications);
+  			              })
+  			              .error(function(msg){
+  			                  console.log(msg);
+  			              });
 
-        	          }
-        	          },
-        	          function(response) {
-        	        	  $rootScope.username = undefined;
-        			      $rootScope.authenticated = false;
-        		          $location.path("/login");
-        	          });
-            }
-        };
+  	          }
+  	          },
+  	          function(response) {
+  	        	  $rootScope.username = undefined;
+  			      $rootScope.authenticated = false;
+  		          $location.path("/login");
+  	          });
+        
+    	return 
+        	{
+            	authenticate: promise
+            };
     })
-	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', 'confService', function($rootScope, $http, apiConstants, authService, confService) {
+	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', function($rootScope, $http, apiConstants, authService) {
 	    
 	    var restApi = {};
-	    
-	    //authService.authenticate();
 	    
 	    var urlBase = function() {
 	    	return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;

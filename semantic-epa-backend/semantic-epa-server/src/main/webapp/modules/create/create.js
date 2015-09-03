@@ -1,4 +1,4 @@
-var spCreate = angular.module('spCreate', ['ngMaterial','ngMdIcons'])
+angular.module('streamPipesApp')
 .controller('CreateCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
 	
 	$scope.typeSelected = "SEP";

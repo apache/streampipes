@@ -1,4 +1,4 @@
-var spMy = angular.module('spMy', ['ngMaterial','ngMdIcons'])
+angular.module('streamPipesApp')
 .controller('MyElementsCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog) {
 	
 	$scope.currentElements = {};

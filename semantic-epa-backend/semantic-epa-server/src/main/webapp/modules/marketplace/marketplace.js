@@ -1,6 +1,5 @@
-var spMarketplace = angular.module('spMarketplace', ['ngMaterial','ngMdIcons']);
-	
-spMarketplace.controller('MarketplaceCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
+angular.module('streamPipesApp')
+	.controller('MarketplaceCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
 		
 		$scope.currentElements = {};
 		

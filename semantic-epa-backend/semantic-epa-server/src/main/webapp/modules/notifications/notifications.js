@@ -1,4 +1,4 @@
-var spRecommendations = angular.module('spRecommendations', ['ngMaterial','ngMdIcons'])
+angular.module('streamPipesApp')
 .controller('RecommendationCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
 	
 	$scope.notifications = [{"title" : "ABC", "targetedActor" : "riemer", "description" : "testtet"}];

@@ -1,5 +1,5 @@
 angular
-    .module('pipelines', ['ngMaterial','ngMdIcons'])
+    .module('streamPipesApp')
     .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope', function ($scope, restApi, $http, $rootScope) {
         $scope.pipelines = [];
 

@@ -1,10 +1,7 @@
 /**
  * Created by Cuddl3s on 13.08.2015.
  */
-var editorControllers = angular.module('editorControllers', ['ngMaterial','ngMdIcons']);
-
-
-editorControllers
+angular.module('streamPipesApp')
     .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi',
         function ($scope, $rootScope,$timeout, $http, restApi) {
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
