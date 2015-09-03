@@ -123,11 +123,11 @@ private static final long serialVersionUID = -3694170770048756860L;
 			else if (outputGrounding.getTransportProtocol() instanceof JmsTransportProtocol) addJmsProducer(params, (JmsTransportProtocol) outputGrounding.getTransportProtocol());
 			String outputBrokerTopic = outputGrounding.getTransportProtocol().getTopicName();
 	        topics.put(params.getConfigurationId(), outputBrokerTopic);
-	        log.info("bind");
+	        System.out.println("bind");
 		}
 		else if (params.getOperation() == Operation.DETACH)
 		{
-			log.info("detach");
+			System.out.println("detach");
 			if (kafkaProducers.containsKey(params.getConfigurationId())) kafkaProducers.remove(params.getConfigurationId());
 			if (activeMqProducers.containsKey(params.getConfigurationId())) activeMqProducers.remove(params.getConfigurationId());
 			topics.remove(params.getConfigurationId());
