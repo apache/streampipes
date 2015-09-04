@@ -14,11 +14,11 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 import de.fzi.cep.sepa.sources.mhwirth.config.AkerVariables;
 import de.fzi.cep.sepa.sources.mhwirth.config.ProaSenseSettings;
-import de.fzi.cep.sepa.sources.mhwirth.main.AbstractMhWirthStream;
 
-public class RamPositionSetPoint extends AbstractMhWirthStream {
+public class RamPositionSetPoint extends AbstractAlreadyExistingStream {
 
 	@Override
 	public EventStream declareModel(SepDescription sep) {

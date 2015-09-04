@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa</artifactId>
+			<artifactId>semantic-epa-sources</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

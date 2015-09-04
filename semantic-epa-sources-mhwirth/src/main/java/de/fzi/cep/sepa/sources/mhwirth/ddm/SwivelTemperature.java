@@ -18,12 +18,12 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.MeasurementRange;
 import de.fzi.cep.sepa.model.impl.quality.Resolution;
+import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 import de.fzi.cep.sepa.sources.mhwirth.config.AkerVariables;
 import de.fzi.cep.sepa.sources.mhwirth.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.mhwirth.config.SourcesConfig;
-import de.fzi.cep.sepa.sources.mhwirth.main.AbstractMhWirthStream;
 
-public class SwivelTemperature extends AbstractMhWirthStream {
+public class SwivelTemperature extends AbstractAlreadyExistingStream {
 
 	@Override
 	public EventStream declareModel(SepDescription sep) {

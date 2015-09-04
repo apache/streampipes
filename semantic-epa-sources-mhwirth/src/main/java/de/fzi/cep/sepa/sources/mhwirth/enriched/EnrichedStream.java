@@ -5,11 +5,11 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 import de.fzi.cep.sepa.sources.mhwirth.config.AkerVariables;
 import de.fzi.cep.sepa.sources.mhwirth.config.ProaSenseSettings;
-import de.fzi.cep.sepa.sources.mhwirth.main.AbstractMhWirthStream;
 
-public class EnrichedStream extends AbstractMhWirthStream {
+public class EnrichedStream extends AbstractAlreadyExistingStream {
 
 	@Override
 	public EventStream declareModel(SepDescription sep) {

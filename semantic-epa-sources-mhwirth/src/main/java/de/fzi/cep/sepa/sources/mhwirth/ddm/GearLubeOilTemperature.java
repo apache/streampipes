@@ -14,12 +14,12 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 import de.fzi.cep.sepa.sources.mhwirth.config.AkerVariables;
 import de.fzi.cep.sepa.sources.mhwirth.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.mhwirth.config.SourcesConfig;
-import de.fzi.cep.sepa.sources.mhwirth.main.AbstractMhWirthStream;
 
-public class GearLubeOilTemperature extends AbstractMhWirthStream {
+public class GearLubeOilTemperature extends AbstractAlreadyExistingStream {
 	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
