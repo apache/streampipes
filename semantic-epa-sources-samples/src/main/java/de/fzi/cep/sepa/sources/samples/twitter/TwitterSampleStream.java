@@ -1,7 +1,9 @@
 package de.fzi.cep.sepa.sources.samples.twitter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.JMSException;
 
@@ -12,25 +14,26 @@ import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import eu.proasense.internal.ComplexValue;
+import eu.proasense.internal.SimpleEvent;
+import eu.proasense.internal.VariableType;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -40,12 +43,14 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterSampleStream implements EventStreamDeclarer {
 
-	ActiveMQPublisher samplePublisher;
-	ActiveMQPublisher geoPublisher;
+	private ActiveMQPublisher samplePublisher;
+	private ActiveMQPublisher geoPublisher;
+	private ProaSenseInternalProducer kafkaProducer;
 
 	public TwitterSampleStream() throws JMSException {
 		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Sample");
 		geoPublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Geo");
+		kafkaProducer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
 
 	@Override
@@ -58,25 +63,25 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		timestampQualities.add(new Latency(1));
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "text", SO.Text).build());
+		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "content", SO.Text).build());
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "",
 				de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp"), timestampQualities));
 
 		EventPropertyPrimitive userName = new EventPropertyPrimitive(XSD._string.toString(), "userName", "",
 				de.fzi.cep.sepa.commons.Utils.createURI("http://foaf/name"));
 		EventPropertyPrimitive followerCount = new EventPropertyPrimitive(XSD._integer.toString(), "followers", "",
-				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
+				de.fzi.cep.sepa.commons.Utils.createURI(SO.Number));
 		List<EventProperty> userProperties = new ArrayList<>();
 		userProperties.add(userName);
 		userProperties.add(followerCount);
 
-		eventProperties.add(new EventPropertyNested("user", userProperties));
+		//eventProperties.add(new EventPropertyNested("user", userProperties));
 
 		List<EventStreamQualityDefinition> eventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
 		eventStreamQualities.add(new Frequency(10));
 
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Twitter.Geo"));
+		grounding.setTransportProtocol(SampleSettings.kafkaProtocol("SEPA.SEP.Twitter.Sample"));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 
 		stream.setEventGrounding(grounding);
@@ -104,12 +109,10 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 
 		StatusListener listener = new StatusListener() {
 			public void onStatus(Status status) {
-				try {
-					samplePublisher.sendText(buildJson(status).toString());
-				} catch (JMSException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			
+					//samplePublisher.sendText(buildJson(status).toString());
+					kafkaProducer.send(buildJson(status).toString().getBytes());
+			
 				if (status.getGeoLocation() != null) {
 					try {
 
@@ -145,10 +148,10 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			}
 		};
 
-		//twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
+		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 
-		//twitterStream.addListener(listener);
-		//twitterStream.sample();
+		twitterStream.addListener(listener);
+		twitterStream.sample();
 
 	}
 
@@ -158,10 +161,10 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		try {
 			json.put("timestamp", status.getCreatedAt().getTime());
 			JSONObject user = new JSONObject();
-			user.put("userName", status.getUser().getName());
-			user.put("follower", status.getUser().getFollowersCount());
-			json.put("user", user);
-			json.put("text", status.getText());
+			json.put("userName", status.getUser().getName());
+			json.put("followers", status.getUser().getFollowersCount());
+			//json.put("user", user);
+			json.put("content", status.getText());
 			// json.put("name", "TwitterEvent");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -187,6 +190,33 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		}
 
 		return json;
+	}
+	
+	private SimpleEvent buildSimpleEvent(long timestamp, String username, int follower, String content) {
+		Map<String, ComplexValue> map = new HashMap<String, ComplexValue>();
+		ComplexValue value = new ComplexValue();
+		value.setType(VariableType.LONG);
+		value.setValue(String.valueOf(timestamp));
+
+		ComplexValue value2 = new ComplexValue();
+		value2.setType(VariableType.STRING);
+		value2.setValue(String.valueOf(username));
+
+		ComplexValue value3 = new ComplexValue();
+		value3.setType(VariableType.LONG);
+		value3.setValue(String.valueOf(follower));
+		
+		ComplexValue value4 = new ComplexValue();
+		value4.setType(VariableType.STRING);
+		value4.setValue(String.valueOf(content));
+
+		map.put("timestamp", value);
+		map.put("username", value2);
+		map.put("follower", value3);
+		map.put("content", value3);
+		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "SampleStream", map);
+		simpleEvent.setSensorId("SampleStream");
+		return simpleEvent;
 	}
 
 	@Override

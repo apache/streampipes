@@ -7,7 +7,7 @@ import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 
 public class TestKafkaConnection implements IMessageListener {
 	
-	private static final int MAX_MESSAGES = 10;
+	private static final int MAX_MESSAGES = 100;
 	
 	private ProaSenseInternalProducer producer;
 	
@@ -23,10 +23,16 @@ public class TestKafkaConnection implements IMessageListener {
 	
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi05.fzi.de:", 9092, 2181, "SEPA.SEP.Random.Number");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "de.fzi.cep.sepa.storm.data");
 		
 		for(int i = 0; i < MAX_MESSAGES; i++)
 		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			connection.publishMessage(RandomStringUtils.randomAlphabetic(12).getBytes());
 		}
 		

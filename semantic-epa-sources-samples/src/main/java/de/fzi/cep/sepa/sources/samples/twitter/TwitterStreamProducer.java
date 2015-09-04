@@ -27,8 +27,8 @@ public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
 		
 		try {
 			streams.add(new TwitterSampleStream());
-			streams.add(new TwitterGeoStream());
-			streams.add(new TweetsGermanyStream());
+			//streams.add(new TwitterGeoStream());
+			//streams.add(new TweetsGermanyStream());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
