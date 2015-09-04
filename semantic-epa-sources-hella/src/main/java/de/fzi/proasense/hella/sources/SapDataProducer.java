@@ -1,5 +1,6 @@
 package de.fzi.proasense.hella.sources;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
@@ -10,14 +11,14 @@ public class SapDataProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SepDescription declareModel() {
-		// TODO Auto-generated method stub
-		return null;
+		SepDescription sep = new SepDescription("source/sap", "SAP", "SAP events");
+		
+		return sep;
 	}
 
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList();
 	}
 
 }
