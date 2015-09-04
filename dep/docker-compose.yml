@@ -42,4 +42,4 @@ kafka-web-console:
   ports:
     - "9000:9000"
   volumes:
-    - ./config/kafka-web-console:/data hwestphal/kafka-web-console
+    - "./config/kafka-web-console:/data hwestphal/kafka-web-console"
