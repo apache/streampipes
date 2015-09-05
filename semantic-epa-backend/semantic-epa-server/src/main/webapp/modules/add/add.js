@@ -1,4 +1,4 @@
-var spAdd = angular.module('spAdd', ['ngMaterial','ngMdIcons'])
+angular.module('streamPipesApp')
 .controller('AddCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
 	
 	$scope.elements;
