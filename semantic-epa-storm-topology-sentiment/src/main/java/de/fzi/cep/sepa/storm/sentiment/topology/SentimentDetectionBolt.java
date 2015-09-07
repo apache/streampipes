@@ -21,40 +21,44 @@ public class SentimentDetectionBolt extends FunctionalSepaBolt<SentimentDetectio
 	private static final long serialVersionUID = -3911542682275246545L;
 
 	private StanfordCoreNLP pipeline;
-	
+
 	public SentimentDetectionBolt(String id) {
 		super(id);
 	}
-	
-	@Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        super.prepare(map, topologyContext, outputCollector);
-        Properties props = new Properties();
-        props.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
-        pipeline = new StanfordCoreNLP(props);
-    }
-	
-	@Override
-	protected void performEventAction(Map<String, Object> event, SentimentDetectionParameters parameters, String configurationId) {
-		String line = parameters.getSentimentMapsTo();
-        
-        int mainSentiment = 0;
-        if (line != null && line.length() > 0) {
-            int longest = 0;
-            Annotation annotation = pipeline.process(line);
-            for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
-                Tree tree = sentence.get(SentimentCoreAnnotations.AnnotatedTree.class);
-                int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
-                String partText = sentence.toString();
-                if (partText.length() > longest) {
-                    mainSentiment = sentiment;
-                    longest = partText.length();
-                }
-            }
-        }
-        event.put("sentiment", mainSentiment);
 
-        emit(new Values(event));	
+	@Override
+	public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
+		super.prepare(map, topologyContext, outputCollector);
+		Properties props = new Properties();
+		props.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
+		pipeline = new StanfordCoreNLP(props);
+	}
+
+	@Override
+	protected void performEventAction(Map<String, Object> event, SentimentDetectionParameters parameters,
+			String configurationId) {
+		if (parameters != null) {
+			String line = (String) event.get(parameters.getSentimentMapsTo());
+
+			int mainSentiment = 0;
+			if (line != null && line.length() > 0) {
+				int longest = 0;
+				Annotation annotation = pipeline.process(line);
+				for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
+					Tree tree = sentence.get(SentimentCoreAnnotations.AnnotatedTree.class);
+					int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
+					String partText = sentence.toString();
+					if (partText.length() > longest) {
+						mainSentiment = sentiment;
+						longest = partText.length();
+					}
+				}
+			}
+
+			event.put("sentiment", mainSentiment);
+
+			emit(new Values(event));
+		}
 	}
 
 }

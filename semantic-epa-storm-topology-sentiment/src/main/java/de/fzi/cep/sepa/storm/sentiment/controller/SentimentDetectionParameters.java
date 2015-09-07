@@ -10,6 +10,7 @@ public class SentimentDetectionParameters extends BindingParameters {
 	
 	public SentimentDetectionParameters(SepaInvocation graph, String sentimentMapsTo) {
 		super(graph);
+		this.sentimentMapsTo = sentimentMapsTo;
 	}
 
 	public String getSentimentMapsTo() {
