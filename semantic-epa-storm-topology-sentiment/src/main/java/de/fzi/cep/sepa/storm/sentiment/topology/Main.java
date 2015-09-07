@@ -22,6 +22,7 @@ public class Main {
 		
 //	 Production settings
 		Config productionConfig = new Config();
+		productionConfig.setDebug(true);
 		productionConfig.put(Config.NIMBUS_HOST, "ipe-koi04.fzi.de");
 		productionConfig.put(Config.NIMBUS_THRIFT_PORT,49627);
 //		System.setProperty("storm.jar", "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm"); 
