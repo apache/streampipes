@@ -30,7 +30,7 @@ public class EsperEngineSettings implements Runnable, IMessageListener {
 //		config.getEngineDefaults().getThreading().setThreadPoolOutboundNumThreads(5);
 		//config.setMetricsReportingEnabled();
 		config.addEventType(StatusEvent.class);
-		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
+//		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
 		config.getEngineDefaults().getStreamSelection()
 	    .setDefaultStreamSelector(StreamSelector.RSTREAM_ISTREAM_BOTH);
 		epService = EPServiceProviderManager.getDefaultProvider(config);
