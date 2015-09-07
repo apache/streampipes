@@ -1,5 +1,6 @@
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
@@ -20,43 +21,50 @@ import de.fzi.cep.sepa.storm.sentiment.controller.SentimentDetectionController;
 
 public class TestSentiment {
 
+	private static String KAFKA_HOST = "ipe-koi04.fzi.de";
+	private static int KAFKA_PORT = 9092;
+
+	private static String ZOOKEEPER_HOST = "ipe-koi04.fzi.de";
+	private static int ZOOKEEPER_PORT = 2181;
+	
+	private static String MESSAGE_FORMAT = MessageFormat.Json;
+	
+	private static String LEFT_TOPIC = "SEPA.SEP.Twitter.Sample";
+	private static String RIGHT_TOPIC = "output.topic";
+
+	private static String SENTIMENT_MAPS_TO_FIELD = "content";
+	private static String SENTIMENT_FIELD = "sentiment";
+	
+
 	public static void main(String[] args)
 	{
 		SepaDescription desc = new SentimentDetectionController().declareModel();
-		desc.setRdfId(new URIKey(URI.create("http://test2")));
+		desc.setRdfId(getId("sepaDescription"));
+
 		SepaInvocation invoc = new SepaInvocation(desc);
-		invoc.setRdfId(new URIKey(URI.create("http://test")));
+		invoc.setRdfId(getId("seapInvocation"));
 		
-		EventSchema schema = new EventSchema();
-		EventPropertyPrimitive p1 = new EventPropertyPrimitive(XSD._string.toString(), "test", "", Arrays.asList(URI.create(SO.Text)));
-		p1.setRdfId(new URIKey(URI.create("http://test3")));
-		p1.setElementName(new URIKey(URI.create("http://test3")).toString());
-		schema.addEventProperty(p1);
+		//Schema left
+		EventSchema schemaLeft = new EventSchema();
+		EventPropertyPrimitive p1 = new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_MAPS_TO_FIELD, "", Arrays.asList(URI.create(SO.Text)));
+		p1.setRdfId(getId("EventPropertyPrimitive1"));
+		p1.setElementName(getId("EventPropertyPrimitive1").toString());
+		schemaLeft.addEventProperty(p1);
 		
-		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(new KafkaTransportProtocol("localhost", 9092, "test.topic", "localhost", 2181));
-		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Thrift)));
-		
-		EventStream stream = new EventStream();
-		stream.setEventSchema(schema);
-		stream.setEventGrounding(grounding);
+		KafkaTransportProtocol kafkaLeft = new KafkaTransportProtocol(KAFKA_HOST, KAFKA_PORT, LEFT_TOPIC, ZOOKEEPER_HOST, ZOOKEEPER_PORT);
+
+		EventStream stream = getStream(kafkaLeft, schemaLeft);
 		
 		invoc.setInputStreams(Arrays.asList(stream));
 		
-		EventSchema schema2 = new EventSchema();
-		EventPropertyPrimitive p2 = new EventPropertyPrimitive(XSD._string.toString(), "test", "", Arrays.asList(URI.create(SO.Text)));
-		p2.setRdfId(new URIKey(URI.create("http://test3")));
-		p2.setElementName(new URIKey(URI.create("http://test3")).toString());
-		schema2.addEventProperty(p2);
-		schema2.addEventProperty(new EventPropertyPrimitive(XSD._string.toString(), "sentiment", "", Arrays.asList(URI.create(SO.Text))));
+		//Schema right
+		EventSchema schemaRight = new EventSchema();
+		schemaRight.addEventProperty(new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_FIELD, "", Arrays.asList(URI.create(SO.Text))));
 		
-		EventGrounding grounding2 = new EventGrounding();
-		grounding2.setTransportProtocol(new KafkaTransportProtocol("localhost", 9092, "output.topic", "localhost", 2181));
-		grounding2.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Thrift)));
-		
-		EventStream stream2 = new EventStream();
-		stream2.setEventSchema(schema2);
-		stream2.setEventGrounding(grounding2);
+		KafkaTransportProtocol kafkaRight = new KafkaTransportProtocol(KAFKA_HOST, KAFKA_PORT, RIGHT_TOPIC, ZOOKEEPER_HOST, ZOOKEEPER_PORT);
+
+
+		EventStream stream2 = getStream(kafkaRight, schemaRight);
 		
 		invoc.setOutputStream(stream2);
 		((MappingPropertyUnary)invoc.getStaticProperties().get(0)).setInternalName("sentimentMapsTo");
@@ -65,5 +73,31 @@ public class TestSentiment {
 		
 		new SentimentDetectionController().invokeRuntime(invoc);
 		
+	}
+
+	private static EventStream getStream(KafkaTransportProtocol kafka, EventSchema schema) {
+		EventGrounding grounding = new EventGrounding();
+		grounding.setRdfId(getRandomId("grounding"));
+		kafka.setRdfId(getRandomId("kafka"));
+
+		grounding.setTransportProtocol(kafka);
+		TransportFormat tf = new TransportFormat(MESSAGE_FORMAT);
+		tf.setRdfId(getRandomId("TransportFormat"));
+		grounding.setTransportFormats(Arrays.asList(tf)); 
+		EventStream stream = new EventStream();
+		stream.setEventSchema(schema);
+		stream.setEventGrounding(grounding);
+		stream.setRdfId(getRandomId("EventStream"));
+
+		return stream;
+	}
+
+	private static URIKey getId(String s) {
+		return new URIKey(URI.create("http://" + s));
+	}
+	
+	private static URIKey getRandomId(String s) {
+		Random random = new Random();
+		return getId(s + random.nextInt(100));
 	}
 }
