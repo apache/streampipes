@@ -22,6 +22,7 @@ public class EnrichedReplay implements Runnable {
 	
 		for(int i = EnrichedReplayConfig.firstFileId; i <= 1; i++)
 		{
+			long previousTime = -1;
 			Optional<BufferedReader> readerOpt = Utils.getReader(makeFile(i));
 			if (readerOpt.isPresent())
 			{
@@ -34,9 +35,17 @@ public class EnrichedReplay implements Runnable {
 					while ((line = br.readLine()) != null)  {
 						if (counter > -1)
 						{
+							
 							try {
 								String[] records = line.split(",");
-								
+								long currentTime = Long.parseLong(records[0]);
+								if (previousTime == -1) previousTime = currentTime;
+								long diff = currentTime - previousTime;		
+								if (diff > 0) 
+								{
+									Thread.sleep(diff);
+								}				
+								previousTime = currentTime;
 								String json = buildJsonString(records);
 								publisher.onEvent(json);
 								if (counter % 10000 == 0) System.out.println(counter +" Events (Enriched Replay) sent.");
