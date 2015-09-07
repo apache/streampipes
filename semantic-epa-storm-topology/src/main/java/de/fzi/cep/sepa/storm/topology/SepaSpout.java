@@ -95,9 +95,9 @@ public class SepaSpout extends BaseRichSpout {
         Properties props = new Properties();
         props.put("zookeeper.connect", zookeeperUrl);
         props.put("group.id", id);
-        props.put("zookeeper.session.timeout.ms", "6000");
-        props.put("zookeeper.sync.time.ms", "2000");
-        props.put("auto.commit.interval.ms", "1000");
+        props.put("zookeeper.session.timeout.ms", "60000");
+        props.put("zookeeper.sync.time.ms", "20000");
+        props.put("auto.commit.interval.ms", "10000");
 
         return new ConsumerConfig(props);
     }
