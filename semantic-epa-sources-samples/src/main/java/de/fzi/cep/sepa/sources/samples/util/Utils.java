@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
-import de.fzi.cep.sepa.sources.samples.main.Init;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -61,28 +60,14 @@ public class Utils {
         json.put("topic", topicName);
         json.put("partner", "aker");
 
-        System.out.println("Subscription: " +json.toString());
-        
-        String testJson = "{\n" +
-                "  \t\"startTime\": \"2013-11-19T11:00:00+0100\", \n" +
-                "\"endTime\" : \"2013-11-19T14:15:00+0100\" , \t\t\t\n" +
-                "\"variables\" : [\"1000692\"], \n" +
-                "\"topic\":\"some_new_topic\", \n" +
-                "\"partner\":\"aker\"\n" +
-                "}";
-
-        try {
-        	if (Init.subscribeToKafka)
-        	{
-	            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
-	                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
-	                    .execute().returnResponse();
-	            return response.toString();
-        	}
-        	
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//	            HttpResponse response = Request.Post(SourcesConfig.eventReplayURI + "/EventPlayer/api/playback/")
+//	                    .bodyString(json.toString(), ContentType.APPLICATION_JSON)
+//	                    .execute().returnResponse();
+//	            return response.toString();        	
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return null;
 
     }

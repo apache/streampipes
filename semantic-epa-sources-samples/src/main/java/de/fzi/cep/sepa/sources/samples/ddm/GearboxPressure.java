@@ -23,9 +23,7 @@ import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 
 public class GearboxPressure implements EventStreamDeclarer {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger("GearLubeOilTemperature");
-		
+	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
 		
@@ -58,7 +56,6 @@ public class GearboxPressure implements EventStreamDeclarer {
 
 	@Override
 	public boolean isExecutable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

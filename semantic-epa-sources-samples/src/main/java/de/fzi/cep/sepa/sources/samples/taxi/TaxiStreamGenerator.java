@@ -2,21 +2,18 @@ package de.fzi.cep.sepa.sources.samples.taxi;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
-public class TaxiStreamGenerator implements Runnable{
+public class TaxiStreamGenerator implements Runnable {
 
 	public static final String MEDALLION = "medallion";
 	public static final String HACK_LICENSE = "hack_license";
@@ -60,6 +57,7 @@ public class TaxiStreamGenerator implements Runnable{
 	@Override
 	public void run() {
 		long previousDropoffTime = -1;
+		System.out.println("Initializing Taxi Stream");
 		
 		Optional<BufferedReader> readerOpt = Utils.getReader(file);
 		long start = System.currentTimeMillis();
@@ -92,7 +90,6 @@ public class TaxiStreamGenerator implements Runnable{
 								previousDropoffTime = currentDropOffTime;
 							}				
 							String json = buildJsonString(records);
-							System.out.println(json);
 							publisher.onEvent(json);
 							if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));
 							if (counter % 10000 == 0) System.out.println(counter +" Events sent.");

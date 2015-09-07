@@ -11,11 +11,8 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
-import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class EnrichedStream implements EventStreamDeclarer{
-
-	private String topicName;
 	
 	public JsonObject generateSampleEvent() {
 		
@@ -54,8 +51,6 @@ public class EnrichedStream implements EventStreamDeclarer{
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
-		this.topicName = grounding.getTransportProtocol().getTopicName();
-
 		stream.setEventGrounding(grounding);
 		stream.setEventSchema(EnrichedUtils.getEnrichedSchema());
 		stream.setName(AkerVariables.Enriched.eventName());
@@ -67,10 +62,6 @@ public class EnrichedStream implements EventStreamDeclarer{
 
 	@Override
 	public void executeStream() {
-		
-		long[] variables = { AkerVariables.Enriched.tagNumber() };
-		String cont = Utils.performRequest(variables, topicName, "121213123",
-				"212342134");
 	}
 
 	@Override

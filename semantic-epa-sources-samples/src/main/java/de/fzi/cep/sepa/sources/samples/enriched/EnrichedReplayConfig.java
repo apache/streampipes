@@ -1,14 +1,16 @@
 package de.fzi.cep.sepa.sources.samples.enriched;
 
+import java.io.File;
+
 public class EnrichedReplayConfig {
 
-	public static final String dataDirectory = "g:\\AkerData\\";
+	public static final String dataDirectory = System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator;
 	
 	public static final String filenamePrefix = "drilling-2015-";
 	
 	public static final int firstFileId = 1;
 	
-	public static final int lastFileId = 30;
+	public static final int lastFileId = 10;
 	
 	public static final String TIME = "time";
 	public static final String HOIST_PRESS_A = "hoist_press_A";

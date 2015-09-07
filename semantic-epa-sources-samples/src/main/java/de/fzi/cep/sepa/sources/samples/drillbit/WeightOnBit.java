@@ -9,7 +9,6 @@ import de.fzi.cep.sepa.model.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -20,7 +19,6 @@ import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class WeightOnBit implements EventStreamDeclarer {
@@ -70,12 +68,6 @@ public class WeightOnBit implements EventStreamDeclarer {
 
 	@Override
 	public void executeStream() {
-		// send POST request to event replay util
-		// call some generic method which takes a source ID as a parameter and
-		// performs the request
-		// AkerVariables.GearLubeOilTemperature.tagNumber returns tag number for
-		// this event stream
-		// topicName denotes the actual topic to subscribe for
 		long[] variables = { AkerVariables.WeightOnBit.tagNumber() };
 		String cont = Utils.performRequest(variables, topicName, "121213123",
 				"212342134");

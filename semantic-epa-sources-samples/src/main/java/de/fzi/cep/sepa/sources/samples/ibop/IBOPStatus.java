@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -20,7 +19,6 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class IBOPStatus implements EventStreamDeclarer {
 
-private String topicName;
 	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
@@ -37,8 +35,6 @@ private String topicName;
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Ibop.topic()));
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
-		
-		this.topicName = grounding.getTransportProtocol().getTopicName();
 
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
@@ -53,14 +49,10 @@ private String topicName;
 
 	@Override
 	public void executeStream() {
-		// send POST request to event replay util
-		// call some generic method which takes a source ID as a parameter and performs the request
-		// AkerVariables.GearLubeOilTemperature.tagNumber returns tag number for this event stream
-		// topicName denotes the actual topic to subscribe for
 	}
 
 	@Override
 	public boolean isExecutable() {
-		return true;
+		return false;
 	}
 }

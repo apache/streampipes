@@ -131,8 +131,6 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 			json.put("text", status.getText());
 			json.put("name", "TwitterGermanyEvent");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 		}
 		
 		return json;
@@ -141,7 +139,7 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 
 	@Override
 	public boolean isExecutable() {
-		return true;
+		return false;
 	}
 }
 

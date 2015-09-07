@@ -43,12 +43,10 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterSampleStream implements EventStreamDeclarer {
 
-	private ActiveMQPublisher samplePublisher;
 	private ActiveMQPublisher geoPublisher;
 	private ProaSenseInternalProducer kafkaProducer;
 
 	public TwitterSampleStream() throws JMSException {
-		samplePublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Sample");
 		geoPublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Geo");
 		kafkaProducer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
@@ -107,18 +105,20 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		cb.setOAuthAccessToken("74137491-xrIoFunaCEGZbjYqttx3VC2BS7cNcXRPYsZs2foep");
 		cb.setOAuthAccessTokenSecret("RWvytKLDRQzpPSlnwnYx80JnSxP7Xmpc3zf48U6JnCc");
 
+		
 		StatusListener listener = new StatusListener() {
+			
+			int counter = 0;
+			
 			public void onStatus(Status status) {
-			
-					//samplePublisher.sendText(buildJson(status).toString());
-					kafkaProducer.send(buildJson(status).toString().getBytes());
-			
+					counter++;
+					kafkaProducer.send(buildJson(status).toString().getBytes());	
+					if (counter % 100 == 0) System.out.println(counter +" Events (Twitter Sample Stream) sent.");
 				if (status.getGeoLocation() != null) {
 					try {
 
 						geoPublisher.sendText(buildGeoJson(status).toString());
 					} catch (JMSException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

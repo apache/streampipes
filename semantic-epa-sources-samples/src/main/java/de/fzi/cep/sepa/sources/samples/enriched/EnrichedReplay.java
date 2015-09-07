@@ -36,10 +36,10 @@ public class EnrichedReplay implements Runnable {
 						{
 							try {
 								String[] records = line.split(",");
-								//System.out.println(line);
+								
 								String json = buildJsonString(records);
 								publisher.onEvent(json);
-								if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
+								if (counter % 10000 == 0) System.out.println(counter +" Events (Enriched Replay) sent.");
 							} catch (Exception e) { e.printStackTrace(); }
 						}
 					counter++;

@@ -85,10 +85,8 @@ public class NestedListRandomNumberStream implements EventStreamDeclarer {
 						samplePublisher.sendText(json);
 						Thread.sleep(1000);
 					} catch (JMSException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -102,7 +100,6 @@ public class NestedListRandomNumberStream implements EventStreamDeclarer {
 
 	@Override
 	public boolean isExecutable() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
@@ -130,7 +127,6 @@ public class NestedListRandomNumberStream implements EventStreamDeclarer {
 				values.put("values", object);
 				listedNumbers.put(values);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

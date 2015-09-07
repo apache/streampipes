@@ -102,6 +102,9 @@ public class RandomNumberStream implements EventStreamDeclarer {
 						byte[] payload = serializer
 								.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
 //						samplePublisher.sendBinary(payload);
+						if (j % 100 == 0) {
+							System.out.println(j +" Events (Random Number) sent.");
+						}
 						kafkaProducer.send(payload);
 						Thread.sleep(1000);
 						j++;

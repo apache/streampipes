@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.sources.samples.proveit;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fzi.proveit.senslet.model.Report;
 import de.fzi.proveit.senslet.model.Senslet;
 import de.fzi.proveit.senslet.model.input.BarcodeInput;
 import de.fzi.proveit.senslet.model.input.CheckboxInput;
@@ -24,7 +23,6 @@ public class ProveITEventConverter {
 
 	public static Map<String, Object> makeFlat(Senslet senslet)
 	{
-		System.out.println(senslet.getHeader().getSensletTitle());
 		Map<String, Object> result = new HashMap<>();
 		
 		for(SensletPropertyType type : senslet.getSensletProperties().keySet())
