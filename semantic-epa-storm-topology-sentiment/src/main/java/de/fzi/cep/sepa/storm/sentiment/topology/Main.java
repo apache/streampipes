@@ -15,17 +15,17 @@ public class Main {
 		StormTopology sentimentDetectionTopology = SepaTopologyBuilder.buildSimpleTopology(new SentimentDetectionBolt("sentiment"), "ipe-koi04.fzi.de:2181");
 		
 		// Develop settings
-		Config conf = new Config();
-		conf.setDebug(true);
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("sentiment-detection", conf, sentimentDetectionTopology);
+//		Config conf = new Config();
+//		conf.setDebug(true);
+//		LocalCluster cluster = new LocalCluster();
+//		cluster.submitTopology("sentiment-detection", conf, sentimentDetectionTopology);
 		
-	// Production settings
-//		Config productionConfig = new Config();
-//		productionConfig.put(Config.NIMBUS_HOST, "ipe-koi04.fzi.de");
-//		productionConfig.put(Config.NIMBUS_THRIFT_PORT,49627);
+//	 Production settings
+		Config productionConfig = new Config();
+		productionConfig.put(Config.NIMBUS_HOST, "ipe-koi04.fzi.de");
+		productionConfig.put(Config.NIMBUS_THRIFT_PORT,49627);
 //		System.setProperty("storm.jar", "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm"); 
-//		StormSubmitter.submitTopology("sentiment-detection", productionConfig, sentimentDetectionTopology);
+		StormSubmitter.submitTopology("sentiment-detection", productionConfig, sentimentDetectionTopology);
 		
 	}
 }
