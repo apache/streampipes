@@ -35,6 +35,11 @@ public class ConfigurationManager {
 	{
 		return "streampipes-server.config";
 	}
+	
+	public static String getStreamPipesClientConfigFilename()
+	{
+		return "streampipes-client.config";
+	}
 
 	public static WebappConfigurationSettings getWebappConfigurationFromProperties() {
 		Configuration cfg = Configuration.getInstance();

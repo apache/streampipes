@@ -37,7 +37,7 @@ public class ProaSenseInternalProducer implements IMessagePublisher {
     	try {
     	ProducerRecord<String, byte[]> record = new ProducerRecord<String, byte[]>(producerTopic, byteMsg);
     	i++;
-    	if (i % 500 == 0) System.out.println(i +"events sent."); 
+    	//if (i % 500 == 0) System.out.println(i +"events sent."); 
     	kafkaProducer.send(record);
     	} catch(Exception e) { e.printStackTrace();}
     }
