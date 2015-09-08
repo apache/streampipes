@@ -56,7 +56,7 @@ public class SepaSpout extends BaseRichSpout {
 
     public SepaSpout(String id, String zookeeperUrl) {
         this.id = id;
-        this.zookeeperUrl = zookeeperUrl;
+        this.zookeeperUrl = "ipe-koi04.fzi.de:2181";
         this.sepaConfigTopic = sepaStreamTopicPrefix + sepaConfigStreamTopicSuffix;
         this.sepaDataTopic = sepaStreamTopicPrefix + sepaDataStreamTopicSuffix;    
         //this.sepaWhitelistTopic = sepaStreamTopicPrefix +"*.*";
