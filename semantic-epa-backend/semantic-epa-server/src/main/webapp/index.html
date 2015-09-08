@@ -112,7 +112,7 @@
       </div>
     </md-toolbar>	
 		
-	<md-content flex id="content">
+	<md-content flex >
 		<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" ng-show="authenticated">
 		  <md-toolbar class="md-tall md-hue-3">
 		    <span flex></span>
@@ -160,7 +160,7 @@
 		      </md-list>
 	  	</md-sidenav>
 		<div id="main">
-			<div ng-view layout-padding>
+			<div id="content" ng-view layout-padding>
 			</div>
 		</div>
 	</md-content>

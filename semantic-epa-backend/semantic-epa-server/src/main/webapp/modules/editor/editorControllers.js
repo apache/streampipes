@@ -2,13 +2,14 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi',
-        function ($scope, $rootScope,$timeout, $http, restApi) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$routeParams',
+        function ($scope, $rootScope,$timeout, $http, restApi, $routeParams) {
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
+            $scope.currentModifiedPipeline = $routeParams.pipeline;
 
 
             
@@ -239,6 +240,7 @@ angular.module('streamPipesApp')
 
                     }
                 });
+                var pipelinePlumb = jsPlumb.getInstance({Container: "#pipelineDisplay"});
 
                 window.onresize = function (event) {
                     jsPlumb.repaintEverything(true);

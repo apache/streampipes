@@ -9,8 +9,10 @@ angular
         api : "/api/v2"
     })
     .run(function($rootScope, $location, restApi, authService) {
+
+		//$location.path("/setup");
     	
-    	restApi.configured().success(function(msg) {
+        restApi.configured().success(function(msg) {
         			if (msg.configured)
         				{
         					authService.authenticate();
@@ -20,10 +22,10 @@ angular
         					$location.path("/setup");
         				}
         });
-    	
-	    $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
+
+        $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 	        authService.authenticate();
-	    });
+        });
     })
     .config(function($mdIconProvider) {
 	
@@ -68,6 +70,10 @@ angular
                 templateUrl : 'modules/editor/editor.html',
                 controller  : 'EditorCtrl'
             })
+			.when('/editor/:pipeline', {
+				templateUrl : 'modules/editor/editor.html',
+				controller  : 'EditorCtrl'
+			})
             .when('/visualizations', {
                 templateUrl : 'modules/visualizations/visualizations.html',
                 controller  : 'AppCtrl'
@@ -401,10 +407,10 @@ angular
   		          $location.path("/login");
   	          });
         
-    	return 
-        	{
-            	authenticate: promise
-            };
+    	return {
+			authenticate: promise
+		};
+
     })
 	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', function($rootScope, $http, apiConstants, authService) {
 	    
