@@ -93,7 +93,7 @@ public class SepaSpout extends BaseRichSpout {
 
     private ConsumerConfig createConsumerConfig() {
         Properties props = new Properties();
-        props.put("zookeeper.connect", zookeeperUrl);
+        props.put("zookeeper.connect", "ipe-koi04.fzi.de:2181");
         props.put("group.id", id);
         props.put("zookeeper.session.timeout.ms", "60000");
         props.put("zookeeper.sync.time.ms", "20000");
