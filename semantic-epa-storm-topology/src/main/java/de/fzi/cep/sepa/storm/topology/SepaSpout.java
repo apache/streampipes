@@ -56,11 +56,7 @@ public class SepaSpout extends BaseRichSpout {
 
     public SepaSpout(String id, String zookeeperUrl) {
         this.id = id;
-        this.zookeeperUrl = "ipe-koi04.fzi.de:2181";
-        this.sepaConfigTopic = sepaStreamTopicPrefix + sepaConfigStreamTopicSuffix;
-        this.sepaDataTopic = sepaStreamTopicPrefix + sepaDataStreamTopicSuffix;    
-        //this.sepaWhitelistTopic = sepaStreamTopicPrefix +"*.*";
-        this.sepaWhitelistTopic = "de.fzi.cep.sepa.storm.*";
+        
     }
 
     public String getId() {
@@ -81,6 +77,11 @@ public class SepaSpout extends BaseRichSpout {
 	@Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
 
+    	this.zookeeperUrl = "ipe-koi04.fzi.de:2181";
+        this.sepaConfigTopic = sepaStreamTopicPrefix + sepaConfigStreamTopicSuffix;
+        this.sepaDataTopic = sepaStreamTopicPrefix + sepaDataStreamTopicSuffix;    
+        //this.sepaWhitelistTopic = sepaStreamTopicPrefix +"*.*";
+        this.sepaWhitelistTopic = "de.fzi.cep.sepa.storm.*";
         this.collector = spoutOutputCollector;
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig());
