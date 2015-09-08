@@ -54,7 +54,7 @@ public class SepaSpout extends BaseRichSpout {
     private ConsumerConnector consumer;
     long mesageCounter = 0;
 
-    public SepaSpout(String id, String zookeeperUrl) {
+    public SepaSpout(String id) {
         this.id = id;
         
     }

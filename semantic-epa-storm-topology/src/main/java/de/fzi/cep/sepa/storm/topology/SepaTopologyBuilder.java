@@ -10,7 +10,7 @@ public class SepaTopologyBuilder {
 	{
 		  TopologyBuilder builder = new TopologyBuilder();
 		  
-		  SepaSpout sepaSpout = new SepaSpout("sepaspout", zookeeperUrl);
+		  SepaSpout sepaSpout = new SepaSpout("sepaspout");
 		  SinkSepaBolt<? extends BindingParameters> sinkSepaBolt = new SinkSepaBolt<>("sinkbolt");
 		  
 		  builder.setSpout(sepaSpout.getId(), sepaSpout);
