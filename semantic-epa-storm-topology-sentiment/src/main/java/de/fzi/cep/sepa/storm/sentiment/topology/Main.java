@@ -11,8 +11,8 @@ import de.fzi.cep.sepa.storm.topology.SepaTopologyBuilder;
 public class Main {
 
 	public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException {
-		String nimbus_host = "ipe-koi05.fzi.de";
-		String storm_zookeeper_host_port = "ipe-koi05.fzi.de:49181";
+		String nimbus_host = "ipe-koi04.fzi.de";
+		String storm_zookeeper_host_port = "ipe-koi04.fzi.de:2181";
 
 		StormTopology sentimentDetectionTopology = SepaTopologyBuilder
 				.buildSimpleTopology(new SentimentDetectionBolt("sentiment"), storm_zookeeper_host_port);
