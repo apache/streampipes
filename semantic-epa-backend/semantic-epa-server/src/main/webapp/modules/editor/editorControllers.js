@@ -12,6 +12,8 @@ angular.module('streamPipesApp')
             $scope.currentModifiedPipeline = $routeParams.pipeline;
 
 
+
+
             
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
@@ -34,9 +36,8 @@ angular.module('streamPipesApp')
                 return restApi.getOwnActions();
             };
 
-
-
             $scope.loadCurrentElements = function(type){
+                console.log($scope.currentModifiedPipeline);
                 $scope.currentElements = [];
                 $('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
@@ -49,6 +50,87 @@ angular.module('streamPipesApp')
                     $scope.loadActions();
                 }
             };
+            
+            $scope.displayPipeline = function(){
+                restApi.getPipelineById($scope.currentModifiedPipeline)
+                    .success(function(pipeline){
+
+                        var currentx = 50;
+                        var currenty = 50;
+                        for (var i = 0, stream; stream = pipeline.streams[i]; i++){
+                            $scope.streamDropped(createNewAssemblyElement(stream, {'x':currentx, 'y':currenty}));
+                            currenty += 200;
+                        }
+                        currenty = 50;
+                        for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++){
+                            currentx += 200;
+                            var $sepa = $scope.sepaDropped(createNewAssemblyElement(sepa, {'x':currentx, 'y':currenty})
+                                .data("options", true));
+                            if (jsPlumb.getConnections({source :sepa.DOM}).length == 0){ //Output Element
+                                jsPlumb.addEndpoint($sepa, sepaEndpointOptions);
+                            }
+                        }
+                        currentx += 200;
+                        if (!$.isEmptyObject(pipeline.action)) {
+                            $scope.actionDropped(createNewAssemblyElement(pipeline.action, {'x': currentx, 'y': currenty})
+                                .data("options", true));
+
+                        }
+
+
+                        connectPipelineElements(pipeline, true);
+                        //console.log(json);
+                        jsPlumb.repaintEverything();
+                    })
+                    .error(function(msg){
+                        console.log(msg);
+                    });
+                
+            };
+            
+            function connectPipelineElements(json, detachable){
+                console.log("connectPipelineElements()");
+                var source, target;
+                var sourceEndpoint;
+                var targetEndpoint
+
+                jsPlumb.setSuspendDrawing(true);
+                if (!$.isEmptyObject(json.action)) {
+                    //Action --> Sepas----------------------//
+                    target = json.action.DOM;
+
+                    for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
+                        source = connection;
+
+                        sourceEndpoint = jsPlumb.addEndpoint(source, sepaEndpointOptions);
+                        targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
+                        jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
+                    }
+                }
+                //Sepas --> Streams / Sepas --> Sepas---------------------//
+                for (var i = 0, sepa; sepa = json.sepas[i]; i++){
+                    for (var j = 0, connection; connection = sepa.connectedTo[j]; j++){
+
+                        source = connection;
+                        target = sepa.DOM;
+
+
+                        var options;
+                        var id = "#" + source;
+                        console.log($(id));
+                        if ($(id).hasClass("sepa")){
+                            options = sepaEndpointOptions;
+                        }else{
+                            options = streamEndpointOptions;
+                        }
+
+                        sourceEndpoint = jsPlumb.addEndpoint(source, options);
+                        targetEndpoint = jsPlumb.addEndpoint(target, leftTargetPointOptions);
+                        jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
+                    }
+                }
+                jsPlumb.setSuspendDrawing(false ,true);
+            }
 
             $scope.tabs = [
 
@@ -72,9 +154,6 @@ angular.module('streamPipesApp')
                     type: 'action',
                     disabled: !($scope.ownActionsAvailable())
                 }
-
-
-
             ];
 
 
@@ -97,7 +176,7 @@ angular.module('streamPipesApp')
 
                                     });
                                     //$scope.createElements(streams, "stream", "#editor-icon-stand");
-                                    console.log($scope.currentElements);
+                                    //console.log($scope.currentElements);
                                     $timeout(function(){
                                         makeDraggable();
                                     })
@@ -163,7 +242,9 @@ angular.module('streamPipesApp')
                 if (endpoints) {
                     jsPlumb.addEndpoint($newElement, streamEndpointOptions);
                 }
+                return $newElement;
             };
+
             $scope.sepaDropped = function($newElement, endpoints){
                 $scope.isSepaInAssembly = true;
                 $newElement.addClass("connectable sepa");
@@ -185,6 +266,7 @@ angular.module('streamPipesApp')
                     }
                     jsPlumb.addEndpoint($newElement, sepaEndpointOptions);
                 }
+                return $newElement;
             };
             $scope.actionDropped = function($newElement, endpoints){
                 $scope.isActionInAssembly = true;
@@ -199,6 +281,7 @@ angular.module('streamPipesApp')
                 if (endpoints) {
                     jsPlumb.addEndpoint($newElement, leftTargetPointOptions);
                 }
+                return $newElement;
             };
 
             $scope.elementTextIcon = function (string){
@@ -240,7 +323,7 @@ angular.module('streamPipesApp')
 
                     }
                 });
-                var pipelinePlumb = jsPlumb.getInstance({Container: "#pipelineDisplay"});
+
 
                 window.onresize = function (event) {
                     jsPlumb.repaintEverything(true);
@@ -316,27 +399,10 @@ angular.module('streamPipesApp')
                     $('.circleMenu-open').circleMenu('close');
                 });
 
-                //Bind click handler--------------------------------
-                //$("#pipelineTableBody").on("click", "tr", function () {
-                //    if (!$(this).data("active") || $(this).data("active") == undefined) {
-                //        $(this).data("active", true);
-                //        $(this).addClass("info");
-                //        $("#pipelineTableBody").children().not(this).removeClass("info");
-                //        $("#pipelineTableBody").children().not(this).data("active", false);
-                //        clearPipelineDisplay();
-                //        displayPipeline($(this).data("JSON"));
-                //    } else {
-                //
-                //    }
-                //});
-                //
-                //$('a[data-toggle="tab"]')
-                //    .on('hide.bs.tab', function (e) {
-                //        clearTab(e);
-                //    })
-                //    .on('show.bs.tab', function (e) {
-                //        toTab(e);
-                //    });
+                if (typeof $scope.currentModifiedPipeline != 'undefined'){
+                    state.adjustingPipelineState = true;
+                    $scope.displayPipeline();
+                }
 
 
 

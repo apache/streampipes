@@ -12,11 +12,19 @@
 		</md-tab>
 
 </md-tabs>
+<md-divider></md-divider>
+<div flex class="filter" layout="row">
+	<span flex></span>
+	<md-input-container flex>
+		<label>Element Name</label>
+		<input ng-model="elName">
+	</md-input-container>
+</div>
 <div layout-padding flex id="editor-icon-stand" class="icon-stand md-whiteframe-z1">
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 
 	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements" my-data-bind class="draggable-icon tt" ng-class="element.type" data-toggle="tooltip" data-placement="top" title="{{element.name}}" >
+	<span ng-repeat="element in currentElements | filter:elName:strict | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-toggle="tooltip" data-placement="top" title="{{element.name}}" >
 		<img class="draggable-img"
 			  ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
 		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">

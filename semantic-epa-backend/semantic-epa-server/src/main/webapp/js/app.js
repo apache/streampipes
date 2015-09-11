@@ -26,6 +26,7 @@ angular
         $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 	        authService.authenticate();
         });
+		$rootScope.state = new State();
     })
     .config(function($mdIconProvider) {
 	
@@ -472,7 +473,7 @@ angular
 	    restApi.removePreferredSepa = function(elementUri) {
 	    	return $http({
 	    	    method: 'DELETE',
-	    	    url: urlBase() + "/sepas/favorites/" +encodeURIComponent(elementUri),
+	    	    url: urlBase() + "/sepas/favorites/" +encodeURIComponent(elementUri)
 	    	})
 	    }
 	    
@@ -501,7 +502,7 @@ angular
 	    restApi.removePreferredSource = function(elementUri) {
 	    	return $http({
 	    	    method: 'DELETE',
-	    	    url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri),
+	    	    url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri)
 	    	})
 	    }
 
@@ -589,6 +590,10 @@ angular
 	    restApi.stopPipeline = function(pipelineId) {
 	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
 	    }
+
+		restApi.getPipelineById = function(pipelineId) {
+			return $http.get(urlBase() + "/pipelines/" + pipelineId);
+		}
 	    
 	    restApi.getNotifications = function() {
 	    	return $http.get(urlBase() +"/notifications");

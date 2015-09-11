@@ -46,14 +46,7 @@ angular
         };
 
         $scope.showPipeline = function(pipeline){
-            //$mdDialog.show({
-            //    controller: PipelineDialogController,
-            //    locals: {pipeline: pipeline},
-            //    templateUrl: 'modules/pipelines/templates/pipelineDialog.tmpl.html',
-            //    parent: angular.element(document.body),
-            //    clickOutsideToClose: true
-            //
-            //});
+
             clearPipelineDisplay();
             displayPipeline(pipeline);
         };
@@ -184,9 +177,6 @@ angular
                 }
             }
             pipelinePlumb.setSuspendDrawing(false ,true);
-
-
-
         }
 
         function clearPipelineDisplay(){

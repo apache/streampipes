@@ -75,11 +75,10 @@
 	<script type="text/javascript">
 		var domain = "";
 		var standardUrl = "http://" +window.location.host +"/semantic-epa-backend/api/";
-		var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
-		var currentTutorialPage;
+//		var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
+//		var currentTutorialPage;
 		var state = new State();
-		var debug = false;
-		var testSwitch = true;
+
 		
 	</script>
 	<script type="text/javascript" src="js/ontology.js"></script>
@@ -112,7 +111,7 @@
       </div>
     </md-toolbar>	
 		
-	<md-content flex >
+	<md-content  flex >
 		<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" ng-show="authenticated">
 		  <md-toolbar class="md-tall md-hue-3">
 		    <span flex></span>
@@ -127,7 +126,7 @@
 		    </div>
 		  </md-toolbar>
 		  <md-list>
-	        <md-list-item class="md-2-line" ng-repeat="item in menu" role="link" md-ink-ripple ng-click="$parent.go(item.link)">
+	        <md-list-item class="md-2-line" ng-repeat="item in menu" role="link" ng-click="$parent.go(item.link)">
 	        
 	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>     
 	          <div class="md-list-item-text">         
@@ -135,7 +134,7 @@
 	          </div>
 	       
 	        </md-list-item>
-	        <md-list-item class="md-2-line" role="link" md-ink-ripple ng-click="$parent.go('notifications')">
+	        <md-list-item class="md-2-line" role="link" ng-click="$parent.go('notifications')">
 		        <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"></md-icon>
 		        <div class="md-list-item-text">
 		            <span class="md-body-2">Notifications  <span class="sidebar-badge">{{unreadNotifications.length}}</span></span>
@@ -143,7 +142,7 @@
 	        </md-list-item>
 	        <md-divider></md-divider>
 	        <md-subheader  class="md-no-sticky">Management</md-subheader>
-	        <md-list-item class="md-2-line" ng-repeat="item in admin" role="link" md-ink-ripple ng-click="$parent.go(item.link)">
+	        <md-list-item class="md-2-line" ng-repeat="item in admin" role="link" ng-click="$parent.go(item.link)">
 	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
 	          <div class="md-list-item-text">	        
 	            <span class="md-body-2">{{item.title}}</span>
@@ -151,7 +150,7 @@
 	        </md-list-item>
 	        <md-divider></md-divider>
 	        <md-subheader  class="md-no-sticky">Help</md-subheader>
-	        <md-list-item class="md-2-line" role="link" md-ink-ripple ng-click="$parent.go(tutorial)">
+	        <md-list-item class="md-2-line" role="link" ng-click="$parent.go(tutorial)">
 		        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Tutorial"></md-icon>
 		        <div class="md-list-item-text">
 		            <span class="md-body-2">Tutorial</span>
