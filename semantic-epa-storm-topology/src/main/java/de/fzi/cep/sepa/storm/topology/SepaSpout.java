@@ -77,14 +77,14 @@ public class SepaSpout extends BaseRichSpout {
 	@Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
 
-    	this.zookeeperUrl = "ipe-koi04.fzi.de:2181";
-        this.sepaConfigTopic = sepaStreamTopicPrefix + sepaConfigStreamTopicSuffix;
+    	this.sepaConfigTopic = sepaStreamTopicPrefix + sepaConfigStreamTopicSuffix;
         this.sepaDataTopic = sepaStreamTopicPrefix + sepaDataStreamTopicSuffix;    
-        //this.sepaWhitelistTopic = sepaStreamTopicPrefix +"*.*";
         this.sepaWhitelistTopic = "de.fzi.cep.sepa.storm.*";
+        String zookeeperServers = map.get("zookeeper.servers").toString();
+        
         this.collector = spoutOutputCollector;
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
-                createConsumerConfig());
+                createConsumerConfig(zookeeperServers, this.getId()));
         List<KafkaStream<byte[], byte[]>> streams = consumer.createMessageStreamsByFilter(new Whitelist(sepaWhitelistTopic));
         
         KafkaStream<byte[], byte[]> messageAndMetadatas = streams.get(0);
@@ -92,10 +92,10 @@ public class SepaSpout extends BaseRichSpout {
 
     }
 
-    private ConsumerConfig createConsumerConfig() {
+    private ConsumerConfig createConsumerConfig(String zookeeperUrl, String groupId) {
         Properties props = new Properties();
-        props.put("zookeeper.connect", "ipe-koi04.fzi.de:2181");
-        props.put("group.id", id);
+        props.put("zookeeper.connect", zookeeperUrl);
+        props.put("group.id", groupId);
         props.put("zookeeper.session.timeout.ms", "60000");
         props.put("zookeeper.sync.time.ms", "20000");
         props.put("auto.commit.interval.ms", "10000");
