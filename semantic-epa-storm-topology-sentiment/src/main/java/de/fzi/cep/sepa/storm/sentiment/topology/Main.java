@@ -29,7 +29,7 @@ public class Main {
 		// Production settings
 		Config productionConfig = new Config();
 		productionConfig.put(Config.NIMBUS_HOST, nimbus_host);
-		productionConfig.put(Config.NIMBUS_THRIFT_PORT, 49627);
+		productionConfig.put(Config.NIMBUS_THRIFT_PORT, 6627);
 		productionConfig.put("bootstrap.servers", "ipe-koi04.fzi.de:9092"); //kafka connection
 		productionConfig.put("zookeeper.servers", "ipe-koi04.fzi.de:2181");
 		productionConfig.setDebug(true);
