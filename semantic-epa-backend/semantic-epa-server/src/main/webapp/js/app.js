@@ -15,7 +15,7 @@ angular
         restApi.configured().success(function(msg) {
         			if (msg.configured)
         				{
-        					authService.authenticate();
+        					authService.authenticate;
         				}
         			else {
         					$rootScope.authenticated = false;
@@ -24,7 +24,7 @@ angular
         });
 
         $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-	        authService.authenticate();
+	        authService.authenticate;
         });
 		$rootScope.state = new State();
     })
@@ -385,7 +385,11 @@ angular
   	        	if (response.data.success == false) 
           		{
           			$rootScope.authenticated = false;
-          			$location.path("/login");
+          			$http.get("/semantic-epa-backend/api/v2/setup/configured")
+          			.then(function(response) {
+          				if (response.data.configured) $location.path("/login");
+          				else $location.path("/setup");
+          			})		
           		}
   	        	else {
   	        	$rootScope.username = response.data.info.authc.principal.username;
