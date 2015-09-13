@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.rest.v2;
 
 import java.util.UUID;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -62,10 +63,12 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 		return null;
 	}
 
-	@Override
-	public String removeOwn(String username, String elementUri) {
-		// TODO Auto-generated method stub
-		return null;
+	@DELETE
+	@Path("/{pipelineId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
+		StorageManager.INSTANCE.getPipelineStorageAPI().deletePipeline(elementUri);
+		return toJson(Notifications.success("Pipeline deleted"));
 	}
 
 	@Override
