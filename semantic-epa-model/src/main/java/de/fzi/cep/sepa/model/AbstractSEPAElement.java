@@ -35,7 +35,7 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	{
 		this();
 		this.elementId = other.getElementId();
-		this.rdfIdGson = other.getRdfId().toString();
+		//this.rdfIdGson = other.getRdfId().toString();
 		this.rdfId = other.rdfId;
 	}
 	
