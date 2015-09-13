@@ -30,6 +30,9 @@
 	<listener>
 		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>de.fzi.cep.sepa.rest.notifications.NotificationListener</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>SemanticEPA-API</servlet-name>
