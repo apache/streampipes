@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.rest.v2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,9 +18,11 @@ import com.google.gson.JsonSyntaxException;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
 import de.fzi.cep.sepa.manager.setup.Installer;
+import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.rest.api.v2.Setup;
+import de.fzi.cep.sepa.rest.notifications.NotificationListener;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/setup")
@@ -53,8 +56,10 @@ public class SetupImpl implements Setup {
     	String configFileLocation = ConfigurationManager.getStreamPipesConfigFileLocation();
     	String configFilename = ConfigurationManager.getStreamPipesConfigFilename();
     	WebappConfigurationSettings settings = (fromJson(json, WebappConfigurationSettings.class));
-    	
-    	return toJson(new Installer(settings, new File(configFileLocation + configFilename), new File(configFileLocation)).install());
+   
+    	List<Message> successMessages = new Installer(settings, new File(configFileLocation + configFilename), new File(configFileLocation)).install();
+    	new NotificationListener().contextInitialized(null);
+    	return toJson(successMessages);
     }
     
     @PUT
