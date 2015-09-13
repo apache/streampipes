@@ -45,7 +45,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("storm", "Online Analytics", "Processes event by Online Analytics", "http://localhost:8080/img");
+		SecDescription desc = new SecDescription("storm", "Online Analytics", "Processes event by Online Analytics");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
@@ -70,7 +70,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		this.eventNotifier = new ProaSenseEventNotifier(consumerTopic);
 		System.out.println(consumerTopic);
 		//consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getInstance().getBrokerConfig().getZookeeperUrl(), consumerTopic,
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getBrokerConfig().getZookeeperUrl(), consumerTopic,
 				new String[] {consumerTopic}, new ProaSenseTopologyPublisher(sec, eventNotifier));
 		kafkaConsumerGroup.run(1);
 		

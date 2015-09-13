@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.maparea.MapAreaController;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
+import de.fzi.cep.sepa.actions.samples.notification.NotificationController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.route.RouteController;
@@ -47,6 +48,7 @@ public class Init implements Runnable {
 		consumers.add(new MapAreaController());
 		consumers.add(new de.fzi.cep.sepa.actions.samples.maparealist.MapAreaController());
 		consumers.add(new ProaSenseKpiController());
+		consumers.add(new NotificationController());
 		//consumers.add(new HistogramController());
 		
 		try {

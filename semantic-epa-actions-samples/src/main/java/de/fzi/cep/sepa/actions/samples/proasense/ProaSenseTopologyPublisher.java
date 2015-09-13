@@ -43,7 +43,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	
 	public ProaSenseTopologyPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
 		this.graph = graph;
-		this.producer = new ProaSenseInternalProducer(Configuration.getInstance().getInstance().getBrokerConfig().getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+		this.producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.notifier = notifier;
 	}
