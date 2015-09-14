@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.mhwirth.config;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 
 public class SourcesConfig {
 
@@ -10,8 +10,8 @@ public class SourcesConfig {
 	public final static String topicPrefixRam;
 	
 	static {
-		serverUrl = Configuration.getInstance().SOURCES_BASE_URL;
-		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		serverUrl = ClientConfiguration.INSTANCE.getWebappUrl();
+		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
