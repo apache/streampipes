@@ -1,19 +1,14 @@
 package de.fzi.cep.sepa.actions.samples.notification;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
-import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiPublisher;
-import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.BrokerConfig;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -21,11 +16,9 @@ import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
@@ -63,8 +56,8 @@ public class NotificationController extends ActionController {
 		sec.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();
-		BrokerConfig config = Configuration.getInstance().getBrokerConfig();
-		grounding.setTransportProtocol(new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), "", config.getZookeeperHost(), config.getZookeeperPort()));
+		
+		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		sec.setSupportedGrounding(grounding);
 		
@@ -75,7 +68,7 @@ public class NotificationController extends ActionController {
 	public Response invokeRuntime(SecInvocation sec) {
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getBrokerConfig().getZookeeperUrl(), consumerTopic,
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
 				new String[] {consumerTopic}, new NotificationProducer(sec));
 		kafkaConsumerGroup.run(1);
 		

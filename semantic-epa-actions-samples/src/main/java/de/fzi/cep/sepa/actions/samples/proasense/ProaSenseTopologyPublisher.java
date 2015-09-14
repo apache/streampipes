@@ -18,7 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -43,7 +43,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	
 	public ProaSenseTopologyPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
 		this.graph = graph;
-		this.producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+		this.producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.notifier = notifier;
 	}

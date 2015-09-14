@@ -7,7 +7,7 @@ import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -23,7 +23,7 @@ public class NotificationProducer implements IMessageListener {
 	
 	public NotificationProducer(SecInvocation sec)
 	{
-		producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), "de.fzi.cep.sepa.notifications");
+		producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
 		this.title = SepaUtils.getFreeTextStaticPropertyValue(sec, "title");
 		this.content = SepaUtils.getFreeTextStaticPropertyValue(sec, "content");
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());

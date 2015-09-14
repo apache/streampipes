@@ -8,8 +8,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyViewer;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.BrokerConfig;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
@@ -54,8 +53,7 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 		desc.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();
-		BrokerConfig config = Configuration.getInstance().getBrokerConfig();
-		grounding.setTransportProtocol(new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), "", config.getZookeeperHost(), config.getZookeeperPort()));
+		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		desc.setSupportedGrounding(grounding);
 		
@@ -67,7 +65,7 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 	public Response invokeRuntime(SecInvocation sec) {
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		this.notifier = new ProaSenseEventNotifier(consumerTopic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getBrokerConfig().getZookeeperUrl(), consumerTopic,
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
 				new String[] {consumerTopic}, new ProaSenseKpiPublisher(sec, notifier));
 		kafkaConsumerGroup.run(1);
 		

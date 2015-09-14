@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.actions.config;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 
 public class ActionConfig {
 
@@ -8,7 +8,7 @@ public class ActionConfig {
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = Configuration.getInstance().ACTION_BASE_URL;
-		iconBaseUrl = Configuration.getInstance().getHostname() +"8080" +"/semantic-epa-backend/img";
+		serverUrl = ClientConfiguration.INSTANCE.getActionUrl();
+		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
 	}
 }

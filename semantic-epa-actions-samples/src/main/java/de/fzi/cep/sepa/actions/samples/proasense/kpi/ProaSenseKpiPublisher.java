@@ -20,7 +20,7 @@ import com.google.gson.JsonPrimitive;
 
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyPublisher;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -43,7 +43,7 @@ public class ProaSenseKpiPublisher implements IMessageListener {
 	
 	public ProaSenseKpiPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
 		this.notifier = notifier;
-		this.producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+		this.producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.kpiName = SepaUtils.getFreeTextStaticPropertyValue(graph, "kpi");
 	}
