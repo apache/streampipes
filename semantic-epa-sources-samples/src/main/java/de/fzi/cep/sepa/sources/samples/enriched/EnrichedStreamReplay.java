@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.enriched;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -35,7 +35,7 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 
 	@Override
 	public void executeStream() {
-		ProaSenseInternalProducer producer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topicName);
+		ProaSenseInternalProducer producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
 		new Thread(new EnrichedReplay(producer)).start();
 	}
 

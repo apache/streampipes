@@ -18,7 +18,7 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -36,7 +36,7 @@ public class TweetsGermanyStream implements EventStreamDeclarer{
 	ActiveMQPublisher publisher;
 	
 	public TweetsGermanyStream() throws JMSException {
-		publisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL +":61616", "SEPA.SEP.Twitter.Germany");
+		publisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() +":61616", "SEPA.SEP.Twitter.Germany");
 	}
 	
 	@Override

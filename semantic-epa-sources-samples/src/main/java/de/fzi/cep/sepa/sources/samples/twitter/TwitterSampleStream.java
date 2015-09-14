@@ -13,7 +13,7 @@ import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
@@ -47,8 +47,8 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 	private ProaSenseInternalProducer kafkaProducer;
 
 	public TwitterSampleStream() throws JMSException {
-		geoPublisher = new ActiveMQPublisher(Configuration.getInstance().TCP_SERVER_URL + ":61616", "SEPA.SEP.Twitter.Geo");
-		kafkaProducer = new ProaSenseInternalProducer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
+		geoPublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Twitter.Geo");
+		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
 
 	@Override

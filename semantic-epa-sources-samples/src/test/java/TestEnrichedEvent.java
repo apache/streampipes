@@ -2,7 +2,7 @@ import javax.jms.JMSException;
 
 import com.google.gson.JsonObject;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedStream;
@@ -14,7 +14,7 @@ public class TestEnrichedEvent {
 		JsonObject json = new EnrichedStream().generateSampleEvent();
 		
 		try {
-			new ActiveMQPublisher(Configuration.getInstance().getJmsAddress(), AkerVariables.Enriched.topic()).sendText(json.toString());
+			new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsUrl(), AkerVariables.Enriched.topic()).sendText(json.toString());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
