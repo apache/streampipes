@@ -1,11 +1,7 @@
 package de.fzi.cep.sepa.esper.config;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
-import de.fzi.cep.sepa.esper.debs.c1.DebsOutputParameters;
-import de.fzi.cep.sepa.esper.debs.c1.OutputType;
-import de.fzi.cep.sepa.esper.writer.Challenge1FileWriter;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.esper.writer.SEPAWriter;
-import de.fzi.cep.sepa.esper.writer.TestDrillingWriter;
 import de.fzi.cep.sepa.esper.writer.Writer;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 
@@ -15,8 +11,8 @@ public class EsperConfig {
 	public final static String iconBaseUrl;
 	
 	static {
-		serverUrl = Configuration.getInstance().ESPER_BASE_URL;
-		iconBaseUrl = Configuration.getInstance().getHostname() +"8080" +"/semantic-epa-backend/img";
+		serverUrl = ClientConfiguration.INSTANCE.getEsperUrl();
+		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
 	}
 	
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)

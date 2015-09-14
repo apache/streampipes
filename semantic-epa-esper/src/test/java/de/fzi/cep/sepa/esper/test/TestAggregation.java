@@ -8,9 +8,8 @@ import java.util.List;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
-import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -18,7 +17,6 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
@@ -57,7 +55,7 @@ public class TestAggregation {
 		outputStream.setEventSchema(outputSchema);
 		
 		EventGrounding outputGrounding = new EventGrounding();
-		outputGrounding.setTransportProtocol(new JmsTransportProtocol(Configuration.getInstance().getBrokerConfig().getJmsHost(), Configuration.getInstance().getBrokerConfig().getJmsPort(), "FZI.Test"));
+		outputGrounding.setTransportProtocol(new JmsTransportProtocol(ClientConfiguration.INSTANCE.getJmsHost(), ClientConfiguration.INSTANCE.getJmsPort(), "FZI.Test"));
 		
 		outputStream.setEventGrounding(outputGrounding);
 		

@@ -14,7 +14,7 @@ public class TestDrillingWriter implements Writer {
 
 	private PrintWriter writer;
 	
-	private static final String fileName = "c:\\users\\riemer\\documents\\2015-07-MhWirth-Data\\drilling0.csv";
+	private static final String fileName = "c:\\users\\riemer\\documents\\2015-07-MhWirth-Data\\test-drilling0.csv";
 	
 	public TestDrillingWriter() {
 		File file = new File(fileName);
