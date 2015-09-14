@@ -21,8 +21,13 @@ public class NotificationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		if (ConfigurationManager.isConfigured())
 		{
+			try {
 			new ProaSenseNotificationSubscriber().subscribe(internalNotificationTopic);
 			new ProaSenseNotificationSubscriber().subscribe(iccsKafkaTopic);
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 }
