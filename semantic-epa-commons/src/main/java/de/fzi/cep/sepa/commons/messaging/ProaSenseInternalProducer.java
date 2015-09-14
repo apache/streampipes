@@ -24,7 +24,7 @@ public class ProaSenseInternalProducer implements IMessagePublisher {
 
     public ProaSenseInternalProducer(String brokerUrl, String producerTopic) {
     	log.info(brokerUrl);
-    	log.info("Topic is " +producerTopic);
+    	log.info("Topic is " + producerTopic);
     	this.producerTopic = producerTopic;
         HashMap<String, Object> kafkaConfig = new HashMap<>();
         kafkaConfig.put("bootstrap.servers", brokerUrl);
