@@ -3,10 +3,8 @@ package de.fzi.cep.sepa.commons.config;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.openrdf.rio.RDFFormat;

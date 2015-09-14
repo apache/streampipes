@@ -8,11 +8,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-
-import com.google.gson.JsonElement;
-
 import de.fzi.cep.sepa.commons.Utils;
 
 public class ConfigurationManager {
@@ -21,9 +16,18 @@ public class ConfigurationManager {
 		return new File(getStreamPipesConfigFileLocation()).exists() && new File(getStreamPipesConfigFullPath()).exists();
 	}
 	
+	public static boolean isClientConfigured() {
+		return new File(getStreamPipesClientConfigFullPath()).exists();
+	}
+	
 	public static String getStreamPipesConfigFullPath()
 	{
 		return getStreamPipesConfigFileLocation() + getStreamPipesConfigFilename();
+	}
+	
+	public static String getStreamPipesClientConfigFullPath()
+	{
+		return getStreamPipesConfigFileLocation() + getStreamPipesClientConfigFilename();
 	}
 	
 	public static String getStreamPipesConfigFileLocation()
