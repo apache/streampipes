@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.desc;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
@@ -23,7 +23,7 @@ public class ModelSubmitter {
 	public static boolean submitProducer(
 			List<SemanticEventProducerDeclarer> producers) throws Exception {
 	
-		return submitProducer(producers, Configuration.getInstance().SOURCES_PORT);
+		return submitProducer(producers, ClientConfiguration.INSTANCE.getSourcesPort());
 	}
 	
 	public static boolean submitAgent(List<SemanticEventProcessingAgentDeclarer> declarers, int port)
@@ -36,7 +36,7 @@ public class ModelSubmitter {
 	}
 
 	public static boolean submitAgent(List<SemanticEventProcessingAgentDeclarer> declarers) throws Exception {
-		return submitAgent(declarers, Configuration.getInstance().ESPER_PORT);
+		return submitAgent(declarers, ClientConfiguration.INSTANCE.getEsperPort());
 	}
 
 	public static boolean submitConsumer(List<SemanticEventConsumerDeclarer> declarers, int port) {
@@ -50,7 +50,7 @@ public class ModelSubmitter {
 	public static boolean submitConsumer(
 			List<SemanticEventConsumerDeclarer> declarers) throws Exception {
 		
-		return submitConsumer(declarers, Configuration.getInstance().ACTION_PORT);
+		return submitConsumer(declarers, ClientConfiguration.INSTANCE.getActionPort());
 	}	
 	
 	private static boolean start(int port, List<RestletConfig> configs)
