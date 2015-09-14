@@ -2,7 +2,6 @@
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html ng-app="streamPipesApp" lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
 
-
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,6 +37,7 @@
 	<script type="text/javascript" src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-cookies.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
 	<script type="text/javascript" src="js/loading-bar.min.js"></script>
 	<script type="text/javascript" src="js/useravatar.js"></script>
 	<script type="text/javascript" src="js/ObjectPath.js"></script>
@@ -84,85 +84,11 @@
 	<script type="text/javascript" src="js/ontology.js"></script>
 </head>
 
-<body ng-controller="AppCtrl" layout="row">
+<body layout="row">
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" id ="topDiv">
-	<md-toolbar layout="row" class="md-whiteframe-z1 md-toolbar-tools">
-			<md-button>
-				<a href="#">StreamStory</a>
-			</md-button>
-			<md-button>
-				<a href="#">StreamPipes</a>
-			</md-button>
-			<md-button>
-				<a href="#">PANDDA</a>
-			</md-button>
-			<md-button>
-				<a href="#">HIPPO</a>
-			</md-button>
-			<span flex></span>
-	</md-toolbar>
-	<md-toolbar class="md-primary md-hue-3">
-      <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()" ng-show="authenticated">
-          <i class="material-icons md-36" >menu</i>
-        </md-button>
-        <img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon">
-        <h1 class="md-toolbar-tools">StreamPipes</h1>
-      </div>
-    </md-toolbar>	
-		
-	<md-content  flex >
-		<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" ng-show="authenticated">
-		  <md-toolbar class="md-tall md-hue-3">
-		    <span flex></span>
-		    <div layout="column" class="md-toolbar-tools-bottom inset">
-		    <div layout layout-sm="column">
-		      <div class="useravatar" user="userInfo"></div> 
-		      <div style="margin-left:10px; margin-right:10px;">{{email}}</div>
-		      </div>
-		      <div style="margin-top:20px;">
-		       <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="logout()">Logout</md-button>
-		       </div>
-		    </div>
-		  </md-toolbar>
-		  <md-list>
-	        <md-list-item class="md-2-line" ng-repeat="item in menu" role="link" ng-click="$parent.go(item.link)">
-	        
-	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>     
-	          <div class="md-list-item-text">         
-	            <span class="md-body-2">{{item.title}}</span>
-	          </div>
-	       
-	        </md-list-item>
-	        <md-list-item class="md-2-line" role="link" ng-click="$parent.go('notifications')">
-		        <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"></md-icon>
-		        <div class="md-list-item-text">
-		            <span class="md-body-2">Notifications  <span class="sidebar-badge">{{unreadNotifications.length}}</span></span>
-		        </div>
-	        </md-list-item>
-	        <md-divider></md-divider>
-	        <md-subheader  class="md-no-sticky">Management</md-subheader>
-	        <md-list-item class="md-2-line" ng-repeat="item in admin" role="link" ng-click="$parent.go(item.link)">
-	          <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
-	          <div class="md-list-item-text">	        
-	            <span class="md-body-2">{{item.title}}</span>
-	          </div>
-	        </md-list-item>
-	        <md-divider></md-divider>
-	        <md-subheader  class="md-no-sticky">Help</md-subheader>
-	        <md-list-item class="md-2-line" role="link" ng-click="$parent.go(tutorial)">
-		        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Tutorial"></md-icon>
-		        <div class="md-list-item-text">
-		            <span class="md-body-2">Tutorial</span>
-		        </div>
-	        </md-list-item>
-		      </md-list>
-	  	</md-sidenav>
-		<div id="main">
-			<div id="content" ng-view layout-padding>
-			</div>
-		</div>
-	</md-content>
+	
+	<div ui-view="top"></div>
+	<div ui-view="container" style="min-height: 100%"></div>
 
 </div>
 

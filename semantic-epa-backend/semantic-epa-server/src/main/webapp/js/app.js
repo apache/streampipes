@@ -1,16 +1,17 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
         contextPath : "/semantic-epa-backend",
         api : "/api/v2"
     })
-    .run(function($rootScope, $location, restApi, authService) {
+    .run(function($rootScope, $location, restApi, authService, $state, $urlRouter) {
 
 		//$location.path("/setup");
+    	var bypass;
     	
         restApi.configured().success(function(msg) {
         			if (msg.configured)
@@ -19,9 +20,23 @@ angular
         				}
         			else {
         					$rootScope.authenticated = false;
-        					$location.path("/setup");
+        					$state.go("streampipes.setup");
         				}
         });
+        
+        $rootScope.$on('$stateChangeStart', 
+        		function(event, toState, toParams, fromState, fromParams){ 
+        	var isLogin = toState.name === "streampipes.login";
+        	var isSetup = toState.name === "streampipes.setup";
+            if(isLogin || isSetup){
+               return;
+            }
+            if($rootScope.authenticated === false) {
+                event.preventDefault(); 
+                $state.go('streampipes.login'); 
+            }
+        	
+        })
 
         $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 	        authService.authenticate;
@@ -53,82 +68,238 @@ angular
     	$httpProvider.defaults.withCredentials = true;
     	$httpProvider.interceptors.push('httpInterceptor');
     }])
-	.config(function($routeProvider) {
-        $routeProvider
-        	.when('/', {
-        		controller: 'AppCtrl',
-    			 resolve:{
-                     'AuthData':function(authService){
-                       return authService.authenticate;
-                     }
-    			 }
-        	})
-            .when('/pipelines', {
-                templateUrl : 'modules/pipelines/pipelines.html',
-                controller  : 'PipelineCtrl'         
-            })
-            .when('/', {
-                templateUrl : 'modules/editor/editor.html',
-                controller  : 'EditorCtrl'
-            })
-			.when('/editor/:pipeline', {
-				templateUrl : 'modules/editor/editor.html',
-				controller  : 'EditorCtrl'
-			})
-            .when('/visualizations', {
-                templateUrl : 'modules/visualizations/visualizations.html',
-                controller  : 'AppCtrl'
-            })
-            .when('/marketplace', {
-                templateUrl : 'modules/marketplace/marketplace.html',
-                controller  : 'MarketplaceCtrl'
-            })
-             .when('/ontology', {
-                templateUrl : 'ontology.html',
-                controller  : 'AppCtrl'
-            })
-            .when('/myelements', {
-                templateUrl : 'modules/myelements/myelements.html',
-                controller  : 'MyElementsCtrl'
-            })
-             .when('/tutorial', {
-                templateUrl : 'tutorial.html',
-                controller  : 'AppCtrl'
-            })
-             .when('/login', {
-                templateUrl : 'login.html',
-                controller  : 'LoginCtrl'
-            })
-             .when('/register', {
-                templateUrl : 'register.html',
-                controller  : 'RegisterCtrl'
-            })
-             .when('/add', {
-                templateUrl : 'modules/add/add.html',
-                controller  : 'AddCtrl'
-            })
-             .when('/setup', {
-                templateUrl : 'setup.html',
-                controller  : 'SetupCtrl'
-            })
-            .when('/error', {
-                templateUrl : 'error.html',
-                controller  : 'SetupCtrl'
-            })
-            .when('/settings', {
-                templateUrl : 'settings.html',
-                controller  : 'SettingsCtrl'
-            })
-            .when('/create', {
-                templateUrl : 'modules/create/create.html',
-                controller  : 'CreateCtrl'
-            })
-            .when('/notifications', {
-                templateUrl : 'modules/notifications/notifications.html',
-                controller  : 'RecommendationCtrl'
-            })
-	})
-    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi) {
+    .config(function($stateProvider, $urlRouterProvider) {
+      
+//	    $urlRouterProvider.otherwise( function($injector, $location) {
+//            var $state = $injector.get("$state");
+//            $state.go("streampipes");
+//        });
+	
+	    $stateProvider
+	        .state('streampipes', {
+	            url: '/streampipes',
+	            views: {
+	              "top" : {
+	            	  templateUrl : "top.html",
+	              	},
+	              "container" : {
+		            	  templateUrl : "streampipes.html",
+		            	  controller: 'AppCtrl'
+		           	},
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : "modules/editor/editor.html",
+		            	  controller: 'EditorCtrl',
+	            		  resolve:{
+	                          'AuthData':function(authService){
+	                            return authService.authenticate;
+	                          }
+	            		  }
+		            }
+	              }
+	          })
+	          .state('streampipes.edit', {
+	            url: '/editor/:pipeline',
+	            views: {
+	              "top" : {
+	            	  templateUrl : "top.html"
+	              	},
+	              "container" : {
+		            	  templateUrl : "streampipes.html",
+		            	  controller: 'AppCtrl'
+		           	},
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : "modules/editor/editor.html",
+		            	  controller: 'EditorCtrl'
+		           	},
+	              }
+	          })
+	          .state('streampipes.login', {
+	            url: '/login',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'login.html',
+		            	  controller: 'LoginCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.pipelines', {
+	            url: '/pipelines',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/pipelines/pipelines.html',
+		            	  controller: 'PipelineCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.visualizations', {
+	            url: '/visualizations',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/visualizations/visualizations.html',
+		            	  controller: 'AppCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.marketplace', {
+	            url: '/marketplace',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/marketplace/marketplace.html',
+		            	  controller: 'MarketplaceCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.ontology', {
+	            url: '/ontology',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'ontology.html',
+		            	  controller: 'AppCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.myelements', {
+	            url: '/myelements',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/myelements/myelements.html',
+		            	  controller: 'MyElementsCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.tutorial', {
+	            url: '/tutorial',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'tutorial.html',
+		            	  controller: 'AppCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.register', {
+	            url: '/register',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'register.html',
+		            	  controller: 'RegisterCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.add', {
+	            url: '/add',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/add/add.html',
+		            	  controller: 'AddCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.setup', {
+	            url: '/setup',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'setup.html',
+		            	  controller: 'SetupCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.error', {
+	            url: '/error',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'error.html',
+		            	  controller: 'SetupCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.settings', {
+	            url: '/settings',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'settings.html',
+		            	  controller: 'SettingsCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.create', {
+	            url: '/create',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/create/create.html',
+		            	  controller: 'CreateCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.notifications', {
+	            url: '/notifications',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/notifications/notifications.html',
+		            	  controller: 'RecommendationCtrl'
+		            }
+	            }
+	          })
+	           .state('streamstory', {
+	            url: '/streamstory',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html",
+		              	},
+		            "container" : {
+		            	  templateUrl : 'streamstory.html',
+			              controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	          .state('pandda', {        	  
+	            url: '/pandda',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html",
+		              	},
+		            "container" : {
+		            	  templateUrl : 'pandda.html',
+			            	  controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	          .state('hippo', {
+	            url: '/hippo',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html",
+		              	},
+		            "container" : {
+		            	  templateUrl : 'hippo.html',
+		            	  controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	        
+    })
+    .controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce) {
+    	
+    	$scope.panddaUrl = "";
+    	$scope.streamStoryUrl = "";
+    	$scope.hippoUrl = "";
+    	
+    	$scope.trustSrc = function(src) {
+    	    return $sce.trustAsResourceUrl(src);
+    	  }
+    	
+    	$scope.loadConfig = function() {
+			restApi.getConfiguration().success(function(msg) {
+				$scope.panddaUrl = msg.panddaUrl;
+		    	$scope.streamStoryUrl = msg.streamStoryUrl;
+		    	$scope.hippoUrl = msg.hippoUrl;
+			});
+		}
+    	
+    	$scope.loadConfig();
+    	
+    	
+    })
+    .controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, $state) {
        
     	$rootScope.unreadNotifications = [];
     	
@@ -139,62 +310,63 @@ angular
     	};
     	    
 		$rootScope.go = function ( path ) {
-			  $location.path( path );
+			  //$location.path( path );
+			$state.go(path);
 		};
 
 	      $scope.logout = function() {
 	        $http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
 		        $scope.user = undefined;
 		        $rootScope.authenticated = false;
-		        $location.path("/login");
+		        $state.go("streampipes.login");
 	        });
 	      };	      
 	      
         $scope.menu = [
            {
-             link : '/',
+             link : 'streampipes',
              title: 'Editor',
              icon: 'action:ic_dashboard_24px' 
            },
            {
-             link : '/pipelines',
+             link : 'streampipes.pipelines',
              title: 'Pipelines',
              icon: 'av:ic_play_arrow_24px'
            },
            {
-             link : '/visualizations',
+             link : 'streampipes.visualizations',
              title: 'Visualizations',
              icon: 'editor:ic_insert_chart_24px'
            },
            {
-               link : '/marketplace',
+               link : 'streampipes.marketplace',
                title: 'Marketplace',
                icon: 'maps:ic_local_mall_24px'
            }
          ];
          $scope.admin = [
            {
-             link : '/myelements',
+             link : 'streampipes.myelements',
              title: 'My Elements',
              icon: 'image:ic_portrait_24px'
            },
            {
-               link : '/add',
+               link : 'streampipes.add',
                title: 'Add element',
                icon: 'content:ic_add_24px'
            },
            {
-               link : '/create',
+               link : 'streampipes.create',
                title: 'Create element',
                icon: 'content:ic_add_24px'
            },
            {
-               link : '/ontology',
+               link : 'streampipes.ontology',
                title: 'Ontology Editor',
                icon: 'social:ic_share_24px'
            },
            {
-             link : '/settings',
+             link : 'streampipes.settings',
              title: 'Settings',
              icon: 'action:ic_settings_24px'
            }
@@ -213,9 +385,6 @@ angular
             $mdSidenav('left').close();
         };
     })
-    //.controller('EditorCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
-	//	$(init("Proa"));
-	//})
 	.controller('RegisterCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $http) {
 
 		$scope.register = function() {
@@ -228,7 +397,7 @@ angular
 		};
 	})
 
-	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http) {
+	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, $state) {
 		
 		$scope.loading = false;
 			
@@ -241,7 +410,7 @@ angular
 		            $rootScope.email = response.data.info.authc.principal.email;
 		            $rootScope.authenticated = true;
 		            $scope.loading = false;
-		            $location.path("/");
+		            $state.go("streampipes");
 		          }, function(response) { // error
 		            $rootScope.authenticated = false;
 		            return $q.reject("Login failed");
@@ -352,7 +521,7 @@ angular
 	})
 	.factory('httpInterceptor', ['$log', function($log) {  
 	    
-	    var httpInterceptor = ["$rootScope", "$q", "$timeout", function($rootScope, $q, $timeout) {
+	    var httpInterceptor = ["$rootScope", "$q", "$timeout", "$state", function($rootScope, $q, $timeout, $state) {
 	        return function(promise) {
 	        	console.log("intercept");
 	          return promise.then(
@@ -363,7 +532,7 @@ angular
 	              if (response.status == 401) {
 	                $rootScope.$broadcast("InvalidToken");
 	                $rootScope.sessionExpired = true;
-	                $location.path("/login");
+	                $state.go("streampipes.login");
 	                $timeout(function() {$rootScope.sessionExpired = false;}, 5000);
 	              } else if (response.status == 403) {
 	                $rootScope.$broadcast("InsufficientPrivileges");
@@ -377,7 +546,7 @@ angular
 	      }];
 	    return httpInterceptor;
     }])
-    .service('authService', function($http, $rootScope, $location) {
+    .service('authService', function($http, $rootScope, $location, $state) {
     	
     	var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
         .then(
@@ -387,8 +556,8 @@ angular
           			$rootScope.authenticated = false;
           			$http.get("/semantic-epa-backend/api/v2/setup/configured")
           			.then(function(response) {
-          				if (response.data.configured) $location.path("/login");
-          				else $location.path("/setup");
+          				if (response.data.configured) $state.go("streampipes.login")//$location.path("/login");
+          				else $state.go("streampipes.setup")
           			})		
           		}
   	        	else {
@@ -409,7 +578,7 @@ angular
   	          function(response) {
   	        	  $rootScope.username = undefined;
   			      $rootScope.authenticated = false;
-  		          $location.path("/login");
+  			      $state.go("streampipes.login")
   	          });
         
     	return {

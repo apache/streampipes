@@ -2,18 +2,18 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$routeParams',
-        function ($scope, $rootScope,$timeout, $http, restApi, $routeParams) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$routeParams', '$stateParams',
+        function ($scope, $rootScope,$timeout, $http, restApi, $routeParams, $stateParams) {
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
-            $scope.currentModifiedPipeline = $routeParams.pipeline;
+            $scope.currentModifiedPipeline = $stateParams.pipeline;
 
 
 
-
+            console.log($scope.currentModifiedPipeline);
             
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen

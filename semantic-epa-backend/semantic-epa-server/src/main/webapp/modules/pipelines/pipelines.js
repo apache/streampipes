@@ -1,6 +1,6 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location', function ($scope, restApi, $http, $rootScope, $mdDialog, $location) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location', '$state', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, $state) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
@@ -187,8 +187,7 @@ angular
         }
 
         function showPipelineInEditor(id){
-
-            $location.path("/editor/" + id);
+        	$state.go("streampipes.edit", {pipeline : id});
         }
 
         function PipelineDialogController($scope, $mdDialog, pipeline){
