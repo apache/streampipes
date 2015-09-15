@@ -21,6 +21,7 @@ import de.fzi.cep.sepa.manager.setup.Installer;
 import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.Setup;
 import de.fzi.cep.sepa.rest.notifications.NotificationListener;
 import de.fzi.sepa.model.client.util.Utils;

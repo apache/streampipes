@@ -37,9 +37,16 @@ public abstract class AbstractRestInterface {
 
 	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
 	protected static PipelineStorage pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
-	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();
-	
+	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();	
 	protected static UserService userService = StorageManager.INSTANCE.getUserService();
+	
+	public static void reloadApis()
+	{
+		requestor = StorageManager.INSTANCE.getStorageAPI();
+		pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
+		userStorage = StorageManager.INSTANCE.getUserStorageAPI();
+		userService = StorageManager.INSTANCE.getUserService();
+	}
 	
 	protected <T> T fromJson(String payload, Class<T> clazz)
 	{
