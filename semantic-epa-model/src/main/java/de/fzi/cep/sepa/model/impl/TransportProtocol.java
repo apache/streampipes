@@ -30,6 +30,7 @@ public abstract class TransportProtocol extends UnnamedSEPAElement {
 	
 	public TransportProtocol(String uri, String topicName)
 	{
+		super();
 		this.brokerHostname = uri;
 		this.topicName = topicName;
 	}
