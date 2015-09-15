@@ -73,16 +73,16 @@ public class RestletGenerator {
 
 		for (SemanticEventProducerDeclarer producer : declarers) {
 			SepDescription sep = producer.declareModel();
-			String currentPath;
+			String currentPath = "/" +sep.getUri();
 			
-			if (standalone) 
-			{
-				currentPath = "/" +sep.getUri();
-			}
-			else
-			{
-				currentPath = sep.getUri();
-			}
+//			if (standalone) 
+//			{
+//				currentPath 
+//			}
+//			else
+//			{
+//				currentPath = sep.getUri();
+//			}
 			sep.setUri(baseUri +currentPath);
 			for (EventStreamDeclarer declarer : producer.getEventStreams()) {
 				EventStream stream = declarer.declareModel(sep);
