@@ -139,7 +139,7 @@ public enum ClientConfiguration {
 			
 			this.webappHost = config.getString("webappHost");
 			this.webappPort = config.getInt("webappPort");
-			this.webappUrl = webappHost +":" +webappPort;
+			this.webappUrl = "http://" +webappHost +":" +webappPort;
 			
 		} catch (ConfigurationException e) {
 			createDefaultSettings();
