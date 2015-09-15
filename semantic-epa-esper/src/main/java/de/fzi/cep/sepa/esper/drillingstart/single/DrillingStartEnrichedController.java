@@ -66,7 +66,7 @@ public class DrillingStartEnrichedController extends EpDeclarer<DrillingStartEnr
 		schema1.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("sepa/drillingstartenriched", "Drilling Status", "Detects a status change in a drilling process (drilling/cooling)");
+		SepaDescription desc = new SepaDescription("sepa/drillingstartenriched", "Drilling Status", "Detects a status change in a drilling process (drilling and cooling)");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
 		
 		

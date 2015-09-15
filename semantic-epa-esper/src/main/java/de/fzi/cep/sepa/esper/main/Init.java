@@ -59,7 +59,7 @@ public class Init implements Runnable {
 		declarers.add(new DrillingStopController());
 		declarers.add(new ComposeController());
 		declarers.add(new DrillingStartEnrichedController());
-		declarers.add(new DrillingStopEnrichedController());
+		//declarers.add(new DrillingStopEnrichedController());
 		declarers.add(new DistributionController());
 		declarers.add(new StaticValueEnricherController());
 		
