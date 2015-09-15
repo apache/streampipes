@@ -98,10 +98,13 @@ public class AuthenticationImpl extends AbstractRestInterface implements Authent
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public String userAuthenticated() {
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-        	 return toJson(ShiroAuthenticationResponseFactory.create((User) userStorage.getUser((String) SecurityUtils.getSubject().getPrincipal())));
-             
-        }
+    	
+    	if (ConfigurationManager.isConfigured())
+    	{
+	        if (SecurityUtils.getSubject().isAuthenticated()) {
+	        	 return toJson(ShiroAuthenticationResponseFactory.create((User) userStorage.getUser((String) SecurityUtils.getSubject().getPrincipal())));        
+	        }
+    	}
         return toJson(new ErrorMessage(NotificationType.NOT_LOGGED_IN.uiNotification()));
     }
     

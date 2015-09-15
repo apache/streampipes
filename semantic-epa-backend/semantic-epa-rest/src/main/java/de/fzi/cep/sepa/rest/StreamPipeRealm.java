@@ -92,6 +92,9 @@ public  class StreamPipeRealm implements Realm {
             } catch (CouchDbException e) {
                 e.printStackTrace();
             }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
