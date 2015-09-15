@@ -28,6 +28,7 @@ angular
         		function(event, toState, toParams, fromState, fromParams){ 
         	var isLogin = toState.name === "streampipes.login";
         	var isSetup = toState.name === "streampipes.setup";
+        	console.log("Setup: " +isSetup +", Login: " +isLogin);
             if(isLogin || isSetup){
                return;
             }
@@ -75,6 +76,8 @@ angular
 //            $state.go("streampipes");
 //        });
 	
+    	$urlRouterProvider.otherwise("/streampipes");
+    	
 	    $stateProvider
 	        .state('streampipes', {
 	            url: '/streampipes',
@@ -576,9 +579,13 @@ angular
   	          }
   	          },
   	          function(response) {
-  	        	  $rootScope.username = undefined;
-  			      $rootScope.authenticated = false;
-  			      $state.go("streampipes.login")
+  	        	$rootScope.username = undefined;
+  			    $rootScope.authenticated = false;
+  			    $http.get("/semantic-epa-backend/api/v2/setup/configured")
+      			.then(function(conf) {
+      				if (conf.data.configured) $state.go("streampipes.login")
+      				else $state.go("streampipes.setup")
+      			})		
   	          });
         
     	return {
