@@ -32,7 +32,7 @@ public class Init  {
 //		declarers.add(new EnrichedEventProducer());
 //		declarers.add(new RamProducer());
 //		declarers.add(new MobileStreamProducer());
-//		declarers.add(new RandomDataProducer());
+		declarers.add(new RandomDataProducer());
 //		declarers.add(new NYCTaxiProducer());
 //		declarers.add(new ProveITEventProducer());		
 
