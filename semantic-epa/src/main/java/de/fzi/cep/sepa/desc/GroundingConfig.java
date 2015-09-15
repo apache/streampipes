@@ -40,7 +40,7 @@ public class GroundingConfig {
 		//this.camelConfig = new CamelConfig.Kafka(brokerAlias, grounding.getUri(), grounding.getPort());
 		this.camelConfig = new CamelConfig.Kafka(brokerAlias, protocol.getBrokerHostname(), protocol.getZookeeperPort());
 		//this.endpointUri = brokerAlias + ":topic:";
-		this.endpointUri = brokerAlias +":" +protocol.getBrokerHostname() +":" +protocol.getKafkaPort() +"?zookeeperHost=" +protocol.getBrokerHostname() +"&zookeeperPort=" +protocol.getZookeeperPort() +"&groupId=group1&serializerClass=kafka.serializer.StringEncoder&topic=";
+		this.endpointUri = brokerAlias +":" +protocol.getBrokerHostname() +":" +protocol.getKafkaPort() +"?zookeeperHost=" +protocol.getZookeeperHost() +"&zookeeperPort=" +protocol.getZookeeperPort() +"&groupId=group1&serializerClass=kafka.serializer.StringEncoder&topic=";
 	}
 
 	public CamelConfig getCamelConfig()
