@@ -1,9 +1,16 @@
 package de.fzi.cep.sepa.messages;
 
+import java.util.UUID;
+
 import org.apache.commons.lang.RandomStringUtils;
+
+import com.google.gson.annotations.SerializedName;
 
 public class ProaSenseNotificationMessage {
 
+	private @SerializedName("_id") String id;
+    private @SerializedName("_rev") String rev;
+    
 	private String notificationId;
 	private String targetedUser;
 	private String title;
@@ -13,6 +20,7 @@ public class ProaSenseNotificationMessage {
 	
 	public ProaSenseNotificationMessage(String title, long creationDate, String description, String targetedUser) {
 		this.notificationId = RandomStringUtils.randomAlphanumeric(10);
+		this.id = UUID.randomUUID().toString();
 		this.targetedUser = targetedUser;
 		this.title = title;
 		this.timestamp = creationDate;
@@ -67,7 +75,21 @@ public class ProaSenseNotificationMessage {
 	public void setTargetedUser(String targetedUser) {
 		this.targetedUser = targetedUser;
 	}
-	
-	
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+		
 }
