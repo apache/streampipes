@@ -33,6 +33,7 @@ public class WebappConfigurationSettings {
 	private String couchDbPipelineDbName;
 	private String couchDbConnectionDbName;
 	private String couchDbMonitoringDbName;
+	private String couchDbNotificationDbName;
 	
 	
 	
@@ -238,4 +239,13 @@ public class WebappConfigurationSettings {
 	public void setCouchDbMonitoringDbName(String couchDbMonitoringDbName) {
 		this.couchDbMonitoringDbName = couchDbMonitoringDbName;
 	}
+
+	public String getCouchDbNotificationDbName() {
+		return couchDbNotificationDbName;
+	}
+
+	public void setCouchDbNotificationDbName(String couchDbNotificationDbName) {
+		this.couchDbNotificationDbName = couchDbNotificationDbName;
+	}
+	
 }

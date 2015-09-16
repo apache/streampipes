@@ -49,6 +49,7 @@ public class ConfigurationManager {
 		Configuration cfg = Configuration.getInstance();
 		WebappConfigurationSettings settings = new WebappConfigurationSettings();
 		settings.setCouchDbConnectionDbName(cfg.COUCHDB_CONNECTION_DB);
+		settings.setCouchDbNotificationDbName(cfg.COUCHDB_NOTIFICATION_DB);
 		settings.setCouchDbHost(cfg.COUCHDB_HOSTNAME);
 		settings.setCouchDbMonitoringDbName(cfg.COUCHDB_MONITORING_DB);
 		settings.setCouchDbPipelineDbName(cfg.COUCHDB_PIPELINE_DB);
@@ -102,7 +103,7 @@ public class ConfigurationManager {
 		properties.put("couchDbPipelineDbName", settings.getCouchDbPipelineDbName());
 		properties.put("couchDbMonitoringDbName", settings.getCouchDbMonitoringDbName());
 		properties.put("couchDbConnectionDbName", settings.getCouchDbConnectionDbName());
-		properties.put("couchDbNotificationDbName", settings.getCouchDbConnectionDbName());
+		properties.put("couchDbNotificationDbName", settings.getCouchDbNotificationDbName());
 		
 		properties.put("sesameUrl", settings.getSesameUrl());
 		properties.put("sesameDbName", settings.getSesameDbName());

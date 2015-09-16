@@ -21,7 +21,12 @@ public class KafkaConsumer implements Runnable {
         ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
         while (it.hasNext())
         {
+        	try {
             listener.onEvent(new String(it.next().message()));
+        	} catch (Exception e)
+        	{
+        		e.printStackTrace();
+        	}
         }
         System.out.println("Shutting down Thread: " + m_threadNumber);
     }
