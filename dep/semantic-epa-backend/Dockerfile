@@ -10,6 +10,8 @@ WORKDIR $CATALINA_HOME
 
 RUN apk add gpgme
 
+RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+
 #see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
 RUN gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys \
 	05AB33110949707C93A279E3D3EFE6B686867BA6 \
