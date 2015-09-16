@@ -25,7 +25,7 @@
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 
 	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-toggle="tooltip" data-placement="top" title="{{element.name}}" >
+	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" >
 		<img class="draggable-img"
 			  ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
 		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">

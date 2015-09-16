@@ -2,29 +2,35 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$routeParams','objectProvider','apiConstants','plumbService',
-        function ($scope, $rootScope,$timeout, $http, restApi, $routeParams, objectProvider, apiConstants, plumbService) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants',
+        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
             $scope.isSepaInAssembly = false;
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
-            $scope.currentModifiedPipeline = $routeParams.pipeline;
-            var editorPlumb;
+            $scope.currentModifiedPipeline = $stateParams.pipeline;
+            //var editorPlumb;
             var textInputFields = [];
 
 
 
 
             $scope.$on('$destroy', function () {
-                editorPlumb.deleteEveryEndpoint();
+                jsPlumb.deleteEveryEndpoint();
             });
 
             $scope.$on('$viewContentLoaded', function (event) {
-                editorPlumb = plumbService.editorPlumb;
+                jsPlumb.setContainer("assembly");
+
                 initAssembly();
                 initPlumb();
+                console.log($scope.currentModifiedPipeline);
+            });
+            $rootScope.$on("elements.loaded", function(){
+                makeDraggable();
+                //initTooltips();
             });
             
             $scope.getOwnBlocks = function(){
@@ -49,12 +55,12 @@ angular.module('streamPipesApp')
             };
 
             $scope.loadCurrentElements = function(type){
-                console.log($scope.currentModifiedPipeline);
+
                 $scope.currentElements = [];
                 $('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
-
-                }else if (type == 'source'){
+                    //TODO BLOCKS
+                }else if (type == 'stream'){
                     $scope.loadSources();
                 }else if (type == 'sepa'){
                     $scope.loadSepas();
@@ -66,6 +72,7 @@ angular.module('streamPipesApp')
             $scope.displayPipelineById = function(){
                 restApi.getPipelineById($scope.currentModifiedPipeline)
                     .success(function(pipeline){
+                        console.log("Succes, pipeline retrieved by ID");
                         $scope.displayPipeline(pipeline);
                     })
                     .error(function(msg){
@@ -86,8 +93,8 @@ angular.module('streamPipesApp')
                     currentx += 200;
                     var $sepa = $scope.sepaDropped(createNewAssemblyElement(sepa, {'x':currentx, 'y':currenty})
                         .data("options", true));
-                    if (editorPlumb.getConnections({source :sepa.DOM}).length == 0){ //Output Element
-                        editorPlumb.addEndpoint($sepa, apiConstants.sepaEndpointOptions);
+                    if (jsPlumb.getConnections({source :sepa.DOM}).length == 0){ //Output Element
+                        jsPlumb.addEndpoint($sepa, apiConstants.sepaEndpointOptions);
                     }
                 }
                 currentx += 200;
@@ -100,7 +107,7 @@ angular.module('streamPipesApp')
 
                 connectPipelineElements(pipeline, true);
                 //console.log(json);
-                editorPlumb.repaintEverything();
+                jsPlumb.repaintEverything();
             };
             
             function connectPipelineElements(json, detachable){
@@ -109,7 +116,7 @@ angular.module('streamPipesApp')
                 var sourceEndpoint;
                 var targetEndpoint
 
-                editorPlumb.setSuspendDrawing(true);
+                jsPlumb.setSuspendDrawing(true);
                 if (!$.isEmptyObject(json.action)) {
                     //Action --> Sepas----------------------//
                     target = json.action.DOM;
@@ -117,9 +124,9 @@ angular.module('streamPipesApp')
                     for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
                         source = connection;
 
-                        sourceEndpoint = editorPlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
-                        targetEndpoint = editorPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                        editorPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
+                        sourceEndpoint = jsPlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
+                        targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
+                        jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
                     }
                 }
                 //Sepas --> Streams / Sepas --> Sepas---------------------//
@@ -139,12 +146,12 @@ angular.module('streamPipesApp')
                             options = apiConstants.streamEndpointOptions;
                         }
 
-                        sourceEndpoint = editorPlumb.addEndpoint(source, options);
-                        targetEndpoint = editorPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                        editorPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
+                        sourceEndpoint = jsPlumb.addEndpoint(source, options);
+                        targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
+                        jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
                     }
                 }
-                editorPlumb.setSuspendDrawing(false ,true);
+                jsPlumb.setSuspendDrawing(false ,true);
             }
 
             $scope.tabs = [
@@ -155,8 +162,8 @@ angular.module('streamPipesApp')
                     disabled: !($scope.ownBlocksAvailable())
                 },
                 {
-                    title : 'Sources',
-                    type: 'source',
+                    title : 'Streams',
+                    type: 'stream',
                     disabled: !($scope.ownSourcesAvailable())
                 },
                 {
@@ -193,7 +200,7 @@ angular.module('streamPipesApp')
                                     //$scope.createElements(streams, "stream", "#editor-icon-stand");
                                     //console.log($scope.currentElements);
                                     $timeout(function(){
-                                        makeDraggable();
+                                        //makeDraggable();
                                         $rootScope.state.streams = $.extend(true, [], $scope.currentElements);
                                     })
                                 })
@@ -214,7 +221,7 @@ angular.module('streamPipesApp')
                         });
                         $scope.currentElements = sepas;
                         $timeout(function(){
-                            makeDraggable();
+                            //makeDraggable();
                             $rootScope.state.sepas = $.extend(true, [], $scope.currentElements);
                         })
 
@@ -231,7 +238,7 @@ angular.module('streamPipesApp')
                         });
                         $scope.currentElements = actions;
                         $timeout(function(){
-                            makeDraggable();
+                            //makeDraggable();
                             $rootScope.state.actions = $.extend(true, [], $scope.currentElements);
                         })
 
@@ -239,6 +246,7 @@ angular.module('streamPipesApp')
             };
 
             var makeDraggable = function(){
+                console.log("MAKING DRAGGABLE");
                 $('.draggable-icon').draggable({
                     revert: 'invalid',
                     helper: 'clone',
@@ -258,7 +266,7 @@ angular.module('streamPipesApp')
                 $newElement.addClass("connectable stream");
 
                 if (endpoints) {
-                    editorPlumb.addEndpoint($newElement, apiConstants.streamEndpointOptions);
+                    jsPlumb.addEndpoint($newElement, apiConstants.streamEndpointOptions);
                 }
                 return $newElement;
             };
@@ -276,13 +284,13 @@ angular.module('streamPipesApp')
                 if (endpoints) {
                     if ($newElement.data("JSON").inputNodes < 2) { //1 InputNode
 
-                        editorPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
+                        jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
                     } else {
-                        editorPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.25));
+                        jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.25));
 
-                        editorPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.75));
+                        jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.75));
                     }
-                    editorPlumb.addEndpoint($newElement, apiConstants.sepaEndpointOptions);
+                    jsPlumb.addEndpoint($newElement, apiConstants.sepaEndpointOptions);
                 }
                 return $newElement;
             };
@@ -297,7 +305,7 @@ angular.module('streamPipesApp')
                         .addClass('disabled');
                 }
                 if (endpoints) {
-                    editorPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
+                    jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
                 }
                 return $newElement;
             };
@@ -316,11 +324,11 @@ angular.module('streamPipesApp')
             }
 
             //TODO ANGULARIZE
-            //Initiate assembly and editorPlumb functionality-------
+            //Initiate assembly and jsPlumb functionality-------
             function initPlumb(){
                 console.log("JSPLUMB EDITOR READY");
                 $rootScope.state.plumbReady = true;
-                editorPlumb.bind("connection", function (info, originalEvent) {
+                jsPlumb.bind("connection", function (info, originalEvent) {
                     var $target = $(info.target);
                     if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
                         createPartialPipeline(info);
@@ -363,7 +371,7 @@ angular.module('streamPipesApp')
                                         initRecs($rootScope.state.currentPipeline, $target);
                                     }
                                 }else{
-                                    editorPlumb.detach(info.connection);
+                                    jsPlumb.detach(info.connection);
                                     displayErrors(data);
                                 }
                             })
@@ -375,7 +383,7 @@ angular.module('streamPipesApp')
 
 
                 window.onresize = function (event) {
-                    editorPlumb.repaintEverything(true);
+                    jsPlumb.repaintEverything(true);
                 };
             }
 
@@ -418,7 +426,7 @@ angular.module('streamPipesApp')
                             }
                             initTooltips();
                         }
-                        editorPlumb.repaintEverything(true);
+                        jsPlumb.repaintEverything(true);
                     }
 
                 }); //End #assembly.droppable()
@@ -457,7 +465,7 @@ angular.module('streamPipesApp')
              */
             $scope.clearAssembly = function() {
                 $('#assembly').children().not('#clear, #submit').remove();
-                editorPlumb.deleteEveryEndpoint();
+                jsPlumb.deleteEveryEndpoint();
                 $rootScope.state.adjustingPipelineState = false;
             };
 
@@ -473,7 +481,7 @@ angular.module('streamPipesApp')
             function addElementToPartialPipeline(element, pipelinePart) {
 
                 pipelinePart.addElement(element);
-                var connections = editorPlumb.getConnections({target: element});
+                var connections = jsPlumb.getConnections({target: element});
                 if (connections.length > 0) {
                     for (var i = 0, con; con = connections[i]; i++) {
                         addElementToPartialPipeline(con.source, pipelinePart);
@@ -729,22 +737,22 @@ angular.module('streamPipesApp')
                     options = apiConstants.sepaEndpointOptions;
                 }
                 var sourceEndPoint;
-                if(editorPlumb.selectEndpoints({source : $parentElement}).length > 0){
+                if(jsPlumb.selectEndpoints({source : $parentElement}).length > 0){
 
-                    if(!(editorPlumb.selectEndpoints({source : $parentElement}).get(0).isFull())){
-                        sourceEndPoint = editorPlumb.selectEndpoints({source : $parentElement}).get(0)
+                    if(!(jsPlumb.selectEndpoints({source : $parentElement}).get(0).isFull())){
+                        sourceEndPoint = jsPlumb.selectEndpoints({source : $parentElement}).get(0)
                     }else{
-                        sourceEndPoint = editorPlumb.addEndpoint($parentElement, options);
+                        sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
                     }
                 }else{
-                    sourceEndPoint = editorPlumb.addEndpoint($parentElement, options);
+                    sourceEndPoint = jsPlumb.addEndpoint($parentElement, options);
                 }
 
-                var targetEndPoint = editorPlumb.selectEndpoints({target: $target}).get(0);
+                var targetEndPoint = jsPlumb.selectEndpoints({target: $target}).get(0);
                 //console.log(targetEndPoint);
 
-                editorPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
-                editorPlumb.repaintEverything();
+                jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
+                jsPlumb.repaintEverything();
             }
 
             $scope.prepareCustomizeModal = function(element) {
@@ -905,7 +913,7 @@ angular.module('streamPipesApp')
             }
 
             function handleDeleteOption($element){
-                editorPlumb.removeAllEndpoints($element);
+                jsPlumb.removeAllEndpoints($element);
 
                 $element.remove();
             }
@@ -961,7 +969,7 @@ angular.module('streamPipesApp')
                     $newState.addClass('a'); //Flag so customize modal won't get triggered
                 }
 
-                editorPlumb.draggable($newState, {containment: 'parent'});
+                jsPlumb.draggable($newState, {containment: 'parent'});
 
                 $newState
                     .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x})
@@ -1038,14 +1046,14 @@ angular.module('streamPipesApp')
             }
             function isConnected(element) {
 
-                if (editorPlumb.getConnections({source: element}).length < 1 && editorPlumb.getConnections({target: element}).length < 1) {
+                if (jsPlumb.getConnections({source: element}).length < 1 && jsPlumb.getConnections({target: element}).length < 1) {
                     return false;
                 }
                 return true;
             }
 
             function isFullyConnected(element) {
-                return $(element).data("JSON").inputNodes == null || editorPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputNodes;
+                return $(element).data("JSON").inputNodes == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputNodes;
             }
 
             function addAutoComplete(input, datatype) {
@@ -1092,7 +1100,7 @@ angular.module('streamPipesApp')
                     maxFont: 25,
                     fontRatio: 10
                 });
-                editorPlumb.draggable($block, {containment: 'parent'});
+                jsPlumb.draggable($block, {containment: 'parent'});
 
                 $block.on("contextmenu", function(e){
                     $('#customize, #division ').hide();
@@ -1112,12 +1120,12 @@ angular.module('streamPipesApp')
 
                 //CLEANUP
                 $selectedElements.each(function(i, element){
-                    editorPlumb.remove(element);
+                    jsPlumb.remove(element);
                 });
                 //jsPlumb.remove($selectedElements);
                 //$selectedElements.remove();
                 //jsPlumb.deleteEveryEndpoint();
-                editorPlumb.addEndpoint($block, apiConstants.sepaEndpointOptions);
+                jsPlumb.addEndpoint($block, apiConstants.sepaEndpointOptions);
 
 
             }
@@ -1171,17 +1179,23 @@ angular.module('streamPipesApp')
 
         }
     ])
-    .directive('myDataBind', function(){
+    .directive('myDataBind', function($rootScope){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
-                elem.data("JSON", scope.element)
+                elem.data("JSON", scope.element);
+                elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.element.name});
+                elem.tooltip();
+                if (scope.$last){
+                    console.log("BROADCASTING");
+                    $rootScope.$broadcast("elements.loaded");
+                }
             }
         }
     })
-    .service('objectProvider', function($http, restApi, plumbService){
+    .service('objectProvider', function($http, restApi){
         var oP = this;
-        var editorPlumb = plumbService.editorPlumb;
+
 
         this.Stream = function(element){
 
@@ -1229,8 +1243,9 @@ angular.module('streamPipesApp')
             this.sepas = [];
             this.action = {};
             this.addElement = function(element){
+
                 var $element = $(element);
-                var connections = editorPlumb.getConnections({
+                var connections = jsPlumb.getConnections({
                     target : element
                 });
 
@@ -1335,7 +1350,7 @@ angular.module('streamPipesApp')
 
             var oi;
             for (var i in pipeline.sepas){
-                if (editorPlumb.getConnections({source :pipeline.sepas[i].DOM}).length == 0){
+                if (jsPlumb.getConnections({source :pipeline.sepas[i].DOM}).length == 0){
                     oi = i;
                     break;
                 }
@@ -1361,8 +1376,16 @@ angular.module('streamPipesApp')
             }
         }
     })
-    .service('plumbService', function(){
-        this.editorPlumb = jsPlumb.getInstance({Container : "assembly"});
-    })
+    //.service('plumbService', function(){
+    //
+    //        this.editorPlumb = jsPlumb.getInstance({Container: "assembly"});
+    //        this.pipelinePlumb = jsPlumb.getInstance({Container : "pipelineDisplay"});
+    //
+    //        this.refresh = function(){
+    //            this.editorPlumb = jsPlumb.getInstance({Container: "assembly"});
+    //            this.pipelinePlumb =  jsPlumb.getInstance({Container : "pipelineDisplay"});
+    //        };
+    //
+    //})
 
     ;
