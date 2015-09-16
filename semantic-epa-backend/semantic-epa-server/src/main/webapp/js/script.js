@@ -22,11 +22,8 @@ var standardDraggableOptions = {
  */
 function init(type) {
     //var debug = false;
-    state.sources = false;
-    state.sepas = false;
-    state.actions = false;
-    state.adjustingPipelineState = false;
-    state.adjustingPipeline = {};
+    //TODO in app.js packen
+
 
     //if (state.plumbReady) {
     //    clearPipelineDisplay();
@@ -196,33 +193,33 @@ function initSources(data) {
 /**
  * Gets and displays streams for clicked source
  */
-function displayStreams(e) {
-    $('#streamCollapse').attr("data-toggle", "collapse");
-    $('#streamCollapse').removeClass("disabled");
-    $('#streams').children().remove();
-    $(this).fadeTo(0, 1);
-    $('.clickable').not(this).fadeTo(200, .2);
-    var $src = $(this);
-
-    if (typeof $(this).data("streams") != "undefined") {
-        createStreams($(this).data("streams"));
-    } else {
-        var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
-        $.getJSON(url).then(function (data) {
-            var savedStreams = data;
-            $src.data("streams", savedStreams);
-            createStreams(data);
-        });
-
-
-    }
-
-    $('#streams').fadeTo(300, 1);
-    e.stopPropagation();
-
-    $('#collapseOne').collapse('show');
-
-}
+//function displayStreams(e) {
+//    $('#streamCollapse').attr("data-toggle", "collapse");
+//    $('#streamCollapse').removeClass("disabled");
+//    $('#streams').children().remove();
+//    $(this).fadeTo(0, 1);
+//    $('.clickable').not(this).fadeTo(200, .2);
+//    var $src = $(this);
+//
+//    if (typeof $(this).data("streams") != "undefined") {
+//        createStreams($(this).data("streams"));
+//    } else {
+//        var url = standardUrl + "sources/" + encodeURIComponent($(this).data("JSON").elementId) + "/events";
+//        $.getJSON(url).then(function (data) {
+//            var savedStreams = data;
+//            $src.data("streams", savedStreams);
+//            createStreams(data);
+//        });
+//
+//
+//    }
+//
+//    $('#streams').fadeTo(300, 1);
+//    e.stopPropagation();
+//
+//    $('#collapseOne').collapse('show');
+//
+//}
 
 //function createStreams(data) {
 //

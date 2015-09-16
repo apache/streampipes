@@ -1,11 +1,14 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location', '$state', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, $state) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
         var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
 
+        $scope.$on('$destroy', function () {
+            pipelinePlumb.deleteEveryEndpoint();
+        });
 
         $scope.getPipelines = function(){
             restApi.getOwnPipelines()
@@ -48,14 +51,14 @@ angular
         $scope.showPipeline = function(pipeline){
 
             clearPipelineDisplay();
-            displayPipeline(pipeline);
+            displayPipelineById(pipeline);
         };
         $scope.modifyPipeline = function(pipeline){
             showPipelineInEditor(pipeline);
 
         };
 
-        function displayPipeline(json){
+        function displayPipelineById(json){
 
             console.log("displayPipeline()");
             for (var i = 0, stream; stream = json.streams[i]; i++){
@@ -149,8 +152,8 @@ angular
                 for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
                     source = connection;
 
-                    var sourceEndpoint = pipelinePlumb.addEndpoint(source, sepaEndpointOptions);
-                    var targetEndpoint = pipelinePlumb.addEndpoint(target, leftTargetPointOptions);
+                    var sourceEndpoint = pipelinePlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
+                    var targetEndpoint = pipelinePlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
                     pipelinePlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
                 }
             }
@@ -166,13 +169,13 @@ angular
                     var id = "#" + source;
                     console.log($(id));
                     if ($(id).hasClass("sepa")){
-                        options = sepaEndpointOptions;
+                        options = apiConstants.sepaEndpointOptions;
                     }else{
-                        options = streamEndpointOptions;
+                        options = apiConstants.streamEndpointOptions;
                     }
 
                     var sourceEndpoint = pipelinePlumb.addEndpoint(source, options);
-                    var targetEndpoint = pipelinePlumb.addEndpoint(target, leftTargetPointOptions);
+                    var targetEndpoint = pipelinePlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
                     pipelinePlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
                 }
             }
@@ -196,7 +199,7 @@ angular
             $scope.hide = function(){
                 $mdDialog.hide();
             };
-            $timeout(displayPipeline($scope.pipeline));
+            $timeout(displayPipelineById($scope.pipeline));
         }
 
         //$(refreshPipelines());
@@ -209,7 +212,7 @@ angular
         //        $("#pipelineTableBody").children().not(this).removeClass("info");
         //        $("#pipelineTableBody").children().not(this).data("active", false);
         //        clearPipelineDisplay();
-        //        displayPipeline($(this).data("JSON"));
+        //        displayPipelineById($(this).data("JSON"));
         //    } else {
         //
         //    }

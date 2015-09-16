@@ -6,7 +6,37 @@ angular
         url: "http://localhost",
         port: "8080",
         contextPath : "/semantic-epa-backend",
-        api : "/api/v2"
+        api : "/api/v2",
+		streamEndpointOptions : {
+			endpoint: ["Dot", {radius: 5}],
+			paintStyle: {fillStyle: "grey"},
+			connectorStyle: {strokeStyle: "grey", lineWidth: 4},
+			connector: "Straight",
+			isSource: true,
+			anchor: ["Perimeter", {shape: "Circle"}],
+			connectorOverlays: [
+				["Arrow", {width: 25, length: 20, location: .5, id: "arrow"}],
+			]
+		},
+
+		sepaEndpointOptions : {
+			endpoint: ["Dot", {radius: 5}],
+			paintStyle: {fillStyle: "grey"},
+			connectorStyle: {strokeStyle: "grey", lineWidth: 4},
+			connector: "Straight",
+			isSource: true,
+			anchor: "Right",
+			connectorOverlays: [
+				["Arrow", {width: 25, length: 20, location: .5, id: "arrow"}],
+			]
+		},
+
+		leftTargetPointOptions : {
+			endpoint: "Rectangle",
+			paintStyle: {fillStyle: "grey"},
+			anchor: "Left",
+			isTarget: true
+		}
     })
     .run(function($rootScope, $location, restApi, authService, $state, $urlRouter) {
 
@@ -42,7 +72,13 @@ angular
         $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 	        authService.authenticate;
         });
-		$rootScope.state = new State();
+		$rootScope.state = new objectProvider.State();
+		$rootScope.state.sources = false;
+		$rootScope.state.sepas = false;
+		$rootScope.state.actions = false;
+		$rootScope.state.adjustingPipelineState = false;
+		$rootScope.state.adjustingPipeline = {};
+
     })
     .config(function($mdIconProvider) {
 	

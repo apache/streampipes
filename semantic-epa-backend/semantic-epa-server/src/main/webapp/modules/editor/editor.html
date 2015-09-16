@@ -25,7 +25,7 @@
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 
 	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements | filter:elName:strict | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-toggle="tooltip" data-placement="top" title="{{element.name}}" >
+	<span ng-repeat="element in currentElements | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-toggle="tooltip" data-placement="top" title="{{element.name}}" >
 		<img class="draggable-img"
 			  ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
 		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
@@ -36,9 +36,175 @@
 
 <div id="assembly" class="canvas">
 
-	<span id="clear" class="glyphicon glyphicon-remove"></span>
-	<md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)" class="md-accent md-raised" id="submit" onclick="submit()" type="submit">
+	<span id="clear" ng-click="clearAssembly()" class="glyphicon glyphicon-remove"></span>
+	<md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)" class="md-accent md-raised" id="submit" ng-click="submit()" type="submit">
 		Submit
 	</md-button>
 
+</div>
+
+<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
+	<li>
+		<a id="blockButton" tabindex="-1" href="">Create Block from Selected</a>
+	</li>
+	<li id='division1' class="divider"></li>
+	<li>
+		<a id="customize" tabindex="-1" href="">Customize</a>
+	</li>
+	<li>
+		<a id="adescription" tabindex="-1" href="">Description</a>
+	</li>
+	<li id='division' class="divider"></li>
+	<li>
+		<a id="delete" tabindex="-1" href="">Delete</a>
+	</li>
+</ul>
+<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
+	<li>
+		<a id="sdescription" tabindex="-1" href="">Description</a>
+	</li>
+</ul>
+
+<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog">
+		<div id="modal-content" class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" ng-click=clearCurrentElement() aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="customizeTitle">Customize</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="modalForm" class="form-horizontal">
+					<fieldset id ="customize-content">
+
+					</fieldset>
+
+				</form>
+				<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
+
+                </div> -->
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click=clearCurrentElement()>
+					Close
+				</button>
+				<button type="button" class="btn btn-primary"  ng-click=save()>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="description-title"></h4>
+			</div>
+			<div class="modal-body">
+				<p id ="modal-description"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id ="pipelineNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title">Pipeline Name</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="pipelineNameForm" class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="nameInput" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-6">
+							<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
+						<div class="col-sm-6">
+							<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
+
+						</div>
+					</div>
+				</form>
+				<div id="overwriteCheckbox" class="checkbox" style="display: none">
+					<label>
+						<input name="overwrite" type="checkbox"> Overwrite
+					</label>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" >
+						Close
+					</button>
+					<md-button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="savePipelineName()">
+						Save
+					</md-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id ="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title">Block Name</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="blockNameForm" class="form-horizontal" role="form">
+					<div class="form-group">
+						<label for="nameInput" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-6">
+							<input name="name" type="text" class="form-control"  placeholder="Please name the Block">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
+						<div class="col-sm-6">
+							<input name="description" type="text" class="form-control"  placeholder="Description">
+
+						</div>
+					</div>
+					<div id="saveBlockCheckbox" class="checkbox">
+						<label>
+							<input name="save" type="checkbox"> Save to Blocks
+						</label>
+					</div>
+				</form>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" >
+						Close
+					</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="blockElements()">
+						Create
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

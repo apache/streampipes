@@ -13,19 +13,19 @@
 	<script type="text/javascript" src="js/jquery.jsPlumb-1.7.5.js"></script>
 	<script type="text/javascript" src="js/ModalBuilder.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="js/assembly.js"></script>
-	<script type="text/javascript" src="js/AccordionBuilder.js"></script>
+	<!--<script type="text/javascript" src="js/assembly.js"></script>-->
+	<!--<script type="text/javascript" src="js/AccordionBuilder.js"></script>-->
 	<script type="text/javascript" src="js/pipelinesOld.js"></script>
-	<script type="text/javascript" src="js/buttons.js"></script>
-	<script type="text/javascript" src="js/md5.js"></script>
+	<!--<script type="text/javascript" src="js/buttons.js"></script>-->
+	<!--<script type="text/javascript" src="js/md5.js"></script>-->
 	<script type="text/javascript" src="js/flowtype.js"></script>
 	<script type="text/javascript" src="js/toastr.js"></script><!-- Toastr -->
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/jQuery.circleMenu.js"></script>
 	<script type="text/javascript" src="js/jstree.min.js"></script>
-	<script type="text/javascript" src="js/utilObjects.js"></script>
-	<script type="text/javascript" src="js/ContextMenuHandler.js"></script>
-	<script type="text/javascript" src="js/Block.js"></script>
+	<!--<script type="text/javascript" src="js/utilObjects.js"></script>-->
+	<!--<script type="text/javascript" src="js/ContextMenuHandler.js"></script>-->
+	<!--<script type="text/javascript" src="js/Block.js"></script>-->
 	<script type="text/javascript" src="js/fileSaver.js"></script>
 
 
@@ -77,7 +77,7 @@
 		var standardUrl = "http://" +window.location.host +"/semantic-epa-backend/api/";
 //		var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
 //		var currentTutorialPage;
-		var state = new State();
+//		var state = new State();
 
 		
 	</script>
@@ -93,83 +93,7 @@
 </div>
 
 
-<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
-	<li>
-		<a id="blockButton" tabindex="-1" href="">Create Block from Selected</a>
-	</li>
-	<li id='division1' class="divider"></li>
-	<li>
-		<a id="customize" tabindex="-1" href="">Customize</a>
-	</li>
-	<li>
-		<a id="adescription" tabindex="-1" href="">Description</a>
-	</li>
-	<li id='division' class="divider"></li>
-	<li>
-		<a id="delete" tabindex="-1" href="">Delete</a>
-	</li>
-</ul>
-<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
-	<li>
-		<a id="sdescription" tabindex="-1" href="">Description</a>
-	</li>
-</ul>
 
-<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-	<div class="modal-dialog">
-		<div id="modal-content" class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" onclick=clearCurrentElement() aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="customizeTitle">Customize</h4>
-			</div>
-			<div class="modal-body">
-
-				<form id="modalForm" class="form-horizontal">
-					<fieldset id ="customize-content">
-
-					</fieldset>
-
-				</form>
-				<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
-
-                </div> -->
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" onclick=clearCurrentElement()>
-					Close
-				</button>
-				<button type="button" class="btn btn-primary"  onclick=save()>
-					Save
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="description-title"></h4>
-			</div>
-			<div class="modal-body">
-				<p id ="modal-description"></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					Close
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 
 <div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -197,93 +121,7 @@
 		</div>
 	</div>
 </div>
-<div id ="pipelineNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Pipeline Name</h4>
-			</div>
-			<div class="modal-body">
 
-				<form id="pipelineNameForm" class="form-horizontal" role="form">
-					<div class="form-group">
-						<label for="nameInput" class="col-sm-2 control-label">Name</label>
-						<div class="col-sm-6">
-							<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
-						<div class="col-sm-6">
-							<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
-
-						</div>
-					</div>
-				</form>
-				<div id="overwriteCheckbox" class="checkbox" style="display: none">
-					<label>
-						<input name="overwrite" type="checkbox"> Overwrite
-					</label>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" >
-						Close
-					</button>
-					<md-button type="button" class="btn btn-primary" data-dismiss="modal" onclick="savePipelineName()">
-						Save
-					</md-button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div id ="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Block Name</h4>
-			</div>
-			<div class="modal-body">
-
-				<form id="blockNameForm" class="form-horizontal" role="form">
-					<div class="form-group">
-						<label for="nameInput" class="col-sm-2 control-label">Name</label>
-						<div class="col-sm-6">
-							<input name="name" type="text" class="form-control"  placeholder="Please name the Block">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
-						<div class="col-sm-6">
-							<input name="description" type="text" class="form-control"  placeholder="Description">
-
-						</div>
-					</div>
-					<div id="saveBlockCheckbox" class="checkbox">
-						<label>
-							<input name="save" type="checkbox"> Save to Blocks
-						</label>
-					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" >
-						Close
-					</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="blockElements()">
-						Create
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
