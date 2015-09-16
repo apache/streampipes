@@ -38,7 +38,7 @@ angular
 			isTarget: true
 		}
     })
-    .run(function($rootScope, $location, restApi, authService, $state, $urlRouter) {
+    .run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 
 		//$location.path("/setup");
     	var bypass;
@@ -128,11 +128,11 @@ angular
 		            "streampipesView@streampipes" : {
 		            	  templateUrl : "modules/editor/editor.html",
 		            	  controller: 'EditorCtrl',
-	            		  resolve:{
-	                          'AuthData':function(authService){
-	                            return authService.authenticate;
-	                          }
-	            		  }
+//	            		  resolve:{
+//	                          'AuthData':function(authService){
+//	                            return authService.authenticate;
+//	                          }
+//	            		  }
 		            }
 	              }
 	          })

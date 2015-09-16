@@ -1,6 +1,6 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
