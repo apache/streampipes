@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class Message {
 
 	private boolean success;
+	private String elementName;
 	
 	private List<Notification> notifications;
 	
@@ -19,6 +20,11 @@ public abstract class Message {
 		super();
 		this.success = success;
 		this.notifications = notifications;
+	}
+	
+	public Message(boolean success, List<Notification> notifications, String elementName) {
+		this(success, notifications);
+		this.elementName = elementName;
 	}
 	
 	
@@ -48,6 +54,14 @@ public abstract class Message {
 	public boolean addNotification(Notification notification)
 	{
 		return notifications.add(notification);
+	}
+
+	public String getElementName() {
+		return elementName;
+	}
+
+	public void setElementName(String elementName) {
+		this.elementName = elementName;
 	}
 
 	

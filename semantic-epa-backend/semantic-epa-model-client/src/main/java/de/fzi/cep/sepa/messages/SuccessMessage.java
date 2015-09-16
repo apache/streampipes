@@ -11,4 +11,8 @@ public class SuccessMessage extends Message {
 	public SuccessMessage(List<Notification> notifications) {
 		super(true, notifications.toArray(new Notification[0]));
 	}
+	
+	public SuccessMessage(String elementName, List<Notification> notifications) {
+		super(true, notifications, elementName);
+	}
 }
