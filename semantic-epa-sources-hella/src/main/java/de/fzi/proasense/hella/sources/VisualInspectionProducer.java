@@ -12,7 +12,7 @@ public class VisualInspectionProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/visual", "Visual Inspection", "Provides streams produced during visual inspection of parts");
+		SepDescription sep = new SepDescription("source-visual", "Visual Inspection", "Provides streams produced during visual inspection of parts");
 		
 		return sep;
 	}

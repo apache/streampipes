@@ -11,7 +11,7 @@ public class SapDataProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/sap", "SAP", "SAP events");
+		SepDescription sep = new SepDescription("source-sap", "SAP", "SAP events");
 		
 		return sep;
 	}

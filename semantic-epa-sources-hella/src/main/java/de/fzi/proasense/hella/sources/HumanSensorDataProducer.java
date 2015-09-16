@@ -15,7 +15,7 @@ public class HumanSensorDataProducer implements SemanticEventProducerDeclarer {
 	@Override
 	public SepDescription declareModel() {
 		
-		SepDescription sep = new SepDescription("source/human", "Human Sensor", "Provides streams generated manually by humans");
+		SepDescription sep = new SepDescription("source-human", "Human Sensor", "Provides streams generated manually by humans");
 		
 		return sep;
 	}
