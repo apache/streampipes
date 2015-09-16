@@ -829,6 +829,14 @@ angular
 	    	    url: urlBase() + "/notifications/" +notificationId
 	    	});
 	    }
+	    
+	    restApi.getSepaById = function(elementId) {
+	 	    	return $http.get(urlBase() +"/sepas/" +encodeURIComponent(elementId));
+	    }
+	    
+	    restApi.getActionById = function(elementId) {
+ 	    	return $http.get(urlBase() +"/actions/" +encodeURIComponent(elementId));
+    }
 	
 	    return restApi;
 	}]);
