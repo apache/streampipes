@@ -42,6 +42,7 @@ angular
             restApi.deleteOwnPipeline(pipelineId)
                 .success(function(data){
                     console.log(data);
+                    $scope.getPipelines();
                 })
                 .error(function(data){
                     console.log(data);

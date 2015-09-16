@@ -9,14 +9,14 @@
 			      <md-subheader class="md-primary">Unread Messages</md-subheader>
 			      <md-list layout-padding>
 			        <md-list-item class="md-3-line" ng-repeat="notification in unreadNotifications">
-			    
+			         	<md-icon md-svg-icon="content:ic_markunread_24px" aria-label="Mark as read" class="md-accent" ng-click="changeNotificationStatus(notification._id)"></md-icon>
 			            <div class="md-list-item-text">
 			              <h3>{{notification.title}}</h3>
-			              <h4>{{notification.targetedActor}}</h4>
+			              <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for {{notification.targetedUser}}</h4>
 			              <p>
 			                {{notification.description}}
 			              </p>
-			            </div>
+			            </div> 
 			        </md-list-item>
 			      </md-list>
 			 </section>
@@ -24,13 +24,14 @@
 			      <md-subheader class="md-primary">All Messages</md-subheader>
 			      <md-list layout-padding>
 			        <md-list-item class="md-3-line" ng-repeat="notification in notifications">
+			         
 			            <div class="md-list-item-text">
 			              <h3>{{notification.title}}</h3>
-			              <h4>{{notification.targetedActor}}</h4>
+			              <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for {{notification.targetedUser}}</h4>
 			              <p>
 			                {{notification.description}}
 			              </p>
-			            </div>
+			            </div> 
 			        </md-list-item>
 			      </md-list>
 			 </section>
