@@ -40,6 +40,11 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
 			<groupId>org.rendersnake</groupId>
 			<artifactId>rendersnake</artifactId>
 			<version>1.8</version>
