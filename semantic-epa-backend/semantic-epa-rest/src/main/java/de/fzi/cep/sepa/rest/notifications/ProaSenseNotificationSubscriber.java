@@ -11,17 +11,18 @@ import de.fzi.cep.sepa.messages.ProaSenseNotificationMessage;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import eu.proasense.internal.RecommendationEvent;
 
-public class ProaSenseNotificationSubscriber implements IMessageListener {
+public class ProaSenseNotificationSubscriber implements IMessageListener, Runnable {
 
 	
 	private TDeserializer deserializer;
+	private String topic;
 	
-	public ProaSenseNotificationSubscriber() {
+	public ProaSenseNotificationSubscriber(String topic) {
 		this.deserializer = new TDeserializer(new TBinaryProtocol.Factory());
-		
+		this.topic = topic;
 	}
 	
-	public void subscribe(String topic)
+	public void subscribe()
 	{
 		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getBrokerConfig().getZookeeperUrl(), topic,
 				new String[] {topic}, this);
@@ -40,4 +41,9 @@ public class ProaSenseNotificationSubscriber implements IMessageListener {
 			e.printStackTrace();
 		}
 			}
+
+	@Override
+	public void run() {
+		subscribe();
+	}
 }
