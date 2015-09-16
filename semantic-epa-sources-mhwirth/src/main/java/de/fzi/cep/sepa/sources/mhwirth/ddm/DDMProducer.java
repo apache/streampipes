@@ -12,7 +12,7 @@ public class DDMProducer implements SemanticEventProducerDeclarer{
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/ddm", "DDM", "Derrick Drilling Machine");
+		SepDescription sep = new SepDescription("source-ddm", "DDM", "Derrick Drilling Machine");
 		sep.setIconUrl(SourcesConfig.iconBaseUrl + "/DDM_Icon" +"_HQ.png");
 		return sep;
 	}
