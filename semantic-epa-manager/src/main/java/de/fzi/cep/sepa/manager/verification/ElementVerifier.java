@@ -99,13 +99,13 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 	}
 	
 	private Message errorMessage() {
-		return new ErrorMessage(collectNotifications());
+		return new ErrorMessage(elementDescription.getName(), collectNotifications());
 	}
 	
 	private Message successMessage() {
 		List<Notification> notifications = collectNotifications();
 		notifications.add(NotificationType.STORAGE_SUCCESS.uiNotification());
-		return new SuccessMessage(notifications);
+		return new SuccessMessage(elementDescription.getName(), notifications);
 	}
 	
 	private List<Notification> collectNotifications()
