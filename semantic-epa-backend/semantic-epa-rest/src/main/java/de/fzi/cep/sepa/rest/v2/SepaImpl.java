@@ -115,7 +115,7 @@ public class SepaImpl extends AbstractRestInterface implements SepaElementOperat
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getElement(String username, String elementUri) {
+	public String getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
 			return toJson(ClientModelTransformer.toSEPAClientModel(requestor.getSEPAById(elementUri)));

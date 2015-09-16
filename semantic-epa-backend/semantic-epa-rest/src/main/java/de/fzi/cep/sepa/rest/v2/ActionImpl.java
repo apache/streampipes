@@ -115,9 +115,12 @@ public class ActionImpl extends AbstractRestInterface implements SepaElementOper
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getElement(String username, String elementUri) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
+		try {
+			return toJson(ClientModelTransformer.toSECClientModel(requestor.getSECById(elementUri)));
+		} catch (URISyntaxException e) {
+			return toJson(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage()));
+		}
 	}
 	
 
