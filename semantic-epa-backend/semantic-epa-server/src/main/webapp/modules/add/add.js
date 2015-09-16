@@ -16,7 +16,14 @@ angular.module('streamPipesApp')
         	angular.forEach(data, function(element, index) {
         		$scope.results[index] = {};
         		$scope.results[index].success = element.success;
-        		$scope.results[index].msg = element.notifications[0].description;
+        		$scope.results[index].elementName = element.elementName;
+        		$scope.results[index].details = [];
+        		angular.forEach(element.notifications, function(notification, i) {
+        			var detail = {};
+        			detail.description = notification.description;
+        			detail.title = notification.title;
+        			$scope.results[index].details.push(detail);
+        		})
         	});
         })
 	}
@@ -41,11 +48,20 @@ angular.module('streamPipesApp')
 	        restApi.add(uri, true)
             .success(function (data) {
             	 $scope.results[i].loading = false;
-            	 $scope.results[i].msg = data.notifications[0].description;
+            	 $scope.results[i].success = data.success;
+            	 $scope.results[i].elementName = data.elementName;
+            	 $scope.results[i].details = [];
+            	 angular.forEach(data.notifications, function(notification, j) {
+         			var detail = {};
+         			detail.description = notification.description;
+         			detail.title = notification.title;
+         			$scope.results[i].details.push(detail);
+         		})
             })
             .error(function (data) {
             	 $scope.results[i].loading = false;
-            	 $scope.results[i].msg = data.notifications[0].description;
+            	 $scope.results[i].description = data.notifications[0].description;
+            	 $scope.results[i].title = data.notifications[0].title;
             })
             .then(function () {
 	            $scope.addElements(uris, ++i);

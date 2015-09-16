@@ -43,12 +43,17 @@
 		class="md-whiteframe-z2">
 		
 		<md-content class="md-padding">
-		<div flex layout="row">{{result.elementId}} <md-progress-circular class="md-accent" style="width:24px;height:24px;" md-mode="indeterminate" ng-show="result.loading"></md-progress-circular>
+		<div flex layout="row"><h3>{{result.elementName}}</h3> <md-progress-circular class="md-accent" style="width:24px;height:24px;" md-mode="indeterminate" ng-show="result.loading"></md-progress-circular>
 		<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="!result.loading && result.success"></md-icon>
 		<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!result.loading && !(result.success)"></md-icon>
 			    		
 		</div>
-		<div ng-show="!result.loading">{{result.msg}}</div>
+		<div ng-repeat = "detail in result.details">
+			<div ng-show="!result.loading">{{detail.title}}</div>
+			<div ng-show="!result.loading">{{detail.description}}</div>
+			<md-divider/>
+		</div>
+		
 		</md-content>
 	</div>
 	</div>

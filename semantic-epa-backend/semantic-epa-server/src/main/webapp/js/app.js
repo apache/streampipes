@@ -58,8 +58,9 @@ angular
         		function(event, toState, toParams, fromState, fromParams){ 
         	var isLogin = toState.name === "streampipes.login";
         	var isSetup = toState.name === "streampipes.setup";
+        	var isRegister = toState.name === "streampipes.register";
         	console.log("Setup: " +isSetup +", Login: " +isLogin);
-            if(isLogin || isSetup){
+            if(isLogin || isSetup || isRegister){
                return;
             }
             if($rootScope.authenticated === false) {
@@ -128,11 +129,11 @@ angular
 		            "streampipesView@streampipes" : {
 		            	  templateUrl : "modules/editor/editor.html",
 		            	  controller: 'EditorCtrl',
-//	            		  resolve:{
-//	                          'AuthData':function(authService){
-//	                            return authService.authenticate;
-//	                          }
-//	            		  }
+	            		  resolve:{
+	                          'AuthData':function(authService){
+	                            return authService.authenticate;
+	                          }
+	            		  }
 		            }
 	              }
 	          })
@@ -439,20 +440,31 @@ angular
 	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, $state) {
 		
 		$scope.loading = false;
+		$scope.authenticationFailed = false;
 			
 		$scope.logIn = function() {
+			  $scope.authenticationFailed = false;
 	    	  $scope.loading = true;
 		      $http.post("/semantic-epa-backend/api/v2/admin/login", $scope.credentials)
 		      .then(
 		          function(response) { // success
-		            $rootScope.username = response.data.info.authc.principal.username;
-		            $rootScope.email = response.data.info.authc.principal.email;
-		            $rootScope.authenticated = true;
-		            $scope.loading = false;
-		            $state.go("streampipes");
+		        	  $scope.loading = false;
+		        	  if (response.data.success)
+		        		  {
+		        		    $rootScope.username = response.data.info.authc.principal.username;
+				            $rootScope.email = response.data.info.authc.principal.email;
+				            $rootScope.authenticated = true;
+				            $state.go("streampipes");
+		        		  }
+		        	  else
+		        		  {
+		        		  	$rootScope.authenticated = false;
+		        		  	$scope.authenticationFailed = true;
+		        		  }
+		            
 		          }, function(response) { // error
 		            $rootScope.authenticated = false;
-		            return $q.reject("Login failed");
+		            $scope.authenticationFailed = true;
 		          }
 		        )      
 	      };    

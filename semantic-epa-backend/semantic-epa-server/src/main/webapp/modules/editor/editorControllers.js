@@ -200,7 +200,7 @@ angular.module('streamPipesApp')
                                     //$scope.createElements(streams, "stream", "#editor-icon-stand");
                                     //console.log($scope.currentElements);
                                     $timeout(function(){
-                                        //makeDraggable();
+                                        makeDraggable();
                                         $rootScope.state.streams = $.extend(true, [], $scope.currentElements);
                                     })
                                 })

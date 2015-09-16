@@ -15,6 +15,9 @@
 				<md-button class="md-accent md-raised" type="submit"
 					ng-disabled="loginForm.$pristine || loginForm.$invalid || loading">Login</md-button>
 				<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+					<div class="md-warn" ng-show="authenticationFailed">
+					      <h4>The password you entered is incorrect. Please try again.</h4>
+					</div>
 				</div>
 			</form>
 			<a ui-sref="streampipes.register">Create new account</a>
