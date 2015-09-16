@@ -15,6 +15,7 @@
 							<md-button class="md-accent md-raised" type="submit"
 								ng-disabled="addFromEndpointForm.$pristine || addFromEndpointForm.$invalid || loading">Add Elements</md-button>
 							<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+							<div ng-show="loading"><h5>This may take up to two minutes.</h5></div>
 							</div>
 						</form>
 					</div>
@@ -29,6 +30,7 @@
 						<div class="form-actions">
 						<md-button class="md-accent md-raised" type="submit"
 							ng-disabled="addElementForm.$pristine || addElementForm.$invalid || loading">Add Element</md-button>
+							<div ng-show="loading"><h5>This may take up to two minutes.</h5></div>
 						</div>
 					</form>
 				</div>
