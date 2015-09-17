@@ -91,6 +91,10 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 								lastTimestamp = event.getTimestamp();
 							} catch (Exception e) { /*e.printStackTrace();*/}
 							}
+						else if (entry.getKey().equals("variable_timestamp"))
+						{
+							event.setTimestamp(obj.get("variable_timestamp").getAsLong());
+						}
 						else values.put(entry.getKey(), convert(obj.get(entry.getKey())));
 					}
 				}
