@@ -24,11 +24,11 @@ public class MaterialMovementStream extends AbstractHellaStream {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_type", "", Utils.createURI(SO.Text)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_type", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "location", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "event", "", Utils.createURI(SO.Text)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "shuttle", "", Utils.createURI(SO.Number)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "shuttle", "", Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "rightPiece", "", Utils.createURI("http://schema.org/Boolean")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "leftPiece", "", Utils.createURI("http://schema.org/Boolean")));
 		
