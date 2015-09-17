@@ -14,7 +14,6 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
-import de.fzi.cep.sepa.model.client.user.User;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -34,14 +33,15 @@ public class PipelineExecutor {
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
 		
 		SecInvocation sec = getSECInvocationGraph(graphs);
-		RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getCorrespondingPipeline(), sec.getDescription(), sec.getName());
-		StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
-		storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 		
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), graphs).invokeGraphs();
+		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).invokeGraphs();
 		
 		if (status.isSuccess()) 
 		{
+			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getCorrespondingPipeline(), sec.getDescription(), sec.getName());
+			StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
+			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
+			
 			setPipelineStarted(pipeline);
 		}
 		return status;
@@ -50,7 +50,7 @@ public class PipelineExecutor {
 	public PipelineOperationStatus stopPipeline()
 	{
 		List<InvocableSEPAElement> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), graphs).detachGraphs();
+		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).detachGraphs();
 		
 		if (status.isSuccess())
 		{

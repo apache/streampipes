@@ -52,7 +52,7 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		validators.add(new GeneralVerifier<T>(elementDescription));		
 	}
 	
-	protected abstract void store(String username, boolean publicElement);
+	protected abstract StorageState store(String username, boolean publicElement);
 	
 	protected abstract void update(String username);
 	
@@ -73,8 +73,10 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 		verify();
 		if (isVerifiedSuccessfully())
 		{
-			store(username, publicElement);
-			return successMessage();
+			StorageState state = store(username, publicElement);
+			if (state == StorageState.STORED) return successMessage();
+			else if (state == StorageState.ALREADY_IN_SESAME) return addedToUserSuccessMessage();
+			else return skippedSuccessMessage();
 		}
 		else return errorMessage();
 		
@@ -105,6 +107,18 @@ public abstract class ElementVerifier<T extends NamedSEPAElement> {
 	private Message successMessage() {
 		List<Notification> notifications = collectNotifications();
 		notifications.add(NotificationType.STORAGE_SUCCESS.uiNotification());
+		return new SuccessMessage(elementDescription.getName(), notifications);
+	}
+	
+	private Message skippedSuccessMessage() {
+		List<Notification> notifications = collectNotifications();
+		notifications.add(new Notification("Already exists", "This element is already in your list of elements, skipped."));
+		return new SuccessMessage(elementDescription.getName(), notifications);
+	}
+	
+	private Message addedToUserSuccessMessage() {
+		List<Notification> notifications = collectNotifications();
+		notifications.add(new Notification("Already stored", "Element description already stored, added element to user"));
 		return new SuccessMessage(elementDescription.getName(), notifications);
 	}
 	

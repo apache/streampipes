@@ -43,9 +43,9 @@ public class TestInvocation {
 		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
 		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, null);
 		List<InvocableSEPAElement> graphs = builder.buildGraph();
-		PipelineOperationStatus status = new GraphSubmitter(pipelineId, graphs).invokeGraphs();
+		PipelineOperationStatus status = new GraphSubmitter(pipelineId, pipeline.getName(), graphs).invokeGraphs();
 		System.out.println(new Gson().toJson(status));
-		PipelineOperationStatus status2 = new GraphSubmitter(pipelineId, graphs).detachGraphs();
+		PipelineOperationStatus status2 = new GraphSubmitter(pipelineId, pipeline.getName(), graphs).detachGraphs();
 		System.out.println(new Gson().toJson(status2));
 		
 		/*

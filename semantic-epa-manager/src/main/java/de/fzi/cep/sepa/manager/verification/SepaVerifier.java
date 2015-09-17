@@ -20,9 +20,14 @@ public class SepaVerifier extends ElementVerifier<SepaDescription>{
 	}
 
 	@Override
-	protected void store(String username, boolean publicElement) {
-		storageApi.storeSEPA(elementDescription);
-		userService.addOwnSepa(username, elementDescription.getUri(), publicElement);
+	protected StorageState store(String username, boolean publicElement) {
+		StorageState storageState = StorageState.STORED;
+		
+		if (!storageApi.exists(elementDescription)) storageApi.storeSEPA(elementDescription);
+		else storageState = StorageState.ALREADY_IN_SESAME;
+		if (!(userService.getOwnSepaUris(username).contains(elementDescription.getUri()))) userService.addOwnSepa(username, elementDescription.getUri(), publicElement);
+		else storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
+		return storageState;
 	}
 
 	@Override

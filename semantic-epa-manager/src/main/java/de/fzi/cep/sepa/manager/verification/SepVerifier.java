@@ -20,15 +20,19 @@ public class SepVerifier extends ElementVerifier<SepDescription>{
 	}
 
 	@Override
-	protected void store(String username, boolean publicElement) {
+	protected StorageState store(String username, boolean publicElement) {
+		StorageState storageState = StorageState.STORED;
 		/*
 		if (SecurityUtils.getSubject().isAuthenticated()) {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			StorageManager.INSTANCE.getUserStorageAPI().addSource(username, elementDescription.getElementId());
 		}
 */
-		storageApi.storeSEP(elementDescription);
-		userService.addOwnSource(username, elementDescription.getUri(), publicElement);
+		if (!storageApi.exists(elementDescription)) storageApi.storeSEP(elementDescription);
+		else storageState = StorageState.ALREADY_IN_SESAME;
+		if (!(userService.getOwnSourceUris(username).contains(elementDescription.getUri()))) userService.addOwnSource(username, elementDescription.getUri(), publicElement);
+		else storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
+		return storageState;
 	}
 
 	@Override

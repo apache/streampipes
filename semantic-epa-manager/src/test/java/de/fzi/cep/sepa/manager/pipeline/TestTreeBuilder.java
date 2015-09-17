@@ -125,6 +125,6 @@ public class TestTreeBuilder {
 			*/
 		}
 		
-		new GraphSubmitter(pipeline.getPipelineId(), graphs).invokeGraphs();
+		new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).invokeGraphs();
 	}
 }

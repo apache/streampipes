@@ -32,7 +32,7 @@ public class HttpRequestBuilder {
 		} catch(Exception e)
 		{
 			e.printStackTrace();
-			return new PipelineElementStatus(payload.getBelongsTo(), false, e.getMessage());
+			return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), false, e.getMessage());
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class HttpRequestBuilder {
 		} catch(Exception e)
 		{
 			e.printStackTrace();
-			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline(), false, e.getMessage());
+			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline(), payload.getName(), false, e.getMessage());
 		}
 	}
 	
@@ -63,6 +63,6 @@ public class HttpRequestBuilder {
 	
 	private PipelineElementStatus convert(de.fzi.cep.sepa.model.impl.Response response)
 	{
-		return new PipelineElementStatus(response.getElementId(), response.isSuccess(), response.getOptionalMessage());
+		return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), response.isSuccess(), response.getOptionalMessage());
 	}
 }
