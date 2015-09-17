@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.proasense.hella.sources.EnrichedEventProducer;
 import de.fzi.proasense.hella.sources.HumanSensorDataProducer;
 import de.fzi.proasense.hella.sources.MontracProducer;
 import de.fzi.proasense.hella.sources.MouldingMachineProducer;
@@ -22,7 +23,7 @@ public class Init extends EmbeddedModelSubmitter {
 
 	@Override
 	protected List<SemanticEventProducerDeclarer> sourceDeclarers() {
-		return Arrays.asList(new MontracProducer(), new HumanSensorDataProducer(), new MouldingMachineProducer(), new VisualInspectionProducer());
+		return Arrays.asList(new MontracProducer(), new HumanSensorDataProducer(), new MouldingMachineProducer(), new VisualInspectionProducer(), new EnrichedEventProducer());
 	}
 
 	@Override
