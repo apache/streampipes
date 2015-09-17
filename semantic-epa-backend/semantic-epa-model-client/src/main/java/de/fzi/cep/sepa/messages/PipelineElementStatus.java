@@ -3,13 +3,15 @@ package de.fzi.cep.sepa.messages;
 public class PipelineElementStatus {
 
 	private String elementId;
+	private String elementName;
 	private String optionalMessage;
 	
 	private boolean success;
 	
-	public PipelineElementStatus(String elementId, boolean success, String optionalMessage)
+	public PipelineElementStatus(String elementId, String elementName, boolean success, String optionalMessage)
 	{
 		this.elementId = elementId;
+		this.elementName = elementName;
 		this.optionalMessage = optionalMessage;
 		this.success = success;
 	}
@@ -25,4 +27,10 @@ public class PipelineElementStatus {
 	public boolean isSuccess() {
 		return success;
 	}
+
+	public String getElementName() {
+		return elementName;
+	}
+	
+	
 }
