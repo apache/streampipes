@@ -61,7 +61,7 @@ public class HellaEnrichedStream extends AbstractHellaStream {
 		stream.setEventSchema(schema);
 		stream.setName(HellaVariables.EnrichedEvent.eventName());
 		stream.setDescription(HellaVariables.EnrichedEvent.description());
-		stream.setUri(sep.getUri() + "/montrac");
+		stream.setUri(sep.getUri() + "/hella-enriched");
 		
 		return stream;
 	}
