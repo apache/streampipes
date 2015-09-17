@@ -168,17 +168,29 @@ angular.module('streamPipesApp')
    };	
    
    $scope.showAlert = function(ev, title, content) {
-
-	    $mdDialog.show(
-	      $mdDialog.alert()
-	        .parent(angular.element(document.querySelector('#topDiv')))
-	        .clickOutsideToClose(true)
-	        .title(title)
-	        .content(angular.toJson(content, true))
-	        .ariaLabel('JSON-LD')
-	        .ok('Done')
-	        .targetEvent(ev)
-	    );
+	   $mdDialog.show({
+ 	      controller: JsonLdDialogController,
+ 	      templateUrl: 'modules/myelements/templates/jsonldDialog.tmpl.html',
+ 	      parent: angular.element(document.body),
+ 	      clickOutsideToClose:true,
+ 	      locals : {
+               content : content,
+               title : title
+           }
+ 	    });
    };
+   
+   function JsonLdDialogController($scope, $mdDialog, content, title) {
+   	
+   	$scope.content = content;
+   	$scope.title = title;
+   	
+ 	  $scope.hide = function() {
+ 	    $mdDialog.hide();
+ 	  };
+ 	  $scope.cancel = function() {
+ 	    $mdDialog.cancel();
+ 	  };
+ 	}
    
 });

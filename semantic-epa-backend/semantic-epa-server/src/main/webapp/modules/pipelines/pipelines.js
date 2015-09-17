@@ -30,16 +30,15 @@ angular
         $scope.getPipelines();
 
         $scope.showDialog = function(data){
-            $mdDialog.show(
-                $mdDialog.alert()
-                    .parent(angular.element(document.body))
-                    .clickOutsideToClose(true)
-                    .title(data.notifications[0].title)
-                    .content(data.notifications[0].description)
-                    .ariaLabel('Success Message')
-                    .ok("Close")
-
-            );
+        	 $mdDialog.show({
+        	      controller: PipelineStatusDialogController,
+        	      templateUrl: 'modules/pipelines/templates/pipelineOperationDialog.tmpl.html',
+        	      parent: angular.element(document.body),
+        	      clickOutsideToClose:true,
+        	      locals : {
+                      data : data
+                  }
+        	    })
         };
 
         $scope.startPipeline = function(pipelineId) {
@@ -240,6 +239,18 @@ angular
             };
             $timeout(displayPipelineById($scope.pipeline));
         }
+        
+        function PipelineStatusDialogController($scope, $mdDialog, data) {
+        	
+        	$scope.data = data;
+        	
+      	  $scope.hide = function() {
+      	    $mdDialog.hide();
+      	  };
+      	  $scope.cancel = function() {
+      	    $mdDialog.cancel();
+      	  };
+      	}
 
         //$(refreshPipelines());
 
@@ -257,3 +268,4 @@ angular
         //    }
         //});
     }]);
+
