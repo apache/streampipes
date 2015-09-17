@@ -20,6 +20,7 @@ import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.PipelineOperation;
@@ -93,8 +94,8 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	{
 		try {
 		de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
-		Operations.startPipeline(pipeline);
-		return constructSuccessMessage(NotificationType.PIPELINE_START_SUCCESS.uiNotification());
+		PipelineOperationStatus status = Operations.startPipeline(pipeline);
+		return toJson(status);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -109,8 +110,8 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	{
 		try {
 			de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
-			Operations.stopPipeline(pipeline);
-			return constructSuccessMessage(NotificationType.PIPELINE_STOP_SUCCESS.uiNotification());
+			PipelineOperationStatus status = Operations.stopPipeline(pipeline);
+			return toJson(status);
 			} catch (Exception e)
 			{
 				return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
