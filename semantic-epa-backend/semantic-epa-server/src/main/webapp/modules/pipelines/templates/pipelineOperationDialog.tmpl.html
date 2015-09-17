@@ -11,8 +11,8 @@
   </md-toolbar>
   <md-dialog-content style="max-width:800px;max-height:810px; ">
     <div>
-    	<h4><md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="msg.success"></md-icon>
-				<md-icon md-svg-icon="alert:ic_warning_24px" aria-label="Action" class="md-accent" ng-show="!msg.success"></md-icon> {{data.title}}</h4>
+    	<h4><md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="data.success"></md-icon>
+				<md-icon md-svg-icon="alert:ic_warning_24px" aria-label="Action" class="md-accent" ng-show="!data.success"></md-icon> {{data.title}}</h4>
     	<div ng-repeat="msg in data.elementStatus">
 	    	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
 			class="md-whiteframe-z2">
