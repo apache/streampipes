@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
@@ -131,7 +132,8 @@ public class RestletGenerator {
 		InetAddress addr;
 		try {
 			addr = InetAddress.getLocalHost();
-			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
+			if (!addr.getCanonicalHostName().equals("localhost")) return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
+			else return Protocol.getProtocol("http").getScheme()  + "://" +ClientConfiguration.INSTANCE.getWebappHost() +":";
 		} catch (UnknownHostException e) {
 			return "http://localhost:";
 		}	
