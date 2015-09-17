@@ -116,6 +116,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 			JsonPrimitive primitive = (JsonPrimitive) jsonElement;
 			if (primitive.isNumber()) return VariableType.DOUBLE;
 			else if (primitive.isString()) return VariableType.STRING;
+			else if (primitive.isBoolean()) return VariableType.BOOLEAN;
 			else return VariableType.LONG;
 		}
 		else throw new Exception();
