@@ -5,6 +5,12 @@ angular
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
         var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
+        $scope.starting = false;
+        $scope.stopping = false;
+
+        $scope.isStarting = function(){
+            return $scope.starting;
+        }
 
         $scope.$on('$destroy', function () {
             pipelinePlumb.deleteEveryEndpoint();
@@ -23,26 +29,58 @@ angular
         };
         $scope.getPipelines();
 
+        $scope.showDialog = function(data){
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .clickOutsideToClose(true)
+                    .title(data.notifications[0].title)
+                    .content(data.notifications[0].description)
+                    .ariaLabel('Success Message')
+                    .ok("Close")
+
+            );
+        };
 
         $scope.startPipeline = function(pipelineId) {
-        	restApi.startPipeline(pipelineId).success(function(data) {
-        		console.log("starting pipeline");
-        		$scope.getPipelines();
-        	});
+            $scope.starting = true;
+            console.log("starting pipeline");
+        	restApi.startPipeline(pipelineId)
+                .success(function(data) {
+                    $scope.starting = false;
+                    console.log(data);
+                    $scope.showDialog(data);
+                    $scope.getPipelines();
+        	    })
+                .error(function(data){
+                    console.log(data);
+                    $scope.starting = false;
+                    $scope.showDialog({notifications : [{title : "Network Error", description : "Please check your Network."}]});
+
+                });
         };
         
         $scope.stopPipeline = function(pipelineId) {
-        	restApi.stopPipeline(pipelineId).success(function(data) {
-        		console.log("stopping pipeline");
-        		$scope.getPipelines();
-        	});
+            console.log("stopping pipeline");
+            $scope.stopping = true;
+        	restApi.stopPipeline(pipelineId)
+                .success(function(data) {
+                    $scope.stopping = false;
+                    $scope.showDialog(data);
+                    $scope.getPipelines();
+        	    })
+                .error(function(data){
+                    console.log(data);
+                    $scope.stopping = false;
+                    $scope.showDialog({notifications : [{title : "Network Error", description : "Please check your Network."}]});
+
+                });
         };
 
         $scope.deletePipeline = function(pipelineId) {
             restApi.deleteOwnPipeline(pipelineId)
                 .success(function(data){
                     console.log(data);
-                    $scope.getPipelines();
                 })
                 .error(function(data){
                     console.log(data);
