@@ -7,7 +7,8 @@ import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 
 public class NotificationListener implements ServletContextListener {
 
-	private static final String iccsKafkaTopic = "proasense.recommendationevents";
+	private static final String iccsKafkaTopic = "eu.proasense.internal.pandda.mhwirth.recommendation";
+	private static final String iccsKafkaHellaTopic = "eu.proasense.internal.pandda.hella.recommendation";
 	private static final String internalNotificationTopic = "de.fzi.cep.sepa.notifications";
 	
 
@@ -24,6 +25,7 @@ public class NotificationListener implements ServletContextListener {
 			try {
 			new Thread(new ProaSenseNotificationSubscriber(internalNotificationTopic)).start();
 			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaTopic)).start();
+			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaHellaTopic)).start();
 			} catch (Exception e)
 			{
 				e.printStackTrace();
