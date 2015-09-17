@@ -679,20 +679,25 @@ angular.module('streamPipesApp')
                 for (var i = 0; i < recs.length; i++) {
 
                     el = recs[i];
-                    var recommendedElement = getElementByElementId(el.elementId);
-                    if (typeof recommendedElement != "undefined") {
+                    getElementByElementId(el.elementId)
+                        .success(function(element){
+                            console.log(element);
+                            if (typeof element != "undefined") {
 
-                        var recEl = new objectProvider.recElement(recommendedElement);
-                        $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
-                            "data-toggle": "tooltip",
-                            "data-placement": "top",
-                            "data-delay": '{"show": 100, "hide": 100}',
-                            title: recEl.name
-                        }).appendTo($('ul', $element));
-                        $('ul', $element).circleMenu('init');
-                    } else {
-                        console.log(i);
-                    }
+                                var recEl = new objectProvider.recElement(element);
+                                $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
+                                    "data-toggle": "tooltip",
+                                    "data-placement": "top",
+                                    "data-delay": '{"show": 100, "hide": 100}',
+                                    title: recEl.name
+                                }).appendTo($('ul', $element));
+                                $('ul', $element).circleMenu('init');
+                            } else {
+                                console.log(i);
+                            }
+                        });
+
+
                 }
 
                 initTooltips();
@@ -702,17 +707,22 @@ angular.module('streamPipesApp')
 
 
                 if (elId.indexOf("sepa") >= 0) { //Sepa
-                    for (var i = 0, element; element = $rootScope.state.sepas[i]; i++) {
-                        if (element.elementId === elId) {
-                            return element;
-                        }
-                    }
+                    return restApi.getSepaById(elId)
+
+                    //for (var i = 0, element; element = $rootScope.state.sepas[i]; i++) {
+                    //    if (element.elementId === elId) {
+                    //        return element;
+                    //    }
+                    //}
                 } else {		//Action
-                    for (var i = 0, element; element = $rootScope.state.actions[i]; i++) {
-                        if (element.elementId === elId) {
-                            return element;
-                        }
-                    }
+
+                    return restApi.getActionById(elId);
+
+                    //for (var i = 0, element; element = $rootScope.state.actions[i]; i++) {
+                    //    if (element.elementId === elId) {
+                    //        return element;
+                    //    }
+                    //}
                 }
             }
 
