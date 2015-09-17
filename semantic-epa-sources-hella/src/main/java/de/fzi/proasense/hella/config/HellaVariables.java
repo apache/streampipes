@@ -7,7 +7,8 @@ public enum HellaVariables {
 	Scrap("visualInspection", "Scrap", "Scrap indicator of parts after visual inspection", "SEPA.SEP.VisualInspection.Scrap"),
 	RawMaterialCertificate("materialCertificate", "Raw Material Certificate", "", "SEPA.SEP.Human.RawMaterialCertificate"),
 	RawMaterialChange("materialChange", "Raw Material Change", "", "SEPA.SEP.Human.RawMaterialChange"),
-	ProductionPlan("machinePlan", "Production Plan", "", "SEPA.SEP.Human.ProductionPlan");
+	ProductionPlan("machinePlan", "Production Plan", "", "SEPA.SEP.Human.ProductionPlan"), 
+	EnrichedEvent("hella-enriched", "Hella Enriched Event", "", "SEPA.SEP.Hella.Enriched");
 	
 	String tagNumber;
 	String eventName;
