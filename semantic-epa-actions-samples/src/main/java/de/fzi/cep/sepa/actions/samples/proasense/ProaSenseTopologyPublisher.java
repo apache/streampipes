@@ -54,18 +54,16 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 		i++;
 		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
-		try {
 			Optional<byte[]> bytesMessage = buildDerivedEvent(json);
 			if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
-			else System.out.println("empty event");
-		} catch (IllegalArgumentException e) {
-			System.out.println("skipping event");
-		}
-		
+			else System.out.println("empty event or skipping");
+				
 	}
 
 	private Optional<byte[]> buildDerivedEvent(String json) throws IllegalArgumentException {
 		//System.out.println(json);
+		
+		boolean isValidTime = true;
 		DerivedEvent event = new DerivedEvent();
 		
 		event.setComponentId("CEP");
@@ -89,7 +87,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 								if (event.getTimestamp() < lastTimestamp) 
 									{
 										System.out.println("invalid time");
-										throw new IllegalArgumentException();
+										isValidTime = false;
 									}
 								lastTimestamp = event.getTimestamp();
 							}
@@ -106,7 +104,8 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 			e.printStackTrace();
 		}
 		event.setEventProperties(values);
-		return serialize(event);
+		if (isValidTime) return serialize(event);
+		else return Optional.empty();
 	}
 
 	private ComplexValue convert(JsonElement jsonElement) throws Exception {
