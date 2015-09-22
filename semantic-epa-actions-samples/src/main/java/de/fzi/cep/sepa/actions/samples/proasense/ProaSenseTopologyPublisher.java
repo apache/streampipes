@@ -54,12 +54,17 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 		i++;
 		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
-		Optional<byte[]> bytesMessage = buildDerivedEvent(json);
-		if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
-		else System.out.println("empty event");
+		try {
+			Optional<byte[]> bytesMessage = buildDerivedEvent(json);
+			if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
+			else System.out.println("empty event");
+		} catch (IllegalArgumentException e) {
+			System.out.println("skipping event");
+		}
+		
 	}
 
-	private Optional<byte[]> buildDerivedEvent(String json) {
+	private Optional<byte[]> buildDerivedEvent(String json) throws IllegalArgumentException {
 		//System.out.println(json);
 		DerivedEvent event = new DerivedEvent();
 		
@@ -79,17 +84,14 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 					{
 						if (entry.getKey().equals("time")) 
 							{
-							try {
-							
 								event.setTimestamp(obj.get("time").getAsLong());
 								//System.out.println("Timestamp, " +event.getTimestamp());
 								if (event.getTimestamp() < lastTimestamp) 
 									{
 										System.out.println("invalid time");
-										throw new Exception();
+										throw new IllegalArgumentException();
 									}
 								lastTimestamp = event.getTimestamp();
-							} catch (Exception e) { /*e.printStackTrace();*/}
 							}
 						else if (entry.getKey().equals("variable_timestamp"))
 						{
