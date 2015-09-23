@@ -18,6 +18,7 @@ public class User {
 	protected String username;
 	protected String email;
 	protected String password;
+		
 	protected List<Pipeline> pipelines;
 	
 	protected List<Element> ownSources;

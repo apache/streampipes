@@ -1,10 +1,14 @@
 package de.fzi.cep.sepa.model.client.user;
 
+import java.util.List;
+
 public class RegistrationData {
 
 	private String username;
 	private String password;
 	private String email;
+	
+	private List<String> roles;
 	
 	public RegistrationData()
 	{
@@ -29,6 +33,16 @@ public class RegistrationData {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+	
+	
 	
 	
 }
