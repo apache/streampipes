@@ -13,13 +13,14 @@ import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import pl.zientarski.SchemaMapper;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class TestJsonSchema {
 
 	public static void main(String[] args)
 	{
 		try {
-			new TestJsonSchema().getJsonSchema(SepDescription.class);
+			new TestJsonSchema().getJsonSchemaJackson(SepaInvocation.class);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
