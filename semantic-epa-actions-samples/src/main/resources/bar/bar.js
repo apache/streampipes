@@ -2,9 +2,11 @@ var chart;
 var client;
 
 var barData = [
-            {label: 'A', values: [{time: 1370044800, y: 33}, {time: 1370044801, y: 33}]},
-            {label: 'B', values: [{time: 1370044800, y: 34}, {time: 1370044801, y: 34}]},
-            {label: 'C', values: [{time: 1370044800, y: 33}, {time: 1370044801, y: 33}]}
+            {label: 'A', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
+            {label: 'B', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
+            {label: 'C', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
+            {label: 'D', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]}
+            {label: 'E', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]}
         ],
         length = 40;
 
@@ -58,6 +60,7 @@ function connectStomp(brokerUrl, inputTopic, listPropertyName, key, value) {
 				var dobj = {};
 			  dobj.time = currentTime;
 			  dobj.y = element.value;
+			  if (barData[index] == undefined) barData[index] = {};
 			  barData[index].values.push(dobj);
 			  barData[index].label = element.key;
 			}); 
