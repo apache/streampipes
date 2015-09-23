@@ -55,6 +55,7 @@ public class HellaEnrichedStream extends AbstractHellaStream {
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "QC5_SW11", "", Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "SW8_PM1orSW9", "", Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "SW9_PM2", "", Utils.createURI(SO.Number)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "LACQUERING", "", Utils.createURI(SO.Number)));
 		
 
 		schema.setEventProperties(eventProperties);
