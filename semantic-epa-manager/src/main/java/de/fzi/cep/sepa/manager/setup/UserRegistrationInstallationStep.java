@@ -24,7 +24,7 @@ public class UserRegistrationInstallationStep implements InstallationStep {
 		this.adminUsername = adminUsername;
 		this.adminPassword = adminPassword;
 		roles = new HashSet<>();
-		roles.add(Role.ADMINISTRATOR);
+		roles.add(Role.SYSTEM_ADMINISTRATOR);
 		roles.add(Role.USER_DEMO);
 	}
 
