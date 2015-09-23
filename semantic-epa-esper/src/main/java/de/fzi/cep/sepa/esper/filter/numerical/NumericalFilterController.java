@@ -75,6 +75,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		operation.addOption(new Option("<="));
 		operation.addOption(new Option(">"));
 		operation.addOption(new Option(">="));
+		operation.addOption(new Option("=="));
 		staticProperties.add(operation);
 		
 		try {
@@ -103,6 +104,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		if (stringOperation.equals("<=")) operation = "LT";
 		else if (stringOperation.equals("<")) operation="LE";
 		else if (stringOperation.equals(">=")) operation = "GE";
+		else if (stringOperation.equals("==")) operation = "EQ";
 		
 		
 		String filterProperty = SepaUtils.getMappingPropertyName(sepa,

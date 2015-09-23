@@ -39,6 +39,8 @@ public class NumericalFilter extends EsperEventEngine<NumericalFilterParameter>{
 			numericalFilter = Expressions.lt(params.getFilterProperty(), params.getThreshold());
 		if (params.getNumericalOperator() == NumericalOperator.GT)
 			numericalFilter = Expressions.gt(params.getFilterProperty(), params.getThreshold());
+		if (params.getNumericalOperator() == NumericalOperator.EQ)
+			numericalFilter = Expressions.eq(params.getFilterProperty(), params.getThreshold());
 	
 		model.whereClause(numericalFilter);
 		logger.info("Generated EPL: " +model.toEPL());
