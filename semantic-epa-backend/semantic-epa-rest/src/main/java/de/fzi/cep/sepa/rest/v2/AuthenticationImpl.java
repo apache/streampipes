@@ -77,7 +77,7 @@ public class AuthenticationImpl implements Authentication {
         }
 
         Set<Role> roles = new HashSet<Role>();
-        roles.add(Role.ADMINISTRATOR);
+        roles.add(Role.SYSTEM_ADMINISTRATOR);
         roles.add(Role.USER_DEMO);
   
         de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(data.getUsername(), data.getEmail(), data.getPassword(), roles);

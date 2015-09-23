@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.rest.notifications;
 
+import java.text.SimpleDateFormat;
+
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -32,16 +34,22 @@ public class ProaSenseNotificationSubscriber implements IMessageListener, Runnab
 	@Override
 	public void onEvent(String json) {
 		RecommendationEvent event = new RecommendationEvent();
-		System.out.println("event");
+		String recommendedDate = "";
 		try {
 			deserializer.deserialize(event,  json.getBytes());
-			StorageManager.INSTANCE.getNotificationStorageApi().addNotification(new ProaSenseNotificationMessage(event.getEventName(), event.getTimestamp(), event.getAction(), event.getActor()));
+			if (event.getEventProperties().containsKey("action_timestamp")) recommendedDate += " at time " +parseDate(Long.parseLong(event.getEventProperties().get("action_timestamp").getValue()));
+			StorageManager.INSTANCE.getNotificationStorageApi().addNotification(new ProaSenseNotificationMessage(event.getEventName(), event.getTimestamp(), event.getAction() +recommendedDate, event.getActor()));
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 			}
 
+	private String parseDate(long timestamp)
+	{
+		return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timestamp);
+	}
+	
 	@Override
 	public void run() {
 		subscribe();
