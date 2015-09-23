@@ -60,7 +60,11 @@ function connectStomp(brokerUrl, inputTopic, listPropertyName, key, value) {
 				var dobj = {};
 			  dobj.time = currentTime;
 			  dobj.y = element.value;
-			  if (barData[index] == undefined) barData[index] = {};
+			  if (barData[index] == undefined) 
+				  {
+				  	barData[index] = {};
+				  	barData[index].values = [];
+				  }
 			  barData[index].values.push(dobj);
 			  barData[index].label = element.key;
 			}); 
