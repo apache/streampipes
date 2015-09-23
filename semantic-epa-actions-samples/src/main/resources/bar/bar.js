@@ -5,7 +5,7 @@ var barData = [
             {label: 'A', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
             {label: 'B', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
             {label: 'C', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
-            {label: 'D', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]}
+            {label: 'D', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]},
             {label: 'E', values: [{time: 1370044800, y: 20}, {time: 1370044801, y: 20}]}
         ],
         length = 40;
