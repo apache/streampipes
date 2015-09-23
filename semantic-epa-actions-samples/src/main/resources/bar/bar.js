@@ -68,14 +68,14 @@ function connectStomp(brokerUrl, inputTopic, listPropertyName, key, value) {
 			  barData[index].values.push(dobj);
 			  barData[index].label = element.key;
 			}); 
-			if (marray.length < 3)
+			if (marray.length < 5)
 				{
-					for(var i = 0; i < (3-marray.length);i++)
+					for(var i = 0; i < (5-marray.length);i++)
 						{
 						  var dobj = {};
 						  dobj.time = currentTime;
 						  dobj.y = 0;
-						  barData[2].values.push(dobj);
+						  barData[4-i].values.push(dobj);
 						}
 				}
 			//chart.push(newData);	
