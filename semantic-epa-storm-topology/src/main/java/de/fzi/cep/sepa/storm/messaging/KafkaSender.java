@@ -9,11 +9,10 @@ import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
-import de.fzi.cep.sepa.storm.controller.ConfigurationMessage;
-import de.fzi.cep.sepa.storm.controller.Operation;
 import de.fzi.cep.sepa.storm.utils.Constants;
 import de.fzi.cep.sepa.storm.utils.Serializer;
 
+//TODO Do I need this class?
 public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 
 	private ProaSenseInternalProducer kafkaDataProducer;
@@ -22,8 +21,6 @@ public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 	
 	public KafkaSender(String producerKafkaUrl, String producerTopic, String configurationId)
 	{
-		this.kafkaDataProducer = new ProaSenseInternalProducer(producerKafkaUrl, producerTopic +  Constants.SEPA_DATA);
-		this.kafkaConfigProducer = new ProaSenseInternalProducer(producerKafkaUrl, producerTopic +  Constants.SEPA_CONFIG);
 		this.configurationId = configurationId;
 	}
 
@@ -47,14 +44,7 @@ public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 
 	@Override
 	public void discard() {
-		ConfigurationMessage<B> config = new ConfigurationMessage<>(Operation.DETACH, configurationId, null);
-		try {
-			System.out.println("discarding");
-			kafkaConfigProducer.send(Serializer.serialize(config));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//TODO
 	}
 
 	

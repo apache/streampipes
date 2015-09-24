@@ -23,8 +23,7 @@ public class Main {
 //		 conf.put("bootstrap.servers", "ipe-koi04.fzi.de:9092"); //kafka connection
 // 		 conf.put("zookeeper.servers", "ipe-koi04.fzi.de:2181");
 //		 LocalCluster cluster = new LocalCluster();
-//		 cluster.submitTopology("sentiment-detection", conf,
-//		 sentimentDetectionTopology);
+//		 cluster.submitTopology("sentiment-detection", conf, sentimentDetectionTopology);
 
 		// Production settings
 		Config productionConfig = new Config();
@@ -33,7 +32,7 @@ public class Main {
 		productionConfig.put("bootstrap.servers", "ipe-koi04.fzi.de:9092"); //kafka connection
 		productionConfig.put("zookeeper.servers", "ipe-koi04.fzi.de:2181");
 		productionConfig.setDebug(true);
-		System.setProperty("storm.jar", "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm");
+//		System.setProperty("storm.jar", "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm");
 		StormSubmitter.submitTopology("sentiment-detection", productionConfig, sentimentDetectionTopology);
 
 //		StormSubmitter.s

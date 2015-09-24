@@ -19,41 +19,52 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.storm.controller.ConfigurationMessage;
-import de.fzi.cep.sepa.storm.controller.Operation;
 import de.fzi.cep.sepa.util.ThriftSerializer;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.tuple.Tuple;
 
 
-public class SinkSepaBolt<B extends BindingParameters> extends SepaBolt<B> {
+public class SinkSepaBolt<B extends BindingParameters> extends BaseRichBolt {
 
 private static final long serialVersionUID = -3694170770048756860L;
+
+	private String id;
     
     private static Logger log = LoggerFactory.getLogger(SinkSepaBolt.class);
     
     private Map<String, KafkaProducer<String, byte[]>> kafkaProducers;
     private Map<String, ActiveMQPublisher> activeMqProducers;
-    private Map<String, String> topics;
+    private String topic;
     private Gson gson;
     private TSerializer serializer;
+    private Map<String, B> boltSettings;
+    private ProaSenseInternalProducer producer;
         
     public SinkSepaBolt(String id) {
-        super(id);
+        this.id = id;
     }
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        super.prepare(map, topologyContext, outputCollector);
+    	// TODO fix the prepare methode
+//        super.prepare(map, topologyContext, outputCollector);
+    	boltSettings = new HashMap<>();
+
+        this.topic = "new.data.storm.yeah.stream";
+
+		producer = new ProaSenseInternalProducer("ipe-koi04.fzi.de:9092", topic);
         this.kafkaProducers = new HashMap<>();
-        this.topics = new HashMap<>();
+        // TODO set topic
         this.activeMqProducers = new HashMap<>();
         this.gson = new Gson();
         this.serializer = new TSerializer(new TBinaryProtocol.Factory());
@@ -65,13 +76,7 @@ private static final long serialVersionUID = -3694170770048756860L;
         //outputFieldsDeclarer.declareStream("abc", new Fields("payload"));
     }
 
-	@Override
-	protected void performEventAction(Map<String, Object> event, B parameters, String configurationId) {
-		event.remove("configurationId");
-		if (kafkaProducers.containsKey(configurationId)) sendToKafka(event, parameters, configurationId);
-		else if (activeMqProducers.containsKey(configurationId)) sendToJms(event, parameters, configurationId);
-	}
-	
+
 	private void sendToJms(Map<String, Object> event, B parameters,
 			String configurationId) {
 		try {
@@ -87,12 +92,8 @@ private static final long serialVersionUID = -3694170770048756860L;
 
 	private void sendToKafka(Map<String, Object> event, B parameters, String configurationId)
 	{
-		try {
-			kafkaProducers.get(configurationId).send(new ProducerRecord<String, byte[]>(topics.get(configurationId), toOutputFormat(event, parameters)));
-		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//			kafkaProducers.get(configurationId).send(new ProducerRecord<String, byte[]>(topic, toOutputFormat(event, parameters)));
+			producer.send(toJsonOutputFormat(event));
 	}
 	
 	private byte[] toOutputFormat(Map<String, Object> event, B parameters) throws TException
@@ -113,45 +114,17 @@ private static final long serialVersionUID = -3694170770048756860L;
 	}
 
 	@Override
-	protected void performConfigAction(ConfigurationMessage<B> params)
-	{
-		super.performConfigAction(params);
-		if (params.getOperation() == Operation.BIND)
-		{
-			EventGrounding outputGrounding = params.getBindingParameters().getGraph().getOutputStream().getEventGrounding();
-			if (outputGrounding.getTransportProtocol() instanceof KafkaTransportProtocol) addKafkaProducer(params, (KafkaTransportProtocol) outputGrounding.getTransportProtocol());
-			else if (outputGrounding.getTransportProtocol() instanceof JmsTransportProtocol) addJmsProducer(params, (JmsTransportProtocol) outputGrounding.getTransportProtocol());
-			String outputBrokerTopic = outputGrounding.getTransportProtocol().getTopicName();
-	        topics.put(params.getConfigurationId(), outputBrokerTopic);
-	        System.out.println("bind");
-		}
-		else if (params.getOperation() == Operation.DETACH)
-		{
-			System.out.println("detach");
-			if (kafkaProducers.containsKey(params.getConfigurationId())) kafkaProducers.remove(params.getConfigurationId());
-			if (activeMqProducers.containsKey(params.getConfigurationId())) activeMqProducers.remove(params.getConfigurationId());
-			topics.remove(params.getConfigurationId());
-		}
-	}
-	
-	private void addJmsProducer(ConfigurationMessage<B> params,
-			JmsTransportProtocol protocol) {
-		try {
-			ActiveMQPublisher publisher = new ActiveMQPublisher(protocol.getBrokerHostname() +":" +protocol.getPort(), protocol.getTopicName());
-			activeMqProducers.put(params.getConfigurationId(), publisher);
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void execute(Tuple tuple) {
+		Map<String, Object> payload = (Map<String, Object>) tuple.getValueByField("payload");
+		
+		sendToKafka(payload, boltSettings.get(payload.get("configurationId")), (String) payload.get("configurationId"));
 	}
 
-	private void addKafkaProducer(ConfigurationMessage<B> params, KafkaTransportProtocol protocol)
-	{
-		String outputBrokerUrl = protocol.getBrokerHostname();
-		int outputBrokerPort = protocol.getKafkaPort();
-        HashMap<String, Object> kafkaConfig = Maps.newHashMap();
-        kafkaConfig.put("bootstrap.servers", outputBrokerUrl +":" +outputBrokerPort);
-        KafkaProducer<String, byte[]> kafkaProducer = new KafkaProducer<>(kafkaConfig, new StringSerializer(), new ByteArraySerializer());
-        kafkaProducers.put(params.getConfigurationId(), kafkaProducer);
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

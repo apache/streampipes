@@ -6,7 +6,7 @@
 		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>semantic-epa-storm-topology-sentiment</artifactId>
+	<artifactId>semantic-epa-storm-topology-sentiment-new</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
@@ -23,7 +23,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!--  		<dependency>
+  		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
 			<version>3.4</version>
@@ -54,7 +54,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
--->
+
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>

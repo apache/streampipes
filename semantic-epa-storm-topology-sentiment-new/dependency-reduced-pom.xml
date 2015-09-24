@@ -6,7 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>semantic-epa-storm-topology-sentiment</artifactId>
+  <artifactId>semantic-epa-storm-topology-sentiment-new</artifactId>
   <build>
     <plugins>
       <plugin>
@@ -74,10 +74,6 @@
         <exclusion>
           <artifactId>clj-time</artifactId>
           <groupId>clj-time</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>joda-time</artifactId>
-          <groupId>joda-time</groupId>
         </exclusion>
         <exclusion>
           <artifactId>compojure</artifactId>
