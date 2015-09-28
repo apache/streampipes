@@ -120,7 +120,7 @@ angular
 	            url: '/streampipes',
 	            views: {
 	              "top" : {
-	            	  templateUrl : "top.html",
+	            	  templateUrl : "top.html"
 	              	},
 	              "container" : {
 		            	  templateUrl : "streampipes.html",
@@ -463,6 +463,8 @@ angular
 		        		  }
 		            
 		          }, function(response) { // error
+                      console.log(response);
+		            $scope.loading = false;
 		            $rootScope.authenticated = false;
 		            $scope.authenticationFailed = true;
 		          }

@@ -8,9 +8,6 @@ angular
         $scope.starting = false;
         $scope.stopping = false;
 
-        $scope.isStarting = function(){
-            return $scope.starting;
-        }
 
         $scope.$on('$destroy', function () {
             pipelinePlumb.deleteEveryEndpoint();
@@ -46,14 +43,19 @@ angular
             console.log("starting pipeline");
         	restApi.startPipeline(pipelineId)
                 .success(function(data) {
-                    $scope.starting = false;
+
                     console.log(data);
                     $scope.showDialog(data);
                     $scope.getPipelines();
+
+                    $scope.starting = false;
+
         	    })
                 .error(function(data){
                     console.log(data);
+
                     $scope.starting = false;
+
                     $scope.showDialog({notifications : [{title : "Network Error", description : "Please check your Network."}]});
 
                 });
@@ -64,13 +66,18 @@ angular
             $scope.stopping = true;
         	restApi.stopPipeline(pipelineId)
                 .success(function(data) {
+
                     $scope.stopping = false;
+
+
                     $scope.showDialog(data);
                     $scope.getPipelines();
         	    })
                 .error(function(data){
                     console.log(data);
+
                     $scope.stopping = false;
+
                     $scope.showDialog({notifications : [{title : "Network Error", description : "Please check your Network."}]});
 
                 });
@@ -87,16 +94,21 @@ angular
         };
 
         $scope.showPipeline = function(pipeline){
+            if(pipeline.display){
+                pipeline.display=false;
+            }else{
+                pipeline.display = true;
+            }
 
-            clearPipelineDisplay();
-            displayPipelineById(pipeline);
+            //clearPipelineDisplay();
+            //displayPipeline(pipeline);
         };
         $scope.modifyPipeline = function(pipeline){
             showPipelineInEditor(pipeline);
 
         };
 
-        function displayPipelineById(json){
+        function displayPipeline(json){
 
             console.log("displayPipeline()");
             for (var i = 0, stream; stream = json.streams[i]; i++){
@@ -110,6 +122,20 @@ angular
             connectPipelineElements(json, false);
             pipelinePlumb.repaintEverything(true);
         }
+
+        $scope.elementTextIcon = function (string){
+            var result ="";
+            if (string.length <= 4){
+                result = string;
+            }else {
+                var words = string.split(" ");
+                words.forEach(function(word, i){
+                    result += word.charAt(0);
+                });
+            }
+            return result.toUpperCase();
+        }
+
         function createPreviewElement(type, element, i, json){
 
             var $state = $("<span>")
@@ -230,15 +256,6 @@ angular
         function showPipelineInEditor(id){
         	$state.go("streampipes.edit", {pipeline : id});
         }
-
-        function PipelineDialogController($scope, $mdDialog, pipeline){
-            $scope.pipeline = pipeline;
-
-            $scope.hide = function(){
-                $mdDialog.hide();
-            };
-            $timeout(displayPipelineById($scope.pipeline));
-        }
         
         function PipelineStatusDialogController($scope, $mdDialog, data) {
         	
@@ -267,5 +284,35 @@ angular
         //
         //    }
         //});
-    }]);
+    }])
+    .directive('myStreamDataBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                elem.data("JSON", scope.stream);
+                elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.stream.name});
+                elem.tooltip();
+            }
+        }
+    })
+    .directive('mySepaDataBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                elem.data("JSON", scope.sepa);
+                elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.sepa.name});
+                elem.tooltip();
+            }
+        }
+    })
+    .directive('myActionDataBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                elem.data("JSON", scope.pipeline.action);
+                elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.pipeline.action.name});
+                elem.tooltip();
+            }
+        }
+    });
 

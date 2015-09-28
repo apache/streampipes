@@ -402,14 +402,14 @@ td {
 #streamDisplay{
 	padding: 5px 0 5px 5px;
 	display:inline-block;
-	width: 40%;
+	width: 20%;
 	height: 100%;
 	position:relative;
 }
 #sepaDisplay{
 	padding: 5px 0 5px 0;
 	display:inline-block;
-	width:40%;
+	width:60%;
 	height: 100%;
 	position:relative;
 }
@@ -550,4 +550,26 @@ md-list .md-button {
 }
 .element-text-icon-small{
 	font-size: 18px;
+}
+
+.pipeline-display-element{
+
+	height: 80px;
+	width: 80px;
+	display: block;
+	vertical-align: middle;
+	background-color: white;
+	line-height: 80px;
+	text-align: center;
+	margin-left:auto;
+	margin-right:auto;
+	font-size: 30px;
+	margin-top: 10px;
+}
+.pipeline-display-element-img{
+	height: 72%;
+	width: 72%;
+
+
+
 }
