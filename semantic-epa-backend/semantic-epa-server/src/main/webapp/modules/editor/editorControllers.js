@@ -13,7 +13,7 @@ angular.module('streamPipesApp')
             $scope.currentModifiedPipeline = $stateParams.pipeline;
             //var editorPlumb;
             var textInputFields = [];
-
+            var connCount = 1;
 
 
 
@@ -329,6 +329,7 @@ angular.module('streamPipesApp')
                 console.log("JSPLUMB EDITOR READY");
                 $rootScope.state.plumbReady = true;
                 jsPlumb.bind("connection", function (info, originalEvent) {
+                    console.log("connection" + connCount++);
                     var $target = $(info.target);
                     if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
                         createPartialPipeline(info);
@@ -637,9 +638,12 @@ angular.module('streamPipesApp')
 
 
             function initRecs(pipeline, $element) {
-                $.when(getRecommendations(pipeline))
-                    .then(function (data) {
+                console.log("Recommending");
+                restApi.recommendPipelineElement(pipeline)
+                    .success(function (data) {
+                        console.log(data);
                         if (data.success) {
+
                             $element.append($("<span><ul>").addClass("recommended-list"));
                             $("ul", $element)
                                 .circleMenu({
@@ -656,20 +660,16 @@ angular.module('streamPipesApp')
                             console.log(data);
 
                         }
-                    }, function (data) {
+                    })
+                    .error(function(data){
                         console.log(data);
                     });
             }
 
             function getRecommendations(partialPipeline) {
-                var url = standardUrl + "pipelines/recommend";
+                console.log("RECOMMENDING");
 
-                return $.ajax({
-                    url: url,
-                    data: JSON.stringify(partialPipeline),
-                    processData: false,
-                    type: 'POST'
-                });
+                return ;
             }
 
 
