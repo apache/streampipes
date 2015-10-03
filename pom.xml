@@ -97,7 +97,8 @@
 		<module>semantic-epa-storm-topology-sentiment</module>
 		<module>semantic-epa-sources-hella</module>
     	<module>semantic-epa-sources-mhwirth</module>
-  </modules>
+    	<module>semantic-epa-kpi</module>
+	</modules>
 
 	<!-- Build Settings -->
 	<build>
@@ -138,7 +139,7 @@
 		<repository>
 			<id>laus</id>
 			<name>nexus repository</name>
-			<url>https://laus.fzi.de/nexus/content/repositories/public/</url>
+			<url>http://laus.fzi.de/nexus/content/repositories/public/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
