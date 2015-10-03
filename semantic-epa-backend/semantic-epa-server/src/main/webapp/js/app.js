@@ -59,6 +59,7 @@ angular
         	var isLogin = toState.name === "streampipes.login";
         	var isSetup = toState.name === "streampipes.setup";
         	var isRegister = toState.name === "streampipes.register";
+        
         	console.log("Setup: " +isSetup +", Login: " +isLogin);
             if(isLogin || isSetup || isRegister){
                return;
