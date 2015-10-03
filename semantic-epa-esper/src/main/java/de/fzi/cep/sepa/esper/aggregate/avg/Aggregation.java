@@ -19,7 +19,7 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		}
 		else if (bindingParameters.getAggregationType() == AggregationType.MIN)
 		{
-			aggregationType = "min("; 
+			aggregationType = "mkin("; 
 		}
 		else 
 		{
