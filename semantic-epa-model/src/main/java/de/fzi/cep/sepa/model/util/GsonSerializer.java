@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.model.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+//import de.fzi.cep.sepa.kpi.KpiRequest;
+//import de.fzi.cep.sepa.kpi.Operation;
 import de.fzi.cep.sepa.model.AbstractSEPAElement;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -20,6 +22,7 @@ public class GsonSerializer {
 		builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
 		builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
 		builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
+		//builder.registerTypeAdapter(Operation.class, new JsonLdSerializer<Operation>());
 		builder.setPrettyPrinting();
 		return builder.create();
 	}
