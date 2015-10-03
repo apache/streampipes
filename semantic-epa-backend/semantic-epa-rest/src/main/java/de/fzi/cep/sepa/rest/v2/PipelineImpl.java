@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -167,6 +168,16 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
+	}
+
+
+	@PUT
+	@Path("/{pipelineId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Override
+	public String overwritePipeline(@PathParam("username") String username, String pipeline) {
+		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(Utils.getGson().fromJson(pipeline, Pipeline.class));
+		return toJson(Notifications.success("Pipeline modified"));
 	}
 
 }
