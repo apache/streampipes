@@ -93,7 +93,7 @@ public class Utils {
 		try {
 			return Optional.of(new BufferedReader(new FileReader(file)));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return Optional.empty();
 		}
 	}
@@ -104,6 +104,10 @@ public class Utils {
     
     public static String toJsonString(String key, Object value) {
 		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(QUOTATIONMARK).append(value).append(QUOTATIONMARK).append(COMMA).toString();
+	}
+    
+    public static String toJsonBoolean(String key, Object value) {
+		return new StringBuilder().append(QUOTATIONMARK).append(key).append(QUOTATIONMARK).append(COLON).append(value).append(COMMA).toString();
 	}
 	
 	public static String toJsonstr(String key, Object value, boolean last) {

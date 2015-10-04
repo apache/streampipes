@@ -4,6 +4,7 @@ import java.io.File;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
 
 public abstract class AbstractNycStream implements EventStreamDeclarer{
 

@@ -11,6 +11,7 @@ import java.util.Optional;
 import com.google.gson.JsonObject;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class TaxiStreamGenerator implements Runnable {

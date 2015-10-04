@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.sources.samples.taxi;
+package de.fzi.cep.sepa.sources.samples.csv;
 
 public enum SimulationSettings {
 
@@ -42,3 +42,4 @@ public enum SimulationSettings {
 	}
 	
 }
+
