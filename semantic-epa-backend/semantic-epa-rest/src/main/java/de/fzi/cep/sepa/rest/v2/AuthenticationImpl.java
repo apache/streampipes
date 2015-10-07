@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.user.RegistrationData;
 import de.fzi.cep.sepa.model.client.user.Role;
@@ -72,17 +73,17 @@ public class AuthenticationImpl implements Authentication {
 	public String doRegister(String registrationData) {
 	
     	RegistrationData data = fromJson(registrationData, RegistrationData.class);
-		if (StorageManager.INSTANCE.getUserStorageAPI().checkUser(data.getEmail())) {
-            return toJson(new ErrorMessage(NotificationType.REGISTRATION_FAILED.uiNotification()));
-        }
 
         Set<Role> roles = new HashSet<Role>();
-        roles.add(Role.SYSTEM_ADMINISTRATOR);
-        roles.add(Role.USER_DEMO);
-  
-        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(data.getUsername(), data.getEmail(), data.getPassword(), roles);
-        StorageManager.INSTANCE.getUserStorageAPI().storeUser(user);
-        return toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
+        roles.add(data.getRole());
+
+        if (StorageManager.INSTANCE.getUserStorageAPI().emailExists(data.getEmail())) return toJson(Notifications.error("This email address already exists. Please choose another address."));
+        else if (StorageManager.INSTANCE.getUserStorageAPI().usernameExists(data.getUsername())) return toJson(Notifications.error("This username address already exists. Please choose another username."));
+        else {
+	        de.fzi.cep.sepa.model.client.user.User user = new de.fzi.cep.sepa.model.client.user.User(data.getUsername(), data.getEmail(), data.getPassword(), roles);
+	        StorageManager.INSTANCE.getUserStorageAPI().storeUser(user);
+	        return toJson(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
+        }
 	}
     
     @GET
