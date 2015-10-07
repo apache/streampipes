@@ -7,6 +7,7 @@ public class RegistrationData {
 	private String username;
 	private String password;
 	private String email;
+	private Role role;
 	
 	private List<String> roles;
 	
@@ -41,8 +42,14 @@ public class RegistrationData {
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
-	
-	
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role selectedRole) {
+		this.role = selectedRole;
+	}
 	
 	
 }
