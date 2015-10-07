@@ -10,10 +10,21 @@
 				<md-input-container flex> <label>Username:</label>
 				<input type="text" ng-model="username" required> </md-input-container>
 				<md-input-container flex> <label>Password:</label>
-				<input type="text" ng-model="password" required> </md-input-container>
-				
+				<input type="password" ng-model="password" required> </md-input-container>
+				<md-input-container> <label>Role</label> <md-select
+					ng-model="selectedRole"> <md-option
+					ng-repeat="role in roles" value="{{role.internalName}}">
+				{{role.name}} </md-option> </md-select> </md-input-container>
 				<md-button class="md-accent md-raised" type="submit"
 					ng-disabled="registerForm.$pristine || registerForm.$invalid">Register</md-button>
+					<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+					<div class="md-warn" ng-show="registrationFailed">
+					      <h4>Registration failed. Please try again.</h4>
+					      <h5>{{errorMessage}}</h5>
+					</div>
+					<div class="md-success" ng-show="registrationSuccess">
+					      <h4>Registration successful. Go to <a ui-sref="streampipes.login">Login</a> page</h4>
+					</div>
 			</form>
 			<a ui-sref="streampipes.login">Back to login page</a>
 		</div>
