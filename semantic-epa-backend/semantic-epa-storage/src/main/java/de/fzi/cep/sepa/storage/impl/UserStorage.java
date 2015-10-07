@@ -49,6 +49,18 @@ public class UserStorage {
         dbClient.shutdown();
     }
     
+    public boolean emailExists(String email)
+    {
+    	List<User> users = getAllUsers();
+    	return users.stream().anyMatch(u -> u.getEmail().equals(email));
+    }
+    
+    public boolean usernameExists(String username)
+    {
+    	List<User> users = getAllUsers();
+    	return users.stream().anyMatch(u -> u.getUsername().equals(username));
+    }
+    
     /**
     *
     * @param username
