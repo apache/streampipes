@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.storm.topology;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jms.JMSException;
@@ -22,11 +23,14 @@ import com.google.gson.Gson;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.ThriftSerializer;
+import backtype.storm.spout.Scheme;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -39,32 +43,33 @@ public class SinkSepaBolt<B extends BindingParameters> extends BaseRichBolt {
 private static final long serialVersionUID = -3694170770048756860L;
 
 	private String id;
-    
+	private String broker;
+	private String topic;
+	private Scheme scheme;
+
     private static Logger log = LoggerFactory.getLogger(SinkSepaBolt.class);
     
     private Map<String, KafkaProducer<String, byte[]>> kafkaProducers;
     private Map<String, ActiveMQPublisher> activeMqProducers;
-    private String topic;
     private Gson gson;
     private TSerializer serializer;
     private Map<String, B> boltSettings;
     private ProaSenseInternalProducer producer;
         
-    public SinkSepaBolt(String id) {
-        this.id = id;
-    }
+    public SinkSepaBolt(String id, EventStream eventStream) {
+    	this.id = id;
+		this.broker = Utils.getBroker(eventStream);		
+		this.topic = Utils.getTopic(eventStream);
+		this.scheme = Utils.getScheme(eventStream);
+	}
+    
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-    	// TODO fix the prepare methode
-//        super.prepare(map, topologyContext, outputCollector);
     	boltSettings = new HashMap<>();
 
-        this.topic = "new.data.storm.yeah.stream";
-
-		producer = new ProaSenseInternalProducer("ipe-koi04.fzi.de:9092", topic);
+		producer = new ProaSenseInternalProducer(broker, topic);
         this.kafkaProducers = new HashMap<>();
-        // TODO set topic
         this.activeMqProducers = new HashMap<>();
         this.gson = new Gson();
         this.serializer = new TSerializer(new TBinaryProtocol.Factory());
@@ -73,7 +78,6 @@ private static final long serialVersionUID = -3694170770048756860L;
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        //outputFieldsDeclarer.declareStream("abc", new Fields("payload"));
     }
 
 
@@ -82,23 +86,20 @@ private static final long serialVersionUID = -3694170770048756860L;
 		try {
 			activeMqProducers.get(configurationId).sendText(new String(toOutputFormat(event, parameters)));
 		} catch (JMSException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		};
 	}
 
-	private void sendToKafka(Map<String, Object> event, B parameters, String configurationId)
+	private void sendToKafka(Map<String, Object> event)
 	{
-//			kafkaProducers.get(configurationId).send(new ProducerRecord<String, byte[]>(topic, toOutputFormat(event, parameters)));
 			producer.send(toJsonOutputFormat(event));
 	}
 	
 	private byte[] toOutputFormat(Map<String, Object> event, B parameters) throws TException
 	{
-		if (parameters.getGraph().getOutputStream().getEventGrounding().getTransportFormats().get(0).getRdfType().contains(URI.create(MessageFormat.Json)))
+		if (Utils.isJson(parameters.getGraph().getOutputStream()))
 			return toJsonOutputFormat(event);
 		else 
 			return toThriftOutputFormat(event);
@@ -115,9 +116,16 @@ private static final long serialVersionUID = -3694170770048756860L;
 
 	@Override
 	public void execute(Tuple tuple) {
-		Map<String, Object> payload = (Map<String, Object>) tuple.getValueByField("payload");
+		Map<String, Object> result = new HashMap<>();
+
+		List<String> fields = scheme.getOutputFields().toList();
 		
-		sendToKafka(payload, boltSettings.get(payload.get("configurationId")), (String) payload.get("configurationId"));
+		for (String field : fields) {
+//			if (tuple.contains(field))
+				result.put(field, tuple.getValueByField(field));
+		}
+		
+		sendToKafka(result);
 	}
 
 	public String getId() {

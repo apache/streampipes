@@ -21,6 +21,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.storage.impl.SepaInvocationStorageImpl;
 import de.fzi.cep.sepa.storm.sentiment.config.StormConfig;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
@@ -74,7 +75,9 @@ public class SentimentDetectionController extends EpDeclarer<SentimentDetectionP
 		// save invocation graph to couchDB
 		// Upload jar to storm topology with the parameters of the invocationGrapf id, couchDB host
 		
-		executeCommand("/home/philipp/Downloads/apache-storm-0.9.5/bin/storm jar /home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment-new/target/semantic-epa-storm-topology-sentiment-new-0.0.1-SNAPSHOT.jar de.fzi.cep.sepa.storm.sentiment.topology.Main test -c nimbus.host=ipe-koi05.fzi.de -c nimbus.thift.port=49627");
+		SepaInvocationStorageImpl impl = new SepaInvocationStorageImpl();
+		String id = impl.storeSepaInvocation(invocationGraph);
+		executeCommand("/home/philipp/Downloads/apache-storm-0.9.5/bin/storm jar /home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment-new/target/semantic-epa-storm-topology-sentiment-new-0.0.1-SNAPSHOT.jar de.fzi.cep.sepa.storm.sentiment.topology.Main "+ id +" test -c nimbus.host=ipe-koi05.fzi.de -c nimbus.thift.port=49627");
 		
 //		String sentimentMapsTo = SepaUtils.getMappingPropertyName(invocationGraph, "sentimentMapsTo");
 
@@ -108,8 +111,8 @@ public class SentimentDetectionController extends EpDeclarer<SentimentDetectionP
 
 	}
 
-	protected String getKafkaUrl() {
-		return "ipe-koi04.fzi.de:9092";
-	}
+//	protected String getKafkaUrl() {
+//		return "ipe-koi04.fzi.de:9092";
+//	}
 
 }

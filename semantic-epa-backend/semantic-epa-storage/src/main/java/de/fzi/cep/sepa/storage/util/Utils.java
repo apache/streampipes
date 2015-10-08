@@ -37,6 +37,18 @@ public class Utils {
 		return dbClient;
 	}
 	
+	public static CouchDbClient getCouchDbSepaInvocationClient()
+	{
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_SEPA_INVOCATION_DB));
+//		dbClient.set
+//		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		dbClient.setGsonBuilder(de.fzi.cep.sepa.model.util.GsonSerializer.getGsonBuilder());
+		return dbClient;
+	}
+	
+	
+	
 	public static CouchDbClient getCouchDbConnectionClient()
 	{
 		Configuration cfg = Configuration.getInstance();

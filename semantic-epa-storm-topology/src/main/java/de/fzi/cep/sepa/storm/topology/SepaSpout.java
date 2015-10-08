@@ -1,58 +1,44 @@
 package de.fzi.cep.sepa.storm.topology;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import kafka.Kafka;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.consumer.Whitelist;
-import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.message.MessageAndMetadata;
-
-import org.apache.thrift.TDeserializer;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
-
-import backtype.storm.zookeeper__init;
+import backtype.storm.spout.Scheme;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.storm.utils.Constants;
-import de.fzi.cep.sepa.storm.utils.Serializer;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.storm.utils.Utils;
+import kafka.consumer.ConsumerConfig;
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+import kafka.javaapi.consumer.ConsumerConnector;
+import kafka.message.MessageAndMetadata;
 
 public class SepaSpout extends BaseRichSpout {
 
 	private static final long serialVersionUID = 1402529305108380459L;
 
-	public static final String SPOUT_ID = "SepaSpout";
 
-	public static final String SEPA_DATA_STREAM = "SEPA_DATA_STREAM";
 
 
 	protected String id;
-	protected String zookeeperUrl;
-	protected String sepaDataTopic;
-	protected String sepaConfigTopic;
-	protected String sepaWhitelistTopic;
+	protected Scheme scheme;
+	protected String zookeeper;
+	protected String topic;
 
 	private ConsumerConnector consumer;
-	long mesageCounter = 0;
 
-	public SepaSpout(String id, String zookeeperUrl) {
-		this.id = SPOUT_ID;
-		this.zookeeperUrl = zookeeperUrl;
-
+	public SepaSpout(String id, EventStream eventStream) {
+		this.id = id;
+		this.scheme = Utils.getScheme(eventStream);
+		this.zookeeper = Utils.getZookeeperUrl(eventStream);		
+		this.topic = Utils.getTopic(eventStream);
 	}
+
 
 	private ConsumerIterator<byte[], byte[]> consumerIterator;
 
@@ -60,26 +46,22 @@ public class SepaSpout extends BaseRichSpout {
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-		outputFieldsDeclarer.declareStream(SEPA_DATA_STREAM, new Fields("payload"));
+		outputFieldsDeclarer.declareStream(Utils.SEPA_DATA_STREAM, scheme.getOutputFields());
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
-
-//		this.sepaWhitelistTopic = "de.fzi.cep.sepa.storm.*";
-//		SEPA.SEP.Twitter.Sample
-
 		this.collector = spoutOutputCollector;
+		int numThreads = 1;
+		
+		consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig(zookeeper, id));
+		
 
-		this.sepaWhitelistTopic = "SEPA.SEP.Twitter.Sample*";
-		String zookeeperServers = map.get("zookeeper.servers").toString();
-
-		consumer = kafka.consumer.Consumer
-				.createJavaConsumerConnector(createConsumerConfig(zookeeperServers, this.getId()));
-		List<KafkaStream<byte[], byte[]>> streams = consumer
-				.createMessageStreamsByFilter(new Whitelist(sepaWhitelistTopic));
-
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+        topicCountMap.put(topic, new Integer(numThreads));
+        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
+        List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(topic);
 		KafkaStream<byte[], byte[]> messageAndMetadatas = streams.get(0);
 		this.consumerIterator = messageAndMetadatas.iterator();
 
@@ -101,19 +83,8 @@ public class SepaSpout extends BaseRichSpout {
 		if (consumerIterator.hasNext()) {
 			MessageAndMetadata<byte[], byte[]> message = consumerIterator.next();
 			byte[] messagePayload = message.message();
-			Map<String, Object> result;
-
-//			try {
-//				result = (Map<String, Object>) Serializer.deserialize(messagePayload);
-				collector.emit(SEPA_DATA_STREAM, new Values(message));
-				
-//			} catch (ClassNotFoundException e) {
-//				 TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				 TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			
+			collector.emit(Utils.SEPA_DATA_STREAM, scheme.deserialize(messagePayload));
 
 		}
 	}
@@ -126,6 +97,5 @@ public class SepaSpout extends BaseRichSpout {
 	public String getId() {
 		return id;
 	}
-
 
 }

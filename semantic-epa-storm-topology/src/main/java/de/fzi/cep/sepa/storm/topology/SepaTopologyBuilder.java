@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.storm.topology;
 
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import de.fzi.cep.sepa.storm.utils.JsonScheme;
 import storm.kafka.BrokerHosts;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
@@ -11,6 +12,7 @@ import storm.kafka.ZkHosts;
 import java.util.UUID;
 
 import backtype.storm.generated.StormTopology;
+import backtype.storm.spout.Scheme;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.TopologyBuilder;
@@ -23,7 +25,6 @@ public class SepaTopologyBuilder {
 		  
 		  
 		  String topicName = "SEPA.SEP.Twitter.Sample";
-		  
 		  BrokerHosts hosts = new ZkHosts("ipe-koi04.fzi.de:2181");
 		  SpoutConfig spoutConfig = new SpoutConfig(hosts, topicName, "/", UUID.randomUUID().toString());
 		  spoutConfig.scheme = new SchemeAsMultiScheme(new StringKeyValueScheme());
@@ -34,17 +35,17 @@ public class SepaTopologyBuilder {
 		  
 		  
 		  
-		  
-		  
-		  SepaSpout sepaSpout = new SepaSpout("sepaspout", zookeeperUrl);
-		  SinkSepaBolt<? extends BindingParameters> sinkSepaBolt = new SinkSepaBolt<>("sinkbolt");
-		  
-		  builder.setSpout(sepaSpout.getId(), kafkaSpout);
-		  builder.setBolt("sentiment", bolt)
-		  	.shuffleGrouping(sepaSpout.getId());
-		  builder.setBolt(sinkSepaBolt.getId(), sinkSepaBolt)
-		  	.shuffleGrouping("sentiment", SepaSpout.SEPA_DATA_STREAM);
+//		  SepaSpout sepaSpout = new SepaSpout("sepaspout", zookeeperUrl);
+//		  SinkSepaBolt<? extends BindingParameters> sinkSepaBolt = new SinkSepaBolt<>("sinkbolt");
+//		  
+//		  builder.setSpout(sepaSpout.getId(), sepaSpout);
+//		  builder.setBolt("sentiment", bolt)
+//		  	.shuffleGrouping(sepaSpout.getId(), SepaSpout.SEPA_DATA_STREAM);
+////		  	.shuffleGrouping(sepaSpout.getId());
+//		  builder.setBolt(sinkSepaBolt.getId(), sinkSepaBolt)
+//		  	.shuffleGrouping("sentiment", SepaSpout.SEPA_DATA_STREAM);
 		  
 		  return builder.createTopology();		  
 	}
+
 }

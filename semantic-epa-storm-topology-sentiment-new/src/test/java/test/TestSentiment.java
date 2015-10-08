@@ -1,3 +1,4 @@
+package test;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Random;
@@ -38,6 +39,12 @@ public class TestSentiment {
 
 	public static void main(String[] args)
 	{
+
+		new SentimentDetectionController().invokeRuntime(getInvocationGraph());
+		
+	}
+	
+	public static SepaInvocation getInvocationGraph() {
 		SepaDescription desc = new SentimentDetectionController().declareModel();
 		desc.setRdfId(getId("sepaDescription"));
 
@@ -47,9 +54,14 @@ public class TestSentiment {
 		//Schema left
 		EventSchema schemaLeft = new EventSchema();
 		EventPropertyPrimitive p1 = new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_MAPS_TO_FIELD, "", Arrays.asList(URI.create(SO.Text)));
-		p1.setRdfId(getId("EventPropertyPrimitive1"));
-		p1.setElementName(getId("EventPropertyPrimitive1").toString());
+		EventPropertyPrimitive p2 = new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", Arrays.asList(URI.create(SO.Text)));
+		EventPropertyPrimitive p3 = new EventPropertyPrimitive(XSD._string.toString(), "userName", "", Arrays.asList(URI.create(SO.Text)));
+
+//		p1.setRdfId(getId("EventPropertyPrimitive1"));
+//		p1.setElementName(getId("EventPropertyPrimitive1").toString());
 		schemaLeft.addEventProperty(p1);
+		schemaLeft.addEventProperty(p2);
+		schemaLeft.addEventProperty(p3);
 		
 		KafkaTransportProtocol kafkaLeft = new KafkaTransportProtocol(KAFKA_HOST, KAFKA_PORT, LEFT_TOPIC, ZOOKEEPER_HOST, ZOOKEEPER_PORT);
 
@@ -59,8 +71,13 @@ public class TestSentiment {
 		
 		//Schema right
 		EventSchema schemaRight = new EventSchema();
-		schemaRight.addEventProperty(new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_FIELD, "", Arrays.asList(URI.create(SO.Text))));
-		
+		EventPropertyPrimitive p4 =new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_FIELD, "", Arrays.asList(URI.create(SO.Text)));
+		schemaRight.addEventProperty(p4);
+		schemaRight.addEventProperty(new EventPropertyPrimitive(XSD._string.toString(), SENTIMENT_MAPS_TO_FIELD, "", Arrays.asList(URI.create(SO.Text))));
+		schemaRight.addEventProperty(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", Arrays.asList(URI.create(SO.Text))));
+		schemaRight.addEventProperty(new EventPropertyPrimitive(XSD._string.toString(), "userName", "", Arrays.asList(URI.create(SO.Text))));
+
+
 		KafkaTransportProtocol kafkaRight = new KafkaTransportProtocol(KAFKA_HOST, KAFKA_PORT, RIGHT_TOPIC, ZOOKEEPER_HOST, ZOOKEEPER_PORT);
 
 
@@ -69,10 +86,9 @@ public class TestSentiment {
 		invoc.setOutputStream(stream2);
 		((MappingPropertyUnary)invoc.getStaticProperties().get(0)).setInternalName("sentimentMapsTo");
 		((MappingPropertyUnary)invoc.getStaticProperties().get(0)).setMapsFrom(URI.create(p1.getElementName()));
-		((MappingPropertyUnary)invoc.getStaticProperties().get(0)).setMapsTo(URI.create(p1.getElementName()));
+		((MappingPropertyUnary)invoc.getStaticProperties().get(0)).setMapsTo(URI.create(p4.getElementName()));
 		
-		new SentimentDetectionController().invokeRuntime(invoc);
-		
+		return invoc;
 	}
 
 	private static EventStream getStream(KafkaTransportProtocol kafka, EventSchema schema) {
