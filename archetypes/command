@@ -1,0 +1,6 @@
+mvn archetype:generate                                  \
+			-DarchetypeGroupId=de.fzi.cep.sepa                \
+			-DarchetypeArtifactId=streampipes-archetype-storm-topology          \
+			-DarchetypeVersion=0.0.1-SNAPSHOT                \
+			-DgroupId=de.fzi.cep.sepa \
+			-DartifactId=storm.cool.feature
