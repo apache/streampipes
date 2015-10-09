@@ -1,12 +1,15 @@
 package de.fzi.cep.sepa.sources.samples.hella;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ConsoleLoggingPublisher;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -20,11 +23,11 @@ import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
 import de.fzi.cep.sepa.sources.samples.csv.LineParser;
 import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.hella.parser.MaterialMovementParser;
-import de.fzi.cep.sepa.sources.samples.hella.parser.MouldingParametersParser;
 
 public class MaterialMovementStream extends AbstractHellaStream {
 
-	private static final String montracDataFolder = "E:\\hella-data\\hella-1week\\week-dummy-scrap\\Montrac-CompleteDataset";
+	public static final String montracDataFolder =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator +"montrac" +File.separator;
+
 	private static final List<String> fileNamePrefixes = Arrays.asList("20150910-", "20150911-", "20150912-", "20150913-", "20150914-", "20150915-", "20150916-");
 
 	
@@ -55,14 +58,14 @@ public class MaterialMovementStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		//IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
 		
-		IMessagePublisher publisher = new ConsoleLoggingPublisher();
+		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		
 		LineParser montracLineParser = new MaterialMovementParser();
 		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ",", "variable_timestamp", montracLineParser, true);
 				
-		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.PERFORMANCE_TEST));
+		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
 		mouldingReplayThread.start();
 	}
 

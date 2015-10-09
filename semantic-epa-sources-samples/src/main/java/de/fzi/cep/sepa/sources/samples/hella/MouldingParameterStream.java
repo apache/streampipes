@@ -1,10 +1,12 @@
 package de.fzi.cep.sepa.sources.samples.hella;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ConsoleLoggingPublisher;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
@@ -24,7 +26,8 @@ import de.fzi.cep.sepa.sources.samples.hella.parser.MouldingParametersParser;
 
 public class MouldingParameterStream extends AbstractHellaStream {
 
-	private static final String mouldingDataFolder = "E:\\hella-data\\hella-1week\\week-dummy-scrap\\IMM_61282649_2015_09_7_days";
+	public static final String mouldingDataFolder =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator +"imm" +File.separator;
+
 	private static final List<String> fileNamePrefixes = Arrays.asList("IMM_61282649_2015091", "IMM_61282649_2015091", "IMM_61282649_2015091", "IMM_61282649_2015091", "IMM_61282649_2015091", "IMM_61282649_2015091", "IMM_61282649_2015091");
 
 	
@@ -59,14 +62,14 @@ public class MouldingParameterStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		//IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.IMM.topic());
 		
-		IMessagePublisher publisher = new ConsoleLoggingPublisher();
+		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		
 		LineParser mouldingLineParser = new MouldingParametersParser();
 		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ";", "variable_timestamp", mouldingLineParser, true);
 				
-		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.PERFORMANCE_TEST));
+		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
 		mouldingReplayThread.start();
 	}
 

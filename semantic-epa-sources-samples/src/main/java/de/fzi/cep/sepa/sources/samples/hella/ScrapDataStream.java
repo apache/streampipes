@@ -1,10 +1,12 @@
 package de.fzi.cep.sepa.sources.samples.hella;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ConsoleLoggingPublisher;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
@@ -25,7 +27,7 @@ import de.fzi.cep.sepa.sources.samples.hella.parser.ScrapLineParser;
 
 public class ScrapDataStream extends AbstractHellaStream {
 	
-	private static final String scrapDataFolder = "E:\\hella-data\\hella-1week\\week-dummy-scrap\\Scrap_2015_09_7_days";
+	public static final String scrapDataFolder =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator +"scrap" +File.separator;
 	private static final List<String> fileNamePrefixes = Arrays.asList("20150910_", "20150911_", "20150912_", "20150913_", "20150914_", "20150915_", "20150916_");
 
 	@Override
@@ -57,14 +59,14 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		//IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
 		
-		IMessagePublisher publisher = new ConsoleLoggingPublisher();
+		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		
 		LineParser scrapLineParser = new ScrapLineParser();
 		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ";", "variable_timestamp", scrapLineParser, true);
 				
-		Thread scrapReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.PERFORMANCE_TEST));
+		Thread scrapReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
 		scrapReplayThread.start();
 	}
 

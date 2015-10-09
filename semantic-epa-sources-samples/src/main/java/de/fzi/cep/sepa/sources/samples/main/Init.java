@@ -8,6 +8,9 @@ import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
+import de.fzi.cep.sepa.sources.samples.hella.MontracProducer;
+import de.fzi.cep.sepa.sources.samples.hella.MouldingMachineProducer;
+import de.fzi.cep.sepa.sources.samples.hella.VisualInspectionProducer;
 import de.fzi.cep.sepa.sources.samples.mobile.MobileStreamProducer;
 import de.fzi.cep.sepa.sources.samples.proveit.ProveITEventProducer;
 import de.fzi.cep.sepa.sources.samples.ram.RamProducer;
@@ -26,7 +29,7 @@ public class Init  {
 	public void declare() {
 		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
 
-//		declarers.add(new TwitterStreamProducer());
+		declarers.add(new TwitterStreamProducer());
 //		declarers.add(new DDMProducer());
 //		declarers.add(new DrillBitProducer());
 //		declarers.add(new EnrichedEventProducer());
@@ -34,7 +37,10 @@ public class Init  {
 //		declarers.add(new MobileStreamProducer());
 		declarers.add(new RandomDataProducer());
 		declarers.add(new NYCTaxiProducer());
-//		declarers.add(new ProveITEventProducer());		
+//		declarers.add(new ProveITEventProducer());	
+		declarers.add(new VisualInspectionProducer());
+		declarers.add(new MontracProducer());
+		declarers.add(new MouldingMachineProducer());
 
 		try {
 			ModelSubmitter.submitProducer(declarers);

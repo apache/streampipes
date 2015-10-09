@@ -4,7 +4,7 @@ import java.io.File;
 
 public class NycSettings {
 	
-	public static final String pathToDataset =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator;
+	public static final String pathToDataset =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator +"taxi" +File.separator;
 
 	public static final String completeDatasetFilename = pathToDataset +"sorted_data.csv";
 	public static final String test01DatasetFilename = pathToDataset + "test_01.csv";
