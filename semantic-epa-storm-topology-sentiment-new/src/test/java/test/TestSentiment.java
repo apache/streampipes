@@ -41,6 +41,7 @@ public class TestSentiment {
 	{
 
 		new SentimentDetectionController().invokeRuntime(getInvocationGraph());
+		new SentimentDetectionController().detachRuntime();
 		
 	}
 	

@@ -20,11 +20,19 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.config.StormConfig;
+import de.fzi.cep.sepa.storm.sentiment.topology.Main;
 import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends EpDeclarer<Parameters>{
+	private static String STORM_LOCATION = "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm";
+	private static String JAR_LOCATION = "/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment-new/target/semantic-epa-storm-topology-sentiment-new-0.0.1-SNAPSHOT.jar";
+	private static String MAIN_CLASS = "de.fzi.cep.sepa.storm.sentiment.topology.Main";
+
+	private static String ID;
+	private static String REV;
+
 
 	@Override
 	public SepaDescription declareModel() {
@@ -70,46 +78,21 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		//TODO 
-		// save invocation graph to couchDB
-		// Upload jar to storm topology with the parameters of the invocationGrapf id, couchDB host
-		String id = Utils.storeSepaInvocation(invocationGraph);
-		executeCommand("/home/philipp/Downloads/apache-storm-0.9.5/bin/storm jar /home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment-new/target/semantic-epa-storm-topology-sentiment-new-0.0.1-SNAPSHOT.jar de.fzi.cep.sepa.storm.sentiment.topology.Main "+ id +" test -c nimbus.host=ipe-koi05.fzi.de -c nimbus.thift.port=49627");
-		
-//		String sentimentMapsTo = SepaUtils.getMappingPropertyName(invocationGraph, "sentimentMapsTo");
+		org.lightcouch.Response res = Utils.storeSepaInvocation(invocationGraph);
+		ID = res.getId();
+		REV = res.getRev();
 
-//		SentimentDetectionParameters params = new SentimentDetectionParameters(new SepaInvocation(invocationGraph), sentimentMapsTo);
-//		ConfigurationMessage<SentimentDetectionParameters> msg = new ConfigurationMessage<>(Operation.BIND, params);
+		Utils.executeCommand(STORM_LOCATION + " jar " + JAR_LOCATION + " " + MAIN_CLASS +" "+ ID +" -c nimbus.host=" + Main.NIMBUS_HOST + " -c nimbus.thift.port=" + Main.NIMBUS_THRIFT_PORT);
 		
-		return null;
+		return new Response(ID, true);
 	}
 	
-	private String executeCommand(String command) {
+	@Override 
+	public Response detachRuntime() {
+		Utils.executeCommand(STORM_LOCATION + " kill " + Main.TOPOLOGY_NAME +" -c nimbus.host=" + Main.NIMBUS_HOST + " -c nimbus.thift.port=" + Main.NIMBUS_THRIFT_PORT);
+		Utils.removeSepaInvocation(ID, REV);
 
-		StringBuffer output = new StringBuffer();
-
-		Process p;
-		try {
-			p = Runtime.getRuntime().exec(command);
-			p.waitFor();
-			BufferedReader reader = 
-                            new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-                        String line = "";			
-			while ((line = reader.readLine())!= null) {
-				output.append(line + "\n");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return output.toString();
-
+		return new Response("1", true);
 	}
-
-//	protected String getKafkaUrl() {
-//		return "ipe-koi04.fzi.de:9092";
-//	}
-
+	
 }
