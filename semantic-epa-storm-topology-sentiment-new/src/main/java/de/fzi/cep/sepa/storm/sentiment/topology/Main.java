@@ -14,7 +14,6 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.storage.impl.SepaInvocationStorageImpl;
 import de.fzi.cep.sepa.storm.topology.SepaSpout;
 import de.fzi.cep.sepa.storm.topology.SinkSepaBolt;
 import de.fzi.cep.sepa.storm.utils.Utils;
@@ -29,8 +28,7 @@ public class Main {
 
 	public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException {
 
-		SepaInvocationStorageImpl invocationStorage = new SepaInvocationStorageImpl();
-		SepaInvocation invocation = invocationStorage.getSepaInvovation(args[0]);
+		SepaInvocation invocation = Utils.getSepaInvocation(args[0]);
 
 		StormTopology sentimentDetectionTopology = buildTopology(invocation);
 		

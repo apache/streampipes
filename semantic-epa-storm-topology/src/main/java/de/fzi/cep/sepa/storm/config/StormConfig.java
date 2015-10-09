@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.storm.sentiment.config;
+package de.fzi.cep.sepa.storm.config;
 
 /**
  * Created by robin on 16.10.14.

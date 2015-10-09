@@ -6,15 +6,14 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class SentimentDetectionParameters extends BindingParameters {
 	
-	private String sentimentMapsTo;
 	
-	public SentimentDetectionParameters(SepaInvocation graph, String sentimentMapsTo) {
-		super(graph);
-		this.sentimentMapsTo = sentimentMapsTo;
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	public String getSentimentMapsTo() {
-		return sentimentMapsTo;
+	public SentimentDetectionParameters(SepaInvocation graph) {
+		super(graph);
 	}
 
 }

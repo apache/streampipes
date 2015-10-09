@@ -6,7 +6,9 @@ import backtype.storm.spout.Scheme;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.storage.impl.SepaInvocationStorageImpl;
 import scala.NotImplementedError;
 
 public class Utils {
@@ -52,4 +54,15 @@ public class Utils {
 		return null;
 	}
 
+	public static SepaInvocation getSepaInvocation(String id) {
+		SepaInvocationStorageImpl invocationStorage = new SepaInvocationStorageImpl();
+		return invocationStorage.getSepaInvovation(id);
+
+	}
+	
+	public static String storeSepaInvocation(SepaInvocation invocation) {
+		SepaInvocationStorageImpl impl = new SepaInvocationStorageImpl();
+		return impl.storeSepaInvocation(invocation);
+
+	}
 }

@@ -61,11 +61,6 @@
 			<version>0.9.4</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-storage</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
