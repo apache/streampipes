@@ -20,10 +20,11 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.config.StormConfig;
+import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class SentimentDetectionController extends EpDeclarer<SentimentDetectionParameters>{
+public class SentimentDetectionController extends EpDeclarer<Parameters>{
 
 	@Override
 	public SepaDescription declareModel() {
