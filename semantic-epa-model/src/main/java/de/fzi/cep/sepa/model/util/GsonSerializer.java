@@ -26,4 +26,17 @@ public class GsonSerializer {
 		builder.setPrettyPrinting();
 		return builder.create();
 	}
+
+	public static GsonBuilder getGsonBuilder()
+	{
+		GsonBuilder builder = new GsonBuilder();
+//		builder.registerTypeAdapter(SepaDescription.class, new JsonLdSerializer());
+		builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
+		builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
+		builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
+		builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
+		builder.setPrettyPrinting();
+		return builder;
+	}
+	
 }
