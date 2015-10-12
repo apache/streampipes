@@ -29,6 +29,7 @@ public class Configuration {
 	
 	public String COUCHDB_USER_DB;
 	public String COUCHDB_PIPELINE_DB;
+	public String COUCHDB_SEPA_INVOCATION_DB;
 	public String COUCHDB_MONITORING_DB;
 	public String COUCHDB_CONNECTION_DB; 
 	public String COUCHDB_NOTIFICATION_DB;
@@ -105,10 +106,12 @@ public class Configuration {
 					
 					COUCHDB_PROTOCOL = config.getString("couchDbProtocol");
 					COUCHDB_HOSTNAME = config.getString("couchDbHost");
+
 					COUCHDB_PORT = config.getInt("couchDbPort");
 					
 					COUCHDB_USER_DB = config.getString("couchDbUserDbName");
 					COUCHDB_PIPELINE_DB = config.getString("couchDbPipelineDbName");
+					COUCHDB_SEPA_INVOCATION_DB = config.getString("couchDbSepaInvocationDbName");
 					COUCHDB_MONITORING_DB = config.getString("couchDbMonitoringDbName");
 					COUCHDB_CONNECTION_DB = config.getString("couchDbConnectionDbName");
 					COUCHDB_NOTIFICATION_DB = config.getString("couchDbNotificationDbName");
@@ -148,11 +151,13 @@ public class Configuration {
 		// load defaults
 					COUCHDB_USER_DB = "users";
 					COUCHDB_PIPELINE_DB = "pipeline";
+					COUCHDB_SEPA_INVOCATION_DB = "invocation";
 					COUCHDB_MONITORING_DB = "monitoring";
 					COUCHDB_CONNECTION_DB = "connection"; 
 					COUCHDB_NOTIFICATION_DB = "notification";
 					COUCHDB_PROTOCOL = "http";
 					COUCHDB_HOSTNAME = Utils.getHostname();
+//					COUCHDB_HOSTNAME = "localhost";
 					COUCHDB_PORT = 5984;
 					
 					SESAME_URI = "http://" +Utils.getHostname() +":8080/openrdf-sesame";
