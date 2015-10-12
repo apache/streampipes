@@ -1,6 +1,0 @@
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/controller/Main.java
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/controller/SentimentDetectionController.java
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/controller/SentimentDetectionParameters.java
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/topology/Main.java
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/topology/SentimentDetectionBolt.java
-/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment/src/main/java/de/fzi/cep/sepa/storm/sentiment/config/StormConfig.java
