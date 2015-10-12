@@ -1,5 +1,6 @@
 backend: 
   image: laus.fzi.de:5000/fzi/semantic-epa-backend
+  net: "host"
   ports: 
     - "8080:8080"
   volumes:
@@ -7,36 +8,41 @@ backend:
     - "./config/aduna:/root/.aduna"
 sources:
   image: laus.fzi.de:5000/fzi/semantic-epa-sources-samples
+  net: "host"
   ports:
     - "8089:8089"
 esper:
   image: laus.fzi.de:5000/fzi/semantic-epa-esper
+  net: "host"  
   ports:
     - "8090:8090"
 actions:
   image: laus.fzi.de:5000/fzi/semantic-epa-actions-samples
+  net: "host"
   ports:
     - "8091:8091"
 activemq:
   image: laus.fzi.de:5000/fzi/activemq
+  net: "host"
   ports:
     - "61616:61616"
 couchdb:
   image: laus.fzi.de:5000/fzi/couchdb
+  net: "host"
   ports:
     - "5984:5984"
   volumes:
     - "./config/couchdb/data:/data"
 zookeeper:
   image: laus.fzi.de:5000/fzi/zookeeper
+  net: "host"
   ports:
     - "2181:2181"
 kafka:
   image: laus.fzi.de:5000/fzi/kafka
+  net: "host"
   ports:
     - "9092:9092"
-  links:
-    - zookeeper
 kafka-web-console:
   image: hwestphal/kafka-web-console
   ports:
