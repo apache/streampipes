@@ -92,7 +92,7 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 		Utils.executeCommand(STORM_LOCATION + " kill " + Main.TOPOLOGY_NAME +" -c nimbus.host=" + Main.NIMBUS_HOST + " -c nimbus.thift.port=" + Main.NIMBUS_THRIFT_PORT);
 		Utils.removeSepaInvocation(ID, REV);
 
-		return new Response("1", true);
+		return new Response(ID, true);
 	}
 	
 }
