@@ -26,8 +26,8 @@ import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends EpDeclarer<Parameters>{
-	private static String STORM_LOCATION = "/home/philipp/Downloads/apache-storm-0.9.5/bin/storm";
-	private static String JAR_LOCATION = "/home/philipp/Coding/fzi/icep/semantic-epa-parent/semantic-epa-storm-topology-sentiment-new/target/semantic-epa-storm-topology-sentiment-new-0.0.1-SNAPSHOT.jar";
+	private static String STORM_LOCATION = "~/apache-storm-0.9.5/bin/storm";
+	private static String JAR_LOCATION = "~/semantic-epa-storm-topology-sentiment.jar";
 	private static String MAIN_CLASS = "de.fzi.cep.sepa.storm.sentiment.topology.Main";
 
 	private static String ID;
