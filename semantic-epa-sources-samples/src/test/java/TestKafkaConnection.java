@@ -14,7 +14,7 @@ public class TestKafkaConnection implements IMessageListener {
 	public TestKafkaConnection(String url, int kafkaTopic, int zookeeperTopic, String topic)
 	{
 		producer = new ProaSenseInternalProducer(url+kafkaTopic, topic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(url+zookeeperTopic, topic,
+		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(url+zookeeperTopic, "storm",
 				new String[] {topic}, this);
 		kafkaConsumerGroup.run(1);
 	}
@@ -23,7 +23,7 @@ public class TestKafkaConnection implements IMessageListener {
 	
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "de.fzi.cep.sepa.notifications");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "output.topic");
 		
 		for(int i = 0; i < MAX_MESSAGES; i++)
 		{
@@ -34,6 +34,12 @@ public class TestKafkaConnection implements IMessageListener {
 				e.printStackTrace();
 			}
 			connection.publishMessage(RandomStringUtils.randomAlphabetic(12).getBytes());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}
