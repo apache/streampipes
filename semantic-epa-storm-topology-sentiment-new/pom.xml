@@ -90,7 +90,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>de.fzi.cep.sepa.storm.sentiment.topology.Main</mainClass>
+									<mainClass>de.fzi.cep.sepa.storm.sentiment.main.Init</mainClass>
 								</transformer>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />

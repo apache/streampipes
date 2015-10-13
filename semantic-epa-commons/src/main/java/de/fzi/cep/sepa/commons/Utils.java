@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;
@@ -69,16 +68,16 @@ public class Utils {
 		RDFWriter writer = Configuration.getInstance().getRioWriter(stream);
 		
 		//RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
-//		RDFWriter writer = Rio.createWriter(RDFFormat.TURTLE, stream);
-//	
+//		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+	
 //		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
 //		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
 //		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+//		
+//		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+//		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
 		
-		//writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-		//writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-		
-		//Rio.write(graph, stream, RDFFormat.JSONLD);
+//		Rio.write(graph, stream, RDFFormat.JSONLD);
 		Rio.write(graph, writer);
 		return stream.toString();
 	}

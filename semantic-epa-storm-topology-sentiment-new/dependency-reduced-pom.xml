@@ -32,7 +32,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.storm.sentiment.topology.Main</mainClass>
+                  <mainClass>de.fzi.cep.sepa.storm.sentiment.main.Init</mainClass>
                 </transformer>
                 <transformer />
               </transformers>
