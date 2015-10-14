@@ -78,7 +78,7 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		org.lightcouch.Response res = Utils.storeSepaInvocation(invocationGraph);
+		org.lightcouch.Response res = Utils.storeSepaInvocation(new SepaInvocation(invocationGraph));
 		ID = res.getId();
 		REV = res.getRev();
 
