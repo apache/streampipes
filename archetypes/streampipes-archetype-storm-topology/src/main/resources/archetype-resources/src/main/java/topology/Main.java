@@ -19,10 +19,10 @@ import de.fzi.cep.sepa.storm.topology.SinkSepaBolt;
 import de.fzi.cep.sepa.storm.utils.Utils;
 
 public class Main {
-	private static String NIMBUS_HOST = "FILLIN HOSTNAME";
-	private static int NIMBUS_THRIFT_PORT = 6627;
+	public static String NIMBUS_HOST = "FILLIN HOSTNAME";
+	public static int NIMBUS_THRIFT_PORT = 6627;
 
-	private static String TOPOLOGY_NAME = "${classNamePrefix}";
+	public static String TOPOLOGY_NAME = "${classNamePrefix}";
 	private static String SINK_BOLT_ID = "sinkBolt";
 	public static  String SPOUT_ID = "SepaSpout";
 
@@ -61,7 +61,7 @@ public class Main {
 		////////////////////////////////////////////////////////////////////////////
 
 		builder.setBolt(sinkSepaBolt.getId(), sinkSepaBolt)
-			.shuffleGrouping(SENTIMENT_BOLD_ID, Utils.SEPA_DATA_STREAM);
+			.shuffleGrouping(TODO, Utils.SEPA_DATA_STREAM);
 
 
 		return builder.createTopology();
