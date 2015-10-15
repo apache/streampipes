@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -194,8 +194,8 @@ angular
 	            url: '/ontology',
 	            views: {
 		            "streampipesView@streampipes" : {
-		            	  templateUrl : 'ontology.html',
-		            	  controller: 'AppCtrl'
+		            	  templateUrl : 'modules/ontology/ontology.html',
+		            	  controller: 'OntologyCtrl'
 		            }
 	            }
 	          })
@@ -393,17 +393,17 @@ angular
            },
            {
                link : 'streampipes.add',
-               title: 'Add element',
+               title: 'Import Elements',
                icon: 'content:ic_add_24px'
            },
            {
                link : 'streampipes.create',
-               title: 'Create element',
+               title: 'Create Element',
                icon: 'content:ic_add_24px'
            },
            {
                link : 'streampipes.ontology',
-               title: 'Ontology Editor',
+               title: 'Knowledge Configurator',
                icon: 'social:ic_share_24px'
            },
            {
@@ -888,7 +888,67 @@ angular
 	    
 	    restApi.getActionById = function(elementId) {
  	    	return $http.get(urlBase() +"/actions/" +encodeURIComponent(elementId));
-    }
+	    };
+ 	    	
+ 	   restApi.getOntologyProperties = function() {
+ 	 	    return $http.get("/semantic-epa-backend/api/ontology/properties");
+ 	   };
+ 	    
+ 	   restApi.getOntologyPropertyDetails = function(propertyId) {
+ 		   return $http.get("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId));
+ 	   }
+ 	   
+ 	  restApi.addOntologyProperty = function(propertyData) {
+  		 return $http.post("/semantic-epa-backend/api/ontology/properties", propertyData);
+  	   }
+ 	   
+ 	  restApi.getOntologyConcepts = function() {
+	 	    return $http.get("/semantic-epa-backend/api/ontology/types");
+	    };
+	    
+	    restApi.getOntologyConceptDetails = function(conceptId) {
+	    	return $http.get("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId));
+	    }
+ 	   
+ 	  restApi.getOntologyNamespaces = function() {
+		   return $http.get("/semantic-epa-backend/api/ontology/namespaces");
+	  }
+ 	  
+ 	  restApi.addOntologyNamespace = function(namespace) {
+		   return $http.post("/semantic-epa-backend/api/ontology/namespaces", namespace);
+	  }
+ 	  
+ 	 restApi.deleteOntologyNamespace = function(prefix) {
+ 		return $http({
+    	    method: 'DELETE',
+    	    url: "/semantic-epa-backend/api/ontology/namespaces/" +encodeURIComponent(prefix)
+    	});
+	 }
+ 	 
+ 	restApi.addOntologyConcept = function(conceptData) {
+		 return $http.post("/semantic-epa-backend/api/ontology/types", conceptData);
+	}
+ 	
+ 	restApi.addOntologyInstance = function(instanceData) {
+		 return $http.post("/semantic-epa-backend/api/ontology/instances", instanceData);
+	}
+ 	
+ 	 restApi.getOntologyInstanceDetails = function(instanceId) {
+	    	return $http.get("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId));
+	 }
+ 	
+ 	restApi.updateOntologyProperty = function(propertyId, propertyData) {
+		 return $http.put("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId), propertyData);
+	}
+ 	
+ 	restApi.updateOntologyConcept = function(conceptId, conceptData) {
+		 return $http.put("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId), conceptData);
+	}
+ 	
+ 	restApi.updateOntologyInstance = function(instanceId, instanceData) {
+		 return $http.put("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId), instanceData);
+	}
+	    
 	
 	    return restApi;
 	}]);

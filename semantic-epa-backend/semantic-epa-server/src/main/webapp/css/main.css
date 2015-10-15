@@ -17,6 +17,19 @@ body {
 	background-attachment: fixed;	
 }
 
+.tree-node {
+    border: 1px solid #dae2ea;
+    background: #f8faff;
+    color: rgb(63,81,181);
+    margin:5px;
+}
+
+.angular-ui-tree-handle {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: rgb(63,81,181);
+    padding: 10px 10px;
+}
 
  .sidebar-badge {
   display: inline-block;

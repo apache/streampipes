@@ -35,6 +35,21 @@
 					</form>
 				</div>
 			</md-tab>
+			<md-tab label="Import Pipelines"> 
+				<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+					<form name="addPipelineForm" ng-submit="addPipelines()" role="form">
+						  <md-input-container flex>
+					        <label>Pipeline (JSON Array)</label>
+					        <textarea ng-model="$parent.pipelines" columns="1" md-maxlength="2000"></textarea>
+					      </md-input-container>
+						<div class="form-actions">
+						<md-button class="md-accent md-raised" type="submit"
+							ng-disabled="addPipelineForm.$pristine || addPipelineForm.$invalid || loading">Add Pipelines</md-button>
+							<div ng-show="loading"><h5>This may take up to two minutes.</h5></div>
+						</div>
+					</form>
+				</div>
+			</md-tab>
 		</md-content>
 	</div>
 </div>
