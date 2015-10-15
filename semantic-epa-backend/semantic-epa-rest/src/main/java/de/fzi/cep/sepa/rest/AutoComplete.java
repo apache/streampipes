@@ -16,8 +16,8 @@ import de.fzi.cep.sepa.messages.AutocompleteItem;
 import de.fzi.cep.sepa.messages.AutocompleteResult;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.ontology.QueryExecutor;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
-import de.fzi.cep.sepa.storage.sparql.QueryExecutor;
 
 @Path("/autocomplete")
 public class AutoComplete extends AbstractRestInterface {
@@ -29,7 +29,7 @@ public class AutoComplete extends AbstractRestInterface {
 		AutocompleteResult result = new AutocompleteResult();
 		String query = QueryBuilder.getAutocompleteSuggestion(propertyName);
 		try {
-			TupleQueryResult queryResult = new QueryExecutor(StorageManager.INSTANCE.getConnection(), query).execute();
+			TupleQueryResult queryResult = new QueryExecutor(StorageManager.INSTANCE.getRepository()).executeQuery(query);
 			while(queryResult.hasNext())
 			{
 				BindingSet set = queryResult.next();
