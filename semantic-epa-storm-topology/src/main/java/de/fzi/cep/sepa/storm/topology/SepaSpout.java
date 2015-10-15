@@ -37,7 +37,7 @@ public class SepaSpout extends BaseRichSpout {
 		this.id = id;
 		this.scheme = StormUtils.getScheme(eventStream);
 		this.zookeeper = Utils.getZookeeperUrl(eventStream);		
-		this.topic = Utils.getTopic(eventStream);
+		this.topic = eventStream.getEventGrounding().getTransportProtocol().getTopicName();
 	}
 
 

@@ -32,5 +32,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="/semantic-epa-storm-topology"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

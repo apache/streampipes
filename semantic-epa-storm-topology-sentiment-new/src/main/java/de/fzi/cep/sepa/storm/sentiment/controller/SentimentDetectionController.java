@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.storm.sentiment.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -18,13 +19,14 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.config.StormConfig;
+import de.fzi.cep.sepa.storm.sentiment.topology.Name;
 import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends EpDeclarer<Parameters>{
 	private static String STORM_LOCATION = "/apache-storm-0.9.5/bin/storm";
-	private static String JAR_LOCATION = "/semantic-epa-storm-topology-sentiment-1.jar";
+	private static String JAR_LOCATION = "/semantic-epa-storm-topology-sentiment.jar";
 	private static String MAIN_CLASS = "de.fzi.cep.sepa.storm.sentiment.topology.Main";
 
 	private static String ID;
@@ -88,7 +90,7 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 	
 	@Override 
 	public Response detachRuntime() {
-		Utils.executeCommand(STORM_LOCATION + " kill " + Utils.TOPOLOGY_NAME +" -c nimbus.host=" + Utils.NIMBUS_HOST + " -c nimbus.thift.port=" + Utils.NIMBUS_THRIFT_PORT);
+		Utils.executeCommand(STORM_LOCATION + " kill " + Name.getTopologyName() +" -c nimbus.host=" + Utils.NIMBUS_HOST + " -c nimbus.thift.port=" + Utils.NIMBUS_THRIFT_PORT);
 		Utils.removeSepaInvocation(ID, REV);
 
 		return new Response(ID, true);

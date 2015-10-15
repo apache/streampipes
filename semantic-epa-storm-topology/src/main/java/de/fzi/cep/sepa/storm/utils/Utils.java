@@ -5,8 +5,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 
 import org.lightcouch.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
@@ -18,7 +16,6 @@ public class Utils {
 
 	public static String NIMBUS_HOST = "ipe-koi05.fzi.de";
 	public static int NIMBUS_THRIFT_PORT = 6627;
-	public final static String TOPOLOGY_NAME = "sentiment-detection";
 	public static final String SEPA_DATA_STREAM = "SEPA_DATA_STREAM";
 
 
@@ -30,20 +27,11 @@ public class Utils {
 
 	}
 
-	public static String getBroker(EventStream eventStream) {
-		KafkaTransportProtocol tp = (KafkaTransportProtocol) eventStream.getEventGrounding().getTransportProtocol();
-		return tp.getBrokerHostname() + ":" + tp.getKafkaPort();
-	}
-
-	public static String getTopic(EventStream eventStream) {
-		KafkaTransportProtocol tp = (KafkaTransportProtocol) eventStream.getEventGrounding().getTransportProtocol();
-		return tp.getTopicName();
-	}
 	
 	public static EventProperty getEventPropertyById(URI id, EventStream eventStream) {
 		
 		for (EventProperty p : eventStream.getEventSchema().getEventProperties()) {
-			if (p.getElementId().equals(id.toString())) {
+			if (p.getRdfIdGson() != null && p.getRdfIdGson().equals(id.toString())) {
 				return p;
 			}
 		}

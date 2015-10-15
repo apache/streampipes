@@ -56,5 +56,10 @@ public abstract class TransportProtocol extends UnnamedSEPAElement {
 	public void setTopicName(String topicName) {
 		this.topicName = topicName;
 	}
+
+	@Override
+	public String toString() {
+		return brokerHostname;
+	}
 	
 }

@@ -68,8 +68,9 @@ public class Main {
 		EventStream inputEventStream = invocation.getInputStreams().get(0);
 		
 		//Get the static parameter sentimentMapsTo from the invocation graph
-		URI mapsFrom = ((MappingPropertyUnary) invocation.getStaticProperties().get(0)).getMapsFrom();
-		EventProperty ep = Utils.getEventPropertyById(mapsFrom, inputEventStream);
+		URI mapsTo = ((MappingPropertyUnary) invocation.getStaticProperties().get(0)).getMapsTo();
+		
+		EventProperty ep = Utils.getEventPropertyById(mapsTo, inputEventStream);
 		conf.put("sentiment.param1", ep.getRuntimeName());
 		
 		return conf;
@@ -78,14 +79,14 @@ public class Main {
 	private static void testDeploy(Config conf, StormTopology topology) {
 		 conf.setDebug(true);
 		 LocalCluster cluster = new LocalCluster();
-		 cluster.submitTopology(Utils.TOPOLOGY_NAME, conf, topology);
+		 cluster.submitTopology(Name.getTopologyName(), conf, topology);
 	}
 
 	private static void productionDeploy(Config productionConfig, StormTopology topology) throws AlreadyAliveException, InvalidTopologyException {
 		productionConfig.put(Config.NIMBUS_HOST, Utils.NIMBUS_HOST);
 		productionConfig.put(Config.NIMBUS_THRIFT_PORT, Utils.NIMBUS_THRIFT_PORT);
 		productionConfig.setDebug(true);
-		StormSubmitter.submitTopology(Utils.TOPOLOGY_NAME, productionConfig, topology);
+		StormSubmitter.submitTopology(Name.getTopologyName(), productionConfig, topology);
 	}
 	
 	

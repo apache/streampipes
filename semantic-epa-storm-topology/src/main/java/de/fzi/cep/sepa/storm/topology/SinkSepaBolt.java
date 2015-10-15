@@ -50,28 +50,36 @@ private static final long serialVersionUID = -3694170770048756860L;
 
     private static Logger log = LoggerFactory.getLogger(SinkSepaBolt.class);
     
-    private Map<String, KafkaProducer<String, byte[]>> kafkaProducers;
-    private Map<String, ActiveMQPublisher> activeMqProducers;
     private Gson gson;
     private TSerializer serializer;
-    private Map<String, B> boltSettings;
-    private ProaSenseInternalProducer producer;
+    private ActiveMQPublisher activeMqProducer;
+    private ProaSenseInternalProducer kafkaProducer;
+    private EventStream eventStream;
         
     public SinkSepaBolt(String id, EventStream eventStream) {
     	this.id = id;
-		this.broker = Utils.getBroker(eventStream);		
-		this.topic = Utils.getTopic(eventStream);
+		this.broker = eventStream.getEventGrounding().getTransportProtocol().toString();		
+		this.topic = eventStream.getEventGrounding().getTransportProtocol().getTopicName();
 		this.scheme = StormUtils.getScheme(eventStream);
+		this.eventStream = eventStream;
+		this.activeMqProducer = null;
+		this.kafkaProducer = null;
 	}
     
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-    	boltSettings = new HashMap<>();
 
-		producer = new ProaSenseInternalProducer(broker, topic);
-        this.kafkaProducers = new HashMap<>();
-        this.activeMqProducers = new HashMap<>();
+    	if (eventStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
+    		this.kafkaProducer = new ProaSenseInternalProducer(broker, topic);
+    	} else {
+    		try {
+				this.activeMqProducer = new ActiveMQPublisher(broker, topic);
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
+    	}
+
         this.gson = new Gson();
         this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 
@@ -80,22 +88,27 @@ private static final long serialVersionUID = -3694170770048756860L;
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
     }
+    
+    private void send(Map<String, Object> event) {
+    	if (kafkaProducer != null) {
+    		sendToKafka(event);
+    	} else if (activeMqProducer != null) {
+    		sendToJms(event);
+    	}
+    }
 
 
-	private void sendToJms(Map<String, Object> event, B parameters,
-			String configurationId) {
+	private void sendToJms(Map<String, Object> event) {
 		try {
-			activeMqProducers.get(configurationId).sendText(new String(toOutputFormat(event, parameters)));
+			activeMqProducer.sendText(new String(toJsonOutputFormat(event)));
 		} catch (JMSException e) {
-			e.printStackTrace();
-		} catch (TException e) {
 			e.printStackTrace();
 		};
 	}
 
 	private void sendToKafka(Map<String, Object> event)
 	{
-			producer.send(toJsonOutputFormat(event));
+			kafkaProducer.send(toJsonOutputFormat(event));
 	}
 	
 	private byte[] toOutputFormat(Map<String, Object> event, B parameters) throws TException
@@ -126,7 +139,7 @@ private static final long serialVersionUID = -3694170770048756860L;
 				result.put(field, tuple.getValueByField(field));
 		}
 		
-		sendToKafka(result);
+		send(result);
 	}
 
 	public String getId() {

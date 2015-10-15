@@ -76,6 +76,10 @@
           <groupId>clj-time</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>joda-time</artifactId>
+          <groupId>joda-time</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>compojure</artifactId>
           <groupId>compojure</groupId>
         </exclusion>

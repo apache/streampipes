@@ -41,4 +41,9 @@ public class JmsTransportProtocol extends TransportProtocol{
 	public void setPort(int port) {
 		this.port = port;
 	}
+
+	@Override
+	public String toString() {
+		return getBrokerHostname() + ":" + getPort();
+	}
 }
