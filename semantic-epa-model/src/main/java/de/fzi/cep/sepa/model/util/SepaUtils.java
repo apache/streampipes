@@ -295,7 +295,7 @@ public class SepaUtils {
 	private static StaticProperty generateClonedFreeTextProperty(
 			FreeTextStaticProperty property) {
 		FreeTextStaticProperty ftsp = new FreeTextStaticProperty(property.getInternalName(), property.getDescription());
-		ftsp.setType(property.getType());
+		ftsp.setRequiredDomainProperty(property.getRequiredDomainProperty());
 		ftsp.setValue(property.getValue());
 		return ftsp;
 	}

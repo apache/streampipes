@@ -35,6 +35,7 @@ public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<
 	public JsonElement serialize(T src, Type typeOfSrc,
 			JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
+		System.out.println(src.getClass().getCanonicalName());
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
         result.add("properties", context.serialize(src, src.getClass()));
  

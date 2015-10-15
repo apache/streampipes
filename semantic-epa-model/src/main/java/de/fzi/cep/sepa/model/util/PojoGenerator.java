@@ -24,13 +24,13 @@ public class PojoGenerator {
 			if (p instanceof EventPropertyPrimitive)
 			{
 				EventPropertyPrimitive primitive = (EventPropertyPrimitive) p;
-				cc.addField(new CtField(resolveCtClass(primitive.getPropertyType()), propertyName, cc));
+				cc.addField(new CtField(resolveCtClass(primitive.getRuntimeType()), propertyName, cc));
 	
 				// add getter
-				cc.addMethod(generateGetter(cc, propertyName, ModelUtils.getPrimitiveClass(primitive.getPropertyType())));
+				cc.addMethod(generateGetter(cc, propertyName, ModelUtils.getPrimitiveClass(primitive.getRuntimeType())));
 	
 				// add setter
-				cc.addMethod(generateSetter(cc, propertyName, ModelUtils.getPrimitiveClass(primitive.getPropertyType())));
+				cc.addMethod(generateSetter(cc, propertyName, ModelUtils.getPrimitiveClass(primitive.getRuntimeType())));
 			}
 			/*
 			else if (p instanceof EventPropertyNested)

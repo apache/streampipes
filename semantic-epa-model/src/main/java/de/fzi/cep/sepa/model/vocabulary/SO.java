@@ -4,6 +4,7 @@ package de.fzi.cep.sepa.model.vocabulary;
 
 public class SO {
 
+	public static final String QuantitativeValue = "http://schema.org/QuantitativeValue";
 	public static String Number = "http://schema.org/Number";
     public static String AcceptsReservations = "http://schema.org/acceptsReservations";
     public static String AccessCode = "http://schema.org/accessCode";

@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
-import de.fzi.cep.sepa.model.util.Cloner;
 import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -29,10 +26,14 @@ public class EventPropertyPrimitive extends EventProperty {
 	private static final long serialVersionUID = 665989638281665875L;
 
 	@RdfProperty("sepa:hasPropertyType")
-	String propertyType;
+	private String runtimeType;
 	
 	@RdfProperty("sepa:hasMeasurementUnit")
-	String measurementUnit;
+	private String measurementUnit;
+	
+	@RdfProperty("sepa:valueSpecification")
+	@OneToOne(cascade = {CascadeType.ALL})
+	private QuantitativeValue valueSpecification;
 	
 	public EventPropertyPrimitive()
 	{
@@ -42,7 +43,7 @@ public class EventPropertyPrimitive extends EventProperty {
 	public EventPropertyPrimitive(EventPropertyPrimitive other)
 	{
 		super(other);
-		this.propertyType = other.getPropertyType();
+		this.runtimeType = other.getRuntimeType();
 		this.measurementUnit = other.getMeasurementUnit();
 	}
 	
@@ -51,25 +52,25 @@ public class EventPropertyPrimitive extends EventProperty {
 		super(subClassOf);
 	}
 
-	public EventPropertyPrimitive(String propertyType, String propertyName,
+	public EventPropertyPrimitive(String runtimeType, String runtimeName,
 			String measurementUnit, List<URI> subClassOf) {
-		super(propertyName, subClassOf);
-		this.propertyType = propertyType;
+		super(runtimeName, subClassOf);
+		this.runtimeType = runtimeType;
 		this.measurementUnit = measurementUnit;
 	}
 
 	public EventPropertyPrimitive(String propertyType, String propertyName,
 			String measurementUnit, List<URI> subClassOf, List<EventPropertyQualityDefinition> qualities) {
 		super(propertyName, subClassOf, qualities);
-		this.propertyType = propertyType;
+		this.runtimeType = propertyType;
 		this.measurementUnit = measurementUnit;
 	}
 	
-	public String getPropertyType() {
-		return propertyType;
+	public String getRuntimeType() {
+		return runtimeType;
 	}
-	public void setPropertyType(String propertyType) {
-		this.propertyType = propertyType;
+	public void setRuntimeType(String propertyType) {
+		this.runtimeType = propertyType;
 	}
 	
 	public String getMeasurementUnit() {
@@ -77,6 +78,14 @@ public class EventPropertyPrimitive extends EventProperty {
 	}
 	public void setMeasurementUnit(String measurementUnit) {
 		this.measurementUnit = measurementUnit;
+	}
+
+	public QuantitativeValue getValueSpecification() {
+		return valueSpecification;
+	}
+
+	public void setValueSpecification(QuantitativeValue valueSpecification) {
+		this.valueSpecification = valueSpecification;
 	}
 
 	@Override
@@ -87,7 +96,7 @@ public class EventPropertyPrimitive extends EventProperty {
 	@Override
 	public Map<String, Object> getUntypedRuntimeFormat() {
 		Map<String, Object> result = new HashMap<>();
-		result.put(runtimeName, ModelUtils.getPrimitiveClass(propertyType));
+		result.put(runtimeName, ModelUtils.getPrimitiveClass(runtimeType));
 		return result;
 	}
 

@@ -18,6 +18,7 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
@@ -34,6 +35,7 @@ public class Cloner {
 	public StaticProperty staticProperty(StaticProperty o) {
 		if (o instanceof FreeTextStaticProperty) return new FreeTextStaticProperty((FreeTextStaticProperty) o);
 		else if (o instanceof OneOfStaticProperty) return new OneOfStaticProperty((OneOfStaticProperty) o);
+		else if (o instanceof MappingPropertyNary) return new MappingPropertyNary((MappingPropertyNary) o);
 		else return new MappingPropertyUnary((MappingPropertyUnary) o);
 	}
 	
@@ -65,6 +67,10 @@ public class Cloner {
 
 	public List<EventStream> streams(List<EventStream> eventStreams) {
 		return eventStreams.stream().map(s -> new EventStream(s)).collect(Collectors.toList());
+	}
+	
+	public EventStream stream(EventStream other) {
+		return new EventStream(other);
 	}
 
 	public List<OutputStrategy> strategies(List<OutputStrategy> outputStrategies) {

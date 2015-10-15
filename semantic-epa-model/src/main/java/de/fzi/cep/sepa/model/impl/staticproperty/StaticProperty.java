@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
+	 "dc",   "http://purl.org/dc/terms/", "so", "http://schema.org/"})
 @RdfsClass("sepa:StaticProperty")
 @MappedSuperclass
 @Entity
@@ -22,10 +22,13 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	protected String label;
 	
 	@RdfProperty("sepa:internalName")
-	String internalName;
+	protected String internalName;
 	
 	@RdfProperty("rdfs:description")
-	String description;
+	protected String description;
+	
+	@RdfProperty("so:valueRequired")
+	protected boolean valueRequired;
 	
 	
 	public StaticProperty()
@@ -72,6 +75,14 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
+	public boolean isValueRequired() {
+		return valueRequired;
+	}
+
+	public void setValueRequired(boolean valueRequired) {
+		this.valueRequired = valueRequired;
+	}
 	
-	//public abstract void accept(StaticPropertyVisitor visitor);
+	
 }

@@ -48,7 +48,7 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 		this.correspondingPipeline = other.getCorrespondingPipeline();
 		this.inputStreams = new Cloner().streams(other.getInputStreams());
 		this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
-		//this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
 	}
 	
 	public InvocableSEPAElement(String uri, String name, String description, String iconUrl) {

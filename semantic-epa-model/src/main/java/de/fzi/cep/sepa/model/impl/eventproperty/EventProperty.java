@@ -18,7 +18,6 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.util.Cloner;
 
@@ -50,7 +49,7 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:domainProperty")
-	protected List<URI> subClassOf;
+	protected List<URI> domainProperties;
 	
 
 	@OneToMany(fetch = FetchType.EAGER,
@@ -82,25 +81,25 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.requiresEventPropertyQualities = new Cloner().reqEpQualitities(other.getRequiresEventPropertyQualities());
 		this.runtimeName = other.getRuntimeName();
 		this.eventPropertyQualities = new Cloner().provEpQualities(other.getEventPropertyQualities());
-		this.subClassOf = other.getSubClassOf();
+		this.domainProperties = other.getDomainProperties();
 	}
 	
 	public EventProperty(List<URI> subClassOf)
 	{
 		this();
-		this.subClassOf = subClassOf;
+		this.domainProperties = subClassOf;
 	}
 		
 	public EventProperty(String propertyName, List<URI> subClassOf) {
 		this();
 		this.runtimeName = propertyName;		
-		this.subClassOf = subClassOf;
+		this.domainProperties = subClassOf;
 	}
 	
 	public EventProperty(String propertyName, List<URI> subClassOf, List<EventPropertyQualityDefinition> eventPropertyQualities) {
 		this();
 		this.runtimeName = propertyName;		
-		this.subClassOf = subClassOf;
+		this.domainProperties = subClassOf;
 		this.eventPropertyQualities = eventPropertyQualities;
 	}
 
@@ -142,12 +141,12 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 		this.required = required;
 	}
 	
-	public List<URI> getSubClassOf() {
-		return subClassOf;
+	public List<URI> getDomainProperties() {
+		return domainProperties;
 	}
 
-	public void setSubClassOf(List<URI> subClassOf) {
-		this.subClassOf = subClassOf;
+	public void setDomainProperties(List<URI> subClassOf) {
+		this.domainProperties = subClassOf;
 	}
 
 	public String getLabel() {

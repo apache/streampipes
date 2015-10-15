@@ -18,7 +18,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	String value;
 	
 	@RdfProperty("sepa:hasType")
-	String type;
+	String requiredDomainProperty;
 	
 	public FreeTextStaticProperty() {
 		super();
@@ -26,7 +26,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	
 	public FreeTextStaticProperty(FreeTextStaticProperty other) {
 		super(other);
-		this.type = other.getType();
+		this.requiredDomainProperty = other.getRequiredDomainProperty();
 		this.value = other.getValue();
 	}
 	
@@ -38,7 +38,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	public FreeTextStaticProperty(String name, String description, String type)
 	{
 		super(name, description);
-		this.type = type;
+		this.requiredDomainProperty = type;
 	}
 
 	public String getValue() {
@@ -49,12 +49,12 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.value = value;
 	}
 
-	public String getType() {
-		return type;
+	public String getRequiredDomainProperty() {
+		return requiredDomainProperty;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setRequiredDomainProperty(String type) {
+		this.requiredDomainProperty = type;
 	}
 	
 	public void accept(StaticPropertyVisitor visitor) {

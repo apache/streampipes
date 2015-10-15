@@ -41,7 +41,7 @@ public class EventStream extends NamedSEPAElement {
 	@RdfProperty("sepa:hasGrounding")
 	EventGrounding eventGrounding;
 	
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasSchema")
 	EventSchema eventSchema;
 	

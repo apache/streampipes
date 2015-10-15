@@ -60,7 +60,8 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 	{
 		super(other);
 		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
-		this.outputStream = new EventStream(other.getOutputStream());
+		this.outputStream =  new Cloner().stream(other.getOutputStream());
+		this.pathName = other.getPathName();
 	}
 
 	public SepaInvocation(SepaDescription sepa, String domId)

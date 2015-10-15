@@ -1,18 +1,14 @@
 package de.fzi.cep.sepa.model.impl.eventproperty;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
@@ -72,7 +68,7 @@ public class EventPropertyList extends EventProperty {
 		{
 			if (p instanceof EventPropertyPrimitive && eventProperties.size() == 1) 
 				{
-					result.put(runtimeName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getPropertyType()));
+					result.put(runtimeName, ModelUtils.getPrimitiveClassAsArray(((EventPropertyPrimitive) p).getRuntimeType()));
 					break;
 				}
 			else 
