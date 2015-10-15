@@ -1,8 +1,13 @@
 package de.fzi.cep.sepa.esper.aggregate.avg;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.openrdf.rio.RDFHandlerException;
+
+import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
@@ -28,6 +33,7 @@ import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -104,8 +110,6 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 
 		String aggregate = SepaUtils.getMappingPropertyName(sepa, "aggregate");
 
-		System.out.println("AGG: " + aggregate);
-
 		int outputEvery = Integer.parseInt(
 				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
 
@@ -113,8 +117,6 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
 
 		String aggregateOperation = SepaUtils.getOneOfProperty(sepa, "operation");
-
-		System.out.println("AGGOP: " + aggregateOperation);
 
 		AggregationType aggregationType;
 

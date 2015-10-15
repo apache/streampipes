@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
@@ -28,6 +29,8 @@ import de.fzi.cep.sepa.esper.pattern.PatternController;
 import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
 import de.fzi.cep.sepa.esper.proasense.drillingstop.DrillingStopController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
+import de.fzi.cep.sepa.hella.minshuttletime.MinShuttleTimeController;
+import de.fzi.cep.sepa.hella.shuttletime.ShuttleTimeController;
 
 public class Init implements Runnable {
 
@@ -62,6 +65,9 @@ public class Init implements Runnable {
 		//declarers.add(new DrillingStopEnrichedController());
 		declarers.add(new DistributionController());
 		declarers.add(new StaticValueEnricherController());
+		declarers.add(new AbsenceController());
+		declarers.add(new ShuttleTimeController());
+		declarers.add(new MinShuttleTimeController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();
