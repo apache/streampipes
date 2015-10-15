@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.sources.samples.hella;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +10,7 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -37,13 +39,13 @@ public class MaterialMovementStream extends AbstractHellaStream {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_type", "", Utils.createURI(SO.Text)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "location", "", Utils.createURI(SO.Text)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "event", "", Utils.createURI(SO.Text)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "shuttle", "", Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "rightPiece", "", Utils.createURI("http://schema.org/Boolean")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "leftPiece", "", Utils.createURI("http://schema.org/Boolean")));
+		eventProperties.add(EpProperties.stringEp("variable_type", SO.Text));
+		eventProperties.add(EpProperties.longEp("variable_timestamp", "http://schema.org/DateTime"));
+		eventProperties.add(EpProperties.stringEp("location", Arrays.asList(URI.create("http://hella.de/hella#montracLocationId"), URI.create(SO.Text))));
+		eventProperties.add(EpProperties.stringEp("event", Arrays.asList(URI.create("http://hella.de/hella#montracEvent"), URI.create(SO.Text))));
+		eventProperties.add(EpProperties.integerEp("shuttle", Arrays.asList(URI.create("http://hella.de/hella#shuttleId"), URI.create(SO.Number))));
+		eventProperties.add(EpProperties.booleanEp("rightPiece", "http://schema.org/Boolean"));
+		eventProperties.add(EpProperties.stringEp("leftPiece", "http://schema.org/Boolean"));
 		
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
