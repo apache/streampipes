@@ -61,8 +61,8 @@ public class Matcher {
 				else if (left instanceof EventPropertyPrimitive)
 				{
 					EventPropertyPrimitive leftPrimitive = (EventPropertyPrimitive) left;
-					List<URI> leftUris = leftPrimitive.getSubClassOf();
-					if (!matches(leftUris, rightPrimitive.getSubClassOf())) match = false;
+					List<URI> leftUris = leftPrimitive.getDomainProperties();
+					if (!matches(leftUris, rightPrimitive.getDomainProperties())) match = false;
 					else {
 						allMatchingProperties.add(leftPrimitive);
 					}

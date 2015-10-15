@@ -14,7 +14,7 @@ public class SchemaGenerator {
 		for(EventProperty requiredProperty : schemaRequirement.getEventProperties())
 		{
 			if (requiredProperty instanceof EventPropertyPrimitive)
-				schema.addEventProperty(new EventPropertyPrimitive(((EventPropertyPrimitive) requiredProperty).getPropertyType(), MonitoringUtils.randomKey(), "", requiredProperty.getSubClassOf()));
+				schema.addEventProperty(new EventPropertyPrimitive(((EventPropertyPrimitive) requiredProperty).getRuntimeType(), MonitoringUtils.randomKey(), "", requiredProperty.getDomainProperties()));
 			//else if (requiredProperty instanceof EventPropertyNested)
 		}
 		return schema;

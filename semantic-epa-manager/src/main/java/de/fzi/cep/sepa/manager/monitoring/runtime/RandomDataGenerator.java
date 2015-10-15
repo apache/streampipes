@@ -18,10 +18,10 @@ public class RandomDataGenerator {
 	
 	public Object getValue(EventPropertyPrimitive primitive)
 	{
-		if (primitive.getPropertyType().equals(getString())) return RandomStringUtils.randomAlphabetic(10);
-		else if (primitive.getPropertyType().equals(getLong())) return random.nextLong();
-		else if (primitive.getPropertyType().equals(getInt())) return random.nextInt();
-		else if (primitive.getPropertyType().equals(getDouble())) return random.nextDouble();
+		if (primitive.getRuntimeType().equals(getString())) return RandomStringUtils.randomAlphabetic(10);
+		else if (primitive.getRuntimeType().equals(getLong())) return random.nextLong();
+		else if (primitive.getRuntimeType().equals(getInt())) return random.nextInt();
+		else if (primitive.getRuntimeType().equals(getDouble())) return random.nextDouble();
 		else return random.nextBoolean();
 	}
 	

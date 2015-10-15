@@ -32,7 +32,7 @@ public class PropertyDuplicateRemover {
 				if (newProperty instanceof EventPropertyPrimitive) 
 					{
 						EventPropertyPrimitive primitive = (EventPropertyPrimitive) newProperty;
-						newProperty = new EventPropertyPrimitive(primitive.getPropertyType(), primitive.getRuntimeName() +i, primitive.getMeasurementUnit(), primitive.getSubClassOf());
+						newProperty = new EventPropertyPrimitive(primitive.getRuntimeType(), primitive.getRuntimeName() +i, primitive.getMeasurementUnit(), primitive.getDomainProperties());
 						newProperty.setRdfId(new URIKey(URI.create(primitive.getRdfId().toString() +i)));
 					}
 				if (newProperty instanceof EventPropertyNested)
@@ -47,7 +47,7 @@ public class PropertyDuplicateRemover {
 							if (np instanceof EventPropertyPrimitive)
 							{
 								EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
-								EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getPropertyType(), thisPrimitive.getRuntimeName(), thisPrimitive.getMeasurementUnit(), thisPrimitive.getSubClassOf());	
+								EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), thisPrimitive.getMeasurementUnit(), thisPrimitive.getDomainProperties());	
 								//newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
 								newNested.setRdfId(new URIKey(URI.create(thisPrimitive.getRdfId().toString())));
 								nestedProperties.add(newNested);
