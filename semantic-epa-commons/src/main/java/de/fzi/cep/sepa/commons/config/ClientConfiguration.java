@@ -56,6 +56,14 @@ public enum ClientConfiguration {
 	private File pathToFile;
 	private File file;
 	
+	private boolean twitterActive;
+	private boolean randomNumberActive;
+	private boolean taxiActive;
+	private boolean hellaReplayActive;
+	private boolean mhwirthReplayActive;
+	private boolean proveItActive;
+	
+	
 	private PropertiesConfiguration config;
 	
 	ClientConfiguration()
@@ -96,6 +104,14 @@ public enum ClientConfiguration {
 			
 			properties.put("webappHost", "localhost");
 			properties.put("webappPort", "8080");
+			
+			properties.put("twitterActive", false);
+			properties.put("randomNumberActive", false);
+			properties.put("taxiActive", false);
+			properties.put("hellaReplayActive", true);
+			properties.put("mhwirthReplayActive", false);
+			properties.put("proveItActive", false);
+			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
 			if (!file.exists())
@@ -140,6 +156,14 @@ public enum ClientConfiguration {
 			this.webappHost = config.getString("webappHost");
 			this.webappPort = config.getInt("webappPort");
 			this.webappUrl = "http://" +webappHost +":" +webappPort;
+			
+			this.twitterActive = config.getBoolean("twitterActive");
+			this.randomNumberActive = config.getBoolean("randomNumberActive");
+			this.taxiActive = config.getBoolean("taxiActive");
+			this.hellaReplayActive = config.getBoolean("hellaReplayActive");
+			this.mhwirthReplayActive = config.getBoolean("mhwirthReplayActive");
+			this.proveItActive = config.getBoolean("proveItActive");
+			
 			
 		} catch (ConfigurationException e) {
 			createDefaultSettings();
@@ -233,6 +257,30 @@ public enum ClientConfiguration {
 
 	public String getWebappUrl() {
 		return webappUrl;
+	}
+	
+	public boolean isTwitterActive() {
+		return twitterActive;
+	}
+
+	public boolean isRandomNumberActive() {
+		return randomNumberActive;
+	}
+
+	public boolean isTaxiActive() {
+		return taxiActive;
+	}
+
+	public boolean isHellaReplayActive() {
+		return hellaReplayActive;
+	}
+
+	public boolean isMhwirthReplayActive() {
+		return mhwirthReplayActive;
+	}
+
+	public boolean isProveItActive() {
+		return proveItActive;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
