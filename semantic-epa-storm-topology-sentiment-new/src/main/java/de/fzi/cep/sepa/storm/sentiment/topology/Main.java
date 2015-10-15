@@ -19,10 +19,8 @@ import de.fzi.cep.sepa.storm.topology.SinkSepaBolt;
 import de.fzi.cep.sepa.storm.utils.Utils;
 
 public class Main {
-	public static String NIMBUS_HOST = "ipe-koi05.fzi.de";
-	public static int NIMBUS_THRIFT_PORT = 6627;
 
-	public final static String TOPOLOGY_NAME = "sentiment-detection";
+	
 	private static String SINK_BOLT_ID = "sinkBolt";
 	public static  String SPOUT_ID = "SepaSpout";
 	
@@ -80,14 +78,14 @@ public class Main {
 	private static void testDeploy(Config conf, StormTopology topology) {
 		 conf.setDebug(true);
 		 LocalCluster cluster = new LocalCluster();
-		 cluster.submitTopology(TOPOLOGY_NAME, conf, topology);
+		 cluster.submitTopology(Utils.TOPOLOGY_NAME, conf, topology);
 	}
 
 	private static void productionDeploy(Config productionConfig, StormTopology topology) throws AlreadyAliveException, InvalidTopologyException {
-		productionConfig.put(Config.NIMBUS_HOST, NIMBUS_HOST);
-		productionConfig.put(Config.NIMBUS_THRIFT_PORT, NIMBUS_THRIFT_PORT);
+		productionConfig.put(Config.NIMBUS_HOST, Utils.NIMBUS_HOST);
+		productionConfig.put(Config.NIMBUS_THRIFT_PORT, Utils.NIMBUS_THRIFT_PORT);
 		productionConfig.setDebug(true);
-		StormSubmitter.submitTopology(TOPOLOGY_NAME, productionConfig, topology);
+		StormSubmitter.submitTopology(Utils.TOPOLOGY_NAME, productionConfig, topology);
 	}
 	
 	

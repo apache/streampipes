@@ -14,6 +14,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.storm.utils.StormUtils;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
@@ -37,7 +38,7 @@ public class SentimentDetectionBolt extends BaseRichBolt {
 
 	public SentimentDetectionBolt(String id, EventStream eventStream) {
 		this.id = id;
-		this.scheme = Utils.getScheme(eventStream);
+		this.scheme = StormUtils.getScheme(eventStream);
 		newFields = scheme.getOutputFields().toList();
 		newFields.add("sentiment");
 		oldFields = scheme.getOutputFields().toList();

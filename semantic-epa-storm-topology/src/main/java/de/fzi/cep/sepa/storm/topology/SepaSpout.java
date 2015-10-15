@@ -11,6 +11,7 @@ import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.storm.utils.StormUtils;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -34,7 +35,7 @@ public class SepaSpout extends BaseRichSpout {
 
 	public SepaSpout(String id, EventStream eventStream) {
 		this.id = id;
-		this.scheme = Utils.getScheme(eventStream);
+		this.scheme = StormUtils.getScheme(eventStream);
 		this.zookeeper = Utils.getZookeeperUrl(eventStream);		
 		this.topic = Utils.getTopic(eventStream);
 	}

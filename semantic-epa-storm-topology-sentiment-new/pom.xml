@@ -23,7 +23,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-  		<dependency>
+		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
 			<version>3.4</version>
@@ -53,6 +53,12 @@
 					<artifactId>log4j</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>0.9.5</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>
@@ -111,7 +117,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin> 
+			</plugin>
 		</plugins>
 	</build>
 </project>

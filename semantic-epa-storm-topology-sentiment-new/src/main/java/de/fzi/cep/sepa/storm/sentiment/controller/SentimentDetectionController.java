@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.storm.sentiment.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +18,13 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.config.StormConfig;
-import de.fzi.cep.sepa.storm.sentiment.topology.Main;
 import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends EpDeclarer<Parameters>{
-	private static String STORM_LOCATION = "~/apache-storm-0.9.5/bin/storm";
-	private static String JAR_LOCATION = "~/semantic-epa-storm-topology-sentiment.jar";
+	private static String STORM_LOCATION = "/apache-storm-0.9.5/bin/storm";
+	private static String JAR_LOCATION = "/semantic-epa-storm-topology-sentiment-1.jar";
 	private static String MAIN_CLASS = "de.fzi.cep.sepa.storm.sentiment.topology.Main";
 
 	private static String ID;
@@ -82,14 +79,16 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 		ID = res.getId();
 		REV = res.getRev();
 
-		Utils.executeCommand(STORM_LOCATION + " jar " + JAR_LOCATION + " " + MAIN_CLASS +" "+ ID +" -c nimbus.host=" + Main.NIMBUS_HOST + " -c nimbus.thift.port=" + Main.NIMBUS_THRIFT_PORT);
+        System.out.println("Start uploading the topology!");
+		Utils.executeCommand(STORM_LOCATION + " jar " + JAR_LOCATION + " " + MAIN_CLASS +" "+ ID +" -c nimbus.host=" + Utils.NIMBUS_HOST + " -c nimbus.thift.port=" + Utils.NIMBUS_THRIFT_PORT);
+        System.out.println("The topology was successfully uploaded!");
 		
 		return new Response(ID, true);
 	}
 	
 	@Override 
 	public Response detachRuntime() {
-		Utils.executeCommand(STORM_LOCATION + " kill " + Main.TOPOLOGY_NAME +" -c nimbus.host=" + Main.NIMBUS_HOST + " -c nimbus.thift.port=" + Main.NIMBUS_THRIFT_PORT);
+		Utils.executeCommand(STORM_LOCATION + " kill " + Utils.TOPOLOGY_NAME +" -c nimbus.host=" + Utils.NIMBUS_HOST + " -c nimbus.thift.port=" + Utils.NIMBUS_THRIFT_PORT);
 		Utils.removeSepaInvocation(ID, REV);
 
 		return new Response(ID, true);

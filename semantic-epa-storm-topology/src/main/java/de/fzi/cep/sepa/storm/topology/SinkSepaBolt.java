@@ -28,6 +28,7 @@ import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import de.fzi.cep.sepa.storm.utils.StormUtils;
 import de.fzi.cep.sepa.storm.utils.Utils;
 import de.fzi.cep.sepa.util.ThriftSerializer;
 import backtype.storm.spout.Scheme;
@@ -60,7 +61,7 @@ private static final long serialVersionUID = -3694170770048756860L;
     	this.id = id;
 		this.broker = Utils.getBroker(eventStream);		
 		this.topic = Utils.getTopic(eventStream);
-		this.scheme = Utils.getScheme(eventStream);
+		this.scheme = StormUtils.getScheme(eventStream);
 	}
     
 
@@ -99,7 +100,7 @@ private static final long serialVersionUID = -3694170770048756860L;
 	
 	private byte[] toOutputFormat(Map<String, Object> event, B parameters) throws TException
 	{
-		if (Utils.isJson(parameters.getGraph().getOutputStream()))
+		if (StormUtils.isJson(parameters.getGraph().getOutputStream()))
 			return toJsonOutputFormat(event);
 		else 
 			return toThriftOutputFormat(event);
