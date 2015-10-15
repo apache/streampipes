@@ -45,6 +45,7 @@ public enum StorageManager {
 	private RepositoryConnection dbpediaConn;
 	
 	private Repository repository;
+	private Repository bkrepo;
 	
 	private InMemoryStorage inMemoryStorage;
 	private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
@@ -61,10 +62,10 @@ public enum StorageManager {
 	private void initBackgroundKnowledgeStorage() {
 		//File dataDir = new File("C:\\temp\\myRepository\\");
 		//Repository repo = new SailRepository( new MemoryStore(dataDir) );
-		Repository repo = new HTTPRepository(SERVER, REPOSITORY_ID);
+		bkrepo = new HTTPRepository(SERVER, REPOSITORY_ID);
 		try {
-			repo.initialize();
-			this.backgroundKnowledgeStorage = new BackgroundKnowledgeStorageImpl(repo);
+			bkrepo.initialize();
+			this.backgroundKnowledgeStorage = new BackgroundKnowledgeStorageImpl(bkrepo);
 		} catch (RepositoryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,6 +125,10 @@ public enum StorageManager {
 
 	public RepositoryConnection getConnection() {
 		return conn;
+	}
+	
+	public Repository getRepository() {
+		return bkrepo;
 	}
 	
 	public RepositoryConnection getDbpediaConnection() {

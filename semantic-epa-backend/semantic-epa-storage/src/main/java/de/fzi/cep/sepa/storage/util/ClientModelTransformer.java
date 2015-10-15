@@ -165,7 +165,7 @@ public class ClientModelTransformer {
 								{
 									if (tempProperty instanceof EventPropertyPrimitive)
 									{
-										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getPropertyType(), tempProperty.getRuntimeName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getSubClassOf());
+										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getRuntimeType(), tempProperty.getRuntimeName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getDomainProperties());
 										newProperty.setRdfId(new URIKey(URI.create(tempProperty.getRdfId().toString() +j)));
 										matchedProperty = newProperty;
 									}
@@ -316,7 +316,7 @@ public class ClientModelTransformer {
 			FreeTextStaticProperty p) {
 		TextInput input = new TextInput();
 		input.setValue("");
-		if (p.getType() != null) input.setDatatype(p.getType());
+		if (p.getRequiredDomainProperty() != null) input.setDatatype(p.getRequiredDomainProperty());
 		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 

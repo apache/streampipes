@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.storage.ontology;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
@@ -11,20 +12,20 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryException;
 
+import de.fzi.cep.sepa.model.client.ontology.Namespace;
 import de.fzi.cep.sepa.model.client.ontology.NodeType;
 import de.fzi.cep.sepa.model.client.ontology.OntologyNode;
+import de.fzi.cep.sepa.storage.filter.BackgroundKnowledgeFilter;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
-import de.fzi.cep.sepa.storage.sparql.QueryExecutor;
+import de.fzi.cep.sepa.storage.util.BackgroundKnowledgeUtils;
 
-public class ClassHierarchyBuilder {
+public class ClassHierarchyExecutor extends QueryExecutor {
 	
 	private static final String RDFS_SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf";
-
-	private Repository repository;
 	
-	public ClassHierarchyBuilder(Repository repository)
+	public ClassHierarchyExecutor(Repository repository)
 	{
-		this.repository = repository;
+		super(repository);
 	}
 	
 	private List<OntologyNode> getClasses() throws QueryEvaluationException, RepositoryException, MalformedQueryException {		
@@ -33,9 +34,9 @@ public class ClassHierarchyBuilder {
 		while (result.hasNext()) {
 			BindingSet bindingSet = result.next();
 			Value valueOfX = bindingSet.getValue("result");
-			classNodes.add(new OntologyNode(valueOfX.toString(), getLabelName(valueOfX.toString()), NodeType.CLASS));
+			classNodes.add(makeNode(valueOfX.stringValue(), NodeType.CLASS));
 		}
-		return classNodes;
+		return BackgroundKnowledgeFilter.classFilter(classNodes);
 	}
 	
 	private String getLabelName(String value)
@@ -47,16 +48,16 @@ public class ClassHierarchyBuilder {
 	
 	private TupleQueryResult getQueryResult(String queryString) throws QueryEvaluationException, RepositoryException, MalformedQueryException
 	{
-		return new QueryExecutor(repository.getConnection(), queryString).execute();
+		return executeQuery(queryString);
 	}
 	
-	public List<OntologyNode> makeClassHierarchy() throws QueryEvaluationException, RepositoryException, MalformedQueryException {
+	public List<OntologyNode> getClassHierarchy() throws QueryEvaluationException, RepositoryException, MalformedQueryException {
 		List<OntologyNode> classHierarchy = new ArrayList<>();
 		for(OntologyNode node : getClasses())
 		{
 			List<OntologyNode> children = new ArrayList<>();
 			children.addAll(getInstances(node.getId()));
-			node.setChildren(children);
+			node.setNodes(children);
 			classHierarchy.add(node);
 		}
 		return classHierarchy;
@@ -69,19 +70,30 @@ public class ClassHierarchyBuilder {
 		while (queryResult.hasNext()) {
 			BindingSet bindingSet = queryResult.next();
 			Value valueOfX = bindingSet.getValue("s");
-			result.add(new OntologyNode(valueOfX.toString(), getLabelName(valueOfX.toString()), NodeType.CLASS));
+			result.add(makeNode(valueOfX.stringValue(), NodeType.CLASS));
 		}
 		return result;
 	}
 	
+	private OntologyNode makeNode(String id, NodeType nodeType)
+	{
+		OntologyNode node;
+		Optional<Namespace> ns = BackgroundKnowledgeUtils.getNamespace(id.toString());
+		if (ns.isPresent()) node = new OntologyNode(id.toString(), id.toString().replace(ns.get().getName(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getName(), NodeType.CLASS);
+		else node = new OntologyNode(id.toString(), getLabelName(id.toString()), nodeType);
+		
+		return node;
+	}
+	
 	private List<OntologyNode> getInstances(String className) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
+		
 		List<OntologyNode> result = new ArrayList<>();
 		TupleQueryResult queryResult = getQueryResult(QueryBuilder.getInstances(className));
 		
 		while (queryResult.hasNext()) {
 			BindingSet bindingSet = queryResult.next();
 			Value valueOfX = bindingSet.getValue("s");
-			result.add(new OntologyNode(valueOfX.toString(), getLabelName(valueOfX.toString()), NodeType.INSTANCE));
+			result.add(makeNode(valueOfX.toString(), NodeType.INSTANCE));
 		}
 		return result;
 	}
