@@ -5,28 +5,30 @@ import java.util.List;
 
 public class Concept extends OntologyElement {
 	
-	private List<Statement> statements;
+	private List<Property> domainProperties;
 	
-	public Concept(String rdfsLabel, String rdfsDescription)
+	public Concept(ElementHeader elementHeader, String rdfsLabel, String rdfsDescription, List<Property> domainProperties)
 	{
-		super(rdfsLabel, rdfsDescription);
-		this.statements = new ArrayList<>();
+		super(elementHeader, rdfsLabel, rdfsDescription);
+		this.domainProperties = domainProperties;
 	}
 	
 	public Concept()
 	{
-		this.statements = new ArrayList<>();
+		this.domainProperties = new ArrayList<>();
 	}
 
-	public List<Statement> getStatements() {
-		return statements;
+	public Concept(ElementHeader header) {
+		super(header);
 	}
 
-	public void setStatements(List<Statement> statements) {
-		this.statements = statements;
+	public List<Property> getDomainProperties() {
+		return domainProperties;
+	}
+
+	public void setDomainProperties(List<Property> domainProperties) {
+		this.domainProperties = domainProperties;
 	}
 	
-	
-	
-	
+
 }

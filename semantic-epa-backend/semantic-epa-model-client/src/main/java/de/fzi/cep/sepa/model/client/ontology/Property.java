@@ -1,12 +1,52 @@
 package de.fzi.cep.sepa.model.client.ontology;
 
-import java.util.List;
-
 public class Property extends OntologyElement {
 	
-	public Property(String rdfsLabel, String rdfsDescription)
+	private Range range;
+	
+	private boolean rangeDefined;
+	private boolean labelDefined;
+	
+	public Property(ElementHeader elementHeader, String rdfsLabel, String rdfsDescription, Range range)
 	{
-		super(rdfsLabel, rdfsDescription);
+		super(elementHeader, rdfsLabel, rdfsDescription);
+		this.range = range;
+		this.labelDefined = true;
+		this.rangeDefined = true;
+	}
+
+	public Property() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Property(ElementHeader header) {
+		super(header);
+		this.rangeDefined = false;
+		this.labelDefined = false;
+	}
+
+	public Range getRange() {
+		return range;
+	}
+
+	public void setRange(Range range) {
+		this.range = range;
+	}
+
+	public boolean isRangeDefined() {
+		return rangeDefined;
+	}
+
+	public void setRangeDefined(boolean rangeDefined) {
+		this.rangeDefined = rangeDefined;
+	}
+
+	public boolean isLabelDefined() {
+		return labelDefined;
+	}
+
+	public void setLabelDefined(boolean labelDefined) {
+		this.labelDefined = labelDefined;
 	}
 	
 	
