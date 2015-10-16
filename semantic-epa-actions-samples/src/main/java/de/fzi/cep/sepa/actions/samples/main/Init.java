@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.gauge.GaugeController;
 import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
+import de.fzi.cep.sepa.actions.samples.kafka.KafkaController;
 import de.fzi.cep.sepa.actions.samples.maparea.MapAreaController;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
 import de.fzi.cep.sepa.actions.samples.notification.NotificationController;
@@ -49,6 +50,7 @@ public class Init implements Runnable {
 		consumers.add(new de.fzi.cep.sepa.actions.samples.maparealist.MapAreaController());
 		consumers.add(new ProaSenseKpiController());
 		consumers.add(new NotificationController());
+		consumers.add(new KafkaController());
 		//consumers.add(new HistogramController());
 		
 		try {
