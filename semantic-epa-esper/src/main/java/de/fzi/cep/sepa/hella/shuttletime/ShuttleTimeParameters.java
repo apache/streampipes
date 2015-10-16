@@ -23,11 +23,11 @@ private static final long serialVersionUID = 4319341875274736697L;
 		super(graph);
 		this.selectProperties = selectProperties;
 		
-		mouldingMachines.add(new MouldingMachine("IMM1", "Arrive", "IMM 1"));
-		mouldingMachines.add(new MouldingMachine("IMM2", "Arrive", "IMM 1"));
-		mouldingMachines.add(new MouldingMachine("IMM 3", "Arrive", "IMM1"));
-		mouldingMachines.add(new MouldingMachine("IMM 4", "Arrive", "IMM1"));
-		mouldingMachines.add(new MouldingMachine("IMM 5", "Arrive",  "IMM1"));
+		mouldingMachines.add(new MouldingMachine("IMM1", "Arrive", "IMM1"));
+		mouldingMachines.add(new MouldingMachine("IMM2", "Arrive", "IMM2"));
+		mouldingMachines.add(new MouldingMachine("IMM3", "Arrive", "IMM3"));
+		mouldingMachines.add(new MouldingMachine("IMM4", "Arrive", "IMM4"));
+		mouldingMachines.add(new MouldingMachine("IMM5", "Arrive",  "IMM5"));
 		
 		this.shuttleIdEventName = shuttleIdEventName;
 		this.eventEventName = eventEventName;

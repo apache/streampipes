@@ -22,11 +22,11 @@ public class ShuttleTime extends EsperEventEngine<ShuttleTimeParameters> {
 				String statement = "select a." +bindingParameters.getShuttleIdEventName() +" as shuttleId, b."
 						+bindingParameters.getLocationEventName() +" as mouldingMachineId, a."
 						+bindingParameters.getLocationEventName() +" as lacqueringLineId, (b."
-						+bindingParameters.getTimestampEventName() +" - a." +bindingParameters.getTimestampEventName() +") as time " 
+						+bindingParameters.getTimestampEventName() +" - a." +bindingParameters.getTimestampEventName() +") as timeDifference " 
 						+" from pattern[every a=" +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) 
 						+"(location='" +lacqueringLineId +"', event='WorkDone (Automatic)')"
 						+" -> b=" +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) 
-						+"(location='" +mm.getLocationId() +"', event='Arrive')"
+						+"(location='" +mm.getMachineId() +"', event='Arrive')"
 						+"] where a." +bindingParameters.getShuttleIdEventName() +"=b." +bindingParameters.getShuttleIdEventName();
 				
 				statements.add(statement);
