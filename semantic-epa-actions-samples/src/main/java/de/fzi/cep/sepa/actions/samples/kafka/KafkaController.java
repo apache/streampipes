@@ -56,6 +56,9 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Broker topic");
 		staticProperties.add(topic);
 		
+		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value");
+		staticProperties.add(topic);
+		
 		desc.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();
@@ -75,9 +78,10 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "topic")).getValue();
 			String port = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "port")).getValue();
 			
+			String pipelineId = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "additionalProperty")).getValue();
 			
 			kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(brokerHostname + ":" +port, topic)));
+					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(brokerHostname + ":" +port, topic), pipelineId));
 			kafkaConsumerGroup.run(1);
 			
 			//consumer.setListener(new ProaSenseTopologyPublisher(sec));
