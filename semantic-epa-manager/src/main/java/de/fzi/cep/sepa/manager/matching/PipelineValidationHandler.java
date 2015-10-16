@@ -118,6 +118,7 @@ public class PipelineValidationHandler {
 				EventStream ancestorOutputStream = ancestor.getOutputStream();
 				leftEventSchema = asList(ancestorOutputStream.getEventSchema());
 				leftEventGrounding = ancestor.getSupportedGrounding();
+				
 			}
 			schemaMatch = ConnectionValidator.validateSchema(
 					leftEventSchema,
@@ -139,7 +140,9 @@ public class PipelineValidationHandler {
 				{
 					invocationGraphs.addAll(makeInvocationGraphs(element));
 					SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
-					incomingStreams.add(ancestor.getOutputStream());
+					EventStream incomingStream = ancestor.getOutputStream();
+					incomingStream.setEventGrounding(ancestor.getSupportedGrounding());
+					incomingStreams.add(incomingStream);
 				}			
 			}
 		
