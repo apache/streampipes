@@ -47,7 +47,8 @@ public class HellaEnrichedStream extends AbstractHellaStream {
 		eventProperties.add(EpProperties.integerEp("IMM2_SW3", SO.Number));
 		eventProperties.add(EpProperties.integerEp("IMM3_SW4", SO.Number));
 		eventProperties.add(EpProperties.integerEp("IMM4_SW5", SO.Number));
-		eventProperties.add(EpProperties.integerEp("IMM5_SW11", SO.Number));		
+		eventProperties.add(EpProperties.integerEp("IMM5_SW11", SO.Number));	
+		eventProperties.add(EpProperties.integerEp("LACQUERING", SO.Number));		
 
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
