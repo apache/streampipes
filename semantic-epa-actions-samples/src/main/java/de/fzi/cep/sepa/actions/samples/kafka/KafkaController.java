@@ -57,7 +57,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		staticProperties.add(topic);
 		
 		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value");
-		staticProperties.add(topic);
+		staticProperties.add(addProperty);
 		
 		desc.setStaticProperties(staticProperties);
 		
