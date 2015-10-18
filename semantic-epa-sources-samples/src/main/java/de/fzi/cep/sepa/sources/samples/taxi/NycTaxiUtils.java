@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
@@ -26,10 +27,10 @@ public class NycTaxiUtils {
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "dropoff_datetime", "", Utils.createURI("http://test.de/timestamp")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "trip_time_in_secs", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "trip_distance", "", Utils.createURI("http://schema.org/Number")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_longitude", "", Utils.createURI("http://test.de/longitude")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_latitude", "", Utils.createURI("http://test.de/latitude")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_longitude", "", Utils.createURI("http://test.de/longitude")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_latitude", "", Utils.createURI("http://test.de/latitude")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_longitude", "", Utils.createURI(Geo.lng)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_latitude", "", Utils.createURI(Geo.lat)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_longitude", "", Utils.createURI(Geo.lng)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "dropoff_latitude", "", Utils.createURI(Geo.lat)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "payment_type", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "fare_amount", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "surcharge", "", Utils.createURI("http://schema.org/Number")));
