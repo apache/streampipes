@@ -3,13 +3,13 @@ package de.fzi.cep.sepa.model.client.ontology;
 public class Namespace {
 
 	private String prefix;
-	private String name;
+	private String namespaceId;
 	
 	
-	public Namespace(String prefix, String name) {
+	public Namespace(String prefix, String namespaceId) {
 		super();
 		this.prefix = prefix;
-		this.name = name;
+		this.namespaceId = namespaceId;
 	}
 	public String getPrefix() {
 		return prefix;
@@ -17,11 +17,11 @@ public class Namespace {
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
-	public String getName() {
-		return name;
+	public String getNamespaceId() {
+		return namespaceId;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNamespaceId(String name) {
+		this.namespaceId = name;
 	}
 	
 	

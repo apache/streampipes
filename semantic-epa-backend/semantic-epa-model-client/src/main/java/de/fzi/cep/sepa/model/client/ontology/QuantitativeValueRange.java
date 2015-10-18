@@ -11,10 +11,14 @@ public class QuantitativeValueRange extends Range {
 	private String unitCode;
 	
 	public QuantitativeValueRange(int minValue, int maxValue, String unitCode) {
-		super(RangeType.QUANTITATIVE_VALUE, TITLE, DESCRIPTION);
+		this();
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.unitCode = unitCode;
+	}
+
+	public QuantitativeValueRange() {
+		super(RangeType.QUANTITATIVE_VALUE, TITLE, DESCRIPTION);
 	}
 
 	public int getMinValue() {

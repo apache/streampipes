@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.model.client.ontology;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
-
 import java.util.ArrayList;
 import java.util.List;
 import de.fzi.cep.sepa.model.client.ontology.NodeType;
@@ -84,4 +82,16 @@ public class OntologyNode {
 		this.namespace = namespace;
 	}
 	
+	@Override 
+	public int hashCode() {
+		   return id.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (! (other instanceof OntologyNode)) return false;
+		else 
+				return this.id.equals(((OntologyNode)other).getId());
+	}
 }

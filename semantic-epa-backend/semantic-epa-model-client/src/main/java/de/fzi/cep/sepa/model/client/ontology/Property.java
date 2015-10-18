@@ -49,5 +49,17 @@ public class Property extends OntologyElement {
 		this.labelDefined = labelDefined;
 	}
 	
+	@Override 
+	public int hashCode() {
+		   return this.getElementHeader().getId().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (! (other instanceof Property)) return false;
+		else return this.getElementHeader().getId().equals(((Property)other).getElementHeader().getId());
+	}
+	
 	
 }
