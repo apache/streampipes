@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ng-context-menu'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ng-context-menu','ui.tree'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -193,8 +193,8 @@ angular
 	            url: '/ontology',
 	            views: {
 		            "streampipesView@streampipes" : {
-		            	  templateUrl : 'ontology.html',
-		            	  controller: 'AppCtrl'
+						templateUrl : 'modules/ontology/ontology.html',
+						controller: 'OntologyCtrl'
 		            }
 	            }
 	          })
@@ -391,19 +391,19 @@ angular
              icon: 'image:ic_portrait_24px'
            },
            {
-               link : 'streampipes.add',
-               title: 'Add element',
-               icon: 'content:ic_add_24px'
-           },
-           {
-               link : 'streampipes.create',
-               title: 'Create element',
-               icon: 'content:ic_add_24px'
-           },
-           {
-               link : 'streampipes.ontology',
-               title: 'Ontology Editor',
-               icon: 'social:ic_share_24px'
+			   link : 'streampipes.add',
+			   title: 'Import Elements',
+			   icon: 'content:ic_add_24px'
+		   },
+			 {
+				 link : 'streampipes.create',
+				 title: 'Create Element',
+				 icon: 'content:ic_add_24px'
+			 },
+			 {
+				 link : 'streampipes.ontology',
+				 title: 'Knowledge Configurator',
+				 icon: 'social:ic_share_24px'
            },
            {
              link : 'streampipes.settings',
@@ -427,13 +427,49 @@ angular
     })
 	.controller('RegisterCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $http) {
 
+		$scope.loading = false;
+		$scope.registrationFailed = false;
+		$scope.registrationSuccess = false;
+		$scope.errorMessage = "";
+
+		$scope.roles = [{"name" : "System Administrator", "internalName" : "SYSTEM_ADMINISTRATOR"},
+			{"name" : "Manager", "internalName" : "MANAGER"},
+			{"name" : "Operator", "internalName" : "OPERATOR"},
+			{"name" : "Demo User", "internalName" : "USER_DEMO"}];
+
+		$scope.selectedRole = $scope.roles[0].internalName;
+
 		$scope.register = function() {
 			var payload = {};
 			payload.username = $scope.username;
 			payload.password = $scope.password;
 			payload.email = $scope.email;
-			
-			$http.post("/semantic-epa-backend/api/v2/admin/register", payload);
+			payload.role = $scope.selectedRole;
+			$scope.loading = true;
+			$scope.registrationFailed = false;
+			$scope.registrationSuccess = false;
+			$scope.errorMessage = "";
+
+			$http.post("/semantic-epa-backend/api/v2/admin/register", payload)
+				.then(
+				function(response) {
+					$scope.loading = false;
+					if (response.data.success)
+					{
+						$scope.registrationSuccess = true;
+					}
+					else
+					{
+						$scope.registrationFailed = true;
+						$scope.errorMessage = response.data.notifications[0].title;
+					}
+
+				}, function(response) { // error
+
+					$scope.loading = false;
+					$scope.registrationFailed = true;
+				}
+			)
 		};
 	})
 
@@ -866,7 +902,66 @@ angular
 	    
 	    restApi.getActionById = function(elementId) {
  	    	return $http.get(urlBase() +"/actions/" +encodeURIComponent(elementId));
-    }
+    	}
+
+		restApi.getOntologyProperties = function() {
+			return $http.get("/semantic-epa-backend/api/ontology/properties");
+		};
+
+		restApi.getOntologyPropertyDetails = function(propertyId) {
+			return $http.get("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId));
+		}
+
+		restApi.addOntologyProperty = function(propertyData) {
+			return $http.post("/semantic-epa-backend/api/ontology/properties", propertyData);
+		}
+
+		restApi.getOntologyConcepts = function() {
+			return $http.get("/semantic-epa-backend/api/ontology/types");
+		};
+
+		restApi.getOntologyConceptDetails = function(conceptId) {
+			return $http.get("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId));
+		}
+
+		restApi.getOntologyNamespaces = function() {
+			return $http.get("/semantic-epa-backend/api/ontology/namespaces");
+		}
+
+		restApi.addOntologyNamespace = function(namespace) {
+			return $http.post("/semantic-epa-backend/api/ontology/namespaces", namespace);
+		}
+
+		restApi.deleteOntologyNamespace = function(prefix) {
+			return $http({
+				method: 'DELETE',
+				url: "/semantic-epa-backend/api/ontology/namespaces/" +encodeURIComponent(prefix)
+			});
+		}
+
+		restApi.addOntologyConcept = function(conceptData) {
+			return $http.post("/semantic-epa-backend/api/ontology/types", conceptData);
+		}
+
+		restApi.addOntologyInstance = function(instanceData) {
+			return $http.post("/semantic-epa-backend/api/ontology/instances", instanceData);
+		}
+
+		restApi.getOntologyInstanceDetails = function(instanceId) {
+			return $http.get("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId));
+		}
+
+		restApi.updateOntologyProperty = function(propertyId, propertyData) {
+			return $http.put("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId), propertyData);
+		}
+
+		restApi.updateOntologyConcept = function(conceptId, conceptData) {
+			return $http.put("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId), conceptData);
+		}
+
+		restApi.updateOntologyInstance = function(instanceId, instanceData) {
+			return $http.put("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId), instanceData);
+		}
 	
 	    return restApi;
 	}]);
