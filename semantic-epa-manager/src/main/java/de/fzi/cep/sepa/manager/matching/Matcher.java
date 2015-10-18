@@ -52,7 +52,6 @@ public class Matcher {
 	}
 	
 	public boolean matches(EventProperty right, EventProperty left) {
-		System.out.println("Matching right " +right.getDomainProperties().get(0).toString() +" against left " +left.getDomainProperties().get(0).toString());
 		boolean match = true;
 		//if (right.getClass() != left.getClass()) return false;
 		if (right instanceof EventPropertyPrimitive)
@@ -89,7 +88,6 @@ public class Matcher {
 					if (!matches(nestedProperty, left)) match = false;
 				}
 			}
-		System.out.println("result " +match);
 		return match;
 	}
 	
