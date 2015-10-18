@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue;
+import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class EpProperties {
@@ -45,10 +45,10 @@ public class EpProperties {
 		return ep(XSD._long.toString(), runtimeName, domainProperties);
 	}
 	
-	public static EventPropertyPrimitive integerEp(String runtimeName, String domainProperty, int minValue, int maxValue, String unitCode)
+	public static EventPropertyPrimitive integerEp(String runtimeName, String domainProperty, double minValue, double maxValue, double step)
 	{
 		EventPropertyPrimitive ep =  ep(XSD._integer.toString(), runtimeName, domainProperty);
-		ep.setValueSpecification(new QuantitativeValue(minValue, maxValue, unitCode));
+		ep.setValueSpecification(new PropertyValueSpecification(minValue, maxValue, step));
 		return ep;
 	}
 	
@@ -57,10 +57,10 @@ public class EpProperties {
 		return ep(XSD._double.toString(), runtimeName, domainProperty);
 	}
 	
-	public static EventPropertyPrimitive doubleEp(String runtimeName, String domainProperty, int minValue, int maxValue, String unitCode)
+	public static EventPropertyPrimitive doubleEp(String runtimeName, String domainProperty, double minValue, double maxValue, double step)
 	{
 		EventPropertyPrimitive ep =  ep(XSD._double.toString(), runtimeName, domainProperty);
-		ep.setValueSpecification(new QuantitativeValue(minValue, maxValue, unitCode));
+		ep.setValueSpecification(new PropertyValueSpecification(minValue, maxValue, step));
 		return ep;
 	}
 	

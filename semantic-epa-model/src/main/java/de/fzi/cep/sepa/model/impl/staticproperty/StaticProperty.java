@@ -42,6 +42,7 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 		this.elementId = other.getElementId();
 		this.elementName = other.getElementName();
 		this.internalName = other.getInternalName();
+		this.valueRequired = other.isValueRequired();
 		this.label = other.getLabel();
 	}
 	
@@ -83,6 +84,5 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	public void setValueRequired(boolean valueRequired) {
 		this.valueRequired = valueRequired;
 	}
-	
-	
+
 }

@@ -2,9 +2,7 @@ package de.fzi.cep.sepa.model.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -72,12 +70,5 @@ public class ModelUtils {
 		result.add(map);
 		return result;
 	}
-	
-
-	
-	private static boolean contains(String value, String[] list)
-	{
-		return Arrays.asList(list).contains(value);
-	}
-	
+		
 }

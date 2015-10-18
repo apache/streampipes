@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.spi.PersistenceProvider;
 
 import org.openrdf.model.Statement;
@@ -13,7 +12,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.http.HTTPRepository;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 
@@ -24,7 +22,6 @@ import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import com.clarkparsia.empire.util.EmpireUtil;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public enum EmpireManager {

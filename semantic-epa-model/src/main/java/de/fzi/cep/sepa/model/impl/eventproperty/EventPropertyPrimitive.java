@@ -15,6 +15,7 @@ import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -33,7 +34,7 @@ public class EventPropertyPrimitive extends EventProperty {
 	
 	@RdfProperty("sepa:valueSpecification")
 	@OneToOne(cascade = {CascadeType.ALL})
-	private QuantitativeValue valueSpecification;
+	private PropertyValueSpecification valueSpecification;
 	
 	public EventPropertyPrimitive()
 	{
@@ -80,11 +81,11 @@ public class EventPropertyPrimitive extends EventProperty {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public QuantitativeValue getValueSpecification() {
+	public PropertyValueSpecification getValueSpecification() {
 		return valueSpecification;
 	}
 
-	public void setValueSpecification(QuantitativeValue valueSpecification) {
+	public void setValueSpecification(PropertyValueSpecification valueSpecification) {
 		this.valueSpecification = valueSpecification;
 	}
 
