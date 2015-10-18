@@ -194,4 +194,34 @@ public class OntologyImpl extends AbstractRestInterface implements Ontology {
 		else return toJson(Notifications.error("Could not update instance. "));
 	}
 
+	@Override
+	@Path("/properties/{propertyId}")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deleteProperty(@PathParam("propertyId") String propertyId) {
+		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(propertyId);
+		if (success) return toJson(Notifications.success("Property successfully deleted."));
+		else return toJson(Notifications.error("Could not delete property. "));
+	}
+
+	@Override
+	@Path("/types/{typeId}")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deleteType(@PathParam("typeId") String typeId) {
+		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(typeId);
+		if (success) return toJson(Notifications.success("Concept successfully deleted."));
+		else return toJson(Notifications.error("Could not delete concept. "));
+	}
+
+	@Override
+	@Path("/instances/{instanceId}")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	public String deleteInstance(@PathParam("instanceId") String instanceId) {
+		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(instanceId);
+		if (success) return toJson(Notifications.success("Instance successfully deleted."));
+		else return toJson(Notifications.error("Could not delete instance. "));
+	}
+
 }

@@ -10,6 +10,8 @@ public interface Ontology {
 	
 	public String updateProperty(String propertyId, String propertyData);
 	
+	public String deleteProperty(String propertyId);
+	
 	
 	public String getTypeHiearchy();
 	
@@ -19,12 +21,16 @@ public interface Ontology {
 	
 	public String updateType(String typeId, String elementData);
 	
+	public String deleteType(String typeId);
+	
 	
 	public String addInstance(String elementData);
 	
 	public String getInstance(String instanceId);
 	
 	public String updateInstance(String instanceId, String elementData);
+	
+	public String deleteInstance(String instanceId);
 	
 	
 	public String getNamespaces();

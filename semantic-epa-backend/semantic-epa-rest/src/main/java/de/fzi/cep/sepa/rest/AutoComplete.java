@@ -28,6 +28,7 @@ public class AutoComplete extends AbstractRestInterface {
 	{
 		AutocompleteResult result = new AutocompleteResult();
 		String query = QueryBuilder.getAutocompleteSuggestion(propertyName);
+		System.out.println(query);
 		try {
 			TupleQueryResult queryResult = new QueryExecutor(StorageManager.INSTANCE.getRepository()).executeQuery(query);
 			while(queryResult.hasNext())
