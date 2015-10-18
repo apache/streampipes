@@ -59,7 +59,7 @@ public class CsvPublisher implements Runnable {
 								long diff = currentTime - previousTime;		
 								if (diff > 0) 
 								{
-									LOG.info("Waiting " +diff/1000 + " seconds");
+									//LOG.info("Waiting " +diff/1000 + " seconds");
 									Thread.sleep(diff/simulationSettings.getSpeedupFactor());
 								}
 								previousTime = currentTime;
