@@ -18,7 +18,7 @@
 	    		{{ns.prefix}}
 	    		</div>
 	    		<div class="md-list-item-text" flex="60" layout="column">
-	    		{{ns.name}}
+	    		{{ns.namespaceId}}
 	    		</div>
 	    		<div class="md-list-item-text" flex="20" layout="column">
 	    		<md-button  ng-click="deleteNamespace(ns.prefix)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>			
@@ -35,11 +35,11 @@
 		    		</div>
 		    		<div class="md-list-item-text" flex="60" layout="column">
 		    			<md-input-container> <label>Name</label> <input
-										type="text" ng-model="newNamespace.name"> 
+										type="text" ng-model="newNamespace.namespaceId"> 
 						</md-input-container>
 		    		</div>
 		    		<div class="md-list-item-text" flex="20" layout="column">
-		    		<md-button  ng-click="addNamespace(ns.name)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>			
+		    		<md-button  ng-click="addNamespace(ns.namespaceId)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>			
 		    		</div>
 		    </md-list-item>
 	    </div>

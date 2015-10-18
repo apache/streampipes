@@ -6,7 +6,7 @@ angular.module('streamPipesApp')
 	$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
 	                           {"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
 	                           {"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
-	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#float"}];
+	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];
 	
 	$scope.rangeTypes = [{"title" : "Primitive Type", "description" : "A primitive type, e.g., a number or a textual value", "rangeType" : "PRIMITIVE"},
 	                           {"title" : "Enumeration", "description" : "A textual value with a specified value set", "rangeType" : "ENUMERATION"},
@@ -25,6 +25,7 @@ angular.module('streamPipesApp')
 	
 	$scope.instanceSelected = false;
 	$scope.instanceDetail = {};
+	$scope.selectedInstanceProperty = "";
 	
 	
 	$scope.loadProperties = function(){
@@ -100,6 +101,22 @@ angular.module('streamPipesApp')
          });
     }
     
+    $scope.addPropertyToInstance = function() {
+    	if (!$scope.instanceDetail.domainProperties) $scope.instanceDetail.domainProperties = [];
+    	restApi.getOntologyPropertyDetails($scope.selectedInstanceProperty)
+        .success(function(propertiesData){
+       	 	$scope.instanceDetail.domainProperties.push(propertiesData);
+        })
+        .error(function(msg){
+            console.log(msg);
+        });
+         
+    }
+    
+    $scope.removePropertyFromInstance = function(property) {
+    	$scope.instanceDetail.domainProperties.splice($scope.instanceDetail.domainProperties.indexOf(property), 1);
+    }
+    
     $scope.removePropertyFromClass = function(property) {
     	$scope.conceptDetail.domainProperties.splice($scope.conceptDetail.domainProperties.indexOf(property), 1);
     }
@@ -110,6 +127,22 @@ angular.module('streamPipesApp')
     	restApi.updateOntologyConcept($scope.conceptDetail.elementHeader.id, $scope.conceptDetail)
 	    	.success(function(msg){
 	    		$scope.loading = false;
+	    		$scope.showToast("Concept updated.");
+	        })
+	        .error(function(msg){
+	        	$scope.loading = false;
+	
+	        });
+    }
+    
+    $scope.storeInstance = function() {
+    	$scope.loading = true;
+    	console.log($scope.instanceDetail);
+    	restApi.updateOntologyInstance($scope.instanceDetail.elementHeader.id, $scope.instanceDetail)
+	    	.success(function(msg){
+	    		$scope.loading = false;
+	    		$scope.showToast("Instance updated.");
+	    		$scope.loadConcepts();
 	        })
 	        .error(function(msg){
 	        	$scope.loading = false;
@@ -149,6 +182,7 @@ angular.module('streamPipesApp')
     	restApi.updateOntologyProperty($scope.propertyDetail.elementHeader.id, $scope.propertyDetail)
 	    	.success(function(msg){
 	    		$scope.loading = false;
+	    		$scope.showToast("Property updated.");
 	        })
 	        .error(function(msg){
 	        	$scope.loading = false;
@@ -183,6 +217,39 @@ angular.module('streamPipesApp')
 		      }
 	   	    })
 	 }
+	 
+	 $scope.deleteConcept = function(conceptId) {
+		 restApi.deleteOntologyConcept(conceptId)
+	    	.success(function(msg){
+	    		$scope.loadConcepts();
+	    		$scope.conceptSelected = false;
+	        })
+	        .error(function(msg){
+	        	console.log(msg);
+	        }); 
+	 };
+	 
+	 $scope.deleteProperty = function(propertyId) {
+		 restApi.deleteOntologyProperty(propertyId)
+	    	.success(function(msg){
+	    		$scope.loadProperties();
+	    		$scope.propertySelected = false;
+	        })
+	        .error(function(msg){
+	        	console.log(msg);
+	        }); 
+	 };
+	 
+	 $scope.deleteInstance = function(instanceId) {
+		 restApi.deleteOntologyInstance(instanceId)
+	    	.success(function(msg){
+	    		$scope.loadConcepts();
+	    		$scope.instanceSelected = false;
+	        })
+	        .error(function(msg){
+	        	console.log(msg);
+	        }); 
+	 };
     
 	$scope.$on('loadProperty', function(event, propertyId) {
 		console.log("hi");
@@ -193,7 +260,23 @@ angular.module('streamPipesApp')
     $scope.loadConcepts();
     
    
+    $scope.showToast = function(text) {
+	    $mdToast.show(
+	    	      $mdToast.simple()
+	    	        .content(text)
+	    	        .position("top right")
+	    	        .hideDelay(3000)
+	    	    );
+    }
     
+    $scope.openImportDialog = function() {
+    	 $mdDialog.show({
+      	      controller: ContextController,
+      	      templateUrl: 'modules/ontology/templates/manageVocabulariesDialog.tmpl.html',
+      	      parent: angular.element(document.body),
+      	      clickOutsideToClose:true,
+      	    })
+    }
     
 });
 
@@ -201,8 +284,9 @@ function AddDialogController($scope, $mdDialog, restApi, elementType, conceptId)
     
 	$scope.elementData = {};
 	$scope.elementData.namespace = "";
+	$scope.elementData.id = "";
 	$scope.elementData.elementName = "";
-	$scope.elementData.instanceOf = conceptId;
+	//$scope.elementData.instanceOf = conceptId;
 	$scope.elementType = elementType;
 	$scope.conceptId = conceptId;
 	$scope.namespaces = [];
@@ -225,7 +309,7 @@ function AddDialogController($scope, $mdDialog, restApi, elementType, conceptId)
 			restApi.addOntologyProperty($scope.elementData)
     			.success(function(msg){
     				$scope.loadProperties();
-    				$scope.loadPropertyDetails($scope.elementData.namespace +":" +$scope.elementData.elementName);
+    				$scope.loadPropertyDetails($scope.elementData.namespace +$scope.elementData.elementName);
     			});
     	}
 		else if (elementType === 'Concept') 
@@ -233,17 +317,19 @@ function AddDialogController($scope, $mdDialog, restApi, elementType, conceptId)
 			restApi.addOntologyConcept($scope.elementData)
 			.success(function(msg){
 				$scope.loadConcepts();
-				$scope.loadConceptDetails($scope.elementData.namespace +":" +$scope.elementData.elementName);
+				$scope.loadConceptDetails($scope.elementData.namespace +$scope.elementData.elementName);
 			});
 		}
 		else 
 		{
+			if ($scope.conceptId != undefined) $scope.elementData.instanceOf = conceptId;
+			$scope.elementData.id=$scope.elementData.namespace +$scope.elementData.elementName
 			restApi.addOntologyInstance($scope.elementData).success(function(msg){
 				console.log($scope.elementData);
 				
 				$scope.loadConcepts();
-				$scope.loadConceptDetails(conceptId);
-				$scope.loadInstanceDetails($scope.elementData.namespace +":" +$scope.elementData.elementName);
+				if ($scope.conceptId != undefined) $scope.loadConceptDetails(conceptId);
+				$scope.loadInstanceDetails($scope.elementData.namespace +$scope.elementData.elementName);
 			});
 		}
 		
@@ -317,5 +403,70 @@ function DialogController($scope, $mdDialog, restApi) {
   	};
   	
   	$scope.getNamespaces();
+	}
+
+function ContextController($scope, $mdDialog, restApi, Upload) {
+	
+	$scope.contexts = [];
+	$scope.addSelected = false;
+	$scope.newContext = {};
+	$scope.file = {};
+	
+	$scope.availableFormats = ["RDFXML", "JSONLD", "TURTLE", "RDFA"];
+	
+	$scope.getContexts = function() {
+    	 restApi.getAvailableContexts()
+         .success(function(contexts){
+             $scope.contexts = contexts;
+             console.log(contexts);
+         })
+         .error(function(msg){
+             console.log(msg);
+         });
+    }
+	
+	$scope.deleteContext = function(contextId) {
+		restApi.deleteContext(contextId)
+   		 .success(function(msg){
+   			 $scope.getContexts();
+            })
+        .error(function(msg){
+            console.log(msg);
+        }); 	
+	}
+	
+	$scope.showAddInput = function() {
+		$scope.addSelected = true;
+	}
+	
+	 $scope.submit = function(file) {
+	        $scope.f = file;
+	        if (file) {
+	            file.upload = Upload.upload({
+	                url: '/semantic-epa-backend/api/v2/contexts',
+	                data: {file: file, 'context' : angular.toJson($scope.newContext)}
+	            });
+
+	            file.upload.then(function (response) {
+	               console.log(response);
+	            }, function (response) {
+	                if (response.status > 0)
+	                    $scope.errorMsg = response.status + ': ' + response.data;
+	            }, function (evt) {
+	                file.progress = Math.min(100, parseInt(100.0 * 
+	                                         evt.loaded / evt.total));
+	            });
+	        }   
+	    }
+	
+  	$scope.hide = function() {
+  		$mdDialog.hide();
+  	};
+  	
+  	$scope.cancel = function() {
+  	    $mdDialog.cancel();
+  	};
+  	
+  	$scope.getContexts();
 	}
 	

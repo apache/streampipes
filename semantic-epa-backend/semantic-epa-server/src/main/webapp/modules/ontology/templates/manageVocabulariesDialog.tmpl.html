@@ -1,0 +1,63 @@
+<md-dialog aria-label="Manage Vocabularies" flex="80">
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Manage Vocabularies</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content flex="100">
+    <div>
+    	<h4>Available Vocabularies</h4>
+    	<div ng-repeat="context in contexts">
+	    	<md-list-item layout="row" class="md-with-secondary" >
+	    		<div class="md-list-item-text" flex="80" layout="column">
+	    		{{context}}
+	    		</div>
+	    		<div class="md-list-item-text" flex="20" layout="column">
+	    		<md-button  ng-click="deleteContext(context)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>			
+	    		</div>
+	    	</md-list-item>
+	    	<p/>
+    	</div>  
+    	<div ng-show="addSelected">
+    	<md-divider></md-divider>
+    	<h4>Add Vocabulary</h4>
+    	<form name="form">
+	 		<md-input-container> 
+	   			<label>Context Identifier</label> 
+	   			<input type="text" ng-model="newContext.contextId"> 
+			</md-input-container>	
+	  		<md-input-container> 
+	  			<label>Base Uri</label> 
+	  			<input type="text" ng-model="newContext.baseUri"> 
+			</md-input-container>
+			<md-input-container>
+				<md-select ng-model="newContext.rdfFormat" placeholder="Format">
+		          <md-option ng-repeat="format in availableFormats" value="{{format}}">
+		            <b>{{format}}</b><br/>
+		          </md-option>
+		        </md-select>
+			</md-input-container>
+			<md-input-container> 
+	  		  	<input type="file" ngf-select ng-model="rdfFile" name="file" ngf-max-size="2MB" class="md-button">
+	        </md-input-container>
+		    <div class="form-actions">
+		    	<md-button  ng-click="submit(rdfFile)" class="md-accent">Upload Vocabulary</md-button>			
+		    </div>
+		    </form>
+	    </div>
+    	<md-button ng-click="showAddInput()" class="md-accent" ng-show="!addSelected">Add Vocabulary</md-button>			
+	    		    
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+  </div>
+  </form>
+</md-dialog>

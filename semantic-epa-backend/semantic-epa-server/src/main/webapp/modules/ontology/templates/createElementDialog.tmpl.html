@@ -10,12 +10,12 @@
     </div>
   </md-toolbar>
   <md-dialog-content flex="100">
-  	<div ng-show="elementType === 'Instance'"><h4>Create an instance of class {{conceptId}}</h4></div>
+  	<div ng-show="conceptId != undefined"><h4>Create an instance of class {{conceptId}}</h4></div>
     <div layout="column">
 		    	<md-select ng-model="elementData.namespace" placeholder="Select Namespace">
-		          <md-option ng-repeat="ns in namespaces" value="{{ns.prefix}}">
+		          <md-option ng-repeat="ns in namespaces" value="{{ns.namespaceId}}">
 		            <b>{{ns.prefix}}</b><br/>
-		            {{ns.name}}
+		            {{ns.namespaceId}}
 		          </md-option>
 		        </md-select>
 			

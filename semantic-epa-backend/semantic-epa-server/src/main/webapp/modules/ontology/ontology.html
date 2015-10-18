@@ -1,26 +1,34 @@
-<div flex layout="row" layout-align="center center">
+<div flex="100" layout="row" layout-align="center center">
 	<div class="md-whiteframe-z2" style="width:100%">
 		<md-content class="md-padding">
 		<h1>Knowledge Configurator</h1>
+		<div class="column">
 		<md-button class="md-accent" ng-click="openNamespaceDialog()">Manage Namespaces</md-button>
+		<md-button class="md-accent" ng-click="openImportDialog()">Manage Vocabularies</md-button>
+		</div>
 		<md-tabs md-border-bottom>
 			<md-tab label="Properties"> 
-				<md-button class="md-accent" ng-click="openAddElementDialog('Property')">Create Property</md-button>
+				<md-button class="md-accent" ng-click="openAddElementDialog('Property')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create Property</md-button>
 				<div flex layout="row">
-					<div flex-sm="30" flex-gt-sm="30" layout-sm="column">
+					<div flex-sm="40" flex-gt-sm="40" layout-sm="column">
 						<div ui-tree data-drag-enabled="false">
 						  <ol ui-tree-nodes="" ng-model="properties">
 						    <li ng-repeat="item in properties" ui-tree-node>
-						      <div ui-tree-handle class="tree-node tree-node-content" ng-click="loadPropertyDetails(item.id)">
-						        <img ng-src="img/PROPERTY.png"> {{item.title}}
-						      </div>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadPropertyDetails(item.id)">
+						       <div flex="100" layout="row">
+						        <div flex="70" layout="row" layout-align="start center" class="tree-node-title"> {{item.title}}</div>
+						        <div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteProperty(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Property"></md-icon></md-button></div>	 
+						       </div>
+						     </div>
 						    </li>
 						  </ol>
 						</div>
 					</div>
-					<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
-						<md-content class="md-padding" ng-show="propertySelected">
-							<h3>{{propertyDetail.elementHeader.title}}</h3>
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="propertySelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							{{propertyDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding">
 							<form name="propertyForm" ng-submit="updateProperty()" role="form">
 								<md-input-container> <label>Label</label> <input
 									type="text" ng-model="propertyDetail.rdfsLabel" required> </md-input-container>
@@ -79,22 +87,33 @@
 				</div>
 			</md-tab>
 			<md-tab label="Concepts"> 
-				<md-button class="md-accent" ng-click="openAddElementDialog('Concept')">Create Concept</md-button>
+				<div layout="row">
+					<md-button class="md-accent" ng-click="openAddElementDialog('Concept')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Concept</md-button>
+					<md-button class="md-accent" ng-click="openAddElementDialog('Instance')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon>  Create Instance</md-button>
+				
+				</div>
 				<div flex layout="row">
 					<div flex-sm="30" flex-gt-sm="40" layout-sm="column">
 						<div ui-tree data-drag-enabled="false">
 						  <ol ui-tree-nodes="" ng-model="concepts">
 						    <li ng-repeat="item in concepts" ui-tree-node>
-						    	<div ui-tree-handle class="tree-node tree-node-content" ng-click="loadConceptDetails(item.id)">
+						    	<div ui-tree-handle class="tree-node tree-node-content color-concept" ng-click="loadConceptDetails(item.id)">
 							    	<div flex="100" layout="row">
-							        	<div flex="70" layout-align="start center"><img ng-src="img/CLASS.png"> <small>{{item.title}}</small></div>
-							        	<div flex="30" layout-align="end center"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div>	 
+							        	<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{item.title}}</div>
+							        	<div flex="30" layout="row" layout-align="end center">
+								        	<div flex="20"></div>
+								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	 
+											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	 
+										</div>
 									</div>
-						      	</div>
+								</div>		
 						      	 <ol ui-tree-nodes="" ng-model="item.nodes">
 								  	<li ng-repeat="node in item.nodes" ui-tree-node>
-								          <div ui-tree-handle ng-click="loadInstanceDetails(node.id)">
-								          	<div flex="70" layout-align="start center"><img ng-src="img/INSTANCE.png"> <small>{{node.title}}</small></div>
+								          <div ui-tree-handle class="tree-node tree-nocde-content color-instance" ng-click="loadInstanceDetails(node.id)">
+								          	<div flex="100" layout="row">
+								          		<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{node.title}}</div>
+								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	
+								         	 </div>
 								          </div>
 								    </li>
 							   	</ol>
@@ -102,9 +121,12 @@
 						  </ol>
 						</div>
 					</div>    
-					<div flex-sm="100" flex-gt-sm="60" layout-sm="column" layout-align="start start">
-						<md-content class="md-padding" ng-show="conceptSelected && !instanceSelected">
-							<h3>{{conceptDetail.elementHeader.title}}</h3>
+
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-concept" ng-show="conceptSelected && !instanceSelected">
+						<div class="ontology-panel-title ontology-panel-concept ontology-panel-title-concept">
+							{{conceptDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding" >
 							<form name="conceptForm" ng-submit="updateConcept()" role="form">
 								<md-input-container> <label>Label</label> <input
 									type="text" ng-model="conceptDetail.rdfsLabel" required> </md-input-container>
@@ -141,8 +163,12 @@
 								 <md-button class="md-accent md-raised" ng-click="storeClass()" type="submit">Save</md-button>	
 							</form>
 						</md-content>
-						<md-content class="md-padding" ng-show="instanceSelected">
-						
+					</div>
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-instance"  ng-show="instanceSelected">
+						<div class="ontology-panel-title ontology-panel-instance ontology-panel-title-instance">
+							{{instanceDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding">
 						<form name="instanceForm" ng-submit="updateInstance()" role="form">
 								<md-input-container> <label>Label</label> <input
 									type="text" ng-model="instanceDetail.rdfsLabel" required> </md-input-container>
@@ -154,7 +180,7 @@
 								<div ng-show="instanceDetail.domainProperties">
 									<div ng-repeat="property in instanceDetail.domainProperties">
 										<div class="md-whiteframe-z1 md-padding">
-											
+											<p><a ng-click="removePropertyFromInstance(property)">(Remove this property)</a></p>
 											<h4>{{property.elementHeader.title}}</h4>
 											<p/>
 											{{property.rdfsLabel}}<br/>
@@ -174,7 +200,7 @@
 											<b>Primitive Value </b><br/>
 											({{property.range.rdfsDatatype}})
 											<md-input-container flex> <label>Value</label>
-												<input type="text" ng-model="propertyDetail.range.value"> </md-input-container>
+												<input type="text" ng-model="property.range.value"> </md-input-container>
 										</div>
 										<div ng-show="property.range.rangeType === 'ENUMERATION'">
 											<h5>Enumeration</h5>
@@ -182,11 +208,18 @@
 										</div>
 										</div>
 									</div>
+									<md-divider></md-divider><p/>
+										<h4>Add new Property</h4>
+										<div layout="row">	 
+							        	<select ng-model="$parent.selectedInstanceProperty">
+							          		<option ng-repeat="property in properties" value="{{property.id}}">
+							            		{{property.title}}
+							          		</option>
+							        	</select>
+							      		<md-button class="md-accent" ng-click="addPropertyToInstance()" type="button">Add Property</md-button>
+							      		</div>
+									 <md-button class="md-accent md-raised" ng-click="storeInstance()" type="submit">Save</md-button>	
 								</div>
-						
-						
-						
-						
 						</md-content>
 					</div>
 				</div>

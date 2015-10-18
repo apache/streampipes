@@ -17,18 +17,79 @@ body {
 	background-attachment: fixed;	
 }
 
+.ontology-panel-main {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.ontology-panel-title {
+	padding: 5px;
+	font-size: 16pt;
+	color: #ffffff;
+}
+
+.ontology-panel-title-property {
+	background: #009688;
+}
+
+.ontology-panel-property {
+	 border: 1px solid #009688;
+}
+
+.ontology-panel-title-concept {
+	background: #F9A825;
+}
+
+.ontology-panel-concept {
+	 border: 1px solid #F9A825;
+}
+
+.ontology-panel-title-instance {
+	background: #9C27B0;
+}
+
+.ontology-panel-instance {
+	 border: 1px solid #9C27B0;
+}
+
+.tree-node-title {
+	color:black;
+	padding:3px;
+	font-size:12px;
+}
+
+
+.tree-node-action {
+	width:24px;
+	height:24px;
+	
+}
+
 .tree-node {
-	border: 1px solid #dae2ea;
+    border: 1px solid #dae2ea;
+    background: #ffffff;
+    color: rgb(63,81,181);
+    margin:5px;
+}
+
+.color-instance {
+	background: #F3E5F5;
+	border: 1px solid #9C27B0;
+}
+
+.color-concept {
+	background: #FFFDE7 ;
+	border: 1px solid #F9A825;
+}
+
+.color-property {
 	background: #f8faff;
-	color: rgb(63,81,181);
-	margin:5px;
+    border: 1px solid #009688;
 }
 
 .angular-ui-tree-handle {
-	background: #f8faff;
-	border: 1px solid #dae2ea;
-	color: rgb(63,81,181);
-	padding: 10px 10px;
+    color: black;
+    padding: 5px 5px;
 }
 
 
