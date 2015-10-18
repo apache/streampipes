@@ -13,7 +13,9 @@ public class Matcher {
 
 	private List<EventProperty> allMatchingProperties = new ArrayList<>();
 	private static final String sepaPrefix = "http://sepa.event-processing.org";
-	private static final String rdfPrefix = "http://www.w3.org";
+	private static final String rdfSchemaPrefix = "http://www.w3.org/2000/01/rdf-schema#";
+	private static final String rdfPrefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+	
 	
 	public List<EventProperty> matchesProperties(EventProperty right,
 			List<EventProperty> left) {
@@ -50,7 +52,7 @@ public class Matcher {
 	}
 	
 	public boolean matches(EventProperty right, EventProperty left) {
-		
+		System.out.println("Matching right " +right.getDomainProperties().get(0).toString() +" against left " +left.getDomainProperties().get(0).toString());
 		boolean match = true;
 		//if (right.getClass() != left.getClass()) return false;
 		if (right instanceof EventPropertyPrimitive)
@@ -87,7 +89,7 @@ public class Matcher {
 					if (!matches(nestedProperty, left)) match = false;
 				}
 			}
-		
+		System.out.println("result " +match);
 		return match;
 	}
 	
@@ -107,7 +109,7 @@ public class Matcher {
 		boolean match = true;
 		if (rightSubClasses == null) return match;
 		for (URI uri : rightSubClasses) {
-			if (!uri.toString().startsWith(sepaPrefix) && !uri.toString().startsWith(rdfPrefix))
+			if (!uri.toString().startsWith(sepaPrefix) && !uri.toString().startsWith(rdfPrefix) && !uri.toString().startsWith(rdfSchemaPrefix))
 				relevantSubclasses.add(uri);
 		}
 		if (!leftSubClasses.stream().anyMatch(uri -> relevantSubclasses.contains(uri))) match = false;
