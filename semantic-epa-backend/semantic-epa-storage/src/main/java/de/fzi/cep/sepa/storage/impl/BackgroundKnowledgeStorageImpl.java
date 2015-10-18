@@ -1,10 +1,8 @@
 package de.fzi.cep.sepa.storage.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
@@ -13,7 +11,9 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.Update;
 import org.openrdf.query.UpdateExecutionException;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -32,6 +32,7 @@ import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.filter.BackgroundKnowledgeFilter;
 import de.fzi.cep.sepa.storage.ontology.ClassHierarchyExecutor;
 import de.fzi.cep.sepa.storage.ontology.ConceptUpdateExecutor;
+import de.fzi.cep.sepa.storage.ontology.InstanceUpdateExecutor;
 import de.fzi.cep.sepa.storage.ontology.PropertyUpdateExecutor;
 import de.fzi.cep.sepa.storage.ontology.QueryExecutor;
 import de.fzi.cep.sepa.storage.ontology.RangeQueryExecutor;
@@ -63,18 +64,22 @@ public class BackgroundKnowledgeStorageImpl implements
 			BindingSet bindingSet = result.next();
 			Value valueOfX = bindingSet.getValue("result");
 			Optional<Namespace> ns = getNamespace(valueOfX.toString());
-			if (ns.isPresent()) ontologyNodes.add(new OntologyNode(valueOfX.toString(), valueOfX.toString().replace(ns.get().getName(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getName(), NodeType.PROPERTY));
+			if (ns.isPresent()) ontologyNodes.add(new OntologyNode(valueOfX.toString(), valueOfX.toString().replace(ns.get().getNamespaceId(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getNamespaceId(), NodeType.PROPERTY));
 			else ontologyNodes.add(new OntologyNode(valueOfX.toString(), valueOfX.toString(), NodeType.PROPERTY));
 		}
 
-		return BackgroundKnowledgeFilter.propertiesFilter(ontologyNodes);
+		return BackgroundKnowledgeFilter.propertiesFilter(ontologyNodes, true);
 	}
-
-	@Override
-	public Property getProperty(String propertyId) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
-		
+	
+	private Property getProperty(String propertyId, String instanceId) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
 		ElementHeader header = null;
 		Property property = null;
+		RangeQueryExecutor rangeExecutor = null;
+		
+		String label = "";
+		String description = "";
+		String range = "";
+		List<String> rangeTypes = new ArrayList<>();;
 			
 		String queryString = QueryBuilder.getProperty(propertyId);
 		TupleQueryResult result = getQueryResult(queryString);
@@ -83,7 +88,7 @@ public class BackgroundKnowledgeStorageImpl implements
 		if (nsOpt.isPresent()) 
 			{
 				Namespace ns = nsOpt.get();
-				header = new ElementHeader(propertyId, propertyId.replace(ns.getName(), ns.getPrefix() +":"), ns.getPrefix(), ns.getName());
+				header = new ElementHeader(propertyId, propertyId.replace(ns.getNamespaceId(), ns.getPrefix() +":"), ns.getPrefix(), ns.getNamespaceId());
 			}
 		else
 			header = new ElementHeader(propertyId, propertyId);
@@ -91,24 +96,32 @@ public class BackgroundKnowledgeStorageImpl implements
 		while(result.hasNext())
 		{
 			BindingSet bindingSet = result.next();
-			Value label = bindingSet.getValue("label");
-			Value description = bindingSet.getValue("description");
-			Value range = bindingSet.getValue("range");
-			Value rangeType = bindingSet.getValue("rangeType");
+			Value labelField = bindingSet.getValue("label");
+			Value descriptionField = bindingSet.getValue("description");
+			range = bindingSet.getValue("range").stringValue();
+			rangeTypes.add(bindingSet.getValue("rangeType").stringValue());	
 			
-			RangeQueryExecutor rangeExecutor = new RangeQueryExecutor(repo, range.stringValue(), rangeType.stringValue());
-			
-			property = new Property(header, label.stringValue(), description.stringValue(), rangeExecutor.getRange());
+			if (labelField != null) label = labelField.stringValue();
+			if (descriptionField != null) description = descriptionField.stringValue();
 		}
 		
-		if (property != null) return property;
-		else return new Property(header);
+		if (instanceId == null) rangeExecutor = new RangeQueryExecutor(repo, propertyId, range, rangeTypes);
+		else rangeExecutor = new RangeQueryExecutor(repo, propertyId, range, rangeTypes, instanceId);
+		property = new Property(header, label, description, rangeExecutor.getRange());
+		property.setRangeDefined((range != null && !range.equals("")) ? true : false);
 		
+		return property;
+	}
+
+	@Override
+	public Property getProperty(String propertyId) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
+		return getProperty(propertyId, null);
 	}
 
 	@Override
 	public Concept getConcept(String conceptId) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
 		TupleQueryResult result =getQueryResult(QueryBuilder.getTypeDetails(conceptId));
+		
 		Concept concept = new Concept();
 		ElementHeader header = null;
 		
@@ -119,7 +132,7 @@ public class BackgroundKnowledgeStorageImpl implements
 		if (nsOpt.isPresent()) 
 			{
 				Namespace ns = nsOpt.get();
-				header = new ElementHeader(conceptId, conceptId.replace(ns.getName(), ns.getPrefix() +":"), ns.getPrefix(), ns.getName());
+				header = new ElementHeader(conceptId, conceptId.replace(ns.getNamespaceId(), ns.getPrefix() +":"), ns.getPrefix(), ns.getNamespaceId());
 			}
 		else
 			header = new ElementHeader(conceptId, conceptId);
@@ -132,18 +145,17 @@ public class BackgroundKnowledgeStorageImpl implements
 			{
 				Value label = bindingSet.getValue("label");
 				Value description = bindingSet.getValue("description");
-				concept.setRdfsLabel(label.stringValue());
-				concept.setRdfsDescription(description.stringValue());
+				if (label != null) concept.setRdfsLabel(label.stringValue());
+				if (description != null) concept.setRdfsDescription(description.stringValue());
 			}
 			Value domainPropertyId = bindingSet.getValue("domainPropertyId");
-			
 			Property property = getProperty(domainPropertyId.stringValue());
 			properties.add(property);
 		
 			idx++;
 		}
 		
-		concept.setDomainProperties(properties);
+		concept.setDomainProperties(BackgroundKnowledgeUtils.filterDuplicates(properties));
 		return concept;
 	}
 
@@ -154,11 +166,11 @@ public class BackgroundKnowledgeStorageImpl implements
 		try {
 			propertyUpdateExecutor.deleteExistingTriples();
 			propertyUpdateExecutor.addNewTriples();
+			return true;
 		} catch (RepositoryException | MalformedQueryException | UpdateExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	@Override
@@ -191,7 +203,7 @@ public class BackgroundKnowledgeStorageImpl implements
 		
 		try {
 			RepositoryConnection conn = repo.getConnection();
-			conn.setNamespace(namespace.getPrefix(), namespace.getName());
+			conn.setNamespace(namespace.getPrefix(), namespace.getNamespaceId());
 			conn.close();
 			return true;
 		} catch (RepositoryException e) {
@@ -228,7 +240,12 @@ public class BackgroundKnowledgeStorageImpl implements
 		try {
 			RepositoryConnection conn = repo.getConnection();
 			ValueFactory factory = conn.getValueFactory();
-			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(conn.getNamespace(resource.getNamespace())+resource.getElementName()), RDF.TYPE, factory.createURI(resource.getInstanceOf()));
+			String elementName = resource.getElementName().replaceAll(" ", "_");
+			org.openrdf.model.Statement st;
+			
+			if (resource.getInstanceOf() != null ) st = factory.createStatement(factory.createURI(resource.getNamespace() +elementName), RDF.TYPE, factory.createURI(resource.getInstanceOf()));
+			else st = factory.createStatement(factory.createURI(resource.getNamespace() +elementName), RDF.TYPE, RDFS.RESOURCE);
+			
 			conn.add(st);
 			conn.close();
 			return true;
@@ -242,7 +259,8 @@ public class BackgroundKnowledgeStorageImpl implements
 		try {
 			RepositoryConnection conn = repo.getConnection();
 			ValueFactory factory = conn.getValueFactory();
-			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(conn.getNamespace(resource.getNamespace())+resource.getElementName()), RDF.TYPE, object);
+			String elementName = resource.getElementName().replaceAll(" ", "_");
+			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(conn.getNamespace(resource.getNamespace())+elementName), RDF.TYPE, object);
 			conn.add(st);
 			conn.close();
 			return true;
@@ -257,11 +275,12 @@ public class BackgroundKnowledgeStorageImpl implements
 		try {
 			conceptUpdateExecutor.deleteExistingTriples();
 			conceptUpdateExecutor.addNewTriples();
+			return true;
 		} catch (RepositoryException | MalformedQueryException | UpdateExecutionException | QueryEvaluationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	@Override
@@ -269,7 +288,6 @@ public class BackgroundKnowledgeStorageImpl implements
 			throws QueryEvaluationException, RepositoryException,
 			MalformedQueryException {
 		TupleQueryResult result =getQueryResult(QueryBuilder.getInstanceDetails(instanceId));
-		
 		Instance instance = new Instance();
 		ElementHeader header = null;
 		
@@ -280,7 +298,7 @@ public class BackgroundKnowledgeStorageImpl implements
 		if (nsOpt.isPresent()) 
 			{
 				Namespace ns = nsOpt.get();
-				header = new ElementHeader(instanceId, instanceId.replace(ns.getName(), ns.getPrefix() +":"), ns.getPrefix(), ns.getName());
+				header = new ElementHeader(instanceId, instanceId.replace(ns.getNamespaceId(), ns.getPrefix() +":"), ns.getPrefix(), ns.getNamespaceId());
 			}
 		else
 			header = new ElementHeader(instanceId, instanceId);
@@ -294,8 +312,8 @@ public class BackgroundKnowledgeStorageImpl implements
 			{
 				Value label = bindingSet.getValue("label");
 				Value description = bindingSet.getValue("description");
-				instance.setRdfsLabel(label.stringValue());
-				instance.setRdfsDescription(description.stringValue());
+				if (label != null) instance.setRdfsLabel(label.stringValue());
+				if (description != null) instance.setRdfsDescription(description.stringValue());
 			}
 			
 			idx++;
@@ -306,14 +324,15 @@ public class BackgroundKnowledgeStorageImpl implements
 			Concept concept = getConcept(conceptId);
 			for(Property property : concept.getDomainProperties())
 			{
-				properties.add(getProperty(property.getElementHeader().getId()));
+				Property p = getProperty(property.getElementHeader().getId(), instanceId);
+				properties.add(p);
 			}
 		}
 		
-		instance.setDomainProperties(properties);
+		instance.setDomainProperties(BackgroundKnowledgeUtils.filterDuplicates(BackgroundKnowledgeFilter.rdfsFilter(properties, true)));
 		return instance;
 	}
-	
+
 	private List<String> getRdfTypes(String instanceId) throws QueryEvaluationException, RepositoryException, MalformedQueryException
 	{
 		List<String> rdfTypes = new ArrayList<>();
@@ -329,7 +348,33 @@ public class BackgroundKnowledgeStorageImpl implements
 
 	@Override
 	public boolean updateInstance(Instance instance) {
-		// TODO Auto-generated method stub
-		return false;
+		InstanceUpdateExecutor instanceUpdateExecutor = new InstanceUpdateExecutor(repo, instance);
+		try {
+			instanceUpdateExecutor.deleteExistingTriples();
+			instanceUpdateExecutor.addNewTriples();
+			return true;
+		} catch (RepositoryException | MalformedQueryException | UpdateExecutionException | QueryEvaluationException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
+
+	@Override
+	public boolean deleteResource(String resourceId) {
+		
+		String deleteQuery = QueryBuilder.deleteResource(resourceId);
+		try {
+			RepositoryConnection connection = repo.getConnection();
+			Update tupleQuery;
+			tupleQuery = connection.prepareUpdate(QueryLanguage.SPARQL, deleteQuery);
+			tupleQuery.execute();
+			
+		    connection.close();
+		    return true;
+		} catch (RepositoryException | MalformedQueryException | UpdateExecutionException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 }

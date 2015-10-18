@@ -36,7 +36,7 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 			Value valueOfX = bindingSet.getValue("result");
 			classNodes.add(makeNode(valueOfX.stringValue(), NodeType.CLASS));
 		}
-		return BackgroundKnowledgeFilter.classFilter(classNodes);
+		return BackgroundKnowledgeFilter.classFilter(classNodes, true);
 	}
 	
 	private String getLabelName(String value)
@@ -79,7 +79,7 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 	{
 		OntologyNode node;
 		Optional<Namespace> ns = BackgroundKnowledgeUtils.getNamespace(id.toString());
-		if (ns.isPresent()) node = new OntologyNode(id.toString(), id.toString().replace(ns.get().getName(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getName(), NodeType.CLASS);
+		if (ns.isPresent()) node = new OntologyNode(id.toString(), id.toString().replace(ns.get().getNamespaceId(), ns.get().getPrefix() +":"), ns.get().getPrefix(), ns.get().getNamespaceId(), NodeType.CLASS);
 		else node = new OntologyNode(id.toString(), getLabelName(id.toString()), nodeType);
 		
 		return node;
@@ -95,6 +95,6 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 			Value valueOfX = bindingSet.getValue("s");
 			result.add(makeNode(valueOfX.toString(), NodeType.INSTANCE));
 		}
-		return result;
+		return BackgroundKnowledgeUtils.filterDuplicates(result);
 	}
 }

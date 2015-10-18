@@ -25,6 +25,7 @@ import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
 import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
+import de.fzi.cep.sepa.storage.api.ContextStorage;
 import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.api.NotificationStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
@@ -181,6 +182,10 @@ public enum StorageManager {
 	public NotificationStorage getNotificationStorageApi()
 	{
 		return new NotificationStorageImpl();
+	}
+	
+	public ContextStorage getContextStorage() {
+		return new ContextStorageImpl(bkrepo);
 	}
 
 

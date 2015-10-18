@@ -47,6 +47,8 @@ public interface BackgroundKnowledgeStorage {
 	
 	public boolean deleteNamespace(String prefix);
 	
+	public boolean deleteResource(String resourceId);
+	
 	
 	
 }

@@ -1,10 +1,15 @@
 package de.fzi.cep.sepa.storage.sparql;
 
+import org.openrdf.repository.RepositoryException;
+
 import de.fzi.cep.sepa.model.client.ontology.Concept;
+import de.fzi.cep.sepa.model.client.ontology.Instance;
 import de.fzi.cep.sepa.model.client.ontology.PrimitiveRange;
 import de.fzi.cep.sepa.model.client.ontology.Property;
+import de.fzi.cep.sepa.model.client.ontology.QuantitativeValueRange;
 import de.fzi.cep.sepa.model.client.ontology.RangeType;
 import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.storage.util.BackgroundKnowledgeUtils;
 
 public class QueryBuilder {
 
@@ -16,6 +21,9 @@ public class QueryBuilder {
 	public static final String RDFS_RANGE = "http://www.w3.org/2000/01/rdf-schema#range";
 	public static final String RDFS_DOMAIN = "http://www.w3.org/2000/01/rdf-schema#domain";
 	public static final String SEPA = "http://sepa.event-processing.org/sepa#";
+	
+	public static final String SO_DOMAIN_INCLUDES = "http://schema.org/domainIncludes";
+	public static final String SO_RANGE_INCLUDES = "http://schema.org/rangeIncludes";
 	
 	public static String buildListSEPQuery() {
 		StringBuilder builder = new StringBuilder();
@@ -91,17 +99,16 @@ public class QueryBuilder {
 	public static String getTypeDetails(String typeId) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() + " select ?label ?description ?domainPropertyId where { "
-				+" <" +typeId +"> <" +RDFS_LABEL +"> " + " ?label ."
-				+" <" +typeId +"> <" +RDFS_DESCRIPTION +"> " + " ?description ."
-				+" ?domainPropertyId <" +RDFS_DOMAIN +"> <" +typeId +"> . }" );
+				+getLabelDescriptionQueryPart(typeId)
+				+" ?domainPropertyId <" +SO_DOMAIN_INCLUDES +"> <" +typeId +"> . }" );
 		return builder.toString();
 	}
 	
 	public static String getInstanceDetails(String instanceId) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() + " select ?label ?description ?typeOf where { "
-				+" <" +instanceId +"> <" +RDFS_LABEL +"> " + " ?label ."
-				+" <" +instanceId +"> <" +RDFS_DESCRIPTION +"> " + " ?description . }");
+				+getLabelDescriptionQueryPart(instanceId)
+				+" }");
 
 		return builder.toString();
 	}
@@ -128,7 +135,7 @@ public class QueryBuilder {
 	
 	public static String getAutocompleteSuggestion(String propertyName) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(getPrefix() + " select ?label ?value where {?s <" +RDF_TYPE +"> sepa:DomainConcept ."
+		builder.append(getPrefix() + " select ?label ?value where { "//?s <" +RDF_TYPE +"> sepa:DomainConcept ."
 				+ "?s <" +propertyName +"> ?value ."
 				+ "?s rdfs:label ?label ."
 				+ "}"
@@ -140,9 +147,8 @@ public class QueryBuilder {
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() + " select ?label ?description ?range ?rangeType where {"
-				+"<" +propertyId +"> <" +RDFS_LABEL +"> " + " ?label ."
-				+"<" +propertyId +"> <" +RDFS_DESCRIPTION +"> " + " ?description ."
-				+"<" +propertyId +"> <" +RDFS_RANGE +"> " + " ?range ."
+				+getLabelDescriptionQueryPart(propertyId)
+				+"<" +propertyId +"> <" +SO_RANGE_INCLUDES +"> " + " ?range ."
 				+"?range <" +RDF_TYPE +"> " + " ?rangeType ."
 				+ "}");
 		System.out.println(builder.toString());
@@ -170,7 +176,7 @@ public class QueryBuilder {
 				+" FILTER (?s  = <" +propertyId +"> && ("
 				+ " ?p = <" +RDFS_LABEL +"> || "
 				+ " ?p = <" +RDFS_DESCRIPTION +"> || "
-				+ " ?p = <" +RDFS_RANGE +"> )) } ");
+				+ " ?p = <" +SO_RANGE_INCLUDES +"> )) } ");
 				
 		return builder.toString();
 	}
@@ -183,7 +189,7 @@ public class QueryBuilder {
 				+" FILTER ( (?s  = <" +conceptId +"> && ("
 				+ " ?p = <" +RDFS_LABEL +"> || "
 				+ " ?p = <" +RDFS_DESCRIPTION +">) || "
-				+ " ( ?o = <" +conceptId +"> && ?p = <" +RDFS_DOMAIN +">) )) } ");
+				+ " ( ?o = <" +conceptId +"> && ?p = <" +SO_DOMAIN_INCLUDES +">) )) } ");
 				
 		return builder.toString();
 	}
@@ -195,7 +201,7 @@ public class QueryBuilder {
 				+ "<" +concept.getElementHeader().getId() +"> <" +RDFS_LABEL +"> '" +concept.getRdfsLabel() +"' ."
 				+ "<" +concept.getElementHeader().getId() +"> <" +RDFS_DESCRIPTION +"> '" +concept.getRdfsDescription() +"' .");
 				
-		concept.getDomainProperties().forEach(dp -> builder.append("<" +dp.getElementHeader().getId() +"> <" +RDFS_DOMAIN +"> <" +concept.getElementHeader().getId() +"> ."));
+		concept.getDomainProperties().forEach(dp -> builder.append("<" +dp.getElementHeader().getId() +"> <" +SO_DOMAIN_INCLUDES +"> <" +concept.getElementHeader().getId() +"> ."));
 			
 		builder.append(" }");
 		return builder.toString();
@@ -210,10 +216,10 @@ public class QueryBuilder {
 				+ "<" +property.getElementHeader().getId() +"> <" +RDFS_DESCRIPTION +"> '" +property.getRdfsDescription() +"' .");
 				
 		if (property.getRange().getRangeType() == RangeType.PRIMITIVE)	
-			builder.append("<" +property.getElementHeader().getId() +"> <" +RDFS_RANGE +"> <" +((PrimitiveRange)property.getRange()).getRdfsDatatype() +"> .");
+			builder.append("<" +property.getElementHeader().getId() +"> <" +SO_RANGE_INCLUDES +"> <" +((PrimitiveRange)property.getRange()).getRdfsDatatype() +"> .");
 		
 		else if (property.getRange().getRangeType() == RangeType.QUANTITATIVE_VALUE)
-			builder.append("<" +property.getElementHeader().getId() +"> <" +RDFS_RANGE +"> <" +SO.QuantitativeValue +"> .");
+			builder.append("<" +property.getElementHeader().getId() +"> <" +SO_RANGE_INCLUDES +"> <" +SO.QuantitativeValue +"> .");
 		
 		else if (property.getRange().getRangeType() == RangeType.ENUMERATION)
 			builder.append("");
@@ -221,6 +227,78 @@ public class QueryBuilder {
 		builder.append(" }");
 		return builder.toString();
 		
+	}
+
+	public static String deleteInstanceDetails(String id) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() +" DELETE { ?s ?p ?o }"
+				+" WHERE { ?s ?p ?o ."
+				+" FILTER ((?s  = <" +id +"> && ("
+				+ " ?p != <" +RDF_TYPE +"> )) || (?s = <" +id +"-qv>) || (?o = <" +id +"-qv>)) } ");
+				
+		return builder.toString();
+	}
+
+	public static String addInstanceDetails(Instance instance) {
+		
+		StringBuilder builder = new StringBuilder();
+		String id = instance.getElementHeader().getId();
+		
+		builder.append(getPrefix() +" INSERT DATA {"
+				+ "<" +instance.getElementHeader().getId() +"> <" +RDFS_LABEL +"> '" +instance.getRdfsLabel() +"' ."
+				+ "<" +instance.getElementHeader().getId() +"> <" +RDFS_DESCRIPTION +"> '" +instance.getRdfsDescription() +"' .");
+		
+		for(Property property : instance.getDomainProperties())
+		{
+			if (property.getRange().getRangeType() == RangeType.PRIMITIVE)
+			{
+				String value = ((PrimitiveRange) property.getRange()).getValue();
+				String rangeTypeRdfs = ((PrimitiveRange) property.getRange()).getRdfsDatatype();
+				try {
+					builder.append("<" +id +"> <" +property.getElementHeader().getId() +"> " +BackgroundKnowledgeUtils.parse(value, rangeTypeRdfs) +" .");
+				} catch (RepositoryException | IllegalArgumentException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (property.getRange().getRangeType() == RangeType.QUANTITATIVE_VALUE)
+			{
+				builder.append("<" +id +"-qv> <" +RDF_TYPE +"> <" +SO.QuantitativeValue +"> .");
+				builder.append("<" +id +"> <" +SO.QuantitativeValue +"> <" +id +"-qv> .");
+				builder.append("<" +id +"-qv> <" +SO.MinValue +"> \"" +((QuantitativeValueRange) property.getRange()).getMinValue() +"\" .");
+				builder.append("<" +id +"-qv> <" +SO.MaxValue +"> \"" +((QuantitativeValueRange) property.getRange()).getMaxValue() +"\" .");
+				builder.append("<" +id +"-qv> <" +SO.UnitCode +"> \"" +((QuantitativeValueRange) property.getRange()).getUnitCode() +"\" .");	
+			}	
+		}
+		
+		builder.append(" }");
+		return builder.toString();
+	}
+
+	public static String getPrimitivePropertyValue(String instanceId,
+			String propertyId) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() + " select ?value where {"
+				+"<" +instanceId +"> <" +propertyId +"> " + " ?value ."
+				+ "}");
+		
+		return builder.toString();
+	}
+
+	public static String deleteResource(String resourceId) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() +" DELETE { ?s ?p ?o }"
+				+" WHERE { ?s ?p ?o ."
+				+" FILTER ((?s  = <" +resourceId +">) || (?p = <" +resourceId +">) || (?o = <" +resourceId +">))  } ");
+				
+		return builder.toString();
+	}
+	
+	private static String getLabelDescriptionQueryPart(String subject)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(	" OPTIONAL { <" +subject +"> <" +RDFS_LABEL +"> " + " ?label . }"
+				+" OPTIONAL { <" +subject +"> <" +RDFS_DESCRIPTION +"> " + " ?description . }");
+		return builder.toString();
 	}
 
 }
