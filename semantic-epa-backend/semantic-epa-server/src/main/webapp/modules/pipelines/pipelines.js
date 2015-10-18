@@ -1,13 +1,20 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state', function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state','$timeout',
+        function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state, $timeout) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
         var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
         $scope.starting = false;
         $scope.stopping = false;
+        var textInputFields = [];
 
+            (function init(){
+                $(document).on("click", function(){
+                    $("#contextMenu").hide();
+                });
+            })();
 
         $scope.$on('$destroy', function () {
             pipelinePlumb.deleteEveryEndpoint();
@@ -18,6 +25,9 @@ angular
                 .success(function(pipelines){
                     $scope.pipelines = pipelines;
                     console.log($scope.pipelines);
+                    $timeout(function(){
+                        addContextMenu();
+                    })
                 })
                 .error(function(msg){
                     console.log(msg);
@@ -25,6 +35,15 @@ angular
 
         };
         $scope.getPipelines();
+
+        $scope.isTextIconShown = function(element){
+            return element.iconUrl == null || element.iconUrl == 'http://localhost:8080/img' || typeof element.iconUrl === 'undefined';
+
+        };
+
+        $scope.activeClass = function(pipeline){
+            return 'active-pipeline';
+        }
 
         $scope.showDialog = function(data){
         	 $mdDialog.show({
@@ -94,11 +113,7 @@ angular
         };
 
         $scope.showPipeline = function(pipeline){
-            if(pipeline.display){
-                pipeline.display=false;
-            }else{
-                pipeline.display = true;
-            }
+            pipeline.display = !pipeline.display;
 
             //clearPipelineDisplay();
             //displayPipeline(pipeline);
@@ -107,23 +122,66 @@ angular
             showPipelineInEditor(pipeline);
 
         };
+        $scope.save = function(){
+            var options = $('#modalForm').serializeArray();
 
-        function displayPipeline(json){
-
-            console.log("displayPipeline()");
-            for (var i = 0, stream; stream = json.streams[i]; i++){
-                createPreviewElement("stream", stream, i, json);
+            if (options.length < $rootScope.state.currentElement.data("JSON").staticProperties.length) {
+                toastRightTop("error", "Please enter all parameters");
+                return false;
             }
-            for (var i = 0, sepa; sepa = json.sepas[i]; i++){
-
-                createPreviewElement("sepa", sepa, i, json);
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value == "") {
+                    toastRightTop("error", "Please enter all parameters");
+                    return false;
+                }
             }
-            createPreviewElement("action", json.action);
-            connectPipelineElements(json, false);
-            pipelinePlumb.repaintEverything(true);
+            saveInStaticProperties(options);
+            updatePipeline();
+
+        };
+
+        function addContextMenu(){
+
+            $('.pipeline-display-element')
+                .off('contextmenu')
+                .on("contextmenu", function(e){
+                    var $invokedOn = $(e.target);
+                    while (!$invokedOn.hasClass('pipeline-display-element')) {
+                        $invokedOn = $invokedOn.parent();
+                    }
+                    if($invokedOn.hasClass("sepa") ||  $invokedOn.hasClass("action")){
+                        $("#propButton, #divi").show();
+                    }else{
+                        $("#propButton, #divi").hide();
+                    }
+                $('#contextMenu')
+                    .data("invokedOn", $invokedOn)
+                    .show()
+                    .css({
+                        position: "fixed",
+                        left: getLeftLocation(e),
+                        top: getTopLocation(e)
+                    }).off('click').on('click', function (e) {
+                        $(this).hide();
+                        var $invokedOn = $(this).data("invokedOn");
+                        var $selected = $(e.target);
+                        while (!$invokedOn.hasClass('pipeline-display-element')) {
+                            $invokedOn = $invokedOn.parent();
+                        }
+                        if ($selected.get(0) === $('#descrButton').get(0)){ //Description clicked
+                            showDescription($invokedOn.data("JSON"));
+                        }else if ($selected.get(0) === $('#propButton').get(0)){
+                            $rootScope.state.propertyPipeline = $.extend({},$invokedOn.data("pipeline"));
+                            $('#customize-content').html(prepareCustomizeModal($invokedOn));
+                            $('#customizeModal').modal('show');
+                        }
+
+                    });
+                    return false;
+
+            });
         }
-
-        $scope.elementTextIcon = function (string){
+            $scope.elementTextIcon = function (string){
             var result ="";
             if (string.length <= 4){
                 result = string;
@@ -134,124 +192,9 @@ angular
                 });
             }
             return result.toUpperCase();
-        }
-
-        function createPreviewElement(type, element, i, json){
-
-            var $state = $("<span>")
-                .addClass("connectable a")
-                .attr("id", element.DOM)
-                .data("JSON", $.extend(true, {}, element));
-            if (element.iconUrl == null){ //Kein icon in JSON angegeben
-                addTextIconToElement($state, $state.data("JSON").name);
-
-                //.data("JSON", $.extend(true, {},element));
-            }else{
-                $('<img>')
-                    .addClass('connectable-img tt')
-                    .attr(
-                    {
-                        src : element.iconUrl,
-                        "data-toggle": "tooltip",
-                        "data-placement": "top",
-                        "data-delay": '{"show": 1000, "hide": 100}',
-                        title: element.name
-                    })
-                    .error(function(){
-                        addTextIconToElement($state, $state.data("JSON").name);
-                        $(this).remove();
-                    })
-                    .appendTo($state)
-
-                    .data("JSON", $.extend(true, {},element));
-            }
-
-            var topLeftY, topLeftX;
-
-            switch (type){
-
-                case "stream":
-                    $state.appendTo("body");
-                    $state.addClass("stream");
-                    topLeftY = getYPosition(json.streams.length , i, $("#streamDisplay"), $state);
-                    topLeftX = getXPosition($("#streamDisplay"), $state);
-                    $state.appendTo("#streamDisplay");
-                    break;
-
-                // jsPlumb.addEndpoint($icon,streamEndpointOptions);
-                case "sepa":
-                    $state.appendTo("body");
-                    $state.addClass("sepa");
-                    topLeftY = getYPosition(json.sepas.length , i, $("#sepaDisplay"), $state);
-                    topLeftX = getXPosition($("#sepaDisplay"), $state);
-                    $state.appendTo("#sepaDisplay");
-                    break;
-
-                case "action":
-                    $state.appendTo("body");
-                    $state.addClass("action");
-                    topLeftY = $("#actionDisplay").height() / 2 - (1/2) * $state.outerHeight();
-                    topLeftX = $("#actionDisplay").width() / 2 - (1/2) * $state.outerWidth();
-                    $state.appendTo("#actionDisplay");
-                    break;
-            }
-            $state.css(
-                {
-                    "position" : "absolute",
-                    "top": topLeftY,
-                    "left": topLeftX
-                }
-            );
-        }
-
-        function connectPipelineElements(json, detachable){
-            console.log("connectPipelineElements()");
-            var source, target;
-
-            pipelinePlumb.setSuspendDrawing(true);
-            if (!$.isEmptyObject(json.action)) {
-                //Action --> Sepas----------------------//
-                target = json.action.DOM;
-
-                for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
-                    source = connection;
-
-                    var sourceEndpoint = pipelinePlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
-                    var targetEndpoint = pipelinePlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                    pipelinePlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
-                }
-            }
-            //Sepas --> Streams / Sepas --> Sepas---------------------//
-            for (var i = 0, sepa; sepa = json.sepas[i]; i++){
-                for (var j = 0, connection; connection = sepa.connectedTo[j]; j++){
-
-                    source = connection;
-                    target = sepa.DOM;
+        };
 
 
-                    var options;
-                    var id = "#" + source;
-                    console.log($(id));
-                    if ($(id).hasClass("sepa")){
-                        options = apiConstants.sepaEndpointOptions;
-                    }else{
-                        options = apiConstants.streamEndpointOptions;
-                    }
-
-                    var sourceEndpoint = pipelinePlumb.addEndpoint(source, options);
-                    var targetEndpoint = pipelinePlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                    pipelinePlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable:detachable});
-                }
-            }
-            pipelinePlumb.setSuspendDrawing(false ,true);
-        }
-
-        function clearPipelineDisplay(){
-            pipelinePlumb.deleteEveryEndpoint();
-            $("#pipelineDisplay").children().each(function(){
-                $(this).children().remove();
-            });
-        }
 
         function showPipelineInEditor(id){
         	$state.go("streampipes.edit", {pipeline : id});
@@ -269,29 +212,141 @@ angular
       	  };
       	}
 
-        //$(refreshPipelines());
+        function getLeftLocation(e) {
 
-        //Bind click handler--------------------------------
-        //$("#pipelineTableBody").on("click", "tr", function () {
-        //    if (!$(this).data("active") || $(this).data("active") == undefined) {
-        //        $(this).data("active", true);
-        //        $(this).addClass("info");
-        //        $("#pipelineTableBody").children().not(this).removeClass("info");
-        //        $("#pipelineTableBody").children().not(this).data("active", false);
-        //        clearPipelineDisplay();
-        //        displayPipelineById($(this).data("JSON"));
-        //    } else {
-        //
-        //    }
-        //});
+            var menuWidth = $('#contextMenu').width();
+            var mouseWidth = e.pageX;
+            var pageWidth = $(window).width();
+
+            // opening menu would pass the side of the page
+            if (mouseWidth + menuWidth > pageWidth && menuWidth < mouseWidth) {
+                return mouseWidth - menuWidth;
+            }
+            return mouseWidth;
+        }
+
+        function getTopLocation(e) {
+
+            var menuHeight = $('#contextMenu').height();
+
+            var mouseHeight = e.pageY;
+            var pageHeight = $(window).height();
+
+            if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
+                return mouseHeight - menuHeight ;
+            }
+            return mouseHeight ;
+
+        }
+
+        function prepareCustomizeModal(element) {
+            $rootScope.state.currentElement = element;
+            var string = "";
+            textInputFields.length = 0;
+            if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
+                var staticPropertiesArray = element.data("JSON").staticProperties;
+
+                var textInputCount = 0;
+                var radioInputCount = 0;
+                var selectInputCount = 0;
+                var checkboxInputCount = 0;
+
+                for (var i = 0; i < staticPropertiesArray.length; i++) {
+                    switch (staticPropertiesArray[i].input.properties.elementType) {
+                        case "TEXT_INPUT":
+                            var textInput = {};
+                            if (staticPropertiesArray[i].input.properties.datatype != undefined)
+                            {
+                                textInput.fieldName = "textinput" +i;
+                                textInput.propertyName = staticPropertiesArray[i].input.properties.datatype;
+                                textInputFields.push(textInput);
+                            }
+                            string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount, staticPropertiesArray[i].input.properties.value);
+                            textInputCount++;
+                            continue;
+                        case "RADIO_INPUT":
+                            string += getRadioInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, radioInputCount);
+                            radioInputCount++;
+                            continue;
+                        case "CHECKBOX":
+                            string += getCheckboxInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, i);
+                            checkboxInputCount++;
+                            continue;
+                        case "SELECT_INPUT":
+                            string += getSelectInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, selectInputCount);
+                            selectInputCount++;
+
+                    }
+                }
+            }
+
+            return string;
+        }
+        function saveInStaticProperties(options) {
+            for (var i = 0; i < options.length; i++) {
+                switch ($rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.elementType) {
+
+                    case "RADIO_INPUT" :
+                    case "SELECT_INPUT" :
+                        for (var j = 0; j < $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++) {
+                            if ($rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value) {
+                                $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
+                            } else {
+                                $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
+                            }
+                        }
+                        continue;
+                    case "CHECKBOX" :
+                        for (var j = 0; j < $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++) {
+                            if ($("#" + options[i].value + " #checkboxes-" + i + "-" + j).is(':checked')) {
+                                $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
+                            } else {
+                                $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
+                            }
+                        }
+                        continue;
+                    case "TEXT_INPUT":
+                        $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
+
+                }
+            }
+            var changed = false;
+            $rootScope.state.propertyPipeline.sepas.forEach(function(sepa, i, sepas){
+               if (sepa.DOM == $rootScope.state.currentElement.data("JSON").DOM){
+                   sepa.staticProperties = $rootScope.state.currentElement.data("JSON").staticProperties;
+                   changed = true;
+               }
+            });
+            if (!changed){
+                if ($rootScope.state.propertyPipeline.action.DOM == $rootScope.state.currentElement.data("JSON").DOM){
+                    $rootScope.state.propertyPipeline.action.staticProperties = $rootScope.state.currentElement.data("JSON").staticProperties;
+                }else{
+                    alert("Something went wrong.");
+                }
+            }
+            //toastRightTop("success", "Parameters saved");
+        }
+
+            function updatePipeline(){
+                restApi.updatePartialPipeline($rootScope.state.propertyPipeline)
+                    .then(function(data){
+                        $('#customizeModal').modal('hide');
+                        $scope.showDialog(data);
+                    }, function(data){
+                        console.log(data);
+                    })
+            }
+
     }])
     .directive('myStreamDataBind', function(){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
                 elem.data("JSON", scope.stream);
+                elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.stream.name});
                 elem.tooltip();
+
             }
         }
     })
@@ -300,8 +355,11 @@ angular
             restrict: 'A',
             link: function(scope, elem, attrs){
                 elem.data("JSON", scope.sepa);
+                elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.sepa.name});
                 elem.tooltip();
+
+
             }
         }
     })
@@ -310,6 +368,7 @@ angular
             restrict: 'A',
             link: function(scope, elem, attrs){
                 elem.data("JSON", scope.pipeline.action);
+                elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.pipeline.action.name});
                 elem.tooltip();
             }

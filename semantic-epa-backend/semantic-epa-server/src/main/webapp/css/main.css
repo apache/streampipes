@@ -18,18 +18,19 @@ body {
 }
 
 .tree-node {
-    border: 1px solid #dae2ea;
-    background: #f8faff;
-    color: rgb(63,81,181);
-    margin:5px;
+	border: 1px solid #dae2ea;
+	background: #f8faff;
+	color: rgb(63,81,181);
+	margin:5px;
 }
 
 .angular-ui-tree-handle {
-    background: #f8faff;
-    border: 1px solid #dae2ea;
-    color: rgb(63,81,181);
-    padding: 10px 10px;
+	background: #f8faff;
+	border: 1px solid #dae2ea;
+	color: rgb(63,81,181);
+	padding: 10px 10px;
 }
+
 
  .sidebar-badge {
   display: inline-block;
@@ -582,7 +583,13 @@ md-list .md-button {
 .pipeline-display-element-img{
 	height: 72%;
 	width: 72%;
-
-
-
+}
+.pipeline-active{
+	background-color: #5533DD33;
+}
+.position-fixed {
+	position: fixed;
+}
+.dropdown-menu{
+	cursor: pointer;
 }

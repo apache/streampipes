@@ -2,8 +2,8 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants',
-        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q',
+        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
@@ -30,8 +30,13 @@ angular.module('streamPipesApp')
             });
             $rootScope.$on("elements.loaded", function(){
                 makeDraggable();
+                bindContextMenu();
                 //initTooltips();
             });
+            $scope.openContextMenu = function($mdOpenMenu, event){
+                $mdOpenMenu(event.$event);
+                alert("open context menu");
+            };
             
             $scope.getOwnBlocks = function(){
                 return [];           //TODO anpassen
@@ -57,7 +62,7 @@ angular.module('streamPipesApp')
             $scope.loadCurrentElements = function(type){
 
                 $scope.currentElements = [];
-                $('#editor-icon-stand').children().remove();        //DOM ACCESS
+                //$('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
                     //TODO BLOCKS
                 }else if (type == 'stream'){
@@ -109,6 +114,10 @@ angular.module('streamPipesApp')
                 //console.log(json);
                 jsPlumb.repaintEverything();
             };
+
+            function bindContextMenu(){
+                $(".draggable-icon").off("contextmenu").on("contextmenu", staticContextMenu);
+            }
             
             function connectPipelineElements(json, detachable){
                 console.log("connectPipelineElements()");
@@ -180,34 +189,36 @@ angular.module('streamPipesApp')
 
 
             $scope.loadSources = function(){
-                return restApi.getOwnSources()
-                    .success(function(sources){
-
-                        $.each(sources, function(i, source){
-                            restApi.getOwnStreams(source)
-                                .success(function(streams){
-                                    //console.log(streams);
-                                    angular.forEach(streams, function(stream, i){
-                                        for (var j = 0; j < $scope.currentElements.length; j++){
-                                            if (stream.elementId == $scope.currentElements[j].elementId){
-                                                return;
-                                            }
-                                        }
-                                        stream.type = 'stream';
-                                        $scope.currentElements.push(stream);
-
-                                    });
-                                    //$scope.createElements(streams, "stream", "#editor-icon-stand");
-                                    //console.log($scope.currentElements);
-                                    $timeout(function(){
-                                        makeDraggable();
-                                        $rootScope.state.streams = $.extend(true, [], $scope.currentElements);
-                                    })
-                                })
-                                .error(function(msg){
-                                    console.log(msg);
-                                })
+                var tempStreams = [];
+                var promises = [];
+                restApi.getOwnSources()
+                    .then(function(sources){
+                        //console.log(sources);
+                        sources.data.forEach(function(source, i, sources){
+                            promises.push(restApi.getOwnStreams(source));
+                                //.then(function(streams){
+                                //    //console.log(streams);
+                                //
+                                //},function(msg){
+                                //    console.log(msg);
+                                //}));
+                            //console.log(promises);
                         });
+
+                        $q.all(promises).then(function(data){
+                            console.log(data);
+                            data.forEach(function(streams){
+                                streams.data.forEach(function(stream){
+                                    stream.type = 'stream';
+                                });
+                                tempStreams = tempStreams.concat(streams.data);
+                            });
+                            $scope.currentElements = tempStreams;
+                            console.log(tempStreams);
+                        });
+
+                    }, function(msg){
+                        console.log(msg);
                     });
             };
 
@@ -397,7 +408,7 @@ angular.module('streamPipesApp')
 
                         if (ui.draggable.hasClass('draggable-icon')) {
                             //TODO get data
-                            console.log(ui);
+                            //console.log(ui);
 
                             if (ui.draggable.data("JSON") == null) {
                                 alert("No JSON - Data for Dropped element");
@@ -911,8 +922,8 @@ angular.module('streamPipesApp')
                     $('#staticContextMenu').off('click').on('click', function (e) {
                         $(this).hide();
                         var $invokedOn = $(this).data("invokedOn");
-                        while ($invokedOn.parent().get(0) != $('#sources').get(0) && $invokedOn.parent().get(0) != $('#streams').get(0) && $invokedOn.parent().get(0) != $('#sepas').get(0)) {
-                            $invokedOn = $invokedOn.parent();
+                        while ($invokedOn.parent().get(0) != $("#editor-icon-stand").get(0)) {
+                                $invokedOn = $invokedOn.parent();
                         }
                         var json = $invokedOn.data("JSON");
                         $('#description-title').text(json.name);
@@ -1000,7 +1011,7 @@ angular.module('streamPipesApp')
                             .data("invokedOn", $(e.target))
                             .show()
                             .css({
-                                position: "absolute",
+                                position: "fixed",
                                 left: getLeftLocation(e, "assembly"),
                                 top: getTopLocation(e, "assembly")
                             });
@@ -1184,6 +1195,84 @@ angular.module('streamPipesApp')
                 var midLeft = (minLeft + maxLeft) / 2;
                 var midTop = (minTop + maxTop) / 2;
                 return {x: midLeft, y: midTop};
+            }
+
+            /**
+             * Shows the contextmenu for given element
+             * @param {Object} e
+             */
+            function staticContextMenu(e) {
+                $('#staticContextMenu').data("invokedOn", $(e.target)).show().css({
+                    position: "fixed",
+                    left: getLeftLocation(e, "static"),
+                    top: getTopLocation(e, "static")
+                });
+                ContextMenuClickHandler("static");
+                return false;
+
+            }
+
+
+            /**
+             * Gets the position of the dropped element insidy the assembly
+             * @param {Object} helper
+             */
+            function getDropPosition(helper) {
+                var helperPos = helper.position();
+                var divPos = $('#assembly').position();
+                var newTop = helperPos.top - divPos.top;
+                return newTop;
+            }
+
+            /**
+             *
+             * @param {Object} e
+             * @param {Object} type
+             */
+            function getLeftLocation(e, type) {
+                if (type === "static") {
+                    var menuWidth = $('#staticContextMenu').width();
+                } else {
+                    var menuWidth = $('#assemblyContextMenu').width();
+                }
+                var mainCoords = $('#main').position();
+                console.log(mainCoords);
+                var mouseWidth = e.pageX;
+                var pageWidth = $(window).width();
+
+                // opening menu would pass the side of the page
+                if (mouseWidth + menuWidth > pageWidth && menuWidth < mouseWidth) {
+                    return mouseWidth - menuWidth;
+                }
+                return mouseWidth;
+            }
+
+            function getTopLocation(e, type) {
+
+                //var elCoordsOffset = $(e.currentTarget).position();
+                //var testtop = elCoordsOffset.top + e.offsetY + $('#assembly').position().top;
+                //return testtop;
+                if (type === "static") {
+                    var menuHeight = $('#staticContextMenu').height();
+                } else {
+                    var menuHeight = $('#assemblyContextMenu').height();
+                }
+
+                var mouseHeight = e.pageY;
+                var pageHeight = $(window).height();
+
+                if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
+                    return mouseHeight - menuHeight ;
+                }
+                return mouseHeight ;
+
+            }
+
+            $scope.openDescriptionModal = function(element){
+
+                $('#description-title').text(element.name);
+                $('#modal-description').text(element.description);
+                $('#descrModal').modal('show');
             }
 
 

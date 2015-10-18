@@ -25,7 +25,7 @@
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 
 	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" >
+	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu">
 		<img class="draggable-img"
 			  ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
 		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
@@ -80,12 +80,7 @@
 					<fieldset id ="customize-content">
 
 					</fieldset>
-
 				</form>
-				<!-- <div id="savedOptions"><strong>Saved parameters: </strong>
-
-                </div> -->
-
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click=clearCurrentElement()>
@@ -208,3 +203,4 @@
 		</div>
 	</div>
 </div>
+

@@ -3,18 +3,33 @@
 			<h1 class=".md-display-3">Saved Pipelines</h1>
 		</div>
 		<div>
-			<md-content class="md-whiteframe-z2">
+			<md-content layout-padding class="md-whiteframe-z2">
 				<md-list>
-					<md-subheader class="md-no-sticky">Pipelines</md-subheader>
+
+						<div layout="row" layout-padding class="md-with-secondary">
+							<span flex="5">Run/Stop</span>
+							<span flex="40">Name/Description</span>
+							<div flex layout="row" >
+								<span flex flex-order="1" layout="row" layout-align="center center">
+									<span>Inspect</span>
+								</span>
+								<span flex flex-order="2" layout="row" layout-align="center center">
+									<span>Modify</span>
+								</span>
+								<span flex flex-order="3" layout="row" layout-align="center center">
+									<span>Delete</span>
+								</span>
+							</div>
+						</div>
 					<div layout="column" ng-repeat="pipeline in pipelines">
-						<md-list-item layout="row" class="md-with-secondary" >
-							<md-button ng-click="startPipeline(pipeline._id)" class="md-icon-button" ng-disabled="starting" ng-show="!pipeline.running"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button>
-							<md-button ng-click="stopPipeline(pipeline._id)" class="md-icon-button" ng-disabled="stopping" ng-show="pipeline.running"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button>
-							<div class="md-list-item-text" flex="33" layout="column">
+						<md-list-item layout="row" class="md-with-secondary"  >
+							<md-button flex="5"  ng-click="startPipeline(pipeline._id)" class="md-icon-button" ng-disabled="starting" ng-show="!pipeline.running"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button>
+							<md-button flex="5" ng-click="stopPipeline(pipeline._id)" class="md-icon-button" ng-disabled="stopping" ng-show="pipeline.running"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button>
+							<div class="md-list-item-text" flex="40" layout="column">
 								<h3>{{pipeline.name}}</h3>
 								<h4>{{pipeline.description}}</h4>
 							</div>
-							<div class="button-bar" flex layout="row">
+							<div flex layout="row">
 								<span flex flex-order="1" layout="row" layout-align="center center">
 									<md-button ng-click="showPipeline(pipeline)" class="md-icon-button"><md-icon md-svg-icon="action:ic_search_24px" aria-label="Inspect" class="md-accent"></md-icon></md-button>
 								</span>
@@ -32,21 +47,26 @@
 						<div layout="row" ng-show="pipeline.display" style="min-height:200px; background-color: #f0f0f0">
 							<span flex flex-order="1" layout="column" layout-align="center start">
 								<span class="stream pipeline-display-element md-whiteframe-z2 tt" ng-repeat="stream in pipeline.streams" my-stream-data-bind>
-									<img class="pipeline-display-element-img" src="{{stream.iconUrl}}" ng-src="{{stream.iconUrl}}">
-									<span class="element-text-icon" ng-show="(stream.iconUrl == null || stream.iconUrl == 'http://localhost:8080/img')">
+									<img class="pipeline-display-element-img"  ng-src="{{stream.iconUrl}}">
+									<span class="element-text-icon" ng-show="isTextIconShown(stream)">
 										{{elementTextIcon(stream.name)}}
 									</span>
 								</span>
 							</span>
-							<span flex flex-order="2" layout="column" layout-align="center start" >
+							<span flex flex-order="2" layout="row" layout-align="start center" >
 								<span class="sepa pipeline-display-element md-whiteframe-z2 tt" my-sepa-data-bind ng-repeat="sepa in pipeline.sepas">
-									<img class="pipeline-display-element-img" src="{{sepa.iconUrl}}" ng-src="{{sepa.iconUrl}}">
+									<img class="pipeline-display-element-img"  ng-src="{{sepa.iconUrl}}">
+									<span class="element-text-icon" ng-show="isTextIconShown(sepa)">
+										{{elementTextIcon(sepa.name)}}
+									</span>
 								</span>
 							</span>
-							<span flex flex-order="3" layout="column" layout-align="center start" >
+							<span flex flex-order="3" layout="row" layout-align="start center" >
 								<span class="action pipeline-display-element md-whiteframe-z2 tt" my-action-data-bind>
-									<img class="pipeline-display-element-img" src="{{pipeline.action.iconUrl}}" ng-src="{{pipeline.action.iconUrl}}">
-
+									<img class="pipeline-display-element-img"  ng-src="{{pipeline.action.iconUrl}}">
+									<span class="element-text-icon" ng-show="isTextIconShown(pipeline.action)">
+										{{elementTextIcon(pipeline.action.name)}}
+									</span>
 								</span>
 							</span>
 
@@ -54,60 +74,45 @@
 					</div>
 				</md-list>
 			</md-content>
-
-
-
-
-			<!--<table class="table table-hover">-->
-				<!--<thead>-->
-				<!--<tr>-->
-					<!--<td><b>#</b></td>-->
-					<!--<td><b>Pipeline Name</b></td>-->
-					<!--<td><b>Validation</b></td>-->
-					<!--<td><b>Status</b></td>-->
-					<!--<td><b>Options</b></td>-->
-					<!--<td><b>Delete</b></td>-->
-					<!--<td><b>Modify</b></td>-->
-
-				<!--</tr>-->
-				<!--</thead>-->
-
-
-
-
-				<!--<tbody id="pipelineTableBody">-->
-
-
-							<!--<tr ng-repeat="pipeline in pipelines" ng-click="showPipeline(pipeline)">-->
-								<!--<td>{{$index+1}}</td>-->
-								<!--<td>{{pipeline.name}}<br/>{{pipeline.description}}</td>-->
-								<!--<td>TBD</td>-->
-								<!--<td>{{pipeline.running == true ? 'Running' : 'Idle'}}</td>-->
-								<!--<td><md-button  ng-click="startPipeline(pipeline._id)" class="md-icon-button md-raised" ng-disabled="starting || pipeline.running"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button><md-button ng-disabled="!(pipeline.running) || stopping == true" class="md-icon-button md-raised" ng-click="stopPipeline(pipeline._id)"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button></td>-->
-								<!--<td><md-button ng-click="deletePipeline(pipeline._id)" class="md-icon-button md-raised"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete" class="md-accent"></md-icon></md-button></td>-->
-								<!--<td><md-button ng-click="modifyPipeline(pipeline._id)" class="md-icon-button md-raised"><md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify" class="md-accent"></md-icon></md-button></td>-->
-								<!--<td><md-button ng-click="showPipeline(pipeline)" class="md-icon-button md-raised"><md-icon md-svg-icon="action:ic_search_24px" aria-label="Inspect" class="md-accent"></md-icon></md-button></td>-->
-							<!--</tr>-->
-							<!--&lt;!&ndash;<div style="height: 100px">&ndash;&gt;-->
-								<!--&lt;!&ndash;<span ng-repeat="stream in pipeline.streams" my-data-bind class="stream">&ndash;&gt;-->
-									<!--&lt;!&ndash;<img src="stream.iconUrl" ng-src="stream.iconUrl">&ndash;&gt;-->
-								<!--&lt;!&ndash;</span>&ndash;&gt;-->
-								<!--&lt;!&ndash;<span ng-repeat="sepa in pipeline.sepas" my-data-bind class="sepa">&ndash;&gt;-->
-									<!--&lt;!&ndash;<img src="sepa.iconUrl" ng-src="sepa.iconUrl">&ndash;&gt;-->
-								<!--&lt;!&ndash;</span>&ndash;&gt;-->
-								<!--&lt;!&ndash;<span class="action" >&ndash;&gt;-->
-									<!--&lt;!&ndash;<img src="action.iconUrl" ng-src="action.iconUrl">&ndash;&gt;-->
-								<!--&lt;!&ndash;</span>&ndash;&gt;-->
-							<!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-
-				<!--</tbody>-->
-			<!--</table>-->
 		</div>
 	</div>
-	<!--<div id="pipelineDisplay" class="">-->
-		<!--<div id="streamDisplay"></div>-->
-		<!--<div id="sepaDisplay"></div>-->
-		<!--<div id="actionDisplay"></div>-->
-	<!--</div>-->
+
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
+	<li>
+		<a id="descrButton" tabindex="-1">Description</a>
+	</li>
+	<md-divider id="divi"></md-divider>
+	<li>
+		<a id="propButton" tabindex="-1">Change Properties</a>
+	</li>
+</ul>
+
+<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog">
+		<div id="modal-content" class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" ng-click=clearCurrentElement() aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="customizeTitle">Customize</h4>
+			</div>
+			<div class="modal-body">
+
+				<form id="modalForm" class="form-horizontal">
+					<fieldset id ="customize-content">
+
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click=clearCurrentElement()>
+					Close
+				</button>
+				<button type="button" class="btn btn-primary"  ng-click=save()>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+

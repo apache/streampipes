@@ -402,70 +402,7 @@ function initTooltips() {
 //    }
 //}
 
-/**
- * Shows the contextmenu for given element
- * @param {Object} e
- */
-function staticContextMenu(e) {
-    $('#staticContextMenu').data("invokedOn", $(e.target)).show().css({
-        position: "absolute",
-        left: getLeftLocation(e, "static"),
-        top: getTopLocation(e, "static")
-    });
-    ContextMenuClickHandler("static");
-    return false;
 
-}
-
-
-/**
- * Gets the position of the dropped element insidy the assembly
- * @param {Object} helper
- */
-function getDropPosition(helper) {
-    var helperPos = helper.position();
-    var divPos = $('#assembly').position();
-    var newTop = helperPos.top - divPos.top;
-    return newTop;
-}
-
-/**
- *
- * @param {Object} e
- * @param {Object} type
- */
-function getLeftLocation(e, type) {
-    if (type === "static") {
-        var menuWidth = $('#staticContextMenu').width();
-    } else {
-        var menuWidth = $('#assemblyContextMenu').width();
-    }
-    var mouseWidth = e.pageX;
-    var pageWidth = $(window).width();
-
-    // opening menu would pass the side of the page
-    if (mouseWidth + menuWidth > pageWidth && menuWidth < mouseWidth) {
-        return mouseWidth - menuWidth;
-    }
-    return mouseWidth;
-}
-
-function getTopLocation(e, type) {
-    if (type === "static") {
-        var menuHeight = $('#staticContextMenu').height();
-    } else {
-        var menuHeight = $('#assemblyContextMenu').height();
-    }
-
-    var mouseHeight = e.pageY;
-    var pageHeight = $(window).height();
-
-    // opening menu would pass the bottom of the page
-    if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
-        return mouseHeight - menuHeight;
-    }
-    return mouseHeight;
-}
 
 
 
