@@ -17,9 +17,27 @@ body {
 	background-attachment: fixed;	
 }
 
+
+.customize-item-main {
+	border: 1px solid rgb(140,158,255);
+	border-radius: 5px;
+}
+
+.customize-item-content {
+	padding:10px;
+}
+
+.customize-item-title {
+	background: rgb(140,158,255);
+	color:black;
+	font-size: 14pt;
+	padding:  5px;
+}
+
 .ontology-panel-main {
 	margin-top: 5px;
 	margin-bottom: 5px;
+	border-radius: 5px;
 }
 
 .ontology-panel-title {
@@ -67,6 +85,7 @@ body {
 
 .tree-node {
     border: 1px solid #dae2ea;
+    border-radius: 5px;
     background: #ffffff;
     color: rgb(63,81,181);
     margin:5px;
