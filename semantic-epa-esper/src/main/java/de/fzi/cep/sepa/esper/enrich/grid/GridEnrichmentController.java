@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.esper.enrich.grid;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.EpDeclarer;
@@ -14,9 +15,12 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.graph.*;
 import de.fzi.cep.sepa.model.impl.output.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -32,8 +36,8 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.de/latitude").build();
-			EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.de/longitude").build();
+			EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction(Geo.lat).build();
+			EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction(Geo.lng).build();
 			eventProperties.add(e1);
 			eventProperties.add(e2);
 			
@@ -70,9 +74,12 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters"));
-			staticProperties.add(new FreeTextStaticProperty("startingLatitude", "The latitude value of the center of the first cell", Geo.lat));
-			staticProperties.add(new FreeTextStaticProperty("startingLongitude", "The longitude value of the center of the first cell", Geo.lng));
+			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters", new PropertyValueSpecification(0, 10000, 100)));
+			
+			SupportedProperty sp1 = new SupportedProperty(Geo.lat, true);
+			SupportedProperty sp2 = new SupportedProperty(Geo.lng, true);
+			DomainStaticProperty sp = new DomainStaticProperty("Starting cell (upper left corner)", "Please select a valid location.", Arrays.asList(sp1, sp2));
+			staticProperties.add(sp);
 			
 			// Mapping properties
 			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
