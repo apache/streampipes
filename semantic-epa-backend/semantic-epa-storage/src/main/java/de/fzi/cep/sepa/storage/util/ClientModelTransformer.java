@@ -8,18 +8,22 @@ import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.model.client.*;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
+import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
+import de.fzi.cep.sepa.model.client.input.SliderInput;
+import de.fzi.cep.sepa.model.client.input.SupportedProperty;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
@@ -206,7 +210,7 @@ public class ClientModelTransformer {
 			FormInput formInput = Utils.getClientPropertyById(clientProperties, id).getInput();
 			if (p instanceof FreeTextStaticProperty) 
 				{
-					resultProperties.add(convertFreeTextStaticProperty((FreeTextStaticProperty) p, ((TextInput) formInput)));
+					resultProperties.add(convertFreeTextStaticProperty((FreeTextStaticProperty) p, formInput));
 				}
 			else if (p instanceof AnyStaticProperty)
 			{
@@ -233,12 +237,34 @@ public class ClientModelTransformer {
 				MatchingStaticProperty matchingProperty = (MatchingStaticProperty) p;
 				RadioGroupInput input = (RadioGroupInput) formInput;
 				resultProperties.add(convertMatchingStaticProperty(matchingProperty, input));
+			} else if (p instanceof DomainStaticProperty)
+			{
+				DomainStaticProperty domainStaticProperty = (DomainStaticProperty) p;
+				DomainConceptInput input = (DomainConceptInput) formInput;
+				resultProperties.add(convertDomainStaticProperty(domainStaticProperty, input));
 			}
 		}
 
 		return resultProperties;
 	}
 	
+	private static StaticProperty convertDomainStaticProperty(
+			DomainStaticProperty domainStaticProperty, DomainConceptInput input) {
+		for(de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty sp : domainStaticProperty.getSupportedProperties())
+		{
+			SupportedProperty clientProperty = input.getSupportedProperties()
+				.stream()
+				.filter(s -> s.getElementId().equals(sp.getRdfId().toString()))
+				.findFirst()
+				.get();
+			
+			sp.setValue(clientProperty.getValue());
+				
+		}
+		
+		return domainStaticProperty;
+	}
+
 	private static StaticProperty convertMatchingStaticProperty(
 			MatchingStaticProperty matchingProperty, RadioGroupInput input) {
 		for(Option option : input.getOptionLeft()) 
@@ -274,9 +300,12 @@ public class ClientModelTransformer {
 		return p;
 	}
 
-	public static FreeTextStaticProperty convertFreeTextStaticProperty(FreeTextStaticProperty p, TextInput input)
+	public static FreeTextStaticProperty convertFreeTextStaticProperty(FreeTextStaticProperty p, FormInput input)
 	{
-		p.setValue(input.getValue());
+		String value;
+		if (input instanceof SliderInput) value = String.valueOf(((SliderInput) input).getValue());
+		else value = ((TextInput) input).getValue();
+		p.setValue(value);
 		return p;
 	}
 	
@@ -314,9 +343,19 @@ public class ClientModelTransformer {
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertFreeTextStaticProperty(
 			FreeTextStaticProperty p) {
-		TextInput input = new TextInput();
-		input.setValue("");
-		if (p.getRequiredDomainProperty() != null) input.setDatatype(p.getRequiredDomainProperty());
+		FormInput input;
+		if (p.getValueSpecification() != null)
+		{
+			input = new SliderInput();
+			((SliderInput) input).setMinValue(p.getValueSpecification().getMinValue());
+			((SliderInput) input).setMaxValue(p.getValueSpecification().getMaxValue());
+			((SliderInput) input).setStep(p.getValueSpecification().getStep());
+		}
+		else {
+			input = new TextInput();
+			((TextInput) input).setValue("");
+			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDatatype(p.getRequiredDomainProperty());
+		}
 		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
 	}
 
@@ -357,10 +396,24 @@ public class ClientModelTransformer {
 				else property = convertMappingProperty((MappingProperty) p, new CheckboxInput());
 			}
 		else if (p instanceof MatchingStaticProperty) property = convertMatchingProperty((MatchingStaticProperty) p);
+		else if (p instanceof DomainStaticProperty) property = convertDomainProperty((DomainStaticProperty) p);
 		
 		property.setElementId(p.getRdfId().toString());
 		return property;
 		//exceptions
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertDomainProperty(
+			DomainStaticProperty p) {
+		List<SupportedProperty> supportedProperties = new ArrayList<>();
+		
+		p.getSupportedProperties().forEach(sp -> supportedProperties.add(new SupportedProperty(sp.getRdfId().toString(), sp.getPropertyId(), sp.getValue(), sp.isValueRequired())));
+		
+		DomainConceptInput input = new DomainConceptInput(p.getRequiredClass(), supportedProperties);
+		
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
+		clientProperty.setElementId(p.getRdfId().toString());
+		return clientProperty;
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertMatchingProperty(
