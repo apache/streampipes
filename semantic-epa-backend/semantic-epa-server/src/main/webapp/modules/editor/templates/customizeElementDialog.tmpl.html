@@ -1,0 +1,108 @@
+<md-dialog aria-label="Customize" flex="60">
+  <form name="customizeForm" ng-submit="saveProperties()" role="form">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Customize {{sepaName}}</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content flex="100">
+  	<div ng-repeat="staticProperty in selectedElement.staticProperties">
+  		<div layout="column" class="customize-item-main">
+  			<div class="customize-item-title">
+  				{{staticProperty.description}}
+  			</div>
+  			<div class="customize-item-content">
+		  		<div ng-show="staticProperty.type=='STATIC_PROPERTY'">
+		  			<div ng-show="staticProperty.input.type == 'RadioInput'">	
+			  			<md-input-container flex>
+			  				<md-radio-group ng-model="selection[staticProperty.elementId]" class="md-accent" name="{{staticProperty.elementId}}">
+					          <md-radio-button ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
+					            <b>{{option.humanDescription}}</b><br/>
+					          </md-radio-button>
+							</md-radio-group>
+						</md-input-container>
+					</div>
+		  			<div ng-show="staticProperty.input.type == 'TextInput'">
+			  			<md-input-container flex> <label>{{staticProperty.description}}</label>
+							<input name="{{staticProperty.elementId}}" ng-model="staticProperty.input.properties.value"/> 
+						</md-input-container>
+					</div>	
+					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
+						 <div ng-repeat="option in staticProperty.input.properties.options">
+				            <md-checkbox ng-model="option.selected">
+				              {{option.humanDescription}}
+				            </md-checkbox>
+				          </div>
+					</div>		
+					<div ng-show="staticProperty.input.type == 'SliderInput'">
+						<md-input-container flex> <label>{{staticProperty.description}}</label>
+							<input name="{{staticProperty.elementId}}" type="text" ng-model="staticProperty.input.properties.value"> 
+							<md-slider flex min="{{staticProperty.input.properties.minValue}}" max="{{staticProperty.input.properties.maxValue}}" step="{{staticProperty.input.properties.step}}" ng-model="staticProperty.input.properties.value" class>
+      						</md-slider>
+						</md-input-container>
+					</div>		
+					<div ng-show="staticProperty.input.type == 'DomainConceptInput'">
+						<b>Required type: {{staticProperty.input.properties.requiredClass}}</b>
+						<div layout="column">
+							<div>
+								Instance search:
+							</div>
+							<div>
+								<md-input-container flex> <label>Name</label>
+									<input ng-model="searchString"/ placeholder="Label">
+								</md-input-container>
+							</div>
+						</div>
+						 <div ng-repeat="supportedProperty in staticProperty.input.properties.supportedProperties">
+				            <md-input-container flex> <label>{{supportedProperty.propertyId}}</label>
+							<input name="{{supportedProperty.elementId}}" ng-model="staticProperty.input.properties.value"/> 
+							</md-input-container>
+				          </div>
+					</div>								
+				</div>	
+				<div ng-show="staticProperty.type=='MAPPING_PROPERTY'">
+					<div ng-show="staticProperty.input.type == 'SelectFormInput'">
+						<md-select ng-model="selection[staticProperty.elementId]"  placeholder="{{staticProperty.description}}">
+				          <md-option ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
+				            <b>{{option.humanDescription}}</b><br/>
+				          </md-option>
+				        </md-select>
+					</div>	
+					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
+						 <div ng-repeat="option in staticProperty.input.properties.options">
+				            <md-checkbox ng-model="option.selected" name="{{option.elementId}}">
+				              {{option.humanDescription}}
+				            </md-checkbox>
+				          </div>
+					</div>	
+				</div>
+				<div ng-show="staticProperty.type=='CUSTOM_OUTPUT'">
+					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
+						 <div ng-repeat="option in staticProperty.input.properties.options">
+				            <md-checkbox ng-model="option.selected" name="{{option.elementId}}">
+				              {{option.humanDescription}}
+				            </md-checkbox>
+				          </div>
+					</div>	
+				</div>
+			</div>	
+		</div>			    
+  	</div>
+  	<div ng-show="invalid">
+  		<h3>Please enter all required parameters.</h3>
+  	</div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+  	<md-button class="md-accent" style="margin-right:20px;" type="submit">
+      Save
+    </md-button>
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+  </div>
+  </form>
+</md-dialog>

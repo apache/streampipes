@@ -229,7 +229,7 @@ angular
 
             var menuHeight = $('#contextMenu').height();
 
-            var mouseHeight = e.pageY;
+            var mouseHeight = e.pageY - $(window).scrollTop();
             var pageHeight = $(window).height();
 
             if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {

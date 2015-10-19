@@ -21,6 +21,7 @@ body {
 .customize-item-main {
 	border: 1px solid rgb(140,158,255);
 	border-radius: 5px;
+	margin:5px;
 }
 
 .customize-item-content {
@@ -30,7 +31,7 @@ body {
 .customize-item-title {
 	background: rgb(140,158,255);
 	color:black;
-	font-size: 14pt;
+	font-size: 12pt;
 	padding:  5px;
 }
 

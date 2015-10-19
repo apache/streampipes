@@ -2,8 +2,8 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q',
-        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', 
+        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
@@ -15,7 +15,30 @@ angular.module('streamPipesApp')
             var textInputFields = [];
             var connCount = 1;
 
-
+            $scope.showCustomizeDialog = function(elementData, sepaName) {
+            	$rootScope.state.currentElement = elementData;
+            	 $mdDialog.show({
+       	   	      controller: CustomizeController,
+       	   	      templateUrl: 'modules/editor/templates/customizeElementDialog.tmpl.html',
+       	   	      parent: angular.element(document.body),
+       	   	      clickOutsideToClose:true,
+       	   	      scope:$scope,
+       	   	      rootScope:$rootScope,
+       	   	      preserveScope:true,
+       		   	  locals : {
+       		   		  elementData : elementData,
+       		   		  sepaName : sepaName
+       		      }
+       	   	    })
+            }
+            
+            angular.element($window).on('scroll', function() {
+                jsPlumb.repaintEverything(true);
+              });
+            
+            $scope.$on("SepaElementConfigured", function(event, item){
+            	initRecs($rootScope.state.currentPipeline, item);
+            });  
 
             $scope.$on('$destroy', function () {
                 jsPlumb.deleteEveryEndpoint();
@@ -339,6 +362,7 @@ angular.module('streamPipesApp')
             function initPlumb(){
                 console.log("JSPLUMB EDITOR READY");
                 $rootScope.state.plumbReady = true;
+                jsPlumb.unbind("connection");
                 jsPlumb.bind("connection", function (info, originalEvent) {
                     console.log("connection" + connCount++);
                     var $target = $(info.target);
@@ -356,14 +380,15 @@ angular.module('streamPipesApp')
                                                 if (!isFullyConnected(id)) {
                                                     return;
                                                 }
-                                                $('#customize-content').html($scope.prepareCustomizeModal($(id)));
-                                                $(textInputFields).each(function (index, value) {
-                                                    addAutoComplete(value.fieldName, value.propertyName);
-                                                });
-                                                var iwbUri = "https://localhost:8443/resource/?uri=" +sepa.elementId;
-                                                var string = "Customize " + sepa.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
-                                                $('#customizeTitle').html(string);
-                                                $('#customizeModal').modal('show');
+                                                $scope.showCustomizeDialog($(id), sepa.name);
+//                                                $('#customize-content').html($scope.prepareCustomizeModal($(id)));
+//                                                $(textInputFields).each(function (index, value) {
+//                                                    addAutoComplete(value.fieldName, value.propertyName);
+//                                                });
+//                                                var iwbUri = "https://localhost:8443/resource/?uri=" +sepa.elementId;
+//                                                var string = "Customize " + sepa.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
+//                                                $('#customizeTitle').html(string);
+//                                                $('#customizeModal').modal('show');
                                             }
                                         }
                                     }
@@ -372,15 +397,13 @@ angular.module('streamPipesApp')
                                         if (!isFullyConnected(id)) {
                                             return;
                                         }
-                                        $('#customize-content').html($scope.prepareCustomizeModal($(id)));
-                                        var iwbUri = "https://localhost:8443/resource/?uri=" +$rootScope.state.currentPipeline.action.elementId;
-                                        var string = "Customize " + $rootScope.state.currentPipeline.action.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
-                                        ;
-                                        $('#customizeTitle').html(string);
-                                        $('#customizeModal').modal('show');
-                                    }
-                                    if ($target.hasClass('sepa')) {
-                                        initRecs($rootScope.state.currentPipeline, $target);
+                                        $scope.showCustomizeDialog($(id), $rootScope.state.currentPipeline.action.name);
+//                                        $('#customize-content').html($scope.prepareCustomizeModal($(id)));
+//                                        var iwbUri = "https://localhost:8443/resource/?uri=" +$rootScope.state.currentPipeline.action.elementId;
+//                                        var string = "Customize " + $rootScope.state.currentPipeline.action.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
+//                                        ;
+//                                        $('#customizeTitle').html(string);
+//                                        $('#customizeModal').modal('show');
                                     }
                                 }else{
                                     jsPlumb.detach(info.connection);
@@ -776,109 +799,6 @@ angular.module('streamPipesApp')
                 jsPlumb.repaintEverything();
             }
 
-            $scope.prepareCustomizeModal = function(element) {
-                $rootScope.state.currentElement = element;
-                var string = "";
-                // $('#savedOptions').children().not('strong').remove();
-                // if (element.data("modal") == null) {
-                textInputFields.length = 0;
-                if (element.data("JSON").staticProperties != null && element.data("JSON").staticProperties != []) {
-                    var staticPropertiesArray = element.data("JSON").staticProperties;
-
-                    var textInputCount = 0;
-                    var radioInputCount = 0;
-                    var selectInputCount = 0;
-                    var checkboxInputCount = 0;
-
-                    for (var i = 0; i < staticPropertiesArray.length; i++) {
-                        switch (staticPropertiesArray[i].input.properties.elementType) {
-                            case "TEXT_INPUT":
-                                var textInput = {};
-                                if (staticPropertiesArray[i].input.properties.datatype != undefined)
-                                {
-                                    textInput.fieldName = "textinput" +i;
-                                    textInput.propertyName = staticPropertiesArray[i].input.properties.datatype;
-                                    textInputFields.push(textInput);
-                                }
-                                string += getTextInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].name, textInputCount, staticPropertiesArray[i].input.properties.value);
-                                textInputCount++;
-                                continue;
-                            case "RADIO_INPUT":
-                                string += getRadioInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, radioInputCount);
-                                radioInputCount++;
-                                continue;
-                            case "CHECKBOX":
-                                string += getCheckboxInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, i);
-                                checkboxInputCount++;
-                                continue;
-                            case "SELECT_INPUT":
-                                string += getSelectInputForm(staticPropertiesArray[i].description, staticPropertiesArray[i].input.properties.options, selectInputCount);
-                                selectInputCount++;
-                                continue;
-                        }
-                    }
-                }
-
-                return string;
-            }
-
-            /**
-             * saves the parameters in the current element's data with key "options"
-             */
-            $scope.save = function() {
-
-                var options = $('#modalForm').serializeArray();
-                if (options.length < $rootScope.state.currentElement.data("JSON").staticProperties.length) {
-                    toastRightTop("error", "Please enter all parameters");
-                    return false;
-                }
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i].value == "") {
-                        toastRightTop("error", "Please enter all parameters");
-                        return false;
-                    }
-                }
-
-                $rootScope.state.currentElement.data("options", true);
-                saveInStaticProperties(options);
-                $rootScope.state.currentElement.removeClass("disabled");
-                // state.currentElement.css("opacity", 1);
-            }
-
-
-            function saveInStaticProperties(options) {
-                for (var i = 0; i < options.length; i++) {
-                    switch ($rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.elementType) {
-
-                        case "RADIO_INPUT" :
-                        case "SELECT_INPUT" :
-                            for (var j = 0; j < $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++) {
-                                if ($rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].humanDescription == options[i].value) {
-                                    $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
-                                } else {
-                                    $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
-                                }
-                            }
-                            continue;
-                        case "CHECKBOX" :
-                            for (var j = 0; j < $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options.length; j++) {
-                                if ($("#" + options[i].value + " #checkboxes-" + i + "-" + j).is(':checked')) {
-                                    $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = true;
-                                } else {
-                                    $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.options[j].selected = false;
-                                }
-                            }
-                            continue;
-                        case "TEXT_INPUT":
-                            $rootScope.state.currentElement.data("JSON").staticProperties[i].input.properties.value = options[i].value;
-                            continue;
-
-                    }
-                }
-                toastRightTop("success", "Parameters saved");
-            }
-
-
              $scope.clearCurrentElement = function() {
                 $rootScope.state.currentElement = null;
             };
@@ -910,9 +830,7 @@ angular.module('streamPipesApp')
                             handleDeleteOption($invokedOn);
 
                         } else if ($selected.get(0) === $('#customize').get(0)) {//Customize clicked
-
-                            $('#customize-content').html($scope.prepareCustomizeModal($invokedOn));
-                            $('#customizeModal').modal('show');
+                        	$scope.showCustomizeDialog($invokedOn);
 
                         } else {
                             handleJsonLDOption($invokedOn)
@@ -1258,13 +1176,15 @@ angular.module('streamPipesApp')
                     var menuHeight = $('#assemblyContextMenu').height();
                 }
 
-                var mouseHeight = e.pageY;
+                var mouseHeight = e.pageY - $(window).scrollTop();
                 var pageHeight = $(window).height();
 
                 if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
+                	console.log("scroll");
                     return mouseHeight - menuHeight ;
                 }
-                return mouseHeight ;
+
+               return mouseHeight ;
 
             }
 
@@ -1488,3 +1408,93 @@ angular.module('streamPipesApp')
     //})
 
     ;
+
+function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName) {
+    
+	$scope.selectedElement = elementData.data("JSON");
+	$scope.selection = [];
+	$scope.sepaName = sepaName;
+	$scope.invalid = false;
+	
+	angular.forEach($scope.selectedElement.staticProperties, function(item) {
+		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
+			{
+				var anyMatch = false;
+				angular.forEach(item.input.properties.options, function(option) {
+					if (option.selected) 
+						{
+							$scope.selection[item.elementId] = option.elementId;
+							anyMatch = true;
+						}
+				});
+				if (!anyMatch) $scope.selection[item.elementId] = item.input.properties.options[0].elementId;
+			}
+	});
+	
+	$scope.hide = function() {
+  		$mdDialog.hide();
+  	};
+  	
+  	$scope.cancel = function() {
+  	    $mdDialog.cancel();
+  	};
+  	
+  	$scope.setSelectValue = function (c, q) {
+  		console.log(q);
+         angular.forEach(q, function (item) {
+             item.selected = false;
+         });
+         
+         c.selected = true;
+         console.log(q);
+     };
+  	
+    /**
+     * saves the parameters in the current element's data with key "options"
+     */
+    $scope.saveProperties = function() {
+
+    	$scope.invalid = false;
+    	angular.forEach($scope.selectedElement.staticProperties, function(item) {
+    		if ($scope.selection[item.elementId] != undefined)
+    			{
+    				angular.forEach(item.input.properties.options, function(option) {
+    					if (option.elementId == $scope.selection[item.elementId])
+    						option.selected = true;
+    				});
+    			}
+    	});
+
+    	
+    	if ($scope.validate()) 
+    	{
+	        $rootScope.state.currentElement.data("options", true);
+	        $rootScope.state.currentElement.data("JSON").staticProperties = $scope.selectedElement.staticProperties;
+	        $rootScope.state.currentElement.removeClass("disabled");
+	        $rootScope.$broadcast("SepaElementConfigured", elementData);
+	        $scope.hide();
+    	}
+    	else $scope.invalid = true;
+    }
+    
+    $scope.validate = function() {
+    	var valid = true;
+    	angular.forEach($scope.selectedElement.staticProperties, function(item) {
+    		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput' || item.input.type == 'CheckboxInput')
+			{
+    			var optionSelected = false;
+    			angular.forEach(item.input.properties.options, function(option) {
+    				if (option.selected) optionSelected = true;
+    			});
+    			if (!optionSelected) valid = false;
+			}
+    		else if (item.input.type =='TextInput' || item.input.type == 'SliderInput')
+    		{
+    			if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
+    		}
+    			
+    	});
+    	return valid;
+    }
+  	
+}
