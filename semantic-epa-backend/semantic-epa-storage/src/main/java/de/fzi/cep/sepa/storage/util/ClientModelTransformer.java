@@ -356,7 +356,7 @@ public class ClientModelTransformer {
 			((TextInput) input).setValue("");
 			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDatatype(p.getRequiredDomainProperty());
 		}
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertOneOfStaticProperty(
@@ -368,7 +368,7 @@ public class ClientModelTransformer {
 			options.add(thisOption);
 		}
 		RadioInput input = new RadioInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertAnyStaticProperty(
@@ -379,7 +379,7 @@ public class ClientModelTransformer {
 			options.add(new Option(option.getElementId(), option.getName()));
 		}
 		CheckboxInput input = new CheckboxInput(options);
-		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getDescription(), input);
+		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertStaticProperty(
@@ -420,7 +420,7 @@ public class ClientModelTransformer {
 			MatchingStaticProperty p) {
 		RadioGroupInput radioGroupInput = new RadioGroupInput();
 		
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MATCHING_PROPERTY, p.getInternalName(), p.getDescription(), radioGroupInput);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MATCHING_PROPERTY, p.getLabel(), p.getDescription(), radioGroupInput);
 		return clientProperty;
 	}
 
@@ -434,7 +434,7 @@ public class ClientModelTransformer {
 		//SelectFormInput input = new SelectFormInput(options);
 		
 		
-		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getInternalName(), p.getDescription(), input);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.MAPPING_PROPERTY, p.getLabel(), p.getDescription(), input);
 		clientProperty.setElementId(p.getRdfId().toString());
 		return clientProperty;
 	}

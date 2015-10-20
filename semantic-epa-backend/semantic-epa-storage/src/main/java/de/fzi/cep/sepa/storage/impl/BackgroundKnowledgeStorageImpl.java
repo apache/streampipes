@@ -26,6 +26,9 @@ import de.fzi.cep.sepa.model.client.ontology.Instance;
 import de.fzi.cep.sepa.model.client.ontology.Namespace;
 import de.fzi.cep.sepa.model.client.ontology.NodeType;
 import de.fzi.cep.sepa.model.client.ontology.OntologyNode;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQuery;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQueryItem;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQueryResponse;
 import de.fzi.cep.sepa.model.client.ontology.Property;
 import de.fzi.cep.sepa.model.client.ontology.Resource;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
@@ -292,6 +295,7 @@ public class BackgroundKnowledgeStorageImpl implements
 		ElementHeader header = null;
 		
 		List<Property> properties = new ArrayList<>();
+		List<String> instanceProperties = new ArrayList<>();
 		int idx = 0;
 		
 		Optional<Namespace> nsOpt = getNamespace(instanceId);
@@ -316,18 +320,17 @@ public class BackgroundKnowledgeStorageImpl implements
 				if (description != null) instance.setRdfsDescription(description.stringValue());
 			}
 			
+			instanceProperties.add(bindingSet.getValue("property").stringValue());
+			
 			idx++;
 		}
 		
-		for(String conceptId : getRdfTypes(instanceId))
+		for(String propertyId : instanceProperties)
 		{
-			Concept concept = getConcept(conceptId);
-			for(Property property : concept.getDomainProperties())
-			{
-				Property p = getProperty(property.getElementHeader().getId(), instanceId);
-				properties.add(p);
-			}
+			Property p = getProperty(propertyId, instanceId);
+			properties.add(p);
 		}
+		
 		
 		instance.setDomainProperties(BackgroundKnowledgeUtils.filterDuplicates(BackgroundKnowledgeFilter.rdfsFilter(properties, true)));
 		return instance;
@@ -372,6 +375,52 @@ public class BackgroundKnowledgeStorageImpl implements
 		    connection.close();
 		    return true;
 		} catch (RepositoryException | MalformedQueryException | UpdateExecutionException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public OntologyQuery getOntologyResult(OntologyQuery query) {
+		for(OntologyQueryItem item : query.getRequiredProperties())
+		{
+			TupleQueryResult result;
+			List<OntologyQueryResponse> queryResponse = new ArrayList<>();
+			int idx = 0;
+			try {
+				result = getQueryResult(QueryBuilder.getPropertyDetails(query.getRequiredClass(), item.getPropertyId(), query.getRequiredProperties()));
+				
+				while (result.hasNext()) { 
+					BindingSet bindingSet = result.next();
+					OntologyQueryResponse response = new OntologyQueryResponse();
+					
+					Value label = bindingSet.getValue("label");
+					Value description = bindingSet.getValue("description");
+					Value propertyValue = bindingSet.getValue("propertyValue");
+					if (label != null) response.setLabel(label.stringValue());
+					if (description != null) response.setDescription(description.stringValue());
+					response.setPropertyValue(propertyValue.stringValue());
+					
+					queryResponse.add(response);
+				}
+				item.setQueryResponse(queryResponse);
+				
+			} catch (QueryEvaluationException | RepositoryException
+					| MalformedQueryException e) {
+				e.printStackTrace();
+				
+			}
+		}
+		return query;
+	}
+
+	@Override
+	public boolean initialize() {
+		try {
+			new QueryExecutor(repo).executeUpdate(QueryBuilder.addRequiredTriples());
+			return true;
+		} catch (UpdateExecutionException | RepositoryException
+				| MalformedQueryException e) {
 			e.printStackTrace();
 			return false;
 		}

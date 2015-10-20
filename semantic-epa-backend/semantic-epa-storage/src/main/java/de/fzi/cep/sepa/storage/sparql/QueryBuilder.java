@@ -1,9 +1,14 @@
 package de.fzi.cep.sepa.storage.sparql;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.repository.RepositoryException;
 
 import de.fzi.cep.sepa.model.client.ontology.Concept;
 import de.fzi.cep.sepa.model.client.ontology.Instance;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQueryItem;
 import de.fzi.cep.sepa.model.client.ontology.PrimitiveRange;
 import de.fzi.cep.sepa.model.client.ontology.Property;
 import de.fzi.cep.sepa.model.client.ontology.QuantitativeValueRange;
@@ -106,8 +111,9 @@ public class QueryBuilder {
 	
 	public static String getInstanceDetails(String instanceId) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(getPrefix() + " select ?label ?description ?typeOf where { "
+		builder.append(getPrefix() + " select ?label ?description ?property where { "
 				+getLabelDescriptionQueryPart(instanceId)
+				+" <" +instanceId +"> ?property ?o ."
 				+" }");
 
 		return builder.toString();
@@ -298,6 +304,37 @@ public class QueryBuilder {
 		StringBuilder builder = new StringBuilder();
 		builder.append(	" OPTIONAL { <" +subject +"> <" +RDFS_LABEL +"> " + " ?label . }"
 				+" OPTIONAL { <" +subject +"> <" +RDFS_DESCRIPTION +"> " + " ?description . }");
+		return builder.toString();
+	}
+
+	public static String getPropertyDetails(String requiredClass,
+			String propertyId, List<OntologyQueryItem> requiredProperties) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() + " select ?label ?description ?propertyValue where {"
+				+" OPTIONAL { ?s <" +RDFS_LABEL +"> ?label . }" 
+				+" OPTIONAL { ?s <" +RDFS_DESCRIPTION +"> ?description . }" 
+				+" ?s <" +propertyId +"> ?propertyValue . ");
+		
+		for(OntologyQueryItem item : requiredProperties)
+		{
+			builder.append(" ?s <" +item.getPropertyId() +"> ?" +RandomStringUtils.randomAlphabetic(5) +" .");
+		}
+		
+		if (requiredClass != null)
+			builder.append(" ?s <" +RDF_TYPE +"> <" +requiredClass +"> .");
+		
+		builder.append(" }");
+		System.out.println(builder.toString());
+		return builder.toString();
+		
+	}
+	
+	public static String addRequiredTriples()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrefix() +" INSERT DATA {"
+				+ "sepa:domainProperty <" +RDFS_RANGE +"> " +"rdf:Property ."
+				+ " }");
 		return builder.toString();
 	}
 

@@ -9,6 +9,7 @@ import org.openrdf.repository.RepositoryException;
 import de.fzi.cep.sepa.model.client.ontology.Concept;
 import de.fzi.cep.sepa.model.client.ontology.Instance;
 import de.fzi.cep.sepa.model.client.ontology.Namespace;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQuery;
 import de.fzi.cep.sepa.model.client.ontology.Resource;
 import de.fzi.cep.sepa.model.client.ontology.OntologyNode;
 import de.fzi.cep.sepa.model.client.ontology.Property;
@@ -49,6 +50,9 @@ public interface BackgroundKnowledgeStorage {
 	
 	public boolean deleteResource(String resourceId);
 	
+	public OntologyQuery getOntologyResult(OntologyQuery query);
+	
+	public boolean initialize();
 	
 	
 }
