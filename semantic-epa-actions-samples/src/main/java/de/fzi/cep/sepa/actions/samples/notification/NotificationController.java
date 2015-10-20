@@ -49,8 +49,8 @@ public class NotificationController extends ActionController {
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new FreeTextStaticProperty("title", "Title"));
-		staticProperties.add(new FreeTextStaticProperty("content", "Content"));
+		staticProperties.add(new FreeTextStaticProperty("title", "Title", ""));
+		staticProperties.add(new FreeTextStaticProperty("content", "Content", ""));
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

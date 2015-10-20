@@ -45,12 +45,12 @@ public class MultiRowTableController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		OneOfStaticProperty operation = new OneOfStaticProperty("output", "Output strategy: ");
+		OneOfStaticProperty operation = new OneOfStaticProperty("output", "Output strategy: ", "");
 		operation.addOption(new Option("Replace rows"));
 		operation.addOption(new Option("Append rows"));
 		
 		staticProperties.add(operation);
-		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "list", "Select list property"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "list", "Select list property", ""));
 	
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

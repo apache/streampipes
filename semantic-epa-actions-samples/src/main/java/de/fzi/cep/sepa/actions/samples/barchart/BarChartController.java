@@ -52,8 +52,8 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "key", "Select key property"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "value", "Select value property"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "key", "Select key property", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "value", "Select value property", ""));
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

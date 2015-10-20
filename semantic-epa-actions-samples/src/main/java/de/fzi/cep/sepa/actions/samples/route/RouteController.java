@@ -53,9 +53,9 @@ public class RouteController implements SemanticEventConsumerDeclarer{
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "label", "Select Label"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "label", "Select Label", ""));
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

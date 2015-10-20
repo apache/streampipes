@@ -47,17 +47,17 @@ public class ChartController implements SemanticEventConsumerDeclarer {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty chartTitle = new FreeTextStaticProperty("title", "Chart title");
+		FreeTextStaticProperty chartTitle = new FreeTextStaticProperty("title", "Chart title", "");
 		staticProperties.add(chartTitle);
 		
-		FreeTextStaticProperty xAxis = new FreeTextStaticProperty("xTitle", "X-Axis title");
+		FreeTextStaticProperty xAxis = new FreeTextStaticProperty("xTitle", "X-Axis title", "");
 		staticProperties.add(xAxis);
 		
-		FreeTextStaticProperty yAxis = new FreeTextStaticProperty("yTitle", "Y-Axis title");
+		FreeTextStaticProperty yAxis = new FreeTextStaticProperty("yTitle", "Y-Axis title", "");
 		staticProperties.add(yAxis);
 		
 		try {
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping", ""));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -87,11 +87,11 @@ public class ChartController implements SemanticEventConsumerDeclarer {
 		
 		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
 		String title = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(graph, "title"))).getValue();
+				.getStaticPropertyByInternalName(graph, "title"))).getValue();
 		String xAxis = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(graph, "xTitle"))).getValue();
+				.getStaticPropertyByInternalName(graph, "xTitle"))).getValue();
 		String yAxis = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(graph, "yTitle"))).getValue();
+				.getStaticPropertyByInternalName(graph, "yTitle"))).getValue();
 		
 		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, "/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName);
 		

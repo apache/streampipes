@@ -47,16 +47,16 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty brokerUrl = new FreeTextStaticProperty("hostname", "Broker Hostname");
+		FreeTextStaticProperty brokerUrl = new FreeTextStaticProperty("hostname", "Broker Hostname", "");
 		staticProperties.add(brokerUrl);
 		
-		FreeTextStaticProperty port = new FreeTextStaticProperty("port", "Kafka Port");
+		FreeTextStaticProperty port = new FreeTextStaticProperty("port", "Kafka Port", "");
 		staticProperties.add(port);
 		
-		FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Broker topic");
+		FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Broker topic", "");
 		staticProperties.add(topic);
 		
-		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value");
+		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value", "");
 		staticProperties.add(addProperty);
 		
 		desc.setStaticProperties(staticProperties);
@@ -74,11 +74,11 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 	public Response invokeRuntime(SecInvocation sec) {
 			String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 			
-			String brokerHostname = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "hostname")).getValue();
-			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "topic")).getValue();
-			String port = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "port")).getValue();
+			String brokerHostname = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "hostname")).getValue();
+			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "topic")).getValue();
+			String port = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "port")).getValue();
 			
-			String pipelineId = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "additionalProperty")).getValue();
+			String pipelineId = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "additionalProperty")).getValue();
 			
 			kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
 					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(brokerHostname + ":" +port, topic), pipelineId));

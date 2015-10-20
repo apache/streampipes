@@ -49,7 +49,7 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		staticProperties.add(new FreeTextStaticProperty("kpi", "KPI name"));
+		staticProperties.add(new FreeTextStaticProperty("kpi", "KPI name", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		EventGrounding grounding = new EventGrounding();

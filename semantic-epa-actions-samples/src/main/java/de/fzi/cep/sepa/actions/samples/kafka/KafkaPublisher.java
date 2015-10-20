@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.actions.samples.kafka;
 
-import org.json.JSONObject;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

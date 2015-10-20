@@ -46,11 +46,11 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 		sec.addEventStream(stream1);
 	
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new FreeTextStaticProperty("min", "min value"));
-		staticProperties.add(new FreeTextStaticProperty("max", "max value"));
+		staticProperties.add(new FreeTextStaticProperty("min", "min value", ""));
+		staticProperties.add(new FreeTextStaticProperty("max", "max value", ""));
 		
 		try {
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Mapping", "Select Mapping", ""));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,9 +86,9 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 		
 		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
 		int min =  Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(graph, "min"))).getValue());
+				.getStaticPropertyByInternalName(graph, "min"))).getValue());
 		int max =  Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(graph, "max"))).getValue());
+				.getStaticPropertyByInternalName(graph, "max"))).getValue());
 		GaugeParameters lineChart = new GaugeParameters("/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName, min, max);
 		
 		return new GaugeGenerator(lineChart).generateHtml();

@@ -40,7 +40,7 @@ public class FileController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("path", "Path");
+		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("path", "Path", "");
 		staticProperties.add(maxNumberOfRows);
 
 		sec.addEventStream(stream1);
@@ -55,7 +55,7 @@ public class FileController extends ActionController {
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
 		String path = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sec, "path"))).getValue();
+				.getStaticPropertyByInternalName(sec, "path"))).getValue();
 		
 		FileParameters fileParameters = new FileParameters(inputTopic, brokerUrl, path);
 		

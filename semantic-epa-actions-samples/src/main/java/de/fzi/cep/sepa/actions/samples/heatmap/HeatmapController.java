@@ -47,9 +47,9 @@ public class HeatmapController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property"));
-		staticProperties.add(new FreeTextStaticProperty("points", "Max number of points"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitude", "Select latitude property", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitude", "Select longitude property", ""));
+		staticProperties.add(new FreeTextStaticProperty("points", "Max number of points", ""));
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
 		sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());
@@ -87,7 +87,7 @@ public class HeatmapController extends ActionController {
 		String latitudeName = SepaUtils.getMappingPropertyName(sec, "latitude");
 		String longitudeName = SepaUtils.getMappingPropertyName(sec, "longitude");
 		int maxPoints = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sec, "points"))).getValue());
+				.getStaticPropertyByInternalName(sec, "points"))).getValue());
 		
 		HeatmapParameters mapsParameters = new HeatmapParameters(websocketTopic, newUrl, latitudeName, longitudeName, maxPoints);
 		

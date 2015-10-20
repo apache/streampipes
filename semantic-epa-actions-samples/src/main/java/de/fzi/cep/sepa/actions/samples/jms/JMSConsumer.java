@@ -50,10 +50,10 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty timeWindow = new FreeTextStaticProperty("uri", "Broker URL");
+		FreeTextStaticProperty timeWindow = new FreeTextStaticProperty("uri", "Broker URL", "");
 		staticProperties.add(timeWindow);
 		
-		FreeTextStaticProperty duration = new FreeTextStaticProperty("topic", "Broker topic");
+		FreeTextStaticProperty duration = new FreeTextStaticProperty("topic", "Broker topic", "");
 		staticProperties.add(duration);
 		
 		desc.setStaticProperties(staticProperties);
@@ -67,8 +67,8 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 		String consumerUrl = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname() + ":" +((JmsTransportProtocol)sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getPort();
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
-		String destinationUri = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "uri")).getValue();
-		String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByName(sec, "topic")).getValue();
+		String destinationUri = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "uri")).getValue();
+		String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "topic")).getValue();
 		
 		
 		try {

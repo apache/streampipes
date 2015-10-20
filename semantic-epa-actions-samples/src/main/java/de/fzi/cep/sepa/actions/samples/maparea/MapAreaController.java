@@ -74,11 +74,11 @@ public class MapAreaController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitudeNw", "Select latitude property (NW)"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitudeNw", "Select longitude property (NW)"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "latitudeSe", "Select latitude property (SE)"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e4.getElementName()), "longitudeSe", "Select longitude property (SE)"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(e5.getElementName()), "label", "Select Label"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "latitudeNw", "Select latitude property (NW)", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "longitudeNw", "Select longitude property (NW)", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "latitudeSe", "Select latitude property (SE)", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e4.getElementName()), "longitudeSe", "Select longitude property (SE)", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e5.getElementName()), "label", "Select Label", ""));
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

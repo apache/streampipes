@@ -40,7 +40,7 @@ public class TableViewController extends ActionController {
 		
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("rows", "Maximum number of rows");
+		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("rows", "Maximum number of rows", "");
 		staticProperties.add(maxNumberOfRows);
 
 		sec.addEventStream(stream1);
@@ -62,7 +62,7 @@ public class TableViewController extends ActionController {
 		String inputTopic = extractTopic(sec);
 		
 		String rows = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sec, "rows"))).getValue();
+				.getStaticPropertyByInternalName(sec, "rows"))).getValue();
 		
 		TableParameters tableParameters = new TableParameters(inputTopic, newUrl, Integer.parseInt(rows), getColumnNames(sec.getInputStreams().get(0).getEventSchema().getEventProperties()));
 		
