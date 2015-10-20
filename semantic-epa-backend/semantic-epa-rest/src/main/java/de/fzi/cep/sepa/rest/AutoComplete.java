@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.rest;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -14,6 +15,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.fzi.cep.sepa.messages.AutocompleteItem;
 import de.fzi.cep.sepa.messages.AutocompleteResult;
+import de.fzi.cep.sepa.model.client.ontology.OntologyQuery;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.ontology.QueryExecutor;
@@ -45,6 +47,15 @@ public class AutoComplete extends AbstractRestInterface {
 		return toJson(result);
 	}
 	
+	@POST
+	@Path("/domain")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getOntologyQueryResult(String ontologyQuery)
+	{
+		OntologyQuery query = fromJson(ontologyQuery, OntologyQuery.class);
+		
+		return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getOntologyResult(query));
+	}
 	
 	public static void main(String[] args)
 	{
