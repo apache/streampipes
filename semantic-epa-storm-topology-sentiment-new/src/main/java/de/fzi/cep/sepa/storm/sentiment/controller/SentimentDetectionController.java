@@ -64,7 +64,7 @@ public class SentimentDetectionController extends EpDeclarer<Parameters>{
 			desc.setOutputStrategies(outputStrategies);
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-			staticProperties.add(new MappingPropertyUnary("sentimentMapsTo", "Sentiment Mapping"));
+			staticProperties.add(new MappingPropertyUnary("sentimentMapsTo", "Sentiment Mapping", ""));
 			desc.setStaticProperties(staticProperties);
 			
 			desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
