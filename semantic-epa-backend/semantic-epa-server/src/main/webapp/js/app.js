@@ -994,6 +994,10 @@ angular
     	    url: "/semantic-epa-backend/api/v2/contexts/" +encodeURIComponent(contextId)
     	});
  	}
+ 	
+ 	restApi.getDomainKnowledgeItems = function(query) {
+ 		return $http.post("/semantic-epa-backend/api/autocomplete/domain", query);
+ 	};
 	    
 
 	
