@@ -21,11 +21,11 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	@RdfProperty("rdfs:label")
 	protected String label;
 	
-	@RdfProperty("sepa:internalName")
-	protected String internalName;
-	
 	@RdfProperty("rdfs:description")
 	protected String description;
+	
+	@RdfProperty("sepa:internalName")
+	protected String internalName;
 	
 	@RdfProperty("so:valueRequired")
 	protected boolean valueRequired;
@@ -46,10 +46,11 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 		this.label = other.getLabel();
 	}
 	
-	public StaticProperty(String name, String description)
+	public StaticProperty(String internalName, String label, String description)
 	{
 		super();
-		this.internalName = name;
+		this.internalName = internalName;
+		this.label = label;
 		this.description = description;
 	}
 

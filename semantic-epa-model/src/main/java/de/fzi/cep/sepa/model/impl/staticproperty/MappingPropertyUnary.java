@@ -30,14 +30,14 @@ public class MappingPropertyUnary extends MappingProperty{
 		this.mapsTo = other.getMapsTo();
 	}
 	
-	public MappingPropertyUnary(URI mapsFrom, String name, String description)
+	public MappingPropertyUnary(URI mapsFrom, String internalName, String label, String description)
 	{
-		super(mapsFrom, name, description);	
+		super(mapsFrom, internalName, label, description);	
 	}
 	
-	public MappingPropertyUnary(String name, String description)
+	public MappingPropertyUnary(String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 	}
 
 	public URI getMapsTo() {

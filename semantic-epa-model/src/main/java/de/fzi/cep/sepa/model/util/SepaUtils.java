@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
@@ -14,6 +15,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
@@ -22,30 +24,45 @@ import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 
 public class SepaUtils {
 
-	public static StaticProperty getStaticPropertyByName(ConsumableSEPAElement sepa, String name)
+	public static String getSupportedPropertyValue(DomainStaticProperty dsp, String propertyId)
 	{
-		return getStaticPropertyByName(sepa.getStaticProperties(), name);
+		Optional<SupportedProperty> matchedProperty = dsp.getSupportedProperties().stream().filter(sp -> sp.getPropertyId().equals(propertyId)).findFirst();
+		if (matchedProperty.isPresent()) return matchedProperty.get().getValue();
+		else return "";
 	}
 	
-	public static String getFreeTextStaticPropertyValue(InvocableSEPAElement graph, String name)
+	public static DomainStaticProperty getDomainStaticPropertyBy(InvocableSEPAElement sepa, String internalName)
 	{
-		StaticProperty staticProperty = getStaticPropertyByName(graph, name);
+		Optional<StaticProperty> matchedProperty = sepa.getStaticProperties().stream().filter(sp -> (sp instanceof DomainStaticProperty) && (sp.getInternalName().equals(internalName))).findFirst();
+		if (matchedProperty.isPresent()) return (DomainStaticProperty) matchedProperty.get();
+		else return null;
+	}
+	
+	public static StaticProperty getStaticPropertyByInternalName(ConsumableSEPAElement sepa, String internalName)
+	{
+		return getStaticPropertyByName(sepa.getStaticProperties(), internalName);
+	}
+	
+	public static String getFreeTextStaticPropertyValue(InvocableSEPAElement graph, String internalName)
+	{
+		StaticProperty staticProperty = getStaticPropertyByInternalName(graph, internalName);
 		if (staticProperty instanceof FreeTextStaticProperty)
 			return ((FreeTextStaticProperty) staticProperty).getValue();
 		return null;
 	}
 	
-	public static StaticProperty getStaticPropertyByName(InvocableSEPAElement seg, String name)
+	public static StaticProperty getStaticPropertyByInternalName(InvocableSEPAElement seg, String internalName)
 	{
-		return getStaticPropertyByName(seg.getStaticProperties(), name);
+		return getStaticPropertyByName(seg.getStaticProperties(), internalName);
 	}
 	
-	public static StaticProperty getStaticPropertyByName(SecInvocation sec, String name)
+	public static StaticProperty getStaticPropertyByInternalName(SecInvocation sec, String internalName)
 	{
-		return getStaticPropertyByName(sec.getStaticProperties(), name);
+		return getStaticPropertyByName(sec.getStaticProperties(), internalName);
 	}
 	
 	// TODO: fetch event property from db for given static property name
@@ -242,7 +259,7 @@ public class SepaUtils {
 
 	private static StaticProperty generateAnyStaticProperty(
 			AnyStaticProperty property) {
-		AnyStaticProperty newProperty = new AnyStaticProperty(property.getInternalName(), property.getDescription());
+		AnyStaticProperty newProperty = new AnyStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
 		newProperty.setOptions(cloneOptions(property.getOptions()));
 		return newProperty;
 		
@@ -260,7 +277,7 @@ public class SepaUtils {
 
 	private static StaticProperty generateClonedMatchingStaticProperty(
 			MatchingStaticProperty property) {
-		MatchingStaticProperty mp = new MatchingStaticProperty(property.getInternalName(), property.getDescription());
+		MatchingStaticProperty mp = new MatchingStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
 		mp.setMatchLeft(property.getMatchLeft());
 		mp.setMatchRight(property.getMatchRight());
 		return mp;
@@ -272,13 +289,13 @@ public class SepaUtils {
 		if (property instanceof MappingPropertyUnary)
 		{
 			MappingPropertyUnary unaryProperty = (MappingPropertyUnary) property;
-			MappingPropertyUnary mp = new MappingPropertyUnary(unaryProperty.getMapsFrom(), unaryProperty.getInternalName(), unaryProperty.getDescription());
+			MappingPropertyUnary mp = new MappingPropertyUnary(unaryProperty.getMapsFrom(), unaryProperty.getInternalName(), unaryProperty.getLabel(), unaryProperty.getDescription());
 			mp.setMapsTo(unaryProperty.getMapsTo());
 			return mp;
 		}
 		else {
 			MappingPropertyNary naryProperty = (MappingPropertyNary) property;
-			MappingPropertyNary mp = new MappingPropertyNary(naryProperty.getMapsFrom(), naryProperty.getInternalName(), naryProperty.getDescription());
+			MappingPropertyNary mp = new MappingPropertyNary(naryProperty.getMapsFrom(), naryProperty.getInternalName(), naryProperty.getLabel(), naryProperty.getDescription());
 			mp.setMapsTo(naryProperty.getMapsTo());
 			return mp;
 		}
@@ -286,14 +303,14 @@ public class SepaUtils {
 
 	private static StaticProperty generateClonedOneOfStaticProperty(
 			OneOfStaticProperty property) {
-		OneOfStaticProperty osp = new OneOfStaticProperty(property.getInternalName(), property.getDescription());
+		OneOfStaticProperty osp = new OneOfStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
 		osp.setOptions(cloneOptions(osp.getOptions()));
 		return osp;
 	}
 
 	private static StaticProperty generateClonedFreeTextProperty(
 			FreeTextStaticProperty property) {
-		FreeTextStaticProperty ftsp = new FreeTextStaticProperty(property.getInternalName(), property.getDescription());
+		FreeTextStaticProperty ftsp = new FreeTextStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
 		ftsp.setRequiredDomainProperty(property.getRequiredDomainProperty());
 		ftsp.setValue(property.getValue());
 		return ftsp;

@@ -41,8 +41,8 @@ public class OneOfStaticProperty extends StaticProperty {
 		this.options = new Cloner().options(other.getOptions());
 	}
 
-	public OneOfStaticProperty(String name, String description) {
-		super(name, description);
+	public OneOfStaticProperty(String internalName, String label, String description) {
+		super(internalName, label, description);
 		options = new ArrayList<Option>();
 	}
 

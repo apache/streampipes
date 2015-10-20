@@ -33,13 +33,13 @@ public class MatchingStaticProperty extends StaticProperty{
 		this.matchRight = other.getMatchRight();
 	}
 	
-	public MatchingStaticProperty(String name, String description)
+	public MatchingStaticProperty(String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 	}
 	
-	public MatchingStaticProperty(String name, String description, URI matchLeft, URI matchRight) {
-		super(name, description);
+	public MatchingStaticProperty(String internalName, String label, String description, URI matchLeft, URI matchRight) {
+		super(internalName, label, description);
 		this.matchLeft = matchLeft;
 		this.matchRight = matchRight;
 	}

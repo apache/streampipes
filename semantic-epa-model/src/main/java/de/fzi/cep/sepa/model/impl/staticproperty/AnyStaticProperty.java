@@ -37,8 +37,8 @@ public class AnyStaticProperty extends StaticProperty {
 		this.options = new Cloner().options(other.getOptions());
 	}
 
-	public AnyStaticProperty(String name, String description) {
-		super(name, description);
+	public AnyStaticProperty(String internalName, String label, String description) {
+		super(internalName, label, description);
 		// TODO Auto-generated constructor stub
 	}
 

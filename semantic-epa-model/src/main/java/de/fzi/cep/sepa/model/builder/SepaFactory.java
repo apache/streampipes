@@ -39,11 +39,11 @@ public class SepaFactory {
 		return new EventPropertyPrimitive(propertyType, name, measurementUnit, subClassOf);
 	}
 	
-	public static StaticProperty createStaticProperty(String name, String description, StaticPropertyType type)
+	public static StaticProperty createStaticProperty(String internalName, String label, String description, StaticPropertyType type)
 	{
-		if (type.equals(StaticPropertyType.Any)) return new AnyStaticProperty(name, description);
-		else if (type.equals(StaticPropertyType.FreeText)) return new FreeTextStaticProperty(name, description);
-		else return new OneOfStaticProperty(name, description);
+		if (type.equals(StaticPropertyType.Any)) return new AnyStaticProperty(internalName, label, description);
+		else if (type.equals(StaticPropertyType.FreeText)) return new FreeTextStaticProperty(internalName, label, description);
+		else return new OneOfStaticProperty(internalName, label, description);
 	}
 	
 }

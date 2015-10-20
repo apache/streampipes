@@ -32,15 +32,15 @@ public abstract class MappingProperty extends StaticProperty {
 		this.mapsFrom = other.getMapsFrom();
 	}
 	
-	protected MappingProperty(URI mapsFrom, String name, String description)
+	protected MappingProperty(URI mapsFrom, String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 		this.mapsFrom = mapsFrom;
 	}
 	
-	protected MappingProperty(String name, String description)
+	protected MappingProperty(String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 	}
 
 	public URI getMapsFrom() {

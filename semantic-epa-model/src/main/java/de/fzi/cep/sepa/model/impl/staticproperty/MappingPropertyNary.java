@@ -32,15 +32,15 @@ public class MappingPropertyNary extends MappingProperty {
 		this.mapsTo = other.getMapsTo();
 	}
 	
-	public MappingPropertyNary(URI mapsFrom, String name, String description)
+	public MappingPropertyNary(URI mapsFrom, String internalName, String label, String description)
 	{
-		super(mapsFrom, name, description);	
+		super(mapsFrom, internalName, label, description);	
 		this.mapsTo = new ArrayList<>();
 	}
 	
-	public MappingPropertyNary(String name, String description)
+	public MappingPropertyNary(String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 		this.mapsTo = new ArrayList<>();
 	}
 

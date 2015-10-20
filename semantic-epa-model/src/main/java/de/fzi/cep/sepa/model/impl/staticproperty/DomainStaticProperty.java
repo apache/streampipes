@@ -36,15 +36,15 @@ public class DomainStaticProperty extends StaticProperty {
 		super();
 	}
 	
-	public DomainStaticProperty(String label, String description, List<SupportedProperty> supportedProperties)
+	public DomainStaticProperty(String internalName, String label, String description, List<SupportedProperty> supportedProperties)
 	{
-		super(label, description);
+		super(internalName, label, description);
 		this.supportedProperties = supportedProperties;
 	}
 	
-	public DomainStaticProperty(String label, String description, String requiredClass, List<SupportedProperty> supportedProperties)
+	public DomainStaticProperty(String internalName, String label, String description, String requiredClass, List<SupportedProperty> supportedProperties)
 	{
-		this(label, description, supportedProperties);
+		this(internalName, label, description, supportedProperties);
 		this.requiredClass = requiredClass;
 	}
 	

@@ -39,20 +39,20 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.value = other.getValue();
 	}
 	
-	public FreeTextStaticProperty(String name, String description)
+	public FreeTextStaticProperty(String internalName, String label, String description)
 	{
-		super(name, description);
+		super(internalName, label, description);
 	}
 	
-	public FreeTextStaticProperty(String name, String description, String type)
+	public FreeTextStaticProperty(String internalName, String label, String description, String type)
 	{
-		super(name, description);
+		super(internalName, label, description);
 		this.requiredDomainProperty = type;
 	}
 	
-	public FreeTextStaticProperty(String name, String description, PropertyValueSpecification valueSpecification)
+	public FreeTextStaticProperty(String internalName, String label, String description, PropertyValueSpecification valueSpecification)
 	{
-		super(name, description);
+		super(internalName, label, description);
 		this.valueSpecification = valueSpecification;
 	}
 
