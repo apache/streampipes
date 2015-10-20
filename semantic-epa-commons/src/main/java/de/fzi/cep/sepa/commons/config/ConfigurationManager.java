@@ -104,6 +104,7 @@ public class ConfigurationManager {
 		properties.put("couchDbMonitoringDbName", settings.getCouchDbMonitoringDbName());
 		properties.put("couchDbConnectionDbName", settings.getCouchDbConnectionDbName());
 		properties.put("couchDbNotificationDbName", settings.getCouchDbNotificationDbName());
+		properties.put("couchDbSepaInvocationDbName", "invocation");
 		
 		properties.put("sesameUrl", settings.getSesameUrl());
 		properties.put("sesameDbName", settings.getSesameDbName());
@@ -121,6 +122,7 @@ public class ConfigurationManager {
 		properties.put("sources_port", "8089");
 		properties.put("webapp_port", "8080");
 		properties.put("context_path", "/semantic-epa-backend");
+		
 		
 		if (!pathToFile.exists()) pathToFile.mkdir();
 		if (!file.exists()) file.createNewFile();
