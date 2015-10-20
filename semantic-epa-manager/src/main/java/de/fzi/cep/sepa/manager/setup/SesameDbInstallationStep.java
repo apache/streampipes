@@ -15,6 +15,7 @@ import org.openrdf.sail.memory.config.MemoryStoreConfig;
 
 import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class SesameDbInstallationStep implements InstallationStep {
 
@@ -42,6 +43,9 @@ public class SesameDbInstallationStep implements InstallationStep {
 				config.setRepositoryImplConfig(new SailRepositoryConfig(backendConfig));
 				manager.addRepositoryConfig(config);
 				msgs.add(Notifications.success("Creating Sesame database..."));
+				boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().initialize();
+				if (success) msgs.add(Notifications.success("Adding schema..."));
+				else msgs.add(Notifications.error("Adding schema..."));
 			}
 		} catch (RepositoryException e) {
 			e.printStackTrace();
