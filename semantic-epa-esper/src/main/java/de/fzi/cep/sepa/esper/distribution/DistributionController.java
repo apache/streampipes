@@ -57,10 +57,10 @@ public class DistributionController extends EpDeclarer<DistributionParameters>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("batchWindow", "Batch size");
+		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("batchWindow", "Batch size", "");
 		staticProperties.add(rpmThreshold);
 
-		staticProperties.add(new MappingPropertyUnary(URI.create(p1.getElementName()), "mapping", "Property mapping"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(p1.getElementName()), "mapping", "Property mapping", ""));
 
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());

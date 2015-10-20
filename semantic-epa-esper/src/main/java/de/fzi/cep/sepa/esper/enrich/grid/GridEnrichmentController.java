@@ -74,16 +74,16 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters", new PropertyValueSpecification(0, 10000, 100)));
+			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters", "", new PropertyValueSpecification(0, 10000, 100)));
 			
 			SupportedProperty sp1 = new SupportedProperty(Geo.lat, true);
 			SupportedProperty sp2 = new SupportedProperty(Geo.lng, true);
-			DomainStaticProperty sp = new DomainStaticProperty("Starting cell (upper left corner)", "Please select a valid location.", Arrays.asList(sp1, sp2));
+			DomainStaticProperty sp = new DomainStaticProperty("startingCell", "Starting cell (upper left corner)", "Select a valid location.", Arrays.asList(sp1, sp2));
 			staticProperties.add(sp);
 			
 			// Mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping", ""));
 			sepa.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {
@@ -96,9 +96,9 @@ public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {		
 		
-		int cellSize = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
-		double startingLatitude = Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "startingLatitude"));
-		double startingLongitude = Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "startingLongitude"));
+		int cellSize = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
+		double startingLatitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lat));
+		double startingLongitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lng));
 		
 		String latPropertyName = SepaUtils.getMappingPropertyName(sepa, "latitude");
 		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "longitude");	

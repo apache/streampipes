@@ -67,16 +67,16 @@ public class CountController extends EpDeclarer<CountParameter>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		OneOfStaticProperty operation = new OneOfStaticProperty("scale", "Scale: ");
+		OneOfStaticProperty operation = new OneOfStaticProperty("scale", "Time Window Scale", "");
 		operation.addOption(new Option("Hours"));
 		operation.addOption(new Option("Minutes"));
 		operation.addOption(new Option("Seconds"));
 		
 		staticProperties.add(operation);
 		
-		MappingProperty mp = new MappingPropertyNary("groupBy", "Group stream by: ");
+		MappingProperty mp = new MappingPropertyNary("groupBy", "Group stream by: ", "");
 		staticProperties.add(mp);
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size: "));
+		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "The size of the time window"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
@@ -90,7 +90,7 @@ public class CountController extends EpDeclarer<CountParameter>{
 				"groupBy", true);
 		
 		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
+				.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 	
 		String scale = SepaUtils.getOneOfProperty(sepa,
 				"scale");

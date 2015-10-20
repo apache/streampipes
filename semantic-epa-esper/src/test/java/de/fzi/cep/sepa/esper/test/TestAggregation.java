@@ -61,14 +61,14 @@ public class TestAggregation {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(test.getEventStreams().get(0).getEventSchema().getEventProperties().get(0).getElementId()), "groupBy", "group stream by: ");
+		MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(test.getEventStreams().get(0).getEventSchema().getEventProperties().get(0).getElementId()), "groupBy", "group stream by: ", "");
 		mp.setMapsTo(URI.create(sep.getEventStreams().get(0).getEventSchema().getEventProperties().get(1).getElementId()));
 		staticProperties.add(mp);
 		
-		FreeTextStaticProperty text1 = new FreeTextStaticProperty("outputEvery", "output values every (seconds)");
+		FreeTextStaticProperty text1 = new FreeTextStaticProperty("outputEvery", "output values every (seconds)", "");
 		text1.setValue("5");
 		staticProperties.add(text1);
-		FreeTextStaticProperty text2 = new FreeTextStaticProperty("timeWindow", "output values every (seconds)");
+		FreeTextStaticProperty text2 = new FreeTextStaticProperty("timeWindow", "output values every (seconds)", "");
 		text2.setValue("10");
 		staticProperties.add(text2);
 		

@@ -66,13 +66,13 @@ public class MinShuttleTimeController extends EpDeclarer<MinShuttleTimeParameter
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "mapping-lacqueringLineId",
-				"Lacquering Line: "));
+				"Lacquering Line: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "mapping-mouldingMachineId",
-				"Moulding Machine Id: "));
+				"Moulding Machine Id: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "mapping-shuttle",
-				"Shuttle: "));
+				"Shuttle: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e4.getElementName()), "mapping-time",
-				"Timestamp: "));
+				"Timestamp: ", ""));
 		
 		desc.setStaticProperties(staticProperties);
 		

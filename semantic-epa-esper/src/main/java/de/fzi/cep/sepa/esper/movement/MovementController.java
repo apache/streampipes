@@ -95,14 +95,14 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			OneOfStaticProperty epsg = new OneOfStaticProperty("epsg", "Select Projection");
+			OneOfStaticProperty epsg = new OneOfStaticProperty("epsg", "Select Projection", "");
 			epsg.addOption(new Option("EPSG:4326"));
 			epsg.addOption(new Option("EPSG:4329"));
 			staticProperties.add(epsg);
 			//TODO mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping"));
-			staticProperties.add(new MappingPropertyNary("group by", "Group elements by"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping", ""));
+			staticProperties.add(new MappingPropertyNary("group by", "Group elements by", ""));
 			desc.setStaticProperties(staticProperties);
 
 						
@@ -118,7 +118,7 @@ public class MovementController extends EpDeclarer<MovementParameter> {
 					
 		String epsgProperty = null;
 		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "epsg")));
+				.getStaticPropertyByInternalName(sepa, "epsg")));
 		for(Option option : osp.getOptions())
 			if (option.isSelected()) epsgProperty = option.getName();
 		

@@ -70,7 +70,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation");
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation", "");
 		operation.addOption(new Option("<"));
 		operation.addOption(new Option("<="));
 		operation.addOption(new Option(">"));
@@ -79,12 +79,12 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		staticProperties.add(operation);
 		
 		try {
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "number", "Provide the event property that should be filtered"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "number", "Provide the event property that should be filtered", ""));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value"));
+		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value", ""));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
@@ -95,7 +95,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		String threshold = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "value"))).getValue();
+				.getStaticPropertyByInternalName(sepa, "value"))).getValue();
 		String stringOperation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
 		

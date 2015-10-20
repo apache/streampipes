@@ -48,19 +48,19 @@ public class PatternController extends EpDeclarer<PatternParameters>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation");
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation", "");
 		operation.addOption(new Option("AND"));
 		operation.addOption(new Option("OR"));
 		operation.addOption(new Option("SEQUENCE"));
 		staticProperties.add(operation);
 		
-		OneOfStaticProperty timeWindowUnit = new OneOfStaticProperty("time unit", "select time unit");
+		OneOfStaticProperty timeWindowUnit = new OneOfStaticProperty("time unit", "select time unit", "");
 		timeWindowUnit.addOption(new Option("sec"));
 		timeWindowUnit.addOption(new Option("min"));
 		timeWindowUnit.addOption(new Option("hrs"));
 		staticProperties.add(timeWindowUnit);
 		
-		FreeTextStaticProperty duration = new FreeTextStaticProperty("duration", "select time");
+		FreeTextStaticProperty duration = new FreeTextStaticProperty("duration", "select time", "");
 		staticProperties.add(duration);
 		
 		//staticProperties.add(new MatchingStaticProperty("select matching", ""));

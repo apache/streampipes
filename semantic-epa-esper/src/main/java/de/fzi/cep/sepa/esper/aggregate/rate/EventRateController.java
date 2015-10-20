@@ -57,8 +57,8 @@ public class EventRateController extends EpDeclarer<EventRateParameter> {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		staticProperties.add(new FreeTextStaticProperty("rate", "average/sec"));
-		staticProperties.add(new FreeTextStaticProperty("output", "output every (seconds)"));
+		staticProperties.add(new FreeTextStaticProperty("rate", "average/sec", ""));
+		staticProperties.add(new FreeTextStaticProperty("output", "output every (seconds)", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;
@@ -68,10 +68,10 @@ public class EventRateController extends EpDeclarer<EventRateParameter> {
 	public Response invokeRuntime(SepaInvocation sepa) {
 	
 		String avgRate = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "rate"))).getValue();
+				.getStaticPropertyByInternalName(sepa, "rate"))).getValue();
 		
 		String outputRate = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "output"))).getValue();
+				.getStaticPropertyByInternalName(sepa, "output"))).getValue();
 	
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());

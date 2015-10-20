@@ -68,7 +68,7 @@ public class MathController extends EpDeclarer<MathParameter>{
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation");
+			OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation", "");
 			operation.addOption(new Option("+"));
 			operation.addOption(new Option("-"));
 			operation.addOption(new Option("/"));
@@ -77,8 +77,8 @@ public class MathController extends EpDeclarer<MathParameter>{
 			staticProperties.add(operation);
 			
 			// Mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "leftOperand", "Select left operand"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "rightOperand", "Select right operand"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "leftOperand", "Select left operand", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "rightOperand", "Select right operand", ""));
 			desc.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {

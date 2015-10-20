@@ -80,23 +80,23 @@ public class MeetsController extends EpDeclarer<PatternParameters>{
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
 		
-		OneOfStaticProperty timeWindowUnit = new OneOfStaticProperty("time unit", "select time unit");
+		OneOfStaticProperty timeWindowUnit = new OneOfStaticProperty("time unit", "select time unit", "");
 		timeWindowUnit.addOption(new Option("sec"));
 		timeWindowUnit.addOption(new Option("min"));
 		timeWindowUnit.addOption(new Option("hrs"));
 		staticProperties.add(timeWindowUnit);
 		
-		FreeTextStaticProperty timeWindow = new FreeTextStaticProperty("Time Window", "Select time window");
+		FreeTextStaticProperty timeWindow = new FreeTextStaticProperty("Time Window", "Select time window", "");
 		staticProperties.add(timeWindow);
 		
-		FreeTextStaticProperty duration = new FreeTextStaticProperty("Distance", "Select minimum distance");
+		FreeTextStaticProperty duration = new FreeTextStaticProperty("Distance", "Select minimum distance", "");
 		staticProperties.add(duration);
 		
 		try {
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Latitude", "Select Latitude Mapping (Stream 1)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "Longitude", "Select Longitude Mapping (Stream 1)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e3.getElementName()), "Latitude", "Select Latitude Mapping (Stream 2)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e4.getElementName()), "Longitude", "Select Longitude Mapping (Stream 2)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "Latitude", "Select Latitude Mapping (Stream 1)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "Longitude", "Select Longitude Mapping (Stream 1)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e3.getElementName()), "Latitude", "Select Latitude Mapping (Stream 2)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e4.getElementName()), "Longitude", "Select Longitude Mapping (Stream 2)", ""));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

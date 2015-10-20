@@ -58,17 +58,17 @@ public class TextFilterController extends EpDeclarer<TextFilterParameter> {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation");
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation", "");
 		operation.addOption(new Option("MATCHES"));
 		operation.addOption(new Option("CONTAINS"));
 		staticProperties.add(operation);
 		try {
-			staticProperties.add(new MappingPropertyUnary(new URI(property.getElementName()), "text", "Select Text Property"));
+			staticProperties.add(new MappingPropertyUnary(new URI(property.getElementName()), "text", "Select Text Property", ""));
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		staticProperties.add(new FreeTextStaticProperty("keyword", "Select Keyword"));
+		staticProperties.add(new FreeTextStaticProperty("keyword", "Select Keyword", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;
@@ -78,7 +78,7 @@ public class TextFilterController extends EpDeclarer<TextFilterParameter> {
 	public Response invokeRuntime(SepaInvocation sepa) {
 			
 		String keyword = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "keyword"))).getValue();
+				.getStaticPropertyByInternalName(sepa, "keyword"))).getValue();
 		String operation = SepaUtils.getOneOfProperty(sepa,
 				"operation");
 		String filterProperty = SepaUtils.getMappingPropertyName(sepa,

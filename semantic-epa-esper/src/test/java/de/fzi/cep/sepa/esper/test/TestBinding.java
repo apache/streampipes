@@ -59,10 +59,10 @@ public class TestBinding {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty text1 = new FreeTextStaticProperty("rate", "average/sec");
+		FreeTextStaticProperty text1 = new FreeTextStaticProperty("rate", "average/sec", "");
 		text1.setValue("5");
 		staticProperties.add(text1);
-		FreeTextStaticProperty text2 = new FreeTextStaticProperty("output", "output every (seconds)");
+		FreeTextStaticProperty text2 = new FreeTextStaticProperty("output", "output every (seconds)", "");
 		text2.setValue("10");
 		staticProperties.add(text2);
 		

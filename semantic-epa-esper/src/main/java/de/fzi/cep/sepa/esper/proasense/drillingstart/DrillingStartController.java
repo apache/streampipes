@@ -91,13 +91,13 @@ public class DrillingStartController extends EpDeclarer<DrillingStartParameters>
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("rpm", "RPM threshold");
-		FreeTextStaticProperty torqueThreshold = new FreeTextStaticProperty("torque", "Torque threshold");
+		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("rpm", "RPM threshold", "");
+		FreeTextStaticProperty torqueThreshold = new FreeTextStaticProperty("torque", "Torque threshold", "");
 		staticProperties.add(rpmThreshold);
 		staticProperties.add(torqueThreshold);
 		
-		staticProperties.add(new MappingPropertyUnary(URI.create(p1.getElementName()), "rpm", "Select RPM Mapping"));
-		staticProperties.add(new MappingPropertyUnary(URI.create(p2.getElementName()), "latitude", "Select Torque Mapping"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(p1.getElementName()), "rpm", "Select RPM Mapping", ""));
+		staticProperties.add(new MappingPropertyUnary(URI.create(p2.getElementName()), "latitude", "Select Torque Mapping", ""));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		return desc;

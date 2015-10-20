@@ -73,7 +73,7 @@ public class StaticValueEnricherController extends EpDeclarer<StaticValueEnriche
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("value", "Provide static value");
+		FreeTextStaticProperty rpmThreshold = new FreeTextStaticProperty("value", "Provide static value", "");
 		staticProperties.add(rpmThreshold);
 		
 		desc.setStaticProperties(staticProperties);

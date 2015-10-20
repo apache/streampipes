@@ -1,13 +1,8 @@
 package de.fzi.cep.sepa.esper.aggregate.avg;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.openrdf.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.EpDeclarer;
@@ -33,7 +28,6 @@ import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -82,21 +76,21 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 
-		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation");
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation", "Aggregation operation type");
 		operation.addOption(new Option("Average"));
 		operation.addOption(new Option("Sum"));
 		operation.addOption(new Option("Min"));
 		operation.addOption(new Option("Max"));
 		staticProperties.add(operation);
 
-		MappingProperty mp = new MappingPropertyNary("groupBy", "group stream by: ");
+		MappingProperty mp = new MappingPropertyNary("groupBy", "Group by", "Partitions the incoming stream by the selected event properties");
 		MappingProperty agg = new MappingPropertyUnary(URI.create(e1.getElementName()), "aggregate",
-				"aggregate property: ");
+				"property", "");
 		staticProperties.add(mp);
 		staticProperties.add(agg);
 
-		staticProperties.add(new FreeTextStaticProperty("outputEvery", "output values every (seconds)"));
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size (seconds)"));
+		staticProperties.add(new FreeTextStaticProperty("outputEvery", "Output Frequency", "output values every (seconds)"));
+		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "Size of the time window in seconds"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 
@@ -111,10 +105,10 @@ public class AggregationController extends EpDeclarer<AggregationParameter> {
 		String aggregate = SepaUtils.getMappingPropertyName(sepa, "aggregate");
 
 		int outputEvery = Integer.parseInt(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "outputEvery"))).getValue());
+				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "outputEvery"))).getValue());
 
 		int timeWindowSize = Integer.parseInt(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
+				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 
 		String aggregateOperation = SepaUtils.getOneOfProperty(sepa, "operation");
 

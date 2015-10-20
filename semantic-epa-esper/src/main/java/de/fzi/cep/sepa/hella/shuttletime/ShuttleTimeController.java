@@ -66,13 +66,13 @@ public class ShuttleTimeController extends EpDeclarer<ShuttleTimeParameters>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new MappingPropertyUnary(URI.create(e3.getElementName()), "mapping-location",
-				"Location: "));
+				"Location: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "mapping-event",
-				"Event: "));
+				"Event: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e2.getElementName()), "mapping-shuttle",
-				"Shuttle: "));
+				"Shuttle: ", ""));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e4.getElementName()), "mapping-time",
-				"Timestamp: "));
+				"Timestamp: ", ""));
 		
 		desc.setStaticProperties(staticProperties);
 		

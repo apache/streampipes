@@ -56,17 +56,17 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		OneOfStaticProperty operation = new OneOfStaticProperty("direction", "Direction: ");
+		OneOfStaticProperty operation = new OneOfStaticProperty("direction", "Direction: ", "");
 		operation.addOption(new Option("Ascending"));
 		operation.addOption(new Option("Descending"));
 		
 		staticProperties.add(operation);
 		
-		MappingProperty mp = new MappingPropertyUnary(URI.create(e1.getElementName()), "sortBy", "Sort by: ");
+		MappingProperty mp = new MappingPropertyUnary(URI.create(e1.getElementName()), "sortBy", "Sort by: ", "");
 		staticProperties.add(mp);
-		staticProperties.add(new FreeTextStaticProperty("topx", "Number of events: "));
+		staticProperties.add(new FreeTextStaticProperty("topx", "Number of events: ", ""));
 		
-		MappingProperty unique = new MappingPropertyNary("unique", "Unique properties: ");
+		MappingProperty unique = new MappingPropertyNary("unique", "Unique properties: ", "");
 		staticProperties.add(unique);
 		
 		desc.setStaticProperties(staticProperties);
@@ -81,7 +81,7 @@ public class TopXController extends EpDeclarer<TopXParameter>{
 				"sortBy", true);
 		
 		int limit = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "topx"))).getValue());
+				.getStaticPropertyByInternalName(sepa, "topx"))).getValue());
 	
 		String direction = SepaUtils.getOneOfProperty(sepa,
 				"direction");

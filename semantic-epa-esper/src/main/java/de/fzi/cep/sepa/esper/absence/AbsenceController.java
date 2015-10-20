@@ -39,7 +39,7 @@ public class AbsenceController extends EpDeclarer<AbsenceParameters>{
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time window size (seconds)"));
+		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "Time window size (seconds)"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		return desc;
@@ -54,7 +54,7 @@ public class AbsenceController extends EpDeclarer<AbsenceParameters>{
 		}
 		
 		int timeWindowSize = Integer.parseInt(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByName(sepa, "timeWindow"))).getValue());
+				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 		
 		AbsenceParameters staticParam = new AbsenceParameters(sepa, selectProperties, timeWindowSize);
 		

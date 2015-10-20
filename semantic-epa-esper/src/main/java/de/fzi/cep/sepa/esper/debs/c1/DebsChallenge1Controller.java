@@ -112,15 +112,15 @@ public class DebsChallenge1Controller extends EpDeclarer<DebsChallenge1Parameter
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters"));
-			staticProperties.add(new FreeTextStaticProperty("startingLatitude", "The latitude value of the center of the first cell"));
-			staticProperties.add(new FreeTextStaticProperty("startingLongitude", "The longitude value of the center of the first cell"));
+			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters", ""));
+			staticProperties.add(new FreeTextStaticProperty("startingLatitude", "The latitude value of the center of the first cell", ""));
+			staticProperties.add(new FreeTextStaticProperty("startingLongitude", "The longitude value of the center of the first cell", ""));
 			
 			// Mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping (Pickup)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping (Pickup)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e3.getElementName()), "latitude2", "Select Latitude Mapping (Dropoff)"));
-			staticProperties.add(new MappingPropertyUnary(new URI(e4.getElementName()), "longitude2", "Select Longitude Mapping (Dropoff)"));
+			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping (Pickup)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping (Pickup)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e3.getElementName()), "latitude2", "Select Latitude Mapping (Dropoff)", ""));
+			staticProperties.add(new MappingPropertyUnary(new URI(e4.getElementName()), "longitude2", "Select Longitude Mapping (Dropoff)", ""));
 			desc.setStaticProperties(staticProperties);
 
 		} catch (Exception e) {
@@ -134,13 +134,13 @@ public class DebsChallenge1Controller extends EpDeclarer<DebsChallenge1Parameter
 	public Response invokeRuntime(SepaInvocation sepa) {
 		
 		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "cellSize"))).getValue());
+				.getStaticPropertyByInternalName(sepa, "cellSize"))).getValue());
 		
 		double startingLatitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "startingLatitude"))).getValue());
+				.getStaticPropertyByInternalName(sepa, "startingLatitude"))).getValue());
 		
 		double startingLongitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByName(sepa, "startingLongitude"))).getValue());
+				.getStaticPropertyByInternalName(sepa, "startingLongitude"))).getValue());
 		
 		String latPropertyName = SepaUtils.getMappingPropertyName(sepa,
 				"latitude");
