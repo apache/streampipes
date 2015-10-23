@@ -113,7 +113,7 @@ public class NumericalFilterController extends EpDeclarer<NumericalFilterParamet
 		logger.info("Text Property: " +filterProperty);
 	
 		String topicPrefix = "topic://";
-		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Integer.parseInt(threshold), NumericalOperator.valueOf(operation), filterProperty);
+		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Double.parseDouble(threshold), NumericalOperator.valueOf(operation), filterProperty);
 		
 		try {
 			invokeEPRuntime(staticParam, NumericalFilter::new, sepa);

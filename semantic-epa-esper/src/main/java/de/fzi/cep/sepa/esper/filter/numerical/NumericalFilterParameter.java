@@ -6,18 +6,18 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class NumericalFilterParameter extends BindingParameters {
 
-	private int threshold;
+	private double threshold;
 	private NumericalOperator numericalOperator;
 	private String filterProperty;
 	
-	public NumericalFilterParameter(SepaInvocation graph, int threshold, NumericalOperator numericalOperator, String filterProperty) {
+	public NumericalFilterParameter(SepaInvocation graph, double threshold, NumericalOperator numericalOperator, String filterProperty) {
 		super(graph);
 		this.threshold = threshold;
 		this.numericalOperator = numericalOperator;
 		this.filterProperty = filterProperty;
 	}
 
-	public int getThreshold() {
+	public double getThreshold() {
 		return threshold;
 	}
 
