@@ -40,6 +40,7 @@ angular.module('streamPipesApp')
             	initRecs($rootScope.state.currentPipeline, item);
             });  
 
+
             $scope.$on('$destroy', function () {
                 jsPlumb.deleteEveryEndpoint();
             });
@@ -60,9 +61,9 @@ angular.module('streamPipesApp')
                 $mdOpenMenu(event.$event);
                 alert("open context menu");
             };
-            
+
             $scope.getOwnBlocks = function(){
-                return [];           //TODO anpassen
+                return restApi.getBlocks();           //TODO anpassen
             };
 
             $scope.ownBlocksAvailable = function(){
@@ -87,7 +88,7 @@ angular.module('streamPipesApp')
                 $scope.currentElements = [];
                 //$('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
-                    //TODO BLOCKS
+                    $scope.loadBlocks();
                 }else if (type == 'stream'){
                     $scope.loadSources();
                 }else if (type == 'sepa'){
@@ -96,7 +97,7 @@ angular.module('streamPipesApp')
                     $scope.loadActions();
                 }
             };
-            
+
             $scope.displayPipelineById = function(){
                 restApi.getPipelineById($scope.currentModifiedPipeline)
                     .success(function(pipeline){
@@ -106,7 +107,7 @@ angular.module('streamPipesApp')
                     .error(function(msg){
                         console.log(msg);
                     });
-                
+
             };
 
             $scope.displayPipeline = function(pipeline){
@@ -141,7 +142,7 @@ angular.module('streamPipesApp')
             function bindContextMenu(){
                 $(".draggable-icon").off("contextmenu").on("contextmenu", staticContextMenu);
             }
-            
+
             function connectPipelineElements(json, detachable){
                 console.log("connectPipelineElements()");
                 var source, target;
@@ -210,6 +211,11 @@ angular.module('streamPipesApp')
                 }
             ];
 
+            $scope.loadBlocks = function(){
+                restApi.getBlocks().then(function(data){
+                    console.log(data);
+                });
+            };
 
             $scope.loadSources = function(){
                 var tempStreams = [];
@@ -219,12 +225,12 @@ angular.module('streamPipesApp')
                         //console.log(sources);
                         sources.data.forEach(function(source, i, sources){
                             promises.push(restApi.getOwnStreams(source));
-                                //.then(function(streams){
-                                //    //console.log(streams);
-                                //
-                                //},function(msg){
-                                //    console.log(msg);
-                                //}));
+                            //.then(function(streams){
+                            //    //console.log(streams);
+                            //
+                            //},function(msg){
+                            //    console.log(msg);
+                            //}));
                             //console.log(promises);
                         });
 
@@ -251,7 +257,7 @@ angular.module('streamPipesApp')
                     .success(function(sepas){
                         console.log(sepas);
                         $.each(sepas, function(i, sepa){
-                           sepa.type = 'sepa';
+                            sepa.type = 'sepa';
                         });
                         $scope.currentElements = sepas;
                         $timeout(function(){
@@ -615,7 +621,7 @@ angular.module('streamPipesApp')
                 $('#pipelineNameModal').modal('show');
             }
 
-             $scope.savePipelineName = function() {
+            $scope.savePipelineName = function() {
 
                 var pipelineName = $('#pipelineNameForm').serializeArray();
                 if (pipelineName.length < 2) {
@@ -677,7 +683,7 @@ angular.module('streamPipesApp')
                     .success(function (data) {
                         console.log(data);
                         if (data.success) {
-
+                            $(".recommended-list", $element).remove();
                             $element.append($("<span><ul>").addClass("recommended-list"));
                             $("ul", $element)
                                 .circleMenu({
@@ -841,7 +847,7 @@ angular.module('streamPipesApp')
                         $(this).hide();
                         var $invokedOn = $(this).data("invokedOn");
                         while ($invokedOn.parent().get(0) != $("#editor-icon-stand").get(0)) {
-                                $invokedOn = $invokedOn.parent();
+                            $invokedOn = $invokedOn.parent();
                         }
                         var json = $invokedOn.data("JSON");
                         $('#description-title').text(json.name);
