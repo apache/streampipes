@@ -67,8 +67,7 @@ angular.module('streamPipesApp')
             };
 
             $scope.ownBlocksAvailable = function(){
-                console.log($scope.getOwnBlocks());
-                return false;
+                return $scope.getOwnBlocks();
             };
 
             $scope.ownSourcesAvailable = function(){
@@ -213,7 +212,12 @@ angular.module('streamPipesApp')
 
             $scope.loadBlocks = function(){
                 restApi.getBlocks().then(function(data){
+                    console.log("LOAD BLOCKS")
                     console.log(data);
+                    data.data.forEach(function(block, i, blocks){
+                       block.type = "block";
+                    });
+                    $scope.currentElements = data.data;
                 });
             };
 
@@ -235,7 +239,7 @@ angular.module('streamPipesApp')
                         });
 
                         $q.all(promises).then(function(data){
-                            console.log(data);
+
                             data.forEach(function(streams){
                                 streams.data.forEach(function(stream){
                                     stream.type = 'stream';
@@ -243,7 +247,7 @@ angular.module('streamPipesApp')
                                 tempStreams = tempStreams.concat(streams.data);
                             });
                             $scope.currentElements = tempStreams;
-                            console.log(tempStreams);
+
                         });
 
                     }, function(msg){
@@ -291,14 +295,52 @@ angular.module('streamPipesApp')
                     revert: 'invalid',
                     helper: 'clone',
                     stack: '.draggable-icon',
-                    start: function (stream, ui) {
+                    start: function (el, ui) {
                         ui.helper.appendTo('#content');
                         $('#assembly').css('border-color', 'red');
                     },
-                    stop: function (stream, ui) {
+                    stop: function (el, ui) {
                         $('#assembly').css('border-color', '#666666');
                     }
                 });
+                $('.block').draggable({
+                    revert: 'invalid',
+                    helper: 'clone',
+                    stack: '.block',
+                    start: function (el, ui) {
+                        ui.helper.appendTo('#content');
+                        $('#assembly').css('border-color', 'red');
+                    },
+                    stop: function (el, ui) {
+                        $('#assembly').css('border-color', '#666666');
+                    }
+                });
+            };
+
+            $scope.blockDropped = function($newElement, endpoints){
+                $scope.isStreamInAssembly = true;
+                $scope.isSepaInAssembly = true;
+                var data = $.extend({},$newElement.data("JSON"));
+                $newElement
+                    .addClass("connectable-block")
+                    .data("block", data )
+                    .append($('<div>').addClass("block-name tt").text(data.name)
+                        .attr({
+                            "data-toggle": "tooltip",
+                            "data-placement": "top",
+                            "data-delay": '{"show": 100, "hide": 100}',
+                            title: data.description
+                        })
+                    )
+                    .append($('<div>').addClass("block-img-container")
+                        .append($('<img>').addClass('block-img').attr("src", data.streams[0].iconUrl)));
+
+                if (endpoints){
+                    jsPlumb.addEndpoint($newElement, apiConstants.sepaEndpointOptions);
+                }
+
+
+
             };
 
             $scope.streamDropped = function($newElement, endpoints){
@@ -435,17 +477,21 @@ angular.module('streamPipesApp')
                     tolerance: "fit",
                     drop: function (element, ui) {
 
-                        if (ui.draggable.hasClass('draggable-icon')) {
+                        if (ui.draggable.hasClass('draggable-icon') || ui.draggable.hasClass('block')) {
                             //TODO get data
                             //console.log(ui);
 
                             if (ui.draggable.data("JSON") == null) {
-                                alert("No JSON - Data for Dropped element");
-                                return false;
+                                    alert("No JSON - Data for Dropped element");
+                                    return false;
                             }
+                            var $newState;
                             //Neues Container Element f�r Icon / identicon erstellen
-                            //TODO MOVE TO CONTROLLER
-                            var $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+                            if (ui.draggable.hasClass("block")){
+                                $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), true);
+                            }else{
+                                $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+                            }
 
                             //Droppable Streams
                             if (ui.draggable.hasClass('stream')) {
@@ -464,6 +510,8 @@ angular.module('streamPipesApp')
                                 //Droppable Actions
                             } else if (ui.draggable.hasClass('action')) {
                                 $scope.actionDropped($newState, true);
+                            }else if (ui.draggable.hasClass('block')){
+                                $scope.blockDropped($newState, true)
                             }
                             initTooltips();
                         }
@@ -542,7 +590,7 @@ angular.module('streamPipesApp')
 
 
 
-                $('#assembly').find('.connectable, .block').each(function (i, element) {
+                $('#assembly').find('.connectable, .connectable-block').each(function (i, element) {
                     var $element = $(element);
 
                     if (!isConnected(element)) {
@@ -582,7 +630,7 @@ angular.module('streamPipesApp')
 
                             }
                         }
-                    } else if ($element.hasClass('block')) {
+                    } else if ($element.hasClass('connectable-block')) {
                         streamPresent = true;
                         sepaPresent = true;
                         pipelineNew.addElement(element);
@@ -822,9 +870,9 @@ angular.module('streamPipesApp')
 
                         }
                         if ($selected.get(0) === $('#blockButton').get(0)){
-                            if ($invokedOn.hasClass("block")){
+                            if ($invokedOn.hasClass("connectable-block")){
 
-                                $scope.displayPipeline($.extend({},$invokedOn.data("block").pipeline));
+                                $scope.displayPipeline($.extend({},$invokedOn.data("block")));
                                 handleDeleteOption($invokedOn);
                                 //$invokedOn.remove();
                             }else{
@@ -881,7 +929,19 @@ angular.module('streamPipesApp')
                         var $recList = $("ul", $element);
                         $recList.circleMenu('open');
                     })
+                    .append($("<md-icon>")
+                        .attr({"md-svg-icon": "content:ic_add_circle_24px", "aria-label" :"Recommended Elements"}))
                     .appendTo($element);
+                $scope.apply();
+
+                //$("<span>")
+                //    .addClass("recommended-button")
+                //    .click(function (e) {
+                //        e.stopPropagation();
+                //        var $recList = $("ul", $element);
+                //        $recList.circleMenu('open');
+                //    })
+                //    .appendTo($element);
             }
 
             function showRecButton(e) {
@@ -903,7 +963,7 @@ angular.module('streamPipesApp')
                 };
             }
 
-            function createNewAssemblyElement(json, coordinates) {
+            function createNewAssemblyElement(json, coordinates, block) {
 
 
                 var $newState = $('<span>')
@@ -925,11 +985,17 @@ angular.module('streamPipesApp')
                         } else {
                             $('#customize, #division ').show();
                         }
+
                         if ($(this).hasClass('ui-selected') && isConnected(this)){
                             $('#blockButton').text("Create Block from Selected");
                             $('#blockButton, #division1 ').show();
                         } else {
                             $('#blockButton, #division1 ').hide();
+                        }
+                        if ($(this).hasClass("connectable-block")){
+                            $('#customize, #division ').hide();
+                            $('#blockButton, #division1 ').show();
+                            $('#blockButton').text("Revert to Pipeline");
                         }
                         $('#assemblyContextMenu')
                             .data("invokedOn", $(e.target))
@@ -943,27 +1009,28 @@ angular.module('streamPipesApp')
                         return false;
                     });
 
+                if (!block) {
+                    if ($newState.data('JSON').iconUrl == null) { //Kein icon in JSON angegeben
 
-                if ($newState.data('JSON').iconUrl == null) { //Kein icon in JSON angegeben
+                        addTextIconToElement($newState, $newState.data('JSON').name);
 
-                    addTextIconToElement($newState, $newState.data('JSON').name);
-
-                } else {
-                    $('<img>')
-                        .attr({
-                            src: json.iconUrl,
-                            "data-toggle": "tooltip",
-                            "data-placement": "top",
-                            "data-delay": '{"show": 1000, "hide": 100}',
-                            title: json.name
-                        })
-                        .error(function(){
-                            $(".connectable-img", $newState).remove();
-                            addTextIconToElement($newState, $newState.data("JSON").name);
-                        })
-                        .addClass('connectable-img tt')
-                        .appendTo($newState)
-                        .data("JSON", $.extend(true, {}, json));
+                    } else {
+                        $('<img>')
+                            .attr({
+                                src: json.iconUrl,
+                                "data-toggle": "tooltip",
+                                "data-placement": "top",
+                                "data-delay": '{"show": 1000, "hide": 100}',
+                                title: json.name
+                            })
+                            .error(function () {
+                                $(".connectable-img", $newState).remove();
+                                addTextIconToElement($newState, $newState.data("JSON").name);
+                            })
+                            .addClass('connectable-img tt')
+                            .appendTo($newState)
+                            .data("JSON", $.extend(true, {}, json));
+                    }
                 }
 
                 return $newState;
@@ -1028,11 +1095,23 @@ angular.module('streamPipesApp')
             //----------------------------------------------------
 
             $scope.blockElements = function(){
-                var block = createBlock();
+                var blockData = createBlock();
+                var block = blockData[0];
                 if (block == false){
                     toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Block Creation Error");
                     return;
                 }
+                console.log(blockData);
+
+                if (blockData.length == 2 && blockData[1] === "on") {
+                    restApi.saveBlock(block)
+                        .then(function (successData) {
+                            console.log(successData);
+                        }, function (errorData) {
+                            console.log(errorData);
+                        });
+                }
+
                 //sendToServer();
                 var $selectedElements = $('.ui-selected');
                 var blockCoords = getMidpointOfAssemblyElements($selectedElements);
@@ -1077,8 +1156,7 @@ angular.module('streamPipesApp')
 
             function createBlock(){
                 var blockData = $('#blockNameForm').serializeArray(); //TODO SAVE
-                //console.log(blockData);
-
+                console.log(blockData);
                 var blockPipeline = new objectProvider.Pipeline();
                 $('.ui-selected').each(function(){
                     var $el = $(this)
@@ -1092,9 +1170,14 @@ angular.module('streamPipesApp')
                 });
                 //console.log(blockPipeline);
                 var block = new objectProvider.Block(blockData[0].value, blockData[1].value, blockPipeline);
+                var data;
+                if (blockData.length = 3) {
+                    data = [block, blockData[2].value];
+                }else{
+                    data = [block];
+                }
 
-
-                return block;
+                return data;
 
             }
 
@@ -1274,7 +1357,7 @@ angular.module('streamPipesApp')
                     target : element
                 });
 
-                if ($element.hasClass('block')){
+                if ($element.hasClass('connectable-block')){
                     var block = $(element).data("block");
                     this.addBlock(block);
                 }
@@ -1287,9 +1370,9 @@ angular.module('streamPipesApp')
                         var conObjId = "#" + connections[i].sourceId;
                         var $conObj = $(conObjId);
 
-                        if ($conObj.hasClass('block')){
+                        if ($conObj.hasClass('connectable-block')){
                             var block = $conObj.data("block");
-                            this.action.connectedTo.push(block.pipeline.sepas[block.outputIndex].DOM)
+                            this.action.connectedTo.push(block.sepas[block.outputIndex].DOM)
                             //this.addBlock($conObj.data("block"), this.action);
                         }else {
                             this.action.connectedTo.push(connections[i].sourceId);
@@ -1304,9 +1387,9 @@ angular.module('streamPipesApp')
                         var conObjId = "#" + connections[i].sourceId;
                         var $conObj = $(conObjId);
 
-                        if ($conObj.hasClass('block')){
+                        if ($conObj.hasClass('connectable-block')){
                             var block = $conObj.data("block");
-                            el.connectedTo.push(block.pipeline.sepas[block.outputIndex].DOM)
+                            el.connectedTo.push(block.sepas[block.outputIndex].DOM)
                             //this.addBlock($conObj.data("block"));
                         }else {
                             el.connectedTo.push(connections[i].sourceId);
@@ -1322,11 +1405,11 @@ angular.module('streamPipesApp')
             }
             this.addBlock = function(block){
                 //connectedElement.connectedTo.push(block.pipeline.sepas[block.outputIndex].DOM)
-                for (var i in block.pipeline.sepas){
-                    this.sepas.push(block.pipeline.sepas[i]); //TODO evtl keine Referenz?
+                for (var i in block.sepas){
+                    this.sepas.push(block.sepas[i]); //TODO evtl keine Referenz?
                 }
-                for (var i in block.pipeline.streams){
-                    this.streams.push(block.pipeline.streams[i]);
+                for (var i in block.streams){
+                    this.streams.push(block.streams[i]);
                 }
             }
 
@@ -1383,11 +1466,13 @@ angular.module('streamPipesApp')
             this.name = name;
             this.description = description;
             this.outputIndex = oi;
-            this.pipeline = pipeline;
+            this.sepas = $.extend([], pipeline.sepas);
+            this.streams = $.extend([], pipeline.streams);
+
             this.getjQueryElement = function(){
                 return $('<div>')
                     .data("block", $.extend({},this))
-                    .addClass("block")
+                    .addClass("connectable-block")
                     .append($('<div>').addClass("block-name tt").text(this.name)
                         .attr({
                             "data-toggle": "tooltip",
@@ -1397,7 +1482,7 @@ angular.module('streamPipesApp')
                         })
                 )
                     .append($('<div>').addClass("block-img-container")
-                        .append($('<img>').addClass('block-img').attr("src", this.pipeline.streams[0].iconUrl)));
+                        .append($('<img>').addClass('block-img').attr("src", this.streams[0].iconUrl)));
             }
         }
     })

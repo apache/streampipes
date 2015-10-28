@@ -699,7 +699,10 @@ angular
 		};
 
 		restApi.getBlocks = function () {
-			return $http.get(urlBase() + "/v2/block");
+			return $http.get(urlBase() + "/block");
+		};
+		restApi.saveBlock = function(block) {
+			return $http.post(urlBase() + "/block", block);
 		};
 
 		restApi.getOwnActions = function () {

@@ -198,6 +198,20 @@ body {
 	box-shadow: 1px 1px 2px #555;
 	text-align: center;
 }
+.block{
+	display: inline-block;
+	vertical-align: top;
+	cursor: pointer;
+	height: 180px;
+	width: 150px;
+	background-color: white;
+	border-radius: 5px;
+	margin-left: 4%;
+	margin-top: 5px;
+	box-shadow: 1px 1px 2px #555;
+	/*border: 1px solid #555;*/
+	text-align: center;
+}
 .stream{
 	border-radius: 50%;
 }
@@ -337,8 +351,9 @@ body {
 	top: 0;
 	height: 40%;
 	width: 40%;
-	background-color: #33DD33;
+	background-color: #ffffff;
 	border-radius: 50%;
+	box-shadow: 0 0 2px #555;
 	/*display: none;*/
 
 }
@@ -534,7 +549,7 @@ textarea{
 	text-align: center;
 }
 
-.block {
+.connectable-block {
 	position: absolute;
 	cursor: pointer;
 	height: 180px;

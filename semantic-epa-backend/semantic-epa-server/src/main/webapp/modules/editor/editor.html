@@ -25,12 +25,18 @@
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 
 	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu">
+	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
 		<img class="draggable-img"
-			  ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
+			 ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
 		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
 			{{elementTextIcon(element.name)}}
 		</span>
+	</span>
+	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="element.type == 'block'">
+		<div class="block-name tt">{{element.name}}</div>
+		<div class="block-img-container">
+			<img class="block-img" ng-src="{{element.streams[0].iconUrl}}">
+		</div>
 	</span>
 </div>
 
