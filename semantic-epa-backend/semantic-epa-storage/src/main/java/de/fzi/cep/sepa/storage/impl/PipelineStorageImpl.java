@@ -154,15 +154,15 @@ public class PipelineStorageImpl implements PipelineStorage {
 	}
 
 	@Override
-	public void storeVirtualSensor(VirtualSensor virtualSensor) {
-		 CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
+	public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
+		 CouchDbClient dbClient = Utils.getCouchDbBlockClient();
 		 dbClient.save(virtualSensor);
 	     dbClient.shutdown();
 	}
 
 	@Override
-	public List<VirtualSensor> getVirtualSensors() {
-		CouchDbClient dbClient = Utils.getCouchDbPipelineClient();
+	public List<VirtualSensor> getVirtualSensors(String username) {
+		CouchDbClient dbClient = Utils.getCouchDbBlockClient();
 		List<VirtualSensor> virtualSensors = dbClient.view("_all_docs")
    			  .includeDocs(true)
    			  .query(VirtualSensor.class);

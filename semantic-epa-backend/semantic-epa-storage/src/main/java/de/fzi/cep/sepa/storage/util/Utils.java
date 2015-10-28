@@ -64,6 +64,14 @@ public class Utils {
 		return dbClient;
 	}
 	
+	public static CouchDbClient getCouchDbBlockClient()
+	{
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, "blocks"));
+		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		return dbClient;
+	}
+	
 	public static CouchDbClient getCouchDbMonitoringClient()
 	{
 		Configuration cfg = Configuration.getInstance();

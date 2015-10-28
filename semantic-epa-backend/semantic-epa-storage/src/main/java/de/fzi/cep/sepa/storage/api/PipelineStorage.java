@@ -28,7 +28,7 @@ public interface PipelineStorage {
 	
 	public <T> void store(T object);
 	
-	public void storeVirtualSensor(VirtualSensor virtualSensor);
+	public void storeVirtualSensor(String username, VirtualSensor virtualSensor);
 	
-	public List<VirtualSensor> getVirtualSensors();
+	public List<VirtualSensor> getVirtualSensors(String username);
 }
