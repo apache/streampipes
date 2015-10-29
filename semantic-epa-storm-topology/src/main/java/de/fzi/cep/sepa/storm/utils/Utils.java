@@ -31,7 +31,7 @@ public class Utils {
 	public static EventProperty getEventPropertyById(URI id, EventStream eventStream) {
 		
 		for (EventProperty p : eventStream.getEventSchema().getEventProperties()) {
-			if (p.getRdfIdGson() != null && p.getRdfIdGson().equals(id.toString())) {
+			if (p.getElementName() != null && p.getElementName().equals(id.toString())) {
 				return p;
 			}
 		}
