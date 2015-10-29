@@ -38,7 +38,7 @@ public class TestBinding {
 		EventRateController eventRateController = new EventRateController();
 		SepaDescription test = eventRateController.declareModel();
 		test.setUri("http://test");
-		test.setElementId("http://test");
+		//test.setElementId("http://test");
 		test.setRdfId(new URIKey(URI.create("http://test.de")));
 		
 		SepaInvocation testGraph = new SepaInvocation(test);
