@@ -59,6 +59,8 @@ public class RestletGenerator {
 			SepaDescription sepa = declarer.declareModel();
 			if (standalone) 
 				{
+				// TODO find better solution
+					if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replace(baseUri +"/", ""));
 					sepa.setPathName("/" +sepa.getPathName());
 					sepa.setUri(baseUri +sepa.getPathName());
 				}

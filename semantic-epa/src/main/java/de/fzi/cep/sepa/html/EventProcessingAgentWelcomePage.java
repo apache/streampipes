@@ -19,7 +19,8 @@ public class EventProcessingAgentWelcomePage extends WelcomePageGenerator<Semant
 			AgentDescription producer = new AgentDescription();
 			producer.setName(declarer.declareModel().getName());
 			producer.setDescription(declarer.declareModel().getDescription());
-			producer.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
+			if (!declarer.declareModel().getUri().startsWith(baseUri)) producer.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
+			else producer.setUri(URI.create(declarer.declareModel().getUri()));
 			descriptions.add(producer);
 		}
 		return descriptions;
