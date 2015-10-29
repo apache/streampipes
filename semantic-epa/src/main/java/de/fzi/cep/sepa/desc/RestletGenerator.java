@@ -63,7 +63,7 @@ public class RestletGenerator {
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
 			SepaDescription sepa = new SepaDescription(declarer.declareModel());
 			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
-			sepa.setIconUrl(baseUri +"/" +sepa.getIconUrl().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
+			//sepa.setIconUrl(baseUri +"/" +sepa.getIconUrl().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
 			if (standalone) 
 				{
 					sepa.setPathName("/" +sepa.getPathName());
