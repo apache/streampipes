@@ -1,12 +1,17 @@
 package de.fzi.cep.sepa.desc;
 
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
+
+import com.clarkparsia.empire.SupportsRdfId;
+import com.clarkparsia.empire.SupportsRdfId.RdfKey;
+import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
@@ -56,15 +61,20 @@ public class RestletGenerator {
 		welcomePageDescriptions.addAll(new EventProcessingAgentWelcomePage(baseUri +"/", declarers).buildUris());
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
-			SepaDescription sepa = declarer.declareModel();
+			SepaDescription sepa = new SepaDescription(declarer.declareModel());
+			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
+			sepa.setIconUrl(baseUri +"/" +sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
 			if (standalone) 
 				{
-				// TODO find better solution
-					if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replace(baseUri +"/", ""));
 					sepa.setPathName("/" +sepa.getPathName());
-					sepa.setUri(baseUri +sepa.getPathName());
+					sepa.setUri(baseUri +sepa.getPathName());		
+					sepa.setRdfId(new SupportsRdfId.URIKey(URI.create(sepa.getUri())));
 				}
-			else sepa.setUri(baseUri +"/" +sepa.getPathName());
+			else 
+				{
+					sepa.setUri(baseUri +"/" +sepa.getPathName());
+					sepa.setRdfId(new SupportsRdfId.URIKey(URI.create(sepa.getUri())));
+				}
 			addConfig(sepa.getPathName(), new SepaRestlet(sepa, declarer));
 		}
 		return this;
@@ -149,5 +159,12 @@ public class RestletGenerator {
 	private void addConfig(String baseUri, Restlet restlet)
 	{
 		restletConfigurations.add(new RestletConfig(baseUri, restlet));
+	}
+	
+	public static void main(String[] args)
+	{
+		String url = "http://abc.de.fzi:8090/sepa/numericalfilter";
+		String replaced = url.replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "");
+		System.out.println(replaced);
 	}
 }
