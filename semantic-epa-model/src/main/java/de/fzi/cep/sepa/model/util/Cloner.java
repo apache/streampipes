@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,22 +14,31 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 
 public class Cloner {
 
 	public OutputStrategy outputStrategy(OutputStrategy other)
 	{
 		if (other instanceof RenameOutputStrategy) return new RenameOutputStrategy((RenameOutputStrategy) other);
+		else if (other instanceof FixedOutputStrategy) return new FixedOutputStrategy((FixedOutputStrategy) other);
+		else if (other instanceof ListOutputStrategy) return new ListOutputStrategy((ListOutputStrategy) other);
+		else if (other instanceof CustomOutputStrategy) return new CustomOutputStrategy((CustomOutputStrategy) other);
 		else return new AppendOutputStrategy((AppendOutputStrategy) other);
 	}
 
@@ -36,6 +46,8 @@ public class Cloner {
 		if (o instanceof FreeTextStaticProperty) return new FreeTextStaticProperty((FreeTextStaticProperty) o);
 		else if (o instanceof OneOfStaticProperty) return new OneOfStaticProperty((OneOfStaticProperty) o);
 		else if (o instanceof MappingPropertyNary) return new MappingPropertyNary((MappingPropertyNary) o);
+		else if (o instanceof DomainStaticProperty) return new DomainStaticProperty((DomainStaticProperty) o);
+		else if (o instanceof AnyStaticProperty) return new AnyStaticProperty((AnyStaticProperty) o);
 		else return new MappingPropertyUnary((MappingPropertyUnary) o);
 	}
 	
@@ -74,7 +86,8 @@ public class Cloner {
 	}
 
 	public List<OutputStrategy> strategies(List<OutputStrategy> outputStrategies) {
-		return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
+		if (outputStrategies != null) return outputStrategies.stream().map(o -> outputStrategy(o)).collect(Collectors.toList());
+		else return new ArrayList<OutputStrategy>();
 	}
 
 	public List<StaticProperty> staticProperties(
@@ -103,6 +116,11 @@ public class Cloner {
 
 	public List<Option> options(List<Option> options) {
 		return options.stream().map(o -> new Option(o)).collect(Collectors.toList());
+	}
+
+	public List<SupportedProperty> supportedProperties(
+			List<SupportedProperty> supportedProperties) {
+		return supportedProperties.stream().map(s -> new SupportedProperty(s)).collect(Collectors.toList());
 	}
 	
 }

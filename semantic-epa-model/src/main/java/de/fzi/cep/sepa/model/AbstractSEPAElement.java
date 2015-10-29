@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.model;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import com.clarkparsia.empire.SupportsRdfId;
 import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
@@ -18,44 +17,16 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	
 	protected RdfKey<String> rdfId;
 	
-	/**
-	 * the elementId, used as @RdfId for unnamed SEPA elements
-	 */
-	protected String elementId;
-	
-	protected String rdfIdGson;
-	
 	public AbstractSEPAElement()
 	{
-		this.elementId = UUID.randomUUID().toString();	
 		myId = new SupportsRdfIdImpl();
 	}
 	
 	public AbstractSEPAElement(AbstractSEPAElement other)
 	{
 		this();
-		this.elementId = other.getElementId();
-		//this.rdfIdGson = other.getRdfId().toString();
-		this.rdfId = other.rdfId;
-		
-		//TODO remove just for testing
-		if (other.getRdfId() == null) {
-			this.rdfIdGson = "http://test.de";
-		} else {
-			this.rdfIdGson = other.getRdfId().toString();
-		}
 	}
 	
-	
-	public String getElementId() {
-		return elementId;
-	}
-
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
-
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public RdfKey getRdfId() {
@@ -67,14 +38,6 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	@Override
 	public void setRdfId(RdfKey arg0) {
 		myId.setRdfId(arg0);	
-	}
-
-	public String getRdfIdGson() {
-		return rdfIdGson;
-	}
-
-	public void setRdfIdGson(String rdfIdGson) {
-		this.rdfIdGson = rdfIdGson;
 	}
 		
 }

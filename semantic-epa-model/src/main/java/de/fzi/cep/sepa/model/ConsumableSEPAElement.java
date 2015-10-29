@@ -50,7 +50,7 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 	
 	public ConsumableSEPAElement(ConsumableSEPAElement other) {
 		super(other);
-		this.eventStreams = new Cloner().streams(other.getEventStreams());
+		if (other.getEventStreams() != null) this.eventStreams = new Cloner().streams(other.getEventStreams());
 		this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
 		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());	
 	}

@@ -35,7 +35,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	public FreeTextStaticProperty(FreeTextStaticProperty other) {
 		super(other);
 		this.requiredDomainProperty = other.getRequiredDomainProperty();
-		this.valueSpecification = other.getValueSpecification();
+		if (other.getValueSpecification() != null) this.valueSpecification = new PropertyValueSpecification(other.getValueSpecification());
 		this.value = other.getValue();
 	}
 	

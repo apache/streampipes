@@ -11,6 +11,8 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.util.Cloner;
+
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:DomainStaticProperty")
@@ -52,7 +54,7 @@ public class DomainStaticProperty extends StaticProperty {
 	{
 		super(other);
 		this.requiredClass = other.getRequiredClass();
-		this.supportedProperties = other.getSupportedProperties();
+		this.supportedProperties = new Cloner().supportedProperties(other.getSupportedProperties());
 	}
 
 	public String getRequiredClass() {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
@@ -16,6 +15,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventSource;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 /**
  * class that represents Semantic Event Producers.
@@ -39,6 +39,12 @@ public class SepDescription extends NamedSEPAElement {
 	public SepDescription() {
 		super();
 		eventStreams = new ArrayList<EventStream>();
+	}
+	
+	public SepDescription(SepDescription other)
+	{
+		super(other);
+		this.eventStreams = new Cloner().streams(other.getEventStreams());
 	}
 	
 	public SepDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams)

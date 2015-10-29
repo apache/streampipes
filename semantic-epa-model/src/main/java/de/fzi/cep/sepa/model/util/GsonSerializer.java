@@ -1,7 +1,15 @@
 package de.fzi.cep.sepa.model.util;
 
+import java.util.List;
+import java.util.function.Supplier;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+
+
 
 
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
@@ -43,4 +51,28 @@ public class GsonSerializer {
 		return builder;
 	}
 	
+	public static Gson getGsonWithIds() {
+		return getGsonBuilder().create();
+	}
+	
+	public static Gson getGsonWithoutIds() {
+		GsonBuilder builder = getGsonBuilder();
+		
+		builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
+			
+			@Override
+			public boolean shouldSkipField(FieldAttributes f) {
+				if (f.getName().equals("elementName")) return true;
+				return false;
+			}
+			
+			@Override
+			public boolean shouldSkipClass(Class<?> clazz) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		return builder.create();
+	}
+		
 }

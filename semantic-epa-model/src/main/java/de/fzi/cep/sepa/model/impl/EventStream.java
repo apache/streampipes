@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
@@ -25,6 +27,8 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 public class EventStream extends NamedSEPAElement {
 
 	private static final long serialVersionUID = -5732549347563182863L;
+	
+	private static final String prefix = "urn:fzi.de:eventstream:";
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -58,12 +62,12 @@ public class EventStream extends NamedSEPAElement {
 	
 	public EventStream(String uri, String name, String description, EventSchema eventSchema)
 	{
-		//super(uri, name, description);
+		super(uri, name, description);
 		this.eventSchema = eventSchema;
 	}
 
 	public EventStream() {
-		super();
+		super(prefix +RandomStringUtils.randomAlphabetic(6));
 //		this.eventGrounding = new EventGrounding();
 //		this.hasEventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
 //		this.requiresEventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
@@ -73,7 +77,7 @@ public class EventStream extends NamedSEPAElement {
 	public EventStream(EventStream other) {
 		super(other);		
 		if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
-		this.eventSchema = new EventSchema(other.getEventSchema());
+		if (other.getEventSchema() != null) this.eventSchema = new EventSchema(other.getEventSchema());
 		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
 		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
 	}
