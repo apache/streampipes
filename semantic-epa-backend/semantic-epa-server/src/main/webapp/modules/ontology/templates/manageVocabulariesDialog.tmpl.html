@@ -1,5 +1,5 @@
 <md-dialog aria-label="Manage Vocabularies" flex="80">
-  <form>
+ 
   <md-toolbar>
     <div class="md-toolbar-tools">
       <h2>Manage Vocabularies</h2>
@@ -9,7 +9,8 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content flex="100">
+  <md-dialog-content class="md-dialog-content">
+   <form>
     <div>
     	<h4>Available Vocabularies</h4>
     	<div ng-repeat="context in contexts">
@@ -53,11 +54,12 @@
     	<md-button ng-click="showAddInput()" class="md-accent" ng-show="!addSelected">Add Vocabulary</md-button>			
 	    		    
     </div>
+    </form>
   </md-dialog-content>
   <div class="md-actions" layout="row">
     <md-button ng-click="hide()" style="margin-right:20px;" >
       Close
     </md-button>
   </div>
-  </form>
+  
 </md-dialog>

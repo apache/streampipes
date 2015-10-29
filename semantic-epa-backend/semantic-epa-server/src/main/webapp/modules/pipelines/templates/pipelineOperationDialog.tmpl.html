@@ -9,13 +9,12 @@
       </md-button>
     </div>
   </md-toolbar>
-  <md-dialog-content style="max-width:800px;max-height:810px; ">
+  <md-dialog-content class="md-dialog-content">
     <div>
     	<h4><md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="data.success"></md-icon>
 				<md-icon md-svg-icon="alert:ic_warning_24px" aria-label="Action" class="md-accent" ng-show="!data.success"></md-icon> {{data.title}}</h4>
     	<div ng-repeat="msg in data.elementStatus">
-	    	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
-			class="md-whiteframe-z2">
+	    	<div flex="100" class="md-whiteframe-z2">
 	    		<div flex layout="column" class="md-padding">
 		    		<div>
 		    			<b>{{msg.elementName}} </b> at URL <b> {{msg.elementId}}</b>

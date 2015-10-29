@@ -1,10 +1,10 @@
 
-<md-content class="md-padding"> <md-tabs md-border-bottom>
+<md-content class="md-padding"> <md-tabs layout="column" layout-fill flex md-dynamic-height>
 <div ng-repeat="tab in tabs">
 <md-tab label="{{tab.title}}" md-on-select="loadCurrentElements(tab.type)"> <md-content class="md-padding">
 <h1 class="md-display-2">{{tab.title}}</h1>
 <div>
-	<md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="3"
+	<md-grid-list md-cols-sm="1" md-cols-md="1" md-cols-gt-md="3"
 		md-row-height-gt-md="1:1" md-gutter="12px" md-gutter-gt-sm="8px"
 		md-row-height="fit"> <md-grid-tile
 		ng-repeat="item in currentElements" md-rowspan="1" md-colspan="1"

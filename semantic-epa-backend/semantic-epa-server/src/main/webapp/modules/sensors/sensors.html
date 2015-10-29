@@ -1,0 +1,135 @@
+<div flex="100" layout="row" layout-align="center center">
+	<div class="md-whiteframe-z2" style="width:100%">
+		<md-content class="md-padding">
+		<h1>Sensor Configurator</h1>
+		<md-tabs md-border-bottom layout-fill md-dynamic-height>
+			<md-tab label="Sepas"> 
+				<div layout="row" flex="100">
+					<div layout="row" layout-align="start center" flex="60">
+						<md-button class="md-accent" ng-click="addNewSepa()">
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create new Sepa
+						</md-button>
+					</div>
+					<div layout="row" layout-align="end center" flex="40">		
+						<div ng-show="selectedSepa != undefined">			
+							<md-button  ng-click="loadSepaDetails(selectedSepa.uri, true, false)" class="md-button md-accent" style="width:24px;height:24px;">
+								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Edit"></md-icon>  Modify 
+							</md-button>					
+<!-- 							<md-button  ng-click="loadSepaDetails(selectedSepa.uri, false, false)" class="md-button md-accent" style="width:24px;height:24px;"> -->
+<!-- 								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Clone"></md-icon>  Clone  -->
+<!-- 							</md-button>		 -->
+						</div>		
+					</div>
+				</div>
+				<div flex layout="row">
+					<div flex-sm="20" flex-gt-sm="20" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="sepas">
+						    <li ng-repeat="sepa in sepas" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadSepaDetails(sepa.uri, true, true)">
+						       <div flex="100" layout="row">
+						        <div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{sepa.name}}</div>
+						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action">
+						        	<md-button  ng-click="openDownloadDialog(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
+						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon>
+						        	</md-button>
+						        </div>	     
+						        <div flex="20" layout="row" layout-align="end center" class="tree-node-action">
+						        	<md-button  ng-click="deleteProperty(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
+						        		<md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete"></md-icon>
+						        	</md-button>
+						        </div>	 
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex-sm="80" flex-gt-sm="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="sepaSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							<div flex="100" layout="row">
+								<div layout="row" layout-align="start center" flex="100">{{selectedSepa.name}}</div>	
+							</div>
+						</div>
+						<md-content class="md-padding">
+							<ng-include src="'modules/sensors/templates/sepa.html'"></ng-include>
+								
+							<md-divider></md-divider>
+							<div class="form-actions">
+								<div class="md-warn" ng-show="errorMessagePresent">
+									      <h4>{{errorMessage}}</h4>
+								</div>
+								<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri)">Create implementation</md-button>
+									<md-button class="md-accent md-raised" ng-click="downloadJsonLd(selectedSepa.uri)">Download description file</md-button>							
+								</div>
+								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
+							</div>
+						</md-content>
+					</div>
+				</div>
+			</md-tab>
+			<md-tab label="Sources"> 
+				<div layout="row">
+					<md-button class="md-accent" ng-click="openAddElementDialog('Concept')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
+				</div>
+				<div flex layout="row">
+<!-- 					<div flex-sm="30" flex-gt-sm="40" layout-sm="column"> -->
+<!-- 						<div ui-tree data-drag-enabled="false"> -->
+<!-- 						  <ol ui-tree-nodes="" ng-model="concepts"> -->
+<!-- 						    <li ng-repeat="(sourceId, source) in sources track by $index" ui-tree-node> -->
+<!-- 						    	<div ui-tree-handle class="tree-node tree-node-content color-concept" ng-click="loadSourceDetails(sourceId)"> -->
+<!-- 							    	<div flex="100" layout="row"> -->
+<!-- 							        	<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{source.name}}</div> -->
+<!-- 							        	<div flex="30" layout="row" layout-align="end center"> -->
+<!-- 								        	<div flex="20"></div> -->
+<!-- 								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	  -->
+<!-- 											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	  -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div>		 -->
+<!-- 						      	 <ol ui-tree-nodes="" ng-model="item.nodes"> -->
+<!-- 								  	<li ng-repeat="(streamId, stream) in source.eventStreams track by $index" ui-tree-node> -->
+<!-- 								          <div ui-tree-handle class="tree-node tree-nocde-content color-instance" ng-click="loadStreamDetails(sourceId, streamId)"> -->
+<!-- 								          	<div flex="100" layout="row"> -->
+<!-- 								          		<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{stream.name}}</div> -->
+<!-- 								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	 -->
+<!-- 								         	 </div> -->
+<!-- 								          </div> -->
+<!-- 								    </li> -->
+<!-- 							   	</ol> -->
+<!-- 						    </li> -->
+<!-- 						  </ol> -->
+<!-- 						</div> -->
+<!-- 					</div>     -->
+
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-concept" ng-show="sourceSelected">
+						<div class="ontology-panel-title ontology-panel-concept ontology-panel-title-concept">
+							{{selectedSource.name}}
+						</div>
+						<md-content class="md-padding" >
+							<form name="conceptForm" ng-submit="updateConcept()" role="form">
+								  <ng-include src="'modules/sensors/templates/sep.html'"/>
+							      <md-divider></md-divider>
+								  <md-button class="md-accent md-raised" ng-click="storeClass()" type="submit">Save</md-button>	
+							</form>
+						</md-content>
+					</div>
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-instance"  ng-show="streamSelected">
+						<div class="ontology-panel-title ontology-panel-instance ontology-panel-title-instance">
+							{{selectedStream.name}}
+						</div>
+						<md-content class="md-padding">
+							<form name="instanceForm" ng-submit="updateInstance()" role="form">
+							 	<ng-include src="'modules/sensors/templates/stream.html'"/>
+								
+								<md-button class="md-accent md-raised" ng-click="storeInstance()" type="submit">Save</md-button>	
+						</form>
+						</md-content>
+					</div>
+				</div>
+			</md-tab>
+		</md-content>
+	</div>
+</div>
+

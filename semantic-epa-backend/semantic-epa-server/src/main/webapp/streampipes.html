@@ -8,7 +8,7 @@
       </div>
     </md-toolbar>	
 		
-		<md-sidenav flex layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" ng-show="authenticated">
+		<md-sidenav flex layout="column" class="md-sidenav-left" md-component-id="left" ng-show="authenticated">
 		  <md-toolbar class="md-tall md-hue-3">
 		    <span flex></span>
 		    <div layout="column" class="md-toolbar-tools-bottom inset">
@@ -55,9 +55,9 @@
 		      </md-list>
 	  	</md-sidenav>
 	  	 <md-content  flex >
-		<div id="main" style="min-height: 100%">
-		<div ui-view="streampipesView" style="height: 100%" layout-padding></div>
+		
+		<div id="streampipesView" ui-view="streampipesView" style="height: 100%;padding:30px;" layout-padding></div>
 <!-- 			<div id="content" ng-view layout-padding> -->
 <!-- 			</div> -->
-		</div>
+		
 		</md-content>

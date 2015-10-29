@@ -1,0 +1,54 @@
+<h3 class="md-display-2">Static Properties</h3>
+<div ng-repeat = "(key, sp) in staticProperties">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+		<div flex="100" layout="row">
+			<div flex="70" layout="row" layout-align="start center"><h4>Static Property {{key+1}}</h4><br/><h5>  {{getType(sp)}}</h5></div>
+			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeStaticProperty(staticProperties, key)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
+		</div>
+		 <md-input-container>
+	    	<label>Internal Name</label>
+	        <input ng-model="sp.properties.internalName" ng-disabled="disabled" >
+		</md-input-container>
+		<md-input-container>
+	    	<label>Label</label>
+	        <input ng-model="sp.properties.label" ng-disabled="disabled" >
+		</md-input-container>
+		<md-input-container>
+	    	<label>Description</label>
+	        <input ng-model="sp.properties.description" ng-disabled="disabled" >
+		</md-input-container>
+	    <div ng-show="sp.type == staticPropertyTypes[0].type">
+	    	<md-input-container>
+	    	<label>Domain Property</label>
+	        <input ng-model="sp.properties.type" ng-disabled="disabled" >
+			</md-input-container>
+	    </div>
+	    <div ng-show="sp.type == staticPropertyTypes[1].type">
+	    	<options element="sp.properties.options" disabled="disabled" ></options>
+	    </div>
+	    <div ng-show="sp.type == staticPropertyTypes[2].type">
+		    <options element="sp.properties.options" disabled="disabled" ></options>
+	    </div>
+	    <div ng-show="sp.type == staticPropertyTypes[3].type">
+	    	<domain-concept-property domain-property="sp.properties" disabled="disabled" ></domain-concept-property>
+	    </div>
+	    <div ng-show="sp.type == staticPropertyTypes[4].type">
+	    	<md-input-container>
+	    	<label>Event Property Mapping</label>
+	        <input ng-model="sp.properties.mapsFrom" ng-disabled="disabled" >
+			</md-input-container>
+	    </div>
+	    <div ng-show="sp.type == staticPropertyTypes[5].type">
+		    (computed at runtime)
+	    </div>
+	</div>
+</div>
+<div layout="row">
+	<md-select ng-model="newStaticPropertyType" placeholder="Select Static Property type" ng-disabled="disabled" >
+          <md-option ng-repeat="spt in staticPropertyTypes" value="{{spt.type}}">
+            <b>{{spt.label}}</b>
+          </md-option>
+	</md-select>
+	<md-button class="md-accent" ng-click="addStaticProperty(staticProperties)" ng-disabled="streams.length >= 2 || disabled">Add Static Property</md-button>
+</div>	
+<p></p>

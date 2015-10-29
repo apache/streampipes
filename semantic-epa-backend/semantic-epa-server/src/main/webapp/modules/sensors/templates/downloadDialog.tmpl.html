@@ -1,0 +1,56 @@
+<md-dialog aria-label="Download {{elementId}}" flex="80">
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Download {{elementId}} </h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content flex="100" class="md-dialog-content">
+    <div layout="column" style="width:100%">	
+		        			
+      		<label>S-EPA type
+			    <md-radio-group ng-model="deployment.deploymentType" style="display:inline;">
+				     <md-radio-button value="SEPA_ESPER">Esper CEP Runtime</md-radio-button>
+				     <md-radio-button value="SEPA_ALGORITHM">Online Algorithm</md-radio-button>
+				     <md-radio-button value="SEPA_STORM">Storm Topology Template</md-radio-button>
+				</md-radio-group> 
+			</label>
+			<label>Deployment Type
+			    <md-radio-group ng-model="deployment.deploymentMethod" style="display:inline;">
+				     <md-radio-button value="STANDALONE">Standalone</md-radio-button>
+				     <md-radio-button value="EMBEDDED">Embedded into servlet container</md-radio-button>
+				 </md-radio-group> 
+			</label>
+	        <md-input-container>
+		    	<label>GroupId</label>
+		        <input ng-model="deployment.groupId">
+		    </md-input-container>
+		    <md-input-container>
+		    	<label>ArtifactId</label>
+		        <input ng-model="deployment.artifactId">
+		    </md-input-container>   
+		    <md-input-container>
+		    	<label>Class Prefix</label>
+		        <input ng-model="deployment.classNamePrefix">
+		    </md-input-container>
+		    <md-input-container ng-show="deployment.deploymentType=='standalone' || deployment.sepaType=='storm'">
+		    	<label>Port</label>
+		        <input ng-model="deployment.port">
+		    </md-input-container>  
+		    
+		    <md-input-container flex> 
+		    	<md-button ng-click="submitDeployment()" class="md-accent" ng-click="">Generate StreamPipes Maven Project</md-button>
+		    </md-input-container>
+					</div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+  </div>
+  </form>
+</md-dialog>

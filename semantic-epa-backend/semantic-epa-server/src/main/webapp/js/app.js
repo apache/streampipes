@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -195,139 +195,148 @@ angular
 					"streampipesView@streampipes" : {
 						templateUrl : 'modules/ontology/ontology.html',
 						controller: 'OntologyCtrl'
-					}
-				}
-			})
-			.state('streampipes.myelements', {
-				url: '/myelements',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'modules/myelements/myelements.html',
-						controller: 'MyElementsCtrl'
-					}
-				}
-			})
-			.state('streampipes.tutorial', {
-				url: '/tutorial',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'tutorial.html',
-						controller: 'AppCtrl'
-					}
-				}
-			})
-			.state('streampipes.register', {
-				url: '/register',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'register.html',
-						controller: 'RegisterCtrl'
-					}
-				}
-			})
-			.state('streampipes.add', {
-				url: '/add',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'modules/add/add.html',
-						controller: 'AddCtrl'
-					}
-				}
-			})
-			.state('streampipes.setup', {
-				url: '/setup',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'setup.html',
-						controller: 'SetupCtrl'
-					}
-				}
-			})
-			.state('streampipes.error', {
-				url: '/error',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'error.html',
-						controller: 'SetupCtrl'
-					}
-				}
-			})
-			.state('streampipes.settings', {
-				url: '/settings',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'settings.html',
-						controller: 'SettingsCtrl'
-					}
-				}
-			})
-			.state('streampipes.create', {
-				url: '/create',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'modules/create/create.html',
-						controller: 'CreateCtrl'
-					}
-				}
-			})
-			.state('streampipes.notifications', {
-				url: '/notifications',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'modules/notifications/notifications.html',
-						controller: 'RecommendationCtrl'
-					}
-				}
-			})
-			.state('streamstory', {
-				url: '/streamstory',
-				views: {
-					"top" : {
-						templateUrl : "top.html"
-					},
-					"container" : {
-						templateUrl : 'streamstory.html',
-						controller : "TopNavCtrl"
-					}
-				}
-			})
-			.state('pandda', {
-				url: '/pandda',
-				views: {
-					"top" : {
-						templateUrl : "top.html"
-					},
-					"container" : {
-						templateUrl : 'pandda.html',
-						controller : "TopNavCtrl"
-					}
-				}
-			})
-			.state('hippo', {
-				url: '/hippo',
-				views: {
-					"top" : {
-						templateUrl : "top.html"
-					},
-					"container" : {
-						templateUrl : 'hippo.html',
-						controller : "TopNavCtrl"
-					}
-				}
-			})
-
-	})
-	.controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce) {
-
-		$scope.panddaUrl = "";
-		$scope.streamStoryUrl = "";
-		$scope.hippoUrl = "";
-
-		$scope.trustSrc = function(src) {
-			return $sce.trustAsResourceUrl(src);
-		}
-
-		$scope.loadConfig = function() {
+		            }
+	            }
+	          })
+	          .state('streampipes.sensors', {
+	            url: '/sensors',
+	            views: {
+		            "streampipesView@streampipes" : {
+						templateUrl : 'modules/sensors/sensors.html',
+						controller: 'SensorCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.myelements', {
+	            url: '/myelements',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/myelements/myelements.html',
+		            	  controller: 'MyElementsCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.tutorial', {
+	            url: '/tutorial',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'tutorial.html',
+		            	  controller: 'AppCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.register', {
+	            url: '/register',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'register.html',
+		            	  controller: 'RegisterCtrl'
+		            }
+	            }
+	          })
+	           .state('streampipes.add', {
+	            url: '/add',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/add/add.html',
+		            	  controller: 'AddCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.setup', {
+	            url: '/setup',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'setup.html',
+		            	  controller: 'SetupCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.error', {
+	            url: '/error',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'error.html',
+		            	  controller: 'SetupCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.settings', {
+	            url: '/settings',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'settings.html',
+		            	  controller: 'SettingsCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.create', {
+	            url: '/create',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/create/create.html',
+		            	  controller: 'CreateCtrl'
+		            }
+	            }
+	          })
+	          .state('streampipes.notifications', {
+	            url: '/notifications',
+	            views: {
+		            "streampipesView@streampipes" : {
+		            	  templateUrl : 'modules/notifications/notifications.html',
+		            	  controller: 'RecommendationCtrl'
+		            }
+	            }
+	          })
+	           .state('streamstory', {
+	            url: '/streamstory',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html"
+		              	},
+		            "container" : {
+		            	  templateUrl : 'streamstory.html',
+			              controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	          .state('pandda', {        	  
+	            url: '/pandda',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html"
+		              	},
+		            "container" : {
+		            	  templateUrl : 'pandda.html',
+			            	  controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	          .state('hippo', {
+	            url: '/hippo',
+	            views: {
+	            	 "top" : {
+		            	  templateUrl : "top.html"
+		              	},
+		            "container" : {
+		            	  templateUrl : 'hippo.html',
+		            	  controller : "TopNavCtrl"
+		            }
+	            }
+	          })
+	        
+    })
+    .controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce) {
+    	
+    	$scope.panddaUrl = "";
+    	$scope.streamStoryUrl = "";
+    	$scope.hippoUrl = "";
+    	
+    	$scope.trustSrc = function(src) {
+    	    return $sce.trustAsResourceUrl(src);
+    	  }
+    	
+    	$scope.loadConfig = function() {
 			restApi.getConfiguration().success(function(msg) {
 				$scope.panddaUrl = msg.panddaUrl;
 				$scope.streamStoryUrl = msg.streamStoryUrl;
@@ -354,77 +363,83 @@ angular
 			$state.go(path);
 		};
 
-		$scope.logout = function() {
-			$http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
-				$scope.user = undefined;
-				$rootScope.authenticated = false;
-				$state.go("streampipes.login");
-			});
-		};
+	      $scope.logout = function() {
+	        $http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
+		        $scope.user = undefined;
+		        $rootScope.authenticated = false;
+		        $state.go("streampipes.login");
+	        });
+	      };	      
+	      
+        $scope.menu = [
+           {
+             link : 'streampipes',
+             title: 'Editor',
+             icon: 'action:ic_dashboard_24px' 
+           },
+           {
+             link : 'streampipes.pipelines',
+             title: 'Pipelines',
+             icon: 'av:ic_play_arrow_24px'
+           },
+           {
+             link : 'streampipes.visualizations',
+             title: 'Visualizations',
+             icon: 'editor:ic_insert_chart_24px'
+           },
+           {
+               link : 'streampipes.marketplace',
+               title: 'Marketplace',
+               icon: 'maps:ic_local_mall_24px'
+           }
+         ];
+         $scope.admin = [
+           {
+             link : 'streampipes.myelements',
+             title: 'My Elements',
+             icon: 'image:ic_portrait_24px'
+           },
+           {
+			   link : 'streampipes.add',
+			   title: 'Import Elements',
+			   icon: 'content:ic_add_24px'
+		   },
+			 {
+				 link : 'streampipes.create',
+				 title: 'Create Element',
+				 icon: 'content:ic_add_24px'
+			 },
+			 {
+				 link : 'streampipes.sensors',
+				 title: 'Sensor Configurator',
+				 icon: 'social:ic_share_24px'
+            },
+			 {
+				 link : 'streampipes.ontology',
+				 title: 'Knowledge Configurator',
+				 icon: 'social:ic_share_24px'
+           },
+           {
+             link : 'streampipes.settings',
+             title: 'Settings',
+             icon: 'action:ic_settings_24px'
+           }
+         ];
+        
+        function buildToggler(navID) {
+            var debounceFn =  $mdUtil.debounce(function(){
+                $mdSidenav(navID)
+                    .toggle();
+            },300);
+            return debounceFn;
+        }
+    })
+    .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+        $scope.close = function () {
+            $mdSidenav('left').close();
+        };
+    })
 
-		$scope.menu = [
-			{
-				link : 'streampipes',
-				title: 'Editor',
-				icon: 'action:ic_dashboard_24px'
-			},
-			{
-				link : 'streampipes.pipelines',
-				title: 'Pipelines',
-				icon: 'av:ic_play_arrow_24px'
-			},
-			{
-				link : 'streampipes.visualizations',
-				title: 'Visualizations',
-				icon: 'editor:ic_insert_chart_24px'
-			},
-			{
-				link : 'streampipes.marketplace',
-				title: 'Marketplace',
-				icon: 'maps:ic_local_mall_24px'
-			}
-		];
-		$scope.admin = [
-			{
-				link : 'streampipes.myelements',
-				title: 'My Elements',
-				icon: 'image:ic_portrait_24px'
-			},
-			{
-				link : 'streampipes.add',
-				title: 'Import Elements',
-				icon: 'content:ic_add_24px'
-			},
-			{
-				link : 'streampipes.create',
-				title: 'Create Element',
-				icon: 'content:ic_add_24px'
-			},
-			{
-				link : 'streampipes.ontology',
-				title: 'Knowledge Configurator',
-				icon: 'social:ic_share_24px'
-			},
-			{
-				link : 'streampipes.settings',
-				title: 'Settings',
-				icon: 'action:ic_settings_24px'
-			}
-		];
-
-		function buildToggler(navID) {
-			var debounceFn =  $mdUtil.debounce(function(){
-				$mdSidenav(navID)
-					.toggle();
-			},300);
-			return debounceFn;
-		}
-	})
-	.controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-		$scope.close = function () {
-			$mdSidenav('left').close();
-		};
-	})
 	.controller('RegisterCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $http) {
 
 		$scope.loading = false;
@@ -699,181 +714,181 @@ angular
 		};
 
 		restApi.getBlocks = function () {
-			return $http.get(urlBase() + "/block");
-		};
-		restApi.saveBlock = function(block) {
-			return $http.post(urlBase() + "/block", block);
-		};
-
+            return $http.get(urlBase() + "/block");
+	    };
+	    restApi.saveBlock = function(block) {
+	            return $http.post(urlBase() + "/block", block);
+	    };
+    
 		restApi.getOwnActions = function () {
-			return $http.get(urlBase() +"/actions/own");
-		};
-
-		restApi.getAvailableActions = function () {
-			return $http.get(urlBase() +"/actions/available");
-		};
-
-		restApi.getPreferredActions = function () {
-			return $http.get(urlBase() +"/actions/favorites");
-		};
-
-		restApi.addPreferredAction = function(elementUri) {
-			return $http({
-				method: 'POST',
-				url: urlBase() + "/actions/favorites",
-				data: $.param({uri: elementUri}),
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			})
-		}
-
-		restApi.removePreferredAction = function(elementUri) {
-			return $http({
-				method: 'DELETE',
-				url: urlBase() + "/actions/favorites/" +encodeURIComponent(elementUri)
-			})
-		}
-
-		restApi.getOwnSepas = function () {
-			return $http.get(urlBase() +"/sepas/own");
-		};
-
-		restApi.getAvailableSepas = function () {
-			return $http.get(urlBase() +"/sepas/available");
-		};
-
-		restApi.getPreferredSepas = function () {
-			return $http.get(urlBase() +"/sepas/favorites");
-		};
-
-		restApi.addPreferredSepa = function(elementUri) {
-			return $http({
-				method: 'POST',
-				url: urlBase() + "/sepas/favorites",
-				data: $.param({uri: elementUri}),
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			})
-		}
-
-		restApi.removePreferredSepa = function(elementUri) {
-			return $http({
-				method: 'DELETE',
-				url: urlBase() + "/sepas/favorites/" +encodeURIComponent(elementUri)
-			})
-		}
-
-		restApi.getOwnSources = function () {
-			console.log($rootScope.email);
-			return $http.get(urlBase() +"/sources/own");
-		};
-
-		restApi.getAvailableSources = function () {
-			return $http.get(urlBase() +"/sources/available");
-		};
-
-		restApi.getPreferredSources = function () {
-			return $http.get(urlBase() +"/sources/favorites");
-		};
-
-		restApi.addPreferredSource = function(elementUri) {
-			return $http({
-				method: 'POST',
-				url: urlBase() + "/sources/favorites",
-				data: $.param({uri: elementUri}),
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			})
-		}
-
-		restApi.removePreferredSource = function(elementUri) {
-			return $http({
-				method: 'DELETE',
-				url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri)
-			})
-		}
+	        return $http.get(urlBase() +"/actions/own");
+	    };
+	    
+	    restApi.getAvailableActions = function () {
+	        return $http.get(urlBase() +"/actions/available");
+	    };
+	    
+	    restApi.getPreferredActions = function () {
+	        return $http.get(urlBase() +"/actions/favorites");
+	    };
+	    
+	    restApi.addPreferredAction = function(elementUri) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/actions/favorites",
+	    	    data: $.param({uri: elementUri}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.removePreferredAction = function(elementUri) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/actions/favorites/" +encodeURIComponent(elementUri)
+	    	})
+	    }
+	    
+	    restApi.getOwnSepas = function () {
+	        return $http.get(urlBase() +"/sepas/own");
+	    };
+	    
+	    restApi.getAvailableSepas = function () {
+	        return $http.get(urlBase() +"/sepas/available");
+	    };
+	    
+	    restApi.getPreferredSepas = function () {
+	        return $http.get(urlBase() +"/sepas/favorites");
+	    };
+	    
+	    restApi.addPreferredSepa = function(elementUri) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/sepas/favorites",
+	    	    data: $.param({uri: elementUri}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.removePreferredSepa = function(elementUri) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/sepas/favorites/" +encodeURIComponent(elementUri)
+	    	})
+	    }
+	    
+	    restApi.getOwnSources = function () {
+	    	console.log($rootScope.email);
+	    	return $http.get(urlBase() +"/sources/own");
+	    };
+	    
+	    restApi.getAvailableSources = function () {
+	    	return $http.get(urlBase() +"/sources/available");
+	    };
+	    
+	    restApi.getPreferredSources = function () {
+	        return $http.get(urlBase() +"/sources/favorites");
+	    };
+	    	    
+	    restApi.addPreferredSource = function(elementUri) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/sources/favorites",
+	    	    data: $.param({uri: elementUri}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.removePreferredSource = function(elementUri) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri)
+	    	})
+	    }
 
 		restApi.getOwnStreams = function(source){
 			return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.elementId) + "/streams");
 
 		};
-
-		restApi.add = function(elementUri, ispublic) {
-			return $http({
-				method: 'POST',
-				url: urlBase() + "/element",
-				data: $.param({uri: elementUri, publicElement: ispublic}),
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			})
-		}
-
-		restApi.addBatch = function(elementUris, ispublic) {
-			return $http({
-				method: 'POST',
-				url: urlBase() + "/element/batch",
-				data: $.param({uri: elementUris, publicElement: ispublic}),
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			})
-		}
-
-		restApi.update = function(elementUri) {
-			return $http({
-				method: 'PUT',
-				url: urlBase() + "/element/" +encodeURIComponent(elementUri)
-			})
-		}
-
-		restApi.del = function(elementUri) {
-			return $http({
-				method: 'DELETE',
-				url: urlBase() + "/element/" +encodeURIComponent(elementUri)
-			})
-		}
-
-		restApi.jsonld = function(elementUri) {
-			return $http.get(urlBase() +"/element/" +encodeURIComponent(elementUri) +"/jsonld");
-		}
-
-		restApi.configured = function() {
-			return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configured");
-		}
-
-		restApi.getConfiguration = function() {
-			return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configuration");
-		}
-
-		restApi.updateConfiguration = function(config) {
-			return $http.put(apiConstants.contextPath +apiConstants.api +"/setup/configuration", config);
-		};
-
-		restApi.getOwnPipelines = function() {
-			return $http.get(urlBase() +"/pipelines/own");
-			//return $http.get("/semantic-epa-backend/api/pipelines");
-		};
-
-		restApi.storePipeline = function(pipeline) {
-			return $http.post(urlBase() +"/pipelines", pipeline);
-		}
-
-		restApi.deleteOwnPipeline = function(pipelineId) {
-			return $http({
-				method: 'DELETE',
-				url: urlBase() + "/pipelines/" +pipelineId
-			})
-		}
-
-		restApi.recommendPipelineElement = function(pipeline) {
-			return $http.post(urlBase() +"/pipelines/recommend", pipeline);
-		}
-
-		restApi.updatePartialPipeline = function(pipeline) {
-			return $http.post(urlBase() +"/pipelines/update", pipeline);
-		}
-
-		restApi.startPipeline = function(pipelineId) {
-			return $http.get(urlBase() +"/pipelines/" +pipelineId +"/start");
-		}
-
-		restApi.stopPipeline = function(pipelineId) {
-			return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
-		}
+	    
+	    restApi.add = function(elementUri, ispublic) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/element",
+	    	    data: $.param({uri: elementUri, publicElement: ispublic}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.addBatch = function(elementUris, ispublic) {
+	    	return $http({
+	    	    method: 'POST',
+	    	    url: urlBase() + "/element/batch",
+	    	    data: $.param({uri: elementUris, publicElement: ispublic}),
+	    	    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+	    	})
+	    }
+	    
+	    restApi.update = function(elementUri) {
+	    	return $http({
+	    	    method: 'PUT',
+	    	    url: urlBase() + "/element/" +encodeURIComponent(elementUri)
+	    	})
+	    }
+	    
+	    restApi.del = function(elementUri) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/element/" +encodeURIComponent(elementUri)
+	    	})
+	    }
+	    
+	    restApi.jsonld = function(elementUri) {
+	    	return $http.get(urlBase() +"/element/" +encodeURIComponent(elementUri) +"/jsonld");
+	    }
+	    
+	    restApi.configured = function() {
+	    	return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configured");
+	    }
+	    
+	    restApi.getConfiguration = function() {
+	    	return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configuration");
+	    }
+	    
+	    restApi.updateConfiguration = function(config) {
+	    	return $http.put(apiConstants.contextPath +apiConstants.api +"/setup/configuration", config);
+	    };
+	    
+	    restApi.getOwnPipelines = function() {
+	    	return $http.get(urlBase() +"/pipelines/own");
+	    	//return $http.get("/semantic-epa-backend/api/pipelines");
+	    };
+	    
+	    restApi.storePipeline = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines", pipeline);
+	    }
+	    
+	    restApi.deleteOwnPipeline = function(pipelineId) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/pipelines/" +pipelineId
+	    	})
+	    }
+	    
+	    restApi.recommendPipelineElement = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines/recommend", pipeline);
+	    }
+	    
+	    restApi.updatePartialPipeline = function(pipeline) {
+	    	return $http.post(urlBase() +"/pipelines/update", pipeline);
+	    }
+	    
+	    restApi.startPipeline = function(pipelineId) {
+	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/start");
+	    }
+	    
+	    restApi.stopPipeline = function(pipelineId) {
+	    	return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
+	    }
 
 		restApi.getPipelineById = function(pipelineId) {
 			return $http.get(urlBase() + "/pipelines/" + pipelineId);
@@ -1006,65 +1021,30 @@ angular
  		return $http.post("/semantic-epa-backend/api/autocomplete/domain", query);
  	};
 	    
-
-		restApi.getOntologyProperties = function() {
-			return $http.get("/semantic-epa-backend/api/ontology/properties");
-		};
-
-		restApi.getOntologyPropertyDetails = function(propertyId) {
-			return $http.get("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId));
-		}
-
-		restApi.addOntologyProperty = function(propertyData) {
-			return $http.post("/semantic-epa-backend/api/ontology/properties", propertyData);
-		}
-
-		restApi.getOntologyConcepts = function() {
-			return $http.get("/semantic-epa-backend/api/ontology/types");
-		};
-
-		restApi.getOntologyConceptDetails = function(conceptId) {
-			return $http.get("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId));
-		}
-
-		restApi.getOntologyNamespaces = function() {
-			return $http.get("/semantic-epa-backend/api/ontology/namespaces");
-		}
-
-		restApi.addOntologyNamespace = function(namespace) {
-			return $http.post("/semantic-epa-backend/api/ontology/namespaces", namespace);
-		}
-
-		restApi.deleteOntologyNamespace = function(prefix) {
-			return $http({
-				method: 'DELETE',
-				url: "/semantic-epa-backend/api/ontology/namespaces/" +encodeURIComponent(prefix)
-			});
-		}
-
-		restApi.addOntologyConcept = function(conceptData) {
-			return $http.post("/semantic-epa-backend/api/ontology/types", conceptData);
-		}
-
-		restApi.addOntologyInstance = function(instanceData) {
-			return $http.post("/semantic-epa-backend/api/ontology/instances", instanceData);
-		}
-
-		restApi.getOntologyInstanceDetails = function(instanceId) {
-			return $http.get("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId));
-		}
-
-		restApi.updateOntologyProperty = function(propertyId, propertyData) {
-			return $http.put("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId), propertyData);
-		}
-
-		restApi.updateOntologyConcept = function(conceptId, conceptData) {
-			return $http.put("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId), conceptData);
-		}
-
-		restApi.updateOntologyInstance = function(instanceId, instanceData) {
-			return $http.put("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId), instanceData);
-		}
+ 
+ 	restApi.getSepasFromOntology = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/sepas")
+ 	}
+ 	
+ 	restApi.getSepaDetailsFromOntology = function(uri, keepIds) {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/sepas/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+ 	}
+ 	
+ 	restApi.getSourcesFromOntology = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/sources")
+ 	}
+ 	
+ 	restApi.getSourceDetailsFromOntology = function(uri, keepIds) {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/sources/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+ 	}
+ 	
+ 	restApi.getActionsFromOntology = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/actions")
+ 	}
+ 	
+ 	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
+ 		return $http.get("/semantic-epa-backend/api/v2/ontology/actions/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+ 	}
 	
 	    return restApi;
 	}]);

@@ -17,6 +17,17 @@ body {
 	background-attachment: fixed;	
 }
 
+.md-dialog-container, md-backdrop {
+    position: fixed;
+}
+.md-dialog-is-showing {
+	overflow:visible;
+}
+
+.panel-margin {
+	margin:10px;
+	padding:10px;
+}
 
 .customize-item-main {
 	border: 1px solid rgb(140,158,255);

@@ -1,0 +1,18 @@
+<md-input-container>
+   	<label>Required Class</label>
+       <input ng-model="domainProperty.requiredClass">
+</md-input-container>
+<h4>Supported Properties</h4>
+<div ng-repeat = "(index, supportedProperty) in domainProperty.supportedProperties">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+		<div flex="100" layout="row">
+				<div flex="70" layout="row" layout-align="start center">	<h5>Supported Property {{index+1}}</h5></div>
+				<div flex="30" layout="row" layout-align="end center"><md-button  ng-disabled="disabled" ng-click="removeSupportedProperty(domainProperty.supportedProperties, index)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete supported property"></md-icon></md-button></div>	
+		</div>
+		<md-input-container>
+    	<label>Property Id</label>
+        <input ng-model="supportedProperty.propertyId" ng-disabled="disabled">
+		</md-input-container>
+	</div>
+</div>
+<md-button class="md-accent" ng-click="addSupportedProperty(domainProperty.supportedProperties)" ng-disabled="disabled">Add suported property</md-button>
