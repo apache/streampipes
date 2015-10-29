@@ -14,6 +14,9 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+
 import de.fzi.cep.sepa.commons.config.Configuration;
 
 public class Utils {
@@ -93,5 +96,4 @@ public class Utils {
 			return "localhost";
 		}	
 	}
-
 }
