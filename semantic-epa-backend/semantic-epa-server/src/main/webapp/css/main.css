@@ -365,8 +365,20 @@ body {
 	background-color: #ffffff;
 	border-radius: 50%;
 	box-shadow: 0 0 2px #555;
-	/*display: none;*/
+	line-height: 1.6;
 
+}
+.possible-button{
+	cursor: pointer;
+	position: absolute;
+	left: -10%;
+	top: 0;
+	height: 40%;
+	width: 40%;
+	background-color: #ffffff;
+	border-radius: 50%;
+	box-shadow: 0 0 2px #555;
+	line-height: 1.6;
 }
 .recommended-list {
 	position: absolute;
@@ -388,6 +400,17 @@ body {
 	width: 80%;
 	height: 80%;
  }
+
+.hover-icon{
+
+	line-height: 1;
+	margin: auto;
+
+}
+.green{
+	color: rgba(51, 200, 51, 0.5);
+}
+
 ul.circleMenu-open {
 	visibility: visible;
 	top: 50%;

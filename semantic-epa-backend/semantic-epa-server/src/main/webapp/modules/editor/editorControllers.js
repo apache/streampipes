@@ -2,8 +2,8 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', 
-        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile',
+        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
@@ -11,9 +11,23 @@ angular.module('streamPipesApp')
             $scope.isActionInAssembly = false;
             $scope.currentElements = [];
             $scope.currentModifiedPipeline = $stateParams.pipeline;
+            $scope.possibleElements = [];
+            $scope.activePossibleElementFilter = {};
             //var editorPlumb;
             var textInputFields = [];
             var connCount = 1;
+
+            $scope.possibleFilter = function(value, index, array){
+                if ($scope.possibleElements.length > 0) {
+                    for(var i = 0; i < $scope.possibleElements.length; i++){
+                        if (value.elementId === $scope.possibleElements[i].elementId) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            };
 
             $scope.showCustomizeDialog = function(elementData, sepaName) {
             	$rootScope.state.currentElement = elementData;
@@ -491,6 +505,10 @@ angular.module('streamPipesApp')
                                 $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), true);
                             }else{
                                 $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+                                $newState.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
+                                    //toggleStyle(e);
+                                    togglePossibleElements(e, $newState);
+                                }))
                             }
 
                             //Droppable Streams
@@ -740,7 +758,7 @@ angular.module('streamPipesApp')
                                     circle_radius: 150,
                                     trigger: 'none'
                                 });
-                            $element.hover(showRecButton, hideRecButton);
+                            $element.hover(showRecButton, hideRecButton); //TODO alle Buttons anzeigen/verstecken
                             populateRecommendedList($element, data.recommendedElements);
                             addRecommendedButton($element);
 
@@ -748,6 +766,7 @@ angular.module('streamPipesApp')
                             console.log(data);
 
                         }
+                        $element.data("possibleElements", data.possibleElements);
                     })
                     .error(function(data){
                         console.log(data);
@@ -758,6 +777,44 @@ angular.module('streamPipesApp')
                 console.log("RECOMMENDING");
 
                 return ;
+            }
+
+            function togglePossibleElements(event, el){
+                console.log(event.currentTarget);
+
+                if(!$.isEmptyObject($scope.activePossibleElementFilter) ){ //Filter Aktiv
+                    if ($scope.activePossibleElementFilter == event.currentTarget){ //Auf aktiven Filter geklickt
+                        $scope.possibleElements = [];
+                        $scope.activePossibleElementFilter = {};
+                        $("md-icon", event.currentTarget).remove();
+                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                        $scope.$apply();
+                        //altes SVG adden
+
+                    }else{ //Auf anderen Filter geklickt
+                        $("md-icon", event.currentTarget).remove();
+                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
+
+                        $("md-icon", $scope.activePossibleElementFilter).remove();
+                        $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                        if (el.data("possibleElements") !== 'undefined') {
+                            $scope.possibleElements = el.data("possibleElements");
+                            $scope.activePossibleElementFilter = event.currentTarget;
+                            $scope.$apply();
+                        }
+                        //TODO Tab wechseln
+                    }
+                }else{ //KEIN FILTER AKTIV
+                    $scope.activePossibleElementFilter = event.currentTarget;
+                    if (el.data("possibleElements") !== 'undefined') {
+                        $("md-icon", event.currentTarget).remove();
+                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
+                        $scope.possibleElements = el.data("possibleElements");
+                        $scope.$apply();
+                    }
+                }
+
+
             }
 
 
@@ -929,10 +986,13 @@ angular.module('streamPipesApp')
                         var $recList = $("ul", $element);
                         $recList.circleMenu('open');
                     })
-                    .append($("<md-icon>")
-                        .attr({"md-svg-icon": "content:ic_add_circle_24px", "aria-label" :"Recommended Elements"}))
+                    .append($compile("<md-icon md-svg-icon='content:ic_add_circle_24px'>")($scope).addClass("hover-icon").addClass("green")
+                        .attr("aria-label", "Recommended Elements"))
                     .appendTo($element);
-                $scope.apply();
+
+
+
+
 
                 //$("<span>")
                 //    .addClass("recommended-button")
