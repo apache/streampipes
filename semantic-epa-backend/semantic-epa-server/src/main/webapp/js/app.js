@@ -179,6 +179,14 @@ angular
 						controller: 'AppCtrl'
 					}
 				}
+			}).state('streampipes.visualizationsnew', {
+				url: '/visualizations-new',
+				views: {
+					"streampipesView@streampipes" : {
+						templateUrl : 'modules/visualizations-new/visualizations-new.html',
+						controller: 'Viz2Ctrl'
+					}
+				}
 			})
 			.state('streampipes.marketplace', {
 				url: '/marketplace',
@@ -387,6 +395,11 @@ angular
              title: 'Visualizations',
              icon: 'editor:ic_insert_chart_24px'
            },
+           {
+               link : 'streampipes.visualizationsnew',
+               title: 'Visualizations-New',
+               icon: 'editor:ic_insert_chart_24px'
+             },
            {
                link : 'streampipes.marketplace',
                title: 'Marketplace',
