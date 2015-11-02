@@ -27,8 +27,13 @@ public class WordCountTopology extends FlinkSepaRuntime<WordCountParameters, Tup
 	}
 
 	@Override
-	protected SerializationSchema<Tuple2<String, Integer>, byte[]> getSerializer() {
-		return new SimpleSerializer();
+	protected SerializationSchema<Tuple2<String, Integer>, byte[]> getKafkaSerializer() {
+		return new SimpleKafkaSerializer();
+	}
+
+	@Override
+	protected SerializationSchema<Tuple2<String, Integer>, String> getJmsSerializer() {
+		return new SimpleJmsSerializer();
 	}
 		
 }
