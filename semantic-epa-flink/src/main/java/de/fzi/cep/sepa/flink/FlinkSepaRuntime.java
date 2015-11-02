@@ -10,16 +10,19 @@ import org.apache.flink.streaming.connectors.kafka.api.KafkaSink;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
+import de.fzi.cep.sepa.flink.sink.FlinkJmsProducer;
+import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
-public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implements Serializable {
+public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implements Runnable, Serializable {
 
 	private B params;
 	private FlinkDeploymentConfig config;
 	
 	private boolean debug;
 	
+	private Thread thread;
 	
 	private StreamExecutionEnvironment env;
 	
@@ -48,37 +51,55 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 		
 		DataStream<T> applicationLogic = getApplicationLogic(messageStream);
 		
-		SerializationSchema<T, byte[]> schema = getSerializer();
+		SerializationSchema<T, byte[]> kafkaSerializer = getKafkaSerializer();
+		SerializationSchema<T, String> jmsSerializer = getJmsSerializer();
 		
-		applicationLogic.addSink(new KafkaSink<T>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), schema));
+		if (isOutputKafkaProtocol()) applicationLogic.addSink(new KafkaSink<T>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
+		else applicationLogic.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
+		thread = new Thread(this);
+		thread.start();
+		
+		return true;
+	}
+	
+	public void run()
+	{
 		try {
 			env.execute();
-			return true;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
 		}
 	}
 	
 	public boolean stop()
 	{
+		thread.stop();
 		return true;
 	}
 	
-	protected abstract SerializationSchema<T, byte[]> getSerializer();
+	protected abstract SerializationSchema<T, byte[]> getKafkaSerializer();
+	protected abstract SerializationSchema<T, String> getJmsSerializer();
 	
 	protected abstract DataStream<T> getApplicationLogic(DataStream<String> messageStream);
 	
 	
 	private String getInputTopic()
 	{
-		return ((KafkaTransportProtocol) params.getGraph().getInputStreams().get(0).getEventGrounding().getTransportProtocol()).getTopicName();
+		return params.getGraph().getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 	}
 	
 	private String getOutputTopic()
 	{
-		return ((KafkaTransportProtocol) params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol()).getTopicName();
+		return params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol().getTopicName();
+	}
+	
+	private String getJmsBrokerAddress()
+	{
+		return ((JmsTransportProtocol) params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol()).getBrokerHostname()
+				+":"
+				+((JmsTransportProtocol)params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol()).getPort();
 	}
 	
 	private Properties getProperties() {
@@ -97,5 +118,10 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 		props.put("zookeeper.sync.time.ms", "20000");
 		props.put("auto.commit.interval.ms", "10000");
 		return props;
+	}
+	
+	private boolean isOutputKafkaProtocol()
+	{
+		return params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol;
 	}
 }
