@@ -1,0 +1,97 @@
+{
+  "@graph" : [ {
+    "@id" : "http://localhost:8094/sepa/wordcount",
+    "@type" : "sepa:SemanticEventProcessingAgent",
+    "sepa:hasName" : "WordCount",
+    "sepa:hasOutputStrategy" : {
+      "@id" : "urn:fzi.de:fixedoutputstrategy:LUASdT"
+    },
+    "sepa:hasURI" : "http://localhost:8094/sepa/wordcount",
+    "sepa:requires" : {
+      "@id" : "urn:fzi.de:eventstream:QSvrJe"
+    },
+    "sepa:supportedGrounding" : {
+      "@id" : "urn:fzi.de:eventgrounding:eWQsWh"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#description" : "WordCount Example"
+  }, {
+    "@id" : "urn:fzi.de:eventgrounding:eWQsWh",
+    "@type" : "sepa:EventGrounding",
+    "sepa:elementName" : "urn:fzi.de:eventgrounding:eWQsWh",
+    "sepa:hasProtocol" : {
+      "@id" : "urn:fzi.de:kafkatransportprotocol:QuWaPg"
+    },
+    "sepa:transportFormat" : {
+      "@id" : "urn:fzi.de:transportformat:roOoDq"
+    }
+  }, {
+    "@id" : "urn:fzi.de:eventschema:VNpsAS",
+    "@type" : "sepa:EventSchema",
+    "sepa:elementName" : "urn:fzi.de:eventschema:VNpsAS"
+  }, {
+    "@id" : "urn:fzi.de:eventstream:QSvrJe",
+    "@type" : "sepa:EventStream",
+    "sepa:hasSchema" : {
+      "@id" : "urn:fzi.de:eventschema:VNpsAS"
+    },
+    "sepa:hasURI" : "urn:fzi.de:eventstream:QSvrJe"
+  }, {
+    "@id" : "urn:fzi.de:fixedoutputstrategy:LUASdT",
+    "@type" : "sepa:FixedOutputStrategy",
+    "sepa:elementName" : "urn:fzi.de:fixedoutputstrategy:LUASdT",
+    "sepa:producesProperty" : [ {
+      "@id" : "fzi:235d61d9-7186-45ba-90ba-7aff5f440a57"
+    }, {
+      "@id" : "fzi:c463836e-28bb-4b33-bb6f-6ce046cb1976"
+    } ]
+  }, {
+    "@id" : "urn:fzi.de:kafkatransportprotocol:QuWaPg",
+    "@type" : "sepa:KafkaTransportProtocol",
+    "sepa:elementName" : "urn:fzi.de:kafkatransportprotocol:QuWaPg",
+    "sepa:kafkaPort" : {
+      "@type" : "xsd:int",
+      "@value" : "0"
+    },
+    "sepa:zookeeperPort" : {
+      "@type" : "xsd:int",
+      "@value" : "0"
+    }
+  }, {
+    "@id" : "fzi:235d61d9-7186-45ba-90ba-7aff5f440a57",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/text"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:235d61d9-7186-45ba-90ba-7aff5f440a57",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
+    "sepa:hasRuntimeName" : "word",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:c463836e-28bb-4b33-bb6f-6ce046cb1976",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:c463836e-28bb-4b33-bb6f-6ce046cb1976",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#integer",
+    "sepa:hasRuntimeName" : "count",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "urn:fzi.de:transportformat:roOoDq",
+    "@type" : [ "sepa:TransportFormat", "http://www.w3.org/2000/01/rdf-schema#Resource", "sepa:json" ],
+    "sepa:elementName" : "urn:fzi.de:transportformat:roOoDq"
+  } ],
+  "@context" : {
+    "sepa" : "http://sepa.event-processing.org/sepa#",
+    "ssn" : "http://purl.oclc.org/NET/ssnx/ssn#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "empire" : "urn:clarkparsia.com:empire:",
+    "fzi" : "urn:fzi.de:sepa:"
+  }
+}
