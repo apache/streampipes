@@ -103,6 +103,8 @@
     	<module>semantic-epa-sources-mhwirth</module>
     	<module>semantic-epa-storm-topology-sentiment-new</module>
     	<module>semantic-epa-kpi</module>
+    	<module>semantic-epa-flink</module>
+    	<module>semantic-epa-flink-samples</module>
 	</modules>
 
 	<!-- Build Settings -->
