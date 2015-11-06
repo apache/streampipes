@@ -27,6 +27,7 @@ public class HttpRequestBuilder {
 	public PipelineElementStatus invoke()
 	{
 		try {
+			System.out.println(jsonLd());
 			Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
 			return handleResponse(httpResp);			
 		} catch(Exception e)
@@ -39,12 +40,12 @@ public class HttpRequestBuilder {
 	public PipelineElementStatus detach()
 	{
 		try {
-			Response httpResp = Request.Delete(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline()).execute();
+			Response httpResp = Request.Delete(payload.getUri()).execute();
 			return handleResponse(httpResp);
 		} catch(Exception e)
 		{
 			e.printStackTrace();
-			return new PipelineElementStatus(payload.getBelongsTo() +"/" +payload.getCorrespondingPipeline(), payload.getName(), false, e.getMessage());
+			return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), false, e.getMessage());
 		}
 	}
 	
@@ -63,6 +64,7 @@ public class HttpRequestBuilder {
 	
 	private PipelineElementStatus convert(de.fzi.cep.sepa.model.impl.Response response)
 	{
+		System.out.println(response);
 		return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), response.isSuccess(), response.getOptionalMessage());
 	}
 }

@@ -11,7 +11,6 @@ import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.user.User;
 
 /**
  * class that provides several (partial) pipeline verification methods

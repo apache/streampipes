@@ -82,13 +82,16 @@ public class InvocationGraphBuilder {
 				if (element instanceof SepaInvocation) {
 					SepaInvocation thisGraph = (SepaInvocation) element;
 					thisGraph.setCorrespondingPipeline(pipelineId);
+					
 					thisGraph = (SepaInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
+					
 					EventSchema outputSchema;
 					EventStream outputStream = new EventStream();
+					System.out.println("STREAM" +outputStream.getUri());
 					List<OutputStrategy> supportedStrategies = thisGraph.getOutputStrategies();
-					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
-							.toString()));
+//					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
+//							.toString()));
 					EventGrounding grounding = new EventGrounding();
 					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(supportedStrategies).getOuputSchemaGenerator();
 					
@@ -169,14 +172,15 @@ public class InvocationGraphBuilder {
 	private InvocableSEPAElement buildSEPAElement(
 			InvocableSEPAElement thisGraph,
 			GenericTreeNode<NamedSEPAElement> node, String outputTopic) {
-		try {
-			thisGraph.setRdfId(new URIKey(new URI(thisGraph.getUri() + "/"
-					+ outputTopic)));
-
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				thisGraph.setRdfId(new URIKey(new URI(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic)));
+				thisGraph.setUri(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic);
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			thisGraph.setUri(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic);
+			
 
 		for (int i = 0; i < node.getNumberOfChildren(); i++) {
 			NamedSEPAElement child = node.getChildAt(i).getData();
@@ -203,15 +207,5 @@ public class InvocationGraphBuilder {
 			}
 		}
 		return thisGraph;
-	}
-
-	private URIKey makeRandomUriKey(String uri) {
-		try {
-			return new URIKey(new URI(uri));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

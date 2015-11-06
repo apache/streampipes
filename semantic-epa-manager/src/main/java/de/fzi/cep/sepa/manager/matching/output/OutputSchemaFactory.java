@@ -18,7 +18,7 @@ public class OutputSchemaFactory {
 		this.firstOutputStrategy = outputStrategies.get(0);
 	}
 	
-	public OutputSchemaGenerator getOuputSchemaGenerator()
+	public OutputSchemaGenerator<?> getOuputSchemaGenerator()
 	{
 		if (firstOutputStrategy instanceof AppendOutputStrategy)
 			return new AppendOutputSchemaGenerator(((AppendOutputStrategy) firstOutputStrategy).getEventProperties());
