@@ -53,7 +53,7 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setBelongsTo(sepa.getRdfId().toString());
-		this.setUri(belongsTo +"/" +getElementId());		
+		//this.setUri(belongsTo +"/" +getElementId());		
 	}
 	
 	public SepaInvocation(SepaInvocation other)
