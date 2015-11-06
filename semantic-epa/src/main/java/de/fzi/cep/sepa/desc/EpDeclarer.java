@@ -61,6 +61,7 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 			
 			String outputBrokerUrl = outputEventGrounding.getTransportProtocol().getBrokerHostname()+":" +outputPort;
 			logger.info("OutputBrokerUrl is " +outputBrokerUrl);
+			
 			if (brokerAliases.containsKey(outputBrokerUrl)) outputGroundingConfig = brokerAliases.get(outputBrokerUrl);
 			else
 			{
@@ -96,7 +97,7 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 			engineParams = new EngineParameters<>(
 				inEventTypes,
 				outEventType, bindingParameters, sepa);
-	
+
 			RuntimeParameters<B> runtimeParameters = new RuntimeParameters<>(sepa.getUri(),
 					supplier, engineParams, config, destination, source);
 			//context.getManagementStrategy().addEventNotifier(new LoggingEventNotifer());
