@@ -278,15 +278,6 @@ angular
 		            }
 	            }
 	          })
-	          .state('streampipes.create', {
-	            url: '/create',
-	            views: {
-		            "streampipesView@streampipes" : {
-		            	  templateUrl : 'modules/create/create.html',
-		            	  controller: 'CreateCtrl'
-		            }
-	            }
-	          })
 	          .state('streampipes.notifications', {
 	            url: '/notifications',
 	            views: {
@@ -417,11 +408,6 @@ angular
 			   title: 'Import Elements',
 			   icon: 'content:ic_add_24px'
 		   },
-			 {
-				 link : 'streampipes.create',
-				 title: 'Create Element',
-				 icon: 'content:ic_add_24px'
-			 },
 			 {
 				 link : 'streampipes.sensors',
 				 title: 'Sensor Configurator',
