@@ -2,22 +2,24 @@ package de.fzi.cep.sepa.model.client.input;
 
 import java.util.List;
 
-public class MultipleValueInput<T extends FormInput> extends FormInput {
+import de.fzi.cep.sepa.model.client.StaticProperty;
+
+public class MultipleValueInput extends FormInput {
 
 	private String memberType;
 	
-	private List<T> members;
+	private List<StaticProperty> members;
 	
 	public MultipleValueInput()
 	{
 		super(ElementType.MULTIPLE_VALUE);
 	}
 
-	public List<T> getMembers() {
+	public List<StaticProperty> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<T> members) {
+	public void setMembers(List<StaticProperty> members) {
 		this.members = members;
 	}
 
