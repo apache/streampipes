@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.storage.util;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
@@ -246,13 +247,38 @@ public class ClientModelTransformer {
 				resultProperties.add(convertDomainStaticProperty(domainStaticProperty, input));
 			} else if (p instanceof CollectionStaticProperty) {
 				CollectionStaticProperty collectionStaticProperty = (CollectionStaticProperty) p;
-				//MultipleValueInput<FormInput>
+				MultipleValueInput multipleValueInput = (MultipleValueInput) formInput;
+				resultProperties.add(convertCollectionStaticProperty(collectionStaticProperty, multipleValueInput));
 			}
 		}
 
 		return resultProperties;
 	}
 	
+	private static StaticProperty convertCollectionStaticProperty(
+			CollectionStaticProperty collectionStaticProperty,
+			MultipleValueInput multipleValueInput) {
+		
+		
+		StaticProperty propertyDescription = collectionStaticProperty.getMembers().get(0);
+		List<StaticProperty> members = new ArrayList<>();
+		collectionStaticProperty.setMemberType(multipleValueInput.getMemberType());
+		for(de.fzi.cep.sepa.model.client.StaticProperty clientInput : multipleValueInput.getMembers()) {
+			if (multipleValueInput.getMemberType().equals("de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty")) 
+			{
+				members.add(convertFreeTextStaticProperty(new FreeTextStaticProperty(propertyDescription.getInternalName(), propertyDescription.getLabel(), propertyDescription.getDescription()), clientInput.getInput()));
+			}
+			else if (multipleValueInput.getMemberType().equals("de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty"))
+			{
+				members.add(convertDomainStaticProperty(new DomainStaticProperty((DomainStaticProperty)propertyDescription), (DomainConceptInput) clientInput.getInput()));
+			}
+		}
+		
+		collectionStaticProperty.setMembers(members);
+		
+		return collectionStaticProperty;
+	}
+
 	private static StaticProperty convertDomainStaticProperty(
 			DomainStaticProperty domainStaticProperty, DomainConceptInput input) {
 		for(de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty sp : domainStaticProperty.getSupportedProperties())
@@ -402,10 +428,24 @@ public class ClientModelTransformer {
 			}
 		else if (p instanceof MatchingStaticProperty) property = convertMatchingProperty((MatchingStaticProperty) p);
 		else if (p instanceof DomainStaticProperty) property = convertDomainProperty((DomainStaticProperty) p);
+		else if (p instanceof CollectionStaticProperty) property = convertCollectionProperty((CollectionStaticProperty) p);
 		
 		property.setElementId(p.getRdfId().toString());
 		return property;
 		//exceptions
+	}
+
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertCollectionProperty(
+			CollectionStaticProperty p) {
+		
+		MultipleValueInput input = new MultipleValueInput();
+		input.setMemberType(p.getMemberType());
+		if (p.getMemberType().equals("de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty")) input.setMembers(Arrays.asList(convertFreeTextStaticProperty((FreeTextStaticProperty) p.getMembers().get(0))));
+		else if (p.getMemberType().equals("de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty")) input.setMembers(Arrays.asList(convertDomainProperty((DomainStaticProperty) p.getMembers().get(0))));
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
+		clientProperty.setElementId(p.getRdfId().toString());
+		
+		return clientProperty;
 	}
 
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertDomainProperty(
