@@ -29,7 +29,7 @@ public class SecInvocation extends InvocableSEPAElement{
 		this.setSupportedGrounding(sec.getSupportedGrounding());
 		this.setStaticProperties(sec.getStaticProperties());
 		this.setBelongsTo(sec.getRdfId().toString());
-		this.setUri(belongsTo +"/" +getElementId());
+		//this.setUri(belongsTo +"/" +getElementId());
 	}
 	
 	public SecInvocation(SecDescription sec, String domId)
