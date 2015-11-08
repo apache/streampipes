@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.model.client.*;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
+import de.fzi.cep.sepa.model.client.input.MultipleValueInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
@@ -23,6 +24,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
@@ -242,6 +244,9 @@ public class ClientModelTransformer {
 				DomainStaticProperty domainStaticProperty = (DomainStaticProperty) p;
 				DomainConceptInput input = (DomainConceptInput) formInput;
 				resultProperties.add(convertDomainStaticProperty(domainStaticProperty, input));
+			} else if (p instanceof CollectionStaticProperty) {
+				CollectionStaticProperty collectionStaticProperty = (CollectionStaticProperty) p;
+				//MultipleValueInput<FormInput>
 			}
 		}
 

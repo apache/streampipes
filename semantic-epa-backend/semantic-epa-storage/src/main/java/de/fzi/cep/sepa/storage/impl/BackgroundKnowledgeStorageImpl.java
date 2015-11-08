@@ -263,7 +263,7 @@ public class BackgroundKnowledgeStorageImpl implements
 			RepositoryConnection conn = repo.getConnection();
 			ValueFactory factory = conn.getValueFactory();
 			String elementName = resource.getElementName().replaceAll(" ", "_");
-			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(conn.getNamespace(resource.getNamespace())+elementName), RDF.TYPE, object);
+			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(resource.getNamespace()+elementName), RDF.TYPE, object);
 			conn.add(st);
 			conn.close();
 			return true;
@@ -330,6 +330,27 @@ public class BackgroundKnowledgeStorageImpl implements
 			Property p = getProperty(propertyId, instanceId);
 			properties.add(p);
 		}
+		
+		List<String> rdfTypes = getRdfTypes(instanceId);
+		rdfTypes
+			.stream()
+			.filter(type -> !BackgroundKnowledgeFilter.omittedPropertyPrefixes
+					.stream()
+					.anyMatch(prefix -> type.equals(prefix)))
+			.forEach(type -> {
+				try {
+					Concept concept = getConcept(type);
+					
+					concept.getDomainProperties()
+						.stream()
+						.filter(dp -> !properties
+								.stream()
+								.anyMatch(p -> p.getElementHeader().getId().equals(dp.getElementHeader().getId())))
+						.forEach(dp -> properties.add(dp));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});;
 		
 		
 		instance.setDomainProperties(BackgroundKnowledgeUtils.filterDuplicates(BackgroundKnowledgeFilter.rdfsFilter(properties, true)));
