@@ -88,7 +88,7 @@ public class InvocationGraphBuilder {
 					
 					EventSchema outputSchema;
 					EventStream outputStream = new EventStream();
-					System.out.println("STREAM" +outputStream.getUri());
+					
 					List<OutputStrategy> supportedStrategies = thisGraph.getOutputStrategies();
 //					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
 //							.toString()));

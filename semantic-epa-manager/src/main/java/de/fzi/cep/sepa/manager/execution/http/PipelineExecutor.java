@@ -38,7 +38,7 @@ public class PipelineExecutor {
 		
 		if (status.isSuccess()) 
 		{
-			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getBelongsTo() + "/" +sec.getCorrespondingPipeline(), sec.getDescription(), sec.getName());
+			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getUri(), sec.getDescription(), sec.getName());
 			StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
