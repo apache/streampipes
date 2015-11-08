@@ -88,10 +88,17 @@ public class SepaOntologyImpl extends AbstractRestInterface implements SepaOntol
 		}
 	}
 
+	@Path("/actions/{actionId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getAction(String actionId, @QueryParam("keepIds") boolean keepIds) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
+		try {
+			SecDescription secDescription = new SecDescription(StorageManager.INSTANCE.getStorageAPI().getSECById(actionId));
+			return getGson(keepIds).toJson(secDescription);
+		} catch (URISyntaxException e) {
+			return toJson(Notifications.error("Error"));
+		}
 	}
 	
 	public static void main(String[] args)
