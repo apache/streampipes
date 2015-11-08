@@ -40,8 +40,8 @@
 									<a ng-click="reset()">(Remove Type Definition)</a>
 									<div ng-show="propertyDetail.range.rangeType === 'PRIMITIVE'">
 									<h5>Primitive Property</h5>
-										<md-radio-group ng-model="$parent.propertyDetail.range.rdfsDatatype" class="md-accent">
-									          <md-radio-button ng-repeat="primitiveClass in primitiveClasses" ng-value="primitiveClass.id" ng-checked="$parent.propertyDetail.range.rdfsDatatype === primitiveClass.id">
+										<md-radio-group ng-model="propertyDetail.range.rdfsDatatype" class="md-accent">
+									          <md-radio-button ng-repeat="primitiveClass in primitiveClasses" ng-value="primitiveClass.id" ng-checked="propertyDetail.range.rdfsDatatype === primitiveClass.id">
 									            <b>{{primitiveClass.title}}</b><br/>
 									            {{primitiveClass.description}}
 									          </md-radio-button>
@@ -63,7 +63,7 @@
 								</div>
 								<div ng-show="!propertyDetail.rangeDefined">
 									<div layout="column">
-										<md-radio-group ng-model="$parent.selectedRangeType" class="md-accent">
+										<md-radio-group ng-model="selectedRangeType" class="md-accent">
 								          <md-radio-button ng-repeat="rt in rangeTypes" ng-value="rt.rangeType">
 								            <b>{{rt.title}}</b><br/>
 								            {{rt.description}}
@@ -152,7 +152,7 @@
 								<md-divider></md-divider><p/>
 								<h4>Add new Property</h4>
 								<div layout="row">	 
-							        <select ng-model="$parent.selectedClassProperty">
+							        <select ng-model="selectedClassProperty">
 							          <option ng-repeat="property in properties" value="{{property.id}}">
 							            {{property.title}}
 							          </option>
@@ -211,7 +211,7 @@
 									<md-divider></md-divider><p/>
 										<h4>Add new Property</h4>
 										<div layout="row">	 
-							        	<select ng-model="$parent.selectedInstanceProperty">
+							        	<select ng-model="selectedInstanceProperty">
 							          		<option ng-repeat="property in properties" value="{{property.id}}">
 							            		{{property.title}}
 							          		</option>

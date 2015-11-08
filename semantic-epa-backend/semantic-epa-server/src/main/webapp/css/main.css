@@ -17,6 +17,16 @@ body {
 	background-attachment: fixed;	
 }
 
+.circle {
+	border-radius: 50%;
+	width: 150px;
+	height: 150px; 
+	font-size:40px;
+    color:#fff;
+    line-height:150px;
+    text-align:center;
+}
+
 .md-dialog-container, md-backdrop {
     position: fixed;
 }

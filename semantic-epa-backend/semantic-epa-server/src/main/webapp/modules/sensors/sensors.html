@@ -28,17 +28,17 @@
 						    <li ng-repeat="sepa in sepas" ui-tree-node>
 						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadSepaDetails(sepa.uri, true, true)">
 						       <div flex="100" layout="row">
-						        <div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{sepa.name}}</div>
-						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action">
-						        	<md-button  ng-click="openDownloadDialog(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
-						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon>
-						        	</md-button>
-						        </div>	     
-						        <div flex="20" layout="row" layout-align="end center" class="tree-node-action">
-						        	<md-button  ng-click="deleteProperty(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
-						        		<md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete"></md-icon>
-						        	</md-button>
-						        </div>	 
+						        <div flex="100" layout="row" layout-align="start center" class="tree-node-title"> {{sepa.name}}</div>
+<!-- 						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action"> -->
+<!-- 						        	<md-button  ng-click="openDownloadDialog(sepa.uri, selectedSepa)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"> -->
+<!-- 						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon> -->
+<!-- 						        	</md-button> -->
+<!-- 						        </div>	      -->
+<!-- 						        <div flex="20" layout="row" layout-align="end center" class="tree-node-action"> -->
+<!-- 						        	<md-button  ng-click="deleteProperty(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"> -->
+<!-- 						        		<md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete"></md-icon> -->
+<!-- 						        	</md-button> -->
+<!-- 						        </div>	  -->
 						       </div>
 						     </div>
 						    </li>
@@ -60,8 +60,7 @@
 									      <h4>{{errorMessage}}</h4>
 								</div>
 								<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri)">Create implementation</md-button>
-									<md-button class="md-accent md-raised" ng-click="downloadJsonLd(selectedSepa.uri)">Download description file</md-button>							
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri, selectedSepa)">Generate</md-button>
 								</div>
 								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
 							</div>
@@ -129,6 +128,65 @@
 					</div>
 				</div>
 			</md-tab>
+			<md-tab label="Actions"> 
+				<div layout="row" flex="100">
+					<div layout="row" layout-align="start center" flex="60">
+						<md-button class="md-accent" ng-click="addNewAction()">
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Action"></md-icon>  Create new Action
+						</md-button>
+					</div>
+					<div layout="row" layout-align="end center" flex="40">		
+						<div ng-show="selectedAction != undefined">			
+							<md-button  ng-click="loadActionDetails(selectedAction.uri, true, false)" class="md-button md-accent" style="width:24px;height:24px;">
+								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Edit"></md-icon>  Modify 
+							</md-button>					
+						</div>		
+					</div>
+				</div>
+				<div flex layout="row">
+					<div flex-sm="20" flex-gt-sm="20" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="actions">
+						    <li ng-repeat="action in actions" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadActionDetails(action.uri, true, true)">
+						       <div flex="100" layout="row">
+						        <div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{action.name}}</div>
+						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action">
+						        	<md-button  ng-click="openDownloadDialog(action.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
+						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon>
+						        	</md-button>
+						        </div>	      
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex-sm="80" flex-gt-sm="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="actionSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							<div flex="100" layout="row">
+								<div layout="row" layout-align="start center" flex="100">{{selectedAction.name}}</div>	
+							</div>
+						</div>
+						<md-content class="md-padding">
+							<ng-include src="'modules/sensors/templates/sec.html'"></ng-include>
+								
+							<md-divider></md-divider>
+							<div class="form-actions">
+								<div class="md-warn" ng-show="errorMessagePresent">
+									      <h4>{{errorMessage}}</h4>
+								</div>
+								<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedAction.uri)">Create implementation</md-button>
+									<md-button class="md-accent md-raised" ng-click="downloadJsonLd(selectedAction.uri)">Download description file</md-button>							
+								</div>
+								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
+							</div>
+						</md-content>
+					</div>
+				</div>
+			</md-tab>
+			</md-tabs>
 		</md-content>
 	</div>
 </div>

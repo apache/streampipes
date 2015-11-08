@@ -11,20 +11,30 @@
   </md-toolbar>
   <md-dialog-content flex="100" class="md-dialog-content">
     <div layout="column" style="width:100%">	
-		        			
-      		<label>S-EPA type
+		 <div layout="row">
+		   <md-input-container>
+		    	<h4>What would you like to export?</h4>
+			 	<md-radio-group ng-model="deployment.outputType" style="display:inline;">
+					    <md-radio-button value="OUTPUT_IMPLEMENTATION">Complete implementation as prepared Maven project</md-radio-button>
+					    <md-radio-button value="OUTPUT_JSONLD">Description file as Json-LD</md-radio-button>
+				</md-radio-group>	
+			</md-input-container> 
+		 </div>   
+		 <div ng-show="deployment.outputType == 'OUTPUT_IMPLEMENTATION'">    			
+      		<h4>What kind of implementation would you like to create?</h4>
 			    <md-radio-group ng-model="deployment.deploymentType" style="display:inline;">
-				     <md-radio-button value="SEPA_ESPER">Esper CEP Runtime</md-radio-button>
-				     <md-radio-button value="SEPA_ALGORITHM">Online Algorithm</md-radio-button>
-				     <md-radio-button value="SEPA_STORM">Storm Topology Template</md-radio-button>
+				    <md-radio-button value="SEPA_ESPER">Esper CEP Runtime</md-radio-button>
+				    <md-radio-button value="SEPA_ALGORITHM">Online Algorithm</md-radio-button>
+				    <md-radio-button value="SEPA_STORM">Apache Storm Topology</md-radio-button>
+				    <md-radio-button value="SEPA_FLINK">Apache Flink Topology</md-radio-button>
 				</md-radio-group> 
-			</label>
-			<label>Deployment Type
+			<h4>Endpoint Settings</h4>
 			    <md-radio-group ng-model="deployment.deploymentMethod" style="display:inline;">
 				     <md-radio-button value="STANDALONE">Standalone</md-radio-button>
 				     <md-radio-button value="EMBEDDED">Embedded into servlet container</md-radio-button>
+				     <md-radio-button value="EXISTING">Implementation will be included into existing project</md-radio-button>
 				 </md-radio-group> 
-			</label>
+			
 	        <md-input-container>
 		    	<label>GroupId</label>
 		        <input ng-model="deployment.groupId">
@@ -37,15 +47,22 @@
 		    	<label>Class Prefix</label>
 		        <input ng-model="deployment.classNamePrefix">
 		    </md-input-container>
-		    <md-input-container ng-show="deployment.deploymentType=='standalone' || deployment.sepaType=='storm'">
+		    <md-input-container ng-show="deployment.deploymentType=='STANDALONE'">
 		    	<label>Port</label>
 		        <input ng-model="deployment.port">
 		    </md-input-container>  
 		    
 		    <md-input-container flex> 
-		    	<md-button ng-click="submitDeployment()" class="md-accent" ng-click="">Generate StreamPipes Maven Project</md-button>
+		    	<md-button ng-click="generateImplementation()" class="md-accent" ng-click="">Generate StreamPipes Maven Project</md-button>
 		    </md-input-container>
-					</div>
+		</div>
+		<div ng-show="deployment.outputType == 'OUTPUT_JSONLD'">  
+		 	<md-input-container flex> 
+		    	<md-button ng-click="generateDescription()" class="md-accent" ng-click="">Generate JSON-LD file</md-button>
+		    </md-input-container> 
+		</div>
+		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+	</div>
   </md-dialog-content>
   <div class="md-actions" layout="row">
     <md-button ng-click="hide()" style="margin-right:20px;" >

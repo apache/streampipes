@@ -13,6 +13,8 @@ angular.module('streamPipesApp')
             $scope.currentModifiedPipeline = $stateParams.pipeline;
             $scope.possibleElements = [];
             $scope.activePossibleElementFilter = {};
+            $rootScope.title = "StreamPipes";
+            
             //var editorPlumb;
             var textInputFields = [];
             var connCount = 1;

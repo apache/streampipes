@@ -10,6 +10,7 @@ angular.module('streamPipesApp')
 	$scope.selectedSepa;
 	$scope.selectedStream;
 	$scope.selectedSource;
+	$scope.selectedAction;
 	
 	$scope.sepaSelected = false;
 	$scope.sourceSelected = false;
@@ -26,11 +27,29 @@ angular.module('streamPipesApp')
 		$scope.editingDisabled = false;
 	}
 	
+	$scope.addNewAction = function() {
+		$scope.selectedAction = {"eventStreams" : [], "name" : "", "staticProperties" : []};
+		$scope.actionSelected = true;
+		$scope.editingDisabled = false;
+	}
+	
 	$scope.loadSepaDetails = function(uri, keepIds, editingDisabled) {
 		restApi.getSepaDetailsFromOntology(uri, keepIds)
 			.success(function(sepaData){
 				$scope.selectedSepa = sepaData;
                 $scope.sepaSelected = true;
+                $scope.editingDisabled = editingDisabled;
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+	}
+	
+	$scope.loadActionDetails = function(uri, keepIds, editingDisabled) {
+		restApi.getActionDetailsFromOntology(uri, keepIds)
+			.success(function(actionData){
+				$scope.selectedAction = actionData;
+                $scope.actionSelected = true;
                 $scope.editingDisabled = editingDisabled;
             })
             .error(function(msg){
@@ -54,7 +73,6 @@ angular.module('streamPipesApp')
         restApi.getSepasFromOntology()
             .success(function(sepaData){
                 $scope.sepas = sepaData;
-                console.log($scope.sepas);
             })
             .error(function(msg){
                 console.log(msg);
@@ -65,7 +83,6 @@ angular.module('streamPipesApp')
         restApi.getSourcesFromOntology()
             .success(function(sources){
                 $scope.sources = sources;
-                console.log($scope.sources);
             })
             .error(function(msg){
                 console.log(msg);
@@ -83,7 +100,7 @@ angular.module('streamPipesApp')
     };
     
     
-    $scope.openDownloadDialog = function(elementId){
+    $scope.openDownloadDialog = function(elementId, elementData){
 		 $mdDialog.show({
 	   	      controller: DownloadDialogController,
 	   	      templateUrl: 'modules/sensors/templates/downloadDialog.tmpl.html',
@@ -92,7 +109,8 @@ angular.module('streamPipesApp')
 	   	      scope:$scope,
 	   	      preserveScope:true,
 		   	  locals : {
-		   		  elementId : elementId
+		   		  elementId : elementId,
+		   		  elementData : elementData
 		      }
 	   	    })
 	 }
@@ -103,24 +121,49 @@ angular.module('streamPipesApp')
     
 });
 
-function DownloadDialogController($scope, $mdDialog, restApi, elementId, $http) {
+function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, $http) {
 
 	$scope.elementId = elementId;
 	$scope.deployment = {};
 	$scope.deployment.elemendId = elementId;
-		
-	$scope.submitDeployment = function() {
-		var formData = new FormData();
-		formData.append("config", angular.toJson($scope.deployment));
-		formData.append("model", angular.toJson($scope.selectedSepa));
-		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/storm', data : formData}).
+	
+	$scope.loading = false;
+	
+	console.log("ELEMENTDATA");
+	console.log(elementData);
+	
+	$scope.generateImplementation = function() {	
+		$scope.loading = true;
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/implementation', data : getFormData()}).
 		  success(function(data, status, headers, config) {
 			    $scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");
+			    $scope.loading = false;
 		  }).
 		  error(function(data, status, headers, config) {
 		    console.log(data);
+		    $scope.loading = false;
 		  });
 	};
+	
+	$scope.generateDescription = function() {
+		$scope.loading = true;
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/description', data : getFormData()}).
+		  success(function(data, status, headers, config) {
+			    $scope.openSaveAsDialog(elementData.name +".jsonld", data, "application/json");
+			    $scope.loading = false;
+		  }).
+		  error(function(data, status, headers, config) {
+		    console.log(data);
+		    $scope.loading = false;
+		  });
+	}
+	
+	var getFormData = function() {
+		var formData = new FormData();
+		formData.append("config", angular.toJson($scope.deployment));
+		formData.append("model", angular.toJson(elementData));
+		return formData;
+	}
 	
 	$scope.hide = function() {
   		$mdDialog.hide();

@@ -1,15 +1,31 @@
 <md-toolbar layout="row" class="md-toolbar-tools">
-			<md-button>
-				<a ui-sref="streamstory">StreamStory</a>
-			</md-button>
-			<md-button>
-				<a ui-sref="streampipes">StreamPipes</a>
-			</md-button>
-			<md-button>
-				<a ui-sref="pandda">PANDDA</a>
-			</md-button>
-			<md-button>
-				<a ui-sref="hippo">HIPPO</a>
-			</md-button>
+			<a ui-sref="home">
+				<md-button>
+				<img alt="icon" src="img/proasense_icon.png" class="toolbar-icon">
+				</md-button>
+			</a>
+			<a ui-sref="streamstory">
+				<md-button>
+					StreamStory
+				</md-button>
+			</a>
+			<a ui-sref="streampipes">
+				<md-button>
+					StreamPipes
+				</md-button>
+			</a>
+			<a ui-sref="pandda">
+				<md-button>
+					PANDDA
+				</md-button>
+			</a>
+			<a ui-sref="hippo">
+				<md-button>
+					HIPPO
+				</md-button>
+			</a>
 			<span flex></span>
+			<div layout layout-align="end center" ng-show="authenticated">
+			   <md-button ng-click="logout()">Logout</md-button>
+			</div>
 </md-toolbar>

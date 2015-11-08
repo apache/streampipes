@@ -120,7 +120,8 @@ angular
 				url: '/streampipes',
 				views: {
 					"top" : {
-						templateUrl : "top.html"
+						templateUrl : "top.html",	
+						controller: "TopNavCtrl"
 					},
 					"container" : {
 						templateUrl : "streampipes.html",
@@ -141,7 +142,8 @@ angular
 				url: '/editor/:pipeline',
 				views: {
 					"top" : {
-						templateUrl : "top.html"
+						templateUrl : "top.html",
+		            	controller : "TopNavCtrl"
 					},
 					"container" : {
 						templateUrl : "streampipes.html",
@@ -159,6 +161,19 @@ angular
 					"streampipesView@streampipes" : {
 						templateUrl : 'login.html',
 						controller: 'LoginCtrl'
+					}
+				}
+			})
+			.state('home', {
+				url: '/home',
+				views: {
+					"top" : {
+						templateUrl : "top.html",
+		            	controller : "TopNavCtrl"
+					},
+					"container" : {
+						templateUrl : "modules/proasense-home/home.html",
+						controller: 'HomeCtrl'
 					}
 				}
 			})
@@ -291,11 +306,12 @@ angular
 	            url: '/streamstory',
 	            views: {
 	            	 "top" : {
-		            	  templateUrl : "top.html"
+		            	  templateUrl : "top.html",
+			              controller : "TopNavCtrl"
 		              	},
 		            "container" : {
 		            	  templateUrl : 'streamstory.html',
-			              controller : "TopNavCtrl"
+		            	  controller: "TopNavCtrl"
 		            }
 	            }
 	          })
@@ -303,11 +319,12 @@ angular
 	            url: '/pandda',
 	            views: {
 	            	 "top" : {
-		            	  templateUrl : "top.html"
+		            	  templateUrl : "top.html",
+		            	  controller : "TopNavCtrl"
 		              	},
 		            "container" : {
 		            	  templateUrl : 'pandda.html',
-			            	  controller : "TopNavCtrl"
+		            	  controller: "TopNavCtrl"
 		            }
 	            }
 	          })
@@ -315,17 +332,18 @@ angular
 	            url: '/hippo',
 	            views: {
 	            	 "top" : {
-		            	  templateUrl : "top.html"
+		            	  templateUrl : "top.html",
+		            	  controller : "TopNavCtrl"
 		              	},
 		            "container" : {
 		            	  templateUrl : 'hippo.html',
-		            	  controller : "TopNavCtrl"
+		            	  controller: "TopNavCtrl"
 		            }
 	            }
 	          })
 	        
     })
-    .controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce) {
+    .controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce, $http, $state) {
     	
     	$scope.panddaUrl = "";
     	$scope.streamStoryUrl = "";
@@ -342,6 +360,14 @@ angular
 				$scope.hippoUrl = msg.hippoUrl;
 			});
 		}
+    	
+    	$scope.logout = function() {
+	        $http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
+		        $scope.user = undefined;
+		        $rootScope.authenticated = false;
+		        $state.go("streampipes.login");
+	        });
+	      };	
 
 		$scope.loadConfig();
 
@@ -350,6 +376,7 @@ angular
 	.controller('AppCtrl', function ($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, $state) {
 
 		$rootScope.unreadNotifications = [];
+		$rootScope.title = "StreamPipes";
 
 		$scope.toggleLeft = buildToggler('left');
 		$rootScope.userInfo = {
@@ -445,6 +472,7 @@ angular
 		$scope.registrationFailed = false;
 		$scope.registrationSuccess = false;
 		$scope.errorMessage = "";
+	
 
 		$scope.roles = [{"name" : "System Administrator", "internalName" : "SYSTEM_ADMINISTRATOR"},
 			{"name" : "Manager", "internalName" : "MANAGER"},
@@ -491,6 +519,7 @@ angular
 
 		$scope.loading = false;
 		$scope.authenticationFailed = false;
+		$rootScope.title = "ProaSense";
 
 		$scope.logIn = function() {
 			$scope.authenticationFailed = false;
@@ -504,7 +533,7 @@ angular
 						$rootScope.username = response.data.info.authc.principal.username;
 						$rootScope.email = response.data.info.authc.principal.email;
 						$rootScope.authenticated = true;
-						$state.go("streampipes");
+						$state.go("home");
 					}
 					else
 					{

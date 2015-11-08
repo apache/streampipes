@@ -252,7 +252,6 @@ angular.module('streamPipesApp')
 	 };
     
 	$scope.$on('loadProperty', function(event, propertyId) {
-		console.log("hi");
 		$scope.loadPropertyDetails(propertyId);
 	});
         

@@ -1,0 +1,23 @@
+<div flex="100" layout="column" layout-align="left center" style="padding:20px">
+	
+		<h1>ProaSense Components</h1>
+		<div layout-fill flex="100" layout="row" layout-align="center center">
+			<div layout-fill flex="25" layout="row" layout-align="center center" ng-repeat="component in componentInfo"> 
+				 <md-card>
+				 	 <div class="md-card-image" flex layout="row" layout-align="center center" style="margin:30px;">
+				 	 	<div class="circle" style="background-color:{{component.color}}">{{component.iconText}}</div>
+				 	 </div> 
+			     
+			     	<md-card-content>
+			     		<h2 class="md-title">{{component.title}}</h2>
+			        	<p>
+			          		{{component.description}}
+			        	</p>
+			      	</md-card-content>
+			      	<md-card-actions layout="row" layout-align="end center">
+			        	<a ui-sref="{{component.link}}"><md-button>Open {{component.title}}</md-button></a>
+			      </md-card-actions>
+			    </md-card>
+	    	</div>
+	    </div>
+</div>

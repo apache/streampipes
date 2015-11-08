@@ -1,12 +1,20 @@
-<md-toolbar class="md-primary md-hue-3">
-      <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()" ng-show="authenticated">
-          <i class="material-icons md-36" >menu</i>
-        </md-button>
-        <img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon">
-        <h1 class="md-toolbar-tools">StreamPipes</h1>
-      </div>
-    </md-toolbar>	
+<div ng-if="title == 'ProaSense'">
+	<div layout="row" flex="100" layout-align="center center" style="padding:30px;">
+			<img alt="icon" src="img/proasense_logo_complete.png">
+	</div>	
+</div>
+<div ng-if="title == 'StreamPipes'">
+	<md-toolbar class="md-primary md-hue-3">
+	      <div class="md-toolbar-tools">
+	        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()" ng-show="authenticated">
+	          <i class="material-icons md-36" >menu</i>
+	        </md-button>
+			<img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon">
+	        <h1 class="md-toolbar-tools">{{title}}</h1>
+	      </div>
+	</md-toolbar>	
+</div>
+
 		
 		<md-sidenav flex layout="column" class="md-sidenav-left" md-component-id="left" ng-show="authenticated">
 		  <md-toolbar class="md-tall md-hue-3">

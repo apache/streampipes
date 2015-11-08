@@ -1,7 +1,16 @@
-<md-input-container>
-   	<label>Required Class</label>
-       <input ng-model="domainProperty.requiredClass">
-</md-input-container>
+<md-checkbox ng-checked="conceptRestricted(domainProperty)" ng-click="toggleConceptRestriction(domainProperty)" aria-label="Concept restriction" ng-disabled="disabled" >
+        	Restrict concept
+</md-checkbox>
+<div ng-show="conceptRestricted(domainProperty)">
+	<md-input-container>
+	   	<label>Required Class</label>
+	    <select ng-model="domainProperty.requiredClass" placeholder="Select required class" ng-disabled="disabled" >
+	        <option ng-repeat="concept in concepts" value="{{concept.id}}" ng-selected="conceptSelected(domainProperty.requiredClass, concept.id)">
+	  			{{concept.title}}
+	  		</option>
+	    </select>
+	</md-input-container>
+</div>
 <h4>Supported Properties</h4>
 <div ng-repeat = "(index, supportedProperty) in domainProperty.supportedProperties">
 	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
@@ -11,7 +20,11 @@
 		</div>
 		<md-input-container>
     	<label>Property Id</label>
-        <input ng-model="supportedProperty.propertyId" ng-disabled="disabled">
+         <select ng-model="supportedProperty.propertyId" placeholder="Select required property" ng-disabled="disabled" >
+        <option ng-repeat="property in properties" value="{{property.id}}">
+  			{{property.title}}
+  		</option>
+    </select>
 		</md-input-container>
 	</div>
 </div>
