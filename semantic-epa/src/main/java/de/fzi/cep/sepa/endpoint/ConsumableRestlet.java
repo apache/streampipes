@@ -54,7 +54,7 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	}
 	
 	protected void createInstanceEndpoint(I graph) {
-		String instanceUri = graph.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", "");
+		String instanceUri = graph.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "");
 		System.out.println("URI" +instanceUri);
 		Server.INSTANCE
 			.getComponent()
