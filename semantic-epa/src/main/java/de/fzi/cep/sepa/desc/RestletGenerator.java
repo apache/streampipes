@@ -62,7 +62,7 @@ public class RestletGenerator {
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
 			SepaDescription sepa = new SepaDescription(declarer.declareModel());
-			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
+			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", ""));
 			//sepa.setIconUrl(baseUri +"/" +sepa.getIconUrl().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
 			if (standalone) 
 				{
@@ -163,8 +163,8 @@ public class RestletGenerator {
 	
 	public static void main(String[] args)
 	{
-		String url = "http://abc.de.fzi:8090/sepa/numericalfilter";
-		String replaced = url.replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "");
+		String url = "http://ipe-koi04.fzi.de:8090/sepa/numericalfilter";
+		String replaced = url.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", "");
 		System.out.println(replaced);
 	}
 }
