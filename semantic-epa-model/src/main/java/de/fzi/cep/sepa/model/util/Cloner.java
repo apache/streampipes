@@ -22,6 +22,7 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
@@ -48,6 +49,7 @@ public class Cloner {
 		else if (o instanceof MappingPropertyNary) return new MappingPropertyNary((MappingPropertyNary) o);
 		else if (o instanceof DomainStaticProperty) return new DomainStaticProperty((DomainStaticProperty) o);
 		else if (o instanceof AnyStaticProperty) return new AnyStaticProperty((AnyStaticProperty) o);
+		else if (o instanceof CollectionStaticProperty) return new CollectionStaticProperty((CollectionStaticProperty) o);
 		else return new MappingPropertyUnary((MappingPropertyUnary) o);
 	}
 	

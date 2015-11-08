@@ -40,6 +40,12 @@ public class CollectionStaticProperty extends StaticProperty {
 		this.memberType = memberType;
 	}
 
+	public CollectionStaticProperty(CollectionStaticProperty other) {
+		super(other);
+		this.members = other.getMembers();
+		this.memberType = other.getMemberType();
+	}
+
 	public List<StaticProperty> getMembers() {
 		return members;
 	}
