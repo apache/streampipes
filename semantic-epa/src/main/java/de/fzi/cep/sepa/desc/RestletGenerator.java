@@ -10,8 +10,6 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
 
 import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.SupportsRdfId.RdfKey;
-import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;

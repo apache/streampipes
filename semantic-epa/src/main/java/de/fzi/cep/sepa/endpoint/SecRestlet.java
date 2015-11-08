@@ -2,19 +2,12 @@ package de.fzi.cep.sepa.endpoint;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentMap;
 
-import org.restlet.Message;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
-import org.restlet.data.Header;
-import org.restlet.util.Series;
-
-
-
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
@@ -22,8 +15,6 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation> {
 
-	private static final String HEADERS_KEY = "org.restlet.http.headers";
-	
 	public SecRestlet(SecDescription desc, SemanticEventConsumerDeclarer declarer)
 	{
 		super(desc, SecInvocation.class, declarer);

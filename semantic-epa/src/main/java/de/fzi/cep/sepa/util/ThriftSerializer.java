@@ -4,23 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.thrift.TDeserializer;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
 
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
 import eu.proasense.internal.VariableType;
 
 public class ThriftSerializer {
-
-	private TDeserializer deserializer;
-	private TSerializer serializer;
 	
 	public ThriftSerializer()
 	{
-		deserializer = new TDeserializer(new TBinaryProtocol.Factory());
-		serializer = new TSerializer(new TBinaryProtocol.Factory());
+		
 	}
 	
 	public SimpleEvent toSimpleEvent(Object graph) {
