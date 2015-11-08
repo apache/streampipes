@@ -104,6 +104,7 @@ public abstract class EpDeclarer<B extends BindingParameters> implements Semanti
 			runtime = new EPRuntime(context, runtimeParameters);
 			this.elementId = sepa.getElementId();
 			
+			context.getShutdownStrategy().setTimeout(10);
 			context.start();
 	}
 	
