@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://frosch.fzi.de:8090/sepa/numericalfilter",
+    "@id" : "http://abc.de.fzi:8090/sepa/numericalfilter",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasIconUrl" : "http://localhost:8080/semantic-epa-backend/img/Numerical_Filter_Icon_HQ.png",
     "sepa:hasName" : "Numerical Filter",
@@ -14,7 +14,7 @@
     }, {
       "@id" : "urn:fzi.de:freetextstaticproperty:hiHgLI"
     } ],
-    "sepa:hasURI" : "http://frosch.fzi.de:8090/sepa/numericalfilter",
+    "sepa:hasURI" : "http://abc.x.de:8090/sepa/numericalfilter",
     "sepa:requires" : {
       "@id" : "localhost:8090/sepa/numericalfilter"
     },

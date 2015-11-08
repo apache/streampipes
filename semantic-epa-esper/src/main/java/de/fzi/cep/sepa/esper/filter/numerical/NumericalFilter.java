@@ -32,22 +32,27 @@ public class NumericalFilter extends EsperEventEngine<NumericalFilterParameter>{
 		
 		Expression numericalFilter = null;
 		if (params.getNumericalOperator() == NumericalOperator.GE)
-			numericalFilter = Expressions.ge(params.getFilterProperty(), params.getThreshold());
+			numericalFilter = Expressions.ge(convert(params.getFilterProperty()), Expressions.constant(params.getThreshold()));
 		if (params.getNumericalOperator() == NumericalOperator.LE)
-			numericalFilter = Expressions.le(params.getFilterProperty(), params.getThreshold());
+			numericalFilter = Expressions.le(convert(params.getFilterProperty()), Expressions.constant(params.getThreshold()));
 		if (params.getNumericalOperator() == NumericalOperator.LT)
-			numericalFilter = Expressions.lt(params.getFilterProperty(), params.getThreshold());
+			numericalFilter = Expressions.lt(convert(params.getFilterProperty()), Expressions.constant(params.getThreshold()));
 		if (params.getNumericalOperator() == NumericalOperator.GT)
-			numericalFilter = Expressions.gt(params.getFilterProperty(), params.getThreshold());
+			numericalFilter = Expressions.gt(convert(params.getFilterProperty()), Expressions.constant(params.getThreshold()));
 		if (params.getNumericalOperator() == NumericalOperator.EQ)
-			numericalFilter = Expressions.eq(params.getFilterProperty(), params.getThreshold());
-	
+			numericalFilter = Expressions.eq(convert(params.getFilterProperty()), Expressions.constant(params.getThreshold()));
+
 		model.whereClause(numericalFilter);
 		logger.info("Generated EPL: " +model.toEPL());
 		
 		statements.add(model.toEPL());
 		return statements;
 		
+	}
+	
+	private Expression convert(String property)
+	{
+		return Expressions.cast(property, "double");
 	}
 }
 
