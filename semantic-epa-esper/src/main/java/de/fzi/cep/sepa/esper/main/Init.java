@@ -10,7 +10,6 @@ import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
 import de.fzi.cep.sepa.esper.compose.ComposeController;
-import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
 import de.fzi.cep.sepa.esper.distribution.DistributionController;
@@ -20,6 +19,7 @@ import de.fzi.cep.sepa.esper.enrich.fixed.StaticValueEnricherController;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
 import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
+import de.fzi.cep.sepa.esper.filter.advancedtextfilter.AdvancedTextFilterController;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.meets.MeetsController;
@@ -68,6 +68,7 @@ public class Init implements Runnable {
 		declarers.add(new AbsenceController());
 		declarers.add(new ShuttleTimeController());
 		declarers.add(new MinShuttleTimeController());
+		declarers.add(new AdvancedTextFilterController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

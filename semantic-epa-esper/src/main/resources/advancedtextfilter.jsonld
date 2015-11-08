@@ -1,15 +1,19 @@
 {
   "@graph" : [ {
-    "@id" : "http://localhost:8090/advancedtextfilter",
+    "@id" : "http://frosch.fzi.de:8090/advancedtextfilter",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "Advanced Text Filter",
     "sepa:hasOutputStrategy" : {
       "@id" : "urn:fzi.de:renameoutputstrategy:rNkPYr"
     },
-    "sepa:hasStaticProperty" : {
+    "sepa:hasStaticProperty" : [ {
       "@id" : "urn:fzi.de:collectionstaticproperty:XNxmMP"
-    },
-    "sepa:hasURI" : "http://localhost:8090/advancedtextfilter",
+    }, {
+      "@id" : "urn:fzi.de:mappingpropertyunary:dGarUB"
+    }, {
+      "@id" : "urn:fzi.de:oneofstaticproperty:kBgMBb"
+    } ],
+    "sepa:hasURI" : "http://frosch.fzi.de:8090/advancedtextfilter",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:vFtkrI"
     },
@@ -25,11 +29,13 @@
     },
     "sepa:elementName" : "urn:fzi.de:collectionstaticproperty:XNxmMP",
     "sepa:internalName" : "collection",
-    "sepa:member" : {
+    "sepa:member" : [ {
       "@id" : "urn:fzi.de:freetextstaticproperty:CHLkwg"
-    },
+    }, {
+      "@id" : "urn:fzi.de:freetextstaticproperty:aErejG"
+    } ],
     "sepa:memberType" : "de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty",
-    "http://www.w3.org/2000/01/rdf-schema#label" : "Select Filter"
+    "http://www.w3.org/2000/01/rdf-schema#label" : "Select filter keywords"
   }, {
     "@id" : "urn:fzi.de:eventgrounding:lYGeEx",
     "@type" : "sepa:EventGrounding",
@@ -67,7 +73,15 @@
     },
     "sepa:elementName" : "urn:fzi.de:freetextstaticproperty:CHLkwg",
     "sepa:internalName" : "text",
-    "http://www.w3.org/2000/01/rdf-schema#label" : "Value"
+    "http://www.w3.org/2000/01/rdf-schema#label" : "Keywords"
+  }, {
+    "@id" : "urn:fzi.de:freetextstaticproperty:aErejG",
+    "@type" : "sepa:FreeTextStaticProperty",
+    "http://schema.org/valueRequired" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    },
+    "sepa:elementName" : "urn:fzi.de:freetextstaticproperty:aErejG"
   }, {
     "@id" : "urn:fzi.de:jmstransportprotocol:qCkEut",
     "@type" : "sepa:JmsTransportProtocol",
@@ -87,6 +101,53 @@
     "sepa:zookeeperPort" : {
       "@type" : "xsd:int",
       "@value" : "0"
+    }
+  }, {
+    "@id" : "urn:fzi.de:mappingpropertyunary:dGarUB",
+    "@type" : "sepa:MappingPropertyUnary",
+    "http://schema.org/valueRequired" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    },
+    "sepa:elementName" : "urn:fzi.de:mappingpropertyunary:dGarUB",
+    "sepa:internalName" : "text-mapping",
+    "sepa:mapsFrom" : {
+      "@id" : "fzi:guIgTfDqgcrN"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#label" : "Perform this operation on"
+  }, {
+    "@id" : "urn:fzi.de:oneofstaticproperty:kBgMBb",
+    "@type" : "sepa:OneOfStaticProperty",
+    "http://schema.org/valueRequired" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    },
+    "sepa:elementName" : "urn:fzi.de:oneofstaticproperty:kBgMBb",
+    "sepa:hasOption" : [ {
+      "@id" : "urn:fzi.de:option:iNsBEB"
+    }, {
+      "@id" : "urn:fzi.de:option:AQPikD"
+    } ],
+    "sepa:internalName" : "operatoin",
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Specify whether the list of keyword should be interpreted as AND or OR",
+    "http://www.w3.org/2000/01/rdf-schema#label" : "Operator"
+  }, {
+    "@id" : "urn:fzi.de:option:AQPikD",
+    "@type" : "sepa:Option",
+    "sepa:elementName" : "urn:fzi.de:option:AQPikD",
+    "sepa:hasName" : "OR",
+    "sepa:isSelected" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "urn:fzi.de:option:iNsBEB",
+    "@type" : "sepa:Option",
+    "sepa:elementName" : "urn:fzi.de:option:iNsBEB",
+    "sepa:hasName" : "AND",
+    "sepa:isSelected" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
     }
   }, {
     "@id" : "urn:fzi.de:renameoutputstrategy:rNkPYr",

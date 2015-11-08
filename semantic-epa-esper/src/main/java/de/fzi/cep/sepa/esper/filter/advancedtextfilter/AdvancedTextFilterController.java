@@ -1,13 +1,18 @@
 package de.fzi.cep.sepa.esper.filter.advancedtextfilter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.util.DeclarerUtils;
 
 public class AdvancedTextFilterController extends EpDeclarer<AdvancedTextFilterParameters> {
@@ -27,8 +32,16 @@ public class AdvancedTextFilterController extends EpDeclarer<AdvancedTextFilterP
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
 		
-	
-		AdvancedTextFilterParameters staticParam = new AdvancedTextFilterParameters(sepa);
+		String operation = SepaUtils.getOneOfProperty(sepa, "operatoin");
+		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "collection", CollectionStaticProperty.class);
+		String propertyName = SepaUtils.getMappingPropertyName(sepa, "text-mapping");
+		
+		List<String> keywords = collection.getMembers()
+				.stream()
+				.map(m -> ((FreeTextStaticProperty)m).getValue())
+				.collect(Collectors.toList());
+					
+		AdvancedTextFilterParameters staticParam = new AdvancedTextFilterParameters(sepa, operation, propertyName, keywords);
 		
 		try {
 			invokeEPRuntime(staticParam, AdvancedTextFilter::new, sepa);
