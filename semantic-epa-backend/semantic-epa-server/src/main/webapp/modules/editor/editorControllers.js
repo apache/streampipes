@@ -1572,37 +1572,10 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	
 	console.log($scope.selectedElement);
 	
-	$scope.querySearch = querySearch;
-    $scope.selectedItemChange = selectedItemChange;
-    $scope.searchTextChange   = searchTextChange;
-   
-    function querySearch (query, staticPropertyId) {
-    	var result = [];
-    	var i = 0;
-    	angular.forEach($scope.availableDomainProperties[staticPropertyId], function(values) {
-    		if (values.length > 0 && i == 0)
-			{
-    			var position = 0;
-    			angular.forEach(values, function(value) {
-    				if (query == undefined || value.label.substring(0, query.length) === query) result.push({label : value.label, description: value.description, position : position});
-    				position++;
-    			})
-        		i++;
-			}		
-    	});
-    	return result;
-    }
-    
-    function searchTextChange(text) {
-    
-    }
-    
-    function selectedItemChange(item, staticPropertyId, supportedProperties) {
-    	angular.forEach(supportedProperties, function(supportedProperty) {
-    	    supportedProperty.value = $scope.availableDomainProperties[staticPropertyId][supportedProperty.propertyId][item.position].propertyValue;
-    	});
-    }
 	
+    console.log("ELEMENT");
+    console.log($scope.selectedElement.staticProperties);
+    
 	angular.forEach($scope.selectedElement.staticProperties, function(item) {
 		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
 		{

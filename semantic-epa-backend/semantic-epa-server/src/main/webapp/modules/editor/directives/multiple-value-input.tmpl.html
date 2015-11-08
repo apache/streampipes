@@ -1,0 +1,17 @@
+<div ng-if="staticProperty.input.properties.members[0].input.type == 'TextInput'">
+	<div ng-repeat = "(index, property) in staticProperty.input.properties.members">
+		<div layout="row">
+			<div flex="60">
+				<md-input-container flex> <label>{{property.input.properties.description}}</label>
+					<input name="{{property.input.properties.elementId}}" ng-model="property.input.properties.value"/> 
+				</md-input-container>
+			</div>
+			<div flex="20">
+				<md-button ng-click="addTextInputRow(staticProperty.input.properties.members)">Add Value</md-button>
+			</div>
+			<div flex="20">
+				<md-button ng-show="index > 0" ng-click="removeTextInputRow(staticProperty.input.properties.members, property)">Remove</md-button>
+			</div>
+		</div>
+	</div>
+</div>

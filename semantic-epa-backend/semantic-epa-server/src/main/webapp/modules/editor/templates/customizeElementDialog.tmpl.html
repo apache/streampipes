@@ -1,5 +1,4 @@
 <md-dialog aria-label="Customize" flex="60">
-  <form name="customizeForm" ng-submit="saveProperties()" role="form">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <h2>Customize {{sepaName}}</h2>
@@ -46,38 +45,11 @@
 						</md-input-container>
 					</div>		
 					<div ng-show="staticProperty.input.type == 'DomainConceptInput'">
-						<b>Required type: {{staticProperty.input.properties.requiredClass}}</b>
-						<div layout="column">
-							<div>
-								Instance search:
-							</div>
-							<div>
-								<md-autocomplete
-						          ng-disabled="false"
-						          md-no-cache="false"
-						          md-selected-item="selectedItem"
-						          md-search-text-change="searchTextChange(searchText)"
-						          md-search-text="searchText"
-						          md-selected-item-change="selectedItemChange(item, staticProperty.elementId, staticProperty.input.properties.supportedProperties)"
-						          md-items="item in querySearch(searchText, staticProperty.elementId)"
-						          md-item-text="item.label"
-						          md-min-length="0"
-						          placeholder="Label">
-						        <md-item-template>
-						          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.label}}</span>
-						        </md-item-template>
-						        <md-not-found>
-						          No instances matching "{{searchText}}" were found.
-						        </md-not-found>
-						      </md-autocomplete>
-							</div>
-						</div>
-						 <div ng-repeat="supportedProperty in staticProperty.input.properties.supportedProperties">
-				            <md-input-container flex> <label>{{supportedProperty.propertyId}}</label>
-							<input name="{{supportedProperty.elementId}}" ng-model="supportedProperty.value"/> 
-							</md-input-container>
-				          </div>
-					</div>								
+						<domain-concept-input static-property="staticProperty"></domain-concept-input>		
+					</div>	
+					<div ng-if="staticProperty.input.type == 'MultipleValueInput'">
+						<multiple-value-input static-property="staticProperty"></multiple-value-input>					
+					</div>							
 				</div>	
 				<div ng-show="staticProperty.type=='MAPPING_PROPERTY'">
 					<div ng-show="staticProperty.input.type == 'SelectFormInput'">
@@ -112,12 +84,11 @@
   	</div>
   </md-dialog-content>
   <div class="md-actions" layout="row">
-  	<md-button class="md-accent" style="margin-right:20px;" type="submit">
+  	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="saveProperties()">
       Save
     </md-button>
     <md-button ng-click="hide()" style="margin-right:20px;" >
       Close
     </md-button>
   </div>
-  </form>
 </md-dialog>
