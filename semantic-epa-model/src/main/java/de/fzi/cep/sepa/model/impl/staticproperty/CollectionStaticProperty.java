@@ -11,6 +11,8 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import de.fzi.cep.sepa.model.util.Cloner;
+
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:CollectionStaticProperty")
@@ -42,7 +44,7 @@ public class CollectionStaticProperty extends StaticProperty {
 
 	public CollectionStaticProperty(CollectionStaticProperty other) {
 		super(other);
-		this.members = other.getMembers();
+		this.members = new Cloner().staticProperties(other.getMembers());
 		this.memberType = other.getMemberType();
 	}
 

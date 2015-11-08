@@ -60,6 +60,11 @@ public class SepaUtils {
 		return getStaticPropertyByName(seg.getStaticProperties(), internalName);
 	}
 	
+	public static <T> T getStaticPropertyByInternalName(InvocableSEPAElement seg, String internalName, Class<T> clazz)
+	{
+		return clazz.cast(getStaticPropertyByInternalName(seg, internalName));
+	}
+	
 	public static StaticProperty getStaticPropertyByInternalName(SecInvocation sec, String internalName)
 	{
 		return getStaticPropertyByName(sec.getStaticProperties(), internalName);
