@@ -361,6 +361,7 @@ public class SO {
     public static String StageAsNumber = "http://schema.org/stageAsNumber";
     public static String StartDate = "http://schema.org/startDate";
     public static String StartTime = "http://schema.org/startTime";
+    public static String Step = "http://schema.org/step";
     public static String StepValue = "http://schema.org/stepValue";
     public static String StorageRequirements = "http://schema.org/storageRequirements";
     public static String StreetAddress = "http://schema.org/streetAddress";
