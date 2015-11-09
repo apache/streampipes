@@ -10,8 +10,8 @@
 	          md-selected-item="selectedItem"
 	          md-search-text-change="searchTextChange(searchText)"
 	          md-search-text="searchText"
-	          md-selected-item-change="selectedItemChange(item, staticProperty.elementId, staticProperty.input.properties.supportedProperties)"
-	          md-items="item in querySearch(searchText, staticProperty.elementId)"
+	          md-selected-item-change="selectedItemChange(item, autoCompleteStaticProperty.elementId, staticProperty.input.properties.supportedProperties)"
+	          md-items="item in querySearch(searchText, autoCompleteStaticProperty.elementId)"
 	          md-item-text="item.label"
 	          md-min-length="0"
 	          placeholder="Label">

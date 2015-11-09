@@ -37,14 +37,14 @@
 				            </md-checkbox>
 				          </div>
 					</div>		
-					<div ng-show="staticProperty.input.type == 'SliderInput'">
+					<div ng-if="staticProperty.input.type == 'SliderInput'">
 						<md-input-container flex> <label>{{staticProperty.description}}</label>
 							<input name="{{staticProperty.elementId}}" type="text" ng-model="staticProperty.input.properties.value"> 
 							<md-slider flex min="{{staticProperty.input.properties.minValue}}" max="{{staticProperty.input.properties.maxValue}}" step="{{staticProperty.input.properties.step}}" ng-model="staticProperty.input.properties.value" class>
       						</md-slider>
 						</md-input-container>
 					</div>		
-					<div ng-show="staticProperty.input.type == 'DomainConceptInput'">
+					<div ng-if="staticProperty.input.type == 'DomainConceptInput'">
 						<domain-concept-input static-property="staticProperty"></domain-concept-input>		
 					</div>	
 					<div ng-if="staticProperty.input.type == 'MultipleValueInput'">

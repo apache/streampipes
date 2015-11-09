@@ -21,7 +21,7 @@
 		<md-input-container>
     	<label>Property Id</label>
          <select ng-model="supportedProperty.propertyId" placeholder="Select required property" ng-disabled="disabled" >
-        <option ng-repeat="property in properties" value="{{property.id}}">
+        <option ng-repeat="property in properties" value="{{property.id}}" ng-selected="isSelectedProperty(property.id, supportedProperty.propertyId)">
   			{{property.title}}
   		</option>
     </select>

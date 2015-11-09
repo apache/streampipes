@@ -1568,14 +1568,8 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	$scope.selection = [];
 	$scope.sepaName = sepaName;
 	$scope.invalid = false;
-	$scope.availableDomainProperties = {};
 	
-	console.log($scope.selectedElement);
-	
-	
-    console.log("ELEMENT");
-    console.log($scope.selectedElement.staticProperties);
-    
+	    
 	angular.forEach($scope.selectedElement.staticProperties, function(item) {
 		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
 		{
@@ -1588,39 +1582,8 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 					}
 			});
 			if (!anyMatch) $scope.selection[item.elementId] = item.input.properties.options[0].elementId;
-		}
-		if (item.input.type == 'DomainConceptInput')
-		{
-			var query = {};
-			query.requiredClass = item.input.properties.requiredClass;
-			query.requiredProperties = [];
-			angular.forEach(item.input.properties.supportedProperties, function(p) {
-				var propertyObj = {};
-				propertyObj.propertyId = p.propertyId;
-				query.requiredProperties.push(propertyObj);
-			});
-			
-			restApi.getDomainKnowledgeItems(query)
-				.success(function(queryResponse){
-                    if (!$scope.availableDomainProperties[item.elementId])
-                	{
-                		$scope.availableDomainProperties[item.elementId] = {};
-                	}
-                    angular.forEach(queryResponse.requiredProperties, function(resp) {
-	                    	angular.forEach(resp.queryResponse, function(instanceResult) {
-	                    	if (!$scope.availableDomainProperties[item.elementId][resp.propertyId])
-	                    		$scope.availableDomainProperties[item.elementId][resp.propertyId] = [];
-	                    	var instanceData = {label : instanceResult.label, description : instanceResult.description, propertyValue : instanceResult.propertyValue};
-	                    	$scope.availableDomainProperties[item.elementId][resp.propertyId].push(instanceData);
-                    	});
-                    });
-                })
-                .error(function(msg){
-                    console.log(msg);
-                });
-		}
+		}				
 	});
-	
 	
 	
 	$scope.hide = function() {

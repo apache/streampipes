@@ -28,7 +28,7 @@
 		    <options element="sp.properties.options" disabled="disabled" ></options>
 	    </div>
 	    <div ng-if="sp.type == staticPropertyTypes[3].type">
-	    	<domain-concept-property domain-property="sp.properties" disabled="disabled" ></domain-concept-property>
+	    	<domain-concept-property domain-property="sp.properties" auto-complete-static-property="sp.properties" disabled="disabled" ></domain-concept-property>
 	    </div>
 	    <div ng-if="sp.type == staticPropertyTypes[4].type">
 	    	<md-input-container>
@@ -59,7 +59,7 @@
 			<md-button class="md-accent" ng-click="addMember(sp.properties)" ng-disabled="disabled">Define member type</md-button>
 		</div>
 		</md-input-container>
-		<div ng-if="memberTypeSelected">
+		<div ng-if="memberTypeSelected || sp.properties.members.length > 0">
 			<div layout="column" flex="100" class="panel-margin ontology-panel-property">
 				<div flex="100" layout="row">
 					<div flex="70" layout="row" layout-align="start center"><h4>Member</h4><br/></div>
@@ -83,7 +83,6 @@
 					</div>
 				</div> 
 				<div ng-if="sp.properties.members[0].type == staticPropertyTypes[3].type">
-				{{sp.properties.members[0].properties}}
 					<domain-concept-property domain-property="sp.properties.members[0].properties" disabled="disabled" ></domain-concept-property>
 				</div> 
 			</div>

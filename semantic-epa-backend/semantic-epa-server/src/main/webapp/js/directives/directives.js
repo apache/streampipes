@@ -41,7 +41,6 @@ angular
 	                restApi.getOntologyProperties()
 	                    .success(function(propertiesData){
 	                        $scope.properties = propertiesData;
-	                        console.log($scope.properties);
 	                    })
 	                    .error(function(msg){
 	                        console.log(msg);
@@ -75,7 +74,6 @@ angular
 			    };
 			    
 			    $scope.toggleDomainPropertyRestriction = function(property) {
-			    	console.log(property);
 		    		 if ($scope.domainPropertyRestricted(property))
 	    			 {
 	    			 	property.properties.domainProperties = [];
@@ -113,7 +111,6 @@ angular
     		link: function($scope, element, attrs) {
 
 	            $scope.addStreamRestriction = function(streams) {
-	            	console.log(streams);
 	    			if (streams == undefined) streams = [];
 	    			streams.push({"eventSchema" : {"eventProperties" : []}});
 	    		}
@@ -198,7 +195,6 @@ angular
 		    	$scope.addMember = function(property) {
 		    		property.members.push(angular.copy($scope.getNewStaticProperty(property.memberType)));
 		    		$scope.memberTypeSelected = true;
-		    		console.log(property);
 		    	}
 		    	
 		    	$scope.removeMember = function(property) {
@@ -279,6 +275,8 @@ angular
 		    	
 		    	scope.loadProperties();
 		    	scope.loadConcepts();
+		    	
+		    	
     		},
     		controller: function($scope, $element) {
     			
@@ -299,7 +297,6 @@ angular
 		    	$scope.toggleConceptRestriction = function(domainProperty) {
 			    	if ($scope.conceptRestricted(domainProperty)) domainProperty.requiredClass = undefined;
 			    	else domainProperty.requiredClass = $scope.concepts[0].id;
-			    	console.log(domainProperty);
 		    	}
 		    	
 		    	$scope.conceptSelected = function(conceptId, currentConceptId)
@@ -307,6 +304,11 @@ angular
 		    		if (conceptId == currentConceptId) return true;
 		    		return false;
 		    	}
+		    	
+		    	$scope.isSelectedProperty = function(availableProperty, selectedProperty) {
+   				 if (availableProperty == selectedProperty) return true;
+   				 return false;
+   			 }
     		}
     	}
     }).directive('outputStrategy', function() {
@@ -329,7 +331,6 @@ angular
     			
 	            $scope.addOutputStrategy = function(strategies) {   
 	            	 if (strategies == undefined) $scope.strategies = [];
-	            	 console.log(getNewOutputStrategy());
 	    			 $scope.strategies.push(getNewOutputStrategy());
 	    		}
 	    			 
@@ -545,6 +546,18 @@ angular
     			 $scope.removeTextInputRow = function(members, property) {
     				 members.splice(property, 1);
     			 }
+    			 
+    			 $scope.addDomainConceptRow = function(firstMember, members) {
+    				 var supportedProperties = [];
+    				 angular.forEach(firstMember.input.properties.supportedProperties, function(property) {
+    					 supportedProperties.push({"propertyId" : property.propertyId, "value" : ""});
+    				 });
+    				 members.push({"input" : {"type" : "DomainConceptInput", "properties" : {"elementType" : "DOMAIN_CONCEPT", "description" : "", "supportedProperties" : supportedProperties, "requiredClass" : firstMember.input.properties.requiredClass}}});
+    			 }
+    	
+    			 $scope.removeDomainConceptRow = function(members, property) {
+    				 members.splice(property, 1);
+    			 }
     		 }
     	}
     }).directive('domainConceptInput', function(restApi) {
@@ -553,13 +566,46 @@ angular
     		templateUrl : 'modules/editor/directives/domain-concept-input.tmpl.html',
     		scope : {
     			staticProperty : "=",
+    			autoCompleteStaticProperty : "="
     		},
-    		 link: function($scope, element, attrs) {
+    		controller: function($scope, $element)  {
     			 
-    			 $scope.querySearch = querySearch;
-    			 $scope.selectedItemChange = selectedItemChange;
-    			 $scope.searchTextChange   = searchTextChange;
-    			 
+    			$scope.querySearch = querySearch;
+    			$scope.selectedItemChange = selectedItemChange;
+    			$scope.searchTextChange   = searchTextChange;
+    			     		
+    			$scope.availableDomainProperties = {};
+    				
+				$scope.loadDomainConcepts = function(item) {
+					var query = {};
+					query.requiredClass = item.input.properties.requiredClass;
+					query.requiredProperties = [];
+					angular.forEach(item.input.properties.supportedProperties, function(p) {
+						var propertyObj = {};
+						propertyObj.propertyId = p.propertyId;
+						query.requiredProperties.push(propertyObj);
+					});
+					
+					restApi.getDomainKnowledgeItems(query)
+						.success(function(queryResponse){
+			                if (!$scope.availableDomainProperties[item.elementId])
+			            	{
+			            		$scope.availableDomainProperties[item.elementId] = {};
+			            	}
+			                angular.forEach(queryResponse.requiredProperties, function(resp) {
+			                    	angular.forEach(resp.queryResponse, function(instanceResult) {
+			                    	if (!$scope.availableDomainProperties[item.elementId][resp.propertyId])
+			                    		$scope.availableDomainProperties[item.elementId][resp.propertyId] = [];
+			                    	var instanceData = {label : instanceResult.label, description : instanceResult.description, propertyValue : instanceResult.propertyValue};
+			                    	$scope.availableDomainProperties[item.elementId][resp.propertyId].push(instanceData);
+			                	});
+			                });
+			            })
+			            .error(function(msg){
+			                console.log(msg);
+			            });
+				}
+    				
     			function querySearch (query, staticPropertyId) {
     			    	var result = [];
     			    	var i = 0;
@@ -586,7 +632,9 @@ angular
 			    	    supportedProperty.value = $scope.availableDomainProperties[staticPropertyId][supportedProperty.propertyId][item.position].propertyValue;
 			    	});
     			}
-    			   
+			    
+			    $scope.loadDomainConcepts($scope.autoCompleteStaticProperty);	
+ 
     		 }
     	}
     });
