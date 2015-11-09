@@ -285,7 +285,7 @@ public class ClientModelTransformer {
 		{
 			SupportedProperty clientProperty = input.getSupportedProperties()
 				.stream()
-				.filter(s -> s.getElementId().equals(sp.getRdfId().toString()))
+				.filter(s -> s.getPropertyId().equals(sp.getPropertyId()))
 				.findFirst()
 				.get();
 			
