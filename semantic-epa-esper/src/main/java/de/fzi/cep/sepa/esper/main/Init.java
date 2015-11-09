@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
+import de.fzi.cep.sepa.esper.collection.TestCollectionController;
 import de.fzi.cep.sepa.esper.compose.ComposeController;
 import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
@@ -68,7 +69,8 @@ public class Init implements Runnable {
 		declarers.add(new AbsenceController());
 		declarers.add(new ShuttleTimeController());
 		declarers.add(new MinShuttleTimeController());
-		//declarers.add(new AdvancedTextFilterController());
+		declarers.add(new AdvancedTextFilterController());
+		declarers.add(new TestCollectionController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

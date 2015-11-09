@@ -1,45 +1,17 @@
 package de.fzi.cep.sepa.esper.filter.numerical;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
-import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
-import de.fzi.cep.sepa.model.builder.SchemaBuilder;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
-import de.fzi.cep.sepa.model.impl.quality.MeasurementRange;
-import de.fzi.cep.sepa.model.impl.quality.Resolution;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
+
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.util.DeclarerUtils;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class NumericalFilterController extends EpDeclarer<NumericalFilterParameter> {
 

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.esper.filter.advancedtextfilter;
+package de.fzi.cep.sepa.esper.collection;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,48 +7,55 @@ import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.desc.EpDeclarer;
+
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.util.DeclarerUtils;
 
-public class AdvancedTextFilterController extends EpDeclarer<AdvancedTextFilterParameters> {
+public class TestCollectionController extends EpDeclarer<TestCollectionParameters>{
 
 	@Override
 	public SepaDescription declareModel() {
-			
+		
 		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("advancedtextfilter.jsonld"), SepaDescription.class);
+			return DeclarerUtils.descriptionFromResources(Resources.getResource("testcollection.jsonLd"), SepaDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return null;
 		}
-		
 	}
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
 		
-		String operation = SepaUtils.getOneOfProperty(sepa, "operatoin");
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "collection", CollectionStaticProperty.class);
-		String propertyName = SepaUtils.getMappingPropertyName(sepa, "text-mapping");
+		String propertyName = SepaUtils.getMappingPropertyName(sepa, "number-mapping");
 		
-		List<String> keywords = collection.getMembers()
+		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m).collect(Collectors.toList());
+		
+		
+		List<DataRange> domainConceptData = domainConcepts
 				.stream()
-				.map(m -> ((FreeTextStaticProperty)m).getValue())
+				.map(m -> new DataRange(
+						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)), 
+						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)), 
+						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m,  SO.Step))))
 				.collect(Collectors.toList());
-					
-		AdvancedTextFilterParameters staticParam = new AdvancedTextFilterParameters(sepa, operation, propertyName, keywords);
+		
+		TestCollectionParameters staticParam = new TestCollectionParameters(sepa, propertyName, domainConceptData);
 		
 		try {
-			invokeEPRuntime(staticParam, AdvancedTextFilter::new, sepa);
+			invokeEPRuntime(staticParam, TestCollection::new, sepa);
 			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Response(sepa.getElementId(), false, e.getMessage());
 		}
 	}
+
 }
