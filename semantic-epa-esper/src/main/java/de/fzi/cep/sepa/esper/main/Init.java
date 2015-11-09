@@ -68,7 +68,7 @@ public class Init implements Runnable {
 		declarers.add(new AbsenceController());
 		declarers.add(new ShuttleTimeController());
 		declarers.add(new MinShuttleTimeController());
-		declarers.add(new AdvancedTextFilterController());
+		//declarers.add(new AdvancedTextFilterController());
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();
