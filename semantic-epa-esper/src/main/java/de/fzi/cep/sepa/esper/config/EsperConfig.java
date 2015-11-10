@@ -12,7 +12,7 @@ public class EsperConfig {
 	
 	static {
 		serverUrl = ClientConfiguration.INSTANCE.getEsperUrl();
-		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
+		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/semantic-epa-backend/img";
 	}
 	
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)

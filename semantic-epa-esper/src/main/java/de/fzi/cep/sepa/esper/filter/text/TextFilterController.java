@@ -23,7 +23,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
