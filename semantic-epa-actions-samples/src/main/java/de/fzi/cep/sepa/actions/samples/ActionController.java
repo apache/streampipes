@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.actions.samples;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -16,6 +17,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String createWebsocketUri(SecInvocation sec)
 	{
+		if (ClientConfiguration.INSTANCE.isNissatechRunning()) return "service.nissatech.com/proasense/ws/"; 
 		return getEventGrounding(sec).getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 	}
 	
