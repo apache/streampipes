@@ -385,7 +385,7 @@ public class ClientModelTransformer {
 		else {
 			input = new TextInput();
 			((TextInput) input).setValue("");
-			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDatatype(p.getRequiredDomainProperty());
+			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDatatype(p.getRequiredDomainProperty().toString());
 		}
 		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getLabel(), p.getDescription(), input);
 	}
