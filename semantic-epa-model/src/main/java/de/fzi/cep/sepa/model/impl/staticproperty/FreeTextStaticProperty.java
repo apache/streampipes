@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.model.impl.staticproperty;
 
+import java.net.URI;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +23,10 @@ public class FreeTextStaticProperty extends StaticProperty {
 	protected String value;
 	
 	@RdfProperty("sepa:hasType")
-	protected String requiredDomainProperty;
+	protected URI requiredDomainProperty;
+	
+	@RdfProperty("sepa:mapsTo")
+	protected URI mapsTo;
 	
 	@OneToOne(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -44,10 +49,16 @@ public class FreeTextStaticProperty extends StaticProperty {
 		super(internalName, label, description);
 	}
 	
-	public FreeTextStaticProperty(String internalName, String label, String description, String type)
+	public FreeTextStaticProperty(String internalName, String label, String description, URI type)
 	{
 		super(internalName, label, description);
 		this.requiredDomainProperty = type;
+	}
+	
+	public FreeTextStaticProperty(String internalName, String label, String description, URI type, URI mapsTo)
+	{
+		super(internalName, label, description);
+		this.mapsTo = mapsTo;
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description, PropertyValueSpecification valueSpecification)
@@ -64,11 +75,11 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.value = value;
 	}
 
-	public String getRequiredDomainProperty() {
+	public URI getRequiredDomainProperty() {
 		return requiredDomainProperty;
 	}
 
-	public void setRequiredDomainProperty(String type) {
+	public void setRequiredDomainProperty(URI type) {
 		this.requiredDomainProperty = type;
 	}
 	
