@@ -17,7 +17,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String createWebsocketUri(SecInvocation sec)
 	{
-		if (ClientConfiguration.INSTANCE.isNissatechRunning()) return "service.nissatech.com/proasense/ws/"; 
+		if (ClientConfiguration.INSTANCE.isNissatechRunning()) return "ws://service.nissatech.com/proasense/ws/"; 
 		return getEventGrounding(sec).getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 	}
 	
