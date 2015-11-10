@@ -37,7 +37,7 @@ public class ProaSenseNotificationSubscriber implements IMessageListener, Runnab
 		String recommendedDate = "";
 		try {
 			deserializer.deserialize(event,  json.getBytes());
-			if (event.getEventProperties().containsKey("action_timestamp")) recommendedDate += " at time " +parseDate(Long.parseLong(event.getEventProperties().get("action_timestamp").getValue()));
+			if (event.getEventProperties().containsKey("action_timestamp")) recommendedDate += " at time " +parseDate(Long.parseLong(event.getEventProperties().get("action_timestamp").getValue())) +"(Recommendation ID: " +event.getRecommendationId() +", Timestamp: " +event.getTimestamp()+", " +"Action_Timestamp" +event.getEventProperties().get("action_timestamp") +")";
 			StorageManager.INSTANCE.getNotificationStorageApi().addNotification(new ProaSenseNotificationMessage(event.getEventName(), event.getTimestamp(), event.getAction() +recommendedDate, event.getActor()));
 		} catch (TException e) {
 			// TODO Auto-generated catch block
