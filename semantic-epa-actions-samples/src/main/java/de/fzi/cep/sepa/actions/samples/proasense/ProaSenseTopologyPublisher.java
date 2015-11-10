@@ -84,12 +84,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 							{
 								event.setTimestamp(obj.get("time").getAsLong());
 								//System.out.println("Timestamp, " +event.getTimestamp());
-								if (event.getTimestamp() < lastTimestamp) 
-									{
-										System.out.println("invalid time");
-										isValidTime = false;
-									}
-								lastTimestamp = event.getTimestamp();
+								
 							}
 						else if (entry.getKey().equals("variable_timestamp"))
 						{
@@ -103,6 +98,11 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 		{
 			e.printStackTrace();
 		}
+		if (event.getTimestamp() < lastTimestamp) 
+		{
+			isValidTime = false;
+		}
+		lastTimestamp = event.getTimestamp();
 		event.setEventProperties(values);
 		if (isValidTime) return serialize(event);
 		else return Optional.empty();
