@@ -340,7 +340,31 @@ angular
 		            	  controller: "TopNavCtrl"
 		            }
 	            }
-	          })
+	          }).state('inspectionReport', {
+		            url: '/inspection',
+		            views: {
+		            	 "top" : {
+			            	  templateUrl : "top.html",
+			            	  controller : "TopNavCtrl"
+			              	},
+			            "container" : {
+			            	  templateUrl : 'humaninspectionreport.html',
+			            	  controller: "TopNavCtrl"
+			            }
+		            }
+	          }).state('maintenanceReport', {
+		            url: '/maintenance',
+		            views: {
+		            	 "top" : {
+			            	  templateUrl : "top.html",
+			            	  controller : "TopNavCtrl"
+			              	},
+			            "container" : {
+			            	  templateUrl : 'humanmaintenancereport.html',
+			            	  controller: "TopNavCtrl"
+			            }
+		            }
+		          })
 	        
     })
     .controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce, $http, $state) {
@@ -348,6 +372,8 @@ angular
     	$scope.panddaUrl = "";
     	$scope.streamStoryUrl = "";
     	$scope.hippoUrl = "";
+    	$scope.humanMaintenanceReportUrl = "";
+    	$scope.humanInspectionReportUrl = "";
     	
     	$scope.trustSrc = function(src) {
     	    return $sce.trustAsResourceUrl(src);
@@ -358,6 +384,8 @@ angular
 				$scope.panddaUrl = msg.panddaUrl;
 				$scope.streamStoryUrl = msg.streamStoryUrl;
 				$scope.hippoUrl = msg.hippoUrl;
+				$scope.humanInspectionReportUrl = msg.humanInspectionReportUrl;
+				$scope.humanMaintenanceReportUrl = msg.humanMaintenanceReportUrl;
 			});
 		}
     	
