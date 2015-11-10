@@ -613,7 +613,9 @@ angular
 			adminPassword: '',
 			streamStoryUrl : '',
 			panddaUrl : '',
-			hippoUrl : ''
+			hippoUrl : '',
+			humanInspectionReportUrl : '',
+			humanMaintenanceReportUrl : ''
 		};
 
 		$scope.configure = function() {
