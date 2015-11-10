@@ -63,6 +63,8 @@ public enum ClientConfiguration {
 	private boolean mhwirthReplayActive;
 	private boolean proveItActive;
 	
+	private boolean nissatechRunning;
+	
 	
 	private PropertiesConfiguration config;
 	
@@ -111,6 +113,8 @@ public enum ClientConfiguration {
 			properties.put("hellaReplayActive", true);
 			properties.put("mhwirthReplayActive", false);
 			properties.put("proveItActive", false);
+			
+			properties.put("nissatechRunning", false);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -164,6 +168,7 @@ public enum ClientConfiguration {
 			this.mhwirthReplayActive = config.getBoolean("mhwirthReplayActive");
 			this.proveItActive = config.getBoolean("proveItActive");
 			
+			this.nissatechRunning = config.getBoolean("nissatechRunning");
 			
 		} catch (ConfigurationException e) {
 			createDefaultSettings();
@@ -281,6 +286,10 @@ public enum ClientConfiguration {
 
 	public boolean isProveItActive() {
 		return proveItActive;
+	}
+	
+	public boolean isNissatechRunning() {
+		return nissatechRunning;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
