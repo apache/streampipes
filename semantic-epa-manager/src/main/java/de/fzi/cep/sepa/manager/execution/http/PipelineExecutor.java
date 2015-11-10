@@ -6,6 +6,7 @@ import java.util.List;
 import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
@@ -38,7 +39,9 @@ public class PipelineExecutor {
 		
 		if (status.isSuccess()) 
 		{
-			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), sec.getUri(), sec.getDescription(), sec.getName());
+			String uri = sec.getUri();
+			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "https://proasense.nissatech.com/actions");
+			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
 			StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
@@ -87,5 +90,12 @@ public class PipelineExecutor {
 		for (InvocableSEPAElement graph : graphs)
 			if (graph instanceof SecInvocation) return (SecInvocation) graph;
 		throw new IllegalArgumentException("No action element available");
+	}
+	
+	public static void main(String[] args)
+	{
+		String testUrl = "http://192.168.84.38:8091/table/fc207c20-be7b-4ef9-aa60-7a35e1f9e2d8-FZI.SEPA.AOGhRDPWTbrcGHZNnvec";
+		testUrl = testUrl.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "https://proasense.nissatech.com/actions");
+		System.out.println(testUrl);
 	}
 }
