@@ -11,7 +11,7 @@ public class SourcesConfig {
 	
 	static {
 		serverUrl = ClientConfiguration.INSTANCE.getWebappUrl();
-		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
+		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/semantic-epa-backend/img";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
