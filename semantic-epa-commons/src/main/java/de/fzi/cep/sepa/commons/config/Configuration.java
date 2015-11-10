@@ -76,6 +76,8 @@ public class Configuration {
 	public String HIPPO_URL;
 	public String PANDDA_URL;
 	public String STREAMSTORY_URL;	
+	public String HUMAN_INSPECTION_REPORT_URL;
+	public String HUMAN_MAINTENANCE_REPORT_URL;
 	
 	/**
 	 * Constructor loads config data from config file.
@@ -135,6 +137,8 @@ public class Configuration {
 					HIPPO_URL = config.getString("hippoUrl");
 					PANDDA_URL = config.getString("panddaUrl");
 					STREAMSTORY_URL = config.getString("streamStoryUrl");	
+					HUMAN_INSPECTION_REPORT_URL = config.getString("humanInspectionReportUrl");
+					HUMAN_MAINTENANCE_REPORT_URL = config.getString("humanMaintenanceReportUrl");
 		
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -199,6 +203,8 @@ public class Configuration {
 					HIPPO_URL = "";
 					PANDDA_URL = "";
 					STREAMSTORY_URL = "";	
+					HUMAN_INSPECTION_REPORT_URL = "";
+					HUMAN_MAINTENANCE_REPORT_URL = "";
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
 	}
 

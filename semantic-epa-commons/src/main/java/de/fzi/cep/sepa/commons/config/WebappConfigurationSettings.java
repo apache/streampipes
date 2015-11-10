@@ -16,6 +16,8 @@ public class WebappConfigurationSettings {
 	private String hippoUrl;
 	private String panddaUrl;
 	private String streamStoryUrl;
+	private String humanInspectionReportUrl;
+	private String humanMaintenanceReportUrl;
 	
 	private String kafkaProtocol;
 	private int kafkaPort;
@@ -247,5 +249,23 @@ public class WebappConfigurationSettings {
 	public void setCouchDbNotificationDbName(String couchDbNotificationDbName) {
 		this.couchDbNotificationDbName = couchDbNotificationDbName;
 	}
+
+	public String getHumanInspectionReportUrl() {
+		return humanInspectionReportUrl;
+	}
+
+	public void setHumanInspectionReportUrl(String humanInspectionReportUrl) {
+		this.humanInspectionReportUrl = humanInspectionReportUrl;
+	}
+
+	public String getHumanMaintenanceReportUrl() {
+		return humanMaintenanceReportUrl;
+	}
+
+	public void setHumanMaintenanceReportUrl(String humanMaintenanceReportUrl) {
+		this.humanMaintenanceReportUrl = humanMaintenanceReportUrl;
+	}
+	
+	
 	
 }

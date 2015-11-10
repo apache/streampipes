@@ -70,6 +70,8 @@ public class ConfigurationManager {
 		settings.setZookeeperHost(cfg.ZOOKEEPER_HOST);
 		settings.setZookeeperPort(cfg.ZOOKEEPER_PORT);
 		settings.setZookeeperProtocol(cfg.ZOOKEEPER_PROTOCOL);
+		settings.setHumanInspectionReportUrl(cfg.HUMAN_INSPECTION_REPORT_URL);
+		settings.setHumanMaintenanceReportUrl(cfg.HUMAN_MAINTENANCE_REPORT_URL);
 		
 		return settings;
 	}
@@ -111,6 +113,8 @@ public class ConfigurationManager {
 		properties.put("panddaUrl", settings.getPanddaUrl());
 		properties.put("hippoUrl", settings.getHippoUrl());
 		properties.put("streamStoryUrl", settings.getStreamStoryUrl());
+		properties.put("humanInspectionReportUrl", settings.getHumanInspectionReportUrl());
+		properties.put("humanMaintenanceReportUrl", settings.getHumanMaintenanceReportUrl());
 		
 		properties.put("hostname", Utils.getHostname());
 		properties.put("server_url", "http://" +Utils.getHostname());
