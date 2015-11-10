@@ -52,6 +52,12 @@ public enum ClientConfiguration {
 	private String webappHost;
 	private int webappPort;
 	private String webappUrl;
+
+	
+	private String iconUrl;
+	private String iconHost;
+	private int iconPort;
+	private String iconScheme;
 	
 	private File pathToFile;
 	private File file;
@@ -115,6 +121,9 @@ public enum ClientConfiguration {
 			properties.put("proveItActive", false);
 			
 			properties.put("nissatechRunning", false);
+			properties.put("iconHost", "localhost");
+			properties.put("iconPort", 8080);
+			properties.put("iconScheme", "http");
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -169,6 +178,12 @@ public enum ClientConfiguration {
 			this.proveItActive = config.getBoolean("proveItActive");
 			
 			this.nissatechRunning = config.getBoolean("nissatechRunning");
+			
+			this.iconHost = config.getString("iconHost");
+			this.iconPort = config.getInt("iconPort");
+			this.iconScheme = config.getString("iconScheme");
+			this.iconUrl =  iconScheme + "://" +iconHost +":" +iconPort;
+			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
 			
 		} catch (ConfigurationException e) {
 			createDefaultSettings();
@@ -290,6 +305,22 @@ public enum ClientConfiguration {
 	
 	public boolean isNissatechRunning() {
 		return nissatechRunning;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public String getIconHost() {
+		return iconHost;
+	}
+
+	public int getIconPort() {
+		return iconPort;
+	}
+
+	public String getIconScheme() {
+		return iconScheme;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
