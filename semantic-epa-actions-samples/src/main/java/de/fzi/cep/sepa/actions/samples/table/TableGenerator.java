@@ -19,6 +19,7 @@ public class TableGenerator extends HtmlGenerator<TableParameters> {
 
 	@Override
 	protected HtmlCanvas buildHtmlCanvas() {
+		for(String column : actionParameters.getColumnNames()) System.out.println(column);
 		HtmlCanvas canvas = new HtmlCanvas();
 		try {
 			canvas.div()

@@ -6,6 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
 import de.fzi.cep.sepa.actions.samples.charts.ChartController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
+import de.fzi.cep.sepa.actions.samples.evaluation.EvaluationController;
 import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.gauge.GaugeController;
 import de.fzi.cep.sepa.actions.samples.heatmap.HeatmapController;
@@ -51,6 +52,7 @@ public class Init implements Runnable {
 		consumers.add(new ProaSenseKpiController());
 		consumers.add(new NotificationController());
 		consumers.add(new KafkaController());
+		consumers.add(new EvaluationController());
 		//consumers.add(new HistogramController());
 		
 		try {
