@@ -5,6 +5,7 @@ public enum SimulationSettings {
 	REALTIME(true, 1, false),
 	PERFORMANCE_TEST(false, 1, false),
 	DEMONSTRATE_10(true, 30, true);
+
 	
 	private boolean simulateRealOccurrenceTime;
 	private int speedupFactor;
