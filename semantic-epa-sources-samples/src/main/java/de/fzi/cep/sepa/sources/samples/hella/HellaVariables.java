@@ -8,7 +8,8 @@ public enum HellaVariables {
 	RawMaterialCertificate("materialCertificate", "Raw Material Certificate (Replay)", "", "SEPA.SEP.Human.RawMaterialCertificate"),
 	RawMaterialChange("materialChange", "Raw Material Change (Replay)", "", "SEPA.SEP.Human.RawMaterialChange"),
 	ProductionPlan("machinePlan", "Production Plan (Replay)", "", "SEPA.SEP.Human.ProductionPlan"), 
-	EnrichedEvent("hella-enriched", "Hella Enriched Event (Replay)", "", "SEPA.SEP.Hella.Enriched");
+	EnrichedEvent("hella-enriched", "Hella Enriched Event (Replay)", "", "SEPA.SEP.Hella.Enriched"),
+	Dust("hella-dust", "Dust Particle Sensor (Replay)", "", "SEPA.SEP.Hella.Dust");
 	
 	String tagNumber;
 	String eventName;

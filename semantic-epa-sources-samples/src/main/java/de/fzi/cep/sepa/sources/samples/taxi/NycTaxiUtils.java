@@ -8,6 +8,7 @@ import javax.jms.JMSException;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -47,12 +48,8 @@ public class NycTaxiUtils {
 	
 	public static IMessagePublisher streamPublisher(String topicName)
 	{
-		try {
-			return new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() +":" +ClientConfiguration.INSTANCE.getJmsPort(), topicName);
-		} catch (JMSException e) {
-			e.printStackTrace();
-			return null;
-		}	
+		
+			return new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
 	}
 	
 }

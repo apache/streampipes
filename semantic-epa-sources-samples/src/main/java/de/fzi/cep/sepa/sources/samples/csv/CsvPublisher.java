@@ -64,6 +64,7 @@ public class CsvPublisher implements Runnable {
 								}
 								previousTime = currentTime;
 							}	
+							System.out.println(toJson(message));
 							publisher.onEvent(toJson(message));
 							counter++;
 							if (counter % 1000 == 0) LOG.info(counter + " Events sent.");
