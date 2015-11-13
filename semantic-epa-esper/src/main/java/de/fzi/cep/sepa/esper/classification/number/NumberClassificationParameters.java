@@ -8,12 +8,15 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 public class NumberClassificationParameters extends BindingParameters {
 
 	private String propertyName;
+	private String outputProperty;
 	private List<DataClassification> domainConceptData;
 
-	public NumberClassificationParameters(SepaInvocation graph, String propertyName, List<DataClassification> domainConceptData) {
+	public NumberClassificationParameters(SepaInvocation graph, String propertyName, String outputProperty,
+			List<DataClassification> domainConceptData) {
 		super(graph);
 		this.propertyName = propertyName;
 		this.domainConceptData = domainConceptData;
+		this.outputProperty = outputProperty;
 	}
 
 	public String getPropertyName() {
@@ -23,6 +26,11 @@ public class NumberClassificationParameters extends BindingParameters {
 	public List<DataClassification> getDomainConceptData() {
 		return domainConceptData;
 	}
+
+	public String getOutputProperty() {
+		return outputProperty;
+	}
 	
 	
+
 }

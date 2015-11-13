@@ -25,7 +25,8 @@ public class NumberClassification extends EsperEventEngine<NumberClassificationP
 		
 		for(DataClassification data : bindingParameters.getDomainConceptData()) {
 			EPStatementObjectModel model = new EPStatementObjectModel();
-			model.selectClause(makeSelectClause(data));
+			model.selectClause(makeSelectClause(data, bindingParameters));
+//			model.selectClause(makeSelectClause(data));
 			model.fromClause(new FromClause().add(FilterStream.create(fixEventName(bindingParameters.getInputStreamParams().get(0).getInName())))); 
 
 			model.whereClause(getWhereClause(bindingParameters.getPropertyName(), data.getMinValue(), data.getMaxValue()));
@@ -37,18 +38,17 @@ public class NumberClassification extends EsperEventEngine<NumberClassificationP
 		return statements;
 	}
 
-	private SelectClause makeSelectClause(DataClassification dataClassification) {
+	private SelectClause makeSelectClause(DataClassification dataClassification, NumberClassificationParameters bindingParameters) {
 		SelectClause clause = SelectClause.create();
-//		for(String property : bindingParameters.getPropertyNames()) {
-//			clause.add(property);
-//		}
+		for(String property : bindingParameters.getInputStreamParams().get(0).getAllProperties()) {
+			clause.add(property);
+		}
 		
-		//TODO change label to dynamic 
-		clause.addWithAsProvidedName("label", dataClassification.getLabel());
+		clause.add(Expressions.constant(dataClassification.getLabel()), bindingParameters.getOutputProperty());
 		return clause;
 	}
 	
-	private Expression getWhereClause(String propertyName, int minValue, int maxValue)
+	private Expression getWhereClause(String propertyName, double minValue, double maxValue)
 	{
 		return Expressions.between(Expressions.property(propertyName), Expressions.constant(minValue), Expressions.constant(maxValue));
 	}

@@ -1,30 +1,30 @@
 package de.fzi.cep.sepa.esper.classification.number;
 
 public class DataClassification {
-	private int minValue;
-	private int maxValue;
+	private double minValue;
+	private double maxValue;
 	private String label;
-	
-	public DataClassification(int minValue, int maxValue, String label) {
+
+	public DataClassification(double minValue, double maxValue, String label) {
 		super();
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.label = label;
 	}
 
-	public int getMinValue() {
+	public double getMinValue() {
 		return minValue;
 	}
 
-	public void setMinValue(int minValue) {
+	public void setMinValue(double minValue) {
 		this.minValue = minValue;
 	}
 
-	public int getMaxValue() {
+	public double getMaxValue() {
 		return maxValue;
 	}
 
-	public void setMaxValue(int maxValue) {
+	public void setMaxValue(double maxValue) {
 		this.maxValue = maxValue;
 	}
 
@@ -35,8 +35,5 @@ public class DataClassification {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	
-	
-	
 
 }

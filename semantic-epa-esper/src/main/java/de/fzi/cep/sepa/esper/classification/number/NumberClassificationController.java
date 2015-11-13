@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -21,7 +22,7 @@ public class NumberClassificationController extends EpDeclarer<NumberClassificat
 	@Override
 	public SepaDescription declareModel() {
 		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("numberclassification.jsonLd"),
+			return DeclarerUtils.descriptionFromResources(Resources.getResource("numberclassification.jsonld"),
 					SepaDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
@@ -36,16 +37,18 @@ public class NumberClassificationController extends EpDeclarer<NumberClassificat
 				CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(sepa, "to_classify");
 
+		String outputProperty = ((AppendOutputStrategy) sepa.getOutputStrategies().get(0)).getEventProperties().get(0).getRuntimeName();
+
 		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m)
 				.collect(Collectors.toList());
 
 		List<DataClassification> domainConceptData = domainConcepts.stream()
-				.map(m -> new DataClassification(Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
-						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
+				.map(m -> new DataClassification(Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
+						Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
 						SepaUtils.getSupportedPropertyValue(m, SO.Text)))
 				.collect(Collectors.toList());
 
-		NumberClassificationParameters staticParam = new NumberClassificationParameters(sepa, propertyName,
+		NumberClassificationParameters staticParam = new NumberClassificationParameters(sepa, propertyName, outputProperty,
 				domainConceptData);
 
 		try {
