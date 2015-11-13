@@ -23,7 +23,7 @@ public class TestCollectionController extends EpDeclarer<TestCollectionParameter
 	public SepaDescription declareModel() {
 		
 		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("testcollection.jsonLd"), SepaDescription.class);
+			return DeclarerUtils.descriptionFromResources(Resources.getResource("testcollection.jsonld"), SepaDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return null;
