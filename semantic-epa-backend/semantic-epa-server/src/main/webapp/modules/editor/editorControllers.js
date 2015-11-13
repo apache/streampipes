@@ -13,6 +13,7 @@ angular.module('streamPipesApp')
             $scope.currentModifiedPipeline = $stateParams.pipeline;
             $scope.possibleElements = [];
             $scope.activePossibleElementFilter = {};
+            $scope.selectedTab = 1;
             $rootScope.title = "StreamPipes";
             
             //var editorPlumb;
@@ -360,6 +361,10 @@ angular.module('streamPipesApp')
             };
 
             $scope.streamDropped = function($newElement, endpoints){
+                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
+                    //toggleStyle(e);
+                    togglePossibleElements(e, $newElement);
+                }));
                 $scope.isStreamInAssembly = true;
                 $newElement.addClass("connectable stream");
 
@@ -370,6 +375,10 @@ angular.module('streamPipesApp')
             };
 
             $scope.sepaDropped = function($newElement, endpoints){
+                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
+                    //toggleStyle(e);
+                    togglePossibleElements(e, $newElement);
+                }));
                 $scope.isSepaInAssembly = true;
                 $newElement.addClass("connectable sepa");
 
@@ -507,14 +516,11 @@ angular.module('streamPipesApp')
                                 $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), true);
                             }else{
                                 $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
-                                $newState.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
-                                    //toggleStyle(e);
-                                    togglePossibleElements(e, $newState);
-                                }))
                             }
 
                             //Droppable Streams
                             if (ui.draggable.hasClass('stream')) {
+
                                 $scope.streamDropped($newState, true);
 
                                 var tempPipeline = new objectProvider.Pipeline();
@@ -525,6 +531,10 @@ angular.module('streamPipesApp')
 
                                 //Droppable Sepas
                             } else if (ui.draggable.hasClass('sepa')) {
+                                //$newState.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
+                                //    //toggleStyle(e);
+                                //    togglePossibleElements(e, $newState);
+                                //}))
                                 $scope.sepaDropped($newState, true);
 
                                 //Droppable Actions
@@ -762,7 +772,11 @@ angular.module('streamPipesApp')
                                 });
                             $element.hover(showRecButton, hideRecButton); //TODO alle Buttons anzeigen/verstecken
                             populateRecommendedList($element, data.recommendedElements);
-                            addRecommendedButton($element);
+                            var hasElements = false;
+                            if (data.recommendedElements.length > 0){
+                                hasElements = true;
+                            }
+                            addRecommendedButton($element, hasElements);
 
                         }else{
                             console.log(data);
@@ -802,6 +816,11 @@ angular.module('streamPipesApp')
                         if (el.data("possibleElements") !== 'undefined') {
                             $scope.possibleElements = el.data("possibleElements");
                             $scope.activePossibleElementFilter = event.currentTarget;
+                            if (el.hasClass("stream")){
+                                $scope.selectedTab = 2;
+                            }else if(el.hasClass("sepa")){
+                                $scope.selectedTab = 3;
+                            }
                             $scope.$apply();
                         }
                         //TODO Tab wechseln
@@ -812,6 +831,11 @@ angular.module('streamPipesApp')
                         $("md-icon", event.currentTarget).remove();
                         $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
                         $scope.possibleElements = el.data("possibleElements");
+                        if (el.hasClass("stream")){
+                            $scope.selectedTab = 2;
+                        }else if(el.hasClass("sepa")){
+                            $scope.selectedTab = 3;
+                        }
                         $scope.$apply();
                     }
                 }
@@ -856,20 +880,9 @@ angular.module('streamPipesApp')
                 if (elId.indexOf("sepa") >= 0) { //Sepa
                     return restApi.getSepaById(elId)
 
-                    //for (var i = 0, element; element = $rootScope.state.sepas[i]; i++) {
-                    //    if (element.elementId === elId) {
-                    //        return element;
-                    //    }
-                    //}
                 } else {		//Action
-
                     return restApi.getActionById(elId);
 
-                    //for (var i = 0, element; element = $rootScope.state.actions[i]; i++) {
-                    //    if (element.elementId === elId) {
-                    //        return element;
-                    //    }
-                    //}
                 }
             }
 
@@ -980,7 +993,13 @@ angular.module('streamPipesApp')
                 prepareJsonLDModal(json);
             }
 
-            function addRecommendedButton($element) {
+            function addRecommendedButton($element, hasElements) {
+                var classString = "";
+                if (hasElements){
+                    classString = "green";
+                }else{
+                    classString = "red";
+                }
                 $("<span>")
                     .addClass("recommended-button")
                     .click(function (e) {
@@ -988,7 +1007,7 @@ angular.module('streamPipesApp')
                         var $recList = $("ul", $element);
                         $recList.circleMenu('open');
                     })
-                    .append($compile("<md-icon md-svg-icon='content:ic_add_circle_24px'>")($scope).addClass("hover-icon").addClass("green")
+                    .append($compile("<md-icon md-svg-icon='content:ic_add_circle_24px'>")($scope).addClass("hover-icon").addClass(classString)
                         .attr("aria-label", "Recommended Elements"))
                     .appendTo($element);
 
@@ -1635,7 +1654,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     $scope.validate = function() {
     	var valid = true;
     	angular.forEach($scope.selectedElement.staticProperties, function(item) {
-    		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
+    		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput' || item.input.type == 'CheckboxInput')
 			{
     			var optionSelected = false;
     			angular.forEach(item.input.properties.options, function(option) {
