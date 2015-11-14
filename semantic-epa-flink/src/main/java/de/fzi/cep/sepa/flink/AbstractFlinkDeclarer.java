@@ -21,7 +21,7 @@ public abstract class AbstractFlinkDeclarer<B extends BindingParameters> impleme
 	}
 	
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		if (runtime.stop())
 			return new Response(graph.getElementId(), true);
 		else

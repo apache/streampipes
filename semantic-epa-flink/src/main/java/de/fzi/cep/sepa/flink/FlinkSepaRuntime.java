@@ -1,8 +1,15 @@
 package de.fzi.cep.sepa.flink;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
 import java.util.Properties;
+import java.util.concurrent.Future;
 
+import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.client.program.ContextEnvironment;
+import org.apache.flink.runtime.akka.AkkaUtils;
+import org.apache.flink.runtime.jobmanager.JobManager;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
@@ -10,6 +17,8 @@ import org.apache.flink.streaming.connectors.kafka.api.KafkaSink;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
+import akka.actor.ActorRef;
+import akka.pattern.Patterns;
 import de.fzi.cep.sepa.flink.sink.FlinkJmsProducer;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
@@ -43,6 +52,8 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 	@SuppressWarnings("deprecation")
 	public boolean execute()
 	{
+		//ExecutionEnvironment contextEnvironment = ContextEnvironment.getExecutionEnvironment();
+		//contextEnvironment.get
 		if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
 		else this.env = StreamExecutionEnvironment.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
 			
@@ -66,6 +77,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 	public void run()
 	{
 		try {
+			//JobExecutionResult result = env.execute();
 			env.execute();
 			
 		} catch (Exception e) {
@@ -75,6 +87,9 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 	
 	public boolean stop()
 	{
+		//ActorRef jobManager = JobManager.getJobManagerRemoteReference(new InetSocketAddress(config.getHost(), config.getPort()), AkkaUtils.createActorSystem(null), 1000);
+		//Future<Object> response = Patterns.ask(jobManager, new CancelJob(jobId), 
+		 
 		thread.stop();
 		return true;
 	}
