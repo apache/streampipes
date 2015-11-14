@@ -77,7 +77,7 @@ public class TaxiStreamGenerator implements Runnable {
 				
 				
 				while ((line = br.readLine()) != null) {
-					if (counter > -1 && counter <= 200000)
+					if (counter > -1 && counter <= 2000000)
 					{
 						try {
 							counter++;
