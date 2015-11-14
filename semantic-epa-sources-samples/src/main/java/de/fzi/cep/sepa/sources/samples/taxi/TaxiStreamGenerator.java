@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.google.gson.JsonObject;
@@ -58,20 +60,24 @@ public class TaxiStreamGenerator implements Runnable {
 	@Override
 	public void run() {
 		long previousDropoffTime = -1;
+		long counter = 0;
+		
 		System.out.println("Initializing Taxi Stream");
 		
+		List<String> payload = new ArrayList<>();
 		Optional<BufferedReader> readerOpt = Utils.getReader(file);
-		long start = System.currentTimeMillis();
+		
+		System.out.println("Reading Data");
 		if (readerOpt.isPresent())
 		{
 			try {
 				BufferedReader br = readerOpt.get();
 				
 				String line;
-				long counter = 0;
+				
 				
 				while ((line = br.readLine()) != null) {
-					if (counter > -1)
+					if (counter > -1 && counter <= 200000)
 					{
 						try {
 							counter++;
@@ -89,21 +95,37 @@ public class TaxiStreamGenerator implements Runnable {
 										Thread.sleep(diff/settings.getSpeedupFactor());
 									}
 								previousDropoffTime = currentDropOffTime;
-							}				
+							}			
+							if (counter % 10000 == 0) System.out.println(counter +" Events read.");
 							String json = buildJsonString(records);
-							publisher.onEvent(json);
-							if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));
-							if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
+							payload.add(json);
 						} catch (Exception e) { e.printStackTrace(); }
 					}
 
 				}
-				br.close();		
+				br.close();
+				
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+		}
+		long start = System.currentTimeMillis();
+		counter = 0;
+		System.out.println("Sending Data");
+		for(String s : payload)
+		{
+			StringBuilder builder = new StringBuilder(s);
+			builder.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
+			builder.append("}");
+			publisher.onEvent(builder.toString());
+			//System.out.println(builder.toString());
+			//publisher.onEvent(s);
+			//if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));
+			if (counter % 10000 == 0) System.out.println(counter +" Events sent.");
+			counter++;
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("Took: " +(end-start));
@@ -182,8 +204,8 @@ public class TaxiStreamGenerator implements Runnable {
 			json.append(Utils.toJsonNumber(TOLLS_AMOUNT, toDouble(line[15])));
 			json.append(Utils.toJsonNumber(TOTAL_AMOUNT, toDouble(line[16])));
 
-			json.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
-			json.append("}");		
+			//json.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
+			//json.append("}");		
 		return json.toString();
 	}
 }

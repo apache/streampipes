@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
@@ -29,7 +30,7 @@ public class NYCTaxiStream extends AbstractNycStream {
 		EventSchema schema = NycTaxiUtils.getEventSchema();
 
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(SampleSettings.kafkaProtocol(NycSettings.sampleTopic));
+		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(NycSettings.sampleTopic));
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		stream.setEventGrounding(grounding);
