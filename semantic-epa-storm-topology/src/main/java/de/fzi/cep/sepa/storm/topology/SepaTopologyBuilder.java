@@ -1,18 +1,13 @@
 package de.fzi.cep.sepa.storm.topology;
 
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.storm.utils.JsonScheme;
+import java.util.UUID;
+
 import storm.kafka.BrokerHosts;
 import storm.kafka.KafkaSpout;
 import storm.kafka.SpoutConfig;
 import storm.kafka.StringKeyValueScheme;
-import storm.kafka.StringScheme;
 import storm.kafka.ZkHosts;
-
-import java.util.UUID;
-
 import backtype.storm.generated.StormTopology;
-import backtype.storm.spout.Scheme;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.TopologyBuilder;

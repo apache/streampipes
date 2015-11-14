@@ -9,8 +9,8 @@ import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
-import de.fzi.cep.sepa.storm.utils.Constants;
 import de.fzi.cep.sepa.storm.utils.Serializer;
+
 
 //TODO Do I need this class?
 public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{

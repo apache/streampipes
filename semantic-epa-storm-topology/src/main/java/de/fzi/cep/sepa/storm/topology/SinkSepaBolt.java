@@ -1,42 +1,33 @@
 package de.fzi.cep.sepa.storm.topology;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.jms.JMSException;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.storm.guava.collect.Maps;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.runtime.util.ThriftSerializer;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.storm.utils.StormUtils;
-import de.fzi.cep.sepa.storm.utils.Utils;
 import backtype.storm.spout.Scheme;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Tuple;
+
+import com.google.gson.Gson;
+
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import de.fzi.cep.sepa.runtime.util.ThriftSerializer;
+import de.fzi.cep.sepa.storm.utils.StormUtils;
 
 
 public class SinkSepaBolt<B extends BindingParameters> extends BaseRichBolt {
