@@ -105,6 +105,9 @@
     	<module>semantic-epa-kpi</module>
     	<module>semantic-epa-flink</module>
     	<module>semantic-epa-flink-samples</module>
+    	<module>semantic-epa-runtime</module>
+    	<module>semantic-epa-runtime-camel</module>
+    	<module>semantic-epa-runtime-flat</module>
 	</modules>
 
 	<!-- Build Settings -->
