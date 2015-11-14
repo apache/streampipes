@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.storage.sparql;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.repository.RepositoryException;

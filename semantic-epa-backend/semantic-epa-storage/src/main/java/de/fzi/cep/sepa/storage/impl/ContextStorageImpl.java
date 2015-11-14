@@ -12,13 +12,10 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.util.RDFLoader;
-import org.openrdf.rio.ParserConfig;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
-import org.openrdf.rio.turtle.TurtleParser;
 
 import de.fzi.cep.sepa.model.client.ontology.Context;
 import de.fzi.cep.sepa.model.client.ontology.RdfFormat;

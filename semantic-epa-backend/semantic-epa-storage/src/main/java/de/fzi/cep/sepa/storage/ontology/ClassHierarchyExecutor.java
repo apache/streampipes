@@ -20,9 +20,7 @@ import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
 import de.fzi.cep.sepa.storage.util.BackgroundKnowledgeUtils;
 
 public class ClassHierarchyExecutor extends QueryExecutor {
-	
-	private static final String RDFS_SUBCLASS_OF = "http://www.w3.org/2000/01/rdf-schema#subClassOf";
-	
+		
 	public ClassHierarchyExecutor(Repository repository)
 	{
 		super(repository);
@@ -63,6 +61,7 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 		return classHierarchy;
 	}
 	
+	@SuppressWarnings("unused")
 	private List<OntologyNode> getSubclasses(String nodeUri) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
 		List<OntologyNode> result = new ArrayList<>();
 		TupleQueryResult queryResult = getQueryResult(QueryBuilder.getSubclasses(nodeUri));

@@ -12,7 +12,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
-import org.openrdf.repository.sparql.SPARQLRepository;
 
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.config.ConfigKeys;
@@ -84,17 +83,17 @@ public enum StorageManager {
 		}
 	}
 	
-	private boolean initDbPediaEndpoint() {
-		SPARQLRepository repo = new SPARQLRepository("http://dbpedia.org/sparql");
-		try {
-			repo.initialize();
-			dbpediaConn = repo.getConnection();
-			return true;
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-			return false;
-		}		  
-	}
+//	private boolean initDbPediaEndpoint() {
+//		SPARQLRepository repo = new SPARQLRepository("http://dbpedia.org/sparql");
+//		try {
+//			repo.initialize();
+//			dbpediaConn = repo.getConnection();
+//			return true;
+//		} catch (RepositoryException e) {
+//			e.printStackTrace();
+//			return false;
+//		}		  
+//	}
 
 	private boolean initEmpire() {
 		

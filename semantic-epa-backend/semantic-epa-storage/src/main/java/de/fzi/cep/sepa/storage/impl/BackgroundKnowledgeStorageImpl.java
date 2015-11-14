@@ -407,7 +407,6 @@ public class BackgroundKnowledgeStorageImpl implements
 		{
 			TupleQueryResult result;
 			List<OntologyQueryResponse> queryResponse = new ArrayList<>();
-			int idx = 0;
 			try {
 				result = getQueryResult(QueryBuilder.getPropertyDetails(query.getRequiredClass(), item.getPropertyId(), query.getRequiredProperties()));
 				

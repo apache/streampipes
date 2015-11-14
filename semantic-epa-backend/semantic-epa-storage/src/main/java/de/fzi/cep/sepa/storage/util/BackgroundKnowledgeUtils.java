@@ -11,7 +11,6 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
 import de.fzi.cep.sepa.model.client.ontology.Namespace;
-import de.fzi.cep.sepa.model.client.ontology.OntologyNode;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.ontology.RangeQueryExecutor;
 
