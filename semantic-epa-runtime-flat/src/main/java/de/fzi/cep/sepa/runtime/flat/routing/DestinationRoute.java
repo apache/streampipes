@@ -30,7 +30,7 @@ public class DestinationRoute extends Route implements EPConsumer {
 	public void accept(Object event) {
 		producer.onEvent(dataType.marshal(event));
 		counter++;
-		if (counter % 1000 == 0) System.out.println(counter +" events processed.");
+		if (counter % 100000 == 0) System.out.println(counter +" events processed.");
 	}
 
 
