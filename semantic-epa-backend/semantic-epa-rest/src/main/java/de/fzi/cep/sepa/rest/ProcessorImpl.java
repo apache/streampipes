@@ -22,7 +22,6 @@ import com.google.gson.JsonObject;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.lightcouch.CouchDbClient;
-import org.openrdf.model.impl.GraphImpl;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
@@ -31,7 +30,6 @@ import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 import de.fzi.sepa.model.client.manager.SEPAManager;
-import de.fzi.sepa.model.client.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

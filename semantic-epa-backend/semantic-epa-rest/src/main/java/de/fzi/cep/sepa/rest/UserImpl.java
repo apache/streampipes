@@ -6,38 +6,26 @@ import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.SuccessMessage;
-import de.fzi.cep.sepa.model.client.user.Element;
 import de.fzi.cep.sepa.model.client.user.Role;
 import de.fzi.cep.sepa.rest.api.*;
-import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.impl.UserStorage;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.*;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.realm.Realm;
+
 import org.apache.shiro.subject.Subject;
 import org.lightcouch.CouchDbClient;
 
 import com.google.gson.JsonObject;
 
-import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.security.MessageDigest;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -153,7 +141,7 @@ public class UserImpl extends AbstractRestInterface implements User{
     @Override
     public String getAllActions() {
         if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
+            //String username = SecurityUtils.getSubject().getPrincipal().toString();
         }
         return null;
     }

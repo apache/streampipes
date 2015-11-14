@@ -1,8 +1,6 @@
 package de.fzi.cep.sepa.rest.test;
 
 import com.google.common.io.Resources;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import org.lightcouch.CouchDbClient;
 
 import java.io.File;
 import java.io.FileNotFoundException;

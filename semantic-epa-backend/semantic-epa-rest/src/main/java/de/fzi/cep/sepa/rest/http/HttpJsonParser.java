@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
+@SuppressWarnings("deprecation")
 public class HttpJsonParser {
 
 	public static String getContentFromUrl(URI uri) throws ClientProtocolException, IOException
@@ -24,11 +25,13 @@ public class HttpJsonParser {
 		HttpGet request = new HttpGet(uri);
 		if (header != null) request.addHeader("Accept", header);
 		
+		@SuppressWarnings("resource")
 		HttpClient client = new DefaultHttpClient();
 		HttpResponse response = client.execute(request);
 		
 		String pageContent = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
 		Logger.getAnonymousLogger().info("Content: " +pageContent);
+	
 		return pageContent;
 		
 	}

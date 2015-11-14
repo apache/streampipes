@@ -1,9 +1,8 @@
 import com.google.gson.*;
-import org.apache.shiro.SecurityUtils;
+
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.Params;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

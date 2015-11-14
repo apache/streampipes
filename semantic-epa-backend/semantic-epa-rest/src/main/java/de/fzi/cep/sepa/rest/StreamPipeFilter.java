@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.rest;
 
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.filter.authc.UserFilter;
 import org.apache.shiro.web.util.WebUtils;
 

@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import org.apache.http.client.ClientProtocolException;
 
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;

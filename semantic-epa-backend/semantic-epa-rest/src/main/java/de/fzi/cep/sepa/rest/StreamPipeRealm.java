@@ -2,21 +2,15 @@ package de.fzi.cep.sepa.rest;
 
 
 import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.model.client.user.User;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.SimpleByteSource;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbException;
-import org.lightcouch.Params;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.MessageDigest;
 import java.util.List;
 
 

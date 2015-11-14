@@ -116,6 +116,7 @@ public abstract class AbstractRestInterface {
 		return SecurityUtils.getSubject().isAuthenticated();
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected String decode(String encodedString) {
 		return URLDecoder.decode(encodedString);
 	}

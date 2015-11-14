@@ -5,14 +5,6 @@ import java.net.URISyntaxException;
 
 import org.apache.http.client.ClientProtocolException;
 
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.rest.ActionImpl;
-import de.fzi.cep.sepa.rest.http.HttpJsonParser;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
-import de.fzi.cep.sepa.storage.util.Transformer;
 
 
 public class TestHttpParser {

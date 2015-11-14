@@ -3,16 +3,12 @@ package de.fzi.cep.sepa.rest.test;
 import de.fzi.cep.sepa.rest.StreamPipeRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
 import org.apache.shiro.mgt.SecurityManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 
 /**
@@ -23,8 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TestShiro {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestShiro.class);
-
+    
     public static void main(String[] args) {
         Realm realm = new StreamPipeRealm();
         SecurityManager securityManager = new DefaultSecurityManager(realm);

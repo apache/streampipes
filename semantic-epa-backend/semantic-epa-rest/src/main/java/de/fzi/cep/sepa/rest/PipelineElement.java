@@ -11,15 +11,9 @@ import javax.ws.rs.core.MediaType;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

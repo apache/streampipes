@@ -16,7 +16,6 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
-import de.fzi.cep.sepa.model.client.ActionClient;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
