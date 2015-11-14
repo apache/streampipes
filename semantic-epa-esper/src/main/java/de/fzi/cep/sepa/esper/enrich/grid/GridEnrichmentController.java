@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
@@ -24,9 +23,10 @@ import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class GridEnrichmentController extends EpDeclarer<GridEnrichmentParameter> {
+public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -22,8 +21,9 @@ import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 
-public class DebsChallenge2Controller extends EpDeclarer<DebsChallenge2Parameters>{
+public class DebsChallenge2Controller extends FlatEpDeclarer<DebsChallenge2Parameters>{
 
 	private EventProperty xCellProperty;
 	private EventProperty yCellProperty;

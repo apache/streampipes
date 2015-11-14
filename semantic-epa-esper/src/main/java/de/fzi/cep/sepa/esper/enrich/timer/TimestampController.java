@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.esper.enrich.timer;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -18,9 +17,10 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class TimestampController extends EpDeclarer<TimestampParameter>{
+public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 
 	@Override
 	public SepaDescription declareModel() {

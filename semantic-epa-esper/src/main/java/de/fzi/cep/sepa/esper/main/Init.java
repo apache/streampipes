@@ -74,6 +74,7 @@ public class Init implements Runnable {
 		declarers.add(new TestCollectionController());
 		declarers.add(new NumberClassificationController());
 		//declarers.add(new AdvancedTextFilterController());
+
 		
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();

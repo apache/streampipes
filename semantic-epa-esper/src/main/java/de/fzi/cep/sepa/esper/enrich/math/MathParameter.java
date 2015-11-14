@@ -7,6 +7,11 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class MathParameter extends BindingParameters {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2155245631394846705L;
+	
 	private List<String> selectProperties;
 	private Operation operation;
 	private String leftOperand;

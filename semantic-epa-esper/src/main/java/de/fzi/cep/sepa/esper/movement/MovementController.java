@@ -8,7 +8,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -31,9 +30,10 @@ import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class MovementController extends EpDeclarer<MovementParameter> {
+public class MovementController extends FlatEpDeclarer<MovementParameter> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger("MovementTest");

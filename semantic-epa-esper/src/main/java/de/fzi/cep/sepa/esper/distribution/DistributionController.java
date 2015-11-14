@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -23,9 +22,10 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class DistributionController extends EpDeclarer<DistributionParameters>{
+public class DistributionController extends FlatEpDeclarer<DistributionParameters>{
 
 	@Override
 	public SepaDescription declareModel() {

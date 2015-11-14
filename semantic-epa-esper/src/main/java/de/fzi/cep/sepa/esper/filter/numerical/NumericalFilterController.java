@@ -3,17 +3,16 @@ package de.fzi.cep.sepa.esper.filter.numerical;
 import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.DeclarerUtils;
 
-public class NumericalFilterController extends EpDeclarer<NumericalFilterParameter> {
+public class NumericalFilterController extends FlatEpDeclarer<NumericalFilterParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

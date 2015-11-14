@@ -12,9 +12,8 @@ import com.espertech.esper.client.soda.StreamSelector;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
 import de.fzi.cep.sepa.esper.debs.c1.StatusEvent;
-import de.fzi.cep.sepa.esper.jms.IMessageListener;
 
-public class EsperEngineSettings implements Runnable, IMessageListener {
+public class EsperEngineSettings implements Runnable {
 
 	public static EPServiceProvider epService;
 	
@@ -85,12 +84,6 @@ public class EsperEngineSettings implements Runnable, IMessageListener {
 	public void run() {
 		//ActiveMQConsumer consumer = new ActiveMQConsumer(brokerUrl, sourceTopic);
 		//consumer.setListener(this);
-	}
-
-	@Override
-	public void onEvent(String json) {
-		//CurrentTimeEvent timeEvent = new CurrentTimeEvent(Long.parseLong(json));
-		//epService.getEPRuntime().sendEvent(timeEvent);
 	}
 	
 }

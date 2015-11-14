@@ -6,16 +6,16 @@ import java.util.stream.Collectors;
 import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.DeclarerUtils;
 
-public class AdvancedTextFilterController extends EpDeclarer<AdvancedTextFilterParameters> {
+public class AdvancedTextFilterController extends FlatEpDeclarer<AdvancedTextFilterParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

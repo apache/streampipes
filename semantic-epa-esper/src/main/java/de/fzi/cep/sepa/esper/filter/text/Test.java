@@ -19,12 +19,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.runtime.EPRuntime;
-import de.fzi.cep.sepa.runtime.param.CamelConfig;
-import de.fzi.cep.sepa.runtime.param.DataType;
-import de.fzi.cep.sepa.runtime.param.EndpointInfo;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
-import de.fzi.cep.sepa.runtime.param.RuntimeParameters;
 
 public class Test {
 

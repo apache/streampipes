@@ -4,12 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openrdf.rio.RDFHandlerException;
-
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.EpDeclarer;
-import de.fzi.cep.sepa.esper.distribution.Distribution;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -25,9 +19,10 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class MathController extends EpDeclarer<MathParameter>{
+public class MathController extends FlatEpDeclarer<MathParameter>{
 
 	@Override
 	public SepaDescription declareModel() {

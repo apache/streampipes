@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -24,10 +23,11 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 
-public class TextFilterController extends EpDeclarer<TextFilterParameter> {
+public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 	
 	@Override
 	public SepaDescription declareModel() {

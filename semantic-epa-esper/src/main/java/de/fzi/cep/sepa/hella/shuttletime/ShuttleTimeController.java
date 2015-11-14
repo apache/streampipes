@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.EpDeclarer;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
@@ -22,9 +21,10 @@ import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class ShuttleTimeController extends EpDeclarer<ShuttleTimeParameters>{
+public class ShuttleTimeController extends FlatEpDeclarer<ShuttleTimeParameters>{
 
 	@Override
 	public SepaDescription declareModel() {

@@ -25,6 +25,7 @@ import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
+import de.fzi.cep.sepa.runtime.routing.Timer;
 
 public abstract class EsperEventEngine<T extends BindingParameters> implements EPEngine<T>{
 
@@ -99,7 +100,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private void registerStatements(List<String> statements, OutputCollector collector, T params)
 	{
 		toEpStatement(statements);
-		queue = new StatementAwareQueue(getWriter(collector, params), 50000);
+		queue = new StatementAwareQueue(getWriter(collector, params), 500000);
 		queue.start();
 		for(EPStatement epStatement : epStatements)
 		{
@@ -127,7 +128,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		if (i % 500 == 0) System.out.println("New event" +i);
+		//if (i % 10000 == 0) System.out.println(i +" in Esper.");
+		if (i == 0) Timer.start();
 		i++;
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
