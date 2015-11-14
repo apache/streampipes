@@ -10,5 +10,5 @@ public interface Declarer<D extends NamedSEPAElement, I extends InvocableSEPAEle
 	
 	public Response invokeRuntime(I invocationGraph);
 	
-	public Response detachRuntime();
+	public Response detachRuntime(String pipelineId);
 }

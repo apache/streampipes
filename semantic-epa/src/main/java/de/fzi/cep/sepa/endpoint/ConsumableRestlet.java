@@ -1,6 +1,10 @@
 package de.fzi.cep.sepa.endpoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
@@ -22,11 +26,14 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	protected Class<I> clazz;
 	protected Declarer<D, I> declarer;
 	
+	protected Map<String, Declarer<D, I>> instanceDeclarers;
+	
 	public ConsumableRestlet(D desc, Class<I> clazz, Declarer<D, I> declarer)
 	{
 		super(desc);
 		this.clazz = clazz;
 		this.declarer = declarer;
+		this.instanceDeclarers = new HashMap<>();
 	}
 	
 	
@@ -43,13 +50,20 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	protected void onPost(Response resp, String payload) {
 		try {
 			I graph = Transformer.fromJsonLd(clazz, payload);
+			instanceDeclarers.put(graph.getElementId(), declarer.getClass().newInstance());
 			createInstanceEndpoint(graph);
-			de.fzi.cep.sepa.model.impl.Response streamPipesResp = declarer.invokeRuntime(graph);
+			de.fzi.cep.sepa.model.impl.Response streamPipesResp = instanceDeclarers.get(graph.getElementId()).invokeRuntime(graph);
 			if (streamPipesResp == null) streamPipesResp = new de.fzi.cep.sepa.model.impl.Response(graph.getElementId(), true);
 			sendStatus(resp, streamPipesResp);
 		} catch (RDFParseException | UnsupportedRDFormatException
 				| RepositoryException | IOException e) {
 			sendStatus(resp, new de.fzi.cep.sepa.model.impl.Response("", false, e.getMessage()));
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
 	}
 	
