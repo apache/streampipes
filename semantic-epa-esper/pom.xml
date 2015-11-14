@@ -31,12 +31,6 @@
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.kafka</groupId>
-					<artifactId>kafka_2.10</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
