@@ -38,7 +38,7 @@ public class KafkaConsumer extends Consumer implements IMessageListener {
 	public void onEvent(String json) {
 		notify(json);	
 		counter++;
-		if (counter % 1000 == 0) System.out.println(counter + " Events sent.");
+		if (counter % 100000 == 0) System.out.println(counter + " Events sent.");
 	}
 
 }
