@@ -86,7 +86,7 @@ public class EvaluationController extends ActionController {
 	}
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		fileWriter.setRunning(false);
 		return new Response(this.elementId, true);
 	}

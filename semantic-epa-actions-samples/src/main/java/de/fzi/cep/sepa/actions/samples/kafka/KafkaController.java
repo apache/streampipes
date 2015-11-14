@@ -90,7 +90,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 	}
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		kafkaConsumerGroup.shutdown();
 		return new Response("", true);
 	}

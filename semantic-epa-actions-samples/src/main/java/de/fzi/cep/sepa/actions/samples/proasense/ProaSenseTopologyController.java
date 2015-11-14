@@ -79,7 +79,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 	}
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		try {
 			consumer.close();
 		} catch (JMSException e) {

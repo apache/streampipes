@@ -66,7 +66,7 @@ public class DebsOutputController extends ActionController {
 
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

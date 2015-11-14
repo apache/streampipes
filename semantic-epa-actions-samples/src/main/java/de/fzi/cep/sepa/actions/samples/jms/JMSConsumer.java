@@ -83,7 +83,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 	}
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		try {
 			consumer.close();
 		} catch (JMSException e) {

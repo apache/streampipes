@@ -65,7 +65,7 @@ public class HistogramController implements SemanticEventConsumerDeclarer{
 	}
 
 	@Override
-	public Response detachRuntime() {
+	public Response detachRuntime(String pipelineId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
