@@ -41,7 +41,7 @@ public class TestSentiment {
 	{
 
 		new SentimentDetectionController().invokeRuntime(getInvocationGraph());
-		new SentimentDetectionController().detachRuntime();
+		//new SentimentDetectionController().detachRuntime(sepa.getPipelineId());
 		
 	}
 	
