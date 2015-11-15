@@ -2,7 +2,7 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile',
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile', 
         function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
@@ -16,10 +16,53 @@ angular.module('streamPipesApp')
             $scope.selectedTab = 1;
             $rootScope.title = "StreamPipes";
             
+            $scope.selectMode = true;
+            
             //var editorPlumb;
             var textInputFields = [];
             var connCount = 1;
+            
+            $scope.currentZoomLevel = 1;
+            
+            $("#assembly").panzoom({
+            	disablePan: true,
+            	increment: 0.25,
+            	minScale: 0.5,
+            	maxScale: 1.5,
+            	contain: 'invert'
+            });
+            
+            $("#assembly").on('panzoomzoom', function(e, panzoom, scale) {
+            	  $scope.currentZoomLevel = scale;
+            	  jsPlumb.setZoom(scale);
+            	  jsPlumb.repaintEverything();
+            	});
 
+            $scope.toggleSelectMode = function() {
+            	if ($scope.selectMode) {
+            		$("#assembly").panzoom("option", "disablePan", false);
+            		$("#assembly").selectable("disable");
+            		$scope.selectMode = false;
+            	}
+            	else {
+            		$("#assembly").panzoom("option", "disablePan", true);
+            		$("#assembly").selectable("enable");
+            		$scope.selectMode = true;
+            	}
+            }
+            
+            $scope.zoomOut = function() {
+            	doZoom(true);
+            }
+            
+            $scope.zoomIn = function() {
+            	 doZoom(false);
+            }
+            
+            var doZoom = function(zoomOut) {
+            	$("#assembly").panzoom("zoom", zoomOut);
+            }
+              
             $scope.possibleFilter = function(value, index, array){
                 if ($scope.possibleElements.length > 0) {
                     for(var i = 0; i < $scope.possibleElements.length; i++){
@@ -67,7 +110,6 @@ angular.module('streamPipesApp')
 
                 initAssembly();
                 initPlumb();
-                console.log($scope.currentModifiedPipeline);
             });
             $rootScope.$on("elements.loaded", function(){
                 makeDraggable();
@@ -188,7 +230,6 @@ angular.module('streamPipesApp')
 
                         var options;
                         var id = "#" + source;
-                        console.log($(id));
                         if ($(id).hasClass("sepa")){
                             options = apiConstants.sepaEndpointOptions;
                         }else{
@@ -276,7 +317,6 @@ angular.module('streamPipesApp')
             $scope.loadSepas = function(){
                 restApi.getOwnSepas()
                     .success(function(sepas){
-                        console.log(sepas);
                         $.each(sepas, function(i, sepa){
                             sepa.type = 'sepa';
                         });
@@ -314,10 +354,10 @@ angular.module('streamPipesApp')
                     stack: '.draggable-icon',
                     start: function (el, ui) {
                         ui.helper.appendTo('#content');
-                        $('#assembly').css('border-color', 'red');
+                        $('#outerAssemblyArea').css('border', '3px dashed rgb(255,64,129)');
                     },
                     stop: function (el, ui) {
-                        $('#assembly').css('border-color', '#666666');
+                        $('#outerAssemblyArea').css('border', '1px solid rgb(63,81,181)');
                     }
                 });
                 $('.block').draggable({
@@ -326,10 +366,10 @@ angular.module('streamPipesApp')
                     stack: '.block',
                     start: function (el, ui) {
                         ui.helper.appendTo('#content');
-                        $('#assembly').css('border-color', 'red');
+                        $('#assemblyArea').css('border-color', '3px dashed rgb(255,64,129)');
                     },
                     stop: function (el, ui) {
-                        $('#assembly').css('border-color', '#666666');
+                        $('#assemblyArea').css('border', '1px solid rgb(63,81,181)');
                     }
                 });
             };
@@ -501,11 +541,11 @@ angular.module('streamPipesApp')
                 $('#assembly').droppable({
                     tolerance: "fit",
                     drop: function (element, ui) {
-
+                    	
                         if (ui.draggable.hasClass('draggable-icon') || ui.draggable.hasClass('block')) {
                             //TODO get data
                             //console.log(ui);
-
+                        	
                             if (ui.draggable.data("JSON") == null) {
                                     alert("No JSON - Data for Dropped element");
                                     return false;
@@ -586,6 +626,16 @@ angular.module('streamPipesApp')
                 $('#assembly').children().not('#clear, #submit').remove();
                 jsPlumb.deleteEveryEndpoint();
                 $rootScope.state.adjustingPipelineState = false;
+                $("#assembly").panzoom("reset", {
+                	disablePan: true,
+                	increment: 0.25,
+                	minScale: 0.5,
+                	maxScale: 1.5,
+                	contain: 'invert'
+                	});
+                $scope.currentZoomLevel = 1;
+                jsPlumb.setZoom($scope.currentZoomLevel);
+                jsPlumb.repaintEverything();
             };
 
             function createPartialPipeline(info) {
@@ -852,7 +902,6 @@ angular.module('streamPipesApp')
                     el = recs[i];
                     getElementByElementId(el.elementId)
                         .success(function(element){
-                            console.log(element);
                             if (typeof element != "undefined") {
 
                                 var recEl = new objectProvider.recElement(element);
@@ -1035,11 +1084,10 @@ angular.module('streamPipesApp')
 
             function getCoordinates(ui) {
 
-                var newPos = ui.helper.position();
-                var newTop = getDropPosition(ui.helper);
-
+                var newLeft = getDropPositionX(ui.helper);
+                var newTop = getDropPositionY(ui.helper);
                 return {
-                    'x': newPos.left,
+                    'x': newLeft,
                     'y': newTop
                 };
             }
@@ -1305,11 +1353,20 @@ angular.module('streamPipesApp')
              * Gets the position of the dropped element insidy the assembly
              * @param {Object} helper
              */
-            function getDropPosition(helper) {
-                var helperPos = helper.position();
-                var divPos = $('#assembly').position();
-                var newTop = helperPos.top - divPos.top;
+            function getDropPositionY(helper) {
+            	var newTop;
+                var helperPos = helper.offset();
+                var divPos = $('#assembly').offset();
+                newTop = (helperPos.top - divPos.top) +(1-$scope.currentZoomLevel)*((helperPos.top-divPos.top)*2);
                 return newTop;
+            }
+            
+            function getDropPositionX(helper) {
+            	var newLeft;
+                var helperPos = helper.offset();
+                var divPos = $('#assembly').offset();
+                newLeft = (helperPos.left - divPos.left) +(1-$scope.currentZoomLevel)*((helperPos.left-divPos.left)*2);
+                return newLeft;
             }
 
             /**
@@ -1520,7 +1577,6 @@ angular.module('streamPipesApp')
         };
 
         this.recElement = function(json){
-            console.log(json);
             this.json = json;
             this.name = json.name;
             this.getjQueryElement = function(){
