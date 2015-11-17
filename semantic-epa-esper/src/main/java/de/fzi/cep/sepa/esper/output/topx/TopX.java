@@ -46,9 +46,9 @@ public class TopX extends EsperEventEngine<TopXParameter>{
 		viewExpressions.add(Expressions.constant(bindingParameters.getLimit()));
 		viewExpressions.add(element.getExpression());
 		
-		View timeView = View.create("win", "time", Expressions.constant(30));
+		View timeView = View.create("win", "time", Expressions.timePeriod(0, 0, 60, 0, 0));
 		View view = View.create("ext", "rank", viewExpressions);
-		//stream.addView(timeView);
+		stream.addView(timeView);
 		stream.addView(view);		
 		
 		model.fromClause(new FromClause().add(stream)); // in name
