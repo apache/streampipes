@@ -1,0 +1,15 @@
+<div class="bar-chart">
+    <div style="text-align: right;">
+        <span ng-if="start && end">{{start|date:'HH:mm:ss'}} - {{end|date:'HH:mm:ss'}}</span>&nbsp;
+    </div>
+    <nvd3-multi-bar-chart
+            data="data"
+            xAxisTickFormat="xAxisTickFormatFunction()"
+            x="xFunction()"
+            y="yFunction()"
+            showXAxis="true"
+            showYAxis="true"
+            reduceXTicks="true"
+            tooltips="false">
+    </nvd3-multi-bar-chart>
+</div>

@@ -2,6 +2,20 @@
   margin: 10px 0 30px;
   min-height: 200px;
 }
+
+.widget-label {
+	padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.widget-label-accent {
+	background-color: rgb(255,64,129);
+}
 .widget-container {
   float: left;
   display: inline-block;
@@ -11,13 +25,15 @@
 .widget {
   margin: 0 1em 0 0;
   background-color: white;
-  border: 2px solid #444;
-  border-radius: 5px;
+  border: 1px solid rgb(63,81,181);
   position: relative;
   height: 100%;
 }
 .widget-header {
   overflow: hidden;
+  padding: 10px 15px;
+  color: white;
+  background-color: rgb(63,81,181);
 }
 .widget-header .label {
   display: inline-block;

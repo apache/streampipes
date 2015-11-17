@@ -1710,7 +1710,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     $scope.validate = function() {
     	var valid = true;
     	angular.forEach($scope.selectedElement.staticProperties, function(item) {
-    		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput' || item.input.type == 'CheckboxInput')
+    		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
 			{
     			var optionSelected = false;
     			angular.forEach(item.input.properties.options, function(option) {

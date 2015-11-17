@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -190,16 +190,8 @@ angular
 				url: '/visualizations',
 				views: {
 					"streampipesView@streampipes" : {
-						templateUrl : 'modules/visualizations/visualizations.html',
-						controller: 'AppCtrl'
-					}
-				}
-			}).state('streampipes.visualizationsnew', {
-				url: '/visualizations-new',
-				views: {
-					"streampipesView@streampipes" : {
 						templateUrl : 'modules/visualizations-new/visualizations-new.html',
-						controller: 'Viz2Ctrl'
+						controller: 'VizCtrl'
 					}
 				}
 			})
@@ -441,11 +433,6 @@ angular
              title: 'Visualizations',
              icon: 'editor:ic_insert_chart_24px'
            },
-           {
-               link : 'streampipes.visualizationsnew',
-               title: 'Visualizations-New',
-               icon: 'editor:ic_insert_chart_24px'
-             },
            {
                link : 'streampipes.marketplace',
                title: 'Marketplace',
@@ -1103,6 +1090,12 @@ angular
  	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
  		return $http.get("/semantic-epa-backend/api/v2/ontology/actions/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
  	}
+ 	
+ 	restApi.getRunningVisualizations = function() {
+ 		return $http.get("/semantic-epa-backend/api/visualizations");
+ 	}
 	
 	    return restApi;
 	}]);
+
+
