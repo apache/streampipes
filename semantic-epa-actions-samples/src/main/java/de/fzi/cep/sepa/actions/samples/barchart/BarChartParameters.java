@@ -12,6 +12,7 @@ public class BarChartParameters extends ActionParameters {
 		super(topic, url);
 		this.keyName = keyName;
 		this.valueName = valueName;
+		this.listPropertyName = listPropertyName;
 	}
 
 	public String getKeyName() {

@@ -1,13 +1,12 @@
 package de.fzi.cep.sepa.actions.samples.heatmap;
 
 import static org.rendersnake.HtmlAttributesFactory.id;
-import static org.rendersnake.HtmlAttributesFactory.onClick;
-import static org.rendersnake.HtmlAttributesFactory.type;
+import static org.rendersnake.HtmlAttributesFactory.onLoad;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.rendersnake.HtmlCanvas;
-import org.rendersnake.StringResource;
 
 import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
 
@@ -22,19 +21,11 @@ public class Heatmap extends HtmlGenerator<HeatmapParameters> {
 	protected HtmlCanvas buildHtmlCanvas() {
 		HtmlCanvas canvas = new HtmlCanvas();
 		try {
-			canvas.div()
-			
-			   .script(type("text/javascript"))
-			   		.render(new StringResource("Queue.js",false))
-					.render(new StringResource("stomp.js",false))
-					.render(new StringResource("openlayers.js", false))
-					.render(new StringResource("heatmap.js",false))
-			   		.render(new StringResource("heatmap-openlayers.js",false))
-			   		.render(new StringResource("heatmap-controller.js",false))
-			   ._script()
-			   .button(onClick("buildGoogleMap('" +actionParameters.getUrl() +"', '" +actionParameters.getTopic() +"', '" +actionParameters.getLatitudeName() +"', '" +actionParameters.getLongitudeName() +"', '" +actionParameters.getMaxPoints() +"')").style("btn btn-danger")).write("Load")._button()   
-			   .div(id("container").style("min-width: 310px; height: 700px; margin: 0 auto"))._div()
-			._div();
+			canvas = getStandardizedHeader(canvas, Arrays.asList("Queue.js", "stomp.js", "openlayers.js", "heatmap.js", "heatmap-openlayers.js", "heatmap-controller.js"), Arrays.asList());
+			canvas
+				.body(onLoad("buildGoogleMap('" +actionParameters.getUrl() +"', '" +actionParameters.getTopic() +"', '" +actionParameters.getLatitudeName() +"', '" +actionParameters.getLongitudeName() +"', '" +actionParameters.getMaxPoints() +"')"))
+			   .div(id("container").style("min-width: 310px; height: 700px; margin: 0 auto"))._div();
+			canvas = getStandardizedFooter(canvas);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

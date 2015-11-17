@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyPublisher;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
@@ -40,6 +38,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		stream1.setEventSchema(schema1);
 		
 		SecDescription desc = new SecDescription("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker");
+		desc.setIconUrl(ActionConfig.iconBaseUrl + "/kafka_logo.png");
 		
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);

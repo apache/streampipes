@@ -10,18 +10,18 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
@@ -31,6 +31,8 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("bar", "Bar charts", "Real-Time bar chart", "");
+		sec.setIconUrl(ActionConfig.iconBaseUrl + "/barchart_icon.png");
+		
 		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -86,7 +88,7 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 	@Override
 	public String getHtml(SecInvocation graph) {
 		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
-		
+		System.out.println(SepaUtils.getMappingPropertyName(graph, "key"));
 		String listPropertyName = SepaUtils.getMappingPropertyName(graph, "key").split(",")[0];
 		String keyName = SepaUtils.getMappingPropertyName(graph, "key").split(",")[1];
 		String valueName = SepaUtils.getMappingPropertyName(graph, "value").split(",")[1];

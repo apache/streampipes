@@ -1,24 +1,20 @@
 package de.fzi.cep.sepa.actions.samples.file;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 
 public class FileController extends ActionController {
@@ -27,6 +23,7 @@ public class FileController extends ActionController {
 	public SecDescription declareModel() {
 		
 		SecDescription sec = new SecDescription("file", "File Output", "", "");
+		sec.setIconUrl(ActionConfig.iconBaseUrl + "/file_icon.png");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());

@@ -38,6 +38,7 @@ public class NotificationController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("notification", "Notification", "Displays a notification in the UI panel", "");
+		sec.setIconUrl(ActionConfig.iconBaseUrl + "/notification_icon.png");
 		
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

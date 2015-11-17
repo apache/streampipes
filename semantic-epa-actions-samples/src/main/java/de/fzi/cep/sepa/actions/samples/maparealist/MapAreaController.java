@@ -10,17 +10,18 @@ import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.Geo;
 
 public class MapAreaController extends ActionController {
 
@@ -59,10 +60,10 @@ public class MapAreaController extends ActionController {
 		EventPropertyList listProperty = new EventPropertyList();
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));
-		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI("http://test.de/longitude"));
-		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));
-		EventProperty e4 = new EventPropertyPrimitive(Utils.createURI("http://test.de/longitude"));
+		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI(Geo.lat));
+		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI(Geo.lng));
+		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI(Geo.lat));
+		EventProperty e4 = new EventPropertyPrimitive(Utils.createURI(Geo.lng));
 		EventProperty e5 = new EventPropertyPrimitive();
 		
 		eventProperties.add(e1);

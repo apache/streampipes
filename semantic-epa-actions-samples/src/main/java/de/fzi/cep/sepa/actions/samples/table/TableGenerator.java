@@ -1,13 +1,12 @@
 package de.fzi.cep.sepa.actions.samples.table;
 
 import static org.rendersnake.HtmlAttributesFactory.id;
-import static org.rendersnake.HtmlAttributesFactory.onClick;
-import static org.rendersnake.HtmlAttributesFactory.type;
+import static org.rendersnake.HtmlAttributesFactory.onLoad;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.rendersnake.HtmlCanvas;
-import org.rendersnake.StringResource;
 
 import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
 
@@ -19,15 +18,11 @@ public class TableGenerator extends HtmlGenerator<TableParameters> {
 
 	@Override
 	protected HtmlCanvas buildHtmlCanvas() {
-		for(String column : actionParameters.getColumnNames()) System.out.println(column);
+		
 		HtmlCanvas canvas = new HtmlCanvas();
 		try {
-			canvas.div()
-					.script(type("text/javascript"))
-					.render(new StringResource("stomp.js", false))
-					.render(new StringResource("datatable.js", false))
-					._script()
-					.button(onClick(
+			canvas = getStandardizedHeader(canvas, Arrays.asList("stomp.js", "datatable.js"), Arrays.asList());
+			canvas.body(onLoad(
 							"buildTable('"
 									+ actionParameters.getUrl()
 									+ "', '"
@@ -38,11 +33,10 @@ public class TableGenerator extends HtmlGenerator<TableParameters> {
 									+ toJavascriptArray(actionParameters
 											.getColumnNames()) + ")").style(
 							"btn btn-danger"))
-					.write("Load")
-					._button()
 					.div(id("container").style(
 							"min-width: 310px; height: 400px; margin: 0 auto"))
-					._div()._div();
+					._div();
+			return getStandardizedFooter(canvas);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -48,25 +48,30 @@ function connectStomp(brokerUrl, inputTopic, listPropertyName, key, value) {
 		console.log("connected to Stomp");			
 		console.log("destination: " +inputTopic);
 		client.subscribe(inputTopic, function (message) {
-			
+			console.log(listPropertyName);
 			var j = jQuery.parseJSON(message.body);
 			//console.log(message.body);
-			var marray = j["rows"];
+			var marray = j[listPropertyName];
 			//var key = marray[0].key;
 			var dataObj = new Array();
 			var currentTime = nextTime();
-			
+			console.log(marray);
 			$.each(marray, function(index,element) {
 				var dobj = {};
+				
+				console.log(element);
+				console.log("key");
+				console.log(element[key]);
 			  dobj.time = currentTime;
-			  dobj.y = element.value;
+			  dobj.y = element[value];
 			  if (barData[index] == undefined) 
 				  {
 				  	barData[index] = {};
 				  	barData[index].values = [];
 				  }
 			  barData[index].values.push(dobj);
-			  barData[index].label = element.key;
+			  barData[index].label = "a" +index;
+			  
 			}); 
 			if (marray.length < 5)
 				{

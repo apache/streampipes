@@ -10,24 +10,25 @@ import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
-public class ChartController implements SemanticEventConsumerDeclarer {
+public class LineChartController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("chart", "Line Chart", "Generates a line chart");
+		sec.setIconUrl(ActionConfig.iconBaseUrl + "/line_chart_icon.png");
 		
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
@@ -95,7 +96,7 @@ public class ChartController implements SemanticEventConsumerDeclarer {
 		
 		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, "/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName);
 		
-		return new ChartGenerator(lineChart).generateHtml();
+		return new LineChartGenerator(lineChart).generateHtml();
 	}
 
 	@Override

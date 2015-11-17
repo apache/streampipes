@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
-import de.fzi.cep.sepa.actions.samples.charts.ChartController;
+import de.fzi.cep.sepa.actions.samples.charts.LineChartController;
+import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.evaluation.EvaluationController;
 import de.fzi.cep.sepa.actions.samples.file.FileController;
@@ -20,7 +21,6 @@ import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.route.RouteController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
-import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 
@@ -36,7 +36,7 @@ public class Init implements Runnable {
 		List<SemanticEventConsumerDeclarer> consumers = new ArrayList<>();
 		
 		consumers.add(new JMSConsumer());
-		consumers.add(new ChartController());
+		consumers.add(new LineChartController());
 		consumers.add(new MapsController());
 		consumers.add(new TableViewController());
 		consumers.add(new FileController());
@@ -53,6 +53,7 @@ public class Init implements Runnable {
 		consumers.add(new NotificationController());
 		consumers.add(new KafkaController());
 		consumers.add(new EvaluationController());
+		consumers.add(new CouchDbController());
 		//consumers.add(new HistogramController());
 		
 		try {
