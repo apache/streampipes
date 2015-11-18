@@ -81,7 +81,7 @@ public class MaterialMovementStream extends AbstractHellaStream {
 
 	@Override
 	public boolean isExecutable() {
-		return false;
+		return true;
 	}
 
 }
