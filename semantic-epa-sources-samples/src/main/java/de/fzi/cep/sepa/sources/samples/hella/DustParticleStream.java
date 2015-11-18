@@ -70,7 +70,7 @@ public class DustParticleStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Dust replay");
-		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
+		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Dust.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		
