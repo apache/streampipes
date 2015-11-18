@@ -14,7 +14,7 @@ public class WordCountController extends AbstractFlinkDeclarer<WordCountParamete
 
 	public SepaDescription declareModel() {
 		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("wordcount.jsonLd"), SepaDescription.class);
+			return DeclarerUtils.descriptionFromResources(Resources.getResource("wordcount.jsonld"), SepaDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return null;
