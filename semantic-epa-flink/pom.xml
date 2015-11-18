@@ -57,7 +57,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-runtime-camel</artifactId>
+			<artifactId>semantic-epa-runtime</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
