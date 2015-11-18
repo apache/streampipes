@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +18,7 @@ import de.fzi.cep.sepa.sources.samples.util.Utils;
 public class EnvironmentDataAggregator {
 
 	static final String inputfilenamePrefix = "e:\\hella-data\\collected\\collected\\export\\cleaned\\hella-Bin";
-	static final String outputfilenamePrefix = "e:\\hella-data\\collected\\collected\\export\\cleaned\\aggregated\\hella-bin-2013";
+	static final String outputfilenamePrefix = "e:\\hella-data\\collected\\collected\\export\\cleaned\\aggregated\\hella-bin-all-ids";
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	
@@ -45,7 +44,7 @@ public class EnvironmentDataAggregator {
 					
 					while ((line = reader.readLine()) != null) {
 						String[] lineData = line.split(",");
-						if (lineData[1].startsWith("20.13")) lines.add(lineData);
+						/*if (lineData[1].startsWith("20.13"))*/ lines.add(lineData);
 						if (counter == 0) key = lineData[2];
 						counter++;
 					}

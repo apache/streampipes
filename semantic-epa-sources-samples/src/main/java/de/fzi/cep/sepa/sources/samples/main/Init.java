@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
+import de.fzi.cep.sepa.sources.samples.hella.EnvironmentalDataProducer;
 import de.fzi.cep.sepa.sources.samples.hella.MontracProducer;
 import de.fzi.cep.sepa.sources.samples.hella.MouldingMachineProducer;
 import de.fzi.cep.sepa.sources.samples.hella.VisualInspectionProducer;
@@ -47,6 +48,7 @@ public class Init  {
 			declarers.add(new VisualInspectionProducer());
 			declarers.add(new MontracProducer());
 			declarers.add(new MouldingMachineProducer());
+			declarers.add(new EnvironmentalDataProducer());
 
 		}
 		

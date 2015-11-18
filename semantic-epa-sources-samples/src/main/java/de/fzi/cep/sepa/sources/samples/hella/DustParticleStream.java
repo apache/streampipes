@@ -1,9 +1,15 @@
 package de.fzi.cep.sepa.sources.samples.hella;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -11,8 +17,16 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
+import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
+import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
+import de.fzi.cep.sepa.sources.samples.csv.LineParser;
+import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
+import de.fzi.cep.sepa.sources.samples.hella.parser.DustLineParser;
 
 public class DustParticleStream extends AbstractHellaStream {
+
+	public static final String dustFolder =System.getProperty("user.home") + File.separator +".streampipes" +File.separator +"sources" +File.separator +"data" +File.separator +"dust" +File.separator;
 
 	@Override
 	public EventStream declareModel(SepDescription sep) {
@@ -21,7 +35,7 @@ public class DustParticleStream extends AbstractHellaStream {
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_type", "", Utils.createURI(SO.Text)));
+		eventProperties.add(EpProperties.stringEp("variable_type", SO.Text));
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "id", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "bin0", "", Utils.createURI(SO.Number)));
@@ -54,14 +68,29 @@ public class DustParticleStream extends AbstractHellaStream {
 
 	@Override
 	public void executeStream() {
-		// TODO Auto-generated method stub
 		
+		System.out.println("Execute Dust replay");
+		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
+		
+		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
+		
+		LineParser dustLineParser = new DustLineParser();
+		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ",", "variable_timestamp", dustLineParser, true);
+				
+		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
+		mouldingReplayThread.start();
+	}
+
+	private List<FolderReadingTask> makeFolderReadingTasks() {
+	
+		FolderReadingTask task = new FolderReadingTask(dustFolder, "hella-bin-all-ids-sorted-", "csv", 0, 0);
+		
+		return Arrays.asList(task);
 	}
 
 	@Override
 	public boolean isExecutable() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

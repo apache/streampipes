@@ -20,7 +20,7 @@ public class MontracProducer implements SemanticEventProducerDeclarer {
 	
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
-		
+	
 		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
 		
 		streams.add(new MaterialMovementStream());

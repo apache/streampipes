@@ -77,7 +77,7 @@ public class TaxiStreamGenerator implements Runnable {
 				
 				
 				while ((line = br.readLine()) != null) {
-					if (counter > -1 && counter <= 2000000)
+					if (counter > -1 && counter <= 200000)
 					{
 						try {
 							counter++;
@@ -121,6 +121,12 @@ public class TaxiStreamGenerator implements Runnable {
 			builder.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
 			builder.append("}");
 			publisher.onEvent(builder.toString());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//System.out.println(builder.toString());
 			//publisher.onEvent(s);
 			//if (publishCurrentTime) timePublisher.onEvent(String.valueOf(currentDropOffTime));

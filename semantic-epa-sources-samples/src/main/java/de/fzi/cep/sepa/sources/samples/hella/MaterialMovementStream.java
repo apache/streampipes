@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
@@ -14,10 +13,8 @@ import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
 import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
 import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
@@ -59,6 +56,7 @@ public class MaterialMovementStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
+		System.out.println("Execute Montrac");
 		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
