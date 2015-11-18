@@ -43,70 +43,17 @@
 								<excludes>
 									<!-- This list contains all dependencies of flink-dist Everything 
 										else will be packaged into the fat-jar -->
-									<exclude>org.apache.flink:flink-shaded-*</exclude>
-									<exclude>org.apache.flink:flink-core</exclude>
-									<exclude>org.apache.flink:flink-java</exclude>
-									<exclude>org.apache.flink:flink-scala</exclude>
-									<exclude>org.apache.flink:flink-runtime</exclude>
-									<exclude>org.apache.flink:flink-optimizer</exclude>
-									<exclude>org.apache.flink:flink-clients</exclude>
-									<exclude>org.apache.flink:flink-spargel</exclude>
-									<exclude>org.apache.flink:flink-avro</exclude>
-									<exclude>org.apache.flink:flink-java-examples</exclude>
-									<exclude>org.apache.flink:flink-scala-examples</exclude>
-									<exclude>org.apache.flink:flink-streaming-examples</exclude>
-									<exclude>org.apache.flink:flink-streaming-core</exclude>
-
+									
 									<!-- Also exclude very big transitive dependencies of Flink WARNING: 
 										You have to remove these excludes if your code relies on other versions of 
 										these dependencies. -->
-									<exclude>org.scala-lang:scala-library</exclude>
-									<exclude>org.scala-lang:scala-compiler</exclude>
-									<exclude>org.scala-lang:scala-reflect</exclude>
-									<exclude>com.amazonaws:aws-java-sdk</exclude>
-									<exclude>com.typesafe.akka:akka-actor_*</exclude>
-									<exclude>com.typesafe.akka:akka-remote_*</exclude>
-									<exclude>com.typesafe.akka:akka-slf4j_*</exclude>
-									<exclude>io.netty:netty-all</exclude>
-									<exclude>io.netty:netty</exclude>
-									<exclude>org.eclipse.jetty:jetty-server</exclude>
-									<exclude>org.eclipse.jetty:jetty-continuation</exclude>
-									<exclude>org.eclipse.jetty:jetty-http</exclude>
-									<exclude>org.eclipse.jetty:jetty-io</exclude>
-									<exclude>org.eclipse.jetty:jetty-util</exclude>
-									<exclude>org.eclipse.jetty:jetty-security</exclude>
-									<exclude>org.eclipse.jetty:jetty-servlet</exclude>
-									<exclude>commons-fileupload:commons-fileupload</exclude>
-									<exclude>org.apache.avro:avro</exclude>
-									<exclude>com.thoughtworks.paranamer:paranamer</exclude>
-									<exclude>org.xerial.snappy:snappy-java</exclude>
-									<exclude>org.apache.commons:commons-compress</exclude>
-									<exclude>org.tukaani:xz</exclude>
-									<exclude>com.esotericsoftware.kryo:kryo</exclude>
-									<exclude>com.esotericsoftware.minlog:minlog</exclude>
-									<exclude>org.objenesis:objenesis</exclude>
-									<exclude>com.twitter:chill_*</exclude>
+											<exclude>com.twitter:chill_*</exclude>
 									<exclude>com.twitter:chill-java</exclude>
 									<exclude>com.twitter:chill-avro_*</exclude>
 									<exclude>com.twitter:chill-bijection_*</exclude>
 									<exclude>com.twitter:bijection-core_*</exclude>
 									<exclude>com.twitter:bijection-avro_*</exclude>
-									<exclude>junit:junit</exclude>
-									<exclude>de.javakaffee:kryo-serializers</exclude>
-									<exclude>joda-time:joda-time</exclude>
-									<exclude>org.apache.commons:commons-math</exclude>
-									<exclude>org.apache.sling:org.apache.sling.commons.json</exclude>
-									<exclude>commons-logging:commons-logging</exclude>
-									<exclude>commons-codec:commons-codec</exclude>
-									<exclude>org.codehaus.jettison:jettison</exclude>
-									<exclude>stax:stax-api</exclude>
-									<exclude>com.typesafe:config</exclude>
-									<exclude>org.uncommons.maths:uncommons-maths</exclude>
-									<exclude>com.github.scopt:scopt_*</exclude>
-									<exclude>org.mortbay.jetty:servlet-api</exclude>
-									<exclude>commons-io:commons-io</exclude>
-									<exclude>commons-cli:commons-cli</exclude>
-									<filters>
+										<filters>
 
 
 									</filters>
@@ -116,7 +63,6 @@
 								<filter>
 									<artifact>org.apache.flink:*</artifact>
 									<excludes>
-										<exclude>org/apache/flink/shaded/**</exclude>
 										<exclude>web-docs/**</exclude>
 									</excludes>
 								</filter>
