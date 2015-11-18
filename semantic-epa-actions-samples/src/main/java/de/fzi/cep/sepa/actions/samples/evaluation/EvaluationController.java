@@ -9,19 +9,19 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
@@ -37,7 +37,7 @@ public class EvaluationController extends ActionController {
 		SecDescription sec = new SecDescription("evaluation", "Evaluation File Output", "File Output used for evaluation purposes", "");
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(Arrays.asList(URI.create(SO.Number)));
+		EventProperty e1 = new EventPropertyPrimitive(Arrays.asList(URI.create(SO.Number), URI.create("http://schema.org/DateTime")));
 		eventProperties.add(e1);
 		
 		EventSchema schema1 = new EventSchema();
