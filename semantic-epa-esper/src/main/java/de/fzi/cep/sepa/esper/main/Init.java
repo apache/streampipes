@@ -27,6 +27,9 @@ import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.meets.MeetsController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
+import de.fzi.cep.sepa.esper.observe.numerical.value.ObserveNumerical;
+import de.fzi.cep.sepa.esper.observe.numerical.value.ObserveNumericalController;
+import de.fzi.cep.sepa.esper.observe.numerical.window.ObserveNumericalWindowController;
 import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.PatternController;
 import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
@@ -69,6 +72,8 @@ public class Init implements Runnable {
 		declarers.add(new DistributionController());
 		declarers.add(new StaticValueEnricherController());
 		declarers.add(new AbsenceController());
+		declarers.add(new ObserveNumericalController());
+		declarers.add(new ObserveNumericalWindowController());
 		declarers.add(new ShuttleTimeController());
 		declarers.add(new MinShuttleTimeController());
 		declarers.add(new TestCollectionController());
