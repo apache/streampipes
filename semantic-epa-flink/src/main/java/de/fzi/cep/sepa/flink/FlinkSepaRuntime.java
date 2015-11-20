@@ -85,7 +85,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> implements R
 	
 	public boolean stop()
 	{
-		FlinkJobController ctrl = new FlinkJobController("ipe-koi05.fzi.de", 6123);
+		FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
 		try {
 			return ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), params.getGraph().getElementId()));	
 	
