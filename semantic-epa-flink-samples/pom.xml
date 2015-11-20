@@ -41,19 +41,14 @@
 						<configuration>
 							<artifactSet>
 								<excludes>
-									<!-- This list contains all dependencies of flink-dist Everything 
-										else will be packaged into the fat-jar -->
-									
+									<exclude>org.apache.flink:flink-java-examples</exclude>
+									<exclude>org.apache.flink:flink-scala-examples</exclude>
+									<exclude>org.apache.flink:flink-streaming-examples</exclude>
+								
 									<!-- Also exclude very big transitive dependencies of Flink WARNING: 
 										You have to remove these excludes if your code relies on other versions of 
 										these dependencies. -->
-											<exclude>com.twitter:chill_*</exclude>
-									<exclude>com.twitter:chill-java</exclude>
-									<exclude>com.twitter:chill-avro_*</exclude>
-									<exclude>com.twitter:chill-bijection_*</exclude>
-									<exclude>com.twitter:bijection-core_*</exclude>
-									<exclude>com.twitter:bijection-avro_*</exclude>
-										<filters>
+												<filters>
 
 
 									</filters>

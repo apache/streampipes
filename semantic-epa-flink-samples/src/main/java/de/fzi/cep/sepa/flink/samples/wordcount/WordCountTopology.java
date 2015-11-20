@@ -1,15 +1,16 @@
 package de.fzi.cep.sepa.flink.samples.wordcount;
 
 import java.io.Serializable;
+import java.util.Map;
 
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.converter.ObjectToMapConverter;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 
-public class WordCountTopology extends FlinkSepaRuntime<WordCountParameters, Tuple2<String, Integer>> implements Serializable {
+public class WordCountTopology extends FlinkSepaRuntime<WordCountParameters> implements Serializable {
 
 	public WordCountTopology(WordCountParameters params)
 	{
@@ -21,19 +22,16 @@ public class WordCountTopology extends FlinkSepaRuntime<WordCountParameters, Tup
 		super(params, config);
 	}
 	
-	protected DataStream<Tuple2<String, Integer>> getApplicationLogic(DataStream<String> messageStream)
-	{
-		return messageStream.flatMap(new JsonExtractor()).groupBy(0).sum(1);
-	}
-
 	@Override
-	protected SerializationSchema<Tuple2<String, Integer>, byte[]> getKafkaSerializer() {
-		return new SimpleKafkaSerializer();
-	}
-
-	@Override
-	protected SerializationSchema<Tuple2<String, Integer>, String> getJmsSerializer() {
-		return new SimpleJmsSerializer();
+	protected DataStream<Map<String, Object>> getApplicationLogic(
+			DataStream<Map<String, Object>> messageStream) {
+		
+		String textMapping = SepaUtils.getMappingPropertyName(params.getGraph(), "text-mapping");
+		return messageStream
+				.flatMap(new WordSplitter(textMapping))
+				.keyBy("word")
+				.sum("count")
+				.flatMap(new ObjectToMapConverter<Word>());
 	}
 		
 }

@@ -6,6 +6,9 @@
     "sepa:hasOutputStrategy" : {
       "@id" : "urn:fzi.de:fixedoutputstrategy:LUASdT"
     },
+    "sepa:hasStaticProperty" : {
+      "@id" : "urn:fzi.de:mappingpropertyunary:swjegv"
+    },
     "sepa:hasURI" : "http://frosch.fzi.de:8094/sepa/wordcount",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:QSvrJe"
@@ -31,7 +34,10 @@
   }, {
     "@id" : "urn:fzi.de:eventschema:VNpsAS",
     "@type" : "sepa:EventSchema",
-    "sepa:elementName" : "urn:fzi.de:eventschema:VNpsAS"
+    "sepa:elementName" : "urn:fzi.de:eventschema:VNpsAS",
+    "sepa:hasEventProperty" : {
+      "@id" : "fzi:U6uCmGFLg7qz"
+    }
   }, {
     "@id" : "urn:fzi.de:eventstream:QSvrJe",
     "@type" : "sepa:EventStream",
@@ -69,6 +75,20 @@
       "@value" : "0"
     }
   }, {
+    "@id" : "urn:fzi.de:mappingpropertyunary:swjegv",
+    "@type" : "sepa:MappingPropertyUnary",
+    "http://schema.org/valueRequired" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    },
+    "sepa:elementName" : "urn:fzi.de:mappingpropertyunary:swjegv",
+    "sepa:internalName" : "text-mapping",
+    "sepa:mapsFrom" : {
+      "@id" : "fzi:U6uCmGFLg7qz"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Select a text-based property",
+    "http://www.w3.org/2000/01/rdf-schema#label" : "Text Property"
+  }, {
     "@id" : "fzi:235d61d9-7186-45ba-90ba-7aff5f440a57",
     "@type" : "sepa:EventPropertyPrimitive",
     "sepa:domainProperty" : {
@@ -77,6 +97,17 @@
     "sepa:elementName" : "urn:fzi.de:sepa:235d61d9-7186-45ba-90ba-7aff5f440a57",
     "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
     "sepa:hasRuntimeName" : "word",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:U6uCmGFLg7qz",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/text"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:U6uCmGFLg7qz",
     "sepa:required" : {
       "@type" : "xsd:boolean",
       "@value" : "false"

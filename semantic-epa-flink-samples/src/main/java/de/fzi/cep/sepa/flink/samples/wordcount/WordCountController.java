@@ -22,7 +22,7 @@ public class WordCountController extends AbstractFlinkDeclarer<WordCountParamete
 	}
 
 	@Override
-	protected FlinkSepaRuntime<WordCountParameters, ?> getRuntime(
+	protected FlinkSepaRuntime<WordCountParameters> getRuntime(
 			SepaInvocation graph) {
 		return new WordCountTopology(new WordCountParameters(graph), new FlinkDeploymentConfig("./semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar", "ipe-koi05.fzi.de", 6123));
 		//return new WordCountTopology(new WordCountParameters(graph));
