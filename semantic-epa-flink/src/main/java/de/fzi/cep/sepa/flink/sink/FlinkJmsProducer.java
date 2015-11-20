@@ -8,6 +8,10 @@ import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 
 public class FlinkJmsProducer<IN> extends RichSinkFunction<IN>  { 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String brokerUrl;
 	private String producerTopic;
 	

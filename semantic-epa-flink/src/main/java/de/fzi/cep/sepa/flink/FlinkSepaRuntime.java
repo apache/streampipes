@@ -1,15 +1,9 @@
 package de.fzi.cep.sepa.flink;
 
 import java.io.Serializable;
-import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Future;
 
-import org.apache.flink.api.common.JobExecutionResult;
-import org.apache.flink.api.java.ExecutionEnvironment;
-import org.apache.flink.client.program.ContextEnvironment;
-import org.apache.flink.runtime.akka.AkkaUtils;
-import org.apache.flink.runtime.jobmanager.JobManager;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
@@ -17,16 +11,21 @@ import org.apache.flink.streaming.connectors.kafka.api.KafkaSink;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
-import akka.actor.ActorRef;
-import akka.pattern.Patterns;
+import de.fzi.cep.sepa.flink.converter.JsonToMapFormat;
+import de.fzi.cep.sepa.flink.serializer.SimpleJmsSerializer;
+import de.fzi.cep.sepa.flink.serializer.SimpleKafkaSerializer;
 import de.fzi.cep.sepa.flink.sink.FlinkJmsProducer;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
-public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implements Runnable, Serializable {
+public abstract class FlinkSepaRuntime<B extends BindingParameters> implements Runnable, Serializable {
 
-	private B params;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected B params;
 	private FlinkDeploymentConfig config;
 	
 	private boolean debug;
@@ -52,20 +51,19 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 	@SuppressWarnings("deprecation")
 	public boolean execute()
 	{
-		//ExecutionEnvironment contextEnvironment = ContextEnvironment.getExecutionEnvironment();
-		//contextEnvironment.get
 		if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
 		else this.env = StreamExecutionEnvironment.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
 			
 		DataStream<String> messageStream = env
 				  .addSource(new FlinkKafkaConsumer082<>(getInputTopic(), new SimpleStringSchema(), getProperties()));
 		
-		DataStream<T> applicationLogic = getApplicationLogic(messageStream);
+		DataStream<Map<String, Object>> convertedStream = messageStream.flatMap(new JsonToMapFormat());
+		DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
 		
-		SerializationSchema<T, byte[]> kafkaSerializer = getKafkaSerializer();
-		SerializationSchema<T, String> jmsSerializer = getJmsSerializer();
+		SerializationSchema<Map<String, Object>, byte[]> kafkaSerializer = new SimpleKafkaSerializer();
+		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
 		
-		if (isOutputKafkaProtocol()) applicationLogic.addSink(new KafkaSink<T>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
+		if (isOutputKafkaProtocol()) applicationLogic.addSink(new KafkaSink<Map<String, Object>>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
 		else applicationLogic.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
 		thread = new Thread(this);
@@ -94,10 +92,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters, T> implement
 		return true;
 	}
 	
-	protected abstract SerializationSchema<T, byte[]> getKafkaSerializer();
-	protected abstract SerializationSchema<T, String> getJmsSerializer();
-	
-	protected abstract DataStream<T> getApplicationLogic(DataStream<String> messageStream);
+	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream);
 	
 	
 	private String getInputTopic()

@@ -7,7 +7,7 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public abstract class AbstractFlinkDeclarer<B extends BindingParameters> implements SemanticEventProcessingAgentDeclarer {
 
-	private FlinkSepaRuntime<B, ?> runtime;
+	private FlinkSepaRuntime<B> runtime;
 	private SepaInvocation graph;
 	
 	public Response invokeRuntime(SepaInvocation graph)
@@ -28,5 +28,5 @@ public abstract class AbstractFlinkDeclarer<B extends BindingParameters> impleme
 			return new Response(graph.getElementId(), false);
 	}
 	
-	protected abstract FlinkSepaRuntime<B, ?> getRuntime(SepaInvocation graph);
+	protected abstract FlinkSepaRuntime<B> getRuntime(SepaInvocation graph);
 }
