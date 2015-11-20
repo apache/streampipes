@@ -44,11 +44,11 @@
 									<exclude>org.apache.flink:flink-java-examples</exclude>
 									<exclude>org.apache.flink:flink-scala-examples</exclude>
 									<exclude>org.apache.flink:flink-streaming-examples</exclude>
-								
+
 									<!-- Also exclude very big transitive dependencies of Flink WARNING: 
 										You have to remove these excludes if your code relies on other versions of 
 										these dependencies. -->
-												<filters>
+									<filters>
 
 
 									</filters>
@@ -80,6 +80,10 @@
 								</transformer>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>reference.conf</resource>
+								</transformer>
 
 							</transformers>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
