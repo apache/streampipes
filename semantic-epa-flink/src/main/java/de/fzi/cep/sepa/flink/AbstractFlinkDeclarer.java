@@ -13,6 +13,7 @@ public abstract class AbstractFlinkDeclarer<B extends BindingParameters> impleme
 	public Response invokeRuntime(SepaInvocation graph)
 	{
 		runtime = getRuntime(graph);
+		this.graph = graph;
 		
 		if (runtime.execute())
 			return new Response(graph.getElementId(), true);

@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.flink.converter;
 
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
@@ -10,8 +11,7 @@ public class ObjectToMapConverter<T extends Object> implements FlatMapFunction<T
 	@Override
 	public void flatMap(T in, Collector<Map<String, Object>> out)
 			throws Exception {
-		out.collect(new org.apache.commons.beanutils.BeanMap(in));
-		
+		out.collect(BeanUtils.describe(in));	
 	}
 
 }

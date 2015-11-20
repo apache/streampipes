@@ -38,6 +38,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> implements R
 	public FlinkSepaRuntime(B params)
 	{
 		this.params = params;
+		this.config = new FlinkDeploymentConfig("", "localhost", 6123);
 		this.debug = true;
 	}
 	
@@ -62,22 +63,21 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> implements R
 		
 		SerializationSchema<Map<String, Object>, byte[]> kafkaSerializer = new SimpleKafkaSerializer();
 		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
-		
+		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic.addSink(new KafkaSink<Map<String, Object>>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
 		else applicationLogic.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
 		thread = new Thread(this);
 		thread.start();
-		
+				
 		return true;
 	}
 	
 	public void run()
 	{
 		try {
-			//JobExecutionResult result = env.execute();
-			env.execute();
-			
+			env.execute(params.getGraph().getElementId());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,11 +85,15 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> implements R
 	
 	public boolean stop()
 	{
-		//ActorRef jobManager = JobManager.getJobManagerRemoteReference(new InetSocketAddress(config.getHost(), config.getPort()), AkkaUtils.createActorSystem(null), 1000);
-		//Future<Object> response = Patterns.ask(jobManager, new CancelJob(jobId), 
-		 
-		thread.stop();
-		return true;
+		FlinkJobController ctrl = new FlinkJobController("ipe-koi05.fzi.de", 6123);
+		try {
+			return ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), params.getGraph().getElementId()));	
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 	
 	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream);
