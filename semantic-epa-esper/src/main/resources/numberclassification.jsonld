@@ -11,7 +11,7 @@
 			}, {
 				"@id" : "urn:fzi.de:collectionstaticproperty:XDWIEG"
 			} ],
-			"sepa:hasURI" : "http://philipp-Vostro-3560:8090/sepa/classification/number",
+			"sepa:hasURI" : "http://frosch.fzi.de:8090/sepa/classification/number",
 			"sepa:requires" : {
 				"@id" : "urn:fzi.de:eventstream:bSEwxI"
 			},

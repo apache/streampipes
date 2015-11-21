@@ -19,7 +19,7 @@
     }, {
       "@id" : "urn:fzi.de:mappingpropertyunary:vWmzea"
     } ],
-    "sepa:hasURI" : "http://philipp-Vostro-3560:8090/sepa/observenumericalvaluewindow",
+    "sepa:hasURI" : "http://frosch.fzi.de:8090/sepa/observenumericalvaluewindow",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:YsXymI"
     },
