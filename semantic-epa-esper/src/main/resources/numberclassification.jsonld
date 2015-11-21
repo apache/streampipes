@@ -1,6 +1,6 @@
 {
 	"@graph" : [ {
-		"@id" : "http://philipp-Vostro-3560:8090/sepa/classification/number",
+		"@id" : "http://frosch.fzi.de:8090/sepa/classification/number",
 			"@type" : "sepa:SemanticEventProcessingAgent",
 			"sepa:hasName" : "NumberClassification",
 			"sepa:hasOutputStrategy" : {
