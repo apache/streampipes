@@ -14,6 +14,7 @@ public class DeploymentConfiguration {
 	private DeploymentType deploymentType;
 	private DeploymentMethod deploymentMethod;
 
+	private String elementType;
 	
 	public DeploymentConfiguration(String groupId, String artifactId,
 			String classNamePrefix, int port) {
@@ -87,5 +88,13 @@ public class DeploymentConfiguration {
 	public void setDeploymentMethod(DeploymentMethod deploymentMethod) {
 		this.deploymentMethod = deploymentMethod;
 	}
-		
+
+	public String getElementType() {
+		return elementType;
+	}
+
+	public void setElementType(String elementType) {
+		this.elementType = elementType;
+	}
+			
 }
