@@ -10,14 +10,14 @@ import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.converter.ObjectToMapConverter;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 
-public class WordCountTopology extends FlinkSepaRuntime<WordCountParameters> implements Serializable {
+public class WordCountProgram extends FlinkSepaRuntime<WordCountParameters> implements Serializable {
 
-	public WordCountTopology(WordCountParameters params)
+	public WordCountProgram(WordCountParameters params)
 	{
 		super(params);
 	}
 	
-	public WordCountTopology(WordCountParameters params, FlinkDeploymentConfig config)
+	public WordCountProgram(WordCountParameters params, FlinkDeploymentConfig config)
 	{
 		super(params, config);
 	}
