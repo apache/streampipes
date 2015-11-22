@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
@@ -12,6 +13,7 @@ import org.restlet.Restlet;
 import com.clarkparsia.empire.SupportsRdfId;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.desc.declarer.Declarer;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
@@ -52,6 +54,25 @@ public class RestletGenerator {
 		this.port = port;
 		this.contextPath = "";
 		this.standalone = true;
+	}
+	
+	public RestletGenerator addRestlets(List<Declarer<?, ?>> declarers) {
+		addSepaRestlets(declarers
+			.stream()
+			.filter(d -> d instanceof SemanticEventProcessingAgentDeclarer)
+			.map(d -> ((SemanticEventProcessingAgentDeclarer) d)).collect(Collectors.toList()));
+		
+		addSecRestlets(declarers
+				.stream()
+				.filter(d -> d instanceof SemanticEventConsumerDeclarer)
+				.map(d -> ((SemanticEventConsumerDeclarer) d)).collect(Collectors.toList()));
+		
+		addSepRestlets(declarers
+				.stream()
+				.filter(d -> d instanceof SemanticEventProducerDeclarer)
+				.map(d -> ((SemanticEventProducerDeclarer) d)).collect(Collectors.toList()));
+		
+		return this;
 	}
 	
 	public RestletGenerator addSepaRestlets(List<SemanticEventProcessingAgentDeclarer> declarers) {
@@ -113,17 +134,21 @@ public class RestletGenerator {
 
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
 
-			SecDescription sec = declarer.declareModel();
+			SecDescription sec = new SecDescription(declarer.declareModel());
+			if (sec.getUri().startsWith("http")) sec.setUri(sec.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", ""));
+			
 			String pathName = sec.getUri();
 			if (standalone) 
 			{
 				pathName = "/" +sec.getUri();
 				sec.setUri(baseUri +pathName);
+				sec.setRdfId(new SupportsRdfId.URIKey(URI.create(sec.getUri())));
 			}
 			else
 			{
 				pathName = sec.getUri();
 				sec.setUri(baseUri +"/" +pathName);
+				sec.setRdfId(new SupportsRdfId.URIKey(URI.create(sec.getUri())));
 			}
 			
 			addConfig(pathName, new SecRestlet(sec, declarer));

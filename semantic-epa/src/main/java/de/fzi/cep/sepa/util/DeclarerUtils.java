@@ -21,6 +21,7 @@ public class DeclarerUtils {
 			return new JsonLdTransformer().fromJsonLd(Resources.toString(resourceUrl, Charsets.UTF_8), destination);
 		} catch (RDFParseException | UnsupportedRDFormatException
 				| RepositoryException | IOException e) {
+			e.printStackTrace();
 			throw new SepaParseException();
 		}
 	}
