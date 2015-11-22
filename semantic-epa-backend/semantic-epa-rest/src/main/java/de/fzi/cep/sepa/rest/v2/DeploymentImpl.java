@@ -22,7 +22,10 @@ import com.sun.jersey.multipart.FormDataParam;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.manager.generation.ArchetypeManager;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
@@ -59,12 +62,19 @@ public class DeploymentImpl extends AbstractRestInterface {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response getDescription(@FormDataParam("config") String deploymentConfig, @FormDataParam("model") String model) {
 		
-		SepaDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
+		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
+		Class<? extends NamedSEPAElement> targetClass;
 		
-		File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() +RandomStringUtils.randomAlphabetic(8) +File.separator +makeName(sepa.getName()) +".jsonld");
+		if (config.getElementType().equals("Sepa")) targetClass = SepaDescription.class;
+		else if (config.getElementType().equals("Sec")) targetClass = SecDescription.class; 
+		else targetClass = SepDescription.class;
+		
+		NamedSEPAElement element = GsonSerializer.getGsonWithIds().fromJson(model, targetClass);
+		
+		File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() +RandomStringUtils.randomAlphabetic(8) +File.separator +makeName(element.getName()) +".jsonld");
 		
 		try {
-			FileUtils.write(file, Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
+			FileUtils.write(file, Utils.asString(new JsonLdTransformer().toJsonLd(element)));
 			return Response.ok(file).header("Content-Disposition",
 	                "attachment; filename=" +file.getName()).build();
 		} catch (RDFHandlerException | IllegalAccessException
