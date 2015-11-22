@@ -1,7 +1,13 @@
 package de.fzi.cep.sepa.flink;
 
-public class FlinkDeploymentConfig {
+import java.io.Serializable;
 
+public class FlinkDeploymentConfig implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String jarFile;
 	private String host;
 	private int port;

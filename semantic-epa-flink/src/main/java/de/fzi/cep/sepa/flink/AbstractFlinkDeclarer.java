@@ -1,21 +1,21 @@
 package de.fzi.cep.sepa.flink;
 
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.desc.declarer.Declarer;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
-public abstract class AbstractFlinkDeclarer<B extends BindingParameters> implements SemanticEventProcessingAgentDeclarer {
+public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extends InvocableSEPAElement, ER extends FlinkRuntime<I>> implements Declarer<D, I> {
 
-	private FlinkSepaRuntime<B> runtime;
-	private SepaInvocation graph;
+	protected I graph;
+	protected ER runtime;
 	
-	public Response invokeRuntime(SepaInvocation graph)
+	public Response invokeRuntime(I graph)
 	{
 		runtime = getRuntime(graph);
 		this.graph = graph;
 		
-		if (runtime.execute())
+		if (runtime.startExecution())
 			return new Response(graph.getElementId(), true);
 		else
 			return new Response(graph.getElementId(), false); 
@@ -29,5 +29,6 @@ public abstract class AbstractFlinkDeclarer<B extends BindingParameters> impleme
 			return new Response(graph.getElementId(), false);
 	}
 	
-	protected abstract FlinkSepaRuntime<B> getRuntime(SepaInvocation graph);
+	protected abstract ER getRuntime(I graph);
+	
 }
