@@ -60,7 +60,7 @@
 									      <h4>{{errorMessage}}</h4>
 								</div>
 								<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri, selectedSepa)">Generate</md-button>
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri, selectedSepa, 'Sepa')">Generate</md-button>
 								</div>
 								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
 							</div>
@@ -177,11 +177,11 @@
 									      <h4>{{errorMessage}}</h4>
 								</div>
 								<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedAction.uri)">Create implementation</md-button>
-									<md-button class="md-accent md-raised" ng-click="downloadJsonLd(selectedAction.uri)">Download description file</md-button>							
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedAction.uri, selectedAction, 'Sec')">Generate</md-button>
 								</div>
 								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
 							</div>
+					
 						</md-content>
 					</div>
 				</div>

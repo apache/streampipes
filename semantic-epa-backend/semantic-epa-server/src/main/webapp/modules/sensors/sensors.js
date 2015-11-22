@@ -100,7 +100,7 @@ angular.module('streamPipesApp')
     };
     
     
-    $scope.openDownloadDialog = function(elementId, elementData){
+    $scope.openDownloadDialog = function(elementId, elementData, elementType){
 		 $mdDialog.show({
 	   	      controller: DownloadDialogController,
 	   	      templateUrl: 'modules/sensors/templates/downloadDialog.tmpl.html',
@@ -110,7 +110,8 @@ angular.module('streamPipesApp')
 	   	      preserveScope:true,
 		   	  locals : {
 		   		  elementId : elementId,
-		   		  elementData : elementData
+		   		  elementData : elementData,
+		   		  elementType : elementType
 		      }
 	   	    })
 	 }
@@ -121,17 +122,15 @@ angular.module('streamPipesApp')
     
 });
 
-function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, $http) {
+function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, elementType, $http) {
 
 	$scope.elementId = elementId;
 	$scope.deployment = {};
 	$scope.deployment.elemendId = elementId;
+	$scope.deployment.elementType = elementType;
 	
 	$scope.loading = false;
-	
-	console.log("ELEMENTDATA");
-	console.log(elementData);
-	
+		
 	$scope.generateImplementation = function() {	
 		$scope.loading = true;
 		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/implementation', data : getFormData()}).
