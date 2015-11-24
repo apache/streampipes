@@ -11,16 +11,27 @@ sources:
   net: "host"
   ports:
     - "8089:8089"
+  volumes:
+    - "./config:/root/.streampipes"
 esper:
   image: laus.fzi.de:5000/fzi/semantic-epa-esper
   net: "host"  
   ports:
     - "8090:8090"
+  volumes:
+    - "./config:/root/.streampipes"
 actions:
   image: laus.fzi.de:5000/fzi/semantic-epa-actions-samples
   net: "host"
   ports:
     - "8091:8091"
+  volumes:
+    - "./config:/root/.streampipes"
+storm-sentiment:
+  image: laus.fzi.de:5000/fzi/semantic-epa-storm-topology-sentiment
+  net: "host"
+  ports:
+    - "8093:8093"
 activemq:
   image: laus.fzi.de:5000/fzi/activemq
   net: "host"
@@ -43,9 +54,16 @@ kafka:
   net: "host"
   ports:
     - "9092:9092"
-kafka-web-console:
-  image: hwestphal/kafka-web-console
-  ports:
+kafka-manager:
+  image: sheepkiller/kafka-manager
+  ports: 
     - "9000:9000"
-  volumes:
-    - "./config/kafka-web-console:/data hwestphal/kafka-web-console"
+  environment:
+    ZK_HOSTS: "ipe-koi04.fzi.de:2181"
+    APPLICATION_SECRET: "letmein"
+#kafka-web-console:
+#  image: hwestphal/kafka-web-console
+#  ports:
+#    - "9000:9000"
+#  volumes:
+#    - "./config/kafka-web-console:/data hwestphal/kafka-web-console"
