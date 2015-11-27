@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.config;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;

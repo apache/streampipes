@@ -3,16 +3,13 @@ package de.fzi.cep.sepa.sources.samples.taxi;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.JMSException;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;

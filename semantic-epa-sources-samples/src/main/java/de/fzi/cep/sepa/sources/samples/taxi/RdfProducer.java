@@ -6,8 +6,6 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 
-import de.fzi.cep.sepa.model.vocabulary.SEPA;
-
 public class RdfProducer {
 
 	private String medallion;

@@ -11,16 +11,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
-
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.json.JSONObject;
+
+import de.fzi.cep.sepa.model.impl.Domain;
 
 public class Utils {
 	

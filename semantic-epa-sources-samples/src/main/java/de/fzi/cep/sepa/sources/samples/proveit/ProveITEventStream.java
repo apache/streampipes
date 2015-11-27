@@ -7,20 +7,19 @@ import java.util.Map;
 
 import javax.jms.JMSException;
 
-import de.fzi.cep.sepa.model.vocabulary.XSD;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import de.fzi.proveit.senslet.model.Senslet;
 import de.fzi.proveit.senslet.model.input.BarcodeInput;
