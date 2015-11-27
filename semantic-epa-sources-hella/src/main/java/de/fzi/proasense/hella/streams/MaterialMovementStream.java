@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.proasense.hella.config.HellaVariables;
 import de.fzi.proasense.hella.main.AbstractHellaStream;
 
