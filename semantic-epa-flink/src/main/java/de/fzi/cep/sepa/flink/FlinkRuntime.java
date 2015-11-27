@@ -37,6 +37,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	}
 	
 	public FlinkRuntime(I graph, FlinkDeploymentConfig config) {
+		this.graph = graph;
 		this.config = config;
 		this.debug = false;
 	}
