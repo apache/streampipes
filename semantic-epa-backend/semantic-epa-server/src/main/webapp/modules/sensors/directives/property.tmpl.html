@@ -5,6 +5,14 @@
    			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeProperty(properties.eventProperties, key2)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
 	</div>
 
+	<md-input-container>
+   	<label>Label</label>
+       <input ng-model="property.properties.label" ng-disabled="disabled" >
+   	</md-input-container>
+   	<md-input-container>
+   	<label>Description</label>
+       <input ng-model="property.properties.description" ng-disabled="disabled" >
+   	</md-input-container>
    	<md-input-container>
    	<label>Datatype</label>
        <select ng-model="property.properties.runtimeType" ng-disabled="disabled">

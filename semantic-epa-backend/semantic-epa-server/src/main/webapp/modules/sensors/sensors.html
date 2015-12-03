@@ -15,9 +15,6 @@
 							<md-button  ng-click="loadSepaDetails(selectedSepa.uri, true, false)" class="md-button md-accent" style="width:24px;height:24px;">
 								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Edit"></md-icon>  Modify 
 							</md-button>					
-<!-- 							<md-button  ng-click="loadSepaDetails(selectedSepa.uri, false, false)" class="md-button md-accent" style="width:24px;height:24px;"> -->
-<!-- 								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Clone"></md-icon>  Clone  -->
-<!-- 							</md-button>		 -->
 						</div>		
 					</div>
 				</div>
@@ -29,16 +26,6 @@
 						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadSepaDetails(sepa.uri, true, true)">
 						       <div flex="100" layout="row">
 						        <div flex="100" layout="row" layout-align="start center" class="tree-node-title"> {{sepa.name}}</div>
-<!-- 						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action"> -->
-<!-- 						        	<md-button  ng-click="openDownloadDialog(sepa.uri, selectedSepa)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"> -->
-<!-- 						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon> -->
-<!-- 						        	</md-button> -->
-<!-- 						        </div>	      -->
-<!-- 						        <div flex="20" layout="row" layout-align="end center" class="tree-node-action"> -->
-<!-- 						        	<md-button  ng-click="deleteProperty(sepa.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"> -->
-<!-- 						        		<md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete"></md-icon> -->
-<!-- 						        	</md-button> -->
-<!-- 						        </div>	  -->
 						       </div>
 						     </div>
 						    </li>
@@ -70,7 +57,7 @@
 			</md-tab>
 			<md-tab label="Sources"> 
 				<div layout="row">
-					<md-button class="md-accent" ng-click="openAddElementDialog('Concept')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
+					<md-button class="md-accent" ng-click="addNewSource()"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
 				</div>
 				<div flex layout="row">
 <!-- 					<div flex-sm="30" flex-gt-sm="40" layout-sm="column"> -->
@@ -150,12 +137,7 @@
 						    <li ng-repeat="action in actions" ui-tree-node>
 						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadActionDetails(action.uri, true, true)">
 						       <div flex="100" layout="row">
-						        <div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{action.name}}</div>
-						        <div flex="20" layout="row" layout-align="start center" class="tree-node-action">
-						        	<md-button  ng-click="openDownloadDialog(action.uri)" class="md-icon-button tree-node-action" style="width:24px;height:24px;">
-						        		<md-icon md-svg-icon="file:ic_file_download_24px" aria-label="Download"></md-icon>
-						        	</md-button>
-						        </div>	      
+						        <div flex="100" layout="row" layout-align="start center" class="tree-node-title"> {{action.name}}</div>
 						       </div>
 						     </div>
 						    </li>
