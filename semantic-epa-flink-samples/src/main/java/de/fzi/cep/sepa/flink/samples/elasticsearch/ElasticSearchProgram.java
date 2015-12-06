@@ -2,13 +2,17 @@ package de.fzi.cep.sepa.flink.samples.elasticsearch;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSink;
+import org.apache.flink.util.Collector;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
 
@@ -44,11 +48,35 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
 
 		String indexName = SepaUtils.getFreeTextStaticPropertyValue(graph, "index-name");
 		String typeName = SepaUtils.getFreeTextStaticPropertyValue(graph, "type-name");
+		String timeName = SepaUtils.getMappingPropertyName(graph, "timestamp");
+	
 		
 		List<TransportAddress> transports = new ArrayList<>();
 		transports.add(new InetSocketTransportAddress("ipe-koi05.fzi.de", 9300));
 
-		return convertedStream.addSink(new ElasticsearchSink<Map<String, Object>>(config, transports, new ElasticSearchIndexRequestBuilder(indexName, typeName)));
-		
+//		data.map(new MapFunction<String, Integer>() {
+//			  public Integer map(String value) { return Integer.parseInt(value); }
+//			});
+
+		return convertedStream.flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
+
+			@Override
+			public void flatMap(Map<String, Object> arg0, Collector<Map<String, Object>> arg1) throws Exception {
+				arg0.put("timestamp", new Date((long) arg0.get(timeName)));
+				arg1.collect(arg0);
+			}
+
+			
+			
+		}).addSink(new ElasticsearchSink<Map<String, Object>>(config, transports, new ElasticSearchIndexRequestBuilder(indexName, typeName)));
+
+//		return convertedStream.map(new MapFunction<Map<String, Object>, Map<String, Object>>() {
+//		    @Override
+//		    public Map<String, Object> map(Map<String, Object> element) throws Exception {
+////		    	Date d = new Date((long) element.get("appendedTime"));
+//		    	Date d = new Date();
+//		        return element.put(timestamp", d);
+//		    }
+//		})		
 	}
 }
