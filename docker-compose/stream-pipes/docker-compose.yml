@@ -32,6 +32,11 @@ storm-sentiment:
   net: "host"
   ports:
     - "8093:8093"
+flink:
+  image: laus.fzi.de:5000/fzi/semantic-epa-flink-samples
+  net: "host"
+  ports:
+    - "8094:8094"
 activemq:
   image: laus.fzi.de:5000/fzi/activemq
   net: "host"
