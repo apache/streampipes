@@ -39,7 +39,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 	@Override
 	protected FlinkSecRuntime getRuntime(SecInvocation graph) {
 		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
-		//return new ElasticSearchProgram(graph);
+//		return new ElasticSearchProgram(graph);
 	}
 
 }
