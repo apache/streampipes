@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.flink;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -98,7 +99,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 		Properties props = new Properties();
 		props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
 		props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
-		props.put("group.id", "group1");
+		props.put("group.id", UUID.randomUUID().toString());
 		props.put("zookeeper.session.timeout.ms", "60000");
 		props.put("zookeeper.sync.time.ms", "20000");
 		props.put("auto.commit.interval.ms", "10000");
