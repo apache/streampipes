@@ -40,7 +40,7 @@ public class PipelineExecutor {
 		if (status.isSuccess()) 
 		{
 			String uri = sec.getUri();
-			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "https://proasense.nissatech.com/actions");
+			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "http://proasense.nissatech.com/actions");
 			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
 			StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
