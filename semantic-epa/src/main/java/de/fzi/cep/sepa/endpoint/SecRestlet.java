@@ -48,7 +48,8 @@ public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation>
 					Server.INSTANCE.getComponent().getDefaultHost().detach(this);
 					de.fzi.cep.sepa.model.impl.Response detachResponse = instanceDeclarers.get(graph.getElementId()).detachRuntime(graph.getCorrespondingPipeline());
 					instanceDeclarers.remove(graph.getElementId());
-					sendStatus(response, detachResponse);
+					//sendStatus(response, detachResponse);
+					sendStatus(response, new de.fzi.cep.sepa.model.impl.Response(graph.getElementId(), true));
 				}
 			}
 		};
