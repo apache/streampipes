@@ -16,6 +16,7 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
 
 import com.clarkparsia.empire.Empire;
+import com.clarkparsia.empire.EmpireOptions;
 import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
@@ -48,7 +49,7 @@ public enum EmpireManager {
 			
 			//Map<String,String> props = empireCfg.getGlobalConfig();
 	        //props.put("com.clarkparsia.empire.annotation.RdfsClass", CustomAnnotationProvider.getAnnotatedClassesAsString());
-			
+			EmpireOptions.STRICT_MODE = false;
 		    Empire.init(empireCfg, new OpenRdfEmpireModule()); 
 		    Map<Object, Object> map = new HashMap<Object,Object>(); 
 		    map.put(RepositoryFactoryKeys.REPO_HANDLE, repository); 

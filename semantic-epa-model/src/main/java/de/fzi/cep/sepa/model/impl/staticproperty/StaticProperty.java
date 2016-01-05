@@ -85,5 +85,7 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	public void setValueRequired(boolean valueRequired) {
 		this.valueRequired = valueRequired;
 	}
+	
+	public abstract void accept(StaticPropertyVisitor visitor);
 
 }

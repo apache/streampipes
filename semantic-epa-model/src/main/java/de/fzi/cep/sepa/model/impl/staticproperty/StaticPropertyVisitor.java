@@ -8,5 +8,7 @@ public interface StaticPropertyVisitor {
 	public void visit(MappingPropertyUnary p);
 	public void visit(OneOfStaticProperty p);
 	public void visit(MatchingStaticProperty matchingStaticProperty);
+	public void visit(CollectionStaticProperty p);
+	public void visit(DomainStaticProperty p);
 
 }

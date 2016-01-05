@@ -72,4 +72,8 @@ public class DomainStaticProperty extends StaticProperty {
 	public void setSupportedProperties(List<SupportedProperty> supportedProperties) {
 		this.supportedProperties = supportedProperties;
 	}
+	
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}
 }

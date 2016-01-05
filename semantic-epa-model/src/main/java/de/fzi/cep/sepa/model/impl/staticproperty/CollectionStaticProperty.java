@@ -63,8 +63,8 @@ public class CollectionStaticProperty extends StaticProperty {
 	public void setMemberType(String memberType) {
 		this.memberType = memberType;
 	}
-	
-		
-	
 
+	public void accept(StaticPropertyVisitor visitor) {
+		visitor.visit(this);
+	}
 }
