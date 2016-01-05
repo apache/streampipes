@@ -54,7 +54,7 @@ public class ControllerClassGenerator {
 
 	private void addInvokeBody(JCodeModel cm, JMethod invokeMethod) {
 		CodeGenerationVisitor visitor = new CodeGenerationVisitor(cm, invokeMethod, graph);
-		graph.getStaticProperties().forEach(sp -> sp.accept(visitor));
+		//graph.getStaticProperties().forEach(sp -> sp.accept(visitor));
 		
 	}
 
