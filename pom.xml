@@ -108,6 +108,7 @@
     	<module>semantic-epa-runtime</module>
     	<module>semantic-epa-runtime-camel</module>
     	<module>semantic-epa-runtime-flat</module>
+    	<module>semantic-epa-sources-proasense-monitoring</module>
 	</modules>
 
 	<!-- Build Settings -->
