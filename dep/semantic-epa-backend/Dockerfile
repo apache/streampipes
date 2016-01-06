@@ -49,6 +49,8 @@ ADD /openrdf-sesame.war /usr/local/tomcat/webapps/openrdf-sesame.war
 ADD /openrdf-workbench.war /usr/local/tomcat/webapps/openrdf-workbench.war
 ADD ./de.fzi.cep.sepa/semantic-epa-sources-hella/1.0-SNAPSHOT/semantic-epa-sources-hella-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/sources-hella.war
 ADD ./de.fzi.cep.sepa/semantic-epa-sources-mhwirth/0.0.1-SNAPSHOT/semantic-epa-sources-mhwirth-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/sources-mhwirth.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/1.0-SNAPSHOT/semantic-epa-sources-proasense-monitoring-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/sources-monitoring.war
+
 
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml
