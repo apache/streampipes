@@ -41,6 +41,10 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 	public EventStream declareModel(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
+		stream.setName("Prediction Monitoring");
+		stream.setDescription("Monitors output of ProaSense predictions");
+		stream.setUri(sep.getUri() + "/prediction");
+
 
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
@@ -53,7 +57,7 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 		stream.setEventSchema(schema);
 		
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(IN_TOPIC));
+		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(OUT_TOPIC));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 				
 		stream.setEventGrounding(grounding);	

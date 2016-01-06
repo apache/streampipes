@@ -42,6 +42,9 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 	public EventStream declareModel(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
+		stream.setName("Recommendation Monitoring");
+		stream.setDescription("Monitors output of ProaSense recommendations");
+		stream.setUri(sep.getUri() + "/recommendation");
 
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
