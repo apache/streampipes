@@ -73,6 +73,7 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 	
 	@Override
 	public void onEvent(String json) {
+		System.out.println(json);
 		Optional<PredictedEvent> recEvent = deserialize(json.getBytes());
 		if (recEvent.isPresent())
 			producer.send(toJson(recEvent.get()).getBytes());
@@ -83,7 +84,7 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 		jsonObj.addProperty("pdfType", re.getPdfType().getValue());
 		jsonObj.addProperty("eventName", re.getEventName());
 		jsonObj.addProperty("time", re.getTimestamp());
-		
+		System.out.println(jsonObj.toString());
 		return jsonObj.toString();
 		
 	}
@@ -113,4 +114,8 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 		return true;
 	}
 
+	public static void main(String[] args) {
+		Thread thread = new Thread(new PredictionStream());
+		thread.start();
+	}
 }

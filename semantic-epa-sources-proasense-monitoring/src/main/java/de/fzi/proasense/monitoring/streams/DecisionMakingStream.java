@@ -69,6 +69,8 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 
 	@Override
 	public void executeStream() {
+		System.out.println("****");
+		System.out.println("Executing Decision Making Stream...");
 		Thread thread = new Thread(new DecisionMakingStream());
 		thread.start();
 	}
@@ -80,6 +82,7 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 
 	@Override
 	public void onEvent(String json) {
+		System.out.println("received");
 		Optional<RecommendationEvent> recEvent = deserialize(json.getBytes());
 		if (recEvent.isPresent())
 			producer.send(toJson(recEvent.get()).getBytes());
@@ -92,6 +95,7 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 		jsonObj.addProperty("recommendationId", re.getRecommendationId());
 		jsonObj.addProperty("time", re.getTimestamp());
 		jsonObj.addProperty("actionTimestamp", Long.parseLong(re.getEventProperties().get("action_timestamp").getValue()));
+		System.out.println(jsonObj.toString());
 		return jsonObj.toString();
 		
 	}
@@ -114,6 +118,11 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), "rec_mon",
 				new String[] {IN_TOPIC}, this);
 		kafkaConsumerGroup.run(1);
+	}
+	
+	public static void main(String[] args) {
+		Thread thread = new Thread(new DecisionMakingStream());
+		thread.start();
 	}
 
 }
