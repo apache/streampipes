@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -23,7 +23,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
-public class LineChartController implements SemanticEventConsumerDeclarer {
+public class LineChartController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
@@ -84,7 +84,9 @@ public class LineChartController implements SemanticEventConsumerDeclarer {
 
 	@Override
 	public String getHtml(SecInvocation graph) {
-		String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
+		//String newUrl = graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
+		String newUrl = createWebsocketUri(graph);
+		String inputTopic = extractTopic(graph);
 		
 		String variableName = SepaUtils.getMappingPropertyName(graph, "Mapping");
 		String title = ((FreeTextStaticProperty) (SepaUtils
@@ -94,7 +96,7 @@ public class LineChartController implements SemanticEventConsumerDeclarer {
 		String yAxis = ((FreeTextStaticProperty) (SepaUtils
 				.getStaticPropertyByInternalName(graph, "yTitle"))).getValue();
 		
-		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, "/topic/" + graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName(), newUrl, variableName);
+		LineChartParameters lineChart = new LineChartParameters(title, xAxis, yAxis, inputTopic, newUrl, variableName);
 		
 		return new LineChartGenerator(lineChart).generateHtml();
 	}
