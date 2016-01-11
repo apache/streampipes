@@ -16,7 +16,8 @@ public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountPar
 	@Override
 	public SepaDescription declareModel() {
 		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("wordcount.jsonld"), SepaDescription.class);
+			return DeclarerUtils.descriptionFromResources(Resources.getResource("wordcount.jsonld"),
+					SepaDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return null;
@@ -24,10 +25,10 @@ public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountPar
 	}
 
 	@Override
-	protected FlinkSepaRuntime<WordCountParameters> getRuntime(
-			SepaInvocation graph) {
-		return new WordCountProgram(new WordCountParameters(graph), new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
-		//return new WordCountProgram(new WordCountParameters(graph));
+	protected FlinkSepaRuntime<WordCountParameters> getRuntime(SepaInvocation graph) {
+		return new WordCountProgram(new WordCountParameters(graph),
+				new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+		// return new WordCountProgram(new WordCountParameters(graph));
 
 	}
 }
