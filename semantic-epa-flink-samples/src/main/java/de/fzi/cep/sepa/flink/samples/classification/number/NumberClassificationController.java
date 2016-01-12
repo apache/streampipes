@@ -8,7 +8,9 @@ import com.google.common.io.Resources;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
@@ -53,7 +55,7 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 		// SepaUtils.getSupportedPropertyValue(m, SO.Text)))
 		// .collect(Collectors.toList());
 
-		//TODO find a better solution
+		// TODO find a better solution
 		List<DataClassification> domainConceptData = new ArrayList<>();
 		List<SupportedProperty> supportedProperties = domainConcepts.get(0).getSupportedProperties();
 		for (int i = 0; i < supportedProperties.size() - 2; i = i + 3) {
@@ -62,14 +64,13 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 					supportedProperties.get(i + 2).getValue()));
 		}
 
-		// return new NumberClassificationProgram(new
-		// NumberClassificationParameters(graph, propertyName, outputProperty,
-		// domainConceptData),
-		// new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST,
-		// Config.FLINK_PORT));
-
 		return new NumberClassificationProgram(
-				new NumberClassificationParameters(graph, propertyName, outputProperty, domainConceptData));
+				new NumberClassificationParameters(graph, propertyName, outputProperty, domainConceptData),
+				new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+
+//		 return new NumberClassificationProgram(
+//		 new NumberClassificationParameters(graph, propertyName,
+//		 outputProperty, domainConceptData));
 	}
 
 }

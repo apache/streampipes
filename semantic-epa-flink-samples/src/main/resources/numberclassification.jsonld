@@ -18,7 +18,7 @@
     "sepa:supportedGrounding" : {
       "@id" : "urn:fzi.de:eventgrounding:UsGOAP"
     },
-    "http://www.w3.org/2000/01/rdf-schema#description" : "Label your data"
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Label your data. Based on Apache Flink."
   }, {
     "@id" : "urn:fzi.de:appendoutputstrategy:aUUNfu",
     "@type" : "sepa:AppendOutputStrategy",
