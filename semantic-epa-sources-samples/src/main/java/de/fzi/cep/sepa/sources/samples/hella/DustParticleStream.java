@@ -77,7 +77,7 @@ public class DustParticleStream extends AbstractHellaStream {
 		LineParser dustLineParser = new DustLineParser();
 		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ",", "variable_timestamp", dustLineParser, true);
 				
-		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
+		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.PERFORMANCE_TEST));
 		mouldingReplayThread.start();
 	}
 
