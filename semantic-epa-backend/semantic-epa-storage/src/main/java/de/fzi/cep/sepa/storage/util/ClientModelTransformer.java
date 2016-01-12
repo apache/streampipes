@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
-import de.fzi.cep.sepa.model.client.*;
+import de.fzi.cep.sepa.model.client.ActionClient;
+import de.fzi.cep.sepa.model.client.SEPAClient;
+import de.fzi.cep.sepa.model.client.SourceClient;
+import de.fzi.cep.sepa.model.client.StaticPropertyType;
+import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
@@ -20,11 +26,15 @@ import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.client.input.SliderInput;
 import de.fzi.cep.sepa.model.client.input.SupportedProperty;
 import de.fzi.cep.sepa.model.client.input.TextInput;
-import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
@@ -34,10 +44,6 @@ import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class ClientModelTransformer {
@@ -263,6 +269,8 @@ public class ClientModelTransformer {
 		StaticProperty propertyDescription = collectionStaticProperty.getMembers().get(0);
 		List<StaticProperty> members = new ArrayList<>();
 		collectionStaticProperty.setMemberType(multipleValueInput.getMemberType());
+		
+		
 		for(de.fzi.cep.sepa.model.client.StaticProperty clientInput : multipleValueInput.getMembers()) {
 			if (multipleValueInput.getMemberType().equals("de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty")) 
 			{
@@ -272,6 +280,10 @@ public class ClientModelTransformer {
 			{
 				members.add(convertDomainStaticProperty(new DomainStaticProperty((DomainStaticProperty)propertyDescription), (DomainConceptInput) clientInput.getInput()));
 			}
+		}
+		
+		for(int i = 0; i < members.size(); i++) {
+			if (i > 0) members.get(i).setElementName("urn.fzi.de:" + members.get(i).getClass().getSimpleName().toLowerCase() +":" +RandomStringUtils.randomAlphabetic(6));
 		}
 		
 		collectionStaticProperty.setMembers(members);
