@@ -46,23 +46,21 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m)
 				.collect(Collectors.toList());
 
-		// List<DataClassification> domainConceptData = domainConcepts.stream()
-		// .map(m -> new
-		// DataClassification(Double.parseDouble(SepaUtils.getSupportedPropertyValue(m,
-		// SO.MinValue)),
-		// Double.parseDouble(SepaUtils.getSupportedPropertyValue(m,
-		// SO.MaxValue)),
-		// SepaUtils.getSupportedPropertyValue(m, SO.Text)))
-		// .collect(Collectors.toList());
+		List<DataClassification> domainConceptData = domainConcepts.stream()
+				.map(m -> new DataClassification(
+						Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
+						Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
+						SepaUtils.getSupportedPropertyValue(m, SO.Text)))
+				 .collect(Collectors.toList());
 
 		// TODO find a better solution
-		List<DataClassification> domainConceptData = new ArrayList<>();
-		List<SupportedProperty> supportedProperties = domainConcepts.get(0).getSupportedProperties();
-		for (int i = 0; i < supportedProperties.size() - 2; i = i + 3) {
-			domainConceptData.add(new DataClassification(Double.parseDouble(supportedProperties.get(i).getValue()),
-					Double.parseDouble(supportedProperties.get(i + 1).getValue()),
-					supportedProperties.get(i + 2).getValue()));
-		}
+//		List<DataClassification> domainConceptData = new ArrayList<>();
+//		List<SupportedProperty> supportedProperties = domainConcepts.get(0).getSupportedProperties();
+//		for (int i = 0; i < supportedProperties.size() - 2; i = i + 3) {
+//			domainConceptData.add(new DataClassification(Double.parseDouble(supportedProperties.get(i).getValue()),
+//					Double.parseDouble(supportedProperties.get(i + 1).getValue()),
+//					supportedProperties.get(i + 2).getValue()));
+//		}
 
 		return new NumberClassificationProgram(
 				new NumberClassificationParameters(graph, propertyName, outputProperty, domainConceptData),
