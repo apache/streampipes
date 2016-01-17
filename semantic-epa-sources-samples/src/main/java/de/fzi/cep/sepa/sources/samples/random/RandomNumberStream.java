@@ -57,7 +57,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "",
-				de.fzi.cep.sepa.commons.Utils.createURI("http://test.de/timestamp")));
+				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "randomValue", "",
 				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"), randomValueQualities));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "randomString", "",
