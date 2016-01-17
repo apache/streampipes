@@ -71,6 +71,9 @@ public enum ClientConfiguration {
 	
 	private boolean nissatechRunning;
 	
+	private long simulationMaxEvents;
+	private long simulationDelayMs;
+	
 	
 	private PropertiesConfiguration config;
 	
@@ -125,6 +128,9 @@ public enum ClientConfiguration {
 			properties.put("iconPort", 8080);
 			properties.put("iconScheme", "http");
 			
+			properties.put("simulationMaxEvents", 10000);
+			properties.put("simulationDelayMs", 0);
+			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
 			if (!file.exists())
@@ -178,6 +184,9 @@ public enum ClientConfiguration {
 			this.proveItActive = config.getBoolean("proveItActive");
 			
 			this.nissatechRunning = config.getBoolean("nissatechRunning");
+			
+			this.simulationMaxEvents = config.getLong("simulationMaxEvents");
+			this.simulationDelayMs = config.getLong("simulationDelayMs");
 			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
@@ -321,6 +330,14 @@ public enum ClientConfiguration {
 
 	public String getIconScheme() {
 		return iconScheme;
+	}
+	
+	public long getSimulationMaxEvents() {
+		return simulationMaxEvents;
+	}
+	
+	public long getSimulationDelayMs() {
+		return simulationDelayMs;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
