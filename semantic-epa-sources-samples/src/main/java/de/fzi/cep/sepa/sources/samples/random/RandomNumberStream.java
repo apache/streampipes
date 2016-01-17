@@ -6,32 +6,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.jms.JMSException;
-
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.codehaus.jettison.json.JSONObject;
 
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
@@ -39,11 +36,12 @@ import eu.proasense.internal.VariableType;
 
 public class RandomNumberStream implements EventStreamDeclarer {
 
-	ActiveMQPublisher samplePublisher;
+	//ActiveMQPublisher samplePublisher;
 	ProaSenseInternalProducer kafkaProducer;
+	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
 
-	public RandomNumberStream() throws JMSException {
-		samplePublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Random.Number");
+	public RandomNumberStream() {
+		//samplePublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Random.Number");
 		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Random.Number");
 	}
 
@@ -97,16 +95,15 @@ public class RandomNumberStream implements EventStreamDeclarer {
 				Random random = new Random();
 				TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
 				int j = 0;
-				for (;;) {
+				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
 					try {
 						byte[] payload = serializer
 								.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
-//						samplePublisher.sendBinary(payload);
-						if (j % 100 == 0) {
+						if (j % 1000 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
-						kafkaProducer.send(payload);
-						Thread.sleep(1000);
+						//kafkaProducer.send(payload);
+						Thread.sleep(SIMULATION_DELAY_MS);
 						j++;
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -169,6 +166,10 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		String[] randomStrings = new String[] { "a", "b", "c", "d" };
 		Random random = new Random();
 		return randomStrings[random.nextInt(3)];
+	}
+	
+	public static void main(String[] args) {
+		new RandomNumberStream().executeStream();
 	}
 
 }
