@@ -58,7 +58,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	@Override
 	public void onEvent(byte[] json) {
 		
-		if (counter % 10 == 0) System.out.println(counter + " Event processed."); 
+		if (counter % 1000 == 0) System.out.println(counter + " Event processed."); 
 		counter++;
 	
 		if (running)
