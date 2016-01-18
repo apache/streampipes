@@ -10,6 +10,7 @@ WORKDIR $CATALINA_HOME
 
 RUN apk update
 RUN apk add gpgme
+RUN apk add curl
 
 RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
