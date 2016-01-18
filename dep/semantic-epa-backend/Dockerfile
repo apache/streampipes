@@ -57,4 +57,4 @@ ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/1.0-SNAPSHOT/sem
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml
 
-CMD ["catalina.sh", "run"]
+CMD ["apache-tomcat-8.0.28/catalina.sh", "run"]
