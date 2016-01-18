@@ -4,7 +4,7 @@ FROM anapsix/alpine-java
 
 
 ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/apache-tomcat-8.0.28/bin:$PATH
+ENV PATH $CATALINA_HOME/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
@@ -40,8 +40,8 @@ RUN set -x \
 	&& curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
 	&& curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
 	&& gpg --verify tomcat.tar.gz.asc \
-	&& tar -xvf tomcat.tar.gz \
-	&& rm apache-tomcat-8.0.28/bin/*.bat \
+	&& tar -xvf tomcat.tar.gz --strip-components=1 \
+	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* 
 
 EXPOSE 8080
