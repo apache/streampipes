@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -95,22 +94,15 @@ public class RandomNumberStream implements EventStreamDeclarer {
 			public void run() {
 				Random random = new Random();
 				TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
-				TDeserializer deserializer = new TDeserializer(new TBinaryProtocol.Factory());
 				int j = 0;
 				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
 					try {
 						byte[] payload = serializer
 								.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
 						if (j % 1000 == 0) {
-							//System.out.println(j +" Events (Random Number) sent.");
+							System.out.println(j +" Events (Random Number) sent.");
 						}
 						kafkaProducer.send(payload);
-						System.out.println(new String(payload));
-						SimpleEvent deserializedEvent = new SimpleEvent();
-						deserializer.deserialize(deserializedEvent, payload);
-						
-						System.out.println(deserializedEvent.getSensorId());
-						
 						Thread.sleep(SIMULATION_DELAY_MS);
 						j++;
 					} catch (InterruptedException e) {
@@ -168,7 +160,6 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "RandomNumber", map);
 		simpleEvent.setSensorId("RNS");
 		simpleEvent.setSensorIdIsSet(true);
-		System.out.println(simpleEvent.toString());
 		return simpleEvent;
 	}
 
