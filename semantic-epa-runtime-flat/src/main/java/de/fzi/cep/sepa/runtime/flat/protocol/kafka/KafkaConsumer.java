@@ -25,7 +25,6 @@ public class KafkaConsumer extends Consumer<byte[]> {
 	
 	@Override
 	public void openConsumer() {
-		System.out.println("Datatype is" +dataType.getClass().getCanonicalName());
 		kafkaConsumerGroup = new KafkaConsumerGroup(zookeeperHost +":" +zookeeperPort, RandomStringUtils.randomAlphabetic(6),
 				new String[] {topic}, this);
 		kafkaConsumerGroup.run(1);

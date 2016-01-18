@@ -30,7 +30,6 @@ public class ThriftDatatypeDefinition implements DatatypeDefinition {
 		SimpleEvent simpleEvent = new SimpleEvent();
 		try {
 			deserializer.deserialize(simpleEvent, input);
-			System.out.println(simpleEvent.toString());
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
