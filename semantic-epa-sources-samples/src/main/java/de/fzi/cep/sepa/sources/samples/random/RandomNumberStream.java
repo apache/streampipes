@@ -98,7 +98,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
 					try {
 						byte[] payload = serializer
-								.serialize(buildSimpleEvent(System.currentTimeMillis(), random.nextInt(100), j));
+								.serialize(buildSimpleEvent(System.nanoTime(), random.nextInt(100), j));
 						if (j % 1000 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
