@@ -33,8 +33,6 @@ public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
   
     public void send(byte[] byteMsg)
     {	
-    	System.out.println("Producer" +new String(byteMsg).toString());
-    	
     	try {
     	ProducerRecord<String, byte[]> record = new ProducerRecord<String, byte[]>(producerTopic, byteMsg);
     	i++;
