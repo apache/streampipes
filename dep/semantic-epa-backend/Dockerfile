@@ -41,7 +41,7 @@ RUN set -x \
 	&& curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
 	&& gpg --verify tomcat.tar.gz.asc \
 	&& tar -xvf tomcat.tar.gz \
-	&& rm bin/*.bat \
+	&& rm apache-tomcat-8.0.28/bin/*.bat \
 	&& rm tomcat.tar.gz* 
 
 EXPOSE 8080
