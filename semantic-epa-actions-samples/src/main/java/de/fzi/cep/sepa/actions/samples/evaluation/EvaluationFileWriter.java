@@ -83,7 +83,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 		if (running)
 		{
 			
-			long currentTimestamp = System.currentTimeMillis();
+			long currentTimestamp = System.nanoTime();
 			StringBuilder output = new StringBuilder();
 			output.append(counter);
 			output.append(",");
