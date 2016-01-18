@@ -4,7 +4,7 @@ FROM anapsix/alpine-java
 
 
 ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
+ENV PATH $CATALINA_HOME/apache-tomcat-8.0.28/bin:$PATH
 RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
@@ -57,4 +57,4 @@ ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/1.0-SNAPSHOT/sem
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml
 
-CMD ["apache-tomcat-8.0.28/catalina.sh", "run"]
+CMD ["catalina.sh", "run"]
