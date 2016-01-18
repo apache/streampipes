@@ -73,7 +73,7 @@ public enum ClientConfiguration {
 	
 	private long simulationMaxEvents;
 	private long simulationDelayMs;
-	
+	private int simulationDelayNs;
 	
 	private PropertiesConfiguration config;
 	
@@ -130,6 +130,7 @@ public enum ClientConfiguration {
 			
 			properties.put("simulationMaxEvents", 10000);
 			properties.put("simulationDelayMs", 0);
+			properties.put("simulationDelayNs", 0);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -187,6 +188,7 @@ public enum ClientConfiguration {
 			
 			this.simulationMaxEvents = config.getLong("simulationMaxEvents");
 			this.simulationDelayMs = config.getLong("simulationDelayMs");
+			this.simulationDelayNs = config.getInt("simulationDelayNs");
 			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
@@ -338,6 +340,10 @@ public enum ClientConfiguration {
 	
 	public long getSimulationDelayMs() {
 		return simulationDelayMs;
+	}
+	
+	public int getSimulationDelayNs() {
+		return simulationDelayNs;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
