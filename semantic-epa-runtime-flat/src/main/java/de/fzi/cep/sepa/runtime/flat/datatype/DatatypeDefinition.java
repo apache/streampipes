@@ -4,7 +4,8 @@ import java.util.Map;
 
 public interface DatatypeDefinition {
 
-	public Map<String, Object> unmarshal(String input);
+	public Map<String, Object> unmarshal(byte[] input);
 	
-	public String marshal(Object event);
+	public byte[] marshal(Object event);
+	
 }

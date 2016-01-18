@@ -1,13 +1,20 @@
 package de.fzi.cep.sepa.commons.messaging.activemq;
 
-import javax.jms.*;
+import javax.jms.BytesMessage;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 
 
-public class ActiveMQPublisher implements IMessagePublisher {
+public class ActiveMQPublisher implements IMessagePublisher<String> {
 	private Connection connection;
 	private Session session;
 	private MessageProducer producer;
@@ -63,7 +70,7 @@ public class ActiveMQPublisher implements IMessagePublisher {
 	}
 
 	@Override
-	public void onEvent(String message) {
+	public void publish(String message) {
 		try {
 			sendText(message);
 		} catch (JMSException e) {

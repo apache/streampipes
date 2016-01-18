@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.runtime.flat.protocol.jms;
 import javax.jms.JMSException;
 
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Producer;
 
 public class JmsProducer extends Producer {
@@ -13,16 +14,17 @@ public class JmsProducer extends Producer {
 	
 	private ActiveMQPublisher publisher;
 	
-	public JmsProducer(String brokerHostname, int brokerPort, String topic) {
+	public JmsProducer(String brokerHostname, int brokerPort, String topic, DatatypeDefinition dataType) {
+		super(dataType);
 		this.brokerHostname = brokerHostname;
 		this.brokerPort = brokerPort;
 		this.topic = topic;
 	}
 	
 	@Override
-	public void onEvent(String message) {
+	public void publish(Object message) {
 		try {
-			publisher.sendText(message);
+			publisher.sendText(new String(dataType.marshal(message)));
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

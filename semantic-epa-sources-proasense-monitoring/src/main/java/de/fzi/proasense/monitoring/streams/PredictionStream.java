@@ -28,7 +28,7 @@ import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.proasense.config.ProaSenseSettings;
 import eu.proasense.internal.PredictedEvent;
 
-public class PredictionStream implements EventStreamDeclarer, Runnable, IMessageListener {
+public class PredictionStream implements EventStreamDeclarer, Runnable, IMessageListener<byte[]> {
 
 	private static final String IN_TOPIC = "eu.proasense.internal.oa.mhwirth.predicted";
 	private static final String OUT_TOPIC = "eu.proasense.internal.sp.monitoring.prediction";
@@ -72,9 +72,9 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 	}
 	
 	@Override
-	public void onEvent(String json) {
-		System.out.println(json);
-		Optional<PredictedEvent> recEvent = deserialize(json.getBytes());
+	public void onEvent(byte[] payload) {
+		System.out.println(payload);
+		Optional<PredictedEvent> recEvent = deserialize(payload);
 		if (recEvent.isPresent())
 			producer.send(toJson(recEvent.get()).getBytes());
 	}

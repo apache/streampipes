@@ -57,7 +57,7 @@ public class MaterialMovementStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Montrac");
-		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
+		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

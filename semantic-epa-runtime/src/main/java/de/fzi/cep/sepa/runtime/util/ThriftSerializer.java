@@ -25,7 +25,7 @@ public class ThriftSerializer {
 		Map<String, ComplexValue> eventProperties = new HashMap<>();
 		for(String propertyName : mapValue.keySet())
 		{
-			if (!propertyName.equals("time"))
+			if (!propertyName.equals("timestamp"))
 			{
 				ComplexValue value = new ComplexValue();
 				value.setValue(String.valueOf(mapValue.get(propertyName)));
@@ -48,7 +48,7 @@ public class ThriftSerializer {
 	
 	public Object toMap(SimpleEvent simpleEvent) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("time", simpleEvent.getTimestamp());
+		map.put("timestamp", simpleEvent.getTimestamp());
 		Map<String, ComplexValue> eventProperties = simpleEvent.getEventProperties();
 		for(String propertyName : eventProperties.keySet())
 		{

@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.actions.samples.proasense;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.thrift.TBase;
@@ -26,7 +26,7 @@ import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
 import eu.proasense.internal.VariableType;
 
-public class ProaSenseTopologyPublisher implements IMessageListener {
+public class ProaSenseTopologyPublisher implements IMessageListener<byte[]> {
 
 	private ProaSenseInternalProducer producer;
 	private SecInvocation graph;
@@ -49,12 +49,12 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	}
 	
 	@Override
-	public void onEvent(String json) {
+	public void onEvent(byte[] json) {
 		//System.out.println("Sending event " +i +", " +json);
 		i++;
 		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
-			Optional<byte[]> bytesMessage = buildDerivedEvent(json);
+			Optional<byte[]> bytesMessage = buildDerivedEvent(new String(json));
 			if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
 			else System.out.println("empty event or skipping");
 				
@@ -142,7 +142,7 @@ public class ProaSenseTopologyPublisher implements IMessageListener {
 	{
 		ProaSenseTopologyPublisher publisher = new ProaSenseTopologyPublisher(null, new ProaSenseEventNotifier(""));
 		long currentTime = System.currentTimeMillis();
-		for(int i = 0; i < 1000; i++) publisher.onEvent(testJson);
+		for(int i = 0; i < 1000; i++) publisher.onEvent(testJson.getBytes());
 		long endTime = System.currentTimeMillis();
 		System.out.println(endTime - currentTime);
 	}

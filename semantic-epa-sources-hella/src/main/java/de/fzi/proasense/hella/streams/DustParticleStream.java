@@ -1,14 +1,10 @@
-package de.fzi.cep.sepa.sources.samples.hella;
+package de.fzi.proasense.hella.streams;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -17,12 +13,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
-import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.LineParser;
-import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
-import de.fzi.cep.sepa.sources.samples.hella.parser.DustLineParser;
+import de.fzi.proasense.hella.config.HellaVariables;
+import de.fzi.proasense.hella.main.AbstractHellaStream;
 
 public class DustParticleStream extends AbstractHellaStream {
 
@@ -67,30 +59,8 @@ public class DustParticleStream extends AbstractHellaStream {
 	}
 
 	@Override
-	public void executeStream() {
-		
-		System.out.println("Execute Dust replay");
-		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Dust.topic());
-		
-		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
-		
-		LineParser dustLineParser = new DustLineParser();
-		CsvReadingTask csvReadingTask = new CsvReadingTask(makeFolderReadingTasks(), ",", "variable_timestamp", dustLineParser, true);
-				
-		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.PERFORMANCE_TEST));
-		mouldingReplayThread.start();
-	}
-
-	private List<FolderReadingTask> makeFolderReadingTasks() {
-	
-		FolderReadingTask task = new FolderReadingTask(dustFolder, "hella-bin-all-ids-sorted-", "csv", 0, 0);
-		
-		return Arrays.asList(task);
-	}
-
-	@Override
 	public boolean isExecutable() {
-		return true;
+		return false;
 	}
 
 }

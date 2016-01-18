@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.commons.messaging;
 
-public interface IMessageListener {
+public interface IMessageListener<T> {
 
-	public void onEvent(String json);
+	public void onEvent(T payload);
 	
 }

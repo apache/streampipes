@@ -10,9 +10,9 @@ import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class EnrichedReplay implements Runnable {
 
-	private IMessagePublisher publisher;
+	private IMessagePublisher<byte[]> publisher;
 	
-	public EnrichedReplay(IMessagePublisher publisher)
+	public EnrichedReplay(IMessagePublisher<byte[]> publisher)
 	{
 		this.publisher = publisher;
 	}
@@ -47,7 +47,7 @@ public class EnrichedReplay implements Runnable {
 								}				
 								previousTime = currentTime;
 								String json = buildJsonString(records);
-								publisher.onEvent(json);
+								publisher.publish(json.getBytes());
 								if (counter % 10000 == 0) System.out.println(counter +" Events (Enriched Replay) sent.");
 							} catch (Exception e) { e.printStackTrace(); }
 						}

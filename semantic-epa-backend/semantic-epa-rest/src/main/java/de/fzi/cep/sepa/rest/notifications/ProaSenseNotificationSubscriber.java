@@ -13,7 +13,7 @@ import de.fzi.cep.sepa.messages.ProaSenseNotificationMessage;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import eu.proasense.internal.RecommendationEvent;
 
-public class ProaSenseNotificationSubscriber implements IMessageListener, Runnable {
+public class ProaSenseNotificationSubscriber implements IMessageListener<byte[]>, Runnable {
 
 	
 	private TDeserializer deserializer;
@@ -32,11 +32,11 @@ public class ProaSenseNotificationSubscriber implements IMessageListener, Runnab
 	}
 
 	@Override
-	public void onEvent(String json) {
+	public void onEvent(byte[] json) {
 		RecommendationEvent event = new RecommendationEvent();
 		String recommendedDate = "";
 		try {
-			deserializer.deserialize(event,  json.getBytes());
+			deserializer.deserialize(event,  json);
 			if (event.getEventProperties().containsKey("action_timestamp")) recommendedDate += " at time " +parseDate(Long.parseLong(event.getEventProperties().get("action_timestamp").getValue())) +"(Recommendation ID: " +event.getRecommendationId() +", Timestamp: " +event.getTimestamp()+", " +"Action_Timestamp" +event.getEventProperties().get("action_timestamp") +")";
 			StorageManager.INSTANCE.getNotificationStorageApi().addNotification(new ProaSenseNotificationMessage(event.getEventName(), event.getTimestamp(), event.getAction() +recommendedDate, event.getActor()));
 		} catch (TException e) {

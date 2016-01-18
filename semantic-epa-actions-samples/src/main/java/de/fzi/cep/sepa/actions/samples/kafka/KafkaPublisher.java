@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 
-public class KafkaPublisher implements IMessageListener {
+public class KafkaPublisher implements IMessageListener<byte[]> {
 
 	private ProaSenseInternalProducer producer;
 	private String pipelineId;
@@ -20,8 +20,8 @@ public class KafkaPublisher implements IMessageListener {
 	}
 	
 	@Override
-	public void onEvent(String message) {
-		JsonObject jsonObj = (JsonObject) jsonParser.parse(message);
+	public void onEvent(byte[] message) {
+		JsonObject jsonObj = (JsonObject) jsonParser.parse(new String(message));
 		if (pipelineId != null) jsonObj.addProperty("pipelineId", pipelineId);
 		producer.send(jsonObj.toString().getBytes());
 	}
@@ -29,6 +29,6 @@ public class KafkaPublisher implements IMessageListener {
 	public static void main(String[] args)
 	{
 		String json = "{\"timestamp\":1441899506000}";
-		new KafkaPublisher(null, "abc").onEvent(json);;
+		new KafkaPublisher(null, "abc").onEvent(json.getBytes());
 	}
 }

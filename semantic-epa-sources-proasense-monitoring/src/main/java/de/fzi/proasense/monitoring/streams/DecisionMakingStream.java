@@ -30,7 +30,7 @@ import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.proasense.config.ProaSenseSettings;
 import eu.proasense.internal.RecommendationEvent;
 
-public class DecisionMakingStream implements EventStreamDeclarer, IMessageListener, Runnable {
+public class DecisionMakingStream implements EventStreamDeclarer, IMessageListener<byte[]>, Runnable {
 
 	private static final String IN_TOPIC = "eu.proasense.internal.pandda.mhwirth.recommendation";
 	private static final String OUT_TOPIC = "eu.proasense.internal.sp.monitoring.recommendation";
@@ -81,9 +81,8 @@ public class DecisionMakingStream implements EventStreamDeclarer, IMessageListen
 	}
 
 	@Override
-	public void onEvent(String json) {
-		System.out.println("received");
-		Optional<RecommendationEvent> recEvent = deserialize(json.getBytes());
+	public void onEvent(byte[] payload) {
+		Optional<RecommendationEvent> recEvent = deserialize(payload);
 		if (recEvent.isPresent())
 			producer.send(toJson(recEvent.get()).getBytes());
 	}

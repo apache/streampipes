@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.commons.messaging;
 
-public interface IMessagePublisher {
+public interface IMessagePublisher<T> {
 
-	public void onEvent(String message);
+	public void publish(T message);
 	
 }

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.RandomStringUtils;
 
 import de.fzi.cep.sepa.runtime.EPRuntime;
-import de.fzi.cep.sepa.runtime.flat.manager.DatatypeManager;
 import de.fzi.cep.sepa.runtime.flat.manager.ProtocolManager;
 import de.fzi.cep.sepa.runtime.flat.param.FlatRuntimeParameters;
 import de.fzi.cep.sepa.runtime.flat.routing.DestinationRoute;
@@ -26,16 +25,18 @@ public class FlatEPRuntime extends EPRuntime {
 					new SourceRoute(
 							"topic://" +is.getEventGrounding().getTransportProtocol().getTopicName(),
 							RandomStringUtils.randomAlphabetic(6),
-							DatatypeManager.findDatatypeDefinition(is.getEventGrounding().getTransportFormats().get(0)),
-							ProtocolManager.findConsumer(is.getEventGrounding().getTransportProtocol()),
+							ProtocolManager.findConsumer(
+									is.getEventGrounding().getTransportProtocol(), 
+									is.getEventGrounding().getTransportFormats().get(0)),
 							engine))
 				.collect(Collectors.toList());
 		
 		destination = new DestinationRoute(
 				"topic://" +params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportProtocol().getTopicName(),
 				RandomStringUtils.randomAlphabetic(6),
-				DatatypeManager.findDatatypeDefinition(params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportFormats().get(0)), 
-				ProtocolManager.findProducer(params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportProtocol()), 
+				ProtocolManager.findProducer(
+						params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportProtocol(),
+						params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportFormats().get(0)), 
 				collector);
 		
 	}

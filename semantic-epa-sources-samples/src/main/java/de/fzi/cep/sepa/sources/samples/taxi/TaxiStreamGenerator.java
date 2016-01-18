@@ -120,7 +120,7 @@ public class TaxiStreamGenerator implements Runnable {
 			StringBuilder builder = new StringBuilder(s);
 			builder.append(Utils.toJsonstr(READ_DATETIME, System.currentTimeMillis(), false));
 			builder.append("}");
-			publisher.onEvent(builder.toString());
+			publisher.publish(builder.toString());
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

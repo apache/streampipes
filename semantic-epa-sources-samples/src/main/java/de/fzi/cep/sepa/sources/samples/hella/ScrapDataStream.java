@@ -58,7 +58,7 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

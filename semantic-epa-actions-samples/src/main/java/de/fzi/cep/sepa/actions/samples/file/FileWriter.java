@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
-public class FileWriter implements Runnable, IMessageListener {
+public class FileWriter implements Runnable, IMessageListener<String> {
 
 	FileParameters params;
 	FileOutputStream stream;

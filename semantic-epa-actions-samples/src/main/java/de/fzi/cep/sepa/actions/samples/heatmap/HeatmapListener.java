@@ -11,7 +11,7 @@ import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQPublisher;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
-public class HeatmapListener implements Runnable, IMessageListener{
+public class HeatmapListener implements Runnable, IMessageListener<String> {
 
 	private JsonArray jsonArray = new JsonArray();
 	private JsonParser parser;

@@ -19,9 +19,9 @@ public class JsonDatatypeDefinition implements DatatypeDefinition {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> unmarshal(String input) {
+	public Map<String, Object> unmarshal(byte[] input) {
 		try {
-			return objectMapper.readValue(input, HashMap.class);
+			return objectMapper.readValue(new String(input), HashMap.class);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,9 +30,9 @@ public class JsonDatatypeDefinition implements DatatypeDefinition {
 	}
 
 	@Override
-	public String marshal(Object event) {
+	public byte[] marshal(Object event) {
 		try {
-			return objectMapper.writeValueAsString(event);
+			return objectMapper.writeValueAsString(event).getBytes();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

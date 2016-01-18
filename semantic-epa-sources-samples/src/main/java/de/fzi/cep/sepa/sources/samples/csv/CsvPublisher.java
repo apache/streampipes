@@ -13,11 +13,11 @@ public class CsvPublisher implements Runnable {
 	
 	private static final Logger LOG = Logger.getAnonymousLogger();
 	
-	private IMessagePublisher publisher;
+	private IMessagePublisher<byte[]> publisher;
 	private CsvReadingTask csvSettings;
 	private SimulationSettings simulationSettings;
 	
-	public CsvPublisher(IMessagePublisher publisher, CsvReadingTask csvSettings, SimulationSettings simulationSettings)
+	public CsvPublisher(IMessagePublisher<byte[]> publisher, CsvReadingTask csvSettings, SimulationSettings simulationSettings)
 	{
 		this.publisher = publisher;
 		this.csvSettings = csvSettings;
@@ -65,7 +65,8 @@ public class CsvPublisher implements Runnable {
 								previousTime = currentTime;
 							}	
 							System.out.println(toJson(message));
-							publisher.onEvent(toJson(message));
+							publisher.publish(toJson(message).getBytes());
+						
 							counter++;
 							if (counter % 1000 == 0) LOG.info(counter + " Events sent.");
 						}

@@ -41,7 +41,7 @@ public class NumberClassificationController extends FlatEpDeclarer<NumberClassif
 
 		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m)
 				.collect(Collectors.toList());
-
+		
 		List<DataClassification> domainConceptData = domainConcepts.stream()
 				.map(m -> new DataClassification(Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
 						Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),

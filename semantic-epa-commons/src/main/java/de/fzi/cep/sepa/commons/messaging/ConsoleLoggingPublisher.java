@@ -1,9 +1,9 @@
 package de.fzi.cep.sepa.commons.messaging;
 
-public class ConsoleLoggingPublisher implements IMessagePublisher{
+public class ConsoleLoggingPublisher implements IMessagePublisher<String> {
 
 	@Override
-	public void onEvent(String message) {
+	public void publish(String message) {
 		System.out.println(message);
 	}
 

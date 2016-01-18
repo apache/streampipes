@@ -2,11 +2,11 @@ package de.fzi.cep.sepa.runtime.flat.protocol.jms;
 
 import javax.jms.JMSException;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQConsumer;
+import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Consumer;
 
-public class JmsConsumer extends Consumer implements IMessageListener{
+public class JmsConsumer extends Consumer<String> {
 
 	private String brokerHostname;
 	private int brokerPort;
@@ -14,7 +14,8 @@ public class JmsConsumer extends Consumer implements IMessageListener{
 	
 	private ActiveMQConsumer consumer;
 	
-	public JmsConsumer(String brokerHostname, int brokerPort, String topic) {
+	public JmsConsumer(String brokerHostname, int brokerPort, String topic, DatatypeDefinition dataType) {
+		super(dataType);
 		this.brokerHostname = brokerHostname;
 		this.brokerPort = brokerPort;
 		this.topic = topic;
@@ -38,7 +39,7 @@ public class JmsConsumer extends Consumer implements IMessageListener{
 
 	@Override
 	public void onEvent(String json) {
-		notify(json);
+		notify(dataType.unmarshal(json.getBytes()));
 	}
 
 }

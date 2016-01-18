@@ -3,25 +3,23 @@ package de.fzi.cep.sepa.runtime.flat.routing;
 import java.util.Map;
 
 import de.fzi.cep.sepa.runtime.EPEngine;
-import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Consumer;
-import de.fzi.cep.sepa.runtime.flat.protocol.IMessageListener;
+import de.fzi.cep.sepa.runtime.flat.protocol.ConsumerMessageListener;
 
-public class SourceRoute extends Route implements IMessageListener {
+public class SourceRoute extends Route implements ConsumerMessageListener {
 
 	private EPEngine<?> epEngine;
-	private Consumer consumer;
+	private Consumer<?> consumer;
 	
-	public SourceRoute(String topic, String routeId, DatatypeDefinition dataType, Consumer consumer, EPEngine<?> engine) {
-		super(routeId, dataType, topic);
+	public SourceRoute(String topic, String routeId, Consumer<?> consumer, EPEngine<?> engine) {
+		super(routeId, topic);
 		this.epEngine = engine;
 		this.consumer = consumer;
 	}
 
 	@Override
-	public void onEvent(String json) {
-		Map<String, Object> result = dataType.unmarshal(json);
-		epEngine.onEvent(result, topic);
+	public void onEvent(Map<String, Object> event) {
+		epEngine.onEvent(event, topic);
 	}
 
 	@Override

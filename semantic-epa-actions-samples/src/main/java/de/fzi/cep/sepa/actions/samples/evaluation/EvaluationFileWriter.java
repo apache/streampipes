@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 
-public class EvaluationFileWriter implements Runnable, IMessageListener {
+public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> {
 
 	EvaluationParameters params;
 	PrintWriter stream;
@@ -56,15 +56,17 @@ public class EvaluationFileWriter implements Runnable, IMessageListener {
 	}
 
 	@Override
-	public void onEvent(String json) {
-		if (counter % 10000 == 0) System.out.println(counter + " Event processed."); 
-		counter++;
+	public void onEvent(byte[] json) {
 		
+		if (counter % 10 == 0) System.out.println(counter + " Event processed."); 
+		counter++;
+	
 		if (running)
 		{
+			
 			long currentTimestamp = System.currentTimeMillis();
 			StringBuilder output = new StringBuilder();
-			JsonObject jsonObj = jsonParser.parse(json).getAsJsonObject();
+			JsonObject jsonObj = jsonParser.parse(new String(json)).getAsJsonObject();
 			for(Entry<String, JsonElement> element : jsonObj.entrySet())
 			{
 				output.append(element.getValue());
@@ -78,6 +80,8 @@ public class EvaluationFileWriter implements Runnable, IMessageListener {
 		}
 		else
 		{
+			System.out.println("Stopping");
+			stream.flush();
 			stream.close();
 			kafkaConsumerGroup.shutdown();
 		}
@@ -90,6 +94,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener {
 
 	public void setRunning(boolean running) {
 		this.running = running;
+		onEvent(null);
 	}
 	
 }

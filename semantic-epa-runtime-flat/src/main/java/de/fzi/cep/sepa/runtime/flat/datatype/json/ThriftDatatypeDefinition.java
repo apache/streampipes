@@ -25,11 +25,12 @@ public class ThriftDatatypeDefinition implements DatatypeDefinition {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> unmarshal(String input) {
-		byte[] bytes = input.getBytes();
+	public Map<String, Object> unmarshal(byte[] input) {
+		
 		SimpleEvent simpleEvent = new SimpleEvent();
 		try {
-			deserializer.deserialize(simpleEvent, bytes);
+			deserializer.deserialize(simpleEvent, input);
+			System.out.println(simpleEvent.toString());
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,10 +39,10 @@ public class ThriftDatatypeDefinition implements DatatypeDefinition {
 	}
 
 	@Override
-	public String marshal(Object event) {
+	public byte[] marshal(Object event) {
 		SimpleEvent simpleEvent = thriftSerializer.toSimpleEvent(event);
 		try {
-			return new String(serializer.serialize(simpleEvent));
+			return serializer.serialize(simpleEvent);
 		} catch (TException e) {
 			return null;
 		}

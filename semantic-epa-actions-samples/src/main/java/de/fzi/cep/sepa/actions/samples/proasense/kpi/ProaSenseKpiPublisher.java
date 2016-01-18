@@ -2,9 +2,9 @@ package de.fzi.cep.sepa.actions.samples.proasense.kpi;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
@@ -29,7 +29,7 @@ import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
 import eu.proasense.internal.VariableType;
 
-public class ProaSenseKpiPublisher implements IMessageListener {
+public class ProaSenseKpiPublisher implements IMessageListener<byte[]> {
 
 	private ProaSenseInternalProducer producer;
 	private static final String DEFAULT_PROASENSE_TOPIC = "eu.proasense.internal.sp.internal.kpi";
@@ -49,11 +49,11 @@ public class ProaSenseKpiPublisher implements IMessageListener {
 	}
 	
 	@Override
-	public void onEvent(String json) {
+	public void onEvent(byte[] json) {
 		i++;
 		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
-		Optional<byte[]> bytesMessage = buildDerivedEvent(json);
+		Optional<byte[]> bytesMessage = buildDerivedEvent(new String(json));
 		if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
 		else System.out.println("empty event");
 	}

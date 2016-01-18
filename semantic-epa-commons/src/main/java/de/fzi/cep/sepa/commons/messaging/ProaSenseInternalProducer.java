@@ -1,7 +1,6 @@
 
 package de.fzi.cep.sepa.commons.messaging;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -12,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ProaSenseInternalProducer implements IMessagePublisher {
+public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
 
     private static final Logger log = LoggerFactory.getLogger(ProaSenseInternalProducer.class);
 
@@ -34,6 +33,8 @@ public class ProaSenseInternalProducer implements IMessagePublisher {
   
     public void send(byte[] byteMsg)
     {	
+    	System.out.println("Producer" +new String(byteMsg).toString());
+    	
     	try {
     	ProducerRecord<String, byte[]> record = new ProducerRecord<String, byte[]>(producerTopic, byteMsg);
     	i++;
@@ -48,8 +49,8 @@ public class ProaSenseInternalProducer implements IMessagePublisher {
     }
 
 	@Override
-	public void onEvent(String message) {
-		send(message.getBytes());
+	public void publish(byte[] message) {
+		send(message);
 	}
 
 }

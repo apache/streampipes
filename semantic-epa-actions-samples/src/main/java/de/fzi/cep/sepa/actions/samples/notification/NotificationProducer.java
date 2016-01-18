@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import eu.proasense.internal.RecommendationEvent;
 
-public class NotificationProducer implements IMessageListener {
+public class NotificationProducer implements IMessageListener<byte[]> {
 
 	ProaSenseInternalProducer producer;
 	private TSerializer serializer;
@@ -30,7 +30,7 @@ public class NotificationProducer implements IMessageListener {
 	}
 	
 	@Override
-	public void onEvent(String json) {
+	public void onEvent(byte[] json) {
 		RecommendationEvent event = new RecommendationEvent();
 		event.setAction(content);
 		event.setActor("");

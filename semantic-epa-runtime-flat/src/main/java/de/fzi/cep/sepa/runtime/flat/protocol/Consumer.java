@@ -3,15 +3,20 @@ package de.fzi.cep.sepa.runtime.flat.protocol;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Consumer {
+import de.fzi.cep.sepa.commons.messaging.IMessageListener;
+import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 
-	protected Map<String, IMessageListener> listeners;
+public abstract class Consumer<T> implements IMessageListener<T> {
+
+	protected Map<String, ConsumerMessageListener> listeners;
+	protected DatatypeDefinition dataType;
 	
-	public Consumer() {
+	public Consumer(DatatypeDefinition dataType) {
 		this.listeners = new HashMap<>();
+		this.dataType = dataType;
 	}
 	
-	public void addListener(String routeId, IMessageListener listener) {
+	public void addListener(String routeId, ConsumerMessageListener listener) {
 		listeners.put(routeId, listener);
 	}
 	
@@ -19,7 +24,7 @@ public abstract class Consumer {
 		listeners.remove(routeId);
 	}
 	
-	public void notify(String event) {
+	public void notify(Map<String, Object> event) {
 		listeners.entrySet().forEach(l -> l.getValue().onEvent(event));
 	}
 	

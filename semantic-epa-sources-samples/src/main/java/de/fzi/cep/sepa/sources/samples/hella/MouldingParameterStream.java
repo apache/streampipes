@@ -61,7 +61,7 @@ public class MouldingParameterStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		IMessagePublisher publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.IMM.topic());
+		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.IMM.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

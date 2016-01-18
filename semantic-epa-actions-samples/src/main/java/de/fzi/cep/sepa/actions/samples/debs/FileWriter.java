@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
-public class FileWriter implements Runnable, IMessageListener {
+public class FileWriter implements Runnable, IMessageListener<String> {
 
 	DebsParameters params;
 	FileOutputStream stream;

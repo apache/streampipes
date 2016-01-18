@@ -8,7 +8,7 @@ import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 import de.fzi.proveit.senslet.model.Senslet;
 
-public class ProveITEventSender implements IMessageListener {
+public class ProveITEventSender implements IMessageListener<String> {
 
 	private ActiveMQPublisher publisher;
 	Gson gson;

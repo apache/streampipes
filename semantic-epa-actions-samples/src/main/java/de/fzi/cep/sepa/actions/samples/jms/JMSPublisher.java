@@ -5,7 +5,7 @@ import javax.jms.JMSException;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQPublisher;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
-public class JMSPublisher implements IMessageListener {
+public class JMSPublisher implements IMessageListener<String> {
 
 	ActiveMQPublisher publisher;
 	
