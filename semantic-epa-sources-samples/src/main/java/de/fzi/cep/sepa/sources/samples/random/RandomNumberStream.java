@@ -99,7 +99,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 					try {
 						byte[] payload = serializer
 								.serialize(buildSimpleEvent(System.nanoTime(), random.nextInt(100), j));
-						if (j % 1000 == 0) {
+						if (j % 10000 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
 						kafkaProducer.send(payload);
