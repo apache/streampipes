@@ -39,6 +39,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 	//ActiveMQPublisher samplePublisher;
 	ProaSenseInternalProducer kafkaProducer;
 	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
+	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
 
 	public RandomNumberStream() {
 		//samplePublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Random.Number");
@@ -103,7 +104,7 @@ public class RandomNumberStream implements EventStreamDeclarer {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
 						kafkaProducer.send(payload);
-						Thread.sleep(SIMULATION_DELAY_MS);
+						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
 						j++;
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
