@@ -11,6 +11,7 @@ WORKDIR $CATALINA_HOME
 RUN apk update
 RUN apk add gpgme
 RUN apk add curl
+RUN apk add tar
 
 RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
@@ -39,7 +40,7 @@ RUN set -x \
 	&& curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
 	&& curl -fSL "$TOMCAT_TGZ_URL.asc" -o tomcat.tar.gz.asc \
 	&& gpg --verify tomcat.tar.gz.asc \
-	&& tar -xvf tomcat.tar.gz --strip 1 \
+	&& tar -xvf tomcat.tar.gz \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz* 
 
