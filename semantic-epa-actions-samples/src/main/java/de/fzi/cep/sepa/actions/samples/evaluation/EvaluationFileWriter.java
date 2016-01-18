@@ -66,6 +66,8 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			
 			long currentTimestamp = System.currentTimeMillis();
 			StringBuilder output = new StringBuilder();
+			output.append(counter);
+			output.append(",");
 			JsonObject jsonObj = jsonParser.parse(new String(json)).getAsJsonObject();
 			for(Entry<String, JsonElement> element : jsonObj.entrySet())
 			{
