@@ -2,7 +2,7 @@ FROM anapsix/alpine-java
 
 EXPOSE 8093
 
-RUN apk add python
+#RUN apk add python
 RUN wget http://mirror.netcologne.de/apache.org/storm/apache-storm-0.9.5/apache-storm-0.9.5.tar.gz
 RUN	tar -zxvf apache-storm-0.9.5.tar.gz
 
