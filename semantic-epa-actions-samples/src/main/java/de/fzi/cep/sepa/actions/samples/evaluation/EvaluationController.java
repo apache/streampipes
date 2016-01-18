@@ -19,7 +19,6 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -50,9 +49,7 @@ public class EvaluationController extends ActionController {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementId()), "property-timestamp", "Timestamp property", ""));
-		FreeTextStaticProperty maxNumberOfRows = new FreeTextStaticProperty("path", "Path", "");
-		staticProperties.add(maxNumberOfRows);
-
+		
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
 		
@@ -74,9 +71,7 @@ public class EvaluationController extends ActionController {
 		
 		String timestampProperty = SepaUtils.getMappingPropertyName(sec, "property-timestamp");
 		
-		String path = SepaUtils.getStaticPropertyByInternalName(sec, "path", FreeTextStaticProperty.class).getValue();
-		
-		EvaluationParameters fileParameters = new EvaluationParameters(inputTopic, brokerUrl, path, timestampProperty);
+		EvaluationParameters fileParameters = new EvaluationParameters(inputTopic, brokerUrl, timestampProperty);
 		
 		fileWriter = new EvaluationFileWriter(fileParameters);
 		Thread writeThread = new Thread(fileWriter);
