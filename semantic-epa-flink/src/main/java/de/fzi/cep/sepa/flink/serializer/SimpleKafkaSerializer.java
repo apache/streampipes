@@ -6,9 +6,15 @@ import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
 public class SimpleKafkaSerializer implements SerializationSchema<Map<String, Object>, byte[]>{
 
+	SimpleJmsSerializer serializer;
+	
+	public SimpleKafkaSerializer() {
+		this.serializer = new SimpleJmsSerializer();
+	}
+	
 	@Override
 	public byte[] serialize(Map<String, Object> element) {
-		return new SimpleJmsSerializer().serialize(element).getBytes();
+		return serializer.serialize(element).getBytes();
 	}
 
 }
