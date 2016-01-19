@@ -1,15 +1,9 @@
 package de.fzi.cep.sepa.sources.samples.random;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
-
-import org.apache.thrift.TException;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.codehaus.jettison.json.JSONObject;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
@@ -20,34 +14,27 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.quality.Latency;
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.SimpleEvent;
-import eu.proasense.internal.VariableType;
 
-public class RandomNumberStream implements EventStreamDeclarer {
-
-	//ActiveMQPublisher samplePublisher;
+public abstract class RandomNumberStream implements EventStreamDeclarer {
+	
 	ProaSenseInternalProducer kafkaProducer;
+	
 	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
 	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
-
-	public RandomNumberStream() {
-		//samplePublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Random.Number");
+	
+	public RandomNumberStream(String topic) {
 		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Random.Number");
 	}
-
-	@Override
-	public EventStream declareModel(SepDescription sep) {
+	
+	protected EventStream prepareStream(String topic, String messageFormat) {
 		EventStream stream = new EventStream();
 
 		EventSchema schema = new EventSchema();
@@ -70,22 +57,18 @@ public class RandomNumberStream implements EventStreamDeclarer {
 		eventStreamQualities.add(new Frequency(1));
 
 		EventGrounding grounding = new EventGrounding();
-//		grounding.setTransportProtocol(SampleSettings.jmsProtocol("SEPA.SEP.Random.Number"));
-		grounding.setTransportProtocol(SampleSettings.kafkaProtocol("SEPA.SEP.Random.Number"));
+		grounding.setTransportProtocol(SampleSettings.kafkaProtocol(topic));
 		grounding.setTransportFormats(
-				de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Thrift)));
+				de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(messageFormat)));
 
 		stream.setEventGrounding(grounding);
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
 		stream.setHasEventStreamQualities(eventStreamQualities);
-		stream.setName("Random Number Stream");
-		stream.setDescription("Random Number Stream Description");
-		stream.setUri(sep.getUri() + "/number");
 
 		return stream;
 	}
-
+	
 	@Override
 	public void executeStream() {
 
@@ -94,25 +77,19 @@ public class RandomNumberStream implements EventStreamDeclarer {
 			@Override
 			public void run() {
 				Random random = new Random();
-				TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
 				int j = 0;
 				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
 					try {
-						byte[] payload = serializer
-								.serialize(buildSimpleEvent(System.nanoTime(), random.nextInt(100), j));
 						if (j % 10000 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
-						kafkaProducer.send(payload);
+						Optional<byte[]> nextMsg = getMessage(System.nanoTime(), random.nextInt(100), j);
+						if (nextMsg.isPresent()) kafkaProducer.send(nextMsg.get());
 						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
 						j++;
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
-					} catch (TException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					} 
 				}
 			}
 		};
@@ -125,53 +102,12 @@ public class RandomNumberStream implements EventStreamDeclarer {
 	public boolean isExecutable() {
 		return true;
 	}
-
-	private JSONObject buildJson(long timestamp, int number) {
-		JSONObject json = new JSONObject();
-
-		try {
-			json.put("timestamp", timestamp);
-			json.put("randomValue", number);
-			json.put("randomString", randomString());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-		}
-
-		return json;
-	}
-
-	private SimpleEvent buildSimpleEvent(long timestamp, int number, int count) {
-		Map<String, ComplexValue> map = new HashMap<String, ComplexValue>();
-		ComplexValue value = new ComplexValue();
-		value.setType(VariableType.LONG);
-		value.setValue(String.valueOf(number));
-
-		ComplexValue value2 = new ComplexValue();
-		value2.setType(VariableType.STRING);
-		value2.setValue(String.valueOf(randomString()));
-
-		ComplexValue value3 = new ComplexValue();
-		value3.setType(VariableType.LONG);
-		value3.setValue(String.valueOf(count));
-
-		map.put("randomValue", value);
-		map.put("randomString", value2);
-		map.put("count", value3);
-		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "RandomNumber", map);
-		simpleEvent.setSensorId("RNS");
-		simpleEvent.setSensorIdIsSet(true);
-		return simpleEvent;
-	}
-
-	private String randomString() {
+	
+	protected String randomString() {
 		String[] randomStrings = new String[] { "a", "b", "c", "d" };
 		Random random = new Random();
 		return randomStrings[random.nextInt(3)];
 	}
 	
-	public static void main(String[] args) {
-		new RandomNumberStream().executeStream();
-	}
-
+	protected abstract Optional<byte[]> getMessage(long nanoTime, int randomNumber, int counter);
 }
