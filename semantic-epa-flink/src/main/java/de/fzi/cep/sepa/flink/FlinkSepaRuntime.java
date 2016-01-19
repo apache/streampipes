@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.flink;
 import java.util.Map;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.connectors.kafka.api.KafkaSink;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
 import de.fzi.cep.sepa.flink.serializer.SimpleJmsSerializer;
@@ -45,7 +45,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic
-			.addSink(new KafkaSink<Map<String, Object>>(getProperties()
+			.addSink(new FlinkKafkaProducer<Map<String, Object>>(getProperties()
 					.getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
 		else applicationLogic
 			.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
