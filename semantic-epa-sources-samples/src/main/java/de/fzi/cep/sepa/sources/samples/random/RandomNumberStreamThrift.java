@@ -32,7 +32,7 @@ public class RandomNumberStreamThrift extends RandomNumberStream {
 		EventStream stream = prepareStream(TOPIC, MessageFormat.Thrift);
 		stream.setName("Random Number Stream (Thrift)");
 		stream.setDescription("Random Number Stream Description");
-		stream.setUri(sep.getUri() + "/number");
+		stream.setUri(sep.getUri() + "/numberthrift");
 		
 		return stream;
 	}

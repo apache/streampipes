@@ -31,7 +31,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
 	
 	public RandomNumberStream(String topic) {
-		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Random.Number");
+		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 	}
 	
 	protected EventStream prepareStream(String topic, String messageFormat) {
