@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.flink.serializer.SimpleKafkaSerializer;
 import de.fzi.cep.sepa.flink.sink.FlinkJmsProducer;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
@@ -43,8 +44,11 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		SerializationSchema<Map<String, Object>, byte[]> kafkaSerializer = new SimpleKafkaSerializer();
 		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
-		if (isOutputKafkaProtocol()) applicationLogic.addSink(new KafkaSink<Map<String, Object>>(getProperties().getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
-		else applicationLogic.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
+		if (isOutputKafkaProtocol()) applicationLogic
+			.addSink(new KafkaSink<Map<String, Object>>(getProperties()
+					.getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
+		else applicationLogic
+			.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
 		thread = new Thread(this);
 		thread.start();
@@ -57,18 +61,29 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		
 	private String getOutputTopic()
 	{
-		return params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol().getTopicName();
+		return protocol()
+				.getTopicName();
 	}
 	
 	private String getJmsBrokerAddress()
 	{
-		return ((JmsTransportProtocol) params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol()).getBrokerHostname()
+		return ((JmsTransportProtocol) protocol())
+				.getBrokerHostname()
 				+":"
-				+((JmsTransportProtocol)params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol()).getPort();
+				+((JmsTransportProtocol) protocol())
+						.getPort();
 	}
 		
 	private boolean isOutputKafkaProtocol()
 	{
-		return params.getGraph().getOutputStream().getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol;
+		return protocol() instanceof KafkaTransportProtocol;
+	}
+	
+	private TransportProtocol protocol() {
+		return params
+				.getGraph()
+				.getOutputStream()
+				.getEventGrounding()
+				.getTransportProtocol();
 	}
 }
