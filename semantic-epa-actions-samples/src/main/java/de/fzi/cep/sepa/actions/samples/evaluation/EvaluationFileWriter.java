@@ -20,7 +20,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 
 	EvaluationParameters params;
 	PrintWriter stream;
-	static long counter = 0;
+	private int counter = 0;
 	private JsonParser jsonParser;
 	private KafkaConsumerGroup kafkaConsumerGroup;
 	
@@ -77,7 +77,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	@Override
 	public void onEvent(byte[] json) {
 		
-		if (counter % 1000 == 0) System.out.println(counter + " Event processed."); 
+		if (counter % 10000 == 0) System.out.println(counter + " Event processed."); 
 		counter++;
 	
 		if (running)
