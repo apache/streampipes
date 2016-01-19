@@ -24,11 +24,14 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	private JsonParser jsonParser;
 	private KafkaConsumerGroup kafkaConsumerGroup;
 	
+	private StringBuilder outputCollector;
+	
 	private boolean running;
 	
 	public EvaluationFileWriter(EvaluationParameters params)
 	{
 		this.params = params;
+		this.outputCollector = new StringBuilder();
 		jsonParser = new JsonParser();
 		this.running = true;
 		prepare();
@@ -77,7 +80,12 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	@Override
 	public void onEvent(byte[] json) {
 		
-		if (counter % 10000 == 0) System.out.println(counter + " Event processed."); 
+		if (counter % 10000 == 0 || !running) 
+			{
+				System.out.println(counter + " Event processed."); 
+				stream.write(outputCollector.toString());	
+				outputCollector.setLength(0);
+			}
 		counter++;
 	
 		if (running)
@@ -97,7 +105,8 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			output.append(",");
 			output.append(currentTimestamp - jsonObj.get(params.getTimestampProperty()).getAsLong());
 			output.append(System.lineSeparator());
-			stream.write(output.toString());		
+			outputCollector.append(output);
+			
 		}
 		else
 		{
