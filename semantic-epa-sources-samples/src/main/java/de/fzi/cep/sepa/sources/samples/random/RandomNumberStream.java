@@ -83,7 +83,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 						if (j % 10000 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
-						Optional<byte[]> nextMsg = getMessage(System.nanoTime(), random.nextInt(100), j);
+						Optional<byte[]> nextMsg = getMessage(System.currentTimeMillis(), random.nextInt(100), j);
 						if (nextMsg.isPresent()) kafkaProducer.send(nextMsg.get());
 						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
 						j++;
