@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.esper.aggregate.avg;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 
 public class Aggregation extends EsperEventEngine<AggregationParameter>{
 
@@ -27,8 +28,15 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 		}
 		
 		aggregationType = aggregationType +"cast(" +bindingParameters.getAggregate() +", double))";  
+		String aggregationRuntimeName = ((AppendOutputStrategy)bindingParameters
+				.getGraph()
+				.getOutputStrategies()
+				.get(0))
+				.getEventProperties()
+				.get(0)
+				.getRuntimeName();
 		
-		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as averageValue from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) " +getGroupBy(bindingParameters) +" output last every " +bindingParameters.getOutputEvery() +" seconds";
+		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as " +aggregationRuntimeName +" from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) " +getGroupBy(bindingParameters) ;//+" output last every " +bindingParameters.getOutputEvery() +" seconds";
 		return makeStatementList(statement);
 	}
 	
