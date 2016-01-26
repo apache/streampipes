@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,17 +26,16 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	private JsonParser jsonParser;
 	private KafkaConsumerGroup kafkaConsumerGroup;
 	private List<ReceivedEvent> input;
-	
-	private StringBuilder outputCollector;
+
 	
 	private boolean running;
 	
 	public EvaluationFileWriter(EvaluationParameters params)
 	{
 		this.params = params;
-		this.outputCollector = new StringBuilder();
 		jsonParser = new JsonParser();
 		this.running = true;
+		this.input = new ArrayList<>();
 		prepare();
 	}
 	
