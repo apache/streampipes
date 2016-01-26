@@ -99,12 +99,25 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	
 	private void process() {
 		int j = 1;
+		StringBuilder output = new StringBuilder();
+		output.append("counter,");
+		
+		JsonObject jsonObj = jsonParser.parse(new String(input.get(0).getByteMsg())).getAsJsonObject();
+		for(Entry<String, JsonElement> element : jsonObj.entrySet())
+		{
+			output.append(element.getKey());
+			output.append(",");
+		}
+		output.setLength(output.length() - 1);
+		output.append(System.lineSeparator());
+		stream.write(output.toString());
 		for(ReceivedEvent event : input) {
 			long currentTimestamp = event.getTimestamp();
-			StringBuilder output = new StringBuilder();
+			output.setLength(0);
+		
 			output.append(j);
 			output.append(",");
-			JsonObject jsonObj = jsonParser.parse(new String(event.getByteMsg())).getAsJsonObject();
+			jsonObj = jsonParser.parse(new String(event.getByteMsg())).getAsJsonObject();
 			for(Entry<String, JsonElement> element : jsonObj.entrySet())
 			{
 				output.append(element.getValue());
