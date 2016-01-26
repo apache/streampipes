@@ -74,6 +74,8 @@ public enum ClientConfiguration {
 	private long simulationMaxEvents;
 	private long simulationDelayMs;
 	private int simulationDelayNs;
+	private long waitEvery;
+	private long waitForMs;
 	
 	private PropertiesConfiguration config;
 	
@@ -131,6 +133,8 @@ public enum ClientConfiguration {
 			properties.put("simulationMaxEvents", 10000);
 			properties.put("simulationDelayMs", 0);
 			properties.put("simulationDelayNs", 0);
+			properties.put("waitEvery", 0);
+			properties.put("waitForMs", 0);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -190,11 +194,15 @@ public enum ClientConfiguration {
 			this.simulationDelayMs = config.getLong("simulationDelayMs");
 			this.simulationDelayNs = config.getInt("simulationDelayNs");
 			
+			this.waitEvery = config.getLong("waitEvery");
+			this.waitForMs = config.getLong("waitForMs");
+			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
 			this.iconScheme = config.getString("iconScheme");
 			this.iconUrl =  iconScheme + "://" +iconHost +":" +iconPort;
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
+			
 			
 		} catch (ConfigurationException e) {
 			createDefaultSettings();
@@ -344,6 +352,14 @@ public enum ClientConfiguration {
 	
 	public int getSimulationDelayNs() {
 		return simulationDelayNs;
+	}
+	
+	public long getWaitEvery() {
+		return waitEvery;
+	}
+	
+	public long getWaitForMs() {
+		return waitForMs;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
