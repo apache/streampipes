@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.flink;
 
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
@@ -45,8 +46,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic
-			.addSink(new FlinkKafkaProducer<Map<String, Object>>(getProperties()
-					.getProperty("bootstrap.servers"), getOutputTopic(), kafkaSerializer));
+			.addSink(new FlinkKafkaProducer<Map<String, Object>>(getOutputTopic(), kafkaSerializer, getProducerProperties()));
 		else applicationLogic
 			.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
@@ -86,4 +86,13 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 				.getEventGrounding()
 				.getTransportProtocol();
 	}
+	
+	private Properties getProducerProperties() {
+		Properties properties = new Properties();
+		properties.put("client.id", graph.getCorrespondingPipeline()+"-" +getOutputTopic());
+		properties.put("metadata.broker.list", getProperties().get("bootstrap.servers"));
+		properties.put("bootstrap.servers", getProperties().get("bootstrap.servers"));
+		return properties;
+	}
+	
 }
