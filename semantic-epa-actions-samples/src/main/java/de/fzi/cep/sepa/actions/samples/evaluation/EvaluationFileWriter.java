@@ -98,11 +98,11 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	}
 	
 	private void process() {
-		
+		int j = 1;
 		for(ReceivedEvent event : input) {
 			long currentTimestamp = event.getTimestamp();
 			StringBuilder output = new StringBuilder();
-			output.append(counter);
+			output.append(j);
 			output.append(",");
 			JsonObject jsonObj = jsonParser.parse(new String(event.getByteMsg())).getAsJsonObject();
 			for(Entry<String, JsonElement> element : jsonObj.entrySet())
@@ -116,6 +116,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			output.append(System.lineSeparator());
 			
 			stream.write(output.toString());
+			j++;
 		}
 		
 		stream.flush();
