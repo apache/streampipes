@@ -108,7 +108,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			output.append(element.getKey());
 			output.append(",");
 		}
-		output.setLength(output.length() - 1);
+		output.append("lastTimestamp,delay");
 		output.append(System.lineSeparator());
 		stream.write(output.toString());
 		for(ReceivedEvent event : input) {
