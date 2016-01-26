@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.google.gson.JsonElement;
@@ -23,6 +24,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	private int counter = 0;
 	private JsonParser jsonParser;
 	private KafkaConsumerGroup kafkaConsumerGroup;
+	private List<ReceivedEvent> input;
 	
 	private StringBuilder outputCollector;
 	
@@ -78,24 +80,31 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	}
 
 	@Override
-	public void onEvent(byte[] json) {
+	public void onEvent(byte[] json) {	
+		
+		if (!running)
+		{
+			System.out.println("Stopping");
+			kafkaConsumerGroup.shutdown();
+			process();
+		} else
+			input.add(new ReceivedEvent(json, System.currentTimeMillis()));
 		
 		if (counter % 10000 == 0 || !running) 
-			{
-				System.out.println(counter + " Event processed."); 
-				stream.write(outputCollector.toString());	
-				outputCollector.setLength(0);
-			}
-		counter++;
-	
-		if (running)
 		{
-			
-			long currentTimestamp = System.currentTimeMillis();
+			System.out.println(counter + " Event processed."); 
+		}
+		counter++;
+	}
+	
+	private void process() {
+		
+		for(ReceivedEvent event : input) {
+			long currentTimestamp = event.getTimestamp();
 			StringBuilder output = new StringBuilder();
 			output.append(counter);
 			output.append(",");
-			JsonObject jsonObj = jsonParser.parse(new String(json)).getAsJsonObject();
+			JsonObject jsonObj = jsonParser.parse(new String(event.getByteMsg())).getAsJsonObject();
 			for(Entry<String, JsonElement> element : jsonObj.entrySet())
 			{
 				output.append(element.getValue());
@@ -106,17 +115,14 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			output.append(currentTimestamp - jsonObj.get(params.getTimestampProperty()).getAsLong());
 			output.append(System.lineSeparator());
 			outputCollector.append(output);
-			
-		}
-		else
-		{
-			System.out.println("Stopping");
-			stream.flush();
-			stream.close();
-			kafkaConsumerGroup.shutdown();
+			stream.write(output.toString());
 		}
 		
+		stream.flush();
+		stream.close();
 	}
+	
+	
 
 	public boolean isRunning() {
 		return running;
