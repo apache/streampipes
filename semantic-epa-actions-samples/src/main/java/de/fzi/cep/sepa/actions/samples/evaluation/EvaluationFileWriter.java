@@ -114,7 +114,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 			output.append(",");
 			output.append(currentTimestamp - jsonObj.get(params.getTimestampProperty()).getAsLong());
 			output.append(System.lineSeparator());
-			outputCollector.append(output);
+			
 			stream.write(output.toString());
 		}
 		
