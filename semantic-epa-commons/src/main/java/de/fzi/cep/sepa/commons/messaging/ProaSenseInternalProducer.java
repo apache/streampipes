@@ -10,6 +10,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+
 
 public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
 
@@ -27,6 +29,8 @@ public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
     	this.producerTopic = producerTopic;
         HashMap<String, Object> kafkaConfig = new HashMap<>();
         kafkaConfig.put("bootstrap.servers", brokerUrl);
+        kafkaConfig.put("batch.size", ClientConfiguration.INSTANCE.getKafkaBatchSize());
+        kafkaConfig.put("linger.ms", ClientConfiguration.INSTANCE.getKafkaLingerMs());
         this.kafkaProducer = new KafkaProducer<>(kafkaConfig, new StringSerializer(), new ByteArraySerializer());
 
     }

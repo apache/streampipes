@@ -77,6 +77,9 @@ public enum ClientConfiguration {
 	private long waitEvery;
 	private long waitForMs;
 	
+	private long kafkaLingerMs;
+	private int kafkaBatchSize;
+	
 	private PropertiesConfiguration config;
 	
 	ClientConfiguration()
@@ -135,6 +138,9 @@ public enum ClientConfiguration {
 			properties.put("simulationDelayNs", 0);
 			properties.put("waitEvery", 0);
 			properties.put("waitForMs", 0);
+			
+			properties.put("kafkaLingerMs", 0);
+			properties.put("kafkaBatchSize", 0);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -196,6 +202,9 @@ public enum ClientConfiguration {
 			
 			this.waitEvery = config.getLong("waitEvery");
 			this.waitForMs = config.getLong("waitForMs");
+			
+			this.kafkaBatchSize = config.getInt("kafkaBatchSize");
+			this.kafkaLingerMs = config.getLong("kafkaLingerMs");
 			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
@@ -360,6 +369,14 @@ public enum ClientConfiguration {
 	
 	public long getWaitForMs() {
 		return waitForMs;
+	}
+	
+	public long getKafkaBatchSize() {
+		return kafkaBatchSize;
+	}
+	
+	public long getKafkaLingerMs() {
+		return kafkaLingerMs;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
