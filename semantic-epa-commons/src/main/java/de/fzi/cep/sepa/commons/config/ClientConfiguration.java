@@ -371,7 +371,7 @@ public enum ClientConfiguration {
 		return waitForMs;
 	}
 	
-	public long getKafkaBatchSize() {
+	public int getKafkaBatchSize() {
 		return kafkaBatchSize;
 	}
 	
