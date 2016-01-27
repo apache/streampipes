@@ -87,7 +87,6 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 						if (nextMsg.isPresent()) kafkaProducer.send(nextMsg.get());
 						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
 						if (j % ClientConfiguration.INSTANCE.getWaitEvery() == 0) {
-							System.out.println("sleeping");
 							Thread.sleep(ClientConfiguration.INSTANCE.getWaitForMs());
 						}
 						j++;
