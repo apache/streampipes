@@ -31,6 +31,7 @@ public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
         kafkaConfig.put("bootstrap.servers", brokerUrl);
         kafkaConfig.put("batch.size", ClientConfiguration.INSTANCE.getKafkaBatchSize());
         kafkaConfig.put("linger.ms", ClientConfiguration.INSTANCE.getKafkaLingerMs());
+        kafkaConfig.put("acks", ClientConfiguration.INSTANCE.getKafkaAcks());
         this.kafkaProducer = new KafkaProducer<>(kafkaConfig, new StringSerializer(), new ByteArraySerializer());
 
     }
@@ -42,6 +43,7 @@ public class ProaSenseInternalProducer implements IMessagePublisher<byte[]> {
     	i++;
     	//if (i % 500 == 0) System.out.println(i +"events sent."); 
     	kafkaProducer.send(record);
+    	
     	} catch(Exception e) { e.printStackTrace();}
     }
 

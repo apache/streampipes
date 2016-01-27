@@ -1,9 +1,5 @@
 package de.fzi.cep.sepa.commons.messaging.kafka;
 
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +7,9 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import kafka.consumer.ConsumerConfig;
+import kafka.consumer.KafkaStream;
+import kafka.javaapi.consumer.ConsumerConnector;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 
 
@@ -70,7 +69,7 @@ public class KafkaConsumerGroup {
 		props.put("zookeeper.connect", a_zookeeper);
 		props.put("group.id", a_groupId);
 		props.put("zookeeper.session.timeout.ms", "10000");
-		props.put("zk.sessiontimeout.ms", "10000");
+		props.put("zk.session.timeout.ms", "400");
 		props.put("zookeeper.sync.time.ms", "10000");
 		props.put("auto.commit.interval.ms", "1000");
 
