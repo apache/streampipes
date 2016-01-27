@@ -79,7 +79,7 @@ public enum ClientConfiguration {
 	
 	private long kafkaLingerMs;
 	private int kafkaBatchSize;
-	private int kafkaAcks;
+	private String kafkaAcks;
 	
 	private PropertiesConfiguration config;
 	
@@ -142,7 +142,7 @@ public enum ClientConfiguration {
 			
 			properties.put("kafkaLingerMs", 0);
 			properties.put("kafkaBatchSize", 0);
-			properties.put("kafkaAcks", 1);
+			properties.put("kafkaAcks", "1");
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -207,7 +207,7 @@ public enum ClientConfiguration {
 			
 			this.kafkaBatchSize = config.getInt("kafkaBatchSize");
 			this.kafkaLingerMs = config.getLong("kafkaLingerMs");
-			this.kafkaAcks = config.getInt("kafkaAcks");
+			this.kafkaAcks = config.getString("kafkaAcks");
 			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
@@ -382,7 +382,7 @@ public enum ClientConfiguration {
 		return kafkaLingerMs;
 	}
 	
-	public int getKafkaAcks() {
+	public String getKafkaAcks() {
 		return kafkaAcks;
 	}
 
