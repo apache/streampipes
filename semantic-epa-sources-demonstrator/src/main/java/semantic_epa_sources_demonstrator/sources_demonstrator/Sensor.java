@@ -28,9 +28,9 @@ public abstract class Sensor {
 			.connectTimeout(1000)
 			.execute().returnContent().asString();
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		return "Error 404. Not Found";
