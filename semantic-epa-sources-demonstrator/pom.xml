@@ -54,6 +54,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<finalName>sources-hella</finalName>
+		<finalName>sources-demonstrator</finalName>
 	</build>
 </project>
