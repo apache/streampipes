@@ -109,6 +109,9 @@
     	<module>semantic-epa-runtime-camel</module>
     	<module>semantic-epa-runtime-flat</module>
     	<module>semantic-epa-sources-proasense-monitoring</module>
+    	
+    	
+    	<module>semantic-epa-sources-demonstrator</module>
 	</modules>
 
 	<!-- Build Settings -->
