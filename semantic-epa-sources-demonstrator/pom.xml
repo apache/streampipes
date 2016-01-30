@@ -35,10 +35,24 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-		
+
 
 
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>laus</id>
+			<name>nexus repository</name>
+			<url>http://laus.fzi.de/nexus/content/repositories/public/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<build>
 		<pluginManagement>
 			<plugins>
