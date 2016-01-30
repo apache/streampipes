@@ -43,6 +43,21 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>inplace</goal>
+            </goals>
+            <configuration>
+              <attachClasses>true</attachClasses>
+              <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
