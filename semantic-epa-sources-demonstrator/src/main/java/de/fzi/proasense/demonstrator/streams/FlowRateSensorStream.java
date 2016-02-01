@@ -21,7 +21,7 @@ public class FlowRateSensorStream extends AbstractDemonstratorStream {
 
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "variable_timestamp", "",
+		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "timestamp", "",
 				Utils.createURI("http://schema.org/DateTime")));
 		// TODO do I need an id
 		eventProperties
@@ -30,7 +30,7 @@ public class FlowRateSensorStream extends AbstractDemonstratorStream {
 				Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "volume_flow", "",
 				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "desnity", "",
+		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "density", "",
 				Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "fluid_temperature", "",
 				Utils.createURI(SO.Number)));
