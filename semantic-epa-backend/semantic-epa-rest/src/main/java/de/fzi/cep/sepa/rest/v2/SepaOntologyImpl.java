@@ -40,6 +40,19 @@ public class SepaOntologyImpl extends AbstractRestInterface implements SepaOntol
 			result.add(new SepDescription(sep));
 		return GsonSerializer.getGson().toJson(result);
 	}
+	
+	@Path("/sources/{sourceId}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
+		
+		try {
+			SepDescription sepaDescription = new SepDescription(StorageManager.INSTANCE.getStorageAPI().getSEPById(sepaId));
+			return getGson(keepIds).toJson(sepaDescription);
+		} catch (URISyntaxException e) {
+			return toJson(Notifications.error("Error"));
+		}
+	}
 
 	@Override
 	@Path("/sepas")

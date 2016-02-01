@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -21,7 +22,11 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.generation.ArchetypeManager;
+import de.fzi.cep.sepa.manager.operations.Operations;
+import de.fzi.cep.sepa.messages.Message;
+import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
@@ -54,6 +59,27 @@ public class DeploymentImpl extends AbstractRestInterface {
 	    return Response.ok(f)
 	            .header("Content-Disposition",
 	                    "attachment; filename=" +f.getName()).build();
+	}
+	
+	@POST
+	@Path("/import")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String directImport(@PathParam("username") String username, @FormDataParam("config") String deploymentConfig, @FormDataParam("model") String model) {
+	    
+		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
+		
+		SepDescription sep = new SepDescription(GsonSerializer.getGsonWithIds().fromJson(model, SepDescription.class));
+		try {
+			Message message = Operations.verifyAndAddElement(Utils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true);
+			 return toJson(message);
+		} catch (RDFHandlerException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException
+				| SecurityException | ClassNotFoundException
+				| SepaParseException | InvalidRdfException e) {
+			e.printStackTrace();
+			return toJson(Notifications.error("Error: Could not store source definition."));
+		}	   
 	}
 	
 	@POST
