@@ -2,36 +2,21 @@
    	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
    		<div flex="100" layout="row" >	
    			<div flex="70" layout="row" layout-align="start center"><h4>Property {{key2+1}}</h4></div>
-   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removePropertyRestriction(key2, restriction)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
+   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removePropertyRestriction(key2, restriction)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
 	</div>
   	<md-checkbox ng-checked="datatypeRestricted(property)" ng-disabled="disabled" ng-click="toggleDatatypeRestriction(property)" aria-label="Datatype Restriction">
         Restrict datatype
     </md-checkbox>
 	
 	<div ng-show="datatypeRestricted(property)">
-	   	<md-input-container>
-	   	<label>Datatype</label>
-	      
-	    <select ng-model="property.properties.runtimeType" ng-disabled="disabled">
-		          <option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}" ng-selected="property.properties.runtimeType == p.id">
-		            {{primitive.title}} - {{primitive.description}}
-		          </option>
-		</select>
-	   	</md-input-container>
+		<datatype-property runtime-type="property.properties.runtimeType" disabled="disabled">
+		</datatype-property>
    	</div>
    	<md-checkbox ng-checked="domainPropertyRestricted(property)" ng-click="toggleDomainPropertyRestriction(property)" aria-label="Domain property Restriction" ng-disabled="disabled" >
         Restrict domain property
     </md-checkbox>
     <div ng-show="domainPropertyRestricted(property)">
-	    <md-input-container>
-	   	<label>Domain Property</label>
-	   	<select ng-model="property.properties.domainProperties[0]" ng-disabled="disabled">
-		          <option ng-repeat="p in properties" value="{{p.id}}" ng-selected="property.properties.domainProperties[0] == p.id">
-		            {{p.title}}
-		          </option>
-		</select>
-	     
-	   	</md-input-container>  
+    	<domain-property property="property.properties.domainProperties[0]" disabled="disabled"></domain-property>
    	</div> 	    
 </div>
 </div>

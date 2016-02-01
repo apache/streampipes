@@ -201,10 +201,6 @@ body {
 	margin-bottom: 0;
 }
 
-.icon-stand{
-	height: 215px;
-	overflow-y: auto;
-}
 
 .draggable-icon{
 	cursor: pointer;
@@ -282,6 +278,24 @@ body {
 	padding: 5px;
 	margin-top: 1%; 
 	box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+	
+}
+
+.editorIconStandOptions {
+	background:  white;
+/* 	border: 2px solid rgb(63,81,181);; */
+/* 	border-bottom: 2px solid rgb(63,81,181); */
+	color: black;
+	padding: 2px;
+	margin-top: 1%; 
+}
+
+
+.icon-stand{
+	height: 215px;
+	overflow-y: auto;
+/* 	border: 2px solid rgb(63,81,181); */
+	border-top:0px;
 	
 }
 

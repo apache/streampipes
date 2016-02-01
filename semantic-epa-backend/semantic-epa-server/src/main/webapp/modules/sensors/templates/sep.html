@@ -1,7 +1,33 @@
 <md-tabs md-dynamic-height md-border-bottom md-selected="selectedSepIndex"> 
 		<md-tab label="Basics">
 			<md-content class="md-padding">
-				<sepa-basics element="selectedSource"></sepa-basics>
+				<sepa-basics element="selectedSource" disabled="editingDisabled"></sepa-basics>
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Streams">
+			<md-content class="md-padding">
+				<sepa-streams element="selectedSource.eventStreams" disabled="editingDisabled"></sepa-streams>
+				<h3 class="md-display-2">Available Streams</h3>
+					<md-list-item class="md-3-line" ng-repeat="(key, stream) in selectedSource.eventStreams track by $index">
+						<img ng-src="{{stream.iconUrl}}" class="md-avatar" alt="{{Icon}}" ng-show="stream.iconUrl != undefined"/>
+						<div flex="50" layout="row" layout-align="start center" >
+					        <div class="md-list-item-text" layout="column">
+					          <h3>{{ stream.name }}</h3>
+					          <h4>{{ stream.description }}</h4>
+					          <p>{{ stream.uri }}</p>
+					        </div>
+					       </div>
+					       <div flex="50" layout="row" layout-align="start center" >
+					       <md-button class="md-accent" ng-click="loadStreamDetails(stream, editingDisabled)">View</md-button>
+					       <md-button class="md-accent" ng-click="cloneStream(selectedSource.eventStreams, stream)">Clone</md-button>
+					       <md-button class="md-accent" ng-click="loadStreamDetails(stream, editingDisabled)" ng-disabled="editingDisabled">Modify</md-button>
+					       <md-button class="md-accent" ng-click="removeStream(selectedSource.eventStreams, stream)" ng-disabled="editingDisabled">Delete</md-button>
+					   </div>
+				   </md-list-item>
+				   <md-button class="md-accent" ng-click="addStream(selectedSource.eventStreams)">Add Stream</md-button>
+				   <div ng-show="streamSelected">
+				     	<sepa-stream-detail stream="selectedStream" disabled="editingDisabled"></sepa-stream-detail> 
+				   </div>
 			</md-content> 
 		</md-tab> 
 </md-tabs>

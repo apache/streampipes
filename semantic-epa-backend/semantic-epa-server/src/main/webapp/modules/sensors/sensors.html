@@ -3,11 +3,52 @@
 		<md-content class="md-padding">
 		<h1>Sensor Configurator</h1>
 		<md-tabs md-border-bottom layout-fill md-dynamic-height>
-			<md-tab label="Sepas"> 
+		
+			<md-tab label="Data Sources"> 
+				<div layout="row">
+					<md-button class="md-accent" ng-click="addNewSource()"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
+				</div>
+				<div flex layout="row">
+					<div flex="30" layout="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="sources">
+						    <li ng-repeat="(pointer, source) in sources track by $index" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property">
+						       <div flex="100" layout="row">
+						        	<div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{source.name}}</div>
+						        	<div flex="20" layout="row" layout-align="end center"><md-button ng-click="loadSourceDetails(pointer)"><md-icon md-svg-icon="action:ic_search_24px" aria-label="Add Concept"></md-icon></md-button>		</div>
+						       		<div flex="20" layout="row" layout-align="end center"><md-button ng-click="getSourceDetailsFromOntology(source.uri)"><md-icon md-svg-icon="content:ic_content_copy_24px" aria-label="Add Concept"></md-icon></md-button>		</div>
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex="70" layout="column" class="ontology-panel-main ontology-panel-property" ng-show="sourceSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							{{selectedSource.name}}
+						</div>
+						<md-content class="md-padding" >
+							<form name="sourceForm" ng-submit="updateConcept()" role="form">
+								  <ng-include src="'modules/sensors/templates/sep.html'"/>
+							      <md-divider></md-divider>
+							</form>
+						</md-content>
+						
+						<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openSourceOptionsDialog(selectedSource.uri, selectedSource, 'Source')">Generate</md-button>
+						</div>
+					</div>
+				</div>
+			</md-tab>
+			
+			
+			
+			<md-tab label="Processing Elements"> 
 				<div layout="row" flex="100">
 					<div layout="row" layout-align="start center" flex="60">
 						<md-button class="md-accent" ng-click="addNewSepa()">
-							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create new Sepa
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create new Processing Element
 						</md-button>
 					</div>
 					<div layout="row" layout-align="end center" flex="40">		
@@ -55,71 +96,15 @@
 					</div>
 				</div>
 			</md-tab>
-			<md-tab label="Sources"> 
-				<div layout="row">
-					<md-button class="md-accent" ng-click="addNewSource()"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
-				</div>
-				<div flex layout="row">
-<!-- 					<div flex-sm="30" flex-gt-sm="40" layout-sm="column"> -->
-<!-- 						<div ui-tree data-drag-enabled="false"> -->
-<!-- 						  <ol ui-tree-nodes="" ng-model="concepts"> -->
-<!-- 						    <li ng-repeat="(sourceId, source) in sources track by $index" ui-tree-node> -->
-<!-- 						    	<div ui-tree-handle class="tree-node tree-node-content color-concept" ng-click="loadSourceDetails(sourceId)"> -->
-<!-- 							    	<div flex="100" layout="row"> -->
-<!-- 							        	<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{source.name}}</div> -->
-<!-- 							        	<div flex="30" layout="row" layout-align="end center"> -->
-<!-- 								        	<div flex="20"></div> -->
-<!-- 								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	  -->
-<!-- 											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	  -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 								</div>		 -->
-<!-- 						      	 <ol ui-tree-nodes="" ng-model="item.nodes"> -->
-<!-- 								  	<li ng-repeat="(streamId, stream) in source.eventStreams track by $index" ui-tree-node> -->
-<!-- 								          <div ui-tree-handle class="tree-node tree-nocde-content color-instance" ng-click="loadStreamDetails(sourceId, streamId)"> -->
-<!-- 								          	<div flex="100" layout="row"> -->
-<!-- 								          		<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{stream.name}}</div> -->
-<!-- 								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	 -->
-<!-- 								         	 </div> -->
-<!-- 								          </div> -->
-<!-- 								    </li> -->
-<!-- 							   	</ol> -->
-<!-- 						    </li> -->
-<!-- 						  </ol> -->
-<!-- 						</div> -->
-<!-- 					</div>     -->
-
-					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-concept" ng-show="sourceSelected">
-						<div class="ontology-panel-title ontology-panel-concept ontology-panel-title-concept">
-							{{selectedSource.name}}
-						</div>
-						<md-content class="md-padding" >
-							<form name="conceptForm" ng-submit="updateConcept()" role="form">
-								  <ng-include src="'modules/sensors/templates/sep.html'"/>
-							      <md-divider></md-divider>
-								  <md-button class="md-accent md-raised" ng-click="storeClass()" type="submit">Save</md-button>	
-							</form>
-						</md-content>
-					</div>
-					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-instance"  ng-show="streamSelected">
-						<div class="ontology-panel-title ontology-panel-instance ontology-panel-title-instance">
-							{{selectedStream.name}}
-						</div>
-						<md-content class="md-padding">
-							<form name="instanceForm" ng-submit="updateInstance()" role="form">
-							 	<ng-include src="'modules/sensors/templates/stream.html'"/>
-								
-								<md-button class="md-accent md-raised" ng-click="storeInstance()" type="submit">Save</md-button>	
-						</form>
-						</md-content>
-					</div>
-				</div>
-			</md-tab>
-			<md-tab label="Actions"> 
+			
+			
+			
+			
+			<md-tab label="Data Sinks"> 
 				<div layout="row" flex="100">
 					<div layout="row" layout-align="start center" flex="60">
 						<md-button class="md-accent" ng-click="addNewAction()">
-							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Action"></md-icon>  Create new Action
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Action"></md-icon>  Create new Data Sink
 						</md-button>
 					</div>
 					<div layout="row" layout-align="end center" flex="40">		

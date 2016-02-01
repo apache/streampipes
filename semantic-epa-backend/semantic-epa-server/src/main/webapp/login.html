@@ -5,12 +5,14 @@
 		<h1>Login</h1>
 		<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
 			<form name="loginForm" ng-submit="logIn()" role="form">
+			<div flex layout="column">
 				<md-input-container> <label>Email</label> <input
 					type="email" ng-model="credentials.username" required> </md-input-container>
 				<md-input-container flex> <label>Password:</label>
 				<input type="password" ng-model="credentials.password" required> </md-input-container>
 				<md-input-container flex> <md-checkbox 
 					ng-model="credentials.rememberMe"> Remember me </md-checkbox></md-input-container>
+			</div>
 				<div class="form-actions">
 				<md-button class="md-accent md-raised" type="submit"
 					ng-disabled="loginForm.$pristine || loginForm.$invalid || loading">Login</md-button>

@@ -10,6 +10,105 @@ angular
     		}
     	}
     }) 
+     .directive('sepaStreamDetail', function() {
+    	return {
+    		restrict : 'E',
+    		templateUrl : 'modules/sensors/directives/stream-detail.tmpl.html',
+    		scope : {
+    			stream : "=stream",
+    			disabled : "=disabled"
+    		},
+    		
+    		controller: function($scope, $element) {
+    			
+    			$scope.addProperty = function(properties) {
+    				properties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeName" : "", "runtimeType" : "", "domainProperties" : []}});
+    			}
+    			
+    			$scope.removeProperty = function(index, properties) {
+    				properties.splice(index, 1);
+    			}
+    		}
+    	}
+    }) 
+     .directive('transportFormat', function() {
+    	return {
+    		restrict : 'E',
+    		templateUrl : 'modules/sensors/directives/transport-format.tmpl.html',
+    		scope : {
+    			grounding : "=grounding",
+    			disabled : "=disabled"
+    		},
+    		
+    		controller: function($scope, $element) {
+    			
+    			$scope.availableTransportFormats = [{"id" : "thrift", "name" : "ProaSense Thrift", "rdf" : ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#thrift"]}, {"id": "json", "name" : "JSON", "rdf" : ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#json"]}];
+    			$scope.selectedTransportFormat = "";
+    			
+    			var getFormat = function() {
+    				if ($scope.selectedTransportFormat == 'thrift') return $scope.availableTransportFormats[0].rdf;
+    				else return $scope.availableTransportFormats[1].rdf;
+    			}
+    			
+    			$scope.addTransportFormat = function(transportFormats) {
+    				transportFormats.push({"rdfType" : getFormat()});
+    			}
+    			
+    			$scope.removeTransportFormat = function(transportFormats) {
+    				transportFormats.splice(0, 1);
+    			}
+    			
+    			$scope.findFormat = function(transportFormat) {
+    				if (transportFormat == undefined) return "";
+    				else {
+	    				if (transportFormat.rdfType.indexOf($scope.availableTransportFormats[0].rdf[2]) != -1) return $scope.availableTransportFormats[0].name;
+	    				else return $scope.availableTransportFormats[1].name;
+    				}
+    			}
+    		}
+    	}
+    }) 
+    .directive('transportProtocol', function() {
+    	return {
+    		restrict : 'E',
+    		templateUrl : 'modules/sensors/directives/transport-protocol.tmpl.html',
+    		scope : {
+    			grounding : "=grounding",
+    			disabled : "=disabled"
+    		},
+    		
+    		controller: function($scope, $element) {
+    			
+    			$scope.availableTransportProtocols = [{"id" : "kafka", "name" : "Apache Kafka", "type" : "de.fzi.cep.sepa.model.impl.KafkaTransportProtocol"}, {"id": "jms", "name" : "JMS", "type" : "de.fzi.cep.sepa.model.impl.JmsTransportProtocol"}];
+    			$scope.selectedTransportProtocol = "";
+    			
+    			$scope.addTransportProtocol = function(transportProtocols) {
+    				if ($scope.selectedTransportProtocol == $scope.availableTransportProtocols[0].id) $scope.addKafkaProtocol(transportProtocols);
+    				else $scope.addJmsProtocol(transportProtocols);
+    			};
+    			
+    			$scope.addKafkaProtocol = function(transportProtocols) {
+    				transportProtocols.push({"type" : $scope.availableTransportProtocols[0].type, "properties" : {"zookeeperHost" : "", "zookeeperPort" : 2181, "brokerHostname" : "", "kafkaPort" : 9092, "topicName" : ""}});
+    			}
+    			
+    			$scope.addJmsProtocol = function(transportProtocols) {
+    				transportProtocols.push({"type" : $scope.availableTransportProtocols[1].type, "properties" : {"brokerHostname" : "", "port" : 61616, "topicName" : ""}});
+    			}
+    			
+    			$scope.removeTransportProtocol = function(transportProtocols) {
+    				transportProtocols.splice(0, 1);
+    			}
+    			
+    			$scope.findProtocol = function(transportProtocol) {
+    				if (transportProtocol == undefined) return "";
+    				else {
+    					if (transportProtocol.type == $scope.availableTransportProtocols[0].type) return $scope.availableTransportProtocols[0].name;
+    					else return $scope.availableTransportProtocols[1].name;
+    				}
+    			} 
+    		}
+    	}
+    }) 
     .directive('requiredPropertyValues', function() {
     	return {
     		restrict : 'E',
@@ -17,6 +116,52 @@ angular
     		scope : {
     			property : "=",
     			disabled : "=disabled"
+    		}
+    	}
+    })
+    .directive('datatypeProperty', function() {
+    	return {
+    		restrict : 'E',
+    		templateUrl : 'modules/sensors/directives/datatype-property.tmpl.html',
+    		scope : {
+    			runtimeType : "=",
+    			disabled : "=disabled"
+    		},
+    		controller: function($scope, $element) {
+    			
+    			$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
+	        	                           {"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
+	        	                           {"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
+	        	                           {"title" : "Long", "description" : "A whole numerical datatype, e.g., '2332313993'", "id" : "http://www.w3.org/2001/XMLSchema#long"},
+	        	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];    	
+
+    			
+    		}
+    	}
+    })
+    .directive('domainProperty', function(restApi) {
+    	return {
+    		restrict : 'E',
+    		templateUrl : 'modules/sensors/directives/domain-property.tmpl.html',
+    		scope : {
+    			property : "=",
+    			disabled : "=disabled"
+    		},
+    		controller: function($scope, $element) {
+    			
+    			$scope.domainProperties = [];
+	        	
+	        	$scope.loadProperties = function(){
+	                restApi.getOntologyProperties()
+	                    .success(function(propertiesData){
+	                        $scope.domainProperties = propertiesData;
+	                    })
+	                    .error(function(msg){
+	                        console.log(msg);
+	                    });
+	            };
+	            
+	            $scope.loadProperties();
     		}
     	}
     })
@@ -30,22 +175,6 @@ angular
 	        },
 	        link: function($scope, element, attrs) {
 	        	
-	        	$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
-	        	                           {"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
-	        	                           {"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
-	        	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];    	
-
-	        	$scope.properties = [];
-	        	
-	        	$scope.loadProperties = function(){
-	                restApi.getOntologyProperties()
-	                    .success(function(propertiesData){
-	                        $scope.properties = propertiesData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
 	            
 	        	
 	            $scope.addPropertyRestriction = function(key, restriction) {
@@ -96,7 +225,7 @@ angular
 			        return result;
 			    };
 			    
-			    $scope.loadProperties();
+			  
 	        }
     	}
     	

@@ -1,5 +1,5 @@
 angular.module('streamPipesApp')
-.controller('SensorCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog) {
+.controller('SensorCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog, $filter) {
 
 	$scope.editingDisabled = true;
 	
@@ -8,17 +8,28 @@ angular.module('streamPipesApp')
 	$scope.actions = [];
 		
 	$scope.selectedSepa;
-	$scope.selectedStream;
 	$scope.selectedSource;
 	$scope.selectedAction;
+	$scope.selectedStream;
 	
 	$scope.sepaSelected = false;
 	$scope.sourceSelected = false;
-	$scope.streamSelected = false;
 	$scope.actionSelected = false;
+	$scope.streamSelected = false;
 	
 	$scope.toggleEditMode = function() {
 		$scope.editingDisabled = !$scope.editingDisabled;
+	
+	}
+	
+	$scope.removeStream = function(eventStreams, stream) {
+		eventStreams.splice(stream, 1);
+	}
+	
+	$scope.loadStreamDetails = function(stream, editingDisabled) {
+		$scope.editingDisabled = editingDisabled;
+		$scope.streamSelected = true;
+		$scope.selectedStream = stream;
 	}
 	
 	$scope.addNewSepa = function() {
@@ -31,6 +42,26 @@ angular.module('streamPipesApp')
 		$scope.selectedAction = {"eventStreams" : [], "name" : "", "staticProperties" : []};
 		$scope.actionSelected = true;
 		$scope.editingDisabled = false;
+	}
+	
+	$scope.addNewSource = function() {
+		$scope.selectedSource = undefined;
+		$scope.selectedSource = {"eventStreams" : [], "name" : ""};
+		$scope.sourceSelected = true;
+		$scope.streamSelected = false;
+		$scope.selectedStream = "";
+		$scope.editingDisabled = false;
+	}
+	
+	$scope.addStream = function(element) {
+		element.push({"name" : "", "eventSchema" : {"eventProperties" : []}, "eventGrounding" : {"transportFormats" : [], "transportProtocols" : []}});
+		$scope.loadStreamDetails(element[element.length-1]);
+	}
+	
+	$scope.cloneStream = function(eventStreams, stream) {
+		var clonedStream = angular.copy(stream);
+		clonedStream.uri = "";
+		eventStreams.push(clonedStream);
 	}
 	
 	$scope.loadSepaDetails = function(uri, keepIds, editingDisabled) {
@@ -58,31 +89,42 @@ angular.module('streamPipesApp')
 	}
 	
 	$scope.loadSourceDetails = function(index) {
+		$scope.editingDisabled = true;
 		$scope.sourceSelected = true;
-		$scope.streamSelected = false;
 		$scope.selectedSource = $scope.sources[index];
-	}
-	
-	$scope.loadStreamDetails = function(index, streamId) {
-		$scope.sourceSelected = false;
-		$scope.streamSelected = true;
-		$scope.selectedStream = $scope.sources[index].eventStreams[streamId];
 	}
 	
 	$scope.loadSepas = function(){
         restApi.getSepasFromOntology()
             .success(function(sepaData){
-                $scope.sepas = sepaData;
+                $scope.sepas = $filter('orderBy')(sepaData, "name", false);;
             })
             .error(function(msg){
                 console.log(msg);
             });
     };
     
+    $scope.getSourceDetailsFromOntology = function(sourceId) {
+    	restApi.getSourceDetailsFromOntology(sourceId, false) 
+    		.success(function(source){
+    			$scope.editingDisabled = false;
+    			$scope.sourceSelected = true;
+    			$scope.selectedSource = source;
+    			$scope.selectedSource.uri = "";		
+    			angular.forEach($scope.selectedSource.eventStreams, function(stream, key) {
+    				stream.uri = "";
+    			});
+    		})
+	        .error(function(msg){
+	            console.log(msg);
+	        });
+    }
+    
     $scope.loadSources = function(){
         restApi.getSourcesFromOntology()
             .success(function(sources){
-                $scope.sources = sources;
+            	
+                $scope.sources = $filter('orderBy')(sources, "name", false);
             })
             .error(function(msg){
                 console.log(msg);
@@ -92,12 +134,28 @@ angular.module('streamPipesApp')
     $scope.loadActions = function(){
         restApi.getActionsFromOntology()
             .success(function(actions){
-                $scope.actions = actions;
+                $scope.actions = $filter('orderBy')(actions, "name", false);
             })
             .error(function(msg){
                 console.log(msg);
             });
     };
+    
+    $scope.openSourceOptionsDialog = function(elementId, elementData, elementType){
+		 $mdDialog.show({
+	   	      controller: SourceOptionsDialogController,
+	   	      templateUrl: 'modules/sensors/templates/sourceOptionsDialog.tmpl.html',
+	   	      parent: angular.element(document.body),
+	   	      clickOutsideToClose:true,
+	   	      scope:$scope,
+	   	      preserveScope:true,
+		   	  locals : {
+		   		  elementId : elementId,
+		   		  elementData : elementData,
+		   		  elementType : elementType
+		      }
+	   	    })
+	 }
     
     
     $scope.openDownloadDialog = function(elementId, elementData, elementType){
@@ -122,7 +180,7 @@ angular.module('streamPipesApp')
     
 });
 
-function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, elementType, $http) {
+function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, elementType, $http, $rootScope) {
 
 	$scope.elementId = elementId;
 	$scope.deployment = {};
@@ -133,7 +191,7 @@ function DownloadDialogController($scope, $mdDialog, restApi, elementId, element
 		
 	$scope.generateImplementation = function() {	
 		$scope.loading = true;
-		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/implementation', data : getFormData()}).
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/implementation', data : getFormData()}).
 		  success(function(data, status, headers, config) {
 			    $scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");
 			    $scope.loading = false;
@@ -146,7 +204,7 @@ function DownloadDialogController($scope, $mdDialog, restApi, elementId, element
 	
 	$scope.generateDescription = function() {
 		$scope.loading = true;
-		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/description', data : getFormData()}).
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/description', data : getFormData()}).
 		  success(function(data, status, headers, config) {
 			    $scope.openSaveAsDialog(elementData.name +".jsonld", data, "application/json");
 			    $scope.loading = false;
@@ -175,5 +233,69 @@ function DownloadDialogController($scope, $mdDialog, restApi, elementId, element
   	$scope.openSaveAsDialog = function(filename, content, mediaType) {
 	    var blob = new Blob([content], {type: mediaType});
 	    saveAs(blob, filename);
+	}  	
+}
+
+function SourceOptionsDialogController($scope, $mdDialog, restApi, elementId, elementData, elementType, $http, $rootScope) {
+
+	$scope.elementId = elementId;
+	$scope.deployment = {};
+	$scope.deployment.elemendId = elementId;
+	$scope.deployment.elementType = elementType;
+	
+	$scope.loading = false;
+	$scope.directImportResult = false;
+	$scope.result = "";
+	
+	$scope.directImport = function() {
+		console.log(elementData);
+		$scope.loading = true;
+		$http({method: 'POST', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/import', data : getFormData()}).
+		  success(function(data, status, headers, config) {
+			  	$scope.loading = false;
+			  	$scope.result = data;
+			  	$scope.directImportResult = true;
+		  }).
+		  error(function(data, status, headers, config) {
+		    console.log(data);
+		    $scope.loading = false;
+		  });
 	}
+	
+	
+	$scope.generateDescription = function() {
+		console.log(elementData);
+		$scope.loading = true;
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/implementation', data : getFormData()}).
+		  success(function(data, status, headers, config) {
+			    $scope.openSaveAsDialog(elementData.name +".jsonld", data, "application/json");
+			    $scope.loading = false;
+		  }).
+		  error(function(data, status, headers, config) {
+		    console.log(data);
+		    $scope.loading = false;
+		  });
+	}
+	
+	var getFormData = function() {
+		var formData = new FormData();
+		formData.append("config", angular.toJson($scope.deployment));
+		formData.append("model", angular.toJson(elementData));
+		return formData;
+	}
+	
+	$scope.hide = function() {
+  		$mdDialog.hide();
+  	};
+  	
+  	$scope.cancel = function() {
+  	    $mdDialog.cancel();
+  	};
+  	
+  	$scope.openSaveAsDialog = function(filename, content, mediaType) {
+	    var blob = new Blob([content], {type: mediaType});
+	    saveAs(blob, filename);
+	}  	
+	
+	
 }

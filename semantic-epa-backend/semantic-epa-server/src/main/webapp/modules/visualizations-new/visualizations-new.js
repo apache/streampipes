@@ -8,6 +8,8 @@ angular.module('streamPipesApp')
 	                         
 	                         ];
 	
+	var defaultWidgets = [];
+	
 	$scope.trustSrc = function(src) {
 	    return $sce.trustAsResourceUrl(src);
 	}
@@ -25,9 +27,10 @@ angular.module('streamPipesApp')
     var preloadVisualizations = function(visualizations) {
     	angular.forEach(visualizations, function(viz) {
     		widgetDefinitions.push({"name" : viz.pipelineName, "style" : { "min-width" : "40%" }, "template" : '<iframe ng-src="' +viz.consumerUrl +'" style="border:0px;min-height:500px;width:600px;" width:"100%" height:"100%" layout="row" layout-align="center center"></iframe>'})
+    		
     	});
     	console.log(widgetDefinitions);
-    	
+    	defaultWidgets = widgetDefinitions;
     	
     	$scope.dashboardOptions = {
     	          widgetButtons: true,

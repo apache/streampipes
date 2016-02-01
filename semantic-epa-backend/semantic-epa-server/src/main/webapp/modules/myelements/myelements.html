@@ -4,46 +4,60 @@
 <md-tab label="{{tab.title}}" md-on-select="loadCurrentElements(tab.type)"> <md-content class="md-padding">
 <h1 class="md-display-2">{{tab.title}}</h1>
 <div>
-	<md-grid-list md-cols-sm="1" md-cols-md="1" md-cols-gt-md="3"
-		md-row-height-gt-md="1:1" md-gutter="12px" md-gutter-gt-sm="8px"
-		md-row-height="fit" flex> <md-grid-tile
-		ng-repeat="item in currentElements" md-rowspan="1" md-colspan="1"
-		md-colspan-sm="1" ng-class="tile.background"> 
-		<md-card
-		style="padding:10px;"> 
-		<div ng-show="item.favorite" class="top right">
-				<md-icon md-svg-icon="action:ic_favorite_24px" aria-label="Action" class="md-accent" style="width: 36px; height: 36px"></md-icon>
-			</div>
-		<img ng-src="{{item.iconUrl}}" class="md-card-image connectable-element"
-	alt="{{item.name}}"
-	ng-show="(item.iconUrl != null && item.iconUrl != 'http://localhost:8080/img')" />
-	<span class="connectable-element"
-		ng-show="(item.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">{{elementTextIcon(item.name)}}</span>
-	</span>
-	<p />
-	<div flex layout="row">
-		<md-content>
-			<h2 class="md-title">{{item.name}}</h2>
-			<p>{{item.description}}</p>
-		</md-content>
-	</div>
-	<div class="md-actions" layout="row" layout-align="end center">
-		<md-fab-speed-dial md-open="false" md-direction="left"
-			ng-class="md-fling"> <md-fab-trigger>
-		<md-button aria-label="menu" class="md-fab md-accent"> <md-icon
-			md-svg-icon="navigation:ic_menu_24px" aria-label="Action"></md-icon>
-		</md-button> </md-fab-trigger> <md-fab-actions> <md-button
-			aria-label="As Favorite" class="md-fab md-mini"
-			ng-click="toggleFavorite(item, tab.type)"> <md-icon
-			md-svg-icon="toggle:ic_star_24px" aria-label="Action"></md-icon> </md-button> <md-button
-			aria-label="Refresh" class="md-fab md-mini" ng-click="refresh(item.elementId, tab.type)"> <md-icon
-			md-svg-icon="action:ic_autorenew_24px" aria-label="Action"></md-icon>
-		</md-button> <md-button aria-label="Remove" class="md-fab md-mini" ng-click="remove(item.elementId, tab.type)"> <md-icon
-			md-svg-icon="content:ic_clear_24px"></md-icon> </md-button> <md-button
-			aria-label="JSON-LD" class="md-fab md-mini" ng-click="jsonld($event, item.elementId)"> <md-icon
-			md-svg-icon="action:ic_search_24px"></md-icon> </md-button></md-fab-speed-dial>
-	</div>
-	</md-card> </md-grid-tile> </md-grid-list>
+	<md-content layout-padding class="md-whiteframe-z2">
+		<md-list>
+			<md-list-item ng-repeat="item in currentElements | orderBy:'+name'">
+				
+				<div flex="100" layout="row">
+					<div flex="20" layout="row" style="margin:10px;">
+						<img ng-src="{{item.iconUrl}}" class="md-card-image connectable-element" alt="{{item.name}}"
+						ng-show="(item.iconUrl != null && item.iconUrl != 'http://localhost:8080/img')" />
+						<span class="connectable-element"
+							ng-show="(item.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">{{elementTextIcon(item.name)}}</span>
+						</span>
+					</div>
+					<div flex="80" layout="row">
+						<div flex="100" layout="column" layout-align="left">
+							<div layout="row">
+								<div flex layout="column">
+									<h2 class="md-title">{{item.name}}</h2>
+									<p>{{item.description}}</p>	
+								</div>
+								<div flex layout="column" layout-algin="end top">
+									<div ng-show="item.favorite" class="top right">
+										<md-icon md-svg-icon="action:ic_favorite_24px" aria-label="Action" class="md-accent" style="width: 36px; height: 36px"></md-icon>
+									</div>
+								</div>
+							</div>		
+							<div flex layout="row">	
+								<span flex flex-order="1" layout="row" layout-align="center center">
+									<md-button aria-label="As Favorite" class="md-accent" ng-click="toggleFavorite(item, tab.type)"> 
+										<md-icon md-svg-icon="toggle:ic_star_24px" aria-label="Action"></md-icon> As Favorite 
+									</md-button> 
+								</span>								
+								<span flex flex-order="2" layout="row" layout-align="center center">
+									<md-button 	aria-label="JSON-LD" class="md-accent" ng-click="jsonld($event, item.elementId)"> 
+										<md-icon md-svg-icon="action:ic_search_24px"></md-icon> View Json-LD 
+									</md-button>
+								</span>
+								<span flex flex-order="3" layout="row" layout-align="center center">
+									<md-button aria-label="Refresh" class="md-accent" ng-click="refresh(item.elementId, tab.type)"> 
+										<md-icon md-svg-icon="action:ic_autorenew_24px" aria-label="Action"></md-icon> Reload Description
+									</md-button> 
+								</span>
+								<span flex flex-order="4" layout="row" layout-align="center center">
+									<md-button aria-label="Remove" class="md-accent" ng-click="remove(item.elementId, tab.type)"> 
+										<md-icon md-svg-icon="content:ic_clear_24px"></md-icon> Delete 
+									</md-button>
+								</span>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<md-divider/>
+			</md-list-item>
+		</md-list>
 </div>
 </md-content> </md-tab> 
 </div>

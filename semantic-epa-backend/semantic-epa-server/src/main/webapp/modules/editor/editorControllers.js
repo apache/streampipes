@@ -16,6 +16,8 @@ angular.module('streamPipesApp')
             $scope.selectedTab = 1;
             $rootScope.title = "StreamPipes";
             
+            $scope.minimizedEditorStand = false;
+            
             $scope.selectMode = true;
             
             //var editorPlumb;
@@ -23,6 +25,10 @@ angular.module('streamPipesApp')
             var connCount = 1;
             
             $scope.currentZoomLevel = 1;
+            
+            $scope.toggleEditorStand = function() {
+            	$scope.minimizedEditorStand = !$scope.minimizedEditorStand;
+            }
             
             $("#assembly").panzoom({
             	disablePan: true,
@@ -252,17 +258,17 @@ angular.module('streamPipesApp')
                     disabled: !($scope.ownBlocksAvailable())
                 },
                 {
-                    title : 'Streams',
+                    title : 'Data Streams',
                     type: 'stream',
                     disabled: !($scope.ownSourcesAvailable())
                 },
                 {
-                    title : 'Sepas',
+                    title : 'Processing Elements',
                     type: 'sepa',
                     disabled: !($scope.ownSepasAvailable())
                 },
                 {
-                    title : 'Actions',
+                    title : 'Data Sinks',
                     type: 'action',
                     disabled: !($scope.ownActionsAvailable())
                 }

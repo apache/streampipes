@@ -5,17 +5,17 @@ angular.module('streamPipesApp')
 	
 	 $scope.tabs = [
 		            {
-		                  title : 'Actions',
-		                  type: 'action'
+		                  title : 'Data Sources',
+		                  type: 'source'
 		            },
 		            {
-		                  title : 'Sepas',
+		                  title : 'Processing Elements',
 		                  type: 'sepa'
 		            },
 		            {
-		                  title : 'Sources',
-		                  type: 'source'
-		                },
+		                  title : 'Data Sinks',
+		                  type: 'action'
+		            }
 		            ];
 
 	$scope.loadCurrentElements = function(type) {

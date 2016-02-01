@@ -195,15 +195,15 @@ angular
 					}
 				}
 			})
-			.state('streampipes.marketplace', {
-				url: '/marketplace',
-				views: {
-					"streampipesView@streampipes" : {
-						templateUrl : 'modules/marketplace/marketplace.html',
-						controller: 'MarketplaceCtrl'
-					}
-				}
-			})
+//			.state('streampipes.marketplace', {
+//				url: '/marketplace',
+//				views: {
+//					"streampipesView@streampipes" : {
+//						templateUrl : 'modules/marketplace/marketplace.html',
+//						controller: 'MarketplaceCtrl'
+//					}
+//				}
+//			})
 			.state('streampipes.ontology', {
 				url: '/ontology',
 				views: {
@@ -407,6 +407,7 @@ angular
 		$rootScope.go = function ( path ) {
 			//$location.path( path );
 			$state.go(path);
+			$mdSidenav('left').close();
 		};
 
 	      $scope.logout = function() {
@@ -432,12 +433,13 @@ angular
              link : 'streampipes.visualizations',
              title: 'Visualizations',
              icon: 'editor:ic_insert_chart_24px'
-           },
-           {
-               link : 'streampipes.marketplace',
-               title: 'Marketplace',
-               icon: 'maps:ic_local_mall_24px'
            }
+//           },
+//           {
+//               link : 'streampipes.marketplace',
+//               title: 'Marketplace',
+//               icon: 'maps:ic_local_mall_24px'
+//           }
          ];
          $scope.admin = [
            {

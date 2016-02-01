@@ -13,21 +13,21 @@
     <div layout="column" style="width:100%">	
 		 <div layout="row">
 		   <md-input-container>
-		    	<h4>Actions</h4>
+		    	<h4>Action</h4>
 			 	<md-radio-group ng-model="deployment.outputType" style="display:inline;">
 					    <md-radio-button value="OUTPUT_IMPLEMENTATION">Generate implementation as prepared Maven project</md-radio-button>
-					    <md-radio-button value="OUTPUT_JSONLD">Download Description file as Json-LD</md-radio-button>
+					    <md-radio-button value="OUTPUT_JSONLD">Download description file as Json-LD</md-radio-button>
+					    <md-radio-button value="DIRECT_IMPORT">Add/Update source description</md-radio-button>
 				</md-radio-group>	
 			</md-input-container> 
 		 </div>   
+		 <div ng-show="deployment.outputType == 'DIRECT_IMPORT'">
+		 	<md-input-container flex> 
+		    		<md-button ng-click="directImport()" class="md-accent" ng-click="">Import Source</md-button>
+		    </md-input-container>
+		  
+		 </div>    
 		 <div ng-show="deployment.outputType == 'OUTPUT_IMPLEMENTATION'">    			
-      		<h4>What kind of implementation would you like to create?</h4>
-			    <md-radio-group ng-model="deployment.deploymentType" style="display:inline;">
-				    <md-radio-button value="SEPA_ESPER">Esper CEP Runtime</md-radio-button>
-				    <md-radio-button value="SEPA_ALGORITHM">Online Algorithm</md-radio-button>
-				    <md-radio-button value="SEPA_STORM">Apache Storm Topology</md-radio-button>
-				    <md-radio-button value="SEPA_FLINK">Apache Flink Topology</md-radio-button>
-				</md-radio-group> 
 			<h4>Endpoint Settings</h4>
 			    <md-radio-group ng-model="deployment.deploymentMethod" style="display:inline;">
 				     <md-radio-button value="STANDALONE">Standalone</md-radio-button>
@@ -62,6 +62,24 @@
 		    </md-input-container> 
 		</div>
 		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+		<div flex layout="row" layout-align="center center" ng-show="directImportResult">
+			<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50">
+				
+				<md-content class="md-padding">
+				<div flex layout="row"><h3>{{result.elementName}}</h3> 
+				<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="result.success"></md-icon>
+				<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!(result.success)"></md-icon>
+					    		
+				</div>
+				<div ng-repeat = "detail in result.notifications">
+					<div>{{detail.title}}</div>
+					<div>{{detail.description}}</div>
+					<md-divider/>
+				</div>
+				
+				</md-content>
+			</div>
+		</div>
 	</div>
   </md-dialog-content>
   <div class="md-actions" layout="row">

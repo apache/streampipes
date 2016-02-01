@@ -7,10 +7,13 @@
 			<md-tab label="Import from Endpoint"> 
 					<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
 						<form name="addFromEndpointForm" ng-submit="addFromEndpoint()" role="form">
-							<md-input-container> <label>Endpoint URL</label> <input
-								type="text" ng-model="$parent.endpointUrl" required></input> </md-input-container>
-								<md-input-container flex> <md-checkbox 
-								ng-model="$parent.marketplace"> Add elements to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
+							<div flex layout="column">
+								<md-input-container> <label>Endpoint URL</label> <input
+									type="text" ng-model="$parent.endpointUrl" required></input> </md-input-container>
+									<md-input-container flex> <md-checkbox 
+									ng-model="$parent.marketplace"> Add elements to the marketplace (element will be available to other users) </md-checkbox>
+								</md-input-container>
+							</div>
 							<div class="form-actions">
 							<md-button class="md-accent md-raised" type="submit"
 								ng-disabled="addFromEndpointForm.$pristine || addFromEndpointForm.$invalid || loading">Add Elements</md-button>
@@ -23,10 +26,15 @@
 			<md-tab label="Import from URL"> 
 				<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
 					<form name="addElementForm" ng-submit="add()" role="form">
-						<md-input-container> <label>One or more URLs, seperated by blank</label> <textarea
-							columns="1" ng-model="$parent.elements" required></textarea> </md-input-container>
+						<div flex layout="column">
+							<md-input-container> 
+								<label>One or more URLs, seperated by blank space</label> <textarea
+								columns="1" ng-model="$parent.elements" required></textarea>
+							</md-input-container>
 							<md-input-container flex> <md-checkbox 
-							ng-model="$parent.marketplace"> Add element to the marketplace (element will be available to other users) </md-checkbox></md-input-container>
+								ng-model="$parent.marketplace"> Add element to the marketplace (element will be available to other users) </md-checkbox>
+							</md-input-container>
+						</div>
 						<div class="form-actions">
 						<md-button class="md-accent md-raised" type="submit"
 							ng-disabled="addElementForm.$pristine || addElementForm.$invalid || loading">Add Element</md-button>
@@ -39,10 +47,12 @@
 			<md-tab label="Import Pipelines"> 
 				<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
 					<form name="addPipelineForm" ng-submit="addPipelines()" role="form">
+						<div flex layout="column">
 						  <md-input-container flex>
 					        <label>Pipeline (JSON Array)</label>
 					        <textarea ng-model="$parent.pipelines" columns="1" md-maxlength="2000"></textarea>
 					      </md-input-container>
+					     </div>
 						<div class="form-actions">
 						<md-button class="md-accent md-raised" type="submit"
 							ng-disabled="addPipelineForm.$pristine || addPipelineForm.$invalid || loading">Add Pipelines</md-button>

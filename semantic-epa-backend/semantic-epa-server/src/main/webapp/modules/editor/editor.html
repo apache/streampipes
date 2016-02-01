@@ -13,31 +13,53 @@
 		</md-tab>
 
 </md-tabs>
-<md-divider></md-divider>
-<div flex class="filter" layout="row">
-	<span flex></span>
-	<md-input-container flex>
-		<label>Element Name</label>
-		<input ng-model="elName">
-	</md-input-container>
-</div>
-<div layout-padding flex id="editor-icon-stand" class="icon-stand md-whiteframe-z1">
-	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
-
-	<!--</draggable-icon-element>-->
-	<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
-		<img class="draggable-img"
-			 ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
-		<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
-			{{elementTextIcon(element.name)}}
-		</span>
-	</span>
-	<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="element.type == 'block'">
-		<div class="block-name tt">{{element.name}}</div>
-		<div class="block-img-container">
-			<img class="block-img" ng-src="{{element.streams[0].iconUrl}}">
+<div class="md-whiteframe-z1" style="padding:0px;padding-left:5px;padding-right:5px;">
+<div class="editorIconStandOptions">
+	<div flex="100" layout="row" style="padding:0px;">
+		<div flex="70" layout="row" layout-align="start center">	
+			<div layout-align="start center" layout="row">	
+				<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
+				<input type="text" ng-model="elName" placeholder="Find Element" style="border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
+			</div>
+			<div layout-align="start center" layout="row">	
+				
+			</div>
 		</div>
-	</span>
+		<div flex="30" layout="row" layout-align="end center">
+			<md-button class="md-icon-button" ng-show="!minimizedEditorStand" ng-click="toggleEditorStand()">
+				<i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_up</i>
+				<md-tooltip md-direction="top">
+						Hide
+				</md-tooltip>
+			</md-button>
+			<md-button class="md-icon-button" ng-show="minimizedEditorStand" ng-click="toggleEditorStand()">
+				<i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_down</i>
+				<md-tooltip md-direction="top">
+						Show
+				</md-tooltip>
+			</md-button>
+		</div>
+	</div>
+</div>
+<div ng-show="!minimizedEditorStand" style="padding:0px;">
+	<div flex id="editor-icon-stand" class="icon-stand">
+	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
+	<!--</draggable-icon-element>-->
+		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
+			<img class="draggable-img"
+				 ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
+			<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
+				{{elementTextIcon(element.name)}}
+			</span>
+		</span>
+		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="element.type == 'block'">
+			<div class="block-name tt">{{element.name}}</div>
+			<div class="block-img-container">
+				<img class="block-img" ng-src="{{element.streams[0].iconUrl}}">
+			</div>
+		</span>
+	</div>
+</div>
 </div>
 <div class="assemblyOptions">
 	<div layout="row" layout-align="start center">	

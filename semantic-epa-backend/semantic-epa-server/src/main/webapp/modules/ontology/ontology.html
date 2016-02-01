@@ -17,7 +17,7 @@
 						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadPropertyDetails(item.id)">
 						       <div flex="100" layout="row">
 						        <div flex="70" layout="row" layout-align="start center" class="tree-node-title"> {{item.title}}</div>
-						        <div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteProperty(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Property"></md-icon></md-button></div>	 
+						        <div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteProperty(item.id)" class="md-icon-button tree-node-action" ><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Property"></md-icon></md-button></div>	 
 						       </div>
 						     </div>
 						    </li>
@@ -30,10 +30,12 @@
 						</div>
 						<md-content class="md-padding">
 							<form name="propertyForm" ng-submit="updateProperty()" role="form">
+								<div flex layout="column">
 								<md-input-container> <label>Label</label> <input
 									type="text" ng-model="propertyDetail.rdfsLabel" required> </md-input-container>
 								<md-input-container flex> <label>Description</label>
 								<input type="text" ng-model="propertyDetail.rdfsDescription" required> </md-input-container>
+								</div>
 								<md-divider></md-divider>
 								<h4>Type Definition</h4>
 								<div ng-show="propertyDetail.rangeDefined">
@@ -102,8 +104,8 @@
 							        	<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{item.title}}</div>
 							        	<div flex="30" layout="row" layout-align="end center">
 								        	<div flex="20"></div>
-								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	 
-											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	 
+								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	 
+											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	 
 										</div>
 									</div>
 								</div>		
@@ -112,7 +114,7 @@
 								          <div ui-tree-handle class="tree-node tree-nocde-content color-instance" ng-click="loadInstanceDetails(node.id)">
 								          	<div flex="100" layout="row">
 								          		<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{node.title}}</div>
-								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	
+								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	
 								         	 </div>
 								          </div>
 								    </li>
@@ -128,10 +130,12 @@
 						</div>
 						<md-content class="md-padding" >
 							<form name="conceptForm" ng-submit="updateConcept()" role="form">
-								<md-input-container> <label>Label</label> <input
-									type="text" ng-model="conceptDetail.rdfsLabel" required> </md-input-container>
-								<md-input-container flex> <label>Description</label>
-								<input type="text" ng-model="conceptDetail.rdfsDescription" required> </md-input-container>
+								<div flex layout="column">
+									<md-input-container> <label>Label</label> <input
+										type="text" ng-model="conceptDetail.rdfsLabel" required> </md-input-container>
+									<md-input-container flex> <label>Description</label>
+									<input type="text" ng-model="conceptDetail.rdfsDescription" required> </md-input-container>
+								</div>
 								<md-divider></md-divider><p/>
 								<h4>Properties</h4>
 								
@@ -170,10 +174,12 @@
 						</div>
 						<md-content class="md-padding">
 						<form name="instanceForm" ng-submit="updateInstance()" role="form">
+							<div flex layout="column">
 								<md-input-container> <label>Label</label> <input
 									type="text" ng-model="instanceDetail.rdfsLabel" required> </md-input-container>
 								<md-input-container flex> <label>Description</label>
 								<input type="text" ng-model="instanceDetail.rdfsDescription" required> </md-input-container>
+							</div>
 								<md-divider></md-divider><p/>
 								<h4>Properties</h4>
 								

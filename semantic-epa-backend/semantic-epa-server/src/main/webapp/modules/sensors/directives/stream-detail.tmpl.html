@@ -1,0 +1,41 @@
+<md-tabs md-dynamic-height md-border-bottom md-selected="selectedSepaIndex"> 
+	<md-tab label="Basics">
+		<md-content class="md-padding">
+			<sepa-basics element="stream" disabled="disabled"></sepa-basics>
+		</md-content> 
+	</md-tab> 
+	<md-tab label="Schema">
+		<md-content class="md-padding">
+			<h3 class="md-display-2">Schema</h3>
+			<div ng-repeat="property in stream.eventSchema.eventProperties">
+				<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+					<div flex="100" layout="row" >	
+				   			<div flex="70" layout="row" layout-align="start center"><h4>Property {{$index+1}}</h4></div>
+				   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeProperty($index, stream.eventSchema.eventProperties)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
+					</div>
+					<datatype-property runtime-type="property.properties.runtimeType" disabled="disabled">
+					</datatype-property>
+				    <md-input-container>
+				    	<label>Runtime Name</label>
+				        <input ng-model="property.properties.runtimeName" required ng-disabled="disabled">
+				    </md-input-container>    
+				    <domain-property property="property.properties.domainProperties[0]" disabled="disabled">
+				    </domain-property>
+				 </div>
+			</div>
+			<md-button class="md-accent" ng-disabled="disabled" ng-click="addProperty(stream.eventSchema.eventProperties)">Add Property</md-button>
+		</md-content>
+	</md-tab>
+	<md-tab label="Transport Format">
+		<md-content class="md-padding">
+			<h3 class="md-display-2">Transport Format</h3>
+			<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
+		</md-content>
+	</md-tab>
+	<md-tab label="Transport Protocol">
+		<md-content class="md-padding">
+			<h3 class="md-display-2">Transport Protocol</h3>
+			<transport-protocol grounding="stream.eventGrounding.transportProtocols" disabled="disabled"></transport-protocol>
+		</md-content>
+	</md-tab>
+</md-tabs>

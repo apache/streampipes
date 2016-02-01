@@ -21,7 +21,7 @@
 								</span>
 							</div>
 						</div>
-					<div layout="column" ng-repeat="pipeline in pipelines">
+					<div layout="column" ng-repeat="pipeline in pipelines | orderBy:'+name'">
 						<md-list-item layout="row" class="md-with-secondary"  >
 							<md-button flex="5"  ng-click="startPipeline(pipeline._id)" class="md-icon-button" ng-disabled="starting" ng-show="!pipeline.running"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button>
 							<md-button flex="5" ng-click="stopPipeline(pipeline._id)" class="md-icon-button" ng-disabled="stopping" ng-show="pipeline.running"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button>

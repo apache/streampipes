@@ -15,11 +15,11 @@
 			<h4>Property {{$index+1}}</h4>
 				<md-input-container>
 			        <label>Datatype</label>
-			        <input ng-model="property.properties.runtimeType" required>
+			        <input ng-model="property.properties.runtimeType" required ng-disabled="{{editingDisabled}}">
 		      	</md-input-container>
 			    <md-input-container>
 			    	<label>Runtime Name</label>
-			        <input ng-model="property.properties.runtimeName" required>
+			        <input ng-model="property.properties.runtimeName" required ng-disabled="{{editingDisabled}}">
 			    </md-input-container>
 			    <md-input-container>
 			    	<label>Domain Properties</label>
