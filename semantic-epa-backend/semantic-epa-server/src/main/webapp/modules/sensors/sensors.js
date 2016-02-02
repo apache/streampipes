@@ -266,7 +266,7 @@ function SourceOptionsDialogController($scope, $mdDialog, restApi, elementId, el
 	$scope.generateDescription = function() {
 		console.log(elementData);
 		$scope.loading = true;
-		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/implementation', data : getFormData()}).
+		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/description', data : getFormData()}).
 		  success(function(data, status, headers, config) {
 			    $scope.openSaveAsDialog(elementData.name +".jsonld", data, "application/json");
 			    $scope.loading = false;
