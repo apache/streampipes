@@ -16,6 +16,7 @@ import de.fzi.cep.sepa.actions.samples.kafka.KafkaController;
 import de.fzi.cep.sepa.actions.samples.maparea.MapAreaController;
 import de.fzi.cep.sepa.actions.samples.maps.MapsController;
 import de.fzi.cep.sepa.actions.samples.notification.NotificationController;
+import de.fzi.cep.sepa.actions.samples.number.NumberController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.route.RouteController;
@@ -54,6 +55,7 @@ public class Init implements Runnable {
 		consumers.add(new KafkaController());
 		consumers.add(new EvaluationController());
 		consumers.add(new CouchDbController());
+                consumers.add(new NumberController());
 		//consumers.add(new HistogramController());
 		
 		try {
