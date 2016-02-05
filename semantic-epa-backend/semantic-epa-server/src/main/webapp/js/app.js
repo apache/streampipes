@@ -550,7 +550,8 @@ angular
 						$rootScope.username = response.data.info.authc.principal.username;
 						$rootScope.email = response.data.info.authc.principal.email;
 						$rootScope.authenticated = true;
-						$state.go("home");
+						if ($rootScope.appConfig == 'ProaSense') $state.go("home");
+						else $state.go("streampipes");
 					}
 					else
 					{
@@ -604,7 +605,8 @@ angular
 			panddaUrl : '',
 			hippoUrl : '',
 			humanInspectionReportUrl : '',
-			humanMaintenanceReportUrl : ''
+			humanMaintenanceReportUrl : '',
+			appConfig : ''
 		};
 
 		$scope.configure = function() {
@@ -644,6 +646,7 @@ angular
 		$scope.configure = function() {
 			$scope.loading = true;
 			restApi.updateConfiguration($scope.setup).success(function(data) {
+				$rootScope.appConfig = $scope.setup.appConfig;
 				$scope.loading = false;
 				$scope.showToast(data.notifications[0].title);
 			}).error(function(data) {
@@ -718,7 +721,12 @@ angular
 					$rootScope.authenticated = false;
 					$http.get("/semantic-epa-backend/api/v2/setup/configured")
 						.then(function(response) {
-							if (response.data.configured) $state.go("streampipes.login")//$location.path("/login");
+							if (response.data.configured) 
+								{
+									console.log(response.data.appConfig);
+									$rootScope.appConfig = response.data.appConfig;
+									$state.go("streampipes.login")//$location.path("/login");
+								}
 							else $state.go("streampipes.setup")
 						})
 				}
@@ -726,6 +734,14 @@ angular
 					$rootScope.username = response.data.info.authc.principal.username;
 					$rootScope.email = response.data.info.authc.principal.email;
 					$rootScope.authenticated = true;
+					$http.get("/semantic-epa-backend/api/v2/setup/configured")
+					.then(function(response) {
+						if (response.data.configured) 
+							{
+								console.log(response.data.appConfig);
+								$rootScope.appConfig = response.data.appConfig;
+							}
+					});
 					$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
 						.success(function(notifications){
 							$rootScope.unreadNotifications = notifications

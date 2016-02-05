@@ -1,14 +1,26 @@
-<div flex="100" layout="row" layout-align="center center">
-	<div class="md-whiteframe-z2" style="width:100%">
-		<md-content class="md-padding">
-		<h1>Knowledge Configurator</h1>
-		<div class="column">
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+	<h5>KNOWLEDGE CONFIGURATION </h5>
+	</div>
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
 		<md-button class="md-accent" ng-click="openNamespaceDialog()">Manage Namespaces</md-button>
 		<md-button class="md-accent" ng-click="openImportDialog()">Manage Vocabularies</md-button>
-		</div>
-		<md-tabs md-dynamic-height>
-			<md-tab label="Properties"> 
+	</div>
+	<div layout-fill>
+		<md-tabs md-dynamic-height md-border-bottom>
+				<md-tab label="Concepts" md-on-select="setSelectedTab('CONCEPTS')"></md-tab> 
+				<md-tab label="Properties" md-on-select="setSelectedTab('PROPERTIES')"> </md-tab>
+		</md-tabs>
+	</div>
+	
+</div>
+
+<div flex="100" layout="row" layout-align="center center">
+	<div layout="column" flex="100" ng-if="selectedTab === 'PROPERTIES'">
+				<div layout="row">
 				<md-button class="md-accent" ng-click="openAddElementDialog('Property')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create Property</md-button>
+				</div>
 				<div flex layout="row">
 					<div flex-sm="40" flex-gt-sm="40" layout-sm="column">
 						<div ui-tree data-drag-enabled="false">
@@ -87,8 +99,8 @@
 						</md-content>
 					</div>
 				</div>
-			</md-tab>
-			<md-tab label="Concepts"> 
+			</div>
+			<div layout="column" flex="100" ng-if="selectedTab === 'CONCEPTS'">
 				<div layout="row">
 					<md-button class="md-accent" ng-click="openAddElementDialog('Concept')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Concept</md-button>
 					<md-button class="md-accent" ng-click="openAddElementDialog('Instance')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon>  Create Instance</md-button>
@@ -229,8 +241,6 @@
 						</md-content>
 					</div>
 				</div>
-			</md-tab>
-		</md-content>
-	</div>
+			</div>
 </div>
-
+</div>

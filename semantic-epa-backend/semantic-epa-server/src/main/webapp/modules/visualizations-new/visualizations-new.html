@@ -1,3 +1,12 @@
-<div ng-if="dashboardReady">
-<div dashboard="dashboardOptions"></div>
+<div flex layout-fill>
+	<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+		<div flex="none" layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+		<h5>VISUALIZATIONS</h5>
+		</div>
+	</div>
+	<div flex layout-align="center center" style="padding:10px;">
+	<div ng-if="dashboardReady">
+		<div dashboard="dashboardOptions"></div>
+	</div>
+	</div>
 </div>

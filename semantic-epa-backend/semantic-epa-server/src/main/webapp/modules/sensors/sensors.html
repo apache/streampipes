@@ -1,10 +1,20 @@
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>SENSOR CONFIGURATION </h5>
+</div>
+<div layout-fill>
+	<md-tabs md-dynamic-height md-border-bottom>
+	
+			<md-tab label="Data Sources" md-on-select="setSelectedTab('SOURCES')"></md-tab> 
+			<md-tab label="Processing Elements" md-on-select="setSelectedTab('EPAS')"> </md-tab>
+			<md-tab label="Data Sinks" md-on-select="setSelectedTab('SINKS')"> </md-tab>
+	</md-tabs>
+</div>
+</div>
+
 <div flex="100" layout="row" layout-align="center center">
-	<div class="md-whiteframe-z2" style="width:100%">
-		<md-content class="md-padding">
-		<h1>Sensor Configurator</h1>
-		<md-tabs md-border-bottom layout-fill md-dynamic-height>
-		
-			<md-tab label="Data Sources"> 
+	<div layout="column" flex="100" ng-if="selectedTab === 'SOURCES'">
 				<div layout="row">
 					<md-button class="md-accent" ng-click="addNewSource()"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
 				</div>
@@ -40,11 +50,8 @@
 						</div>
 					</div>
 				</div>
-			</md-tab>
-			
-			
-			
-			<md-tab label="Processing Elements"> 
+			</div>
+			<div layout="column" flex="100" ng-if="selectedTab === 'EPAS'">
 				<div layout="row" flex="100">
 					<div layout="row" layout-align="start center" flex="60">
 						<md-button class="md-accent" ng-click="addNewSepa()">
@@ -95,12 +102,11 @@
 						</md-content>
 					</div>
 				</div>
-			</md-tab>
+			</div>
 			
 			
 			
-			
-			<md-tab label="Data Sinks"> 
+			<div layout="column" flex="100" ng-if="selectedTab === 'SINKS'">
 				<div layout="row" flex="100">
 					<div layout="row" layout-align="start center" flex="60">
 						<md-button class="md-accent" ng-click="addNewAction()">
@@ -152,9 +158,6 @@
 						</md-content>
 					</div>
 				</div>
-			</md-tab>
-			</md-tabs>
-		</md-content>
 	</div>
 </div>
-
+</div>

@@ -27,6 +27,11 @@ angular.module('streamPipesApp')
 	$scope.instanceDetail = {};
 	$scope.selectedInstanceProperty = "";
 	
+	$scope.selectedTab = "CONCEPTS";
+	
+	$scope.setSelectedTab = function(type) {
+		$scope.selectedTab = type;
+	}
 	
 	$scope.loadProperties = function(){
         restApi.getOntologyProperties()

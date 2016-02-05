@@ -1,10 +1,22 @@
+<div flex layout-fill layout="column" class="logo-production">
+<div flex layout-align="center center">
+<div ng-if="appConfig == 'StreamPipes'">
+	<div layout="column" flex="100" layout-align="center center" style="padding:30px">
+				<div layout-align="center center" layout="row" style="background-color:rgb(63,81,181);padding:10px;padding-left:40px;padding-right:40px;color:white;"><img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon" style="margin-right:10px;"><h1>StreamPipes</h1></div>
+	</div>
+</div>	
+<div ng-if="appConfig == 'ProaSense'">
+	<div layout="row" flex="100" layout-align="center center" style="padding:30px;">
+			<div layout-align="center center" layout="row" style="background-color:#ffffff;padding:10px;padding-left:40px;padding-right:40px;color:white;"><img alt="icon" src="img/proasense_logo_complete.png"></div>
+	</div>	
+</div>	
 <div flex layout="row" layout-align="center center">
-	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
-		class="md-whiteframe-z2">
+	<div flex="40" class="md-whiteframe-z2">
 		<md-content class="md-padding">
 		<h1>Register</h1>
-		<div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+		<div flex="100" layout-sm="column">
 			<form name="registerForm" ng-submit="register()" role="form">
+			<div flex layout="column">
 				<md-input-container> <label>Email</label> <input
 					type="email" ng-model="email" required> </md-input-container>
 				<md-input-container flex> <label>Username:</label>
@@ -15,6 +27,8 @@
 					ng-model="selectedRole"> <md-option
 					ng-repeat="role in roles" value="{{role.internalName}}">
 				{{role.name}} </md-option> </md-select> </md-input-container>
+				</div>
+				<div class="form-actions">
 				<md-button class="md-accent md-raised" type="submit"
 					ng-disabled="registerForm.$pristine || registerForm.$invalid">Register</md-button>
 					<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
@@ -25,9 +39,11 @@
 					<div class="md-success" ng-show="registrationSuccess">
 					      <h4>Registration successful. Go to <a ui-sref="streampipes.login">Login</a> page</h4>
 					</div>
+				</div>
 			</form>
 			<a ui-sref="streampipes.login">Back to login page</a>
 		</div>
 		</md-content>
 	</div>
+</div>
 </div>

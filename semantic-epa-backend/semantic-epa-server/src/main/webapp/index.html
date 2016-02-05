@@ -88,6 +88,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/angular-ui-tree.min.css">
 	<link rel="stylesheet" href="css/malhar-angular-dashboard.css"></link>
+	
 	<script type="text/javascript">
 		var domain = "";
 		var standardUrl = window.location.protocol +"//" +window.location.host +"/semantic-epa-backend/api/";
@@ -100,16 +101,12 @@
 </head>
 
 <body layout="row">
-<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" id ="topDiv">
+<div flex layout="column" tabIndex="-1" role="main" id ="topDiv">
 	
 	<div ui-view="top"></div>
-	<div ui-view="container" style="min-height: 100%" flex></div>
+	<div ui-view="container" flex layout="column" layout-fill style="min-height: 100%"></div>
 
 </div>
-
-
-
-
 
 <div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">

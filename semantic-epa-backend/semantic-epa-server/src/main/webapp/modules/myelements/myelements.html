@@ -1,11 +1,27 @@
-
-<md-content class="md-padding"> <md-tabs md-border-bottom md-dynamic-height>
-<div ng-repeat="tab in tabs">
-<md-tab label="{{tab.title}}" md-on-select="loadCurrentElements(tab.type)"> <md-content class="md-padding">
-<h1 class="md-display-2">{{tab.title}}</h1>
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>MY ELEMENTS </h5>
+</div>
+<div layout-fill>
+	<md-tabs md-dynamic-height md-border-bottom>
+	
+			<md-tab ng-repeat="tab in tabs"
+					label="{{tab.title}}"
+					md-on-select="loadCurrentElements(tab.type)">
+				<md-tab-label>
+					{{tab.title}}
+				</md-tab-label>
+				<md-content layout-padding class="md-whiteframe-z2">
+			
+	
+				</md-content>
+			</md-tab>
+	</md-tabs>
+</div>
+</div>
 <div>
-	<md-content layout-padding class="md-whiteframe-z2">
-		<md-list>
+<md-list>
 			<md-list-item ng-repeat="item in currentElements | orderBy:'+name'">
 				
 				<div flex="100" layout="row">
@@ -59,9 +75,5 @@
 			</md-list-item>
 		</md-list>
 </div>
-</md-content> </md-tab> 
 </div>
-</md-tabs> 
-</md-content>
-
 

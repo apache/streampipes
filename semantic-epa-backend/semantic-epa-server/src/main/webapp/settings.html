@@ -1,11 +1,14 @@
+<div flex layout-fill>
+<div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
+<div flex layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>SETTINGS </h5>
+</div>
+</div>
+
 <div flex layout="row" layout-align="center center" layout-fill>
 	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
 		class="md-whiteframe-z2" style="padding:10px;">
-		
-		<h1>Settings</h1>
 
-		<p/>
-		<md-divider/>
 		<md-content layout-padding>
 		    <form name="settingsForm" role="form" ng-submit="configure()" >
 		    <h3>Database Settings</h3>
@@ -131,6 +134,16 @@
 		        <input type="text" ng-model="setup.humanMaintenanceReportUrl">
 		      </md-input-container>
 		      </div>
+		      <md-divider/>
+		      <h3>App Config</h3>
+		    	<div layout layout-sm="column">
+			      <md-input-container flex>
+			      	  <md-radio-group ng-model="setup.appConfig">
+     						 <md-radio-button value="ProaSense" class="md-primary">ProaSense</md-radio-button>
+			      			 <md-radio-button value="StreamPipes" class="md-primary">StreamPipes</md-radio-button>
+			      		</md-radio-group>
+			      </md-input-container>
+		      	</div>
 		     <div class="form-actions">
 		     <div layout layout-sm="column">
 				<md-button class="md-accent md-raised" type="submit"

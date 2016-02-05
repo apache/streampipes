@@ -1,31 +1,25 @@
-<div ng-include="'modules/navigation/navigation.html'"></div>
-<md-tabs md-border-bottom md-selected="selectedTab">
-
-		<md-tab ng-repeat="tab in tabs"
-				ng-disabled="tab.disabled"
-				label="{{tab.title}}"
-				md-on-select="loadCurrentElements(tab.type)">
-			<md-tab-label>
-				{{tab.title}}
-				<md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
-			</md-tab-label>
-
-		</md-tab>
-
-</md-tabs>
-<div class="md-whiteframe-z1" style="padding:0px;padding-left:5px;padding-right:5px;">
-<div class="editorIconStandOptions">
-	<div flex="100" layout="row" style="padding:0px;">
-		<div flex="70" layout="row" layout-align="start center">	
-			<div layout-align="start center" layout="row">	
-				<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
-				<input type="text" ng-model="elName" placeholder="Find Element" style="border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
-			</div>
-			<div layout-align="start center" layout="row">	
-				
-			</div>
-		</div>
-		<div flex="30" layout="row" layout-align="end center">
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+	<h5>PIPELINE EDITOR </h5>
+	</div>
+	<div layout-fill>
+		<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
+		
+				<md-tab ng-repeat="tab in tabs"
+						ng-disabled="tab.disabled"
+						label="{{tab.title}}"
+						md-on-select="loadCurrentElements(tab.type)">
+					<md-tab-label>
+						{{tab.title}}
+						<md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
+					</md-tab-label>
+		
+				</md-tab>
+		
+		</md-tabs>
+	</div>
+	<div flex="30" layout="row" layout-align="end center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
 			<md-button class="md-icon-button" ng-show="!minimizedEditorStand" ng-click="toggleEditorStand()">
 				<i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_up</i>
 				<md-tooltip md-direction="top">
@@ -38,10 +32,22 @@
 						Show
 				</md-tooltip>
 			</md-button>
-		</div>
 	</div>
 </div>
-<div ng-show="!minimizedEditorStand" style="padding:0px;">
+<div ng-show="!minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
+	<div class="editorIconStandOptions" style="padding:5px;">
+		<div flex="100" layout="row">
+			<div flex="70" layout="row" layout-align="start center">	
+				<div layout-align="start center" layout="row" style="padding-top:10px;padding-left:10px;">	
+					<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
+					<input type="text" ng-model="elName" placeholder="Find Element" style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
+				</div>
+				<div layout-align="start center" layout="row">	
+					
+				</div>
+			</div>
+		</div>
+	</div>
 	<div flex id="editor-icon-stand" class="icon-stand">
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 	<!--</draggable-icon-element>-->
@@ -60,7 +66,7 @@
 		</span>
 	</div>
 </div>
-</div>
+<div style="margin-left:1%;margin-right:1%;">
 <div class="assemblyOptions">
 	<div layout="row" layout-align="start center">	
 			<md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)" class="md-icon-button" ng-click="submit()" type="submit">
@@ -109,7 +115,7 @@
 	</div>
 	
 </div>
-
+</div>
 
 <ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
 	<li>
@@ -271,4 +277,4 @@
 		</div>
 	</div>
 </div>
-
+</div>

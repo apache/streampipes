@@ -17,6 +17,14 @@ body {
 	background-attachment: fixed;	
 }
 
+.logo-production {
+	background: url(../img/production-line.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .circle {
 	border-radius: 50%;
 	width: 150px;
@@ -278,16 +286,16 @@ body {
 	padding: 5px;
 	margin-top: 1%; 
 	box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
-	
+
 }
 
 .editorIconStandOptions {
-	background:  white;
+/* 	background:  white; */
 /* 	border: 2px solid rgb(63,81,181);; */
 /* 	border-bottom: 2px solid rgb(63,81,181); */
 	color: black;
 	padding: 2px;
-	margin-top: 1%; 
+/* 	margin-top: 1%;  */
 }
 
 
@@ -305,9 +313,8 @@ body {
 	box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
 	padding: 5px;
 	border: 1px solid rgb(63,81,181);
-    height:600px;
-    width:100%;
-    
+    height:700px;
+    width:100%;    
 }
 .canvas{
 /*  	position: relative;  */

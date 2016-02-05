@@ -8,6 +8,12 @@ angular.module('streamPipesApp')
 	$scope.loading = false;
 	$scope.marketplace = false;
 	
+	$scope.selectedTab = "ENDPOINT";
+	
+	$scope.setSelectedTab = function(type) {
+		$scope.selectedTab = type;
+	}
+	
 	$scope.addFromEndpoint = function () {
 		$scope.loading = true;		
 		restApi.addBatch($scope.endpointUrl, true)

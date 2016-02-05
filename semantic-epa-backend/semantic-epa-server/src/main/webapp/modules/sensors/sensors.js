@@ -17,6 +17,12 @@ angular.module('streamPipesApp')
 	$scope.actionSelected = false;
 	$scope.streamSelected = false;
 	
+	$scope.selectedTab = "SOURCES";
+	
+	$scope.setSelectedTab = function(type) {
+		$scope.selectedTab = type;
+	}
+	
 	$scope.toggleEditMode = function() {
 		$scope.editingDisabled = !$scope.editingDisabled;
 	
