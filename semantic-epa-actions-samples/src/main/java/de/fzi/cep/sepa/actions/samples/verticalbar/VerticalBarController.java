@@ -78,7 +78,7 @@ public class VerticalBarController extends ActionController {
                 staticProperties.add(new FreeTextStaticProperty("max", "max value", ""));
                 staticProperties.add(new FreeTextStaticProperty("color", "Color of the cirlce", ""));
 
-                staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementId()), "Mapping", "Select Mapping", ""));
+                staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping", "Select Mapping", ""));
 
                 sec.setStaticProperties(staticProperties);
                 sec.setSupportedGrounding(ActionUtils.getSupportedGrounding());

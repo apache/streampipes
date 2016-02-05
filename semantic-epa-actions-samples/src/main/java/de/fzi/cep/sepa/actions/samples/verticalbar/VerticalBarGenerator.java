@@ -42,7 +42,7 @@ public class VerticalBarGenerator extends HtmlGenerator<VerticalBarParameters> {
                                 + actionParameters.getPropertyName()
                                 + "')")
                                 .style("btn btn-danger"))
-                                .div(id("container").style("min-width: 200px; min-height: 200px; margin: 0px auto; position: relative; padding: 10px"))
+                                .div(id("container").style("min-width: 200px; min-height: 200px; margin: 15px auto; position: relative; padding: 10px"))
                                 ._div();
                         return getStandardizedFooter(canvas);
                 } catch (IOException e) {

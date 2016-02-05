@@ -73,18 +73,18 @@ function buildTable(brokerUrl, inputTopic, bgColor, minValue, maxValue, property
                 $("#barTop").css({
                         "border-top": "2px " + bgColor + " solid",
                         "border-right": "15px " + bgColor + " solid"
-                }).width(40);
+                }).width(60);
                 $("#barBottom").css({
                         "border-top": "2px " + bgColor + " solid",
                         "border-right": "15px " + bgColor + " solid"
-                }).width(40);                
+                }).width(60);                
                 $("#marker").css({
                         "border-top": "2px " + "black" + " solid",
                         "border-right": "15px " + "black" + " solid",
                         "margin-top": "-1px"
-                }).width(40);
+                }).width(60);
                 $("#currentFill").css({
-                        "width": "40px",
+                        "width": "60px",
                         "border-width": "2px",
                         "border-style": "solid",
                         "-webkit-border-radius": "2px",
