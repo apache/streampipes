@@ -37,6 +37,8 @@ public class WebappConfigurationSettings {
 	private String couchDbMonitoringDbName;
 	private String couchDbNotificationDbName;
 	
+	private String appConfig;
+	
 	
 	
 	public WebappConfigurationSettings(String couchDbHost, String sesameUrl, String sesameDbName,
@@ -264,6 +266,14 @@ public class WebappConfigurationSettings {
 
 	public void setHumanMaintenanceReportUrl(String humanMaintenanceReportUrl) {
 		this.humanMaintenanceReportUrl = humanMaintenanceReportUrl;
+	}
+
+	public String getAppConfig() {
+		return appConfig;
+	}
+
+	public void setAppConfig(String appConfig) {
+		this.appConfig = appConfig;
 	}
 	
 	

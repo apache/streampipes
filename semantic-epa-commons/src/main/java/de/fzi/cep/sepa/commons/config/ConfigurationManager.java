@@ -72,6 +72,7 @@ public class ConfigurationManager {
 		settings.setZookeeperProtocol(cfg.ZOOKEEPER_PROTOCOL);
 		settings.setHumanInspectionReportUrl(cfg.HUMAN_INSPECTION_REPORT_URL);
 		settings.setHumanMaintenanceReportUrl(cfg.HUMAN_MAINTENANCE_REPORT_URL);
+		settings.setAppConfig(cfg.APP_CONFIG);
 		
 		return settings;
 	}
@@ -126,6 +127,8 @@ public class ConfigurationManager {
 		properties.put("sources_port", "8089");
 		properties.put("webapp_port", "8080");
 		properties.put("context_path", "/semantic-epa-backend");
+		
+		properties.put("appConfig", settings.getAppConfig());
 		
 		
 		if (!pathToFile.exists()) pathToFile.mkdir();

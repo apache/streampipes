@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.commons.config;
 
-import java.io.*;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
@@ -79,6 +79,8 @@ public class Configuration {
 	public String HUMAN_INSPECTION_REPORT_URL;
 	public String HUMAN_MAINTENANCE_REPORT_URL;
 	
+	public String APP_CONFIG;
+	
 	/**
 	 * Constructor loads config data from config file.
 	 */
@@ -139,6 +141,8 @@ public class Configuration {
 					STREAMSTORY_URL = config.getString("streamStoryUrl");	
 					HUMAN_INSPECTION_REPORT_URL = config.getString("humanInspectionReportUrl");
 					HUMAN_MAINTENANCE_REPORT_URL = config.getString("humanMaintenanceReportUrl");
+					
+					APP_CONFIG= config.getString("appConfig");
 		
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -206,6 +210,8 @@ public class Configuration {
 					HUMAN_INSPECTION_REPORT_URL = "";
 					HUMAN_MAINTENANCE_REPORT_URL = "";
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
+					
+					APP_CONFIG = "StreamPipes";
 	}
 
 	public static Configuration getInstance() {
