@@ -6,14 +6,13 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
-import de.fzi.cep.sepa.storage.impl.*;
-
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 
 import com.clarkparsia.empire.Empire;
+import com.clarkparsia.empire.EmpireOptions;
 import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
@@ -21,7 +20,6 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
-import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.ContextStorage;
@@ -29,6 +27,15 @@ import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.api.NotificationStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
+import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
+import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
+import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
+import de.fzi.cep.sepa.storage.impl.MonitoringDataStorageImpl;
+import de.fzi.cep.sepa.storage.impl.NotificationStorageImpl;
+import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
+import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
+import de.fzi.cep.sepa.storage.impl.UserStorage;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
@@ -98,7 +105,7 @@ public enum StorageManager {
 	private boolean initEmpire() {
 		
 		try {
-		
+		EmpireOptions.STRICT_MODE = false;
 		EmpireConfiguration empireCfg = new EmpireConfiguration(); 
 		empireCfg.setAnnotationProvider(CustomAnnotationProvider.class); 
 			
