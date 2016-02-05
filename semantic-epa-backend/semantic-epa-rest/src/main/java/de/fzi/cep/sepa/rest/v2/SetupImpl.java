@@ -35,6 +35,7 @@ public class SetupImpl implements Setup {
 			if (ConfigurationManager.isConfigured()) 
 				{
 					obj.addProperty("configured", true);
+					obj.addProperty("appConfig", ConfigurationManager.getWebappConfigurationFromProperties().getAppConfig());
 					return obj.toString();
 				}
 			else 
