@@ -1,5 +1,5 @@
 angular.module('streamPipesApp')
-.controller('VizCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog, $interval, $sce) {
+.controller('VizCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog, $interval, $sce, $timeout) {
 
 	$scope.runningVisualizations;
 	$scope.dashboardReady = false;
@@ -26,7 +26,7 @@ angular.module('streamPipesApp')
     
     var preloadVisualizations = function(visualizations) {
     	angular.forEach(visualizations, function(viz) {
-    		widgetDefinitions.push({"name" : viz.pipelineName, "style" : { "min-width" : "40%" }, "template" : '<iframe ng-src="' +viz.consumerUrl +'" style="border:0px;min-height:500px;width:600px;" width:"100%" height:"100%" layout="row" layout-align="center center"></iframe>'})
+    		widgetDefinitions.push({"name" : viz.pipelineName, "size" : {"height" : "100%"}, "style" : { }, "template" : '<iframe ng-src="' +viz.consumerUrl +'" style="border:0px;width:100%;" scrolling="yes"></iframe>'})
     		
     	});
     	console.log(widgetDefinitions);
@@ -38,10 +38,9 @@ angular.module('streamPipesApp')
     	          defaultWidgets: defaultWidgets
     	        };
     	$scope.dashboardReady = true;
-    	$('iframe').iFrameResize( [{log:true}] );
-    }
     
-	
+    	 $timeout($scope.resize, 1000);
+    }
 	
     var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
         return {
@@ -52,6 +51,25 @@ angular.module('streamPipesApp')
 
     $scope.getPipelines();
     
+    $scope.resize = function() {
+    	angular.element("iframe").iFrameResize({log                     : true,                  // Enable console logging
+    	    enablePublicMethods     : true,                  // Enable methods within iframe hosted page
+    	    heightCalculationMethod : 'max',
+    	    checkOrigin : false,
+    	    resizedCallback : function(msg) {
+    	    	console.log(msg);
+    	    	console.log("Hallo");
+    	    },
+    	    messageCallback : function(msg) {
+    	    	console.log(msg);
+    	    }});
+    	console.log(angular.element("iframe"));
+    	console.log("ressized2");
+    	
+    	//angular.element("iframe").first().parentElement.style.height="200px";
+    	
+    }
+        
     $scope.dashboardOptions = {
 	          widgetButtons: true,
 	          widgetDefinitions: widgetDefinitions,
