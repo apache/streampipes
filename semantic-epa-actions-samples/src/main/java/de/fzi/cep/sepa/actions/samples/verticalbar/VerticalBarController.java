@@ -5,6 +5,10 @@
  */
 package de.fzi.cep.sepa.actions.samples.verticalbar;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
@@ -23,10 +27,6 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.SO;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

@@ -5,12 +5,15 @@
  */
 package de.fzi.cep.sepa.actions.samples.number;
 
-import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
-import java.io.IOException;
-import java.util.Arrays;
 import static org.rendersnake.HtmlAttributesFactory.id;
 import static org.rendersnake.HtmlAttributesFactory.onLoad;
+
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.rendersnake.HtmlCanvas;
+
+import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
 
 /**
  *
@@ -38,7 +41,7 @@ public class NumberGenerator extends HtmlGenerator<NumberParameters> {
                                 + actionParameters.getPropertyName()
                                 + "')")
                                 .style("btn btn-danger"))
-                                .div(id("container").style("min-width: 200px; min-height: 200px; margin: 0 auto; position: relative;"))
+                                .div(id("container").style("min-width: 200px; height: 200px; margin: 0 auto; position: relative;"))
                                 ._div();
                         return getStandardizedFooter(canvas);
                 } catch (IOException e) {
