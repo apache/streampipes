@@ -22,6 +22,7 @@ import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.route.RouteController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
+import de.fzi.cep.sepa.actions.samples.verticalbar.VerticalBarController;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 
@@ -56,6 +57,7 @@ public class Init implements Runnable {
 		consumers.add(new EvaluationController());
 		consumers.add(new CouchDbController());
                 consumers.add(new NumberController());
+                consumers.add(new VerticalBarController());
 		//consumers.add(new HistogramController());
 		
 		try {
