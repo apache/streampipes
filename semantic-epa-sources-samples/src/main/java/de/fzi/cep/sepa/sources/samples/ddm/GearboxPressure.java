@@ -17,6 +17,7 @@ import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
 import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
+import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class GearboxPressure implements EventStreamDeclarer {
 	
@@ -43,6 +44,7 @@ public class GearboxPressure implements EventStreamDeclarer {
 		stream.setName(AkerVariables.GearBoxPressure.eventName());
 		stream.setDescription(AkerVariables.GearBoxPressure.description());
 		stream.setUri(sep.getUri() + "/gearboxPressure");
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/icon-gearbox" +".png");
 		
 		return stream;
 	}

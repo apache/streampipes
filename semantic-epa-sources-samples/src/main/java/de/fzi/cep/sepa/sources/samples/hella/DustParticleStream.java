@@ -17,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
 import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
 import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
@@ -62,6 +63,7 @@ public class DustParticleStream extends AbstractHellaStream {
 		stream.setName(HellaVariables.Dust.eventName());
 		stream.setDescription(HellaVariables.Dust.description());
 		stream.setUri(sep.getUri() + "/dust");
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/icon-dust" +".png");
 		
 		return stream;
 	}
