@@ -21,7 +21,7 @@ angular.module('streamPipesApp')
 	$scope.concepts = [];
 	$scope.conceptSelected = false;
 	$scope.conceptDetail = {};
-	$scope.selectedClassProperty = "";
+	$scope.currentlySelectedClassProperty;
 	
 	$scope.instanceSelected = false;
 	$scope.instanceDetail = {};
@@ -95,10 +95,13 @@ angular.module('streamPipesApp')
             });
     };
     
-    $scope.addPropertyToClass = function() {
+    $scope.addPropertyToClass = function(p) {
     	if (!$scope.conceptDetail.domainProperties) $scope.conceptDetail.domainProperties = [];
-    	 restApi.getOntologyPropertyDetails($scope.selectedClassProperty)
+    	console.log(p);
+    	 restApi.getOntologyPropertyDetails(p)
          .success(function(propertiesData){
+        	 console.log("properties");
+        	 console.log(propertiesData);
         	 $scope.conceptDetail.domainProperties.push(propertiesData);
          })
          .error(function(msg){
