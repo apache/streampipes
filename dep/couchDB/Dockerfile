@@ -1,7 +1,7 @@
 FROM frodenas/ubuntu 
 MAINTAINER Ferran Rodenas <frodenas@gmail.com>
 
-# Install and configure CouchDB 1.6.0
+# Install and configure CouchDB 1.6.1
 RUN DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --force-yes \
     erlang-dev \
@@ -16,9 +16,9 @@ RUN DEBIAN_FRONTEND=noninteractive && \
     libcurl4-gnutls-dev \
     libtool && \
     cd /tmp && \
-    wget http://mirror.sdunix.com/apache/couchdb/source/1.6.0/apache-couchdb-1.6.0.tar.gz && \
-    tar xzvf apache-couchdb-1.6.0.tar.gz && \
-    cd apache-couchdb-1.6.0 && \
+    wget http://mirror.sdunix.com/apache/couchdb/source/1.6.1/apache-couchdb-1.6.1.tar.gz && \
+    tar xzvf apache-couchdb-1.6.1.tar.gz && \
+    cd apache-couchdb-1.6.1 && \
     ./configure && \
     make && \
     make install && \
