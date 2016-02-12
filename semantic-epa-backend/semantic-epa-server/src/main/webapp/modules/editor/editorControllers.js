@@ -2,7 +2,7 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile', 
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile',
         function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
@@ -852,51 +852,60 @@ angular.module('streamPipesApp')
             }
 
             function togglePossibleElements(event, el){
-                console.log(event.currentTarget);
 
-                if(!$.isEmptyObject($scope.activePossibleElementFilter) ){ //Filter Aktiv
-                    if ($scope.activePossibleElementFilter == event.currentTarget){ //Auf aktiven Filter geklickt
-                        $scope.possibleElements = [];
-                        $scope.activePossibleElementFilter = {};
-                        $("md-icon", event.currentTarget).remove();
-                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
-                        $scope.$apply();
-                        //altes SVG adden
+                if( event != null && el != null) {
+                    if (!$.isEmptyObject($scope.activePossibleElementFilter)) { //Filter Aktiv
+                        if ($scope.activePossibleElementFilter == event.currentTarget) { //Auf aktiven Filter geklickt
+                            $scope.possibleElements = [];
+                            $scope.activePossibleElementFilter = {};
+                            $("md-icon", event.currentTarget).remove();
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                            //$scope.$apply();
+                            //altes SVG adden
 
-                    }else{ //Auf anderen Filter geklickt
-                        $("md-icon", event.currentTarget).remove();
-                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
+                        } else { //Auf anderen Filter geklickt
+                            $("md-icon", event.currentTarget).remove();
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
 
-                        $("md-icon", $scope.activePossibleElementFilter).remove();
-                        $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                            $("md-icon", $scope.activePossibleElementFilter).remove();
+                            $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                            if (el.data("possibleElements") !== 'undefined') {
+                                $scope.possibleElements = el.data("possibleElements");
+                                $scope.activePossibleElementFilter = event.currentTarget;
+                                if (el.hasClass("stream")) {
+                                    $scope.selectedTab = 2;
+                                } else if (el.hasClass("sepa")) {
+                                    $scope.selectedTab = 3;
+                                }
+                                //$scope.$apply();
+                            }
+                            //TODO Tab wechseln
+                        }
+                    } else { //KEIN FILTER AKTIV
+                        $scope.activePossibleElementFilter = event.currentTarget;
                         if (el.data("possibleElements") !== 'undefined') {
+                            $("md-icon", event.currentTarget).remove();
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
                             $scope.possibleElements = el.data("possibleElements");
-                            $scope.activePossibleElementFilter = event.currentTarget;
-                            if (el.hasClass("stream")){
+                            if (el.hasClass("stream")) {
                                 $scope.selectedTab = 2;
-                            }else if(el.hasClass("sepa")){
+                            } else if (el.hasClass("sepa")) {
                                 $scope.selectedTab = 3;
                             }
-                            $scope.$apply();
+                            //$scope.$apply();
                         }
-                        //TODO Tab wechseln
                     }
-                }else{ //KEIN FILTER AKTIV
-                    $scope.activePossibleElementFilter = event.currentTarget;
-                    if (el.data("possibleElements") !== 'undefined') {
-                        $("md-icon", event.currentTarget).remove();
-                        $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
-                        $scope.possibleElements = el.data("possibleElements");
-                        if (el.hasClass("stream")){
-                            $scope.selectedTab = 2;
-                        }else if(el.hasClass("sepa")){
-                            $scope.selectedTab = 3;
-                        }
-                        $scope.$apply();
+                }else{
+                    if (!$.isEmptyObject($scope.activePossibleElementFilter) && $scope.activePossibleElementFilter != null && $scope.activePossibleElementFilter !== 'undefined'){
+                        $("md-icon", $scope.activePossibleElementFilter).remove();
+                        $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
                     }
+                    $scope.possibleElements = [];
+                    $scope.activePossibleElementFilter = {};
+
                 }
 
-
+                $scope.$apply();
             }
 
 
@@ -1100,6 +1109,7 @@ angular.module('streamPipesApp')
 
             function createNewAssemblyElement(json, coordinates, block) {
 
+                togglePossibleElements(null, null);
 
                 var $newState = $('<span>')
                     .data("JSON", $.extend(true, {}, json))
@@ -1421,6 +1431,8 @@ angular.module('streamPipesApp')
 
             }
 
+
+
             $scope.openDescriptionModal = function(element){
 
                 $('#description-title').text(element.name);
@@ -1445,9 +1457,8 @@ angular.module('streamPipesApp')
             }
         }
     })
-    .service('objectProvider', function($http, restApi){
+    .service('objectProvider', function($http, restApi, imageChecker){
         var oP = this;
-
 
         this.Stream = function(element){
 
@@ -1460,7 +1471,7 @@ angular.module('streamPipesApp')
             this.iconUrl = json.iconUrl;
             this.domains = json.domains;
 
-        }
+        };
         this.Sepa = function(element){
 
             var json = $(element).data("JSON");
@@ -1474,7 +1485,7 @@ angular.module('streamPipesApp')
             this.domains = json.domains;
             this.staticProperties = json.staticProperties;
 
-        }
+        };
         this.Action = function(element){
             var json = $(element).data("JSON");
 
@@ -1486,7 +1497,7 @@ angular.module('streamPipesApp')
             this.connectedTo = [];
             this.staticProperties = json.staticProperties;
 
-        }
+        };
 
         this.Pipeline = function(){
             this.name = "";
@@ -1546,7 +1557,7 @@ angular.module('streamPipesApp')
                     this.streams.push(el);
                 }
 
-            }
+            };
             this.addBlock = function(block){
                 //connectedElement.connectedTo.push(block.pipeline.sepas[block.outputIndex].DOM)
                 for (var i in block.sepas){
@@ -1555,7 +1566,7 @@ angular.module('streamPipesApp')
                 for (var i in block.streams){
                     this.streams.push(block.streams[i]);
                 }
-            }
+            };
 
             this.update = function(info, success){
                 var pipeline = this;
@@ -1587,16 +1598,30 @@ angular.module('streamPipesApp')
             this.name = json.name;
             this.getjQueryElement = function(){
                 var element = this;
-                return $('<a>')
-                    .data("recObject", element)
-                    .append($('<img>').attr("src", element.json.iconUrl).error(function(){
-                        addTextIconToElement($(this).parent(), element.name, true);
-                        $(this).remove();
-
-                    }).addClass("recommended-item-img"));
+                var $el = $('<a style="text-decoration: none">')
+                    .data("recObject", element);
+                imageChecker.imageExists(element.json.iconUrl, function(exists){
+                    if (exists){
+                        console.log("BILD GELADEN")
+                        $el.append($('<img>').attr("src", element.json.iconUrl).addClass("recommended-item-img"));
+                    }else{
+                        console.log("BILD NICHT GELADEN");
+                        addTextIconToElement($el, element.name, true);
+                    }
+                });
+                return $el;
+                //return $('<a>')
+                //    .data("recObject", element)
+                //    .append($('<img>').attr("src", element.json.iconUrl).error(function(){
+                //        console.log("BILD NICHT GELADEN");
+                //        addTextIconToElement($(this).parent(), element.name, true);
+                //        $(this).remove();
+                //
+                //    }).addClass("recommended-item-img"));
 
             };
-        }
+        };
+
         this.Block = function(name, description, pipeline){
 
             var oi;
@@ -1627,21 +1652,9 @@ angular.module('streamPipesApp')
                     .append($('<div>').addClass("block-img-container")
                         .append($('<img>').addClass('block-img').attr("src", this.streams[0].iconUrl)));
             }
-        }
-    })
-    //.service('plumbService', function(){
-    //
-    //        this.editorPlumb = jsPlumb.getInstance({Container: "assembly"});
-    //        this.pipelinePlumb = jsPlumb.getInstance({Container : "pipelineDisplay"});
-    //
-    //        this.refresh = function(){
-    //            this.editorPlumb = jsPlumb.getInstance({Container: "assembly"});
-    //            this.pipelinePlumb =  jsPlumb.getInstance({Container : "pipelineDisplay"});
-    //        };
-    //
-    //})
-
-    ;
+        };
+        //return oP;
+    });
 
 function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, restApi) {
     
