@@ -8,7 +8,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -20,6 +19,7 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
@@ -156,7 +156,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean exists(SepaDescription sepa) {
-		SepaDescription storedSEPA = entityManager.find(SepaDescription.class, sepa.getRdfId());
+		SepaDescription storedSEPA = entityManager.find(SepaDescription.class, sepa.getElementId());
 		return storedSEPA != null ? true : false;
 	}
 
