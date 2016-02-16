@@ -12,7 +12,6 @@
 	</md-tabs>
 </div>
 </div>
-
 <div flex="100" layout="row" layout-align="center center">
 	<div layout="column" flex="100" ng-if="selectedTab === 'SOURCES'">
 				<div layout="row">
@@ -67,7 +66,7 @@
 					</div>
 				</div>
 				<div flex layout="row">
-					<div flex-sm="20" flex-gt-sm="20" layout-sm="column">
+					<div flex="20" layout-sm="column">
 						<div ui-tree data-drag-enabled="false">
 						  <ol ui-tree-nodes="" ng-model="sepas">
 						    <li ng-repeat="sepa in sepas" ui-tree-node>
@@ -80,13 +79,14 @@
 						  </ol>
 						</div>
 					</div>
-					<div flex-sm="80" flex-gt-sm="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="sepaSelected">
+					<div flex="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="sepaSelected">
 						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
 							<div flex="100" layout="row">
 								<div layout="row" layout-align="start center" flex="100">{{selectedSepa.name}}</div>	
 							</div>
 						</div>
 						<md-content class="md-padding">
+						
 							<ng-include src="'modules/sensors/templates/sepa.html'"></ng-include>
 								
 							<md-divider></md-divider>

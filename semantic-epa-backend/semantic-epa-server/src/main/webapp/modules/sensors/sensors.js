@@ -3,6 +3,8 @@ angular.module('streamPipesApp')
 
 	$scope.editingDisabled = true;
 	
+	$scope.categoryOpt = {displayProp: 'type', idProp: 'type', externalIdProp: 'type'};
+	
 	$scope.sepas = [];
 	$scope.sources = [];
 	$scope.actions = [];
@@ -17,6 +19,11 @@ angular.module('streamPipesApp')
 	$scope.actionSelected = false;
 	$scope.streamSelected = false;
 	
+	$scope.availableEpaCategories = [];
+	$scope.availableEcCategories = [];
+	
+	$scope.selectedCategories = [];
+	
 	$scope.selectedTab = "SOURCES";
 	
 	$scope.setSelectedTab = function(type) {
@@ -27,6 +34,7 @@ angular.module('streamPipesApp')
 		$scope.editingDisabled = !$scope.editingDisabled;
 	
 	}
+	
 	
 	$scope.removeStream = function(eventStreams, stream) {
 		eventStreams.splice(stream, 1);
@@ -165,6 +173,7 @@ angular.module('streamPipesApp')
     
     
     $scope.openDownloadDialog = function(elementId, elementData, elementType){
+    	console.log(elementData);
 		 $mdDialog.show({
 	   	      controller: DownloadDialogController,
 	   	      templateUrl: 'modules/sensors/templates/downloadDialog.tmpl.html',
@@ -180,9 +189,25 @@ angular.module('streamPipesApp')
 	   	    })
 	 }
     
+    $scope.loadEpaCategories = function() {
+    	 restApi.getEpaCategories()
+         .success(function(epas){
+             $scope.availableEpaCategories = epas;
+         });
+    }
+    
+    $scope.loadEcCategories = function() {
+   	 restApi.getEcCategories()
+        .success(function(ecs){
+            $scope.availableEcCategories = ecs;
+        });
+   }
+    
     $scope.loadSepas();
     $scope.loadActions();
     $scope.loadSources();
+    $scope.loadEcCategories();
+    $scope.loadEpaCategories();
     
 });
 
@@ -194,7 +219,24 @@ function DownloadDialogController($scope, $mdDialog, restApi, elementId, element
 	$scope.deployment.elementType = elementType;
 	
 	$scope.loading = false;
+	$scope.result;
+	$scope.directIportResult = true;
 		
+	$scope.updateElement = function() {
+		$scope.loading = true;
+		console.log(elementData);
+		$http({method: 'POST', headers: {'Accept' : 'application/json', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/update', data : getFormData()}).
+		  success(function(data, status, headers, config) {
+			  	$scope.loading = false;
+			  	$scope.result = data;
+			  	$scope.directImportResult = true;
+		  }).
+		  error(function(data, status, headers, config) {
+		    console.log(data);
+		    $scope.loading = false;
+		  });
+	}
+	
 	$scope.generateImplementation = function() {	
 		$scope.loading = true;
 		$http({method: 'POST', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip', 'Content-Type': undefined}, url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/implementation', data : getFormData()}).

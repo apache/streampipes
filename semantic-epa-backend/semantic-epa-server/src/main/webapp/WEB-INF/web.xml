@@ -37,15 +37,15 @@
 	<servlet>
 		<servlet-name>SemanticEPA-API</servlet-name>
 		<servlet-class>
-			com.sun.jersey.spi.container.servlet.ServletContainer
+			org.glassfish.jersey.servlet.ServletContainer
 		</servlet-class>
 		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-name>jersey.config.server.provider.packages</param-name>
 			<param-value>de.fzi.cep.sepa.rest</param-value>
 		</init-param>
 		<init-param>
-			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-			<param-value>de.fzi.cep.sepa.rest.filter.LoggingFilter</param-value>
+			<param-name>jersey.config.server.provider.classnames</param-name>
+			<param-value>org.glassfish.jersey.filter.LoggingFilter;org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

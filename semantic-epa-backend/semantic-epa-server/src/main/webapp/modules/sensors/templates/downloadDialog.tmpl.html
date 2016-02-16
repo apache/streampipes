@@ -17,6 +17,7 @@
 			 	<md-radio-group ng-model="deployment.outputType" style="display:inline;">
 					    <md-radio-button value="OUTPUT_IMPLEMENTATION">Generate implementation as prepared Maven project</md-radio-button>
 					    <md-radio-button value="OUTPUT_JSONLD">Download Description file as Json-LD</md-radio-button>
+					     <md-radio-button value="DIRECT_IMPORT">Update element description</md-radio-button>
 				</md-radio-group>	
 			</md-input-container> 
 		 </div>   
@@ -61,7 +62,30 @@
 		    	<md-button ng-click="generateDescription()" class="md-accent" ng-click="">Generate JSON-LD file</md-button>
 		    </md-input-container> 
 		</div>
+		<div ng-show="deployment.outputType == 'DIRECT_IMPORT'">  
+		 	<md-input-container flex> 
+		    	<md-button ng-click="updateElement()" class="md-accent" ng-click="">Update description</md-button>
+		    </md-input-container> 
+		</div>
 		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+		<div flex layout="row" layout-align="center center" ng-show="directImportResult">
+			<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50">
+				
+				<md-content class="md-padding">
+				<div flex layout="row"><h3>{{result.elementName}}</h3> 
+				<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="result.success"></md-icon>
+				<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!(result.success)"></md-icon>
+					    		
+				</div>
+				<div ng-repeat = "detail in result.notifications">
+					<div>{{detail.title}}</div>
+					<div>{{detail.description}}</div>
+					<md-divider/>
+				</div>
+				
+				</md-content>
+			</div>
+		</div>
 	</div>
   </md-dialog-content>
   <div class="md-actions" layout="row">

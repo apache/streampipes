@@ -13,7 +13,7 @@
 				   			<div flex="70" layout="row" layout-align="start center"><h4>Property {{$index+1}}</h4></div>
 				   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeProperty($index, stream.eventSchema.eventProperties)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
 					</div>
-					<datatype-property runtime-type="property.properties.runtimeType" disabled="disabled">
+					<datatype-property runtime-type="property.properties.runtimeType" dp-mode="capability" disabled="disabled">
 					</datatype-property>
 				    <md-input-container>
 				    	<label>Runtime Name</label>

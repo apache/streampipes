@@ -9,7 +9,7 @@
     </md-checkbox>
 	
 	<div ng-show="datatypeRestricted(property)">
-		<datatype-property runtime-type="property.properties.runtimeType" disabled="disabled">
+		<datatype-property runtime-type="property.properties.runtimeType" dp-mode="'restriction'" disabled="disabled">
 		</datatype-property>
    	</div>
    	<md-checkbox ng-checked="domainPropertyRestricted(property)" ng-click="toggleDomainPropertyRestriction(property)" aria-label="Domain property Restriction" ng-disabled="disabled" >

@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard', 'angularjs-dropdown-multiselect'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -1111,6 +1111,18 @@ angular
  	
  	restApi.getRunningVisualizations = function() {
  		return $http.get("/semantic-epa-backend/api/visualizations");
+ 	}
+ 	
+ 	restApi.getEpaCategories = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/categories/epa");
+ 	}
+ 	
+ 	restApi.getEcCategories = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/categories/ec");
+ 	}
+ 	
+ 	restApi.getEpCategories = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/categories/ep");
  	}
 	
 	    return restApi;
