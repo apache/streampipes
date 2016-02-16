@@ -8,6 +8,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class Matcher {
 
@@ -62,11 +64,31 @@ public class Matcher {
 				else if (left instanceof EventPropertyPrimitive)
 				{
 					EventPropertyPrimitive leftPrimitive = (EventPropertyPrimitive) left;
-					List<URI> leftUris = leftPrimitive.getDomainProperties();
-					if (!matches(leftUris, rightPrimitive.getDomainProperties())) match = false;
-					else {
-						allMatchingProperties.add(leftPrimitive);
+					
+					// check datatype restriction
+					if (rightPrimitive.getRuntimeType() != null && !rightPrimitive.getRuntimeType().equals("")) {
+						if (!leftPrimitive.getRuntimeType().equals(rightPrimitive.getRuntimeType())) 
+							if (!subclassOf(leftPrimitive.getRuntimeType(), rightPrimitive.getRuntimeType())) match = false;
+						System.out.println(match);
 					}
+					
+					//check domain property restriction
+					if (rightPrimitive.getDomainProperties() != null && rightPrimitive.getDomainProperties().size() > 0) {
+						if (!rightPrimitive.getDomainProperties()
+								.stream()
+								.anyMatch(rp -> leftPrimitive
+										.getDomainProperties()
+										.stream()
+										.anyMatch(lp -> 
+											rp.toString().equals(lp.toString()))))
+							match = false;
+						System.out.println(match);
+					}
+							
+					//if (!matches(leftUris, rightPrimitive.getDomainProperties())) match = false;
+					if (match)
+						allMatchingProperties.add(leftPrimitive);
+					
 				} else if (left instanceof EventPropertyNested)
 				{
 					List<EventProperty> nestedProperties = ((EventPropertyNested) left).getEventProperties();
@@ -91,6 +113,15 @@ public class Matcher {
 		return match;
 	}
 	
+	private boolean subclassOf(String left, String right) {
+		if (!right.equals(SO.Number)) return false;
+		else {
+			if (left.equals(XSD._integer.toString())
+					|| left.equals(XSD._long.toString()) || left.equals(XSD._double.toString())) return true;
+		}
+		return false;
+	}
+
 	public boolean matchesList(EventPropertyList left, EventPropertyList right)
 	{
 		boolean match = true;
