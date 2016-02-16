@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.model.impl.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -33,18 +32,25 @@ public class SepaDescription extends ConsumableSEPAElement {
 	List<OutputStrategy> outputStrategies;
 	
 	String pathName;
+	
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:epaType")
+	protected List<String> epaTypes;
 
 	public SepaDescription(SepaDescription other)
 	{
 		super(other);
 		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
 		this.pathName = other.getPathName();
+		this.epaTypes = new Cloner().epaTypes(other.getEpaTypes());
 	}
 	
 	public SepaDescription()
 	{
 		super();
 		this.outputStrategies = new ArrayList<>();
+		this.epaTypes = new ArrayList<>();
 	}
 	
 	public SepaDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
@@ -72,6 +78,15 @@ public class SepaDescription extends ConsumableSEPAElement {
 		staticProperties = new ArrayList<StaticProperty>();
 	}
 
+	
+
+	public List<String> getEpaTypes() {
+		return epaTypes;
+	}
+
+	public void setEpaTypes(List<String> epaTypes) {
+		this.epaTypes = epaTypes;
+	}
 
 	public String getPathName() {
 		return pathName;

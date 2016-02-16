@@ -42,6 +42,11 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 	
 	String pathName;
 	
+	@OneToMany(fetch = FetchType.EAGER,
+			   cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:epaType")
+	protected List<String> epaTypes;
+	
 	public SepaInvocation(SepaDescription sepa)
 	{
 		super();
@@ -53,6 +58,7 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
 		this.setBelongsTo(sepa.getRdfId().toString());
+		this.epaTypes = sepa.getEpaTypes();
 		//this.setUri(belongsTo +"/" +getElementId());		
 	}
 	
@@ -62,6 +68,7 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
 		this.outputStream =  new Cloner().stream(other.getOutputStream());
 		this.pathName = other.getPathName();
+		this.epaTypes = new Cloner().epaTypes(other.getEpaTypes());
 	}
 
 	public SepaInvocation(SepaDescription sepa, String domId)
@@ -123,6 +130,12 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.outputStrategies = outputStrategies;
 	}
 
+	public List<String> getEpaTypes() {
+		return epaTypes;
+	}
 
+	public void setEpaTypes(List<String> epaTypes) {
+		this.epaTypes = epaTypes;
+	}
 	
 }

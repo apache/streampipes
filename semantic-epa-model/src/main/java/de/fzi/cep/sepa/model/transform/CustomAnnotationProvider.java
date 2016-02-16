@@ -63,7 +63,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.TransportProtocol.class,
 				de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty.class,
 				de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty.class,
-				de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty.class
+				de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty.class,
+				de.fzi.cep.sepa.model.impl.EcType.class,
+				de.fzi.cep.sepa.model.impl.EpaType.class
 		);
 	}
 

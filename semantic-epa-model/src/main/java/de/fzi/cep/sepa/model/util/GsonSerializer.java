@@ -1,17 +1,12 @@
 package de.fzi.cep.sepa.model.util;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-
-
-
-
+import de.fzi.cep.sepa.model.impl.EcType;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
@@ -46,9 +41,15 @@ public class GsonSerializer {
 		builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
 		builder.registerTypeAdapter(MeasurementProperty.class, new JsonLdSerializer<MeasurementProperty>());
 		builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
+		builder.registerTypeAdapter(EcType.class, new EcTypeAdapter());
+		builder.registerTypeAdapter(EpaType.class, new EpaTypeAdapter());
 		
 		builder.setPrettyPrinting();
 		return builder;
+	}
+	
+	public static Gson getGson(boolean keepIds) {
+		return keepIds ? getGsonWithIds() : getGsonWithoutIds();
 	}
 	
 	public static Gson getGsonWithIds() {

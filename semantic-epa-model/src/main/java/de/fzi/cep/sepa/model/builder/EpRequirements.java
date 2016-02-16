@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.model.builder;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class EpRequirements {
@@ -31,6 +32,10 @@ public class EpRequirements {
 	public static EventPropertyPrimitive stringReq()
 	{
 		return datatypeReq(XSD._string.toString());
+	}
+	
+	public static EventPropertyPrimitive numberReq() {
+		return datatypeReq(SO.Number);
 	}
 	
 	public static EventPropertyPrimitive domainPropertyReq(String domainProperty)

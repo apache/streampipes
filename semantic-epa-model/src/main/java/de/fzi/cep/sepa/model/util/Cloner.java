@@ -124,5 +124,13 @@ public class Cloner {
 			List<SupportedProperty> supportedProperties) {
 		return supportedProperties.stream().map(s -> new SupportedProperty(s)).collect(Collectors.toList());
 	}
+
+	public List<String> epaTypes(List<String> epaTypes) {
+		return epaTypes;
+	}
+
+	public List<String> ecTypes(List<String> ecTypes) {
+		return ecTypes;
+	}
 	
 }
