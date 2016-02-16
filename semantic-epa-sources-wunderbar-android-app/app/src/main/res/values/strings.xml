@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ProaSense Sensor Connector</string>
+    <string name="action_settings">Settings</string>
+    <string name="test">TEXT</string>
+</resources>
