@@ -9,7 +9,6 @@ import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
 import de.fzi.cep.sepa.esper.aggregate.rate.EventRateController;
-import de.fzi.cep.sepa.esper.classification.number.NumberClassification;
 import de.fzi.cep.sepa.esper.classification.number.NumberClassificationController;
 import de.fzi.cep.sepa.esper.collection.TestCollectionController;
 import de.fzi.cep.sepa.esper.compose.ComposeController;
@@ -17,17 +16,14 @@ import de.fzi.cep.sepa.esper.debs.c1.DebsChallenge1Controller;
 import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2Controller;
 import de.fzi.cep.sepa.esper.distribution.DistributionController;
 import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnrichedController;
-import de.fzi.cep.sepa.esper.drillingstop.single.DrillingStopEnrichedController;
 import de.fzi.cep.sepa.esper.enrich.fixed.StaticValueEnricherController;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
 import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
-import de.fzi.cep.sepa.esper.filter.advancedtextfilter.AdvancedTextFilterController;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
 import de.fzi.cep.sepa.esper.meets.MeetsController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
-import de.fzi.cep.sepa.esper.observe.numerical.value.ObserveNumerical;
 import de.fzi.cep.sepa.esper.observe.numerical.value.ObserveNumericalController;
 import de.fzi.cep.sepa.esper.observe.numerical.window.ObserveNumericalWindowController;
 import de.fzi.cep.sepa.esper.output.topx.TopXController;
@@ -82,7 +78,7 @@ public class Init implements Runnable {
 
 		
 		// Configure external timing for DEBS Challenge
-		new Thread(new EsperEngineSettings()).start();
+		//new Thread(new EsperEngineSettings()).start();
 		
 		try {
 			ModelSubmitter.submitAgent(declarers);
