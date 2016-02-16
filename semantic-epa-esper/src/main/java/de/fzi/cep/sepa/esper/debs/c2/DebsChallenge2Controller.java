@@ -5,21 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 
@@ -38,14 +40,11 @@ public class DebsChallenge2Controller extends FlatEpDeclarer<DebsChallenge2Param
 
 			EventSchema schema1 = new EventSchema();
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/latitude"));
-			EventProperty e2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/longitude"));
-			EventProperty e3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/latitude"));
-			EventProperty e4 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(
-					"http://test.de/longitude"));
+			EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
+			EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
+			EventProperty e3 = EpRequirements.domainPropertyReq(Geo.lat);
+			EventProperty e4 = EpRequirements.domainPropertyReq(Geo.lng);
+		
 			eventProperties.add(e1);
 			eventProperties.add(e2);
 			eventProperties.add(e3);

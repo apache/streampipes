@@ -6,14 +6,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
-import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
-import de.fzi.cep.sepa.model.impl.graph.*;
-import de.fzi.cep.sepa.model.impl.output.*;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
@@ -36,8 +40,8 @@ public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParam
 		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction(Geo.lat).build();
-			EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction(Geo.lng).build();
+			EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
+			EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
 			eventProperties.add(e1);
 			eventProperties.add(e2);
 			

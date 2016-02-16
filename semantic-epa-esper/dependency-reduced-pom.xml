@@ -34,7 +34,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.esper.main.Init</mainClass>
+                  <mainClass>de.fzi.cep.sepa.esper.main.PerformanceTest</mainClass>
                 </transformer>
                 <transformer />
               </transformers>
