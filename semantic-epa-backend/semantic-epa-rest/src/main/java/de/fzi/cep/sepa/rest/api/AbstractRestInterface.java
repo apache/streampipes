@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
-import de.fzi.cep.sepa.storage.impl.UserStorage;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -18,17 +16,19 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
-import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.messages.ErrorMessage;
 import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
+import de.fzi.cep.sepa.model.util.GsonSerializer;
+import de.fzi.cep.sepa.rest.http.HttpJsonParser;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.storage.impl.UserStorage;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.util.Utils;
@@ -56,6 +56,14 @@ public abstract class AbstractRestInterface {
 	protected <T> String toJson(T object)
 	{
 		return Utils.getGson().toJson(object);
+	}
+	
+	protected <T> T fromJsonWithCustomBuilder(String payload, Class<T> clazz, boolean keepIds) {
+		return GsonSerializer.getGson(keepIds).fromJson(payload, clazz);
+	}
+	
+	protected <T> String toJsonWithCustomBuilder(T object, boolean keepIds) {
+		return GsonSerializer.getGson(keepIds).toJson(object);
 	}
 	
 	protected <T> String toJsonLd(T object)

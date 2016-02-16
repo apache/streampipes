@@ -15,10 +15,10 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openrdf.rio.RDFHandlerException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
-import com.sun.jersey.multipart.FormDataParam;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
@@ -35,6 +35,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 
 @Path("/v2/users/{username}/deploy")
@@ -80,6 +81,31 @@ public class DeploymentImpl extends AbstractRestInterface {
 			e.printStackTrace();
 			return toJson(Notifications.error("Error: Could not store source definition."));
 		}	   
+	}
+	
+	@POST
+	@Path("/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String directUpdate(@PathParam("username") String username, @FormDataParam("config") String deploymentConfig, @FormDataParam("model") String model) {
+		
+		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
+		boolean success;
+		
+		if (config.getElementType().equals("Sepa")) {
+			SepaDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
+			success = StorageManager.INSTANCE.getStorageAPI().deleteSEPA(sepa.getElementId());
+			StorageManager.INSTANCE.getStorageAPI().storeSEPA(sepa);
+		}
+		
+		else {
+			SecDescription sec = new SecDescription(GsonSerializer.getGsonWithIds().fromJson(model, SecDescription.class));
+			success = StorageManager.INSTANCE.getStorageAPI().update(sec);
+		}
+		
+		if (success) return toJson(Notifications.success("Element description updated."));
+		else return toJson(Notifications.error("Could not update element description."));
+		
 	}
 	
 	@POST

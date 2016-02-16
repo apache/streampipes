@@ -57,9 +57,8 @@ public class AuthenticationImpl implements Authentication {
 
     @Path("/logout")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String doLogout(String token) {
+	public String doLogout() {
 		Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return toJson(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
@@ -88,7 +87,6 @@ public class AuthenticationImpl implements Authentication {
     
     @GET
     @Path("/authc")
-    @Produces(MediaType.APPLICATION_JSON)
     @Override
     public String userAuthenticated() {
     	

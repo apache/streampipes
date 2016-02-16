@@ -11,8 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-
-import com.sun.jersey.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;

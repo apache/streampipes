@@ -9,6 +9,9 @@
 	<name>Semantic Event Processing REST API</name>
 	<artifactId>semantic-epa-rest</artifactId>
 	<packaging>jar</packaging>
+	<properties>
+		<jersey.version>2.22.1</jersey.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
@@ -49,9 +52,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.9</version>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -59,14 +62,14 @@
 			<version>2.2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-json</artifactId>
-			<version>1.9</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey.contribs</groupId>
-			<artifactId>jersey-multipart</artifactId>
-			<version>1.9</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.restassured</groupId>

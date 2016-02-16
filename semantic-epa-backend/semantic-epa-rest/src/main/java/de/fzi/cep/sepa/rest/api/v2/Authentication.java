@@ -4,7 +4,7 @@ public interface Authentication {
 
 	public String doLogin(String token);
 	
-	public String doLogout(String token);
+	public String doLogout();
 	
 	public String doRegister(String registrationData);
 	

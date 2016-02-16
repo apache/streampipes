@@ -84,7 +84,7 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	@Path("/{pipelineId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getElement(String username, @PathParam("pipelineId") String pipelineId) {
+	public String getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
 		return toJson(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId));
 	}
 
