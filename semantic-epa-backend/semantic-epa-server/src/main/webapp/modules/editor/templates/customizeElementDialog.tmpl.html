@@ -8,12 +8,39 @@
       </md-button>
     </div>
   </md-toolbar>
+  
   <md-dialog-content flex="100" class="md-dialog-content">
+  	<div layout="column" class="customize-item-main-help">
+  			<div class="customize-item-title-help" flex="100" layout="row">
+  				<div flex="70" layout="row" layout-align="start center" ng-click="toggleHelpDialog()"> 
+  				<i class="material-icons" style="color: white;">help</i>  &nbsp;What's my purpose?
+  				</div>
+  				<div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
+					<md-button class="md-icon-button" ng-if="helpDialogVisible" ng-click="toggleHelpDialog()">
+					<i class="material-icons" style="color: white;">arrow_drop_up</i>
+					</md-button>
+					<md-button class="md-icon-button" ng-if="!helpDialogVisible" ng-click="toggleHelpDialog()">
+						<i class="material-icons" style="color: white;">arrow_drop_down</i>
+					</md-button>
+				</div>
+  			</div>
+  			<div class="customize-item-content" ng-if="helpDialogVisible">
+  			The <i>{{sepaName}}</i> component performs the following operation:<br/> 
+  			<i>{{selectedElement.description}}</i>
+  			<div ng-show="elementData.description == ''">(Sorry, no further description available)</div>
+  			
+  			</div>
+  	</div>
   	<div ng-repeat="staticProperty in selectedElement.staticProperties">
   		<div layout="column" class="customize-item-main">
-  			<div class="customize-item-title">
-  				{{staticProperty.name}}
-  			</div>
+  			<div class="customize-item-title" layout="row" flex="100">
+  				<div flex="80" layout="row" layout-align="start center"> 
+  					{{staticProperty.name}}
+  				</div>
+  				<div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
+  					<i class="material-icons" style="color: white;">help</i>
+  				</div>
+  			</div>	
   			<div class="customize-item-content">
 		  		<div ng-show="staticProperty.type=='STATIC_PROPERTY'">
 		  			<div ng-show="staticProperty.input.type == 'RadioInput'">	

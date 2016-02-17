@@ -1759,7 +1759,20 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	$scope.selection = [];
 	$scope.sepaName = sepaName;
 	$scope.invalid = false;
+	$scope.helpDialogVisible = false;
 	
+	$scope.toggleHelpDialog = function() {
+		$scope.helpDialogVisible = !$scope.helpDialogVisible;
+	}
+	
+	$scope.getStaticPropertyInfo = function(staticProperty) {
+		var info = "";
+		if (staticProperty.type =='MAPPING_PROPERTY')
+			info += "This field is a mapping property. It requires you to select one or more specific data elements from a stream.<b>"
+		info += "This field requires the following specifc input: <b>";
+		return info;
+	}
+	console.log(elementData);
 	    
 	angular.forEach($scope.selectedElement.staticProperties, function(item) {
 		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')

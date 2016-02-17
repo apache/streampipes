@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard', 'angularjs-dropdown-multiselect'])
+    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard', 'angularjs-dropdown-multiselect', 'rt.popup'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
