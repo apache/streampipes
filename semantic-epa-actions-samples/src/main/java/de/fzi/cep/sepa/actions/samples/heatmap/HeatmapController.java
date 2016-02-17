@@ -2,18 +2,19 @@ package de.fzi.cep.sepa.actions.samples.heatmap;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
@@ -28,13 +29,11 @@ public class HeatmapController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
+		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI(Geo.lat));
-		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI(Geo.lng));
+		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
+		EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
 		
 		eventProperties.add(e1);
 		eventProperties.add(e2);

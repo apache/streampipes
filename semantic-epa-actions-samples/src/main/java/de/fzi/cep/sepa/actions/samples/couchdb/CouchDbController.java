@@ -1,7 +1,10 @@
 package de.fzi.cep.sepa.actions.samples.couchdb;
 
+import java.util.Arrays;
+
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -12,7 +15,7 @@ public class CouchDbController  implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("couchdb", "CouchDB", "Stores events in a couchdb database.");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/couchdb_icon.png");
-		
+		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
 		return sec;
 	}
 

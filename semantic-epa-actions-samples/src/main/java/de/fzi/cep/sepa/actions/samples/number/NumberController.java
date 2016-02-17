@@ -5,27 +5,27 @@
  */
 package de.fzi.cep.sepa.actions.samples.number;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.model.vocabulary.Geo;
-import de.fzi.cep.sepa.model.vocabulary.SO;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -52,12 +52,10 @@ public class NumberController extends ActionController {
         public SecDescription declareModel() {
                 SecDescription sec = new SecDescription("number", "Number", "Displays a colored circle with value", "");
                 //sec.setIconUrl(ActionConfig.iconBaseUrl + "/---.png");
-                List<String> domains = new ArrayList<String>();
-                domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-                domains.add(Domain.DOMAIN_PROASENSE.toString());
-
+                sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+                
                 List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-                EventProperty e1 = new EventPropertyPrimitive(Utils.createURI(SO.Number));
+                EventProperty e1 = EpRequirements.numberReq();
                 eventProperties.add(e1);
 
                 EventSchema schema1 = new EventSchema();

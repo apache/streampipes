@@ -3,39 +3,34 @@ package de.fzi.cep.sepa.actions.samples.histogram;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.Domain;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.vocabulary.MhWirth;
-import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public class HistogramController implements SemanticEventConsumerDeclarer{
 
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("histogram", "Histogram", "Generates a histogram for time-series data", "http://localhost:8080/img");
-		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(SO.Number, MhWirth.RamVelSetpoint, MhWirth.RamPosSetpoint));
+		EventProperty e1 = EpRequirements.numberReq();
 		eventProperties.add(e1);
 		schema1.setEventProperties(eventProperties);
 		stream1.setEventSchema(schema1);		

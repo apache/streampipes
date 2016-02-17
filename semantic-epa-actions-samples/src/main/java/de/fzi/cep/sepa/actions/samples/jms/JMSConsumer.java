@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.actions.samples.jms;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -10,7 +11,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
@@ -29,11 +30,6 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 	@Override
 	public SecDescription declareModel() {
 		
-		
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
@@ -42,7 +38,7 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 		
 		SecDescription desc = new SecDescription("jms", "JMS Publisher", "Publishes events to a JMS topic");
 		desc.setIconUrl(ActionConfig.iconBaseUrl + "/jms_logo.png");
-		
+		desc.setEcTypes(Arrays.asList(EcType.FORWARD.name()));
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
 		

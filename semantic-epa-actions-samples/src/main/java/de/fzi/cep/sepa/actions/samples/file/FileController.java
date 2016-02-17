@@ -1,12 +1,14 @@
 package de.fzi.cep.sepa.actions.samples.file;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -24,7 +26,7 @@ public class FileController extends ActionController {
 		
 		SecDescription sec = new SecDescription("file", "File Output", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/file_icon.png");
-		
+		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());

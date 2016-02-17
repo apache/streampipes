@@ -10,6 +10,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -39,7 +40,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		
 		SecDescription desc = new SecDescription("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker");
 		desc.setIconUrl(ActionConfig.iconBaseUrl + "/kafka_logo.png");
-		
+		desc.setEcTypes(Arrays.asList(EcType.FORWARD.name()));
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
 		
@@ -56,6 +57,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		staticProperties.add(topic);
 		
 		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value", "");
+		addProperty.setValueRequired(false);
 		staticProperties.add(addProperty);
 		
 		desc.setStaticProperties(staticProperties);

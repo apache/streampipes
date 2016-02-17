@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -39,7 +40,7 @@ public class NotificationController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("notification", "Notification", "Displays a notification in the UI panel", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/notification_icon.png");
-		
+		sec.setEcTypes(Arrays.asList(EcType.NOTIFICATION.name()));
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventSchema schema1 = new EventSchema();

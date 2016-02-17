@@ -9,7 +9,8 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.Domain;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -52,18 +53,14 @@ public class MapAreaController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maparealist", "Map area view (list input)", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
-	
+		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		EventPropertyList listProperty = new EventPropertyList();
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI(Geo.lat));
-		EventProperty e2 = new EventPropertyPrimitive(Utils.createURI(Geo.lng));
-		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI(Geo.lat));
-		EventProperty e4 = new EventPropertyPrimitive(Utils.createURI(Geo.lng));
+		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
+		EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
+		EventProperty e3 = EpRequirements.domainPropertyReq(Geo.lat);
+		EventProperty e4 = EpRequirements.domainPropertyReq(Geo.lng);
 		EventProperty e5 = new EventPropertyPrimitive();
 		
 		eventProperties.add(e1);
