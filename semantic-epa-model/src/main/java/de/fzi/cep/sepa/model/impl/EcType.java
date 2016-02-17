@@ -2,12 +2,12 @@ package de.fzi.cep.sepa.model.impl;
 
 public enum EcType {
 
-	VISUALIZATION_CHART("", ""),
-	VISUALIZATION_GEO("", ""),
-	STORAGE("", ""),
-	FORWARD("", ""),
-	NOTIFICATION("", ""),
-	ACTUATOR("", "");
+	VISUALIZATION_CHART("Charts", ""),
+	VISUALIZATION_GEO("Geospatial Visualization", ""),
+	STORAGE("Storage", ""),
+	FORWARD("Forward", ""),
+	NOTIFICATION("Notifications", ""),
+	ACTUATOR("Actuators", "");
 	
 	private String label;
 	private String description;

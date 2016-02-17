@@ -3,13 +3,14 @@ package de.fzi.cep.sepa.model.impl;
 
 public enum EpaType {
 
-	FILTER("a", "b"),
-	AGGREGATE("", ""),
-	ENRICH_TEXT("", ""),
-	GEO("", ""),
-	PATTERN_DETECT("", ""),
-	ALGORITHM("", ""),
-	TRANSFORM("", "");
+	FILTER("Filter", "b"),
+	AGGREGATE("Aggregation", ""),
+	ENRICH_TEXT("Text Functions", ""),
+	ENRICH("Enrichment", ""),
+	GEO("Geospatial Operations", ""),
+	PATTERN_DETECT("Pattern Detection", ""),
+	ALGORITHM("Algorithm", ""),
+	TRANSFORM("Transformation", "");
 	
 	private String label;
 	private String description;
