@@ -21,10 +21,14 @@ import de.fzi.cep.sepa.storage.controller.StorageManager;
 public class PipelineExecutor {
 
 	private Pipeline pipeline;
+	private boolean visualize;
+	private boolean storeStatus;
 	
-	public PipelineExecutor(Pipeline pipeline)
+	public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus)
 	{
 		this.pipeline = pipeline;
+		this.visualize = visualize;
+		this.storeStatus = storeStatus;
 	}
 	
 	public PipelineOperationStatus startPipeline()
@@ -42,10 +46,10 @@ public class PipelineExecutor {
 			String uri = sec.getUri();
 			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "http://proasense.nissatech.com/actions");
 			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
-			StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
+			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
-			setPipelineStarted(pipeline);
+			if (storeStatus) setPipelineStarted(pipeline);
 		}
 		return status;
 	}
@@ -57,8 +61,8 @@ public class PipelineExecutor {
 		
 		if (status.isSuccess())
 		{
-			StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
-			setPipelineStopped(pipeline);
+			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
+			if (storeStatus) setPipelineStopped(pipeline);
 		}
 		return status;
 	}
