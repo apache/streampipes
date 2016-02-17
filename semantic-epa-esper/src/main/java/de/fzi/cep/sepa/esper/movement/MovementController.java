@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -45,6 +46,7 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 		SepaDescription desc = new SepaDescription("sepa/movement", "Movement Analysis",
 				"Movement Analysis Enricher");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_1_HQ.png");
+		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
 		try {
 			EventStream stream1 = new EventStream();
 

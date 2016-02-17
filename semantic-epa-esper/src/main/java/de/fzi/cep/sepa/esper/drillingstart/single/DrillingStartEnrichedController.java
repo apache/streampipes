@@ -3,11 +3,13 @@ package de.fzi.cep.sepa.esper.drillingstart.single;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -69,7 +71,7 @@ public class DrillingStartEnrichedController extends FlatEpDeclarer<DrillingStar
 		
 		SepaDescription desc = new SepaDescription("sepa/drillingstartenriched", "Drilling Status", "Detects a status change in a drilling process (drilling and cooling)");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
-		
+		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);

@@ -1,18 +1,20 @@
 package de.fzi.cep.sepa.esper.project.extract;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
@@ -33,7 +35,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
-		
+		desc.setEpaTypes(Arrays.asList(EpaType.TRANSFORM.name()));	
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(new CustomOutputStrategy());
 		desc.setOutputStrategies(strategies);

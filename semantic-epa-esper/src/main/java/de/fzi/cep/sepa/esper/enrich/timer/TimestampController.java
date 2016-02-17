@@ -1,14 +1,16 @@
 package de.fzi.cep.sepa.esper.enrich.timer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.impl.EpaType;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
@@ -34,6 +36,7 @@ public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 		
 		SepaDescription desc = new SepaDescription("sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
+		desc.setEpaTypes(Arrays.asList(EpaType.ENRICH.name()));	
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());
 		

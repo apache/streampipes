@@ -1,10 +1,12 @@
 package de.fzi.cep.sepa.esper.aggregate.count;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -40,7 +42,7 @@ public class CountController extends FlatEpDeclarer<CountParameter>{
 		
 		SepaDescription desc = new SepaDescription("sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Counter_Icon_HQ.png");
-		
+		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		

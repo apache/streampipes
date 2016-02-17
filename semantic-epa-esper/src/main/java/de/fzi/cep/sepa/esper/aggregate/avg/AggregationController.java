@@ -2,11 +2,13 @@ package de.fzi.cep.sepa.esper.aggregate.avg;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -57,6 +59,7 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 		SepaDescription desc = new SepaDescription("sepa/aggregation", "Aggregation",
 				"Performs different aggregation functions");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
+		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
 		// TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl + desc.getElementId());
 

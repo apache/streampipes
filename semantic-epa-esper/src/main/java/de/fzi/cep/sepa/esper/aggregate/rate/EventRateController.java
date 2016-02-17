@@ -1,10 +1,12 @@
 package de.fzi.cep.sepa.esper.aggregate.rate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -35,6 +37,7 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("sepa/eventrate", "Event rate", "Computes current event rate");
+		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());

@@ -3,11 +3,13 @@ package de.fzi.cep.sepa.esper.filter.text;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -44,7 +46,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 		
 		SepaDescription desc = new SepaDescription("sepa/textfilter", "Text Filter", "Text Filter Description");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		
+		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
 		
 		//TODO check if needed

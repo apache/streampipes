@@ -2,11 +2,13 @@ package de.fzi.cep.sepa.esper.drillingstop.single;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -69,7 +71,7 @@ public class DrillingStopEnrichedController extends FlatEpDeclarer<DrillingStopE
 		
 		SepaDescription desc = new SepaDescription("sepa/drillingstopenriched", "Drilling Stop", "Detects stop of a drilling process (starting from single event source)");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
-		
+		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);
