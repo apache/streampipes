@@ -9,7 +9,7 @@ import de.fzi.cep.sepa.commons.Utils;
 
 @Entity
 public abstract class SEPAElement {
-
+	
 	protected String name;
 	protected String description;
 	protected String iconName;
@@ -103,5 +103,5 @@ public abstract class SEPAElement {
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
-		
+
 }
