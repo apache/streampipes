@@ -109,7 +109,7 @@ public class ClientModelTransformer {
 
 	public static SEPAClient toSEPAClientModel(SepaDescription sepa)
 	{
-		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription());
+		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getEpaTypes());
 		client.setInputNodes(sepa.getEventStreams().size());
 		client.setElementId(sepa.getRdfId().toString());
 		client.setIconUrl(sepa.getIconUrl());
@@ -505,7 +505,7 @@ public class ClientModelTransformer {
 	
 	public static ActionClient toSECClientModel(SecDescription sec)
 	{
-		ActionClient client = new ActionClient(sec.getName(), sec.getDescription());
+		ActionClient client = new ActionClient(sec.getName(), sec.getDescription(), sec.getEcTypes());
 		client.setElementId(sec.getRdfId().toString());
 		client.setIconUrl(sec.getIconUrl());
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
