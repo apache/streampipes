@@ -1,11 +1,15 @@
 package de.fzi.cep.sepa.rest.v2;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EpaType;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.Category;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -18,7 +22,7 @@ public class CategoryImpl extends AbstractRestInterface implements Category {
 	@Produces("application/json")
 	@Override
 	public String getEps() {
-		return toJson(StorageManager.INSTANCE.getStorageAPI().getAllSEPs());
+		return toJson(makeCategories(StorageManager.INSTANCE.getStorageAPI().getAllSEPs()));
 	}
 
 	@GET
@@ -35,5 +39,12 @@ public class CategoryImpl extends AbstractRestInterface implements Category {
 	@Override
 	public String getEcCategories() {
 		return toJsonWithCustomBuilder(EcType.values(), false);
+	}
+	
+	private List<de.fzi.cep.sepa.model.client.Category> makeCategories(List<SepDescription> producers) {
+		return producers
+				.stream()
+				.map(p -> new de.fzi.cep.sepa.model.client.Category(p.getRdfId().toString(), p.getName(), p.getDescription()))
+				.collect(Collectors.toList());
 	}
 }
