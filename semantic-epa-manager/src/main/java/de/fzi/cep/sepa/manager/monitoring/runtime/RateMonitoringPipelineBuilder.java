@@ -29,7 +29,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
-import de.fzi.sepa.model.client.util.Utils;
 
 public class RateMonitoringPipelineBuilder {
 
@@ -52,7 +51,6 @@ public class RateMonitoringPipelineBuilder {
 	
 	
 	public RateMonitoringPipelineBuilder(SepDescription sepDescription, EventStream stream, String outputTopic) throws URISyntaxException {
-		System.out.println(RATE_SEPA_URI);
 		this.stream = stream;
 		this.outputTopic = outputTopic;
 		this.sepDescription = sepDescription;
@@ -98,9 +96,7 @@ public class RateMonitoringPipelineBuilder {
 		
 		pipeline.setPipelineId(UUID.randomUUID().toString());
 		pipeline.setName("Monitoring - " +stream.getName());
-		
-		System.out.println(Utils.getGson().toJson(pipeline));
-		
+				
 		return pipeline;
 	}
 	
