@@ -6,17 +6,20 @@ import javax.persistence.Entity;
 public class StreamClient extends SEPAElement {
 
 	private String sourceId;
+	private String category;
 	
 	public StreamClient(String name, String description, String sourceId)
 	{
 		super(name, description);
 		this.sourceId = sourceId;
+		this.category = sourceId;
 	}
 	
 	public StreamClient(String name, String description, String sourceId, String iconName)
 	{
 		super(name, description, iconName);
 		this.sourceId = sourceId;
+		this.category = sourceId;
 	}
 
 	public String getSourceId() {
@@ -27,7 +30,13 @@ public class StreamClient extends SEPAElement {
 		this.sourceId = sourceId;
 	}
 
-	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	
 	
 }

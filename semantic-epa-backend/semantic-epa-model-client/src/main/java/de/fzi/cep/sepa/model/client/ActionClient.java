@@ -13,8 +13,8 @@ public class ActionClient extends ConsumableSEPAElement {
 	private List<String> domains;
 	
 	
-	public ActionClient(String name, String description) {
-		super(name, description);
+	public ActionClient(String name, String description, List<String> category) {
+		super(name, description, category);
 		
 	}
 
