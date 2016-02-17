@@ -1,7 +1,7 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state','$timeout',
-        function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state, $timeout) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state','$timeout','imageChecker',
+        function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state, $timeout, imageChecker) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
@@ -140,6 +140,21 @@ angular
             updatePipeline();
 
         };
+        $scope.addImageOrTextIcon = function($element, json){
+            imageChecker.imageExists(json.iconUrl, function(exists){
+                if (exists){
+                    var $img = $('<img>')
+                        .attr("src", json.iconUrl)
+                        .addClass('pipeline-display-element-img');
+                    $element.append($img);
+                }else{
+                    var $span = $("<span>")
+                        .text(getElementIconText(json.name) || "N/A")
+                        .addClass("element-text-icon")
+                    $element.append($span);
+                }
+            });
+        }
 
         function addContextMenu(){
 
@@ -339,22 +354,25 @@ angular
             }
 
     }])
-    .directive('myStreamDataBind', function(){
+    .directive('myStreamDataAndImageBind', function(){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
+                scope.addImageOrTextIcon(elem, scope.stream);
                 elem.data("JSON", scope.stream);
                 elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.stream.name});
                 elem.tooltip();
 
+
             }
         }
     })
-    .directive('mySepaDataBind', function(){
+    .directive('mySepaDataAndImageBind', function(){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
+                scope.addImageOrTextIcon(elem, scope.sepa);
                 elem.data("JSON", scope.sepa);
                 elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.sepa.name});
@@ -364,10 +382,11 @@ angular
             }
         }
     })
-    .directive('myActionDataBind', function(){
+    .directive('myActionDataAndImageBind', function(){
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
+                scope.addImageOrTextIcon(elem, scope.pipeline.action);
                 elem.data("JSON", scope.pipeline.action);
                 elem.data("pipeline", scope.pipeline);
                 elem.attr({'data-toggle' : "tooltip", 'data-placement': "top", 'title' : scope.pipeline.action.name});

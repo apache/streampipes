@@ -51,17 +51,22 @@
 	<div flex id="editor-icon-stand" class="icon-stand">
 	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
 	<!--</draggable-icon-element>-->
-		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | orderBy: 'name' " my-data-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
-			<img class="draggable-img"
-				 ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')" ng-src="{{element.iconUrl}}">
-			<span class="element-text-icon" ng-show="(element.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">
-				{{elementTextIcon(element.name)}}
-			</span>
+		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | orderBy: 'name' " my-data-bind image-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
+			<!--<img class="draggable-img"-->
+				 <!--ng-show="showImageIf(element.iconUrl)" ng-src="{{element.iconUrl}}">-->
+			<!--<span class="element-text-icon" ng-show="!showImageIf(element.iconUrl)">-->
+				<!--{{elementTextIcon(element.name)}}-->
+			<!--</span>-->
 		</span>
-		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="element.type == 'block'">
+		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="currentElements[0].type == 'block'">
 			<div class="block-name tt">{{element.name}}</div>
-			<div class="block-img-container">
-				<img class="block-img" ng-src="{{element.streams[0].iconUrl}}">
+			<div class="block-img-container" block-image-bind>
+				<!--<img class="block-img"-->
+					 <!--ng-show="showImageIf(element.streams[0].iconUrl)" ng-src="{{element.streams[0].iconUrl}}">-->
+				<!--<span class="element-text-icon"-->
+					  <!--ng-show="!showImageIf(element.streams[0].iconUrl)">-->
+				<!--{{elementTextIcon(element.name)}}-->
+			<!--</span>-->
 			</div>
 		</span>
 	</div>

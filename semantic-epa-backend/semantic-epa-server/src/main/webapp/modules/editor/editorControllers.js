@@ -2,8 +2,8 @@
  * Created by Cuddl3s on 13.08.2015.
  */
 angular.module('streamPipesApp')
-    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile',
-        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile) {
+    .controller('EditorCtrl', ['$scope', '$rootScope', '$timeout', '$http','restApi','$stateParams','objectProvider','apiConstants','$q', '$mdDialog', '$document', '$compile','imageChecker',
+        function ($scope, $rootScope,$timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker) {
 
             $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
             $scope.isStreamInAssembly = false;
@@ -80,6 +80,9 @@ angular.module('streamPipesApp')
                 }
                 return true;
             };
+            $scope.showImageIf = function(iconUrl){
+                return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
+            };
 
             $scope.showCustomizeDialog = function(elementData, sepaName) {
             	$rootScope.state.currentElement = elementData;
@@ -132,19 +135,19 @@ angular.module('streamPipesApp')
             };
 
             $scope.ownBlocksAvailable = function(){
-                return $scope.getOwnBlocks();
+                return true; //TODO
             };
 
             $scope.ownSourcesAvailable = function(){
-                return restApi.getOwnSources();
+                return true; //TODO
             };
 
             $scope.ownSepasAvailable = function(){
-                return restApi.getOwnSepas();
+                return true; //TODO
             };
 
             $scope.ownActionsAvailable = function(){
-                return restApi.getOwnActions();
+                return true; //TODO
             };
 
             $scope.loadCurrentElements = function(type){
@@ -293,13 +296,7 @@ angular.module('streamPipesApp')
                         //console.log(sources);
                         sources.data.forEach(function(source, i, sources){
                             promises.push(restApi.getOwnStreams(source));
-                            //.then(function(streams){
-                            //    //console.log(streams);
-                            //
-                            //},function(msg){
-                            //    console.log(msg);
-                            //}));
-                            //console.log(promises);
+
                         });
 
                         $q.all(promises).then(function(data){
@@ -470,7 +467,9 @@ angular.module('streamPipesApp')
                 }else {
                     var words = string.split(" ");
                     words.forEach(function(word, i){
-                        result += word.charAt(0);
+                        if (word.charAt(0) != '(' && word.charAt(0) != ')') {
+                            result += word.charAt(0);
+                        }
                     });
                 }
                 return result.toUpperCase();
@@ -479,11 +478,11 @@ angular.module('streamPipesApp')
             //TODO ANGULARIZE
             //Initiate assembly and jsPlumb functionality-------
             function initPlumb(){
-                console.log("JSPLUMB EDITOR READY");
+
                 $rootScope.state.plumbReady = true;
                 jsPlumb.unbind("connection");
                 jsPlumb.bind("connection", function (info, originalEvent) {
-                    console.log("connection" + connCount++);
+
                     var $target = $(info.target);
                     if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
                         createPartialPipeline(info);
@@ -629,6 +628,7 @@ angular.module('streamPipesApp')
              * clears the Assembly of all elements
              */
             $scope.clearAssembly = function() {
+                togglePossibleElements(null, null);
                 $('#assembly').children().not('#clear, #submit').remove();
                 jsPlumb.deleteEveryEndpoint();
                 $rootScope.state.adjustingPipelineState = false;
@@ -845,12 +845,6 @@ angular.module('streamPipesApp')
                     });
             }
 
-            function getRecommendations(partialPipeline) {
-                console.log("RECOMMENDING");
-
-                return ;
-            }
-
             function togglePossibleElements(event, el){
 
                 if( event != null && el != null) {
@@ -875,11 +869,10 @@ angular.module('streamPipesApp')
                                 if (el.hasClass("stream")) {
                                     $scope.selectedTab = 2;
                                 } else if (el.hasClass("sepa")) {
-                                    $scope.selectedTab = 3;
+                                    $scope.selectedTab = 2;
                                 }
                                 //$scope.$apply();
                             }
-                            //TODO Tab wechseln
                         }
                     } else { //KEIN FILTER AKTIV
                         $scope.activePossibleElementFilter = event.currentTarget;
@@ -890,7 +883,7 @@ angular.module('streamPipesApp')
                             if (el.hasClass("stream")) {
                                 $scope.selectedTab = 2;
                             } else if (el.hasClass("sepa")) {
-                                $scope.selectedTab = 3;
+                                $scope.selectedTab = 2;
                             }
                             //$scope.$apply();
                         }
@@ -1114,7 +1107,7 @@ angular.module('streamPipesApp')
                 var $newState = $('<span>')
                     .data("JSON", $.extend(true, {}, json))
                     .appendTo('#assembly');
-                if (typeof json.DOM != "undefined") { //TODO TESTTEST
+                if (typeof json.DOM !== "undefined") { //TODO TESTTEST
                     $newState.attr("id", json.DOM);
                     $newState.addClass('a'); //Flag so customize modal won't get triggered
                 }
@@ -1155,29 +1148,31 @@ angular.module('streamPipesApp')
                     });
 
                 if (!block) {
-                    if ($newState.data('JSON').iconUrl == null) { //Kein icon in JSON angegeben
+                    $scope.addImageOrTextIcon($newState, json, false, 'connectable');
 
-                        addTextIconToElement($newState, $newState.data('JSON').name);
+                    //$newState.append(addImageOrTextIcon(json, false, 'connectable').data("JSON", $.extend(true, {}, json)));
+                    //
+                    //imageChecker.imageExists(json.iconUrl, function(exists){
+                    //    if (exists){
+                    //        $('<img>')
+                    //            .attr({
+                    //                src: json.iconUrl,
+                    //                "data-toggle": "tooltip",
+                    //                "data-placement": "top",
+                    //                "data-delay": '{"show": 1000, "hide": 100}',
+                    //                title: json.name
+                    //            })
+                    //            .addClass('connectable-img tt')
+                    //            .appendTo($newState)
+                    //            .data("JSON", $.extend(true, {}, json));
+                    //    }else{
+                    //        addTextIconToElement($newState, $newState.data('JSON').name);
+                    //    }
+                    //});  //Kein icon in JSON angegeben
 
-                    } else {
-                        $('<img>')
-                            .attr({
-                                src: json.iconUrl,
-                                "data-toggle": "tooltip",
-                                "data-placement": "top",
-                                "data-delay": '{"show": 1000, "hide": 100}',
-                                title: json.name
-                            })
-                            .error(function () {
-                                $(".connectable-img", $newState).remove();
-                                addTextIconToElement($newState, $newState.data("JSON").name);
-                            })
-                            .addClass('connectable-img tt')
-                            .appendTo($newState)
-                            .data("JSON", $.extend(true, {}, json));
-                    }
+                } else {
+
                 }
-
                 return $newState;
             }
 
@@ -1431,13 +1426,61 @@ angular.module('streamPipesApp')
 
             }
 
-
-
             $scope.openDescriptionModal = function(element){
 
                 $('#description-title').text(element.name);
                 $('#modal-description').text(element.description);
                 $('#descrModal').modal('show');
+            };
+
+            $scope.addImageOrTextIcon = function($element, json, small, type){
+                var iconUrl = "";
+                if (type == 'block'){
+                    iconUrl = json.streams[0].iconUrl;
+                }else {
+                    iconUrl = json.iconUrl;
+                }
+                imageChecker.imageExists(iconUrl, function(exists){
+                    if (exists){
+                        var $img = $('<img>')
+                            .attr("src", iconUrl)
+                            .data("JSON", $.extend(true, {}, json));
+                        if(type == 'draggable'){
+                            $img.addClass("draggable-img tt");
+                        }else if (type == 'connectable') {
+                            $img.addClass('connectable-img tt');
+                        }else if (type == 'block'){
+                            $img.addClass('block-img tt');
+                        }else if (type == 'recommended'){
+                            $img.addClass('recommended-item-img tt');
+                        }
+                        $element.append($img);
+                    }else{
+                        var name = "";
+                        if (type == 'block'){
+                            name = json.streams[0].name;
+                        }else{
+                            name = json.name;
+                        }
+                        var $span = $("<span>")
+                            .text(getElementIconText(name) || "N/A")
+                            .attr(
+                            {"data-toggle": "tooltip",
+                                "data-placement": "top",
+                                "data-delay": '{"show": 1000, "hide": 100}',
+                                title: name
+                            })
+                            .data("JSON", $.extend(true, {}, json));
+                        if (small){
+                            $span.addClass("element-text-icon-small")
+                        }else{
+                            $span.addClass("element-text-icon")
+                        }
+                        $element.append($span);
+                    }
+                });
+
+
             }
 
 
@@ -1454,6 +1497,22 @@ angular.module('streamPipesApp')
                     console.log("BROADCASTING");
                     $rootScope.$broadcast("elements.loaded");
                 }
+            }
+        }
+    })
+    .directive('imageBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                scope.addImageOrTextIcon(elem, scope.element, false,'draggable');
+            }
+        }
+    })
+    .directive('blockImageBind', function(){
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attrs){
+                scope.addImageOrTextIcon(elem, scope.element, false, 'block');
             }
         }
     })
@@ -1600,25 +1659,9 @@ angular.module('streamPipesApp')
                 var element = this;
                 var $el = $('<a style="text-decoration: none">')
                     .data("recObject", element);
-                imageChecker.imageExists(element.json.iconUrl, function(exists){
-                    if (exists){
-                        console.log("BILD GELADEN")
-                        $el.append($('<img>').attr("src", element.json.iconUrl).addClass("recommended-item-img"));
-                    }else{
-                        console.log("BILD NICHT GELADEN");
-                        addTextIconToElement($el, element.name, true);
-                    }
-                });
-                return $el;
-                //return $('<a>')
-                //    .data("recObject", element)
-                //    .append($('<img>').attr("src", element.json.iconUrl).error(function(){
-                //        console.log("BILD NICHT GELADEN");
-                //        addTextIconToElement($(this).parent(), element.name, true);
-                //        $(this).remove();
-                //
-                //    }).addClass("recommended-item-img"));
+                addImageOrTextIcon($el, element.json, true, 'recommended');
 
+                return $el;
             };
         };
 
@@ -1638,21 +1681,75 @@ angular.module('streamPipesApp')
             this.streams = $.extend([], pipeline.streams);
 
             this.getjQueryElement = function(){
+                var block = this;
+                var $inner = $('<div>')
+                    .addClass("block-img-container");
+                addImageOrTextIcon($inner, block, false, 'block');
                 return $('<div>')
                     .data("block", $.extend({},this))
                     .addClass("connectable-block")
-                    .append($('<div>').addClass("block-name tt").text(this.name)
+                    .append($('<div>').addClass("block-name tt").text(block.name)
                         .attr({
                             "data-toggle": "tooltip",
                             "data-placement": "top",
                             "data-delay": '{"show": 100, "hide": 100}',
-                            title: this.description
+                            title: block.description
                         })
-                )
-                    .append($('<div>').addClass("block-img-container")
-                        .append($('<img>').addClass('block-img').attr("src", this.streams[0].iconUrl)));
+                    )
+                    .append($inner);
             }
         };
+
+         function addImageOrTextIcon($element, json, small, type){
+            var iconUrl = "";
+            if (type == 'block'){
+                iconUrl = json.streams[0].iconUrl;
+            }else {
+                iconUrl = json.iconUrl;
+            }
+            imageChecker.imageExists(iconUrl, function(exists){
+                if (exists){
+                    var $img = $('<img>')
+                        .attr("src", iconUrl)
+                        .data("JSON", $.extend(true, {}, json));
+                    if(type == 'draggable'){
+                        $img.addClass("draggable-img tt");
+                    }else if (type == 'connectable') {
+                        $img.addClass('connectable-img tt');
+                    }else if (type == 'block'){
+                        $img.addClass('block-img tt');
+                    }else if (type == 'recommended'){
+                        $img.addClass('recommended-item-img tt');
+                    }
+                    $element.append($img);
+                }else{
+                    var name = "";
+                    if (type == 'block'){
+                        name = json.streams[0].name;
+                    }else{
+                        name = json.name;
+                    }
+                    var $span = $("<span>")
+                        .text(getElementIconText(name) || "N/A")
+                        .attr(
+                        {"data-toggle": "tooltip",
+                            "data-placement": "top",
+                            "data-delay": '{"show": 1000, "hide": 100}',
+                            title: name
+                        })
+                        .data("JSON", $.extend(true, {}, json));
+                    if (small){
+                        $span.addClass("element-text-icon-small")
+                    }else{
+                        $span.addClass("element-text-icon")
+                    }
+                    $element.append($span);
+                }
+            });
+
+
+        }
+
         //return oP;
     });
 

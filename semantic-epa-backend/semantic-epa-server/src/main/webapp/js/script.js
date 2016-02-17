@@ -786,7 +786,9 @@ function getElementIconText(string){
     }else {
         var words = string.split(" ");
         words.forEach(function(word, i){
-            result += word.charAt(0);
+            if (i < 4) {
+                result += word.charAt(0);
+            }
         });
     }
     return result.toUpperCase();

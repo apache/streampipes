@@ -49,27 +49,27 @@
 						<md-divider ng-if="!$last"></md-divider>
 						<div layout="row" ng-show="pipeline.display" style="min-height:200px; background-color: #f0f0f0">
 							<span flex flex-order="1" layout="column" layout-align="center start">
-								<span class="stream pipeline-display-element md-whiteframe-z2 tt" ng-repeat="stream in pipeline.streams" my-stream-data-bind>
-									<img class="pipeline-display-element-img"  ng-src="{{stream.iconUrl}}">
-									<span class="element-text-icon" ng-show="isTextIconShown(stream)">
-										{{elementTextIcon(stream.name)}}
-									</span>
+								<span class="stream pipeline-display-element md-whiteframe-z2 tt" ng-repeat="stream in pipeline.streams" my-stream-data-and-image-bind>
+									<!--<img class="pipeline-display-element-img"  ng-src="{{stream.iconUrl}}">-->
+									<!--<span class="element-text-icon" ng-show="isTextIconShown(stream)">-->
+										<!--{{elementTextIcon(stream.name)}}-->
+									<!--</span>-->
 								</span>
 							</span>
 							<span flex flex-order="2" layout="row" layout-align="start center" >
-								<span class="sepa pipeline-display-element md-whiteframe-z2 tt" my-sepa-data-bind ng-repeat="sepa in pipeline.sepas">
-									<img class="pipeline-display-element-img"  ng-src="{{sepa.iconUrl}}">
-									<span class="element-text-icon" ng-show="isTextIconShown(sepa)">
-										{{elementTextIcon(sepa.name)}}
-									</span>
+								<span class="sepa pipeline-display-element md-whiteframe-z2 tt" my-sepa-data-and-image-bind ng-repeat="sepa in pipeline.sepas">
+									<!--<img class="pipeline-display-element-img"  ng-src="{{sepa.iconUrl}}">-->
+									<!--<span class="element-text-icon" ng-show="isTextIconShown(sepa)">-->
+										<!--{{elementTextIcon(sepa.name)}}-->
+									<!--</span>-->
 								</span>
 							</span>
 							<span flex flex-order="3" layout="row" layout-align="start center" >
-								<span class="action pipeline-display-element md-whiteframe-z2 tt" my-action-data-bind>
-									<img class="pipeline-display-element-img"  ng-src="{{pipeline.action.iconUrl}}">
-									<span class="element-text-icon" ng-show="isTextIconShown(pipeline.action)">
-										{{elementTextIcon(pipeline.action.name)}}
-									</span>
+								<span class="action pipeline-display-element md-whiteframe-z2 tt" my-action-data-and-image-bind>
+									<!--<img class="pipeline-display-element-img"  ng-src="{{pipeline.action.iconUrl}}">-->
+									<!--<span class="element-text-icon" ng-show="isTextIconShown(pipeline.action)">-->
+										<!--{{elementTextIcon(pipeline.action.name)}}-->
+									<!--</span>-->
 								</span>
 							</span>
 
