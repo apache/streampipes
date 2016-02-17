@@ -22,7 +22,7 @@ public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 		stream.setUri(sep.getUri() + variable.path());
 		
 		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportProtocol(ProaSenseSettings.jmsProtocol(WunderbarConfig.topicPrefix + variable.topic()));
+		grounding.setTransportProtocol(ProaSenseSettings.jmsProtocol(variable.topic()));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 				
 		stream.setEventGrounding(grounding);	
@@ -42,6 +42,6 @@ public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 
 	
 	public EventPropertyPrimitive timestampProperty() {
-		return new EventPropertyPrimitive(XSD._long.toString(), "variable_timestamp", "", Utils.createURI("http://schema.org/DateTime"));
+		return new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "", Utils.createURI("http://schema.org/DateTime"));
 	}
 }
