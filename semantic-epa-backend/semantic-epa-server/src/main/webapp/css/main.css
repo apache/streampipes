@@ -17,6 +17,24 @@ body {
 	background-attachment: fixed;	
 }
 
+.popover {
+ border: 1px solid rgb(255,64,129);
+ box-shadow: 0 0px 0px;
+ -webkit-bow-shadow: none;
+ border-radius:0px;
+ padding:0px;
+}
+
+.arrow {
+	color: rgb(255,64,129);
+}
+
+.popover-title {
+	background-color: rgb(255,64,129);
+	color:white;
+	border-radius:0px 0px 0 0;
+}
+
 .logo-production {
 	background: url(../img/production-line.png) no-repeat center center fixed; 
   -webkit-background-size: cover;
@@ -48,7 +66,7 @@ body {
 }
 
 .customize-item-main {
-	border: 1px solid rgb(140,158,255);
+	border: 1px solid rgb(63,81,181);
 	border-radius: 0px;
 	margin:5px;
 }
@@ -58,8 +76,9 @@ body {
 }
 
 .customize-item-title {
-	background: rgb(140,158,255);
-	color:black;
+/* 	background: rgb(140,158,255); */
+	background: rgb(63,81,181);
+	color:white;
 	font-size: 12pt;
 	padding:  5px;
 }

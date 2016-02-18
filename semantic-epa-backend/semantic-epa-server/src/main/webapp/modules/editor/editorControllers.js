@@ -1760,14 +1760,20 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	$scope.sepaName = sepaName;
 	$scope.invalid = false;
 	$scope.helpDialogVisible = false;
+	$scope.currentStaticProperty;
 	
 	$scope.toggleHelpDialog = function() {
 		$scope.helpDialogVisible = !$scope.helpDialogVisible;
 	}
 	
-	$scope.getStaticPropertyInfo = function(staticProperty) {
+	$scope.setCurrentStaticProperty = function(staticProperty) {
+		console.log(staticProperty);
+		$scope.currentStaticProperty = staticProperty;
+	}
+	
+	$scope.getStaticPropertyInfo = function() {
 		var info = "";
-		if (staticProperty.type =='MAPPING_PROPERTY')
+		if (currentStaticProperty.type =='MAPPING_PROPERTY')
 			info += "This field is a mapping property. It requires you to select one or more specific data elements from a stream.<b>"
 		info += "This field requires the following specifc input: <b>";
 		return info;
