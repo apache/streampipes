@@ -36,38 +36,29 @@
 </div>
 <div ng-show="!minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
 	<div class="editorIconStandOptions" style="padding:5px;">
-		<div flex="100" layout="row">
-			<div flex="70" layout="row" layout-align="start center">	
-				<div layout-align="start center" layout="row" style="padding-top:10px;padding-left:10px;">	
-					<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
-					<input type="text" ng-model="elName" placeholder="Find Element" style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
+		<div flex="100" layout="row" layout-align="start start" style="padding-top:10px;padding-left:10px;">
+
+				<div layout-align="start center" layout="row" >
+					<div layout="row" style="margin-right: 10px">
+						<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
+						<input type="text" ng-model="elName" placeholder="Find Element" style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
+					</div>
 				</div>
-				<div layout-align="start center" layout="row">	
-					
+				<div layout-align="start center" layout="row" layout-wrap flex>
+					<md-checkbox ng-repeat="option in options | orderBy: 'label'" ng-click="toggleFilter(option)" >
+						{{option.label}}
+					</md-checkbox>
 				</div>
-			</div>
+
 		</div>
 	</div>
 	<div flex id="editor-icon-stand" class="icon-stand">
-	<!--<draggable-icon-element ng-repeat="element in currentElements">-->
-	<!--</draggable-icon-element>-->
-		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | orderBy: 'name' " my-data-bind image-bind class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-hide="element.type == 'block'">
-			<!--<img class="draggable-img"-->
-				 <!--ng-show="showImageIf(element.iconUrl)" ng-src="{{element.iconUrl}}">-->
-			<!--<span class="element-text-icon" ng-show="!showImageIf(element.iconUrl)">-->
-				<!--{{elementTextIcon(element.name)}}-->
-			<!--</span>-->
+
+		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | filter: selectFilter | orderBy: 'name' " my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-if="element.type !== 'block'">
 		</span>
-		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " my-data-bind class="block tt"  data-target="testMenu" ng-show="currentElements[0].type == 'block'">
+		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " class="block tt"  data-target="testMenu" ng-if="element.type == 'block'" my-data-bind>
 			<div class="block-name tt">{{element.name}}</div>
-			<div class="block-img-container" block-image-bind>
-				<!--<img class="block-img"-->
-					 <!--ng-show="showImageIf(element.streams[0].iconUrl)" ng-src="{{element.streams[0].iconUrl}}">-->
-				<!--<span class="element-text-icon"-->
-					  <!--ng-show="!showImageIf(element.streams[0].iconUrl)">-->
-				<!--{{elementTextIcon(element.name)}}-->
-			<!--</span>-->
-			</div>
+			<div class="block-img-container" image-bind="block"></div>
 		</span>
 	</div>
 </div>

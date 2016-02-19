@@ -15,6 +15,8 @@ angular.module('streamPipesApp')
             $scope.activePossibleElementFilter = {};
             $scope.selectedTab = 1;
             $rootScope.title = "StreamPipes";
+            $scope.options = [];
+            $scope.selectedOptions = [];
             
             $scope.minimizedEditorStand = false;
             
@@ -80,6 +82,23 @@ angular.module('streamPipesApp')
                 }
                 return true;
             };
+
+            $scope.selectFilter = function(value, index, array){
+                if ($scope.selectedOptions.length > 0){
+                    return $scope.selectedOptions.indexOf(value.category) > -1;
+                }else{
+                    return true;
+                }
+            };
+
+            $scope.toggleFilter = function(option){
+                var index = $scope.selectedOptions.indexOf(option.type);
+                if (index > -1){
+                    $scope.selectedOptions.splice(index, 1);
+                }else{
+                    $scope.selectedOptions.push(option.type);
+                }
+            }
             $scope.showImageIf = function(iconUrl){
                 return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
             };
@@ -99,7 +118,7 @@ angular.module('streamPipesApp')
        		   		  sepaName : sepaName
        		      }
        	   	    })
-            }
+            };
             
             $scope.showClearAssemblyConfirmDialog = function(ev) {
                 var confirm = $mdDialog.confirm()
@@ -169,12 +188,16 @@ angular.module('streamPipesApp')
                 $scope.currentElements = [];
                 //$('#editor-icon-stand').children().remove();        //DOM ACCESS
                 if (type == 'block'){
+                    $scope.loadOptions("block");
                     $scope.loadBlocks();
                 }else if (type == 'stream'){
+                    $scope.loadOptions("stream");
                     $scope.loadSources();
                 }else if (type == 'sepa'){
+                    $scope.loadOptions("sepa");
                     $scope.loadSepas();
                 }else if (type == 'action'){
+                    $scope.loadOptions("action");
                     $scope.loadActions();
                 }
             };
@@ -290,6 +313,41 @@ angular.module('streamPipesApp')
                     disabled: !($scope.ownActionsAvailable())
                 }
             ];
+
+            $scope.loadOptions = function(type){
+                $scope.options = [];
+                $scope.selectedOptions = [];
+
+                if (type == 'stream'){
+                    restApi.getEpCategories()
+                        .then(function(result){
+                            $scope.options = result.data;
+                            console.log($scope.options);
+                        }, function (error){
+                            $scope.options = [];
+                            console.log(error);
+                        });
+                }else if (type == 'sepa'){
+                    restApi.getEpaCategories()
+                        .then(function(result){
+                            $scope.options = result.data;
+                            console.log($scope.options);
+                        }, function (error){
+                            $scope.options = [];
+                            console.log(error);
+                        });
+                }else if (type == 'action'){
+                    restApi.getEcCategories()
+                        .then(function(result){
+                            $scope.options = result.data;
+                            console.log($scope.options);
+                        }, function (error){
+                            $scope.options = [];
+                            console.log(error);
+                        });
+                }
+
+            };
 
             $scope.loadBlocks = function(){
                 restApi.getBlocks().then(function(data){
@@ -1449,7 +1507,7 @@ angular.module('streamPipesApp')
 
             $scope.addImageOrTextIcon = function($element, json, small, type){
                 var iconUrl = "";
-                if (type == 'block'){
+                if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined'){
                     iconUrl = json.streams[0].iconUrl;
                 }else {
                     iconUrl = json.iconUrl;
@@ -1471,7 +1529,7 @@ angular.module('streamPipesApp')
                         $element.append($img);
                     }else{
                         var name = "";
-                        if (type == 'block'){
+                        if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined'){
                             name = json.streams[0].name;
                         }else{
                             name = json.name;
@@ -1518,15 +1576,12 @@ angular.module('streamPipesApp')
         return {
             restrict: 'A',
             link: function(scope, elem, attrs){
-                scope.addImageOrTextIcon(elem, scope.element, false,'draggable');
-            }
-        }
-    })
-    .directive('blockImageBind', function(){
-        return {
-            restrict: 'A',
-            link: function(scope, elem, attrs){
-                scope.addImageOrTextIcon(elem, scope.element, false, 'block');
+                if (attrs.imageBind == 'block'){
+                    scope.addImageOrTextIcon(elem, scope.element, false,'block');
+                }else if (attrs.imageBind == 'draggable'){
+                    scope.addImageOrTextIcon(elem, scope.element, false,'draggable');
+                }
+
             }
         }
     })
