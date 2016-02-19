@@ -101,6 +101,20 @@ angular.module('streamPipesApp')
        	   	    })
             }
             
+            $scope.showClearAssemblyConfirmDialog = function(ev) {
+                var confirm = $mdDialog.confirm()
+                      .title('Clear assembly area?')
+                      .textContent('All pipeline elements in the assembly area will be removed.')
+                      .targetEvent(ev)
+                      .ok('Clear assembly')
+                      .cancel('Cancel');
+                $mdDialog.show(confirm).then(function() {
+                  $scope.clearAssembly();
+                }, function() {
+               
+                });
+              };
+            
             angular.element($window).on('scroll', function() {
                 jsPlumb.repaintEverything(true);
               });
