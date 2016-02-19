@@ -37,14 +37,14 @@ public class MQTTHandler implements MqttCallback {
         if (instance == null) {
             instance = new MQTTHandler(context);
         }
-        DEVICE_ID += ":"+Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        DEVICE_ID += ":" + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         return instance;
     }
 
 
     @Override
     public void connectionLost(Throwable throwable) {
-        Log.i("TAG", "connectinlost");
+        ((ActivityMain)context).connection(ConnectionVariable.MQTT_CONNECTION_LOST);
     }
 
     @Override
