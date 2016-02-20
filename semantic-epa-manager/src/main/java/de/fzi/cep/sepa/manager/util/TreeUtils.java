@@ -8,11 +8,12 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.client.SEPAClient;
 import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 
 public class TreeUtils {
 
@@ -82,6 +83,15 @@ public class TreeUtils {
 		for(de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty sp : sepa.getStaticProperties())
 		{
 			if (sp.getRdfId().toString().equals(elementId)) return (MappingProperty) sp;
+		}
+		return null;
+	}
+	
+	public static MatchingStaticProperty findMatchingProperty(String elementId, ConsumableSEPAElement sepa)
+	{
+		for(de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty sp : sepa.getStaticProperties())
+		{
+			if (sp.getRdfId().toString().equals(elementId)) return (MatchingStaticProperty) sp;
 		}
 		return null;
 	}

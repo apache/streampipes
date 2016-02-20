@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.manager.matching;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,19 +28,21 @@ import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
+import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 
@@ -248,22 +251,33 @@ public class PipelineValidationHandler {
 		List<de.fzi.cep.sepa.model.client.StaticProperty> newStaticProperties = new ArrayList<>();
 		
 		for (de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty : currentStaticProperties) {
-			if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
+			if (clientStaticProperty.getType() == StaticPropertyType.MATCHING_PROPERTY) {
+				List<Option> options;
+				if (i == 0) options = ((RadioGroupInput) clientStaticProperty.getInput()).getOptionLeft();
+				else options = ((RadioGroupInput) clientStaticProperty.getInput()).getOptionRight();
+				
+				if (options.size() > 0)	options.addAll(updateMatchingOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i));
+				else options = updateMatchingOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i);
+				newStaticProperties.add(updateStaticProperty(clientStaticProperty, options, i == 0));
+			}
+			else if (clientStaticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
 			
 				List<Option> options = ((SelectInput) clientStaticProperty.getInput()).getOptions();
 			
-				if (options.size() > 0)	options.addAll(updateOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i));
-				else options = updateOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i);
-				newStaticProperties.add(updateStaticProperty(clientStaticProperty, options));
+				if (options.size() > 0)	options.addAll(updateMappingOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i));
+				else options = updateMappingOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i);
+				newStaticProperties.add(updateStaticProperty(clientStaticProperty, options, true));
 
 			} else if (clientStaticProperty.getType() == StaticPropertyType.CUSTOM_OUTPUT)
 			{
 				SepaDescription convertedSepaElement = (SepaDescription) currentSEPA;
 				if (convertedSepaElement.getOutputStrategies().get(0) instanceof CustomOutputStrategy)
 				{
+					CustomOutputStrategy customOutput = (CustomOutputStrategy) convertedSepaElement.getOutputStrategies().get(0);
 					List<Option> options = ((CheckboxInput) clientStaticProperty.getInput()).getOptions();
 					if (options.size() == 0) options = convertCustomOutput(ancestorOutputStream.getEventSchema().getEventProperties(), new ArrayList<Option>());
-					newStaticProperties.add(updateStaticProperty(clientStaticProperty, options));
+					if (i > 0 && customOutput.isOutputRight())  options.addAll(convertCustomOutput(ancestorOutputStream.getEventSchema().getEventProperties(), new ArrayList<Option>()));
+					newStaticProperties.add(updateStaticProperty(clientStaticProperty, options, true));
 				}
 			} else
 				newStaticProperties.add(clientStaticProperty);
@@ -292,7 +306,7 @@ public class PipelineValidationHandler {
 		return currentStaticProperties;
 	}
 
-	private de.fzi.cep.sepa.model.client.StaticProperty updateStaticProperty(de.fzi.cep.sepa.model.client.StaticProperty currentStaticProperty, List<Option> newOption)
+	private de.fzi.cep.sepa.model.client.StaticProperty updateStaticProperty(de.fzi.cep.sepa.model.client.StaticProperty currentStaticProperty, List<Option> newOption, boolean firstStream)
 	{
 		de.fzi.cep.sepa.model.client.StaticProperty newProperty = new de.fzi.cep.sepa.model.client.StaticProperty();
 		newProperty.setName(currentStaticProperty.getName());
@@ -301,20 +315,43 @@ public class PipelineValidationHandler {
 		newProperty.setDOM(currentStaticProperty.getDOM());
 		newProperty.setElementId(currentStaticProperty
 				.getElementId());
+		
 		if (currentStaticProperty.getInput() instanceof SelectFormInput) newProperty.setInput(new SelectFormInput(newOption));
+		else if (currentStaticProperty.getInput() instanceof RadioGroupInput) {
+			RadioGroupInput input = (RadioGroupInput) currentStaticProperty.getInput();
+			if (firstStream) input.setOptionLeft(newOption);
+			else input.setOptionRight(newOption);
+			newProperty.setInput(input);
+		}
 		else newProperty.setInput(new CheckboxInput(newOption));
 		newProperty.setType(currentStaticProperty.getType());
 		return newProperty;
 	}
 	
-	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream leftStream, int i) {
+	private List<Option> updateMatchingOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream stream, int i) {
+		MatchingStaticProperty mp = TreeUtils.findMatchingProperty(clientStaticProperty.getElementId(), sepa);
+		
+		URI maps;
+		if (i == 0) maps = mp.getMatchLeft();
+		else maps = mp.getMatchRight();
+		
+		return updateOptions(clientStaticProperty, sepa, stream, i, maps);
+	}
+	
+	private List<Option> updateMappingOptions (de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream leftStream, int i) {
 		MappingProperty mp = TreeUtils.findMappingProperty(
 				clientStaticProperty.getElementId(), sepa);
+		
+		return updateOptions(clientStaticProperty, sepa, leftStream, i, mp.getMapsFrom());
+	}
+	
+	private List<Option> updateOptions(de.fzi.cep.sepa.model.client.StaticProperty clientStaticProperty, de.fzi.cep.sepa.model.ConsumableSEPAElement sepa, EventStream leftStream, int i, URI maps) {
+		
 		List<Option> options = new ArrayList<>();
 
-		if (mp.getMapsFrom() != null) {
+		if (maps != null) {
 			EventProperty rightProperty = TreeUtils
-					.findEventProperty(mp.getMapsFrom()
+					.findEventProperty(maps
 							.toString(), sepa.getEventStreams());
 
 			
