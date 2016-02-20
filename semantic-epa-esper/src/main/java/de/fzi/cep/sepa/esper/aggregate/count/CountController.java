@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -73,7 +74,7 @@ public class CountController extends FlatEpDeclarer<CountParameter>{
 		
 		MappingProperty mp = new MappingPropertyNary("groupBy", "Group stream by: ", "");
 		staticProperties.add(mp);
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "The size of the time window"));
+		staticProperties.add(StaticProperties.integerFreeTextProperty("timeWindow", "Time Window Size", "The size of the time window"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		

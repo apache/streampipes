@@ -7,7 +7,6 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.esper.pattern.PatternParameters;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -27,7 +26,7 @@ import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
-public class MeetsController extends FlatEpDeclarer<PatternParameters>{
+public class MeetsController extends FlatEpDeclarer<MeetsParameters>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {

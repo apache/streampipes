@@ -9,6 +9,7 @@ import java.util.List;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -68,7 +69,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		staticProperties.add(new FreeTextStaticProperty("keyword", "Select Keyword", ""));
+		staticProperties.add(StaticProperties.stringFreeTextProperty("keyword", "Select Keyword", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;

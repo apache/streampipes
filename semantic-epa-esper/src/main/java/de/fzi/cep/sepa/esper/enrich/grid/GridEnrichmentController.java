@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -19,7 +20,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -78,7 +78,7 @@ public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParam
 			
 			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-			staticProperties.add(new FreeTextStaticProperty("cellSize", "The size of a cell in meters", "", new PropertyValueSpecification(0, 10000, 100)));
+			staticProperties.add(StaticProperties.integerFreeTextProperty("cellSize", "The size of a cell in meters", "", new PropertyValueSpecification(0, 10000, 100)));
 			
 			SupportedProperty sp1 = new SupportedProperty(Geo.lat, true);
 			SupportedProperty sp2 = new SupportedProperty(Geo.lng, true);

@@ -8,6 +8,7 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -88,12 +89,12 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 
 		MappingProperty mp = new MappingPropertyNary("groupBy", "Group by", "Partitions the incoming stream by the selected event properties");
 		MappingProperty agg = new MappingPropertyUnary(URI.create(e1.getElementName()), "aggregate",
-				"property", "");
+				"Property Selection", "Specifies the event property from your stream that should be aggregated.");
 		staticProperties.add(mp);
 		staticProperties.add(agg);
-
-		staticProperties.add(new FreeTextStaticProperty("outputEvery", "Output Frequency", "output values every (seconds)"));
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "Size of the time window in seconds"));
+		FreeTextStaticProperty p = StaticProperties.integerFreeTextProperty("outputEvery", "Output Frequency", "output values every (seconds)");
+		staticProperties.add(p);
+		staticProperties.add(StaticProperties.integerFreeTextProperty("timeWindow", "Time Window Size", "Size of the time window in seconds"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 

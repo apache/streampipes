@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -37,12 +38,12 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 		desc.addEventStream(stream2);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new CustomOutputStrategy());
+		strategies.add(new CustomOutputStrategy(false));
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 			
-		staticProperties.add(new FreeTextStaticProperty("timeWindow", "Time Window Size", "Time window size (seconds)"));
+		staticProperties.add(StaticProperties.integerFreeTextProperty("timeWindow", "Time Window Size", "Time window size (seconds)"));
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		return desc;

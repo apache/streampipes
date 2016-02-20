@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -55,8 +56,8 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		staticProperties.add(new FreeTextStaticProperty("rate", "average/sec", ""));
-		staticProperties.add(new FreeTextStaticProperty("output", "output every (seconds)", ""));
+		staticProperties.add(StaticProperties.integerFreeTextProperty("rate", "average/sec", ""));
+		staticProperties.add(StaticProperties.integerFreeTextProperty("output", "output every (seconds)", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;
