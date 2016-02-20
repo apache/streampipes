@@ -7,7 +7,8 @@ public enum EcType {
 	STORAGE("Storage", ""),
 	FORWARD("Forward", ""),
 	NOTIFICATION("Notifications", ""),
-	ACTUATOR("Actuators", "");
+	ACTUATOR("Actuators", ""),
+	UNCATEGORIZED("Uncategorized", "");
 	
 	private String label;
 	private String description;

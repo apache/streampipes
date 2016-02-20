@@ -32,6 +32,7 @@ public class SecDescription extends ConsumableSEPAElement{
 	{
 		super(uri, name, description, iconUrl);
 		this.eventStreams = new ArrayList<>();
+		this.ecTypes = new ArrayList<>();
 	}
 	
 	public SecDescription(SecDescription other)
@@ -43,11 +44,13 @@ public class SecDescription extends ConsumableSEPAElement{
 	public SecDescription(String uri, String name, String description)
 	{
 		this(uri, name, description, "");
+		this.ecTypes = new ArrayList<>();
 	}
 	
 	public SecDescription()
 	{
 		super();
+		this.ecTypes = new ArrayList<>();
 	}
 
 	public List<String> getEcTypes() {

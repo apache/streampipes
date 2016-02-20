@@ -28,15 +28,25 @@ public class CustomOutputStrategy extends OutputStrategy {
 	@RdfProperty("sepa:producesProperty")
 	List<EventProperty> eventProperties;
 	
+	@RdfProperty("sepa:outputRight")
+	protected boolean outputRight;
+	
 	public CustomOutputStrategy()
 	{
 		super();
 		this.eventProperties = new ArrayList<>();
 	}
 	
+	public CustomOutputStrategy(boolean outputRight) {
+		super();
+		this.outputRight = outputRight;
+		this.eventProperties = new ArrayList<>();
+	}
+	
 	public CustomOutputStrategy(CustomOutputStrategy other) {
 		super(other);
 		this.eventProperties = new Cloner().properties(other.getEventProperties());
+		this.outputRight = other.isOutputRight();
 	}
 	
 	public CustomOutputStrategy(List<EventProperty> eventProperties)
@@ -51,5 +61,15 @@ public class CustomOutputStrategy extends OutputStrategy {
 	public void setEventProperties(List<EventProperty> eventProperties) {
 		this.eventProperties = eventProperties;
 	}
+
+	public boolean isOutputRight() {
+		return outputRight;
+	}
+
+	public void setOutputRight(boolean outputRight) {
+		this.outputRight = outputRight;
+	}
+	
+	
 	
 }

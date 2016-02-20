@@ -27,6 +27,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -50,6 +51,7 @@ public class Cloner {
 		else if (o instanceof DomainStaticProperty) return new DomainStaticProperty((DomainStaticProperty) o);
 		else if (o instanceof AnyStaticProperty) return new AnyStaticProperty((AnyStaticProperty) o);
 		else if (o instanceof CollectionStaticProperty) return new CollectionStaticProperty((CollectionStaticProperty) o);
+		else if (o instanceof MatchingStaticProperty) return new MatchingStaticProperty((MatchingStaticProperty) o);
 		else return new MappingPropertyUnary((MappingPropertyUnary) o);
 	}
 	

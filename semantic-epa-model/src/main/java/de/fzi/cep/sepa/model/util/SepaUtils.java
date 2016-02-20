@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
@@ -88,6 +89,18 @@ public class SepaUtils {
 		//TODO: exceptions
 	}
 	
+	public static List<String> getMatchingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName) {
+		
+		List<String> propertyNames = new ArrayList<>();
+		for(int i = 0; i <= 1; i++)
+		{
+			URI propertyURI = getMatchingPropertyURI(sepa, staticPropertyName, i == 0);
+			EventStream stream = sepa.getInputStreams().get(i);
+			propertyNames.add(stream.getEventSchema().getEventProperties().stream().filter(p -> p.getElementId().equals(propertyURI.toString())).findFirst().get().getRuntimeName());
+		}
+		return propertyNames;
+		//TODO: exceptions
+	}
 	public static List<String> getMultipleMappingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
 	{
 		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
@@ -169,6 +182,22 @@ public class SepaUtils {
 		return getEventPropertyNameByPrefix(properties, namePrefix, true, "");
 	}
 	
+	private static URI getMatchingPropertyURI(InvocableSEPAElement sepa, String propertyName, boolean first) {
+		List<MatchingStaticProperty> properties = sepa
+				.getStaticProperties()
+				.stream()
+				.filter(sp -> sp instanceof MatchingStaticProperty)
+				.map(m -> ((MatchingStaticProperty)m))
+				.collect(Collectors.toList());
+		
+		for(MatchingStaticProperty m : properties) {
+				if (m.getInternalName().equals(propertyName)) {
+					if (first) return m.getMatchLeft();
+					else return m.getMatchRight();
+				}
+		}
+		return null;
+	}
 	private static URI getURIFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
 	{
 		for(StaticProperty p : sepa.getStaticProperties())

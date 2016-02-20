@@ -10,7 +10,8 @@ public enum EpaType {
 	GEO("Geospatial Operations", ""),
 	PATTERN_DETECT("Pattern Detection", ""),
 	ALGORITHM("Algorithm", ""),
-	TRANSFORM("Transformation", "");
+	TRANSFORM("Transformation", ""),
+	UNCATEGORIZED("Uncategorized", "");
 	
 	private String label;
 	private String description;

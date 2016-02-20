@@ -17,12 +17,15 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 @Entity
 public class FreeTextStaticProperty extends StaticProperty {
 
-	private static final long serialVersionUID = 5029422126802713205L;
+	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("sepa:hasValue")
 	protected String value;
 	
-	@RdfProperty("sepa:hasType")
+	@RdfProperty("sepa:requiresDatatype")
+	protected URI requiredDatatype; 
+	
+	@RdfProperty("sepa:requiresDomainProperty")
 	protected URI requiredDomainProperty;
 	
 	@RdfProperty("sepa:mapsTo")
@@ -40,6 +43,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	public FreeTextStaticProperty(FreeTextStaticProperty other) {
 		super(other);
 		this.requiredDomainProperty = other.getRequiredDomainProperty();
+		this.requiredDatatype = other.getRequiredDatatype();
 		if (other.getValueSpecification() != null) this.valueSpecification = new PropertyValueSpecification(other.getValueSpecification());
 		this.value = other.getValue();
 	}
@@ -92,8 +96,12 @@ public class FreeTextStaticProperty extends StaticProperty {
 	}
 		
 	
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}	
+	public URI getRequiredDatatype() {
+		return requiredDatatype;
+	}
+
+	public void setRequiredDatatype(URI requiredDatatype) {
+		this.requiredDatatype = requiredDatatype;
+	}
 	
 }
