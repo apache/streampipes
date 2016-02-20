@@ -26,6 +26,8 @@ import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.client.input.SliderInput;
 import de.fzi.cep.sepa.model.client.input.SupportedProperty;
 import de.fzi.cep.sepa.model.client.input.TextInput;
+import de.fzi.cep.sepa.model.impl.EcType;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
@@ -109,7 +111,8 @@ public class ClientModelTransformer {
 
 	public static SEPAClient toSEPAClientModel(SepaDescription sepa)
 	{
-		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), sepa.getEpaTypes());
+		List<String> categories = sepa.getEpaTypes().size() > 0 ? sepa.getEpaTypes() : Arrays.asList(EpaType.UNCATEGORIZED.name());
+		SEPAClient client = new SEPAClient(sepa.getName(), sepa.getDescription(), categories);
 		client.setInputNodes(sepa.getEventStreams().size());
 		client.setElementId(sepa.getRdfId().toString());
 		client.setIconUrl(sepa.getIconUrl());
@@ -397,7 +400,9 @@ public class ClientModelTransformer {
 		else {
 			input = new TextInput();
 			((TextInput) input).setValue("");
-			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDatatype(p.getRequiredDomainProperty().toString());
+			if (p.getRequiredDomainProperty() != null) ((TextInput) input).setDomainProperty(p.getRequiredDomainProperty().toString());
+			if (p.getRequiredDatatype() != null) ((TextInput) input).setDatatype(p.getRequiredDatatype()
+					.toString());
 		}
 		return new de.fzi.cep.sepa.model.client.StaticProperty(StaticPropertyType.STATIC_PROPERTY, p.getInternalName(), p.getLabel(), p.getDescription(), input);
 	}
@@ -505,7 +510,8 @@ public class ClientModelTransformer {
 	
 	public static ActionClient toSECClientModel(SecDescription sec)
 	{
-		ActionClient client = new ActionClient(sec.getName(), sec.getDescription(), sec.getEcTypes());
+		List<String> categories = sec.getEcTypes().size() > 0 ? sec.getEcTypes() : Arrays.asList(EcType.UNCATEGORIZED.name());
+		ActionClient client = new ActionClient(sec.getName(), sec.getDescription(), categories);
 		client.setElementId(sec.getRdfId().toString());
 		client.setIconUrl(sec.getIconUrl());
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientStaticProperties = new ArrayList<>();
