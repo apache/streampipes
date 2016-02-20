@@ -1,3 +1,9 @@
+<div flex layout-fill>
+<div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
+<div flex layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>SETUP</h5>
+</div>
+</div>
 <div flex layout="row" layout-align="center center">
 	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
 		class="md-whiteframe-z2" style="padding:10px;">
@@ -46,14 +52,20 @@
 		        <input ng-model="setup.couchDbConnectionDbName">
 		      </md-input-container>
 		      </div>
+		       <div flex="100" layout="row">
+			      <div flex="50" layout layout="column">
 		       <md-input-container flex>
 		        <label>Sesame URL</label>
 		        <input ng-model="setup.sesameUrl">
 		      </md-input-container>
+		      </div>
+		         <div flex="50" layout layout="column">
 		      <md-input-container flex>
 		        <label>Sesame Database Name</label>
 		        <input ng-model="setup.sesameDbName">
 		      </md-input-container>
+		      </div>
+		      </div>
 		     <md-divider/>
 		     <h3>Broker Settings</h3>
 		    <div layout layout-sm="column">
@@ -99,6 +111,7 @@
 		      </md-input-container>
 		      </div>
 		     <md-divider/>
+		     <div flex layout="column">
 		     <h3>Initial User Settings</h3>
 		      <md-input-container flex>
 		        <label>Email</label>
@@ -112,7 +125,9 @@
 		        <label>Password</label>
 		        <input type="password" ng-model="setup.adminPassword">
 		      </md-input-container>
+		      </div>
 		       <md-divider/>
+		        <div flex layout="column">
 		     <h3>ProaSense components</h3>
 		      <md-input-container flex>
 		        <label>StreamStory URL</label>
@@ -134,6 +149,17 @@
 		        <label>Human Maintenance Report URL</label>
 		        <input type="text" ng-model="setup.humanMaintenanceReportUrl">
 		      </md-input-container>
+		      </div>
+		      <md-divider/>
+		      <h3>App Config</h3>
+		    	<div layout layout-sm="column">
+			      <md-input-container flex>
+			      	  <md-radio-group ng-model="setup.appConfig">
+     						 <md-radio-button value="ProaSense" class="md-primary">ProaSense</md-radio-button>
+			      			 <md-radio-button value="StreamPipes" class="md-primary">StreamPipes</md-radio-button>
+			      		</md-radio-group>
+			      </md-input-container>
+		      	</div>
 		     <div class="form-actions">
 		     <div layout layout-sm="column">
 				<md-button class="md-accent md-raised" type="submit"
@@ -159,4 +185,5 @@
 		    </div>
 		  </md-content>
 	</div>
+</div>
 </div>
