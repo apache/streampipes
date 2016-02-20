@@ -18,6 +18,9 @@ angular.module('streamPipesApp')
             $scope.options = [];
             $scope.selectedOptions = [];
             
+            $scope.currentPipelineName = "";
+            $scope.currentPipelineDescription = "";
+            
             $scope.minimizedEditorStand = false;
             
             $scope.selectMode = true;
@@ -85,9 +88,13 @@ angular.module('streamPipesApp')
 
             $scope.selectFilter = function(value, index, array){
                 if ($scope.selectedOptions.length > 0){
-                    return $scope.selectedOptions.indexOf(value.category) > -1;
-                }else{
-                    return true;
+                	var found = false;
+                	angular.forEach(value.category, function(c) {
+                		if ($scope.selectedOptions.indexOf(c) > -1) found = true;
+                	});
+                    return found;
+                } else {
+                    return false;
                 }
             };
 
@@ -99,10 +106,40 @@ angular.module('streamPipesApp')
                     $scope.selectedOptions.push(option.type);
                 }
             }
+            
+            $scope.optionSelected = function(option) {
+            	return $scope.selectedOptions.indexOf(option.type) > -1;
+            }
+            
+            $scope.selectAllOptions = function() {
+            	$scope.selectedOptions = [];
+            	angular.forEach($scope.options, function(o) {
+                	$scope.selectedOptions.push(o.type);
+                });
+            }
+            
+            $scope.deselectAllOptions = function() {
+            	$scope.selectedOptions = [];
+            }
+            
             $scope.showImageIf = function(iconUrl){
                 return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
             };
 
+            $scope.showSavePipelineDialog = function(elementData, sepaName) {
+            	$rootScope.state.currentElement = elementData;
+            	 $mdDialog.show({
+       	   	      controller: SavePipelineController,
+       	   	      templateUrl: 'modules/editor/templates/submitPipelineModal.tmpl.html',
+       	   	      parent: angular.element(document.body),
+       	   	      clickOutsideToClose:true,
+       	   	      scope:$scope,
+       	   	      rootScope:$rootScope,
+       	   	      preserveScope:true,
+
+       	   	    })
+            }
+            
             $scope.showCustomizeDialog = function(elementData, sepaName) {
             	$rootScope.state.currentElement = elementData;
             	 $mdDialog.show({
@@ -207,6 +244,7 @@ angular.module('streamPipesApp')
                     .success(function(pipeline){
                         console.log("Succes, pipeline retrieved by ID");
                         $scope.displayPipeline(pipeline);
+                    
                     })
                     .error(function(msg){
                         console.log(msg);
@@ -241,6 +279,10 @@ angular.module('streamPipesApp')
                 connectPipelineElements(pipeline, true);
                 //console.log(json);
                 jsPlumb.repaintEverything();
+                console.log(pipeline);
+                
+                $scope.currentPipelineName = pipeline.name;
+                $scope.currentPipelineDescription = pipeline.description;
             };
 
             function bindContextMenu(){
@@ -322,6 +364,9 @@ angular.module('streamPipesApp')
                     restApi.getEpCategories()
                         .then(function(result){
                             $scope.options = result.data;
+                            angular.forEach($scope.options, function(o) {
+                            	$scope.selectedOptions.push(o.type);
+                            });
                             console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
@@ -331,6 +376,9 @@ angular.module('streamPipesApp')
                     restApi.getEpaCategories()
                         .then(function(result){
                             $scope.options = result.data;
+                            angular.forEach($scope.options, function(o) {
+                            	$scope.selectedOptions.push(o.type);
+                            });
                             console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
@@ -340,6 +388,9 @@ angular.module('streamPipesApp')
                     restApi.getEcCategories()
                         .then(function(result){
                             $scope.options = result.data;
+                            angular.forEach($scope.options, function(o) {
+                            	$scope.selectedOptions.push(o.type);
+                            });
                             console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
@@ -809,6 +860,11 @@ angular.module('streamPipesApp')
                 if (!error) {
 
                     $rootScope.state.currentPipeline = pipelineNew;
+                    if ($rootScope.state.adjustingPipelineState) {
+                    	$rootScope.state.currentPipeline.name = $scope.currentPipelineName;
+                    	$rootScope.state.currentPipeline.description = $scope.currentPipelineDescription;
+                    }
+                    	
                     openPipelineNameModal();
 
 
@@ -817,73 +873,12 @@ angular.module('streamPipesApp')
 
             function openPipelineNameModal() {
                 if ($rootScope.state.adjustingPipelineState) {
-                    var name = $rootScope.state.adjustingPipeline.name;
-                    var descr = $rootScope.state.adjustingPipeline.description;
-
-                    $("#nameInput").attr("value", name);
-                    $("#descriptionInput").attr("value", descr);
-                    $("#overwriteCheckbox").show();
+                    $scope.modifyPipelineMode = true;
                 }
-                $('#pipelineNameModal').modal('show');
+                $scope.showSavePipelineDialog();
             }
 
-            $scope.savePipelineName = function() {
-
-                var pipelineName = $('#pipelineNameForm').serializeArray();
-                if (pipelineName.length < 2) {
-                    toastRightTop("error", "Please enter all parameters");
-                    return false;
-                }
-
-                $rootScope.state.currentPipeline.name = pipelineName[0].value;
-                $rootScope.state.currentPipeline.description = pipelineName[1].value;
-
-                var overWrite;
-
-                if (!($("#overwriteCheckbox").css('display') == 'none')) {
-                    overWrite = $("#overwriteCheckbox").prop("checked");
-                } else {
-                    overWrite = false;
-                }
-                $rootScope.state.currentPipeline.send()
-                    .success(function(data){
-                        if (data.success) {
-                            displaySuccess(data);
-                            if ($rootScope.state.adjustingPipelineState && overWrite) {
-                                var pipelineId = $rootScope.state.adjustingPipeline._id;
-
-                                restApi.deleteOwnPipeline(pipelineId)
-                                    .success(function(data){
-                                        if (data.success) {
-                                            $rootScope.state.adjustingPipelineState = false;
-                                            $("#overwriteCheckbox").css("display", "none");
-                                            refresh("Proa");
-                                        } else {
-                                            displayErrors(data);
-                                        }
-                                    })
-                                    .error(function(data){
-                                        toastRightTop("error", "Could not delete Pipeline")
-                                        console.log(data);
-                                    })
-
-                            }
-                            $scope.clearAssembly();
-
-                        } else {
-                            displayErrors(data);
-                        }
-                    })
-                    .error(function(data){
-                        toastRightTop("error", "Could not fulfill request", "Connection Error");
-                        console.log(data);
-                    });
-
-            };
-
-
-
-            function initRecs(pipeline, $element) {
+           function initRecs(pipeline, $element) {
                 console.log("Recommending");
                 restApi.recommendPipelineElement(pipeline)
                     .success(function (data) {
@@ -1822,15 +1817,86 @@ angular.module('streamPipesApp')
         //return oP;
     });
 
+function SavePipelineController($scope, $rootScope, $mdDialog, $state) {
+	
+	$scope.savePipelineName = function(switchTab) {
+
+        if ($rootScope.state.currentPipeline.name == "") {
+            toastRightTop("error", "Please enter a name for your pipeline");
+            return false;
+        }
+
+        var overWrite;
+
+        if (!($("#overwriteCheckbox").css('display') == 'none')) {
+            overWrite = $("#overwriteCheckbox").prop("checked");
+        } else {
+            overWrite = false;
+        }
+        $rootScope.state.currentPipeline.send()
+            .success(function(data){
+                if (data.success) {
+                    displaySuccess(data);
+                    $scope.hide();
+                    if (switchTab) $state.go("streampipes.pipelines");
+                    if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline : data.notifications[1].description});
+                    if ($rootScope.state.adjustingPipelineState && overWrite) {
+                        var pipelineId = $rootScope.state.adjustingPipeline._id;
+
+                        restApi.deleteOwnPipeline(pipelineId)
+                            .success(function(data){
+                                if (data.success) {
+                                    $rootScope.state.adjustingPipelineState = false;
+                                    $("#overwriteCheckbox").css("display", "none");
+                                    refresh("Proa");
+                                } else {
+                                    displayErrors(data);
+                                }
+                            })
+                            .error(function(data){
+                                toastRightTop("error", "Could not delete Pipeline")
+                                console.log(data);
+                            })
+
+                    }
+                    $scope.clearAssembly();
+
+                } else {
+                    displayErrors(data);
+                }
+            })
+            .error(function(data){
+                toastRightTop("error", "Could not fulfill request", "Connection Error");
+                console.log(data);
+            });
+
+    };
+    
+    $scope.hide = function() {
+  		$mdDialog.hide();
+  	};
+}
+
 function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, restApi) {
     
+	
 	$scope.selectedElement = elementData.data("JSON");
+	console.log($scope.selectedElement);
 	$scope.selection = [];
+	$scope.matchingSelectionLeft = [];
+	$scope.matchingSelectionRight = [];
 	$scope.sepaName = sepaName;
 	$scope.invalid = false;
 	$scope.helpDialogVisible = false;
 	$scope.currentStaticProperty;
+	$scope.validationErrors = [];
 	
+	$scope.primitiveClasses = [{"id" : "http://www.w3.org/2001/XMLSchema#string"},
+	                           {"id" : "http://www.w3.org/2001/XMLSchema#boolean"},
+	                           {"id" : "http://www.w3.org/2001/XMLSchema#integer"},
+	                           {"id" : "http://www.w3.org/2001/XMLSchema#long"},
+	                           {"id" : "http://www.w3.org/2001/XMLSchema#double"}];    	
+
 	$scope.toggleHelpDialog = function() {
 		$scope.helpDialogVisible = !$scope.helpDialogVisible;
 	}
@@ -1849,19 +1915,29 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	}
 	console.log(elementData);
 	    
+	var writeOptions = function(options, selection, elementId) {
+		var anyMatch = false;
+		angular.forEach(options, function(option) {
+			if (option.selected) 
+				{
+					selection[elementId] = option.elementId;
+					anyMatch = true;
+				}
+		});
+		if (!anyMatch) $scope.selection[elementId] = options[0].elementId;
+	}
+	
 	angular.forEach($scope.selectedElement.staticProperties, function(item) {
 		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
 		{
-			var anyMatch = false;
-			angular.forEach(item.input.properties.options, function(option) {
-				if (option.selected) 
-					{
-						$scope.selection[item.elementId] = option.elementId;
-						anyMatch = true;
-					}
-			});
-			if (!anyMatch) $scope.selection[item.elementId] = item.input.properties.options[0].elementId;
-		}				
+			writeOptions(item.input.properties.options, $scope.selection, item.elementId);
+		}	
+		if (item.input.type == 'RadioGroupInput') {
+			console.log("radio");
+			writeOptions(item.input.properties.optionLeft, $scope.matchingSelectionLeft, item.elementId);
+			writeOptions(item.input.properties.optionRight, $scope.matchingSelectionRight, item.elementId);
+		}
+		console.log(item);
 	});
 	
 	
@@ -1898,6 +1974,19 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     				});
     			}
     	});
+    	angular.forEach($scope.selectedElement.staticProperties, function(item) {
+    		if ($scope.matchingSelectionLeft[item.elementId] != undefined)
+    			{
+    				angular.forEach(item.input.properties.optionLeft, function(option) {
+    					if (option.elementId == $scope.matchingSelectionLeft[item.elementId])
+    						option.selected = true;
+    				});
+    				angular.forEach(item.input.properties.optionRight, function(option) {
+    					if (option.elementId == $scope.matchingSelectionRight[item.elementId])
+    						option.selected = true;
+    				});
+    			}
+    	});
 
     	
     	if ($scope.validate()) 
@@ -1912,6 +2001,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     }
     
     $scope.validate = function() {
+    	$scope.validationErrors = [];
     	var valid = true;
     	angular.forEach($scope.selectedElement.staticProperties, function(item) {
     		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
@@ -1924,11 +2014,28 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 			}
     		else if (item.input.type =='TextInput' || item.input.type == 'SliderInput')
     		{
+    			console.log(item.input.properties);
     			if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
+    			if (item.input.properties.datatype != undefined) {
+    				if (!$scope.typeCheck(item.input.properties.value, item.input.properties.datatype)) {
+    					valid = false;
+    					$scope.validationErrors.push(item.name +" must be of type " +item.input.properties.datatype);
+    				}
+    				
+    			}
     		}
     			
     	});
     	return valid;
+    }
+    
+    $scope.typeCheck = function(property, datatype) {
+    	if (datatype == $scope.primitiveClasses[0].id) return true; 
+    	if (datatype == $scope.primitiveClasses[1].id) return (property == 'true' || property =='false');    
+    	if (datatype == $scope.primitiveClasses[2].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));     
+    	if (datatype == $scope.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));       
+    	if (datatype == $scope.primitiveClasses[4].id) return !isNaN(property);  
+    	return false;
     }
   	
 }

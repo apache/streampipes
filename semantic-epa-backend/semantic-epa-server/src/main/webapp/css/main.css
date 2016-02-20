@@ -249,10 +249,10 @@ body {
 	vertical-align: top;
 	background-color: white;
 	display: inline-block;
-	height: 90px;
-	width: 90px;
-	line-height: 90px;
-	margin-left: 4%;
+	height: 80px;
+	width: 80px;
+	line-height: 80px;
+	margin-left: 3%;
 	margin-top: 5px;
 	box-shadow: 1px 1px 2px #555;
 	text-align: center;
@@ -286,19 +286,19 @@ body {
 .draggable-img{
 	/*font-size: 60px;*/
 	/*margin-top: 14%;*/
-	height: 60px;
-	width: 60px;
+	height: 50px;
+	width: 50px;
 	/*margin-bottom: 0;*/
 	color: #d22;
 }
 .sepa>.draggable-img{
-	height: 80px;
-	width: 80px;
+	height: 70px;
+	width: 70px;
 	/*margin-top: 5px;*/
 }
 .sepa>p>.draggable-img{
-	height: 80px;
-	width: 80px;
+	height: 70px;
+	width: 70px;
 	/*margin-top: 5px;*/
 }
 
@@ -328,13 +328,15 @@ body {
 /* 	border: 2px solid rgb(63,81,181);; */
 /* 	border-bottom: 2px solid rgb(63,81,181); */
 	color: black;
-	padding: 2px;
+	padding: 0px;
 /* 	margin-top: 1%;  */
 }
 
 
 .icon-stand{
-	height: 215px;
+	height: 100%;
+	margin-bottom:1%;
+	padding-bottom:1%;
 	overflow-y: auto;
 /* 	border: 2px solid rgb(63,81,181); */
 	border-top:0px;
@@ -791,7 +793,7 @@ md-list .md-button {
 }
 
 .element-text-icon{
-	font-size: 24px;
+	font-size: 20px;
 }
 .element-text-icon-small{
 	font-size: 18px;

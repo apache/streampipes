@@ -94,6 +94,18 @@
 				          </div>
 					</div>	
 				</div>
+				<div ng-show="staticProperty.type=='MATCHING_PROPERTY'">
+					<md-select ng-model="matchingSelectionLeft[staticProperty.elementId]"  placeholder="Left Stream Property">
+				          <md-option ng-repeat="option in staticProperty.input.properties.optionLeft" ng-value="option.elementId">
+				            <b>{{option.humanDescription}}</b><br/>
+				          </md-option>
+				     </md-select>
+				     <md-select ng-model="matchingSelectionRight[staticProperty.elementId]"  placeholder="Right Stream Property">
+				          <md-option ng-repeat="option in staticProperty.input.properties.optionRight" ng-value="option.elementId">
+				            <b>{{option.humanDescription}}</b><br/>
+				          </md-option>
+				     </md-select>
+				</div>
 				<div ng-show="staticProperty.type=='CUSTOM_OUTPUT'">
 					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
 						 <div ng-repeat="option in staticProperty.input.properties.options">
@@ -108,6 +120,9 @@
   	</div>
   	<div ng-show="invalid">
   		<h3>Please enter all required parameters.</h3>
+  		<div ng-repeat="error in validationErrors track by $index">
+  		<h4>{{error}}</h4>
+  		</div>
   	</div>
   </md-dialog-content>
   <div class="md-actions" layout="row">

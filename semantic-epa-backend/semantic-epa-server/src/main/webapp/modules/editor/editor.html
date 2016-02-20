@@ -35,21 +35,43 @@
 	</div>
 </div>
 <div ng-show="!minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
-	<div class="editorIconStandOptions" style="padding:5px;">
-		<div flex="100" layout="row" layout-align="start start" style="padding-top:10px;padding-left:10px;">
+	<div class="editorIconStandOptions" style="padding:0px;">
+		<div flex="100" layout="row" layout-align="start start" style="padding-top:2px;padding-left:10px;">
 
 				<div layout-align="start center" layout="row" >
-					<div layout="row" style="margin-right: 10px">
+					<div layout="row" style="margin-right: 5px">
 						<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
 						<input type="text" ng-model="elName" placeholder="Find Element" style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
 					</div>
+					<div layout="row">	
+						<md-menu-bar>
+			          		<md-menu>
+			            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+			            		<md-icon md-svg-icon="action:ic_view_list_24px" style="color: rgb(63,81,181);"> </md-icon>
+			              		Select categories
+			            	</button>
+			            	<md-menu-content>
+			            		<md-menu-item class="md-indent">
+			            			<md-icon md-svg-icon="action:ic_done_24px" style="color: rgb(63,81,181);"> </md-icon>
+									<md-button ng-click="selectAllOptions()">&nbsp;Select all</md-button>	   		
+			            		</md-menu-item>
+			            		<md-menu-item class="md-indent">
+			            			<md-icon md-svg-icon="content:ic_clear_24px" style="color: rgb(63,81,181);"> </md-icon>
+									<md-button ng-click="deselectAllOptions()">&nbsp;Deselect all</md-button>	   		
+			            		</md-menu-item>
+			            		<md-menu-divider></md-menu-divider>
+			              		<div ng-repeat="option in options | orderBy: 'label'"> 
+			              			<md-menu-item class="md-indent">
+			              				<md-icon md-svg-icon="action:ic_visibility_24px" style="color: rgb(63,81,181);" ng-if="optionSelected(option)"> </md-icon>
+										<md-icon md-svg-icon="action:ic_visibility_off_24px" style="color: rgb(63,81,181);" ng-if="!optionSelected(option)"> </md-icon>
+										<md-button ng-click="toggleFilter(option)">&nbsp;{{option.label}}</md-button>
+									</md-menu-item>
+			 					</div>	
+			              	</md-menu-content>
+			              	</md-menu>
+			        	</md-menu-bar>	
+					</div>
 				</div>
-				<div layout-align="start center" layout="row" layout-wrap flex>
-					<md-checkbox ng-repeat="option in options | orderBy: 'label'" ng-click="toggleFilter(option)" >
-						{{option.label}}
-					</md-checkbox>
-				</div>
-
 		</div>
 	</div>
 	<div flex id="editor-icon-stand" class="icon-stand">
@@ -186,50 +208,7 @@
 	</div>
 </div>
 
-<div id ="pipelineNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Pipeline Name</h4>
-			</div>
-			<div class="modal-body">
 
-				<form id="pipelineNameForm" class="form-horizontal" role="form">
-					<div class="form-group">
-						<label for="nameInput" class="col-sm-2 control-label">Name</label>
-						<div class="col-sm-6">
-							<input name="name" type="text" class="form-control" id="nameInput" placeholder="Please name the pipeline">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
-						<div class="col-sm-6">
-							<input name="description" type="text" class="form-control" id="descriptionInput" placeholder="Description">
-
-						</div>
-					</div>
-				</form>
-				<div id="overwriteCheckbox" class="checkbox" style="display: none">
-					<label>
-						<input name="overwrite" type="checkbox"> Overwrite
-					</label>
-				</div>
-
-				<div class="modal-footer">
-					<md-button type="button" class="md-accent" data-dismiss="modal" >
-						Close
-					</md-button>
-					<md-button type="button" class="md-accent md-raised" data-dismiss="modal" ng-click="savePipelineName()">
-						Save
-					</md-button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <div id ="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">

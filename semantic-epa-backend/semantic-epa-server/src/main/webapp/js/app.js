@@ -178,7 +178,7 @@ angular
 				}
 			})
 			.state('streampipes.pipelines', {
-				url: '/pipelines',
+				url: '/pipelines/:pipeline',
 				views: {
 					"streampipesView@streampipes" : {
 						templateUrl : 'modules/pipelines/pipelines.html',

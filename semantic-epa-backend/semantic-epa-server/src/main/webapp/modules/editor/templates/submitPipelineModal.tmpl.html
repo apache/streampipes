@@ -1,0 +1,42 @@
+<md-dialog aria-label="Save" flex="60">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Save Pipeline</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  
+  <md-dialog-content flex="100" class="md-dialog-content">
+	  <div flex="100" layout="column">
+	  		<div id="overwriteCheckbox" class="checkbox" ng-show="modifyPipelineMode">
+				<md-checkbox ng-disabled="false" aria-label="Overwrite" ng-model="overwritePipeline">
+				Update existing pipeline
+				</md-checkbox>
+			</div>
+			<md-input-container flex> <label>Pipeline Name</label>
+				<input name="{{staticProperty.elementId}}" ng-model="state.currentPipeline.name"/> 
+			</md-input-container>
+			<md-input-container flex> <label>Description</label>
+				<input name="{{staticProperty.elementId}}" ng-model="state.currentPipeline.description"/> 
+			</md-input-container>	
+			<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="startPipelineAfterStorage">
+			Start pipeline immediately
+			</md-checkbox>
+			
+	</div>
+</md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="savePipelineName(false)" ng-disabled="startPipelineAfterStorage">
+      Save
+    </md-button>
+    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="savePipelineName(true)">
+      Save and go to pipeline view
+    </md-button>
+  </div>
+</md-dialog>

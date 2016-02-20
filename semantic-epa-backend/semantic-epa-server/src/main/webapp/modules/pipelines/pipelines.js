@@ -1,13 +1,16 @@
 angular
     .module('streamPipesApp')
-    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state','$timeout','imageChecker',
-        function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state, $timeout, imageChecker) {
+    .controller('PipelineCtrl', [ '$scope','restApi','$http','$rootScope','$mdDialog','$location','apiConstants', '$state','$timeout', '$stateParams', 'imageChecker',
+        function ($scope, restApi, $http, $rootScope, $mdDialog, $location, apiConstants, $state, $timeout, $stateParams, imageChecker) {
         $scope.pipeline = {};
         $scope.pipelines = [];
         $scope.pipelinShowing = false;
         var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
         $scope.starting = false;
         $scope.stopping = false;
+        
+        $scope.startPipelineDirectly = $stateParams.pipeline;
+                
         var textInputFields = [];
 
             (function init(){
@@ -102,16 +105,11 @@ angular
                 });
         };
 
-        $scope.deletePipeline = function(pipelineId) {
-            restApi.deleteOwnPipeline(pipelineId)
-                .success(function(data){
-                	$scope.getPipelines();
-                    console.log(data);
-                })
-                .error(function(data){
-                    console.log(data);
-                })
-        };
+        
+        if ($scope.startPipelineDirectly != ""){
+        	console.log("starting pipeline");
+           $scope.startPipeline($scope.startPipelineDirectly);
+        }
 
         $scope.showPipeline = function(pipeline){
             pipeline.display = !pipeline.display;
@@ -140,6 +138,28 @@ angular
             updatePipeline();
 
         };
+        
+        $scope.deletePipeline = function(ev, pipelineId) {
+            var confirm = $mdDialog.confirm()
+                  .title('Delete pipeline?')
+                  .textContent('The pipeline will be removed. ')
+                  .targetEvent(ev)
+                  .ok('Delete')
+                  .cancel('Cancel');
+            $mdDialog.show(confirm).then(function() {
+            	restApi.deleteOwnPipeline(pipelineId)
+                .success(function(data){
+                	$scope.getPipelines();
+                    console.log(data);
+                })
+                .error(function(data){
+                    console.log(data);
+                })
+            }, function() {
+            	
+            });
+          };
+          
         $scope.addImageOrTextIcon = function($element, json){
             imageChecker.imageExists(json.iconUrl, function(exists){
                 if (exists){
