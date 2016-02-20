@@ -22,6 +22,7 @@ import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
+import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.PipelineOperation;
@@ -124,11 +125,14 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 	public String addPipeline(@PathParam("username") String username, String pipeline)
 	{
 		Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, Pipeline.class);
-		serverPipeline.setPipelineId(UUID.randomUUID().toString());
+		String pipelineId = UUID.randomUUID().toString();
+		serverPipeline.setPipelineId(pipelineId);
 		serverPipeline.setRunning(false);
 		serverPipeline.setCreatedByUser(username);
 		userService.addOwnPipeline(username, serverPipeline);
-		return toJson(Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS));
+		SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
+		message.addNotification(new Notification("id", pipelineId));
+		return toJson(message);
 	}
 
 	@Path("/recommend")
