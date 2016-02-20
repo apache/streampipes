@@ -8,6 +8,7 @@ public class TextInput extends FormInput {
 	private String value;
 	private String humanDescription;
 	private String datatype;
+	private String domainProperty;
 	
 	public TextInput(String humanDescription, String value) {
 		super(ElementType.TEXT_INPUT);
@@ -43,6 +44,14 @@ public class TextInput extends FormInput {
 
 	public void setDatatype(String datatype) {
 		this.datatype = datatype;
+	}
+
+	public String getDomainProperty() {
+		return domainProperty;
+	}
+
+	public void setDomainProperty(String domainProperty) {
+		this.domainProperty = domainProperty;
 	}
 	
 }
