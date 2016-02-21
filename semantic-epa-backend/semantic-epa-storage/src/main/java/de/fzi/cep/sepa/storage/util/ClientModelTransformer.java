@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -19,8 +20,10 @@ import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
 import de.fzi.cep.sepa.model.client.input.FormInput;
 import de.fzi.cep.sepa.model.client.input.MultipleValueInput;
 import de.fzi.cep.sepa.model.client.input.Option;
+import de.fzi.cep.sepa.model.client.input.PropertyMapping;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.RadioInput;
+import de.fzi.cep.sepa.model.client.input.ReplaceOutputInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.client.input.SliderInput;
@@ -36,6 +39,8 @@ import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
@@ -127,12 +132,37 @@ public class ClientModelTransformer {
 			CustomOutputStrategy strategy = (CustomOutputStrategy) sepa.getOutputStrategies().get(0);
 			clientStaticProperties.add(convertCustomOutput(strategy));
 		}
+		if (sepa.getOutputStrategies().get(0) instanceof ReplaceOutputStrategy) {
+			ReplaceOutputStrategy strategy = (ReplaceOutputStrategy) sepa.getOutputStrategies().get(0);
+			clientStaticProperties.add(convertReplaceOutput(strategy));
+		}
 	
 		client.setStaticProperties(clientStaticProperties);	
 		
 		return client;
 	}
 	
+	private static de.fzi.cep.sepa.model.client.StaticProperty convertReplaceOutput(
+			ReplaceOutputStrategy strategy) {
+		
+		ReplaceOutputInput replaceOutput = new ReplaceOutputInput();
+		List<PropertyMapping> pm = new ArrayList<>();
+		for(UriPropertyMapping m : strategy.getReplaceProperties()) {
+			PropertyMapping mapping = new PropertyMapping(new SelectFormInput(), m.getReplaceWith().getRuntimeName(), null, null);
+			mapping.setRenameAllowed(m.isRenamingAllowed());
+			mapping.setTypeCastAllowed(m.isTypeCastAllowed());
+			mapping.setDomainPropertyCastAllowed(m.isDomainPropertyCastAllowed());
+			mapping.setElementId(m.getElementId());
+			pm.add(mapping);
+		}
+		replaceOutput.setPropertyMapping(pm);
+		de.fzi.cep.sepa.model.client.StaticProperty clientProperty = new de.fzi.cep.sepa.model.client.StaticProperty(
+				StaticPropertyType.REPLACE_OUTPUT, "replace", "Replace Property", "", replaceOutput);
+		clientProperty.setElementId(strategy.getRdfId().toString());
+		
+		return clientProperty;
+	}
+
 	private static de.fzi.cep.sepa.model.client.StaticProperty convertCustomOutput(
 			CustomOutputStrategy strategy) {
 		
@@ -156,6 +186,21 @@ public class ClientModelTransformer {
 		List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties = sepaClient.getStaticProperties();
 		sepa.setStaticProperties(convertStaticProperties(sepa, clientProperties));
 		
+		if (sepa.getOutputStrategies().get(0) instanceof ReplaceOutputStrategy) {
+			ReplaceOutputStrategy strategy = (ReplaceOutputStrategy) sepa.getOutputStrategies().get(0);
+			ReplaceOutputInput input = ((ReplaceOutputInput) Utils.getClientPropertyById(sepaClient.getStaticProperties(), strategy.getElementId()).getInput());
+			
+			for(int i = 0; i < input.getPropertyMapping().size(); i++) {
+				PropertyMapping pm = input.getPropertyMapping().get(i);
+				UriPropertyMapping upm = strategy.getReplaceProperties().get(i);
+				Optional<Option> selectedProperty = pm.getInput().getOptions().stream().filter(p -> p.isSelected()).findFirst();
+				if (selectedProperty.isPresent()) {
+					upm.setReplaceTo(URI.create(selectedProperty.get().getElementId()));
+					if (upm.isRenamingAllowed()) 
+						upm.getReplaceWith().setRuntimeName(pm.getRuntimeName());
+				}
+			}	
+		}
 		if (sepa.getOutputStrategies().get(0) instanceof CustomOutputStrategy)
 		{
 			List<EventProperty> outputProperties = new ArrayList<EventProperty>();
@@ -181,7 +226,7 @@ public class ClientModelTransformer {
 								{
 									if (tempProperty instanceof EventPropertyPrimitive)
 									{
-										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getRuntimeType(), tempProperty.getRuntimeName()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getDomainProperties());
+										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getRuntimeType(), option.getHumanDescription()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getDomainProperties());
 										newProperty.setRdfId(new URIKey(URI.create(tempProperty.getRdfId().toString() +j)));
 										matchedProperty = newProperty;
 									}
@@ -191,6 +236,7 @@ public class ClientModelTransformer {
 						}
 						if (!processedProperties.contains(matchedProperty)) 
 							{
+								matchedProperty.setRuntimeName(option.getHumanDescription());
 								outputProperties.add(matchedProperty);
 							}
 						if (matchedProperty instanceof EventPropertyNested) processedProperties.addAll(((EventPropertyNested) matchedProperty).getEventProperties());
