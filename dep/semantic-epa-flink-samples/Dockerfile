@@ -1,6 +1,6 @@
 FROM anapsix/alpine-java
 
-EXPOSE 8094, 6123, 48080, 48081
+EXPOSE 8094 6123 48080 48081
 
 #RUN apk add python
 RUN wget "http://www.eu.apache.org/dist/flink/flink-0.10.0/flink-0.10.0-bin-hadoop1-scala_2.10.tgz"
