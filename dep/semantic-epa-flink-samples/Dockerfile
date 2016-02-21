@@ -9,5 +9,5 @@ RUN	tar -zxvf flink-0.10.0-bin-hadoop1-scala_2.10.tgz
 ADD /flink-conf.yaml ./flink-0.10.0-bin-hadoop1-scala_2.10/conf/flink-conf.yaml
 ADD ./de.fzi.cep.sepa/semantic-epa-flink-samples/0.0.1-SNAPSHOT/semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar  /semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar
 
-RUN ./flink-0.10.0-bin-hadoop1-scala_2.10/bin/start-local-streaming.sh
+CMD ["./flink-0.10.0-bin-hadoop1-scala_2.10/bin/start-local-streaming.sh"]
 ENTRYPOINT ["java", "-jar", "/semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar"]
