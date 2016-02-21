@@ -29,6 +29,7 @@ import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
+import de.fzi.cep.sepa.model.client.input.ReplaceOutputInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -41,6 +42,8 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -279,6 +282,30 @@ public class PipelineValidationHandler {
 					if (i > 0 && customOutput.isOutputRight())  options.addAll(convertCustomOutput(ancestorOutputStream.getEventSchema().getEventProperties(), new ArrayList<Option>()));
 					newStaticProperties.add(updateStaticProperty(clientStaticProperty, options, true));
 				}
+			} else if (clientStaticProperty.getType() == StaticPropertyType.REPLACE_OUTPUT) {
+				SepaDescription convertedSepaElement = (SepaDescription) currentSEPA;
+				if (convertedSepaElement.getOutputStrategies().get(0) instanceof ReplaceOutputStrategy)
+				{
+					ReplaceOutputStrategy replaceOutput = (ReplaceOutputStrategy) convertedSepaElement.getOutputStrategies().get(0);
+					ReplaceOutputInput input = ((ReplaceOutputInput) clientStaticProperty.getInput());
+					for(int j = 0; j < replaceOutput.getReplaceProperties().size(); j++) {
+						UriPropertyMapping upm = replaceOutput.getReplaceProperties().get(j);
+						List<Option> options = updateOptions(clientStaticProperty, currentSEPA, ancestorOutputStream, i, upm.getReplaceFrom());
+						input.getPropertyMapping().get(j).setInput(new SelectFormInput(options));
+					}
+					de.fzi.cep.sepa.model.client.StaticProperty newProperty = new de.fzi.cep.sepa.model.client.StaticProperty();
+					newProperty.setName(clientStaticProperty.getName());
+					newProperty.setDescription(clientStaticProperty
+							.getDescription());
+					newProperty.setDOM(clientStaticProperty.getDOM());
+					newProperty.setElementId(clientStaticProperty
+							.getElementId());
+					newProperty.setType(clientStaticProperty.getType());
+					newProperty.setInput(input);
+					newStaticProperties.add(newProperty);	
+					
+				}
+				
 			} else
 				newStaticProperties.add(clientStaticProperty);
 		} 
@@ -364,7 +391,7 @@ public class PipelineValidationHandler {
 	
 				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
 					options.add(new Option(matchedStreamProperty
-							.getRdfId().toString(),
+							.getElementId().toString(),
 							matchedStreamProperty.getRuntimeName()));
 				}
 			}
@@ -376,7 +403,7 @@ public class PipelineValidationHandler {
 	
 				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
 					options.add(new Option(matchedStreamProperty
-							.getRdfId().toString(),
+							.getElementId().toString(),
 							matchedStreamProperty.getRuntimeName()));
 				}
 			}
@@ -429,11 +456,11 @@ public class PipelineValidationHandler {
 		
 		for(EventProperty p : eventProperties)
 		{
-			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
-			else if (p instanceof EventPropertyList) options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getElementId(), p.getRuntimeName()));
+			else if (p instanceof EventPropertyList) options.add(new Option(p.getElementId(), p.getRuntimeName()));
 			else if (p instanceof EventPropertyNested) 
 				{
-					options.add(new Option(p.getRdfId().toString(), p.getRuntimeName()));
+					options.add(new Option(p.getElementId(), p.getRuntimeName()));
 					options.addAll(convertCustomOutput(((EventPropertyNested) p).getEventProperties(), new ArrayList<Option>()));
 				}
 		}

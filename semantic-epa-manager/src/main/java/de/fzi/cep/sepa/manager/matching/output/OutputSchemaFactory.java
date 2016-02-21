@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
 
 public class OutputSchemaFactory {
 
@@ -30,6 +31,8 @@ public class OutputSchemaFactory {
 			return new CustomOutputSchemaGenerator(((CustomOutputStrategy) firstOutputStrategy).getEventProperties());
 		else if (firstOutputStrategy instanceof ListOutputStrategy)
 			return new ListOutputSchemaGenerator(((ListOutputStrategy) firstOutputStrategy).getPropertyName());
+		else if (firstOutputStrategy instanceof ReplaceOutputStrategy)
+			return new ReplaceOutputSchemaGenerator((ReplaceOutputStrategy) firstOutputStrategy);
 		else throw new IllegalArgumentException();
 	}
 }

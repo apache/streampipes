@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
@@ -18,7 +17,6 @@ import de.fzi.cep.sepa.commons.config.BrokerConfig;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
-import de.fzi.cep.sepa.manager.matching.output.OutputStrategyRewriter;
 import de.fzi.cep.sepa.manager.util.TopicGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -34,9 +32,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class InvocationGraphBuilder {
@@ -90,8 +86,7 @@ public class InvocationGraphBuilder {
 					EventStream outputStream = new EventStream();
 					
 					List<OutputStrategy> supportedStrategies = thisGraph.getOutputStrategies();
-//					outputStream.setRdfId(makeRandomUriKey(thisGraph.getUri()
-//							.toString()));
+
 					EventGrounding grounding = new EventGrounding();
 					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(supportedStrategies).getOuputSchemaGenerator();
 					
@@ -153,15 +148,12 @@ public class InvocationGraphBuilder {
 		if (node.getParent().getData() instanceof InvocableSEPAElement)
 		{
 			InvocableSEPAElement invocable = (InvocableSEPAElement) node.getParent().getData();
-			System.out.println(invocable.getName());
 			if (invocable.getSupportedGrounding().getTransportProtocols().stream().anyMatch(g -> g instanceof KafkaTransportProtocol))
 			{
-				System.out.println("selected kafka");
 				return new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), outputTopic, config.getZookeeperHost(), config.getZookeeperPort());
 			}
 			else
 			{
-				System.out.println("selected jms");
 				return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic);
 			}
 		}
@@ -179,8 +171,6 @@ public class InvocationGraphBuilder {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			thisGraph.setUri(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic);
-			
 
 		for (int i = 0; i < node.getNumberOfChildren(); i++) {
 			NamedSEPAElement child = node.getChildAt(i).getData();
