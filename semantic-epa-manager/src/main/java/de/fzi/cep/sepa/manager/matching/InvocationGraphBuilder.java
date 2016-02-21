@@ -1,13 +1,9 @@
 package de.fzi.cep.sepa.manager.matching;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.GenericTreeNode;
@@ -57,7 +53,7 @@ public class InvocationGraphBuilder {
 	private void prepare() {
 		for (GenericTreeNode<NamedSEPAElement> node : postOrder) {
 			if (node.getData() instanceof SepaDescription) {
-				node.setData(new SepaInvocation((SepaDescription) node.getData()));
+				node.setData(new SepaInvocation(new SepaInvocation((SepaDescription) node.getData())));
 			}
 			if (node.getData() instanceof SecDescription) {
 				node.setData(new SecInvocation((SecDescription) node.getData()));
@@ -164,13 +160,9 @@ public class InvocationGraphBuilder {
 	private InvocableSEPAElement buildSEPAElement(
 			InvocableSEPAElement thisGraph,
 			GenericTreeNode<NamedSEPAElement> node, String outputTopic) {
-			try {
-				thisGraph.setRdfId(new URIKey(new URI(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic)));
+
 				thisGraph.setUri(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic);
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 
 		for (int i = 0; i < node.getNumberOfChildren(); i++) {
 			NamedSEPAElement child = node.getChildAt(i).getData();

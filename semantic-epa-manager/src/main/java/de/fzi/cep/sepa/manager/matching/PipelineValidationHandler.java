@@ -131,7 +131,7 @@ public class PipelineValidationHandler {
 					asList(rightEventSchema));
 			
 			formatMatch = ConnectionValidator.validateTransportFormat(leftEventGrounding, rightEventGrounding);
-			protocolMatch = ConnectionValidator.validateTransportProtocol(leftEventGrounding, rightEventGrounding);
+			protocolMatch = ConnectionValidator.validateTransportProtocol(new EventGrounding(leftEventGrounding), new EventGrounding(rightEventGrounding));
 		} else if (connectedTo.size() == 2) {
 			
 			SepaDescription sepa = (SepaDescription) rightElement;

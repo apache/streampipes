@@ -18,7 +18,8 @@ public class TransportProtocolMatchValidator implements
 		{
 			List<TransportProtocol> rightProtocols = right.getTransportProtocols();
 			List<TransportProtocol> leftProtocols = left.getTransportProtocols();
-			
+			System.out.println(rightProtocols.size());
+			System.out.println(leftProtocols.size());
 			protocolMatch = rightProtocols.stream().anyMatch(rightProtocol -> leftProtocols.stream().anyMatch(leftProtocol -> rightProtocol.getClass().getCanonicalName().equals(leftProtocol.getClass().getCanonicalName())));
 		}
 		return protocolMatch;
