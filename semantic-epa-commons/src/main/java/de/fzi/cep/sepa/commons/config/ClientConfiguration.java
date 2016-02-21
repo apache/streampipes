@@ -81,6 +81,9 @@ public enum ClientConfiguration {
 	private int kafkaBatchSize;
 	private String kafkaAcks;
 	
+	private String flinkHost;
+	private int flinkPort;
+	
 	private PropertiesConfiguration config;
 	
 	ClientConfiguration()
@@ -143,6 +146,9 @@ public enum ClientConfiguration {
 			properties.put("kafkaLingerMs", 0);
 			properties.put("kafkaBatchSize", 0);
 			properties.put("kafkaAcks", "1");
+			
+			properties.put("flinkHost", "ipe-koi05.fzi.de");
+			properties.put("flinkPort", 6123);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -208,6 +214,9 @@ public enum ClientConfiguration {
 			this.kafkaBatchSize = config.getInt("kafkaBatchSize");
 			this.kafkaLingerMs = config.getLong("kafkaLingerMs");
 			this.kafkaAcks = config.getString("kafkaAcks");
+			
+			this.flinkHost = config.getString("flinkHost");
+			this.flinkPort = config.getInt("flinkPort");
 			
 			this.iconHost = config.getString("iconHost");
 			this.iconPort = config.getInt("iconPort");
@@ -384,6 +393,14 @@ public enum ClientConfiguration {
 	
 	public String getKafkaAcks() {
 		return kafkaAcks;
+	}
+	
+	public String getFlinkHost() {
+		return flinkHost;
+	}
+
+	public int getFlinkPort() {
+		return flinkPort;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
