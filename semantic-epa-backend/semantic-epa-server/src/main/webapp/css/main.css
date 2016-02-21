@@ -334,7 +334,7 @@ body {
 
 
 .icon-stand{
-	height: 100%;
+	max-height: 200px;
 	margin-bottom:1%;
 	padding-bottom:1%;
 	overflow-y: auto;
