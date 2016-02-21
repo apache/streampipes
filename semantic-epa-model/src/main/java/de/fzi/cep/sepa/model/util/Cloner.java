@@ -19,6 +19,8 @@ import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
@@ -41,6 +43,7 @@ public class Cloner {
 		else if (other instanceof FixedOutputStrategy) return new FixedOutputStrategy((FixedOutputStrategy) other);
 		else if (other instanceof ListOutputStrategy) return new ListOutputStrategy((ListOutputStrategy) other);
 		else if (other instanceof CustomOutputStrategy) return new CustomOutputStrategy((CustomOutputStrategy) other);
+		else if (other instanceof ReplaceOutputStrategy) return new ReplaceOutputStrategy((ReplaceOutputStrategy) other);
 		else return new AppendOutputStrategy((AppendOutputStrategy) other);
 	}
 
@@ -133,6 +136,11 @@ public class Cloner {
 
 	public List<String> ecTypes(List<String> ecTypes) {
 		return ecTypes;
+	}
+
+	public List<UriPropertyMapping> replaceStrategy(
+			List<UriPropertyMapping> replaceProperties) {
+		return replaceProperties.stream().map(s -> new UriPropertyMapping(s)).collect(Collectors.toList());
 	}
 	
 }

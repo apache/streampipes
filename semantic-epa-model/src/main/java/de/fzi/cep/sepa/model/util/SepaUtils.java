@@ -15,6 +15,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
@@ -358,6 +359,16 @@ public class SepaUtils {
 			else if (schemaProperty instanceof EventPropertyNested)
 			{
 				return getFullPropertyName(property, ((EventPropertyNested) schemaProperty).getEventProperties(), initialPrefix +schemaProperty.getRuntimeName() +delimiter, delimiter);
+			}
+		}
+		return null;
+	}
+
+	public static EventProperty getEventPropertyById(SepaInvocation graph,
+			URI replaceFrom) {
+		for(EventStream stream : graph.getInputStreams()) {
+			for(EventProperty p : stream.getEventSchema().getEventProperties()) {
+				if (p.getElementId().equals(replaceFrom.toString())) return p;
 			}
 		}
 		return null;
