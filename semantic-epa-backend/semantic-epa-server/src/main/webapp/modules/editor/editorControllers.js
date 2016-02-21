@@ -1933,9 +1933,13 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 			writeOptions(item.input.properties.options, $scope.selection, item.elementId);
 		}	
 		if (item.input.type == 'RadioGroupInput') {
-			console.log("radio");
 			writeOptions(item.input.properties.optionLeft, $scope.matchingSelectionLeft, item.elementId);
 			writeOptions(item.input.properties.optionRight, $scope.matchingSelectionRight, item.elementId);
+		}
+		if (item.input.type == 'ReplaceOutputInput') {
+			angular.forEach(item.input.properties.propertyMapping, function(pm) {
+				writeOptions(pm.input.options, $scope.selection, pm.elementId);
+			});
 		}
 		console.log(item);
 	});
@@ -1973,6 +1977,16 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     						option.selected = true;
     				});
     			}
+    		if (item.type == 'REPLACE_OUTPUT') {
+    			angular.forEach(item.input.properties.propertyMapping, function(pm) {
+    				if ($scope.selection[pm.elementId] != undefined) {
+    					angular.forEach(pm.input.options, function(o) {
+    						if (o.elementId == $scope.selection[pm.elementId])
+    							o.selected = true;
+    					})
+    				}
+    			})
+    		}
     	});
     	angular.forEach($scope.selectedElement.staticProperties, function(item) {
     		if ($scope.matchingSelectionLeft[item.elementId] != undefined)
@@ -1988,7 +2002,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     			}
     	});
 
-    	
+    	console.log($scope.selectedElement.staticProperties);
     	if ($scope.validate()) 
     	{
 	        $rootScope.state.currentElement.data("options", true);

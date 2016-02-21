@@ -106,6 +106,20 @@
 				          </md-option>
 				     </md-select>
 				</div>
+				<div ng-show="staticProperty.type=='REPLACE_OUTPUT'">
+					<div ng-repeat="replaceOutput in staticProperty.input.properties.propertyMapping">
+						<md-select ng-model="selection[replaceOutput.elementId]"  placeholder="{{staticProperty.description}}">
+				          <md-option ng-repeat="option in replaceOutput.input.options" ng-value="option.elementId">
+				            <b>{{option.humanDescription}}</b><br/>
+				          </md-option>
+				        </md-select>
+				        <div ng-show="replaceOutput.renameAllowed">
+					        <md-input-container flex> <label>New property name</label>
+								<input ng-model="replaceOutput.runtimeName"/> 
+							</md-input-container>
+				        </div>
+					</div>
+				</div>
 				<div ng-show="staticProperty.type=='CUSTOM_OUTPUT'">
 					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
 						 <div ng-repeat="option in staticProperty.input.properties.options">

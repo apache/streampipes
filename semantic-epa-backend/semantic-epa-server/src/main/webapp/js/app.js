@@ -615,7 +615,7 @@ angular
 			hippoUrl : '',
 			humanInspectionReportUrl : '',
 			humanMaintenanceReportUrl : '',
-			appConfig : ''
+			appConfig : 'StreamPipes'
 		};
 
 		$scope.configure = function() {
