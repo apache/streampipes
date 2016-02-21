@@ -34,7 +34,7 @@ public class TableGenerator extends HtmlGenerator<TableParameters> {
 											.getColumnNames()) + ")").style(
 							"btn btn-danger"))
 					.div(id("container").style(
-							"min-width: 310px; height: 400px; margin: 0 auto"))
+							"width: 100%; height: 400px; margin: 0 auto"))
 					._div();
 			return getStandardizedFooter(canvas);
 		} catch (IOException e) {

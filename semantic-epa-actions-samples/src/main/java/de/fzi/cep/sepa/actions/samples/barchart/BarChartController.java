@@ -9,7 +9,6 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -33,11 +32,7 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 		SecDescription sec = new SecDescription("bar", "Bar charts", "Real-Time bar chart", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/barchart_icon.png");
 		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
-		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+	
 		EventPropertyList outputProperty = new EventPropertyList();
 		outputProperty.setRuntimeName("output");
 		
