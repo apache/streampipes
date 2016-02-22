@@ -37,7 +37,7 @@ public class FestoContainerB102Stream  extends AbstractDemonstratorStream {
 		stream.setEventSchema(schema);
 		stream.setName(variables.eventName());
 		stream.setDescription(variables.description());
-		stream.setUri(sep.getUri() + variables.tagNumber());
+		stream.setUri(sep.getUri() +"/" +variables.tagNumber());
 
 		return stream;
 	}
