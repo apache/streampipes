@@ -1,4 +1,4 @@
-package de.fzi.proasense.demonstrator.streams;
+package de.fzi.proasense.demonstrator.festo.streams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,36 +12,32 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.proasense.demonstrator.config.DemonstratorVariables;
+import de.fzi.proasense.demonstrator.sources.AbstractDemonstratorStream;
 
-public class FlowRateSensorStream extends AbstractDemonstratorStream {
+public class FestoFlowRateStream extends AbstractDemonstratorStream {
+
+	public FestoFlowRateStream(DemonstratorVariables variables) {
+		super(variables);
+	}
 
 	@Override
 	public EventStream declareModel(SepDescription sep) {
-		EventStream stream = prepareStream(DemonstratorVariables.FLOWRATESENSOR.topic());
+		EventStream stream = prepareStream(variables.topic());
 
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "timestamp", "",
 				Utils.createURI("http://schema.org/DateTime")));
-		// TODO do I need an id
-		eventProperties
-				.add(new EventPropertyPrimitive(XSD._string.toString(), "sensorId", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "mass_flow", "",
 				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "volume_flow", "",
-				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "density", "",
-				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "fluid_temperature", "",
-				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "sensor_flault_flags", "",
+		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "temperature", "",
 				Utils.createURI(SO.Number)));
 		
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);
-		stream.setName(DemonstratorVariables.FLOWRATESENSOR.eventName());
-		stream.setDescription(DemonstratorVariables.FLOWRATESENSOR.description());
-		stream.setUri(sep.getUri() + "/flowrate");
+		stream.setName(variables.eventName());
+		stream.setDescription(variables.description());
+		stream.setUri(sep.getUri() + variables.tagNumber());
 		
 		return stream;
 	}

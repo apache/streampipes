@@ -17,7 +17,7 @@ public class Init extends EmbeddedModelSubmitter {
 
 	@Override
 	protected List<SemanticEventProducerDeclarer> sourceDeclarers() {
-		return Arrays.asList(new DemonstratorProducer());
+		return Arrays.asList(new SiemensProducer(), new FestoProducer());
 	}
 
 	@Override
