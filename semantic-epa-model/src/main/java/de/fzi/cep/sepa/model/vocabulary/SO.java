@@ -59,6 +59,7 @@ public class SO {
     public static String BodyLocation = "http://schema.org/bodyLocation";
     public static String BookEdition = "http://schema.org/bookEdition";
     public static String BookingTime = "http://schema.org/bookingTime";
+    public static String Boolean = "http://schema.org/Boolean";
     public static String Box = "http://schema.org/box";
     public static String Breadcrumb = "http://schema.org/breadcrumb";
     public static String BreastfeedingWarning = "http://schema.org/breastfeedingWarning";
