@@ -84,6 +84,9 @@ public enum ClientConfiguration {
 	private String flinkHost;
 	private int flinkPort;
 	
+	private String elasticsearchHost;
+	private int elasticsearchPort;
+	
 	private PropertiesConfiguration config;
 	
 	ClientConfiguration()
@@ -149,6 +152,9 @@ public enum ClientConfiguration {
 			
 			properties.put("flinkHost", "ipe-koi05.fzi.de");
 			properties.put("flinkPort", 6123);
+			
+			properties.put("elasticsearchHost", "ipe-koi05.fzi.de");
+			properties.put("elasticsearchPort", 9300);
 			
 			
 			if (!pathToFile.exists()) pathToFile.mkdir();
@@ -222,6 +228,9 @@ public enum ClientConfiguration {
 			this.iconPort = config.getInt("iconPort");
 			this.iconScheme = config.getString("iconScheme");
 			this.iconUrl =  iconScheme + "://" +iconHost +":" +iconPort;
+			
+			this.elasticsearchPort = config.getInt("elasticsearchPort");
+			this.elasticsearchHost = config.getString("elasticsearchHost");
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
 			
 			
@@ -401,6 +410,18 @@ public enum ClientConfiguration {
 
 	public int getFlinkPort() {
 		return flinkPort;
+	}
+
+	public String getElasticsearchHost() {
+		return elasticsearchHost;
+	}
+
+	public int getElasticsearchPort() {
+		return elasticsearchPort;
+	}
+	
+	public String getElasticsearchUrl() {
+		return getElasticsearchHost() +":" +getElasticsearchPort();
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
