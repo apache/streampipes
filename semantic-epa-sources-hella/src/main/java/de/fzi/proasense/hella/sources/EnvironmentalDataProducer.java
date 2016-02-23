@@ -7,6 +7,9 @@ import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.proasense.hella.streams.DustParticleStream;
+import de.fzi.proasense.hella.streams.HumidityStream;
+import de.fzi.proasense.hella.streams.IrTemperatureStream;
+import de.fzi.proasense.hella.streams.TemperatureStream;
 
 public class EnvironmentalDataProducer implements SemanticEventProducerDeclarer {
 
@@ -19,7 +22,7 @@ public class EnvironmentalDataProducer implements SemanticEventProducerDeclarer 
 
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
-		return Arrays.asList(new DustParticleStream());
+		return Arrays.asList(new DustParticleStream(), new TemperatureStream(), new IrTemperatureStream(), new HumidityStream());
 	}
 
 }

@@ -9,7 +9,10 @@ public enum HellaVariables {
 	RawMaterialChange("materialChange", "Raw Material Change", "", "SEPA.SEP.Human.RawMaterialChange"),
 	ProductionPlan("machinePlan", "Production Plan", "", "SEPA.SEP.Human.ProductionPlan"), 
 	EnrichedEvent("hella-enriched", "Hella Enriched Event", "", "SEPA.SEP.Hella.Enriched"),
-	Dust("hella-dust", "Dust Particle Sensor (Replay)", "", "SEPA.SEP.Hella.Dust");
+	Dust("dust", "Dust Particle Sensor", "Provides observations from Hellas dust particle sensors, categorized by different particle sizes and identified by fields bin0..bin15.", "SEPA.SEP.Hella.Dust"),
+	Temperature("temperature", "Temperature", "Provides observations from Hellas temperature sensors.", "SEPA.SEP.Hella.Dust"),
+	IrTemperature("irtemperature", "IR Temperature", "Observations from Hellas infrared temperature sensors", "SEPA.SEP.Hella.Dust"),
+	Humidity("humidity", "Humidity", "Provides current humidity values at specified locations", "SEPA.SEP.Hella.Dust");;
 
 	
 	String tagNumber;
