@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSink;
@@ -16,6 +15,7 @@ import org.apache.flink.util.Collector;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -52,7 +52,7 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
 	
 		
 		List<TransportAddress> transports = new ArrayList<>();
-		transports.add(new InetSocketTransportAddress("ipe-koi05.fzi.de", 9300));
+		transports.add(new InetSocketTransportAddress(ClientConfiguration.INSTANCE.getElasticsearchHost(), ClientConfiguration.INSTANCE.getElasticsearchPort()));
 
 //		data.map(new MapFunction<String, Integer>() {
 //			  public Integer map(String value) { return Integer.parseInt(value); }
