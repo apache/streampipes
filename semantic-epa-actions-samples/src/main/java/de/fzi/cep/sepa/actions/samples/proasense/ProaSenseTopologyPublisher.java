@@ -80,7 +80,10 @@ public class ProaSenseTopologyPublisher implements IMessageListener<byte[]> {
 				
 				for(Map.Entry<String,JsonElement> entry : entries){
 					{
-						if (entry.getKey().equals("time")) 
+						if (entry.getKey().equals("timestamp")) {
+							event.setTimestamp(obj.get("timestamp").getAsLong());
+						}
+						else if (entry.getKey().equals("time")) 
 							{
 								event.setTimestamp(obj.get("time").getAsLong());
 								//System.out.println("Timestamp, " +event.getTimestamp());
