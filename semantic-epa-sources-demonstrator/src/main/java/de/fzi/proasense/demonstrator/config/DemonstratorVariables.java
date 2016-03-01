@@ -42,7 +42,6 @@ public enum DemonstratorVariables {
 	
 	public String topic()
 	{
-		String topic = "de.fzi.proasense.demonstrator." +tagNumber;
 		return topic;
 	}
 }
