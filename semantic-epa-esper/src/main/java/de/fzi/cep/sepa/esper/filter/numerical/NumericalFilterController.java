@@ -1,78 +1,70 @@
 package de.fzi.cep.sepa.esper.filter.numerical;
 
-import com.google.common.io.Resources;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.NumericalOperator;
+import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.Option;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.DeclarerUtils;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 public class NumericalFilterController extends FlatEpDeclarer<NumericalFilterParameter> {
 
 	@Override
 	public SepaDescription declareModel() {
 			
-		try {
-			return DeclarerUtils.descriptionFromResources(Resources.getResource("numericalFilter.jsonLd"), SepaDescription.class);
-		} catch (SepaParseException e) {
-			e.printStackTrace();
-			return null;
-		}
 		
+		SepaDescription desc = new SepaDescription("sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description");
+		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
 		
-//		SepaDescription desc = new SepaDescription("sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description");
-//		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
-//		
-//		List<EventProperty> propertyRestrictions = new ArrayList<>();
-//		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://schema.org/Number").build();
-//		
-//		List<EventPropertyQualityRequirement> numberQualities = new ArrayList<EventPropertyQualityRequirement>();
-//		numberQualities.add(new EventPropertyQualityRequirement(new MeasurementRange(-50, 0), null));
-//		numberQualities.add(new EventPropertyQualityRequirement(new Resolution((float) 0.01), new Resolution(10)));
-//		e1.setRequiresEventPropertyQualities(numberQualities);
-//		
-//		propertyRestrictions.add(e1);
-//		
-//		EventStream stream1 = StreamBuilder
-//				.createStreamRestriction(EsperConfig.serverUrl + "/" +desc.getElementId())
-//				.schema(
-//						SchemaBuilder.create()
-//							.properties(propertyRestrictions)
-//							.build()
-//						).build();
-//		
-//		
-//		desc.addEventStream(stream1);
-//		
-//		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-//		strategies.add(new RenameOutputStrategy("Rename", "NumericalFilterResult"));
-//		desc.setOutputStrategies(strategies);
-//		
-//		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-//		
-//		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Operation", "");
-//		operation.addOption(new Option("<"));
-//		operation.addOption(new Option("<="));
-//		operation.addOption(new Option(">"));
-//		operation.addOption(new Option(">="));
-//		operation.addOption(new Option("=="));
-//		staticProperties.add(operation);
-//		
-//		try {
-//			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "number", "Provide the event property that should be filtered", ""));
-//		} catch (URISyntaxException e) {
-//			e.printStackTrace();
-//		}
-//		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value", ""));
-//		desc.setStaticProperties(staticProperties);
-//		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-//		
-//		return desc;
+		List<EventProperty> propertyRestrictions = new ArrayList<>();
+		EventProperty e1 = EpRequirements.numberReq();
+		
+		propertyRestrictions.add(e1);
+		
+		EventStream stream = new EventStream();
+		EventSchema schema = new EventSchema();
+		schema.setEventProperties(propertyRestrictions);
+	
+		desc.addEventStream(stream);
+		
+		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+		strategies.add(new RenameOutputStrategy("Rename", "NumericalFilterResult"));
+		desc.setOutputStrategies(strategies);
+		
+		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		
+		OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Filter Operation", "Specifies the filter operation that should be applied on the field");
+		operation.addOption(new Option("<"));
+		operation.addOption(new Option("<="));
+		operation.addOption(new Option(">"));
+		operation.addOption(new Option(">="));
+		operation.addOption(new Option("=="));
+		staticProperties.add(operation);
+	
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "number", "Specifies the field name where the filter operation should be applied on.", ""));
+		
+		staticProperties.add(new FreeTextStaticProperty("value", "Threshold value", "Specifies a threshold value."));
+		desc.setStaticProperties(staticProperties);
+		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
+		
+		return desc;
 	}
 
 	@Override
@@ -88,15 +80,11 @@ public class NumericalFilterController extends FlatEpDeclarer<NumericalFilterPar
 		if (stringOperation.equals("<=")) operation = "LT";
 		else if (stringOperation.equals("<")) operation="LE";
 		else if (stringOperation.equals(">=")) operation = "GE";
-		else if (stringOperation.equals("==")) operation = "EQ";
-		
+		else if (stringOperation.equals("==")) operation = "EQ";	
 		
 		String filterProperty = SepaUtils.getMappingPropertyName(sepa,
 				"number", true);
 		
-		logger.info("Text Property: " +filterProperty);
-	
-		String topicPrefix = "topic://";
 		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Double.parseDouble(threshold), NumericalOperator.valueOf(operation), filterProperty);
 		
 		try {
