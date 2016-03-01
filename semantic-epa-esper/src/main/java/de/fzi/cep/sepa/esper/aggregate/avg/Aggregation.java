@@ -36,7 +36,7 @@ public class Aggregation extends EsperEventEngine<AggregationParameter>{
 				.get(0)
 				.getRuntimeName();
 		
-		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as " +aggregationRuntimeName +" from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) " +getGroupBy(bindingParameters) ;//+" output last every " +bindingParameters.getOutputEvery() +" seconds";
+		String statement = "select " +getSelectClause(bindingParameters) +aggregationType +" as " +aggregationRuntimeName +" from " +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) +".win:time(" +bindingParameters.getTimeWindowSize() +" sec) " +getGroupBy(bindingParameters) +" output last every " +bindingParameters.getOutputEvery() +" seconds";
 		return makeStatementList(statement);
 	}
 	

@@ -28,6 +28,7 @@ import de.fzi.cep.sepa.esper.observe.numerical.value.ObserveNumericalController;
 import de.fzi.cep.sepa.esper.observe.numerical.window.ObserveNumericalWindowController;
 import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.and.AndController;
+import de.fzi.cep.sepa.esper.pattern.increase.IncreaseController;
 import de.fzi.cep.sepa.esper.pattern.sequence.SequenceController;
 import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
 import de.fzi.cep.sepa.esper.proasense.drillingstop.DrillingStopController;
@@ -77,6 +78,7 @@ public class Init implements Runnable {
 		declarers.add(new NumberClassificationController());
 		//declarers.add(new AdvancedTextFilterController());
 		declarers.add(new SequenceController());
+		declarers.add(new IncreaseController());
 
 		
 		// Configure external timing for DEBS Challenge
