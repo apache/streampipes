@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.proveit;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
@@ -16,8 +17,9 @@ public class ProveITEventProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
-		List<EventStreamDeclarer> streams = new ProveITStreamGenerator().generateStreams();
-		return streams;
+//		List<EventStreamDeclarer> streams = new ProveITStreamGenerator().generateStreams();
+//		return streams;
+		return Arrays.asList(new ProveItLocationStream());
 	}
 
 }
