@@ -25,7 +25,7 @@
 		</div>
 	</div>
 	<div ng-repeat="supportedProperty in staticProperty.input.properties.supportedProperties">
-    	<md-input-container flex> <label>{{supportedProperty.propertyId}}</label>
+    	<md-input-container flex="100" layout="column"> <label>{{supportedProperty.propertyId}}</label>
 			<input name="{{supportedProperty.elementId}}" ng-model="supportedProperty.value"/> 
 		</md-input-container>
 	</div>

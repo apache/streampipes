@@ -44,7 +44,7 @@
   			<div class="customize-item-content">
 		  		<div ng-show="staticProperty.type=='STATIC_PROPERTY'">
 		  			<div ng-show="staticProperty.input.type == 'RadioInput'">	
-			  			<md-input-container flex>
+			  			<md-input-container flex="100" layout="column">
 			  				<md-radio-group ng-model="selection[staticProperty.elementId]" class="md-accent" name="{{staticProperty.elementId}}">
 					          <md-radio-button ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
 					            <b>{{option.humanDescription}}</b><br/>
@@ -53,7 +53,7 @@
 						</md-input-container>
 					</div>
 		  			<div ng-show="staticProperty.input.type == 'TextInput'">
-			  			<md-input-container flex> <label>{{staticProperty.description}}</label>
+			  			<md-input-container flex="100" layout="column"> <label>{{staticProperty.description}}</label>
 							<input name="{{staticProperty.elementId}}" ng-model="staticProperty.input.properties.value"/> 
 						</md-input-container>
 					</div>	
@@ -65,14 +65,14 @@
 				          </div>
 					</div>		
 					<div ng-if="staticProperty.input.type == 'SliderInput'">
-						<md-input-container flex> <label>{{staticProperty.description}}</label>
+						<md-input-container flex="100" layout="column"> <label>{{staticProperty.description}}</label>
 							<input name="{{staticProperty.elementId}}" type="text" ng-model="staticProperty.input.properties.value"> 
 							<md-slider flex min="{{staticProperty.input.properties.minValue}}" max="{{staticProperty.input.properties.maxValue}}" step="{{staticProperty.input.properties.step}}" ng-model="staticProperty.input.properties.value" class>
       						</md-slider>
 						</md-input-container>
 					</div>		
 					<div ng-if="staticProperty.input.type == 'DomainConceptInput'">
-						<domain-concept-input static-property="staticProperty"></domain-concept-input>		
+						<domain-concept-input static-property="staticProperty" auto-complete-static-property="staticProperty"></domain-concept-input>		
 					</div>	
 					<div ng-if="staticProperty.input.type == 'MultipleValueInput'">
 						<multiple-value-input static-property="staticProperty"></multiple-value-input>					

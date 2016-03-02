@@ -99,12 +99,8 @@ angular.module('streamPipesApp')
             };
 
             $scope.toggleFilter = function(option){
-                var index = $scope.selectedOptions.indexOf(option.type);
-                if (index > -1){
-                    $scope.selectedOptions.splice(index, 1);
-                }else{
-                    $scope.selectedOptions.push(option.type);
-                }
+            	$scope.selectedOptions = [];
+            	$scope.selectedOptions.push(option.type);
             }
             
             $scope.optionSelected = function(option) {
