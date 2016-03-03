@@ -30,6 +30,7 @@ public class MQTTHandler implements MqttCallback {
 
     private MQTTHandler(Context context) {
         this.context = context;
+        DEVICE_ID += ":" + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
 
@@ -37,7 +38,6 @@ public class MQTTHandler implements MqttCallback {
         if (instance == null) {
             instance = new MQTTHandler(context);
         }
-        DEVICE_ID += ":" + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         return instance;
     }
 
