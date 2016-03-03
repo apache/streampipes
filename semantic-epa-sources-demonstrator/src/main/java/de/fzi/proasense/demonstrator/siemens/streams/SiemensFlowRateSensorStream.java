@@ -29,8 +29,8 @@ public class SiemensFlowRateSensorStream extends AbstractDemonstratorStream {
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "timestamp", "",
 				Utils.createURI("http://schema.org/DateTime")));
 		// TODO do I need an id
-		eventProperties
-				.add(new EventPropertyPrimitive(XSD._string.toString(), "sensorId", "", Utils.createURI(SO.Text)));
+//		eventProperties
+//				.add(new EventPropertyPrimitive(XSD._string.toString(), "sensorId", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "mass_flow", "",
 				Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "volume_flow", "",

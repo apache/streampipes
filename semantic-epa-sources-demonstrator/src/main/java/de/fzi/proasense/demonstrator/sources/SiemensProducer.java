@@ -20,8 +20,8 @@ public class SiemensProducer implements SemanticEventProducerDeclarer {
 	@Override
 	public List<EventStreamDeclarer> getEventStreams() {
 		return Arrays.asList(new SiemensFlowRateSensorStream(DemonstratorVariables.SIENENS_FLOWRATESENSOR1),
-				new SiemensFlowRateSensorStream(DemonstratorVariables.SIENENS_FLOWRATESENSOR2),
-				new SiemensFlowRateSensorStream(DemonstratorVariables.SIEMENS_LEVELSENSOR));
+				new SiemensFlowRateSensorStream(DemonstratorVariables.SIENENS_FLOWRATESENSOR2));
+//				new SiemensFlowRateSensorStream(DemonstratorVariables.SIEMENS_LEVELSENSOR));
 	}
 
 }

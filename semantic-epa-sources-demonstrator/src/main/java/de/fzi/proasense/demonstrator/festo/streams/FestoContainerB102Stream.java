@@ -28,8 +28,7 @@ public class FestoContainerB102Stream  extends AbstractDemonstratorStream {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "timestamp", "",
 				Utils.createURI("http://schema.org/DateTime")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "floating_switch", "",
-				Utils.createURI(SO.Boolean)));
+		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "level", "", Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._boolean.toString(), "underflow", "",
 				Utils.createURI(SO.Boolean)));
 
