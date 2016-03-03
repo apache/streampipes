@@ -39,7 +39,7 @@ public class SiemensFlowRateSensorStream extends AbstractDemonstratorStream {
 				Utils.createURI(SO.Number)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "fluid_temperature", "",
 				Utils.createURI(SO.Number)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "sensor_flault_flags", "",
+		eventProperties.add(new EventPropertyPrimitive(XSD._float.toString(), "sensor_fault_flags", "",
 				Utils.createURI(SO.Number)));
 		
 		schema.setEventProperties(eventProperties);
