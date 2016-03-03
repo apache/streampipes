@@ -117,7 +117,7 @@ public class Matcher {
 		if (!right.equals(SO.Number)) return false;
 		else {
 			if (left.equals(XSD._integer.toString())
-					|| left.equals(XSD._long.toString()) || left.equals(XSD._double.toString())) return true;
+					|| left.equals(XSD._long.toString()) || left.equals(XSD._double.toString()) || left.equals(XSD._float.toString())) return true;
 		}
 		return false;
 	}
