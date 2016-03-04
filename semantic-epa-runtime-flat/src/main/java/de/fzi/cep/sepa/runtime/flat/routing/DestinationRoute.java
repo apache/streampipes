@@ -29,7 +29,7 @@ public class DestinationRoute extends Route implements EPConsumer {
 	public void accept(Object event) {
 		producer.publish(event);
 		counter++;
-		if (counter % 100000 == 0) System.out.println(counter +" events processed.");
+		if (counter % 10000 == 0) System.out.println(counter +" events processed (topic " +topic +")");
 	}
 
 

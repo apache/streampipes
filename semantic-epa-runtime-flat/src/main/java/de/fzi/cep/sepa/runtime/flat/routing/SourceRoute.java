@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.runtime.flat.routing;
 import java.util.Map;
 
 import de.fzi.cep.sepa.runtime.EPEngine;
+import de.fzi.cep.sepa.runtime.flat.manager.ProtocolManager;
 import de.fzi.cep.sepa.runtime.flat.protocol.Consumer;
 import de.fzi.cep.sepa.runtime.flat.protocol.ConsumerMessageListener;
 
@@ -19,7 +20,7 @@ public class SourceRoute extends Route implements ConsumerMessageListener {
 
 	@Override
 	public void onEvent(Map<String, Object> event) {
-		epEngine.onEvent(event, topic);
+		if (ProtocolManager.isTopicLeader(topic, routeId)) epEngine.onEvent(event, topic);
 	}
 
 	@Override

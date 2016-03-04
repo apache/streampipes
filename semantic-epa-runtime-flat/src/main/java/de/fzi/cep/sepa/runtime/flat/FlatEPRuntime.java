@@ -1,10 +1,11 @@
 package de.fzi.cep.sepa.runtime.flat;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.flat.manager.ProtocolManager;
 import de.fzi.cep.sepa.runtime.flat.param.FlatRuntimeParameters;
@@ -18,18 +19,18 @@ public class FlatEPRuntime extends EPRuntime {
 		
 	public FlatEPRuntime(FlatRuntimeParameters<?> params) {
 		super(params);
-	
-		sources = params.getEngineParameters().getGraph().getInputStreams()
-				.stream()
-				.map(is -> 
-					new SourceRoute(
-							"topic://" +is.getEventGrounding().getTransportProtocol().getTopicName(),
-							RandomStringUtils.randomAlphabetic(6),
-							ProtocolManager.findConsumer(
-									is.getEventGrounding().getTransportProtocol(), 
-									is.getEventGrounding().getTransportFormats().get(0)),
-							engine))
-				.collect(Collectors.toList());
+		
+		sources = new ArrayList<>();
+		for(EventStream is : params.getEngineParameters().getGraph().getInputStreams()) {
+			String routeId = RandomStringUtils.randomAlphabetic(6);
+			sources.add(new SourceRoute(
+					"topic://" +is.getEventGrounding().getTransportProtocol().getTopicName(),
+					routeId,
+					ProtocolManager.findConsumer(
+							is.getEventGrounding().getTransportProtocol(), 
+							is.getEventGrounding().getTransportFormats().get(0), routeId),
+					engine));
+		}
 		
 		destination = new DestinationRoute(
 				"topic://" +params.getEngineParameters().getGraph().getOutputStream().getEventGrounding().getTransportProtocol().getTopicName(),
@@ -50,6 +51,7 @@ public class FlatEPRuntime extends EPRuntime {
 	@Override
 	public void preDiscard() {
 		sources.forEach(source -> source.stopRoute());
+		sources.forEach(source -> ProtocolManager.removeFromConsumerMap(source.getTopic(), source.getRouteId()));
 		destination.stopRoute();
 	}
 

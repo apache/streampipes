@@ -1,6 +1,8 @@
 package de.fzi.cep.sepa.runtime.flat.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
@@ -22,10 +24,29 @@ public class ProtocolManager {
 	
 	private static final String topicPrefix = "topic://";
 	
-	public static Consumer<?> findConsumer(TransportProtocol protocol, TransportFormat format) {
+	private static Map<String, List<String>> consumerLeaderMap = new HashMap<>();
+
+	
+	public static void removeFromConsumerMap(String topic, String routeId) {
+		consumerLeaderMap.get(topic).remove(routeId);
+	}
+	
+	public static boolean isTopicLeader(String topic, String routeId) {
+		return consumerLeaderMap.get(topic).get(0).equals(routeId);
+	}
+	
+	public static Consumer<?> findConsumer(TransportProtocol protocol, TransportFormat format, String routeId) {
 		
-		if (consumers.containsKey(topicPrefix +topicName(protocol))) return consumers.get(topicPrefix +topicName(protocol));
-		else return makeConsumer(protocol, DatatypeManager.findDatatypeDefinition(format));
+		if (consumers.containsKey(topicPrefix +topicName(protocol))) {
+			consumerLeaderMap.get(topicPrefix +topicName(protocol)).add(routeId);
+			return consumers.get(topicPrefix +topicName(protocol));
+		}
+		else {
+			List<String> consumerList = new ArrayList<>();
+			consumerList.add(routeId);
+			consumerLeaderMap.put(topicPrefix +topicName(protocol), consumerList);
+			return makeConsumer(protocol, DatatypeManager.findDatatypeDefinition(format));
+		}
 		
 	}
 	
