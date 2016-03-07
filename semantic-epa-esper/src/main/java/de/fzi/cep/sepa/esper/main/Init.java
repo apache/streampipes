@@ -29,6 +29,7 @@ import de.fzi.cep.sepa.esper.output.topx.TopXController;
 import de.fzi.cep.sepa.esper.pattern.and.AndController;
 import de.fzi.cep.sepa.esper.pattern.increase.IncreaseController;
 import de.fzi.cep.sepa.esper.pattern.sequence.SequenceController;
+import de.fzi.cep.sepa.esper.pattern.streamstopped.StreamStoppedController;
 import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
 import de.fzi.cep.sepa.esper.proasense.drillingstop.DrillingStopController;
 import de.fzi.cep.sepa.esper.project.extract.ProjectController;
@@ -78,6 +79,7 @@ public class Init implements Runnable {
 		//declarers.add(new AdvancedTextFilterController());
 		declarers.add(new SequenceController());
 		declarers.add(new IncreaseController());
+		declarers.add(new StreamStoppedController());
 		declarers.add(new GeofencingController());
 
 		
