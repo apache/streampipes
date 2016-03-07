@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.actions.samples.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.actions.alarm.AlarmLightController;
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
 import de.fzi.cep.sepa.actions.samples.charts.LineChartController;
 import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
@@ -58,6 +59,7 @@ public class Init implements Runnable {
 		consumers.add(new CouchDbController());
                 consumers.add(new NumberController());
                 consumers.add(new VerticalBarController());
+        consumers.add(new AlarmLightController());
 		//consumers.add(new HistogramController());
 		
 		try {
