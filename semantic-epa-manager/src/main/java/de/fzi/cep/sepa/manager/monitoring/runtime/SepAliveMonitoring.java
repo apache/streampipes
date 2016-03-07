@@ -19,13 +19,13 @@ public class SepAliveMonitoring implements EpRuntimeMonitoring<SepDescription>, 
 	
 	
 	@Override
-	public boolean register(SepDescription element, String pipelineId) {
+	public boolean register(String pipelineId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean remove(SepDescription element, String pipelineId) {
+	public boolean remove(String pipelineId) {
 		// TODO Auto-generated method stub
 		return false;
 	}

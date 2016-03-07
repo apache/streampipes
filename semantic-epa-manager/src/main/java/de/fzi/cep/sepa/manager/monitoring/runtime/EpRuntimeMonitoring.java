@@ -4,7 +4,7 @@ import de.fzi.cep.sepa.model.AbstractSEPAElement;
 
 public interface EpRuntimeMonitoring<T> {
 	
-	public abstract boolean register(T element, String pipelineId);
-	public abstract boolean remove(T element, String pipelineId);
+	public abstract boolean register(String pipelineId);
+	public abstract boolean remove(String pipelineId);
 
 }
