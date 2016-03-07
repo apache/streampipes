@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.proasense.demonstrator.config.DemonstratorVariables;
+import de.fzi.proasense.demonstrator.config.SourcesConfig;
 import de.fzi.proasense.demonstrator.sources.AbstractDemonstratorStream;
 
 public class FestoFlowRateStream extends AbstractDemonstratorStream {
@@ -38,7 +39,7 @@ public class FestoFlowRateStream extends AbstractDemonstratorStream {
 		stream.setName(variables.eventName());
 		stream.setDescription(variables.description());
 		stream.setUri(sep.getUri() +"/" + variables.tagNumber());
-		
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/" +variables.icon() +".png");
 		return stream;
 	}
 
