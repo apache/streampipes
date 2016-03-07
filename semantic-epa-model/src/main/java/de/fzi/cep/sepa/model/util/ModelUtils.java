@@ -43,6 +43,7 @@ public class ModelUtils {
 		else if (propertyType.equals(xmlBaseURI+"long")) return Long.class;
 		else if (propertyType.equals(xmlBaseURI+"integer") )return Integer.class;
 		else if (propertyType.equals(xmlBaseURI+"boolean") )return Boolean.class;
+		else if (propertyType.equals(xmlBaseURI+"float")) return Float.class;
 		else return null;
 	}
 	
@@ -54,6 +55,7 @@ public class ModelUtils {
 		else if (propertyType.equals(xmlBaseURI+"long")) return Long[].class;
 		else if (propertyType.equals(xmlBaseURI+"integer") )return Integer[].class;
 		else if (propertyType.equals(xmlBaseURI+"boolean") )return Boolean[].class;
+		else if (propertyType.equals(xmlBaseURI+"float")) return Float[].class;
 		else return null;
 	}
 	
