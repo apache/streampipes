@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class AccelerometerStream extends AbstractWunderbarStream {
 	
@@ -25,7 +26,7 @@ public class AccelerometerStream extends AbstractWunderbarStream {
 		
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
-		
+		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Acceleration1.png");
 		return stream;
 	}
 
