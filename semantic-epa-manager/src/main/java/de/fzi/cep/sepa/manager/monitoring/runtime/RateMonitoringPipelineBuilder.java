@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.manager.monitoring.runtime;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,14 +34,13 @@ import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 public class RateMonitoringPipelineBuilder {
 
-	private final String RATE_SEPA_URI = ClientConfiguration.INSTANCE.getEsperUrl() +"/sepa/eventrate";
-	private final String KAFKA_SEC_URI = ClientConfiguration.INSTANCE.getActionUrl() +"/kafka";
-	
-//	private final String RATE_SEPA_URI = "http://frosch.fzi.de:8090/sepa/eventrate";
-//	private final String KAFKA_SEC_URI = "http://frosch.fzi.de:8091/kafka";
+	//TODO make ULSs dynamic
+	private final String RATE_SEPA_URI = "http://philipp-Vostro-3560:8090/sepa/streamStopped";
+	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
+	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";
+
+	private final static String SEP_URI = "http://ipe-koi04.perimeter.fzi.de:8089//source/random";
 		
-	private static final int RATE_AGG_SECS = 5;
-	private static final int RATE_OUTPUT_SECS = 1;
 	
 	private EventStream stream;
 	private final String outputTopic;
@@ -50,10 +51,11 @@ public class RateMonitoringPipelineBuilder {
 	private SecDescription kafkaSecDescription;
 	
 	
-	public RateMonitoringPipelineBuilder(SepDescription sepDescription, EventStream stream, String outputTopic) throws URISyntaxException {
-		this.stream = stream;
-		this.outputTopic = outputTopic;
-		this.sepDescription = sepDescription;
+	public RateMonitoringPipelineBuilder(String sepUri) throws URISyntaxException {
+		this.outputTopic = OUTPUT_TOPIC;
+		SepDescription desc = StorageManager.INSTANCE.getStorageAPI().getSEPById(SEP_URI);
+		this.stream = desc.getEventStreams().get(0);
+		this.sepDescription = desc;
 		this.rateSepaDescription = getRateEpa();
 		this.kafkaSecDescription = getKafkaPublisherEc();
 	}
@@ -144,10 +146,8 @@ public class RateMonitoringPipelineBuilder {
 				
 				if (p.getInput().getElementType() == ElementType.TEXT_INPUT)
 				{
-					if (p.getInternalName().equals("rate"))
-						((TextInput) p.getInput()).setValue(String.valueOf(RATE_AGG_SECS));
-					else if (p.getInternalName().equals("output"))
-						((TextInput) p.getInput()).setValue(String.valueOf(RATE_OUTPUT_SECS));
+					if (p.getInternalName().equals("topic"))
+						((TextInput) p.getInput()).setValue(String.valueOf(SEP_URI));
 				}
 			}
 			newStaticProperties.add(p);
@@ -157,13 +157,17 @@ public class RateMonitoringPipelineBuilder {
 	}
 	
 	public static void main(String[] args) throws URISyntaxException {
-		SepDescription desc = StorageManager.INSTANCE.getStorageAPI().getSEPById("http://frosch.fzi.de:8080/sources-monitoring/source-monitoring");
-		EventStream stream = desc.getEventStreams().get(0);
-		RateMonitoringPipelineBuilder pc = new RateMonitoringPipelineBuilder(desc, stream, "abc");
+		RateMonitoringPipelineBuilder pc = new RateMonitoringPipelineBuilder(SEP_URI);
 			
+		System.out.println(pc.RATE_SEPA_URI);
 		try {
 			Pipeline pipeline = pc.buildPipeline();
 			Operations.startPipeline(pipeline, false, false);
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			 String s = br.readLine();
+			 
+			Operations.stopPipeline(pipeline, false, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
