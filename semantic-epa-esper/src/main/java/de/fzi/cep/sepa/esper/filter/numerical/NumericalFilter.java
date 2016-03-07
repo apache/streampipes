@@ -52,7 +52,9 @@ public class NumericalFilter extends EsperEventEngine<NumericalFilterParameter>{
 	
 	private Expression convert(String property)
 	{
-		return Expressions.cast(property, "double");
+		//return Expressions.property(property);
+		return Expressions.cast(Expressions.property(property), "double");
+		//return Expressions.cast(property, "double");
 	}
 }
 

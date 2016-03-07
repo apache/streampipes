@@ -128,6 +128,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
+		//MapUtils.debugPrint(System.out, "", event);
 		//if (i % 10000 == 0) System.out.println(i +" in Esper.");
 		if (i == 0) Timer.start();
 		i++;

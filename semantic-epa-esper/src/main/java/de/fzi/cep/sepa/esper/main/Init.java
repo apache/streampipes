@@ -20,6 +20,7 @@ import de.fzi.cep.sepa.esper.enrich.math.MathController;
 import de.fzi.cep.sepa.esper.enrich.timer.TimestampController;
 import de.fzi.cep.sepa.esper.filter.numerical.NumericalFilterController;
 import de.fzi.cep.sepa.esper.filter.text.TextFilterController;
+import de.fzi.cep.sepa.esper.geo.durationofstay.DurationOfStayController;
 import de.fzi.cep.sepa.esper.geo.geofencing.GeofencingController;
 import de.fzi.cep.sepa.esper.meets.MeetsController;
 import de.fzi.cep.sepa.esper.movement.MovementController;
@@ -79,8 +80,9 @@ public class Init implements Runnable {
 		//declarers.add(new AdvancedTextFilterController());
 		declarers.add(new SequenceController());
 		declarers.add(new IncreaseController());
-		declarers.add(new StreamStoppedController());
 		declarers.add(new GeofencingController());
+		declarers.add(new DurationOfStayController());
+		declarers.add(new StreamStoppedController());
 
 		
 		// Configure external timing for DEBS Challenge
