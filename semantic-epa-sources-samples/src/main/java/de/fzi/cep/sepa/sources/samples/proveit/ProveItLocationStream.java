@@ -46,7 +46,7 @@ public class ProveItLocationStream  implements EventStreamDeclarer {
 		properties.add(EpProperties.doubleEp("accuracy", SO.Number));
 		
 		schema.setEventProperties(properties);
-		
+		stream.setEventSchema(schema);
 		return stream;
 	}
 
