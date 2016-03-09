@@ -58,7 +58,7 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(StaticProperties.integerFreeTextProperty("topic", "topic", ""));
+		staticProperties.add(StaticProperties.stringFreeTextProperty("topic", "topic", ""));
 		desc.setStaticProperties(staticProperties);
 		
 		return desc;

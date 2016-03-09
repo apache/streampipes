@@ -16,7 +16,7 @@ public class StreamStopped extends EsperEventEngine<StreamStoppedParameter> {
 //		String epl = "select * from pattern [every " + inName + ".win:time(10 sec) having count(*) >= 0 -> (timer:interval(10 sec) and not " + inName + "..win:time(10 sec) having count(*) == 0)]";
 		 
 		 String epl = "select '"+ topic +"' as topic, current_timestamp as timestamp from pattern[every a=" + fixEventName(inName) +
-				 " -> timer:interval(10 sec) and not b="+ fixEventName(inName) + "]";
+				 " -> timer:interval(6 sec) and not b="+ fixEventName(inName) + "]";
 
 		return makeStatementList(epl);
 
