@@ -13,8 +13,13 @@ import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 
 public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 
+	protected WunderbarVariables variable;
 	
-	public EventStream prepareStream(SepDescription sep, WunderbarVariables variable) {
+	public AbstractWunderbarStream(WunderbarVariables variable) {
+		this.variable = variable;
+	}
+	
+	public EventStream prepareStream(SepDescription sep) {
 		
 		EventStream stream = new EventStream();
 		stream.setName(variable.eventName());

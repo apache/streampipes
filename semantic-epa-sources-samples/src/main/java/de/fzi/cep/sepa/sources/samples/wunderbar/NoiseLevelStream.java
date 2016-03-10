@@ -12,9 +12,13 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class NoiseLevelStream extends AbstractWunderbarStream {
 	
+	public NoiseLevelStream(WunderbarVariables variable) {
+		super(variable);
+	}
+	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
-		EventStream stream = prepareStream(sep, WunderbarVariables.NOISE_LEVEL);
+		EventStream stream = prepareStream(sep);
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> properties = new ArrayList<>();

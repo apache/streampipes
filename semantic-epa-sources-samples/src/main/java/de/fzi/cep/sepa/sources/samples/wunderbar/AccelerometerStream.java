@@ -12,9 +12,13 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 
 public class AccelerometerStream extends AbstractWunderbarStream {
 	
+	public AccelerometerStream(WunderbarVariables variable) {
+		super(variable);
+	}
+	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
-		EventStream stream = prepareStream(sep, WunderbarVariables.ACCELEROMETER);
+		EventStream stream = prepareStream(sep);
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> properties = new ArrayList<>();

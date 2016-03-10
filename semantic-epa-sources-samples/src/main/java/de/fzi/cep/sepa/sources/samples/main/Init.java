@@ -19,6 +19,7 @@ import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiProducer;
 import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.wunderbar.WunderbarProducer;
+import de.fzi.cep.sepa.sources.samples.wunderbar.WunderbarProducer2;
 
 public class Init  {
 
@@ -53,6 +54,7 @@ public class Init  {
 
 		}
 		declarers.add(new WunderbarProducer());
+		declarers.add(new WunderbarProducer2());
 		
 		try {
 			ModelSubmitter.submitProducer(declarers);

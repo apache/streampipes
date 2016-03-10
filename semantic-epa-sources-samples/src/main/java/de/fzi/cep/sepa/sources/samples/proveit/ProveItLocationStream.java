@@ -28,7 +28,7 @@ public class ProveItLocationStream  implements EventStreamDeclarer {
 		stream.setUri(sep.getUri() + "location");
 		
 		EventGrounding grounding = new EventGrounding();
-		JmsTransportProtocol protocol = new JmsTransportProtocol("tcp://kalmar29.fzi.de", 61616, "SEPA.SEP.ProveIT.Location");
+		JmsTransportProtocol protocol = new JmsTransportProtocol("tcp://kalmar29.fzi.de", 61616, "ProveIT.*.GPS");
 		grounding.setTransportProtocol(protocol);
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 				
