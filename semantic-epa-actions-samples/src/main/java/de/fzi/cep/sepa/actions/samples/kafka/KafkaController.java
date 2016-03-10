@@ -20,8 +20,10 @@ import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
@@ -47,18 +49,16 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
-		FreeTextStaticProperty brokerUrl = new FreeTextStaticProperty("hostname", "Broker Hostname", "");
-		staticProperties.add(brokerUrl);
+		SupportedProperty kafkaHost = new SupportedProperty("http://schema.org/kafkaHost", true);
+		SupportedProperty kafkaPort = new SupportedProperty("http://schema.org/kafkaPort", true);
 		
-		FreeTextStaticProperty port = new FreeTextStaticProperty("port", "Kafka Port", "");
-		staticProperties.add(port);
+		List<SupportedProperty> supportedProperties = Arrays.asList(kafkaHost, kafkaPort);
+		DomainStaticProperty dsp = new DomainStaticProperty("kafka-connection", "Kafka Connection Details", "Specifies connection details for the Apache Kafka broker", supportedProperties);
+		
+		staticProperties.add(dsp);
 		
 		FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Broker topic", "");
 		staticProperties.add(topic);
-		
-		FreeTextStaticProperty addProperty = new FreeTextStaticProperty("additionalProperty", "Additionial Property Value", "");
-		addProperty.setValueRequired(false);
-		staticProperties.add(addProperty);
 		
 		desc.setStaticProperties(staticProperties);
 		
@@ -75,14 +75,14 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 	public Response invokeRuntime(SecInvocation sec) {
 			String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 			
-			String brokerHostname = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "hostname")).getValue();
 			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "topic")).getValue();
-			String port = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "port")).getValue();
-			
-			String pipelineId = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "additionalProperty")).getValue();
+		
+			DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(sec, "kafka-connection");
+			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://event-processing.org/schema#kafkaHost");
+			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://event-processing.org/schema#kafkaPort"));
 			
 			kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(brokerHostname + ":" +port, topic), pipelineId));
+					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(kafkaHost + ":" +kafkaPort, topic)));
 			kafkaConsumerGroup.run(1);
 			
 			//consumer.setListener(new ProaSenseTopologyPublisher(sec));
