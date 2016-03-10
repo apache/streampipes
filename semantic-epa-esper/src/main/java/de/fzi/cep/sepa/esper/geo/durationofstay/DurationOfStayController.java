@@ -48,7 +48,7 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
-		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
+		stream1.setEventSchema(schema);
 	
 		desc.addEventStream(stream1);
 		
@@ -76,7 +76,7 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		MappingPropertyUnary latMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-latitude", "Latitude Coordinate", "Specifies the latitude field of the stream.");
 		staticProperties.add(latMapping);
 		
-		MappingPropertyUnary lngMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-longitude", "Latitude Coordinate", "Specifies the latitude field of the stream.");
+		MappingPropertyUnary lngMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-longitude", "Longitude Coordinate", "Specifies the longitude field of the stream.");
 		staticProperties.add(lngMapping);
 		
 		MappingPropertyUnary timestampMapping = new MappingPropertyUnary(URI.create(e4.getElementId()), "mapping-timestamp", "Time Field", "Specifies a field that contains a timestamp value");

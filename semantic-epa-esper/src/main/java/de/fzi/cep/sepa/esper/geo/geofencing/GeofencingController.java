@@ -15,7 +15,6 @@ import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
@@ -40,14 +39,14 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 		EventSchema schema = new EventSchema();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
 		EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
-		EventProperty e3 = new EventPropertyPrimitive();
+		EventProperty e3 = EpRequirements.stringReq();
 		schema.setEventProperties(Arrays.asList(e1, e2, e3));
 		
 		SepaDescription desc = new SepaDescription("sepa/geofencing", "Geofencing", "Detects whether a location-based stream moves inside a (circular) area around a given point described as latitude-longitude pair.");
 		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
-		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
+		stream1.setEventSchema(schema);
 	
 		desc.addEventStream(stream1);
 		
@@ -80,7 +79,7 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 		MappingPropertyUnary latMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-latitude", "Latitude Coordinate", "Specifies the latitude field of the stream.");
 		staticProperties.add(latMapping);
 		
-		MappingPropertyUnary lngMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-longitude", "Latitude Coordinate", "Specifies the latitude field of the stream.");
+		MappingPropertyUnary lngMapping = new MappingPropertyUnary(URI.create(e1.getElementId()), "mapping-longitude", "Longitude Coordinate", "Specifies the longitude field of the stream.");
 		staticProperties.add(lngMapping);
 		
 		MappingPropertyUnary partitionMapping = new MappingPropertyUnary(URI.create(e3.getElementId()), "mapping-partition", "Partition Property", "Specifies a field that should be used to partition the stream (e.g., a vehicle plate number)");
