@@ -235,7 +235,7 @@ public class ClientModelTransformer {
 							j++;
 						}
 						if (!processedProperties.contains(matchedProperty)) 
-							{
+							{		
 								matchedProperty.setRuntimeName(option.getHumanDescription());
 								outputProperties.add(matchedProperty);
 							}
@@ -248,7 +248,7 @@ public class ClientModelTransformer {
 			
 		return sepa;
 	}
-	
+		
 	private static List<StaticProperty> convertStaticProperties(SecDescription sec, List<de.fzi.cep.sepa.model.client.StaticProperty> clientProperties)
 	{
 		return convertStaticProperties(sec.getStaticProperties(), clientProperties);
