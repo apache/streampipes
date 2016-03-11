@@ -31,6 +31,8 @@ public class AccelerometerStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Acceleration1.png");
+		stream.setMeasurementCapability(mc("AccelerationCapability"));
+		stream.setMeasurementObject(mo("FestoCebitDevice"));
 		return stream;
 	}
 

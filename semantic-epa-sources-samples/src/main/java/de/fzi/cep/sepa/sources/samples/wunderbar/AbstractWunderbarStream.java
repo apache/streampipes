@@ -1,5 +1,9 @@
 package de.fzi.cep.sepa.sources.samples.wunderbar;
 
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -7,6 +11,8 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementCapability;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementObject;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
@@ -14,6 +20,8 @@ import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 
 	protected WunderbarVariables variable;
+	
+	protected final static String SEPA_PREFIX = "http://event-processing.org/sepa/";
 	
 	public AbstractWunderbarStream(WunderbarVariables variable) {
 		this.variable = variable;
@@ -33,6 +41,14 @@ public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 		stream.setEventGrounding(grounding);	
 		
 		return stream;
+	}
+	
+	protected List<MeasurementCapability> mc(String capabilitySuffix) {
+		return Arrays.asList(new MeasurementCapability(URI.create(SEPA_PREFIX +capabilitySuffix)));
+	}
+	
+	protected List<MeasurementObject> mo(String measurementObjectSuffix) {
+		return Arrays.asList(new MeasurementObject(URI.create(SEPA_PREFIX +measurementObjectSuffix)));
 	}
 	
 	@Override

@@ -29,6 +29,8 @@ public class NoiseLevelStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/SoundLevel.png");
+		stream.setMeasurementCapability(mc("NoiseMeasurementCapability"));
+		stream.setMeasurementObject(mo("CebitHall6"));
 		return stream;
 	}
 

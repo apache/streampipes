@@ -29,6 +29,8 @@ public class TemperatureStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Temperature_Icon_HQ.png");
+		stream.setMeasurementCapability(mc("TemperatureMeasurementCapability"));
+		stream.setMeasurementObject(mo("CebitHall6"));
 		return stream;
 	}
 

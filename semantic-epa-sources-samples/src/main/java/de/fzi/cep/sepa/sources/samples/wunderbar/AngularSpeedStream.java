@@ -31,6 +31,8 @@ public class AngularSpeedStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Gyroscope.png");
+		stream.setMeasurementCapability(mc("GyroscopeCapability"));
+		stream.setMeasurementObject(mo("FestoCebitDevice"));
 		return stream;
 	}
 

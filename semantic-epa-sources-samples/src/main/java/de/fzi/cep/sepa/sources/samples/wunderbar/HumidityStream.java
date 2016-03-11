@@ -29,6 +29,8 @@ public class HumidityStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Humidity.png");
+		stream.setMeasurementCapability(mc("HumidityMeasurementCapability"));
+		stream.setMeasurementObject(mo("CebitHall6"));
 		return stream;
 	}
 

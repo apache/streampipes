@@ -29,6 +29,8 @@ public class LuminosityStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Brightness.png");
+		stream.setMeasurementCapability(mc("BrightnessMeasurementCapability"));
+		stream.setMeasurementObject(mo("CebitHall6"));
 		return stream;
 	}
 

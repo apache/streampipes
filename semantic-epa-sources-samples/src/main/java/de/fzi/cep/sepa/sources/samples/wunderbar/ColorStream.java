@@ -31,6 +31,8 @@ public class ColorStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Color.png");
+		stream.setMeasurementCapability(mc("ColorDetectionCapability"));
+		stream.setMeasurementObject(mo("FestoCebitDevice"));
 		return stream;
 	}
 

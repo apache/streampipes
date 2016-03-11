@@ -29,6 +29,8 @@ public class ProximityStream extends AbstractWunderbarStream {
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Proximity_Sensor.png");
+		stream.setMeasurementCapability(mc("ProximityDetectionCapability"));
+		stream.setMeasurementObject(mo("FestoCebitDevice"));
 		return stream;
 	}
 
