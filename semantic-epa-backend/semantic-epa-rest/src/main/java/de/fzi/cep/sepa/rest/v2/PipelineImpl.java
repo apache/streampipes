@@ -17,6 +17,7 @@ import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
+import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
 import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.messages.Notification;
 import de.fzi.cep.sepa.messages.NotificationType;
@@ -66,6 +67,14 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 		return null;
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{pipelineId}/status")
+	@Override
+	public String getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+		return Utils.getGson().toJson(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
+	}
+	
 	@DELETE
 	@Path("/{pipelineId}")
 	@Produces(MediaType.APPLICATION_JSON)

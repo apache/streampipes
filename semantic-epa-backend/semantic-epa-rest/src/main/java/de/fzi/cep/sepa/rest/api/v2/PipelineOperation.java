@@ -14,4 +14,6 @@ public interface PipelineOperation extends SepaElementOperation {
 	public String update(String pipeline);
 	
 	public String overwritePipeline(String username, String pipeline);
+
+	public String getPipelineStatus(String username, String pipelineId);
 }
