@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.esper.pattern.and;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
@@ -67,13 +65,13 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		matchingOperator.addOption(new Option("<"));
 		matchingOperator.addOption(new Option(">"));
 		matchingOperator.setValueRequired(false);
-		staticProperties.add(matchingOperator);
+		//staticProperties.add(matchingOperator);
 		
 		FreeTextStaticProperty duration = new FreeTextStaticProperty("duration", "Time Value", "Specifies the size of the time window.");
 		staticProperties.add(duration);
 		
-		MatchingStaticProperty matchingProperty = new MatchingStaticProperty("matching", "Matching", "Specifies an additional value restriction on both streams.", URI.create(e1.getElementId()), URI.create(e2.getElementId()));
-		staticProperties.add(matchingProperty);
+		//MatchingStaticProperty matchingProperty = new MatchingStaticProperty("matching", "Matching", "Specifies an additional value restriction on both streams.", URI.create(e1.getElementId()), URI.create(e2.getElementId()));
+		//staticProperties.add(matchingProperty);
 		
 //		MappingProperty m1 = new MappingPropertyUnary(URI.create(e1.getElementId()), "partition", "Partition", "The streams will be partitioned based on the selected property.");
 //		m1.setValueRequired(false);
@@ -91,8 +89,8 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
 		int duration = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "duration"));
 		//String partitionProperty = SepaUtils.getMappingPropertyName(invocationGraph, "partition", true);
-		List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
-		
+		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
+		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 		
 		try {
