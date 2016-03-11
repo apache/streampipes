@@ -86,7 +86,8 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
-		String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
+		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
+		String matchingOperator = "";
 		int duration = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "duration"));
 		//String partitionProperty = SepaUtils.getMappingPropertyName(invocationGraph, "partition", true);
 		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");

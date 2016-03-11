@@ -60,20 +60,20 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		timeWindowUnit.addOption(new Option("hrs"));
 		staticProperties.add(timeWindowUnit);
 		
-		OneOfStaticProperty matchingOperator = new OneOfStaticProperty("matching-operator", "Time Unit", "Specifies a unit for the time window of the sequence. ");
-		matchingOperator.addOption(new Option("=="));
-		matchingOperator.addOption(new Option(">="));
-		matchingOperator.addOption(new Option("<="));
-		matchingOperator.addOption(new Option("<"));
-		matchingOperator.addOption(new Option(">"));
-		matchingOperator.setValueRequired(false);
-		staticProperties.add(matchingOperator);
+//		OneOfStaticProperty matchingOperator = new OneOfStaticProperty("matching-operator", "Time Unit", "Specifies a unit for the time window of the sequence. ");
+//		matchingOperator.addOption(new Option("=="));
+//		matchingOperator.addOption(new Option(">="));
+//		matchingOperator.addOption(new Option("<="));
+//		matchingOperator.addOption(new Option("<"));
+//		matchingOperator.addOption(new Option(">"));
+//		matchingOperator.setValueRequired(false);
+//		staticProperties.add(matchingOperator);
 		
 		FreeTextStaticProperty duration = new FreeTextStaticProperty("duration", "Time Value", "Specifies the size of the time window.");
 		staticProperties.add(duration);
 		
 		MatchingStaticProperty matchingProperty = new MatchingStaticProperty("matching", "Matching", "Specifies an additional value restriction on both streams.", URI.create(e1.getElementId()), URI.create(e2.getElementId()));
-		staticProperties.add(matchingProperty);
+		//staticProperties.add(matchingProperty);
 		
 //		MappingProperty m1 = new MappingPropertyUnary(URI.create(e1.getElementId()), "partition", "Partition", "The streams will be partitioned based on the selected property.");
 //		m1.setValueRequired(false);
@@ -88,11 +88,12 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
-		String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
+		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
+		String matchingOperator = "";
 		int duration = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "duration"));
 		//String partitionProperty = SepaUtils.getMappingPropertyName(invocationGraph, "partition", true);
-		List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
-		
+		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
+		List<String> matchingProperties = new ArrayList<>();
 		SequenceParameters params = new SequenceParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 		
 		try {
