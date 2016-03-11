@@ -78,8 +78,8 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "topic")).getValue();
 		
 			DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(sec, "kafka-connection");
-			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://event-processing.org/schema#kafkaHost");
-			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://event-processing.org/schema#kafkaPort"));
+			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaHost");
+			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 			
 			kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
 					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(kafkaHost + ":" +kafkaPort, topic)));
