@@ -20,6 +20,9 @@
 									<span>Modify</span>
 								</span>
 								<span flex flex-order="3" layout="row" layout-align="center center">
+									<span>Status</span>
+								</span>
+								<span flex flex-order="4" layout="row" layout-align="center center">
 									<span>Delete</span>
 								</span>
 							</div>
@@ -40,14 +43,28 @@
 									<md-button  ng-click="modifyPipeline(pipeline._id)" class="md-icon-button"><md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify" class="md-accent"></md-icon></md-button>
 								</span>
 								<span flex flex-order="3" layout="row" layout-align="center center">
-									<md-button  ng-click="deletePipeline($event, pipeline._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>
+									<md-button ng-click="getPipelineStatus(pipeline)" class="md-icon-button"><i class="material-icons md-accent" style="color: rgb(255,64,129);">help</i></md-button>
 								</span>
+								<span flex flex-order="4" layout="row" layout-align="center center">
+									<md-button  ng-click="deletePipeline($event, pipeline._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>
+								</span>			
 							</div>
 
 
 						</md-list-item>
 						<md-divider ng-if="!$last"></md-divider>
-						<div layout="row" ng-show="pipeline.display" style="min-height:200px; background-color: #f0f0f0">
+						<div layout="column" ng-show="pipeline.displayStatus" style="min-height:100px; background-color: #f6f6f6; padding:5px;padding-left:15px;">
+						
+							<div flex="100" layout="column" ng-repeat="status in pipelineStatus[pipeline._id]">
+								<div flex="100" layout="row">
+									<div flex="20"><h4>{{status.timestamp | date:'dd.MM.yyyy HH:mm'}}</h4></div>
+									<div flex="20"><h4>{{status.messageType}}</h4></div>
+									<div flex="60"><h4>{{status.message}}</h4></div>
+								</div>
+							</div>
+						
+						</div>
+						<div layout="row" ng-show="pipeline.display" style="min-height:200px; background-color: #f6f6f6">
 							<span flex flex-order="1" layout="column" layout-align="center start">
 								<span class="stream pipeline-display-element md-whiteframe-z2 tt" ng-repeat="stream in pipeline.streams" my-stream-data-and-image-bind>
 									<!--<img class="pipeline-display-element-img"  ng-src="{{stream.iconUrl}}">-->

@@ -591,7 +591,8 @@ angular.module('streamPipesApp')
                         }
                     });
                 }
-                return result.toUpperCase();
+                return string;
+                //return result.toUpperCase();
             }
 
             //TODO ANGULARIZE
@@ -1920,10 +1921,12 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 					anyMatch = true;
 				}
 		});
+		console.log(options[0]);
 		if (!anyMatch) $scope.selection[elementId] = options[0].elementId;
 	}
 	
 	angular.forEach($scope.selectedElement.staticProperties, function(item) {
+	
 		if (item.input.type =='RadioInput' || item.input.type == 'SelectFormInput')
 		{
 			writeOptions(item.input.properties.options, $scope.selection, item.elementId);

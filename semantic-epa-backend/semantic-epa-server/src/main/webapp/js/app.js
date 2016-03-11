@@ -965,6 +965,10 @@ angular
 		restApi.getPipelineById = function(pipelineId) {
 			return $http.get(urlBase() + "/pipelines/" + pipelineId);
 		}
+		
+		restApi.getPipelineStatusById = function(pipelineId) {
+			return $http.get(urlBase() + "/pipelines/" + pipelineId +"/status");
+		}
 
 		restApi.updatePipeline = function(pipeline){
 			var pipelineId = pipeline._id;

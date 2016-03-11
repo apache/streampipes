@@ -9,6 +9,8 @@ angular
         $scope.starting = false;
         $scope.stopping = false;
         
+        $scope.pipelineStatus = [];
+        
         $scope.startPipelineDirectly = $stateParams.pipeline;
                 
         var textInputFields = [];
@@ -71,7 +73,7 @@ angular
                     $scope.getPipelines();
 
                     $scope.starting = false;
-
+                    
         	    })
                 .error(function(data){
                     console.log(data);
@@ -104,6 +106,15 @@ angular
 
                 });
         };
+        
+        $scope.getPipelineStatus = function(pipeline) {
+        	restApi.getPipelineStatusById(pipeline._id)
+            .success(function(data) {
+
+               $scope.pipelineStatus[pipeline._id] = data;
+               pipeline.displayStatus = !pipeline.displayStatus;
+    	    })
+        }
 
         
         if ($scope.startPipelineDirectly != ""){
