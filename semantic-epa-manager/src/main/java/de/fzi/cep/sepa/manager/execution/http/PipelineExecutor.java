@@ -8,6 +8,7 @@ import org.lightcouch.DocumentConflictException;
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
+import de.fzi.cep.sepa.manager.execution.status.SepMonitoringManager;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
@@ -26,12 +27,14 @@ public class PipelineExecutor {
 	private Pipeline pipeline;
 	private boolean visualize;
 	private boolean storeStatus;
+	private boolean monitor;
 	
-	public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus)
+	public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor)
 	{
 		this.pipeline = pipeline;
 		this.visualize = visualize;
 		this.storeStatus = storeStatus;
+		this.monitor = monitor;
 	}
 	
 	public PipelineOperationStatus startPipeline()
@@ -55,7 +58,7 @@ public class PipelineExecutor {
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
 					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
 			
-			//SepMonitoringManager.addObserver(pipeline.getPipelineId());
+			if (monitor) SepMonitoringManager.addObserver(pipeline.getPipelineId());
 			
 			if (storeStatus) setPipelineStarted(pipeline);
 		}
@@ -75,7 +78,7 @@ public class PipelineExecutor {
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
 					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STOPPED.title(), PipelineStatusMessageType.PIPELINE_STOPPED.description()));
 			
-			//SepMonitoringManager.removeObserver(pipeline.getPipelineId());
+			if (monitor) SepMonitoringManager.removeObserver(pipeline.getPipelineId());
 			
 		}
 		return status;

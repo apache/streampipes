@@ -54,7 +54,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 					streamToObserver.put(streamId, po);
 					Pipeline p = new SepStoppedMonitoringPipelineBuilder(sourceId, streamId).buildPipeline();
-					Operations.startPipeline(p, false, false);
+					Operations.startPipeline(p, false, false, false);
 					streamToStoppedMonitoringPipeline.put(streamId, p);
 
 				} else {
@@ -89,7 +89,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 			if (po.size() == 1) {
 				streamToObserver.remove(streamId);
 				
-				Operations.stopPipeline(streamToStoppedMonitoringPipeline.get(streamId), false, false);
+				Operations.stopPipeline(streamToStoppedMonitoringPipeline.get(streamId), false, false, false);
 				streamToStoppedMonitoringPipeline.remove(streamId);
 			} else {
 				po.remove(observer);

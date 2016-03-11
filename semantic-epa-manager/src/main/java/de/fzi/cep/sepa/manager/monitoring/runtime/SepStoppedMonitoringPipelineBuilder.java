@@ -22,7 +22,9 @@ import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
+import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
 import de.fzi.cep.sepa.model.client.input.ElementType;
+import de.fzi.cep.sepa.model.client.input.SupportedProperty;
 import de.fzi.cep.sepa.model.client.input.TextInput;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
@@ -109,16 +111,23 @@ public class SepStoppedMonitoringPipelineBuilder {
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {
 			if (p.getType() == StaticPropertyType.STATIC_PROPERTY) {
-				if (p.getInput().getElementType() == ElementType.DOMAIN_CONCEPT) {
-					if (p.getInternalName().equals("hostname"))
-						((TextInput) p.getInput()).setValue(String
-								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
-					else if (p.getInternalName().equals("port"))
-						((TextInput) p.getInput()).setValue(String
-								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaPort()));
-					else if (p.getInternalName().equals("topic"))
+				if (p.getInput().getElementType() == ElementType.TEXT_INPUT) {
+					if (p.getInternalName().equals("topic"))
 						((TextInput) p.getInput()).setValue(outputTopic);
 				}
+				else if (p.getInput().getElementType() == ElementType.DOMAIN_CONCEPT) {
+					DomainConceptInput input = (DomainConceptInput) p.getInput();
+					for(SupportedProperty sp : input.getSupportedProperties()) {
+						
+						if (sp.getPropertyId().equals("http://schema.org/kafkaHost"))
+							sp.setValue(String
+								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
+						else if (sp.getPropertyId().equals("http://schema.org/kafkaPort"))
+							sp.setValue(String
+									.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaPort()));
+					}
+				}
+					
 			}
 			newStaticProperties.add(p);
 		}
@@ -152,12 +161,12 @@ public class SepStoppedMonitoringPipelineBuilder {
 
 		try {
 			Pipeline pipeline = pc.buildPipeline();
-			Operations.startPipeline(pipeline, false, false);
+			Operations.startPipeline(pipeline, false, false, false);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String s = br.readLine();
 
-			Operations.stopPipeline(pipeline, false, false);
+			Operations.stopPipeline(pipeline, false, false, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
