@@ -7,10 +7,13 @@ import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
+import de.fzi.cep.sepa.messages.PipelineStatusMessage;
+import de.fzi.cep.sepa.messages.PipelineStatusMessageType;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
@@ -49,6 +52,11 @@ public class PipelineExecutor {
 			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
+			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
+					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STARTED.title(), PipelineStatusMessageType.PIPELINE_STARTED.description()));
+			
+			//SepMonitoringManager.addObserver(pipeline.getPipelineId());
+			
 			if (storeStatus) setPipelineStarted(pipeline);
 		}
 		return status;
@@ -63,6 +71,12 @@ public class PipelineExecutor {
 		{
 			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
 			if (storeStatus) setPipelineStopped(pipeline);
+			
+			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
+					new PipelineStatusMessage(pipeline.getPipelineId(), System.currentTimeMillis(), PipelineStatusMessageType.PIPELINE_STOPPED.title(), PipelineStatusMessageType.PIPELINE_STOPPED.description()));
+			
+			//SepMonitoringManager.removeObserver(pipeline.getPipelineId());
+			
 		}
 		return status;
 	}

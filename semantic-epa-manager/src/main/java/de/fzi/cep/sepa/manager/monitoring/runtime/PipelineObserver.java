@@ -1,5 +1,9 @@
 package de.fzi.cep.sepa.manager.monitoring.runtime;
 
+import de.fzi.cep.sepa.manager.operations.Operations;
+import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+
 public class PipelineObserver {
 
 	private String pipelineId;
@@ -12,6 +16,10 @@ public class PipelineObserver {
 
 	public void update() {
 		System.out.println(pipelineId + " was updated yeah!!");
+		Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+		Operations.stopPipeline(pipeline);
+		
+		
 	};
 	public String getPipelineId() {
 		return pipelineId;

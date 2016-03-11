@@ -34,8 +34,8 @@ import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 public class SepStoppedMonitoringPipelineBuilder {
 
 	// TODO make ULSs dynamic
-	private final String RATE_SEPA_URI = "http://philipp-Vostro-3560:8090/sepa/streamStopped";
-	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
+	private final String RATE_SEPA_URI = "http://frosch.fzi.de:8090/sepa/streamStopped";
+	private final String KAFKA_SEC_URI = "http://frosch.fzi.de:8091/kafka";
 	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";
 
 	private EventStream stream;
@@ -109,7 +109,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {
 			if (p.getType() == StaticPropertyType.STATIC_PROPERTY) {
-				if (p.getInput().getElementType() == ElementType.TEXT_INPUT) {
+				if (p.getInput().getElementType() == ElementType.DOMAIN_CONCEPT) {
 					if (p.getInternalName().equals("hostname"))
 						((TextInput) p.getInput()).setValue(String
 								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
