@@ -456,8 +456,11 @@ public class PipelineValidationHandler {
 		
 		for(EventProperty p : eventProperties)
 		{
-			if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getElementId(), p.getRuntimeName()));
-			else if (p instanceof EventPropertyList) options.add(new Option(p.getElementId(), p.getRuntimeName()));
+			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList) {
+				String runtimeName = p.getRuntimeName();
+				if (p instanceof EventPropertyPrimitive) options.add(new Option(p.getElementId(), runtimeName));
+				else if (p instanceof EventPropertyList) options.add(new Option(p.getElementId(), runtimeName));
+			}
 			else if (p instanceof EventPropertyNested) 
 				{
 					options.add(new Option(p.getElementId(), p.getRuntimeName()));

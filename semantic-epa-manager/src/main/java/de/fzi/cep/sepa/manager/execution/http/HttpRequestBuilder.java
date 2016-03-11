@@ -27,7 +27,6 @@ public class HttpRequestBuilder {
 	public PipelineElementStatus invoke()
 	{
 		try {
-			System.out.println(jsonLd());
 			Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
 			return handleResponse(httpResp);			
 		} catch(Exception e)
@@ -52,7 +51,6 @@ public class HttpRequestBuilder {
 	private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException
 	{
 		String resp = httpResp.returnContent().asString();
-		System.out.println(resp);
 		de.fzi.cep.sepa.model.impl.Response streamPipesResp = new Gson().fromJson(resp, de.fzi.cep.sepa.model.impl.Response.class);
 		return convert(streamPipesResp);
 	}
@@ -64,7 +62,6 @@ public class HttpRequestBuilder {
 	
 	private PipelineElementStatus convert(de.fzi.cep.sepa.model.impl.Response response)
 	{
-		System.out.println(response);
 		return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), response.isSuccess(), response.getOptionalMessage());
 	}
 }
