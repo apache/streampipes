@@ -64,8 +64,6 @@ public class EpProperties {
 		return ep;
 	}
 	
-	
-	
 	private static EventPropertyPrimitive ep(String runtimeType, String runtimeName, String domainProperty)
 	{
 		return new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI(domainProperty));

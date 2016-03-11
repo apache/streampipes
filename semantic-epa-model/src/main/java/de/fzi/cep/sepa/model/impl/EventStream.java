@@ -19,6 +19,9 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementCapability;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementObject;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -49,6 +52,14 @@ public class EventStream extends NamedSEPAElement {
 	@RdfProperty("sepa:hasSchema")
 	EventSchema eventSchema;
 	
+	@RdfProperty("sepa:measurementCapability")
+	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+	protected List<MeasurementCapability> measurementCapability;
+	
+	@RdfProperty("sepa:measurementObject")
+	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
+	protected List<MeasurementObject> measurementObject;
+	
 	
 	public EventStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
 			EventGrounding eventGrounding, 
@@ -58,7 +69,6 @@ public class EventStream extends NamedSEPAElement {
 		this.eventGrounding = eventGrounding;
 		this.eventSchema = eventSchema;
 	}
-	
 	
 	public EventStream(String uri, String name, String description, EventSchema eventSchema)
 	{
@@ -80,6 +90,8 @@ public class EventStream extends NamedSEPAElement {
 		if (other.getEventSchema() != null) this.eventSchema = new EventSchema(other.getEventSchema());
 		if (other.getHasEventStreamQualities() != null) this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(s -> new EventStreamQualityDefinition(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityDefinition>::new));
 		if (other.getRequiresEventStreamQualities() != null) this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(s -> new EventStreamQualityRequirement(s)).collect(Collectors.toCollection(ArrayList<EventStreamQualityRequirement>::new));
+		if (other.getMeasurementCapability() != null) this.measurementCapability =  new Cloner().mc(other.getMeasurementCapability());
+		if (other.getMeasurementObject() != null) this.measurementObject = new Cloner().mo(other.getMeasurementObject());
 	}
 
 
@@ -125,5 +137,27 @@ public class EventStream extends NamedSEPAElement {
 	public void setEventGrounding(EventGrounding eventGrounding) {
 		this.eventGrounding = eventGrounding;
 	}
-	
+
+
+	public List<MeasurementCapability> getMeasurementCapability() {
+		return measurementCapability;
+	}
+
+
+	public void setMeasurementCapability(
+			List<MeasurementCapability> measurementCapability) {
+		this.measurementCapability = measurementCapability;
+	}
+
+
+	public List<MeasurementObject> getMeasurementObject() {
+		return measurementObject;
+	}
+
+
+	public void setMeasurementObject(List<MeasurementObject> measurementObject) {
+		this.measurementObject = measurementObject;
+	}
+
+		
 }

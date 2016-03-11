@@ -23,6 +23,8 @@ import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementCapability;
+import de.fzi.cep.sepa.model.impl.quality.MeasurementObject;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
@@ -141,6 +143,15 @@ public class Cloner {
 	public List<UriPropertyMapping> replaceStrategy(
 			List<UriPropertyMapping> replaceProperties) {
 		return replaceProperties.stream().map(s -> new UriPropertyMapping(s)).collect(Collectors.toList());
+	}
+
+	public List<MeasurementCapability> mc(
+			List<MeasurementCapability> measurementCapability) {
+		return measurementCapability.stream().map(m -> new MeasurementCapability(m)).collect(Collectors.toList());
+	}
+
+	public List<MeasurementObject> mo(List<MeasurementObject> measurementObject) {
+		return measurementObject.stream().map(m -> new MeasurementObject(m)).collect(Collectors.toList());
 	}
 	
 }

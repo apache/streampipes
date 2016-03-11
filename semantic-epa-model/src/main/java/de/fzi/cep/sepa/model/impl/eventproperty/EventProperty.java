@@ -62,7 +62,8 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	@RdfProperty("sepa:hasEventPropertyQualityRequirement")
 	protected List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
-
+	
+	
 	public EventProperty()
 	{
 		super(prefix + UUID.randomUUID().toString());
