@@ -15,7 +15,7 @@ public class DomainConceptInput extends FormInput {
 	
 	public DomainConceptInput(String requiredClass,
 			List<SupportedProperty> supportedProperties) {
-		super();
+		super(ElementType.DOMAIN_CONCEPT);
 		this.requiredClass = requiredClass;
 		this.supportedProperties = supportedProperties;
 	}
