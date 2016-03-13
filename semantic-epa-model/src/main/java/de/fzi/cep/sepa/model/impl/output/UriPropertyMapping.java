@@ -45,6 +45,7 @@ public class UriPropertyMapping extends UnnamedSEPAElement {
 		super();
 		this.replaceFrom = other.getReplaceFrom();
 		this.replaceWith = other.getReplaceWith();
+		this.replaceTo = other.getReplaceTo();
 		this.renamingAllowed = other.isRenamingAllowed();
 		this.typeCastAllowed = other.isTypeCastAllowed();
 		this.domainPropertyCastAllowed = other.isDomainPropertyCastAllowed();
