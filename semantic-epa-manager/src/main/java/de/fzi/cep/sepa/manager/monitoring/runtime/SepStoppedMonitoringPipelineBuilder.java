@@ -36,8 +36,11 @@ import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 public class SepStoppedMonitoringPipelineBuilder {
 
 	// TODO make ULSs dynamic
-	private final String RATE_SEPA_URI = "http://frosch.fzi.de:8090/sepa/streamStopped";
-	private final String KAFKA_SEC_URI = "http://frosch.fzi.de:8091/kafka";
+//	private final String RATE_SEPA_URI = "http://frosch.fzi.de:8090/sepa/streamStopped";
+//	private final String KAFKA_SEC_URI = "http://frosch.fzi.de:8091/kafka";
+	
+	private final String RATE_SEPA_URI = "http://ipe-koi05.perimeter.fzi.de:8090/sepa/streamStopped";
+	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
 	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";
 
 	private EventStream stream;
@@ -118,7 +121,6 @@ public class SepStoppedMonitoringPipelineBuilder {
 				else if (p.getInput().getElementType() == ElementType.DOMAIN_CONCEPT) {
 					DomainConceptInput input = (DomainConceptInput) p.getInput();
 					for(SupportedProperty sp : input.getSupportedProperties()) {
-						
 						if (sp.getPropertyId().equals("http://schema.org/kafkaHost"))
 							sp.setValue(String
 								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
@@ -154,8 +156,8 @@ public class SepStoppedMonitoringPipelineBuilder {
 
 	public static void main(String[] args) throws URISyntaxException {
 
-		String SEP_URI = "http://ipe-koi04.perimeter.fzi.de:8089//source-montrac";
-		String STREAM_URI = "http://ipe-koi04.perimeter.fzi.de:8089//source-montrac/montrac";
+		String SEP_URI = "http://frosch.fzi.de:8089//source-wunderbar";
+		String STREAM_URI = "http://frosch.fzi.de:8089//source-wunderbar/accelerometer";
 
 		SepStoppedMonitoringPipelineBuilder pc = new SepStoppedMonitoringPipelineBuilder(SEP_URI, STREAM_URI);
 

@@ -1,8 +1,8 @@
 package de.fzi.cep.sepa.manager.monitoring.runtime;
 
-import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
+import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
+import de.fzi.cep.sepa.messages.PipelineStatusMessage;
+import de.fzi.cep.sepa.messages.PipelineStatusMessageType;
 
 public class PipelineObserver {
 
@@ -16,11 +16,30 @@ public class PipelineObserver {
 
 	public void update() {
 		System.out.println(pipelineId + " was updated yeah!!");
-		Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
-		Operations.stopPipeline(pipeline);
+		PipelineStatusManager.addPipelineStatus(pipelineId, makePipelineStatusMessage(PipelineStatusMessageType.PIPELINE_NO_DATA));
 		
-		
+		SimilarStreamFinder streamFinder = new SimilarStreamFinder(pipelineId);
+		if (streamFinder.isReplacable()) {
+			System.out.println("Pipeline replacable");
+			
+			boolean success = new PipelineStreamReplacer(pipelineId, streamFinder.getSimilarStreams().get(0)).replaceStream();
+			if (success) {
+				System.out.println("success");
+				PipelineStatusManager.addPipelineStatus(pipelineId, makePipelineStatusMessage(PipelineStatusMessageType.PIPELINE_EXCHANGE_SUCCESS));
+			} else {
+				System.out.println("failure");
+				PipelineStatusManager.addPipelineStatus(pipelineId, makePipelineStatusMessage(PipelineStatusMessageType.PIPELINE_EXCHANGE_FAILURE));
+			}
+		} else {
+			System.out.println("Pipeline not replacable");
+			PipelineStatusManager.addPipelineStatus(pipelineId, makePipelineStatusMessage(PipelineStatusMessageType.PIPELINE_EXCHANGE_FAILURE));
+		}
 	};
+	
+	private PipelineStatusMessage makePipelineStatusMessage(PipelineStatusMessageType type) {
+		return new PipelineStatusMessage(pipelineId, System.currentTimeMillis(), type.title(), type.description());
+	}
+	
 	public String getPipelineId() {
 		return pipelineId;
 	}
