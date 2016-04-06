@@ -42,7 +42,9 @@
                          		<i ng-if="widget.contentStyle.display === 'none'" class="material-icons">fullscreen</i>
                          		<i ng-if="widget.contentStyle.display !== 'none'" class="material-icons">fullscreen_exit</i>
                          	</md-button>
-                 			<md-button class="md-icon-button" ng-click="openWidgetSettings(widget);" ng-if="!options.hideWidgetSettings"><i class="material-icons">settings</i></md-button>
+<!--                  			<md-button class="md-icon-button" ng-click="openWidgetSettings(widget);" ng-if="!options.hideWidgetSettings"><i class="material-icons">settings</i></md-button> -->
+                         	<md-button class="md-icon-button" ng-click="openVizInNewWindow(widget);"><i class="material-icons">open_in_new</i></md-button> 
+                        	
                         	<md-button class="md-icon-button" ng-click="removeWidget(widget);" ng-if="!options.hideWidgetClose"><i class="material-icons">clear</i></md-button>
                           </div>
                 </div>

@@ -19,7 +19,7 @@ angular.module('ui.dashboard', ['ui.bootstrap', 'ui.sortable']);
 
 angular.module('ui.dashboard')
 
-  .directive('dashboard', ['WidgetModel', 'WidgetDefCollection', '$modal', 'DashboardState', '$log', function (WidgetModel, WidgetDefCollection, $modal, DashboardState, $log) {
+  .directive('dashboard', ['WidgetModel', 'WidgetDefCollection', '$modal', 'DashboardState', '$log', '$window', function (WidgetModel, WidgetDefCollection, $modal, DashboardState, $log, $window) {
 
     return {
       restrict: 'A',
@@ -72,7 +72,7 @@ angular.module('ui.dashboard')
         scope.sortableOptions = angular.extend({}, sortableDefaults, scope.options.sortableOptions || {});
 
       }],
-      link: function (scope) {
+      link: function (scope, $window) {
 
         // Save default widget config for reset
         scope.defaultWidgets = scope.options.defaultWidgets;
@@ -137,6 +137,11 @@ angular.module('ui.dashboard')
          * Opens a dialog for setting and changing widget properties
          * @param  {Object} widget The widget instance object
          */
+        
+        scope.openVizInNewWindow = function(widget) {
+        	$window.open(widget.consumerUrl, "_blank");
+        }
+        
         scope.openWidgetSettings = function (widget) {
 
           // Set up $modal options 

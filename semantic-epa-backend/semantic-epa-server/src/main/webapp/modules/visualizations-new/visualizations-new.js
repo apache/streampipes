@@ -26,7 +26,7 @@ angular.module('streamPipesApp')
     
     var preloadVisualizations = function(visualizations) {
     	angular.forEach(visualizations, function(viz) {
-    		widgetDefinitions.push({"name" : viz.pipelineName, "size" : {"width" :"50%", "height" : "100%"}, "style" : { }, "template" : '<iframe ng-src="' +viz.consumerUrl +'" style="border:0px;width:100%;" scrolling="yes"></iframe>'})
+    		widgetDefinitions.push({"name" : viz.pipelineName, "consumerUrl" : viz.consumerUrl, "size" : {"width" :"50%", "height" : "100%"}, "style" : { }, "template" : '<iframe ng-src="' +viz.consumerUrl +'" style="border:0px;width:100%;" scrolling="yes"></iframe>'})
     		
     	});
     	console.log(widgetDefinitions);
