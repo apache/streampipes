@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.model.client;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -19,6 +21,8 @@ public class Pipeline extends ElementComposition {
 	private boolean publicElement;
 	
 	private String createdByUser;
+	
+	private List<String> pipelineCategories;
 	
 	private @SerializedName("_id") String pipelineId;
     private @SerializedName("_rev") String rev;
@@ -81,6 +85,14 @@ public class Pipeline extends ElementComposition {
 	public void setRev(String rev) {
 		this.rev = rev;
 	}
+	
+	public List<String> getPipelineCategories() {
+		return pipelineCategories;
+	}
+
+	public void setPipelineCategories(List<String> pipelineCategories) {
+		this.pipelineCategories = pipelineCategories;
+	}
 
 	public Pipeline clone()
 	{
@@ -91,6 +103,7 @@ public class Pipeline extends ElementComposition {
 		pipeline.setStreams(streams);
 		pipeline.setAction(action);
 		pipeline.setCreatedByUser(createdByUser);
+		pipeline.setPipelineCategories(pipelineCategories);
 		
 		return pipeline;
 	}
