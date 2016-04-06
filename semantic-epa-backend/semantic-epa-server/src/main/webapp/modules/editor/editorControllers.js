@@ -1814,7 +1814,21 @@ angular.module('streamPipesApp')
         //return oP;
     });
 
-function SavePipelineController($scope, $rootScope, $mdDialog, $state) {
+function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) {
+	
+	$scope.pipelineCategories = [];
+	
+	$scope.getPipelineCategories = function(){
+        restApi.getPipelineCategories()
+            .success(function(pipelineCategories){
+                $scope.pipelineCategories = pipelineCategories;       
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
+
+    };
+    $scope.getPipelineCategories();
 	
 	$scope.savePipelineName = function(switchTab) {
 

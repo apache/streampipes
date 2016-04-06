@@ -1,9 +1,20 @@
 <div flex layout-fill>
 <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-<div flex="none" layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-<h5>SAVED PIPELINES</h5>
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+	<h5>PIPELINES</h5>
+	</div>
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+		<md-button class="md-accent" ng-click="showPipelineCategoriesDialog()">Manage Categories</md-button>
+	</div>
+	<div layout-fill>
+		<md-tabs md-dynamic-height md-border-bottom>
+				<md-tab label="All Pipelines" md-on-select="setSelectedTab('')"></md-tab> 
+				<md-tab label="{{pipelineCategory.categoryName}}" md-on-select="setSelectedTab(pipelineCategory._id)" ng-repeat="pipelineCategory in pipelineCategories"> </md-tab>
+		</md-tabs>
+	</div>
+	
 </div>
-</div>
+
 <div class="container-fluid">
 		<div>
 			<md-content layout-padding>
@@ -27,7 +38,7 @@
 								</span>
 							</div>
 						</div>
-					<div layout="column" ng-repeat="pipeline in pipelines | orderBy:'+name'">
+					<div layout="column" ng-repeat="pipeline in pipelines | pipelineCategoryFilter: activeCategory | orderBy:'+name'">
 						<md-list-item layout="row" class="md-with-secondary"  >
 							<md-button flex="5"  ng-click="startPipeline(pipeline._id)" class="md-icon-button" ng-disabled="starting" ng-show="!pipeline.running"><md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start" class="md-accent"></md-icon></md-button>
 							<md-button flex="5" ng-click="stopPipeline(pipeline._id)" class="md-icon-button" ng-disabled="stopping" ng-show="pipeline.running"><md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon></md-button>

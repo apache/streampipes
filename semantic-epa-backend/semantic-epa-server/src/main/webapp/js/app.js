@@ -946,6 +946,21 @@ angular
 	    	})
 	    }
 	    
+	    restApi.getPipelineCategories = function() {
+	    	return $http.get(urlBase() +"/pipelinecategories");
+	    };
+	    
+	    restApi.storePipelineCategory = function(pipelineCategory) {
+	    	return $http.post(urlBase() +"/pipelinecategories", pipelineCategory);
+	    };
+	    
+	    restApi.deletePipelineCategory = function(categoryId) {
+	    	return $http({
+	    	    method: 'DELETE',
+	    	    url: urlBase() + "/pipelinecategories/" +categoryId
+	    	});
+	    }
+	    
 	    restApi.recommendPipelineElement = function(pipeline) {
 	    	return $http.post(urlBase() +"/pipelines/recommend", pipeline);
 	    }

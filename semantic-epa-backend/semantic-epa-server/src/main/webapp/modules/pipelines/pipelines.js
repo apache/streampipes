@@ -10,6 +10,8 @@ angular
         $scope.stopping = false;
         
         $scope.pipelineStatus = [];
+        $scope.pipelineCategories = [];
+        $scope.activeCategory = "";
         
         $scope.startPipelineDirectly = $stateParams.pipeline;
                 
@@ -24,12 +26,15 @@ angular
         $scope.$on('$destroy', function () {
             pipelinePlumb.deleteEveryEndpoint();
         });
+        
+        $scope.setSelectedTab = function(categoryId) {
+        	$scope.activeCategory = categoryId;
+        }
 
         $scope.getPipelines = function(){
             restApi.getOwnPipelines()
                 .success(function(pipelines){
                     $scope.pipelines = pipelines;
-                    console.log($scope.pipelines);
                     $timeout(function(){
                         addContextMenu();
                     })
@@ -40,6 +45,18 @@ angular
 
         };
         $scope.getPipelines();
+        
+        $scope.getPipelineCategories = function(){
+            restApi.getPipelineCategories()
+                .success(function(pipelineCategories){
+                    $scope.pipelineCategories = pipelineCategories;       
+                })
+                .error(function(msg){
+                    console.log(msg);
+                });
+
+        };
+        $scope.getPipelineCategories();
 
         $scope.isTextIconShown = function(element){
             return element.iconUrl == null || element.iconUrl == 'http://localhost:8080/img' || typeof element.iconUrl === 'undefined';
@@ -49,6 +66,17 @@ angular
         $scope.activeClass = function(pipeline){
             return 'active-pipeline';
         }
+        
+        $scope.showPipelineCategoriesDialog = function(){
+       	 $mdDialog.show({
+       	      controller: PipelineCategoriesDialogController,
+       	      templateUrl: 'modules/pipelines/templates/managePipelineCategoriesDialog.tmpl.html',
+       	      parent: angular.element(document.body),
+       	      scope:$scope,
+       	      preserveScope: true,
+       	      clickOutsideToClose:true       	      
+       	    })
+       };
 
         $scope.showDialog = function(data){
         	 $mdDialog.show({
@@ -64,11 +92,8 @@ angular
 
         $scope.startPipeline = function(pipelineId) {
             $scope.starting = true;
-            console.log("starting pipeline");
         	restApi.startPipeline(pipelineId)
                 .success(function(data) {
-
-                    console.log(data);
                     $scope.showDialog(data);
                     $scope.getPipelines();
 
@@ -86,22 +111,16 @@ angular
         };
         
         $scope.stopPipeline = function(pipelineId) {
-            console.log("stopping pipeline");
             $scope.stopping = true;
         	restApi.stopPipeline(pipelineId)
                 .success(function(data) {
-
                     $scope.stopping = false;
-
-
                     $scope.showDialog(data);
                     $scope.getPipelines();
         	    })
                 .error(function(data){
                     console.log(data);
-
                     $scope.stopping = false;
-
                     $scope.showDialog({notifications : [{title : "Network Error", description : "Please check your Network."}]});
 
                 });
@@ -118,7 +137,6 @@ angular
 
         
         if ($scope.startPipelineDirectly != ""){
-        	console.log("starting pipeline");
            $scope.startPipeline($scope.startPipelineDirectly);
         }
 
@@ -246,6 +264,99 @@ angular
         function showPipelineInEditor(id){
         	$state.go("streampipes.edit", {pipeline : id});
         }
+        
+        function PipelineCategoriesDialogController($scope, $mdDialog) {
+        	
+        	$scope.newCategory = {};
+        	$scope.newCategory.categoryName = "";
+        	$scope.newCategory.categoryDescription = "";
+        	$scope.addSelected = false;
+        	$scope.addPipelineToCategorySelected = [];
+        	$scope.categoryDetailsVisible = [];
+        	$scope.selectedPipelineId = "";
+        	
+        	$scope.toggleCategoryDetailsVisibility = function(categoryId) {
+        		$scope.categoryDetailsVisible[categoryId] = !$scope.categoryDetailsVisible[categoryId];
+        	}
+        	
+        	
+            
+            $scope.addPipelineToCategory = function(pipelineCategory) {
+            	
+            	var pipeline = findPipeline(pipelineCategory.selectedPipelineId);
+            	if (pipeline.pipelineCategories == undefined) pipeline.pipelineCategories = [];
+            	pipeline.pipelineCategories.push(pipelineCategory._id);
+            	$scope.storeUpdatedPipeline(pipeline);
+            }
+            
+            $scope.removePipelineFromCategory = function(pipeline, categoryId) {
+            	var index = pipeline.pipelineCategories.indexOf(categoryId);
+            	pipeline.pipelineCategories.splice(index, 1);
+            	$scope.storeUpdatedPipeline(pipeline);
+            }
+            
+            $scope.storeUpdatedPipeline = function(pipeline) {
+            	 restApi.updatePipeline(pipeline)
+                 .success(function(msg){
+                     console.log(msg); 
+                     $scope.getPipelines();
+                 })
+                 .error(function(msg){
+                     console.log(msg);
+                 });
+            }
+            
+            var findPipeline = function(pipelineId) {
+            	var matchedPipeline = {};
+            	angular.forEach($scope.pipelines, function(pipeline) {
+            		console.log(pipeline._id);
+            		if (pipeline._id == pipelineId) matchedPipeline = pipeline;
+            	});
+            	return matchedPipeline;
+            }
+           
+            $scope.addPipelineCategory = function() {
+            	restApi.storePipelineCategory($scope.newCategory)
+            	 .success(function(data){
+                     console.log(data);
+                     $scope.getPipelineCategories();
+                     $scope.addSelected = false;
+                 })
+                 .error(function(msg){
+                     console.log(msg);
+                 });
+            }
+            
+            $scope.showAddToCategoryInput = function(categoryId, show) {
+            	$scope.addPipelineToCategorySelected[categoryId] = show;
+            	$scope.categoryDetailsVisible[categoryId] = true;
+            }
+            
+            $scope.deletePipelineCategory = function(pipelineId) {
+            	restApi.deletePipelineCategory(pipelineId)
+            	 .success(function(data){
+                     console.log(data);
+                     $scope.getPipelineCategories();
+                 })
+                 .error(function(msg){
+                     console.log(msg);
+                 });
+            }         
+        	
+        	$scope.showAddInput = function() {
+        		$scope.addSelected = true;
+        		$scope.newCategory.categoryName="";
+            	$scope.newCategory.categoryDescription="";
+        	}
+        	
+	      	$scope.hide = function() {
+	      	  $mdDialog.hide();
+	      	};
+	      	
+	      	$scope.cancel = function() {
+	      	    $mdDialog.cancel();
+	      	};
+      	}
         
         function PipelineStatusDialogController($scope, $mdDialog, data) {
         	
@@ -424,5 +535,35 @@ angular
                 elem.tooltip();
             }
         }
-    });
+    })
+    .filter('pipelineCategoryFilter', function() { 
+    	 return function(pipelines, categoryId) {
+    		 console.log(categoryId);
+    		 var result = [];
+    		 var showAll = false;
+    		 if (categoryId == "") showAll = true;
+    		 angular.forEach(pipelines, function(pipeline) {
+    			 if (showAll) result.push(pipeline);
+    			 else {
+	    			 angular.forEach(pipeline.pipelineCategories, function(category) {
+	    				 if (category == categoryId) result.push(pipeline);
+	    			 })
+    			 }
+    		 })
+    		 return result;
+    	 };
+    })
+    .filter('categoryAlreadyInPipelineFilter', function() { 
+    	 return function(pipelines, categoryId) {
+    		 var result = [];
+    		 angular.forEach(pipelines, function(pipeline) {
+    			 var inPipeline = false;
+    			 angular.forEach(pipeline.pipelineCategories, function(category) {
+    				 if (category == categoryId) inPipeline = true;
+    			 })
+    			 if (!inPipeline) result.push(pipeline);
+    		 })
+    		 return result;
+    	 };
+    })
 
