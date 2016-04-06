@@ -24,6 +24,7 @@ public class ReplaceOutputSchemaGenerator implements OutputSchemaGenerator<Repla
 		List<EventProperty> properties = stream.getEventSchema().getEventProperties();
 		
 		for(UriPropertyMapping replaceProperty : strategy.getReplaceProperties()) {
+		System.out.println(replaceProperty.getReplaceTo().toASCIIString());
 			EventProperty property = findPropertyById(replaceProperty.getReplaceTo(), properties);
 			EventProperty newProperty = clone(property);
 			if (replaceProperty.isRenamingAllowed()) newProperty.setRuntimeName(replaceProperty.getReplaceWith().getRuntimeName());
