@@ -86,6 +86,12 @@ public class Utils {
 		return dbClient;
 	}
 	
+	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, cfg.COUCHDB_PIPELINE_CATEGORY_DB));
+		return dbClient;
+	}
+	
 	private static CouchDbProperties props(Configuration cfg, String dbname)
 	{
 		return new CouchDbProperties(dbname, true, cfg.COUCHDB_PROTOCOL, cfg.COUCHDB_HOSTNAME, cfg.COUCHDB_PORT, null, null);	

@@ -25,6 +25,7 @@ import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.ContextStorage;
 import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.api.NotificationStorage;
+import de.fzi.cep.sepa.storage.api.PipelineCategoryStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
 import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
@@ -33,6 +34,7 @@ import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
 import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
 import de.fzi.cep.sepa.storage.impl.MonitoringDataStorageImpl;
 import de.fzi.cep.sepa.storage.impl.NotificationStorageImpl;
+import de.fzi.cep.sepa.storage.impl.PipelineCategoryStorageImpl;
 import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
 import de.fzi.cep.sepa.storage.impl.UserStorage;
@@ -188,6 +190,10 @@ public enum StorageManager {
 	public NotificationStorage getNotificationStorageApi()
 	{
 		return new NotificationStorageImpl();
+	}
+	
+	public PipelineCategoryStorage getPipelineCategoryStorageApi() {
+		return new PipelineCategoryStorageImpl();
 	}
 	
 	public ContextStorage getContextStorage() {

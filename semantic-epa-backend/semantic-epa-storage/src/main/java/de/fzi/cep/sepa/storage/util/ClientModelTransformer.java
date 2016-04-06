@@ -195,6 +195,7 @@ public class ClientModelTransformer {
 				UriPropertyMapping upm = strategy.getReplaceProperties().get(i);
 				Optional<Option> selectedProperty = pm.getInput().getOptions().stream().filter(p -> p.isSelected()).findFirst();
 				if (selectedProperty.isPresent()) {
+					System.out.println(selectedProperty.get().getElementId());
 					upm.setReplaceTo(URI.create(selectedProperty.get().getElementId()));
 					if (upm.isRenamingAllowed()) 
 						upm.getReplaceWith().setRuntimeName(pm.getRuntimeName());
