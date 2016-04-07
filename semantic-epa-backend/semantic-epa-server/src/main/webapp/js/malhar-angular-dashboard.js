@@ -72,7 +72,7 @@ angular.module('ui.dashboard')
         scope.sortableOptions = angular.extend({}, sortableDefaults, scope.options.sortableOptions || {});
 
       }],
-      link: function (scope, $window) {
+      link: function (scope) {
 
         // Save default widget config for reset
         scope.defaultWidgets = scope.options.defaultWidgets;
