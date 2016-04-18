@@ -1,0 +1,25 @@
+package de.fzi.cep.sepa.flink.test.project;
+
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import java.lang.String;
+
+public class TestProjectParameters extends BindingParameters {
+  private String propertyName;
+
+  private String outputProperty;
+
+  public TestProjectParameters(SepaInvocation graph, String propertyName, String outputProperty) {
+    super(graph);
+    this.propertyName = propertyName;
+    this.outputProperty = outputProperty;
+  }
+
+  public String getPropertyName() {
+    return propertyName;
+  }
+
+  public String getOutputProperty() {
+    return outputProperty;
+  }
+}

@@ -1,0 +1,21 @@
+package de.fzi.cep.sepa.flink.test.project;
+
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
+import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import java.util.Map;
+import org.apache.flink.streaming.api.datastream.DataStream;
+
+public class TestProjectProgram extends FlinkSepaRuntime<TestProjectParameters> {
+  public TestProjectProgram(TestProjectParameters params) {
+    super(params);
+  }
+
+  public TestProjectProgram(TestProjectParameters params, FlinkDeploymentConfig config) {
+    super(params, config);
+  }
+
+  @Override
+  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
+    return (DataStream<Map<String, Object>>) messageStream
+      .flatMap(new TestProject(params.getPropertyName()));}
+}

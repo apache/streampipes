@@ -1,0 +1,29 @@
+package de.fzi.cep.sepa.flink.test.project;
+
+import com.google.common.io.Resources;
+import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
+import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
+import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.util.DeclarerUtils;
+import java.lang.Override;
+
+public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjectParameters> {
+  @Override
+  public SepaDescription declareModel() {
+    try { 
+    	return DeclarerUtils.descriptionFromResources(Resources.getResource("testproject.jsonld"),
+    		SepaDescription.class);
+    } catch (SepaParseException e) {
+    	e.printStackTrace();
+    	return null;
+    }
+  }
+
+  @Override
+  protected FlinkSepaRuntime<TestProjectParameters> getRuntime(SepaInvocation graph) {
+    //TODO
+    return null;
+  }
+}
