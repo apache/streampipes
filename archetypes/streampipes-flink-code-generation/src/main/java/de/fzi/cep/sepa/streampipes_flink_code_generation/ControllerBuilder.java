@@ -13,26 +13,26 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class ControllerBuilder extends Builder {
 
-	public ControllerBuilder(String name, String packageName) {
-		super(name, packageName);
+	public ControllerBuilder(SepaDescription sepa, String name, String packageName) {
+		super(sepa, name, packageName);
 	}
-	
+
+	private String getDeclareModelCode() {
+		return "SepaDescription desc = new SepaDescription(\"" + sepa.getPathName() + "\", \"" + sepa.getName()
+				+ "\", \"" + sepa.getDescription() + "\");\n" + "return desc;\n";
+	}
+
 	@Override
 	public JavaFile build() {
 		MethodSpec declareModel = MethodSpec.methodBuilder("declareModel").addModifiers(Modifier.PUBLIC)
-				.addAnnotation(Override.class).returns(SepaDescription.class)
-				.addCode("" + "try { \n" + "	return $T.descriptionFromResources($T.getResource(\""
-						+ name.toLowerCase() + ".jsonld\"),\n" + "		SepaDescription.class);\n"
-						+ "} catch ($T e) {\n" + "	e.printStackTrace();\n" + "	return null;\n"
-
-						+ "}\n", JFC.DECLARE_UTILS, JFC.RESOURCES, JFC.SEPA_PARSE_EXCEPTION)
-				.build();
+				.addAnnotation(Override.class).returns(SepaDescription.class).addCode(getDeclareModelCode()).build();
 
 		ClassName parameters = ClassName.get(packageName, name + "Parameters");
 
 		MethodSpec getRuntime = MethodSpec.methodBuilder("getRuntime").addAnnotation(Override.class)
 				.addModifiers(Modifier.PROTECTED).addParameter(SepaInvocation.class, "graph")
-				.returns(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters)).addCode("//TODO\nreturn null;\n").build();
+				.returns(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters))
+				.addCode("//TODO\nreturn null;\n").build();
 
 		ClassName abstractFlinkAgentDeclarer = ClassName.get("de.fzi.cep.sepa.flink", "AbstractFlinkAgentDeclarer");
 
@@ -41,9 +41,6 @@ public class ControllerBuilder extends Builder {
 				.addMethod(getRuntime).build();
 
 		return JavaFile.builder(packageName, controllerClass).build();
-
-		// javaFile.writeTo(System.out);
-
 	}
 
 	@Override

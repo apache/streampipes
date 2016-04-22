@@ -20,10 +20,10 @@ public abstract class JFC {
 	public static ClassName FLAT_MAP_FUNCTION = ClassName.get("org.apache.flink.api.common.functions", "FlatMapFunction");
 	public static ClassName COLLECTOR = ClassName.get("org.apache.flink.util", "Collector");
 
-	public static ClassName RESOURCES = ClassName.get("com.google.common.io", "Resources");
+//	public static ClassName RESOURCES = ClassName.get("com.google.common.io", "Resources");
 
 	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get("de.fzi.cep.sepa.flink", "FlinkDeploymentConfig");
 	public static ClassName FLINK_SEPA_RUNTIME = ClassName.get("de.fzi.cep.sepa.flink", "FlinkSepaRuntime");
-	public static ClassName SEPA_PARSE_EXCEPTION = ClassName.get("de.fzi.cep.sepa.commons.exceptions", "SepaParseException");
-	public static ClassName DECLARE_UTILS = ClassName.get("de.fzi.cep.sepa.util", "DeclarerUtils");
+//	public static ClassName SEPA_PARSE_EXCEPTION = ClassName.get("de.fzi.cep.sepa.commons.exceptions", "SepaParseException");
+//	public static ClassName DECLARE_UTILS = ClassName.get("de.fzi.cep.sepa.util", "DeclarerUtils");
 }

@@ -29,6 +29,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		String name = "TestProject";
 		String packageName = "de.fzi.cep.sepa.flink.test.project";
+
 		createProject(name, packageName);
 	}
 
@@ -36,7 +37,7 @@ public class Main {
 		createDirectoryStructure();
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
-		Utils.writeToFile(new ControllerBuilder(name, packageName).build(), src);
+//		Utils.writeToFile(new ControllerBuilder(name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
 		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
 
