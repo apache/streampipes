@@ -1,6 +1,8 @@
 package de.fzi.cep.sepa.streampipes_flink_code_generation;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
@@ -11,8 +13,13 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 /**
@@ -29,15 +36,30 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		String name = "TestProject";
 		String packageName = "de.fzi.cep.sepa.flink.test.project";
+		
+		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
+		EventSchema schema1 = new EventSchema();
+		schema1.setEventProperties(eventProperties);
+		
+		EventStream stream1 = new EventStream();
+		stream1.setEventSchema(schema1);
+		
+		SepaDescription sepa = new SepaDescription("sepa/testproject", name, "Test description");
+		sepa.addEventStream(stream1);
 
-		createProject(name, packageName);
+		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+		strategies.add(outputStrategy);
+		sepa.setOutputStrategies(strategies);
+
+		createProject(sepa, name, packageName);
 	}
 
-	public static void createProject(String name, String packageName) throws Exception {
+	public static void createProject(SepaDescription sepa, String name, String packageName) throws Exception {
 		createDirectoryStructure();
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
-//		Utils.writeToFile(new ControllerBuilder(name, packageName).build(), src);
+		Utils.writeToFile(new ControllerBuilder(sepa, name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
 		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
 

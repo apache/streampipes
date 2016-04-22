@@ -10,6 +10,27 @@ public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjec
   @Override
   public SepaDescription declareModel() {
     SepaDescription desc = new SepaDescription("sepa/testProject", "TestProject", "Example description");
+    
+    
+    List<EventProperty> eventProperties = new ArrayList<EventProperty>();
+    EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#montracEvent").build();
+    eventProperties.add(e1);
+    
+    EventStream stream0 = StreamBuilder
+				.createStreamRestriction(EsperConfig.serverUrl +"/" + desc.getElementId())
+				.schema(
+						SchemaBuilder.create()
+							.properties(eventProperties)
+							.build()
+						).build();
+
+    List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+    AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+    strategies.add(outputStrategy);
+    desc.setOutputStrategies(strategies);
+
+    desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
+
     return desc;
   }
 
