@@ -16,7 +16,7 @@ public class ModelSubmitter {
 	{
 		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addSepRestlets(producers)
-		.getRestletConfigurations();	
+		.getRestletConfigurations(true);	
 		
 		return start(port, restletConfigurations);
 	}
@@ -31,7 +31,7 @@ public class ModelSubmitter {
 	{
 		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addSepaRestlets(declarers)
-		.getRestletConfigurations();	
+		.getRestletConfigurations(true);	
 
 		return start(port, restletConfigurations);
 	}
@@ -43,7 +43,7 @@ public class ModelSubmitter {
 	public static boolean submitConsumer(List<SemanticEventConsumerDeclarer> declarers, int port) {
 		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addSecRestlets(declarers)
-		.getRestletConfigurations();	
+		.getRestletConfigurations(true);	
 		
 		return start(port, restletConfigurations);
 	}
@@ -51,7 +51,7 @@ public class ModelSubmitter {
 	public static boolean submitMixed(List<Declarer<?, ?>> declarers, int port) {
 		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addRestlets(declarers)
-		.getRestletConfigurations();	
+		.getRestletConfigurations(true);	
 		
 		return start(port, restletConfigurations);
 		

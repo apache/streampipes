@@ -40,6 +40,8 @@ public class RestletGenerator {
 	private String contextPath;
 	private boolean standalone;
 	
+	public final static String REGEX = "[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/";
+	
 	public RestletGenerator(int port, String contextPath, boolean standalone) {
 		this.restletConfigurations = new ArrayList<>();
 		this.welcomePageDescriptions = new ArrayList<>();
@@ -81,7 +83,7 @@ public class RestletGenerator {
 
 		for (SemanticEventProcessingAgentDeclarer declarer : declarers) {
 			SepaDescription sepa = new SepaDescription(declarer.declareModel());
-			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", ""));
+			if (sepa.getPathName() == null) sepa.setPathName(sepa.getUri().replaceFirst(REGEX, ""));
 			//sepa.setIconUrl(baseUri +"/" +sepa.getIconUrl().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", ""));
 			if (standalone) 
 				{
@@ -135,7 +137,7 @@ public class RestletGenerator {
 		for (SemanticEventConsumerDeclarer declarer : declarers) {
 
 			SecDescription sec = new SecDescription(declarer.declareModel());
-			if (sec.getUri().startsWith("http")) sec.setUri(sec.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+/", ""));
+			if (sec.getUri().startsWith("http")) sec.setUri(sec.getUri().replaceFirst(REGEX, ""));
 			
 			String pathName = sec.getUri();
 			if (standalone) 
@@ -157,9 +159,10 @@ public class RestletGenerator {
 		return this;
 	}
 	
-	public List<RestletConfig> getRestletConfigurations()
+	public List<RestletConfig> getRestletConfigurations(boolean prependPath)
 	{
-		addConfig("", new WelcomePage(welcomePageDescriptions));
+		String pathPrefix = prependPath ? "/" : "";
+		addConfig(pathPrefix, new WelcomePage(welcomePageDescriptions));
 		return restletConfigurations;
 	}
 	
@@ -173,7 +176,7 @@ public class RestletGenerator {
 			return "http://localhost:";
 		}	
 	}
-	
+		
 	private String getBaseUri(int port)
 	{
 		return getUrl() +port;

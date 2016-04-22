@@ -45,7 +45,7 @@ public class SecRestlet extends ConsumableRestlet<SecDescription, SecInvocation>
 				
 				if (request.getMethod().equals(Method.DELETE))
 				{
-					Server.INSTANCE.getComponent().getDefaultHost().detach(this);
+					Server.INSTANCE.getRouter().detach(this);
 					de.fzi.cep.sepa.model.impl.Response detachResponse = instanceDeclarers.get(graph.getElementId()).detachRuntime(graph.getCorrespondingPipeline());
 					instanceDeclarers.remove(graph.getElementId());
 					//sendStatus(response, detachResponse);

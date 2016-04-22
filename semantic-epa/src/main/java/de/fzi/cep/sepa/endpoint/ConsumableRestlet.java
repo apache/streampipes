@@ -1,9 +1,7 @@
 package de.fzi.cep.sepa.endpoint;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.openrdf.repository.RepositoryException;
@@ -15,6 +13,7 @@ import org.restlet.Restlet;
 import org.restlet.data.Form;
 import org.restlet.data.Method;
 
+import de.fzi.cep.sepa.desc.RestletGenerator;
 import de.fzi.cep.sepa.desc.declarer.Declarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
@@ -68,11 +67,9 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	}
 	
 	protected void createInstanceEndpoint(I graph) {
-		String instanceUri = graph.getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "");
-		System.out.println("URI" +instanceUri);
+		String instanceUri = graph.getUri().replaceFirst(RestletGenerator.REGEX, "");
 		Server.INSTANCE
-			.getComponent()
-			.getDefaultHost()
+			.getRouter()
 			.attach(instanceUri, instanceRestlet(graph));
 	}
 	
