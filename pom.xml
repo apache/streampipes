@@ -110,6 +110,7 @@
     	<module>semantic-epa-runtime-flat</module>
     	<module>semantic-epa-sources-proasense-monitoring</module> 	
     	<module>semantic-epa-sources-demonstrator</module>
+    	<module>semantic-epa-samples-embedded</module>
 	</modules>
 
 	<!-- Build Settings -->
