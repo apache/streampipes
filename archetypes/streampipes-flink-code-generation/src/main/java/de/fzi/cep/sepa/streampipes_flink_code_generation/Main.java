@@ -36,7 +36,7 @@ public class Main {
 		createDirectoryStructure();
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
-		Utils.writeToFile(createController(name, packageName), src);
+		Utils.writeToFile(new ControllerBuilder(name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
 		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
 
@@ -55,60 +55,46 @@ public class Main {
 
 	public static JavaFile createProgram(String name, String packageName) {
 		ClassName parameters = ClassName.get("", name + "Parameters");
-		ClassName flinkDeploymentConfig = ClassName.get("de.fzi.cep.sepa.flink", "FlinkDeploymentConfig");
-		ClassName flinkSepaRuntime = ClassName.get("de.fzi.cep.sepa.flink", "FlinkSepaRuntime");
-		ClassName override = ClassName.get("", "Override");
-		ClassName map = ClassName.get("java.util", "Map");
-		ClassName string = ClassName.get("", "String");
-		ClassName object = ClassName.get("", "Object");
-		ClassName dataStream = ClassName.get("org.apache.flink.streaming.api.datastream", "DataStream");
-		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(map, string, object);
-		ParameterizedTypeName d = ParameterizedTypeName.get(dataStream, mapStringObject);
+		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(JFC.MAP, JFC.STRING, JFC.OBJECT);
+		ParameterizedTypeName d = ParameterizedTypeName.get(JFC.DATA_STREAM, mapStringObject);
 
 		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
 				.addParameter(parameters, "params").addStatement("super(params)").build();
 
 		MethodSpec constructorConfig = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(parameters, "params").addParameter(flinkDeploymentConfig, "config")
+				.addParameter(parameters, "params").addParameter(JFC.FLINK_DEPLOYMENT_CONFIG, "config")
 				.addStatement("super(params, config)").build();
 
-		MethodSpec getApplicationLogic = MethodSpec.methodBuilder("getApplicationLogic").addAnnotation(override)
+		MethodSpec getApplicationLogic = MethodSpec.methodBuilder("getApplicationLogic").addAnnotation(JFC.OVERRIDE)
 				.addModifiers(Modifier.PROTECTED).returns(d)
 				.addParameter(d, "messageStream").addCode("return (DataStream<Map<String, Object>>) messageStream\n"
 						+ "  .flatMap(new " + name + "(params.getPropertyName()));")
 				.build();
 
 		TypeSpec programClass = TypeSpec.classBuilder(name + "Program").addModifiers(Modifier.PUBLIC)
-				.superclass(ParameterizedTypeName.get(flinkSepaRuntime, parameters)).addMethod(constructor)
+				.superclass(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters)).addMethod(constructor)
 				.addMethod(constructorConfig).addMethod(getApplicationLogic).build();
 
 		return JavaFile.builder(packageName, programClass).build();
 	}
 
 	public static JavaFile createImplementation(String name, String packageName) {
-		ClassName map = ClassName.get("java.util", "Map");
-		ClassName string = ClassName.get("", "String");
-		ClassName object = ClassName.get("", "Object");
-		ClassName exception = ClassName.get("", "Exception");
-		ClassName override = ClassName.get("", "Override");
-		ClassName flatMapFunction = ClassName.get("org.apache.flink.api.common.functions", "FlatMapFunction");
-		ClassName collector = ClassName.get("org.apache.flink.util", "Collector");
-		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(map, string, object);
+		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(JFC.MAP, JFC.STRING, JFC.OBJECT);
 
 		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(string, "propertyName").addStatement("this.$N = $N", "propertyName", "propertyName")
+				.addParameter(JFC.STRING, "propertyName").addStatement("this.$N = $N", "propertyName", "propertyName")
 				.build();
 
 		TypeName in = mapStringObject;
-		TypeName out = ParameterizedTypeName.get(collector, mapStringObject);
+		TypeName out = ParameterizedTypeName.get(JFC.COLLECTOR, mapStringObject);
 
-		MethodSpec flatMap = MethodSpec.methodBuilder("flatMap").addAnnotation(override).addModifiers(Modifier.PUBLIC)
-				.addParameter(in, "in").addParameter(out, "out").addException(exception)
+		MethodSpec flatMap = MethodSpec.methodBuilder("flatMap").addAnnotation(JFC.OVERRIDE).addModifiers(Modifier.PUBLIC)
+				.addParameter(in, "in").addParameter(out, "out").addException(JFC.EXCEPTION)
 				.addStatement("Object o = in.get(propertyName)").addCode("//TODO implement\n").build();
 
 		TypeSpec parameterClass = TypeSpec.classBuilder("TestProject").addModifiers(Modifier.PUBLIC)
-				.addSuperinterface(ParameterizedTypeName.get(flatMapFunction, mapStringObject, mapStringObject))
-				.addField(string, "propertyName", Modifier.PRIVATE).addMethod(constructor).addMethod(flatMap).build();
+				.addSuperinterface(ParameterizedTypeName.get(JFC.FLAT_MAP_FUNCTION, mapStringObject, mapStringObject))
+				.addField(JFC.STRING, "propertyName", Modifier.PRIVATE).addMethod(constructor).addMethod(flatMap).build();
 
 		return JavaFile.builder(packageName, parameterClass).build();
 
@@ -135,37 +121,6 @@ public class Main {
 		return JavaFile.builder(packageName, parameterClass).build();
 	}
 
-	public static JavaFile createController(String name, String packageName) {
-		ClassName declareUtils = ClassName.get("de.fzi.cep.sepa.util", "DeclarerUtils");
-		ClassName resources = ClassName.get("com.google.common.io", "Resources");
-		ClassName sepaParseException = ClassName.get("de.fzi.cep.sepa.commons.exceptions", "SepaParseException");
-		MethodSpec declareModel = MethodSpec.methodBuilder("declareModel").addModifiers(Modifier.PUBLIC)
-				.addAnnotation(Override.class).returns(SepaDescription.class)
-				.addCode("" + "try { \n" + "	return $T.descriptionFromResources($T.getResource(\""
-						+ name.toLowerCase() + ".jsonld\"),\n" + "		SepaDescription.class);\n"
-						+ "} catch ($T e) {\n" + "	e.printStackTrace();\n" + "	return null;\n"
-
-						+ "}\n", declareUtils, resources, sepaParseException)
-				.build();
-
-		ClassName flinkSepaRuntime = ClassName.get("de.fzi.cep.sepa.flink", "FlinkSepaRuntime");
-		ClassName parameters = ClassName.get(packageName, name + "Parameters");
-
-		MethodSpec getRuntime = MethodSpec.methodBuilder("getRuntime").addAnnotation(Override.class)
-				.addModifiers(Modifier.PROTECTED).addParameter(SepaInvocation.class, "graph")
-				.returns(ParameterizedTypeName.get(flinkSepaRuntime, parameters)).addCode("//TODO\nreturn null;\n").build();
-
-		ClassName abstractFlinkAgentDeclarer = ClassName.get("de.fzi.cep.sepa.flink", "AbstractFlinkAgentDeclarer");
-
-		TypeSpec controllerClass = TypeSpec.classBuilder(name + "Controller").addModifiers(Modifier.PUBLIC)
-				.superclass(ParameterizedTypeName.get(abstractFlinkAgentDeclarer, parameters)).addMethod(declareModel)
-				.addMethod(getRuntime).build();
-
-		return JavaFile.builder(packageName, controllerClass).build();
-
-		// javaFile.writeTo(System.out);
-
-	}
 
 	public static String createPomFile(String name, String packageName) {
 		String pom = Utils.readResourceFile("pom");

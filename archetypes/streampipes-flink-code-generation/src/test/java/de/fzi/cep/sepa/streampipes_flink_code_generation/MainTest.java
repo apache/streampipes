@@ -18,35 +18,28 @@ import junit.framework.TestCase;
  * Unit test for simple App.
  */
 public class MainTest extends TestCase {
-	private String name = "TestProject";
-	private String packeageName = "de.fzi.cep.sepa.flink.test.project";
 
 	public void testCreateProgram() {
-		String actual = Main.createProgram(name, packeageName).toString();
+		String actual = Main.createProgram(TV.NAME, TV.PACKAGE_NAME).toString();
 		String expected = Utils.readResourceFile("expected_TestProjectProgram_java");
 		assertEquals(expected, actual);
 	}
 
-	public void testCreateController() {
-		String actual = Main.createController(name, packeageName).toString();
-		String expected = Utils.readResourceFile("expected_TestProjectController_java");
-		assertEquals(expected, actual);
-	}
 
 	public void testCreateParametes() {
-		String actual = Main.createParameters(name, packeageName).toString();
+		String actual = Main.createParameters(TV.NAME, TV.PACKAGE_NAME).toString();
 		String expected = Utils.readResourceFile("expected_TestProjectParameters_java");
 		assertEquals(expected, actual);
 	}
 
 	public void testCreateImplementation() {
-		String actual = Main.createImplementation(name, packeageName).toString();
+		String actual = Main.createImplementation(TV.NAME, TV.PACKAGE_NAME).toString();
 		String expected = Utils.readResourceFile("expected_TestProject_java");
 		assertEquals(expected, actual);
 	}
 
 	public void testCreatePom() {
-		String actual = Main.createPomFile(name, packeageName);
+		String actual = Main.createPomFile(TV.NAME, TV.PACKAGE_NAME);
 		String expected = Utils.readResourceFile("pom_xml");
 
 		assertEquals(expected, actual);
