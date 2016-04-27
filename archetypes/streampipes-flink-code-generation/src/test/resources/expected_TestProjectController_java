@@ -10,23 +10,18 @@ public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjec
   @Override
   public SepaDescription declareModel() {
     SepaDescription desc = new SepaDescription("sepa/testProject", "TestProject", "Example description");
-    
-    
-    List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-    EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#montracEvent").build();
-    eventProperties.add(e1);
-    
-    EventStream stream0 = StreamBuilder
-				.createStreamRestriction(EsperConfig.serverUrl +"/" + desc.getElementId())
-				.schema(
-						SchemaBuilder.create()
-							.properties(eventProperties)
-							.build()
-						).build();
+    List<EventProperty> eventProperties0 = new ArrayList<EventProperty>();
+    EventProperty e0 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build();
+    eventProperties0.add(e0);
+    EventStream stream0 = StreamBuilder.createStream("sepa/testProject", "TestProject", "Example description")
+    .schema(SchemaBuilder.create().properties(eventProperties0).build()).build();
+    desc.addEventStream(stream0);
 
     List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-    AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
-    strategies.add(outputStrategy);
+    AppendOutputStrategy outputStrategy0 = new AppendOutputStrategy();
+    List<EventProperty> appendProperties = new ArrayList<EventProperty>();
+    outputStrategy0.setEventProperties(appendProperties);
+    strategies.add(outputStrategy0);
     desc.setOutputStrategies(strategies);
 
     desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());

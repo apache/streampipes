@@ -16,10 +16,12 @@ import com.squareup.javapoet.TypeSpec;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 /**
@@ -49,6 +51,10 @@ public class Main {
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
+		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(),
+				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
 		sepa.setOutputStrategies(strategies);
 
@@ -90,8 +96,8 @@ public class Main {
 
 		MethodSpec getApplicationLogic = MethodSpec.methodBuilder("getApplicationLogic").addAnnotation(JFC.OVERRIDE)
 				.addModifiers(Modifier.PROTECTED).returns(d)
-				.addParameter(d, "messageStream").addCode("return (DataStream<Map<String, Object>>) messageStream\n"
-						+ "  .flatMap(new " + name + "(params.getPropertyName()));")
+				.addParameter(d, "messageStream").addCode("return ($T<Map<String, Object>>) messageStream\n"
+						+ "  .flatMap(new " + name + "(params.getPropertyName()));", JFC.DATA_STREAM)
 				.build();
 
 		TypeSpec programClass = TypeSpec.classBuilder(name + "Program").addModifiers(Modifier.PUBLIC)
