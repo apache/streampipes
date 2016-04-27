@@ -2,9 +2,19 @@ package de.fzi.cep.sepa.flink.test.project;
 
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.model.builder.SchemaBuilder;
+import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 import java.lang.Override;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjectParameters> {
   @Override
@@ -13,19 +23,15 @@ public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjec
     List<EventProperty> eventProperties0 = new ArrayList<EventProperty>();
     EventProperty e0 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build();
     eventProperties0.add(e0);
-    EventStream stream0 = StreamBuilder.createStream("sepa/testProject", "TestProject", "Example description")
-    .schema(SchemaBuilder.create().properties(eventProperties0).build()).build();
+    EventStream stream0 = StreamBuilder.createStream("sepa/testProject", "TestProject", "Example description").schema(SchemaBuilder.create().properties(eventProperties0).build()).build();
     desc.addEventStream(stream0);
-
     List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
     AppendOutputStrategy outputStrategy0 = new AppendOutputStrategy();
     List<EventProperty> appendProperties = new ArrayList<EventProperty>();
     outputStrategy0.setEventProperties(appendProperties);
     strategies.add(outputStrategy0);
     desc.setOutputStrategies(strategies);
-
     desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-
     return desc;
   }
 

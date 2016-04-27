@@ -14,11 +14,16 @@ import com.squareup.javapoet.ClassName;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 /**
  * Java File Classes (JFC)
@@ -45,8 +50,14 @@ public abstract class JFC {
 	public static ClassName SEPA_DESCRIPTION = ClassName.get(SepaDescription.class);
 	public static ClassName EVENT_STREAM = ClassName.get(EventStream.class);
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
+	public static ClassName SCHEMA_BUILDER = ClassName.get(SchemaBuilder.class);
 	public static ClassName EVENT_PROPERTY = ClassName.get(EventProperty.class);
 	public static ClassName PRIMITIVE_PROPERTY_BUILDER = ClassName.get(PrimitivePropertyBuilder.class);
+	public static ClassName APPEND_OUTPUT_STRATEGY = ClassName.get(AppendOutputStrategy.class);
+	public static ClassName OUTPUT_STRATEGY = ClassName.get(OutputStrategy.class);
+	public static ClassName EP_PROPERTIES = ClassName.get(EpProperties.class);
+	public static ClassName STANDARD_TRANSPORT_FORMAT = ClassName.get(StandardTransportFormat.class);
+
 
 
 	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get(FlinkDeploymentConfig.class);

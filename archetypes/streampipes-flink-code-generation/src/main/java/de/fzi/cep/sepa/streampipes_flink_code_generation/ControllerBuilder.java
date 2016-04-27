@@ -26,53 +26,53 @@ public class ControllerBuilder extends OldBuilder {
 		super(sepa, name, packageName);
 	}
 
-
 	public Builder getEventStream(Builder b, EventStream eventStream, int n) {
 		b = getEventProperties(b, eventStream.getEventSchema().getEventProperties(), n);
 		b.addStatement(
 				"$T stream$L = $T.createStream($S, $S, $S).schema($T.create().properties(eventProperties$L).build()).build()",
 				JFC.EVENT_STREAM, n, JFC.STREAM_BUILDER, eventStream.getName(), eventStream.getDescription(),
-				eventStream.getUri(), JFC.STREAM_BUILDER, n);
+				eventStream.getUri(), JFC.SCHEMA_BUILDER, n);
 
 		return b;
 	}
 
-
 	public Builder getEventProperties(Builder b, List<EventProperty> eventProperties, int n) {
-		b.addStatement("$T<$T> eventProperties$L = new $T<$T>()", JFC.LIST, JFC.ARRAY_LIST, n, JFC.EVENT_PROPERTY, 
+		b.addStatement("$T<$T> eventProperties$L = new $T<$T>()", JFC.LIST, JFC.EVENT_PROPERTY, n, JFC.ARRAY_LIST,
 				JFC.EVENT_PROPERTY);
 
 		for (int i = 0; i < eventProperties.size(); i++) {
 			// TODO check for type
-			b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i, JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
+			b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i,
+					JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
 			b.addStatement("eventProperties$L.add(e$L)", n, i);
 		}
 
 		return b;
 	}
 
-	public String getAppendOutputStrategy(AppendOutputStrategy aos, int n) {
-		String result = "AppendOutputStrategy outputStrategy" + n + " = new AppendOutputStrategy();\n";
-		result += "List<EventProperty> appendProperties = new ArrayList<EventProperty>();\n";
+	public Builder getAppendOutputStrategy(Builder b, AppendOutputStrategy aos, int n) {
+		b.addStatement("$T outputStrategy$L = new $T()", JFC.APPEND_OUTPUT_STRATEGY, n, JFC.APPEND_OUTPUT_STRATEGY);
+		b.addStatement("$T<$T> appendProperties = new $T<$T>()", JFC.LIST, JFC.EVENT_PROPERTY, JFC.ARRAY_LIST,
+				JFC.EVENT_PROPERTY);
 
 		for (EventProperty ep : aos.getEventProperties()) {
-			result += "appendProperties.add(";
 			// TODO
-			result += "EpProperties.stringEp(\"" + ep.getRuntimeName() + "\", \""
-					+ ep.getDomainProperties().get(0).toString() + "\"));\n";
+			b.addStatement("appendProperties.add($T.stringEp($S, $S))", JFC.EP_PROPERTIES, ep.getRuntimeName(),
+					ep.getDomainProperties().get(0).toString());
 		}
 
-		result += "outputStrategy" + n + ".setEventProperties(appendProperties);";
+		b.addStatement("outputStrategy$L.setEventProperties(appendProperties)", n);
 
-		return result;
+		return b;
 	}
 
-	public String getOutputStrategies(List<OutputStrategy> outputStrategies) {
-		String result = "List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();\n";
+	public Builder getOutputStrategies(Builder b, List<OutputStrategy> outputStrategies) {
+		b.addStatement("$T<$T> strategies = new $T<$T>()", JFC.LIST, JFC.OUTPUT_STRATEGY, JFC.ARRAY_LIST,
+				JFC.OUTPUT_STRATEGY);
 		for (int i = 0; i < outputStrategies.size(); i++) {
 			OutputStrategy outputStrategy = outputStrategies.get(i);
 			if (outputStrategy instanceof AppendOutputStrategy) {
-				result += getAppendOutputStrategy((AppendOutputStrategy) outputStrategy, i) + "\n";
+				b = getAppendOutputStrategy(b, (AppendOutputStrategy) outputStrategy, i);
 			} else {
 				// TODO add implementation for the other strategies
 				try {
@@ -81,64 +81,62 @@ public class ControllerBuilder extends OldBuilder {
 					e.printStackTrace();
 				}
 			}
-			result += "strategies.add(outputStrategy" + i + ");\n";
-		}
 
-		return result;
-	}
-
-	public String getSupportedGrounding(EventGrounding grounding) {
-		return "desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());";
-	}
-
-	public Builder getDeclareModelCode(Builder b) {
-		b.addStatement("$T desc = new $T(\"" + sepa.getPathName() + "\", \"" + sepa.getName() + "\", \""
-				+ sepa.getDescription() + "\")", JFC.SEPA_DESCRIPTION, JFC.SEPA_DESCRIPTION);
-
-		for (int i = 0; i < sepa.getEventStreams().size(); i++) {
-			// result += getEventStream(sepa.getEventStreams().get(i), i) +
-			// "\n";
-			b = getEventStream(b, sepa.getEventStreams().get(i), i);
-
-			b.addStatement("desc.addEventStream(stream" + i + ")");
+			b.addStatement("strategies.add(outputStrategy$L)", i);
 		}
 
 		return b;
 	}
 
-	public static void main(String[] args) {
-		com.squareup.javapoet.MethodSpec.Builder declareModel = MethodSpec.methodBuilder("declareModel")
-				.addModifiers(Modifier.PUBLIC).addAnnotation(Override.class).returns(SepaDescription.class);
-
-		ControllerBuilder cb = new ControllerBuilder(new SepaDescription("", "", ""), "", "");
-		declareModel = cb.getDeclareModelCode(declareModel);
-		System.out.println(declareModel.build().toString());
-
+	public Builder getSupportedGrounding(Builder b, EventGrounding grounding) {
+		return b.addStatement("desc.setSupportedGrounding($T.getSupportedGrounding())", JFC.STANDARD_TRANSPORT_FORMAT);
 	}
 
-	public String getDeclareModelCode() {
-		String result = "SepaDescription desc = new SepaDescription(\"" + sepa.getPathName() + "\", \"" + sepa.getName()
-				+ "\", \"" + sepa.getDescription() + "\");\n";
+	//	public String getDeclareModelCode() {
+//		String result = "SepaDescription desc = new SepaDescription(\"" + sepa.getPathName() + "\", \"" + sepa.getName()
+//				+ "\", \"" + sepa.getDescription() + "\");\n";
+//		for (int i = 0; i < sepa.getEventStreams().size(); i++) {
+//			// TODO
+//			// result += getEventStream(sepa.getEventStreams().get(i), i) +
+//			// "\n";
+//			result += "desc.addEventStream(stream" + i + ");\n";
+//		}
+//
+//		// result += "\n" + getOutputStrategies(sepa.getOutputStrategies());
+//		result += "desc.setOutputStrategies(strategies);\n\n";
+//
+//		// result += getSupportedGrounding(sepa.getSupportedGrounding());
+//
+//		result += "\n\nreturn desc;\n";
+//
+//		return result;
+//	}
+
+	public Builder getDeclareModelCode(Builder b) {
+		b.addStatement("$T desc = new $T($S, $S, $S)", JFC.SEPA_DESCRIPTION, JFC.SEPA_DESCRIPTION, sepa.getPathName(), sepa.getName(), sepa.getDescription());
+
 		for (int i = 0; i < sepa.getEventStreams().size(); i++) {
-			//TODO
-//			result += getEventStream(sepa.getEventStreams().get(i), i) + "\n";
-			result += "desc.addEventStream(stream" + i + ");\n";
+			// TODO
+			b = getEventStream(b, sepa.getEventStreams().get(i), i);
+			b.addStatement("desc.addEventStream(stream$L)", i);
 		}
 
-		result += "\n" + getOutputStrategies(sepa.getOutputStrategies());
-		result += "desc.setOutputStrategies(strategies);\n\n";
+		b = getOutputStrategies(b, sepa.getOutputStrategies());
+		b.addStatement("desc.setOutputStrategies(strategies)");
 
-		result += getSupportedGrounding(sepa.getSupportedGrounding());
+		b = getSupportedGrounding(b, sepa.getSupportedGrounding());
 
-		result += "\n\nreturn desc;\n";
+		b.addStatement("return desc");
 
-		return result;
+		return b;
 	}
 
 	@Override
 	public JavaFile build() {
-		MethodSpec declareModel = MethodSpec.methodBuilder("declareModel").addModifiers(Modifier.PUBLIC)
-				.addAnnotation(Override.class).returns(SepaDescription.class).addCode(getDeclareModelCode()).build();
+		Builder mB = MethodSpec.methodBuilder("declareModel").addModifiers(Modifier.PUBLIC)
+				.addAnnotation(Override.class).returns(SepaDescription.class);
+
+		MethodSpec declareModel = getDeclareModelCode(mB).build();
 
 		ClassName parameters = ClassName.get(packageName, name + "Parameters");
 
