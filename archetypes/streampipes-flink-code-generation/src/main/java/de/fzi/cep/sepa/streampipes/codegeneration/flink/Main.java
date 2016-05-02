@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,13 +23,15 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 /**
  *
  */
 public class Main {
 	private static String path = "/home/philipp/FZI/";
-	private static String root = path + "aa_delme_flinkTemplatetest/";
+	private static String root = path + "a_delme_flinkTemplatetest/";
 	private static String target = root + "target/";
 	private static String src = root + "src/main/java/";
 	private static String resources = root + "src/main/resources/";

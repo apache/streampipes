@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class ControllerGenerator extends Generator {
 

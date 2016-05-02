@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

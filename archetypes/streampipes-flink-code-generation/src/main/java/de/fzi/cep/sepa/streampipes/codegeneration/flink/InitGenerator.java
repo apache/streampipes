@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeSpec;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class InitGenerator extends Generator {
 	private String port;

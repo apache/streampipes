@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration;
 
 import com.squareup.javapoet.JavaFile;
 

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,6 +15,8 @@ import org.junit.Test;
 import com.google.common.io.Files;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
+
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 public class UtilsTest {
 	private static File temp;

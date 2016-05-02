@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes_flink_code_generation;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -11,6 +11,9 @@ import org.junit.Test;
 import com.squareup.javapoet.ClassName;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.InitGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 public class InitGeneratorTest {
 
