@@ -29,6 +29,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.util.StandardTransportFormat;
 
 /**
@@ -55,6 +56,7 @@ public abstract class JFC {
 	
 	public static ClassName SEPA_DESCRIPTION = ClassName.get(SepaDescription.class);
 	public static ClassName SEPA_INVOCATION = ClassName.get(SepaInvocation.class);
+	public static ClassName SEPA_UTILS = ClassName.get(SepaUtils.class);
 	public static ClassName EVENT_STREAM = ClassName.get(EventStream.class);
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
 	public static ClassName SCHEMA_BUILDER = ClassName.get(SchemaBuilder.class);

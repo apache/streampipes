@@ -132,6 +132,8 @@ public class ControllerGeneratorTest {
 		String actual = cd.getRuntime().build().toString();
 		String expected = "@java.lang.Override\n"
 				+ "protected de.fzi.cep.sepa.flink.FlinkSepaRuntime<de.fzi.cep.sepa.flink.test.project.TestProjectParameters> getRuntime(de.fzi.cep.sepa.model.impl.graph.SepaInvocation graph) {\n"
+				+ "  String mappingFirst = de.fzi.cep.sepa.model.util.SepaUtils.getMappingPropertyName(graph, \"mappingFirst\");\n" + 
+				"  String freeText = de.fzi.cep.sepa.model.util.SepaUtils.getFreeTextStaticPropertyValue(graph, \"freeText\");\n"
 				+ "  de.fzi.cep.sepa.flink.test.project.TestProjectParameters staticParam = new de.fzi.cep.sepa.flink.test.project.TestProjectParameters(graph, mappingFirst, freeText);\n"
 				+ "  return new " + TV.PACKAGE_NAME +"."+ TV.NAME
 				+ "Program(staticParam, new de.fzi.cep.sepa.flink.FlinkDeploymentConfig(" + TV.PACKAGE_NAME

@@ -18,7 +18,10 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
@@ -129,6 +132,11 @@ public class ControllerGenerator extends Generator {
 				.addModifiers(Modifier.PROTECTED).addParameter(SepaInvocation.class, "graph")
 				.returns(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters));
 
+		
+		for (StaticProperty sp : sepa.getStaticProperties()) {
+			getStaticProperty(b, sp);
+		}
+
 		String staticParam = "$T staticParam = new $T(graph, ";
 		for (StaticProperty sp : sepa.getStaticProperties()) {
 			staticParam = staticParam + sp.getInternalName() + ", ";
@@ -139,6 +147,25 @@ public class ControllerGenerator extends Generator {
 		b.addStatement("return new $T(staticParam, new $T($T.JAR_FILE, $T.FLINK_HOST, $T.FLINK_PORT))", program,
 				JFC.FLINK_DEPLOYMENT_CONFIG, config, config, config);
 
+		return b;
+	}
+
+	private Builder getStaticProperty(Builder b, StaticProperty sp) {
+		String name = sp.getInternalName().replaceAll("-", "_").replaceAll("/", "_");
+		if (sp instanceof MappingProperty) {
+			b.addStatement("String $L = $T.getMappingPropertyName(graph, $S)", name, JFC.SEPA_UTILS,
+					sp.getInternalName());
+		} else if (sp instanceof FreeTextStaticProperty) {
+			b.addStatement("String $L = $T.getFreeTextStaticPropertyValue(graph, $S)", name, JFC.SEPA_UTILS,
+					sp.getInternalName());
+		} else {
+			// TODO add implementation for the other strategies
+			try {
+				throw new Exception("Not yet Implemented");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return b;
 	}
 
