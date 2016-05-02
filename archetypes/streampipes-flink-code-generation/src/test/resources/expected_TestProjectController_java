@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.flink.test.project;
 
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
@@ -37,7 +38,7 @@ public class TestProjectController extends AbstractFlinkAgentDeclarer<TestProjec
 
   @Override
   protected FlinkSepaRuntime<TestProjectParameters> getRuntime(SepaInvocation graph) {
-    //TODO
-    return null;
+    TestProjectParameters staticParam = new TestProjectParameters(graph);
+    return new TestProjectProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
   }
 }

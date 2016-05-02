@@ -16,6 +16,7 @@ public class TestProjectProgram extends FlinkSepaRuntime<TestProjectParameters> 
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-    return (DataStream<Map<String, Object>>) messageStream
-      .flatMap(new TestProject(params.getPropertyName()));}
+    // TODO implement
+    return messageStream;
+  }
 }

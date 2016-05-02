@@ -78,11 +78,12 @@ public class Main {
 		createDirectoryStructure();
 
 		// source files
-		Utils.writeToFile(new ImplementationGenerator(sepa, name, packageName).build(), src);
+//		Utils.writeToFile(new ImplementationGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ParametersGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new InitGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ProgramGenerator(sepa, name, packageName).build(), src);
+		Utils.writeToFile(new ConfigGenerator(sepa, name, packageName).build(), src);
 
 		// xml files
 		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName);

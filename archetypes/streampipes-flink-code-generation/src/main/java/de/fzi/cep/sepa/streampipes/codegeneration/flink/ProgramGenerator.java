@@ -33,8 +33,8 @@ public class ProgramGenerator extends Generator {
 
 		MethodSpec getApplicationLogic = MethodSpec.methodBuilder("getApplicationLogic").addAnnotation(JFC.OVERRIDE)
 				.addModifiers(Modifier.PROTECTED).returns(d)
-				.addParameter(d, "messageStream").addCode("return ($T<Map<String, Object>>) messageStream\n"
-						+ "  .flatMap(new " + name + "(params.getPropertyName()));", JFC.DATA_STREAM)
+				.addParameter(d, "messageStream")
+				.addCode("// TODO implement\nreturn messageStream;\n")
 				.build();
 
 		TypeSpec programClass = TypeSpec.classBuilder(name + "Program").addModifiers(Modifier.PUBLIC)
