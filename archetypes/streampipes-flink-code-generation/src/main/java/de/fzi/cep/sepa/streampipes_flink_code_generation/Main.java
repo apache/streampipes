@@ -29,7 +29,7 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
  */
 public class Main {
 	private static String path = "/home/philipp/FZI/";
-	private static String root = path + "a_flinkTemplatetest/";
+	private static String root = path + "aa_flinkTemplatetest/";
 	private static String target = root + "target/";
 	private static String src = root + "src/main/java/";
 	private static String resources = root + "src/main/resources/";
@@ -65,7 +65,7 @@ public class Main {
 		createDirectoryStructure();
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
-		Utils.writeToFile(new ControllerBuilder(sepa, name, packageName).build(), src);
+		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
 		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
 

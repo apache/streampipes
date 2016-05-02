@@ -23,13 +23,13 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
-public class ControllerBuilderTest {
+public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetEventStream() {
 
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		EventStream eventStream = StreamBuilder.createStream(TV.NAME, TV.DESCRIPTION, TV.PATH_NAME)
 				.schema(SchemaBuilder.create().build()).build();
 
@@ -45,7 +45,7 @@ public class ControllerBuilderTest {
 	@Test
 	public void testGetEventProperties() {
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build());
 
@@ -60,7 +60,7 @@ public class ControllerBuilderTest {
 	
 	@Test
 	public void testAppendGetOutputStrategyWithNoEventProperty() {
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -77,7 +77,7 @@ public class ControllerBuilderTest {
 
 	@Test
 	public void testAppendGetOutputStrategyWithEventProperties() {
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -99,7 +99,7 @@ public class ControllerBuilderTest {
 
 	@Test
 	public void testGetOutputStrategies() {
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
@@ -114,7 +114,7 @@ public class ControllerBuilderTest {
 
 	@Test
 	public void testGetSupportedGrounding() {
-		ControllerBuilder cb = new ControllerBuilder(null, "", "");
+		ControllerGenerator cb = new ControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		String actual = cb.getSupportedGrounding(b, null).build().toString();
@@ -141,7 +141,7 @@ public class ControllerBuilderTest {
 		strategies.add(outputStrategy);
 		sepa.setOutputStrategies(strategies);
 
-		String actual = new ControllerBuilder(sepa, TV.NAME, TV.PACKAGE_NAME).build().toString();
+		String actual = new ControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME).build().toString();
 		String expected = Utils.readResourceFile("expected_TestProjectController_java");
 
 		assertEquals(expected, actual);

@@ -20,9 +20,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
-public class ControllerBuilder extends OldBuilder {
+public class ControllerGenerator extends Generator {
 
-	public ControllerBuilder(SepaDescription sepa, String name, String packageName) {
+	public ControllerGenerator(SepaDescription sepa, String name, String packageName) {
 		super(sepa, name, packageName);
 	}
 

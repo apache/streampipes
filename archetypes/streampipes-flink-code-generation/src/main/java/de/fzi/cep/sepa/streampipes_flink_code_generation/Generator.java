@@ -4,12 +4,12 @@ import com.squareup.javapoet.JavaFile;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
-public abstract class OldBuilder {
+public abstract class Generator {
 	protected String name;
 	protected String packageName;
 	protected SepaDescription sepa;
 	
-	public OldBuilder(SepaDescription sepa, String name, String packageName) {
+	public Generator(SepaDescription sepa, String name, String packageName) {
 		super();
 		this.sepa = sepa;
 		this.name = name;
