@@ -52,7 +52,7 @@ public class InitGenerator extends Generator {
 	@Override
 	public JavaFile build() {
 		List<ClassName> controllers = new ArrayList<ClassName>();
-		controllers.add(ClassName.get("", "TestProjectController"));
+		controllers.add(ClassName.get("", name + "Controller"));
 
 		TypeSpec controllerClass = TypeSpec.classBuilder("Init").addModifiers(Modifier.PUBLIC)
 				.superclass(JFC.EMBEDDED_MODEL_SUBMITTER).addMethod(getEpaDeclarers(controllers))

@@ -36,7 +36,7 @@ public class Main {
 	private static String test = root + "src/test/";
 
 	public static void main(String[] args) throws Exception {
-		String name = "TestProject";
+		String name = "NewTestProject";
 		String packageName = "de.fzi.cep.sepa.flink.test.project";
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
@@ -66,9 +66,9 @@ public class Main {
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
 		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
+		Utils.writeToFile(new InitGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
 		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
-
 	}
 
 	public static void createDirectoryStructure() throws Exception {
@@ -121,7 +121,7 @@ public class Main {
 				.addParameter(in, "in").addParameter(out, "out").addException(JFC.EXCEPTION)
 				.addStatement("Object o = in.get(propertyName)").addCode("//TODO implement\n").build();
 
-		TypeSpec parameterClass = TypeSpec.classBuilder("TestProject").addModifiers(Modifier.PUBLIC)
+		TypeSpec parameterClass = TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC)
 				.addSuperinterface(ParameterizedTypeName.get(JFC.FLAT_MAP_FUNCTION, mapStringObject, mapStringObject))
 				.addField(JFC.STRING, "propertyName", Modifier.PRIVATE).addMethod(constructor).addMethod(flatMap).build();
 
