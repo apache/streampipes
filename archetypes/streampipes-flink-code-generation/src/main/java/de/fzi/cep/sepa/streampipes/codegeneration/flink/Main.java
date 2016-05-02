@@ -69,12 +69,11 @@ public class Main {
 		createDirectoryStructure();
 
 		// source files
-		Utils.writeToFile(createImplementation(name, packageName), src);
-		Utils.writeToFile(createParameters(name, packageName), src);
+		Utils.writeToFile(new ImplementationGenerator(sepa, name, packageName).build(), src);
+		Utils.writeToFile(new ParametersGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new InitGenerator(sepa, name, packageName).build(), src);
-		Utils.writeToFile(createProgram(name, packageName), src);
-		Utils.writeToFile(createProgram(name, packageName), src);
+		Utils.writeToFile(new ProgramGenerator(sepa, name, packageName).build(), src);
 
 		// xml files
 		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName);
@@ -92,74 +91,6 @@ public class Main {
 		if (!success) {
 			throw new Exception("Couldn't create folder structure");
 		}
-	}
-
-	public static JavaFile createProgram(String name, String packageName) {
-		ClassName parameters = ClassName.get("", name + "Parameters");
-		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(JFC.MAP, JFC.STRING, JFC.OBJECT);
-		ParameterizedTypeName d = ParameterizedTypeName.get(JFC.DATA_STREAM, mapStringObject);
-
-		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(parameters, "params").addStatement("super(params)").build();
-
-		MethodSpec constructorConfig = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(parameters, "params").addParameter(JFC.FLINK_DEPLOYMENT_CONFIG, "config")
-				.addStatement("super(params, config)").build();
-
-		MethodSpec getApplicationLogic = MethodSpec.methodBuilder("getApplicationLogic").addAnnotation(JFC.OVERRIDE)
-				.addModifiers(Modifier.PROTECTED).returns(d)
-				.addParameter(d, "messageStream").addCode("return ($T<Map<String, Object>>) messageStream\n"
-						+ "  .flatMap(new " + name + "(params.getPropertyName()));", JFC.DATA_STREAM)
-				.build();
-
-		TypeSpec programClass = TypeSpec.classBuilder(name + "Program").addModifiers(Modifier.PUBLIC)
-				.superclass(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters)).addMethod(constructor)
-				.addMethod(constructorConfig).addMethod(getApplicationLogic).build();
-
-		return JavaFile.builder(packageName, programClass).build();
-	}
-
-	public static JavaFile createImplementation(String name, String packageName) {
-		ParameterizedTypeName mapStringObject = ParameterizedTypeName.get(JFC.MAP, JFC.STRING, JFC.OBJECT);
-
-		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(JFC.STRING, "propertyName").addStatement("this.$N = $N", "propertyName", "propertyName")
-				.build();
-
-		TypeName in = mapStringObject;
-		TypeName out = ParameterizedTypeName.get(JFC.COLLECTOR, mapStringObject);
-
-		MethodSpec flatMap = MethodSpec.methodBuilder("flatMap").addAnnotation(JFC.OVERRIDE).addModifiers(Modifier.PUBLIC)
-				.addParameter(in, "in").addParameter(out, "out").addException(JFC.EXCEPTION)
-				.addStatement("Object o = in.get(propertyName)").addCode("//TODO implement\n").build();
-
-		TypeSpec parameterClass = TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC)
-				.addSuperinterface(ParameterizedTypeName.get(JFC.FLAT_MAP_FUNCTION, mapStringObject, mapStringObject))
-				.addField(JFC.STRING, "propertyName", Modifier.PRIVATE).addMethod(constructor).addMethod(flatMap).build();
-
-		return JavaFile.builder(packageName, parameterClass).build();
-
-	}
-
-	public static JavaFile createParameters(String name, String packageName) {
-		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(SepaInvocation.class, "graph").addStatement("super(graph)")
-				.addParameter(String.class, "propertyName").addStatement("this.$N = $N", "propertyName", "propertyName")
-				.addParameter(String.class, "outputProperty")
-				.addStatement("this.$N = $N", "outputProperty", "outputProperty").build();
-
-		MethodSpec getPropertyName = MethodSpec.methodBuilder("getPropertyName").addModifiers(Modifier.PUBLIC)
-				.returns(String.class).addStatement("return propertyName").build();
-
-		MethodSpec getOutputProperty = MethodSpec.methodBuilder("getOutputProperty").addModifiers(Modifier.PUBLIC)
-				.returns(String.class).addStatement("return outputProperty").build();
-
-		TypeSpec parameterClass = TypeSpec.classBuilder(name + "Parameters").addModifiers(Modifier.PUBLIC)
-				.superclass(BindingParameters.class).addField(String.class, "propertyName", Modifier.PRIVATE)
-				.addField(String.class, "outputProperty", Modifier.PRIVATE).addMethod(constructor)
-				.addMethod(getPropertyName).addMethod(getOutputProperty).build();
-
-		return JavaFile.builder(packageName, parameterClass).build();
 	}
 
 }

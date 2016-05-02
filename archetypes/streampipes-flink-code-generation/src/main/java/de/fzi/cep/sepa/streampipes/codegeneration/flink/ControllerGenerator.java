@@ -94,26 +94,6 @@ public class ControllerGenerator extends Generator {
 		return b.addStatement("desc.setSupportedGrounding($T.getSupportedGrounding())", JFC.STANDARD_TRANSPORT_FORMAT);
 	}
 
-	//	public String getDeclareModelCode() {
-//		String result = "SepaDescription desc = new SepaDescription(\"" + sepa.getPathName() + "\", \"" + sepa.getName()
-//				+ "\", \"" + sepa.getDescription() + "\");\n";
-//		for (int i = 0; i < sepa.getEventStreams().size(); i++) {
-//			// TODO
-//			// result += getEventStream(sepa.getEventStreams().get(i), i) +
-//			// "\n";
-//			result += "desc.addEventStream(stream" + i + ");\n";
-//		}
-//
-//		// result += "\n" + getOutputStrategies(sepa.getOutputStrategies());
-//		result += "desc.setOutputStrategies(strategies);\n\n";
-//
-//		// result += getSupportedGrounding(sepa.getSupportedGrounding());
-//
-//		result += "\n\nreturn desc;\n";
-//
-//		return result;
-//	}
-
 	public Builder getDeclareModelCode(Builder b) {
 		b.addStatement("$T desc = new $T($S, $S, $S)", JFC.SEPA_DESCRIPTION, JFC.SEPA_DESCRIPTION, sepa.getPathName(), sepa.getName(), sepa.getDescription());
 
