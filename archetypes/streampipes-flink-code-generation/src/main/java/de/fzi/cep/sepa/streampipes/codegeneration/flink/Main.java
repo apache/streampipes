@@ -1,37 +1,31 @@
 package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.element.Modifier;
-
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
-
-import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.model.builder.SchemaBuilder;
+import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 /**
  *
  */
 public class Main {
-	private static String path = "/home/philipp/FZI/";
-	private static String root = path + "a_delme_flinkTemplatetest/";
+	private static String root = "/home/philipp/FZI/a_delme_flinkTemplatetest/";
+
 	private static String target = root + "target/";
 	private static String src = root + "src/main/java/";
 	private static String resources = root + "src/main/resources/";
@@ -43,14 +37,19 @@ public class Main {
 		String name = "NewTestProject";
 		String packageName = "de.fzi.cep.sepa.flink.test.project";
 		
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
-		EventSchema schema1 = new EventSchema();
-		schema1.setEventProperties(eventProperties);
-		
-		EventStream stream1 = new EventStream();
-		stream1.setEventSchema(schema1);
-		
 		SepaDescription sepa = new SepaDescription("sepa/testproject", name, "Test description");
+		
+		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
+		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#test1").build();
+		eventProperties.add(e1);
+		
+		EventStream stream1 = StreamBuilder
+				.createStreamRestriction("localhost/sepa/testproject")
+				.schema(
+						SchemaBuilder.create()
+							.properties(eventProperties)
+							.build()
+						).build();
 		sepa.addEventStream(stream1);
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
@@ -61,6 +60,16 @@ public class Main {
 		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
 		sepa.setOutputStrategies(strategies);
+		
+
+		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "mappingFirst",
+				"Mapping First: ", ""));
+		staticProperties.add(new FreeTextStaticProperty("freeText", "Free Text: ", ""));
+		
+		sepa.setStaticProperties(staticProperties);
+		
+		
 
 		createProject(sepa, name, packageName);
 	}

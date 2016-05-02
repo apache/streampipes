@@ -2,24 +2,23 @@ package de.fzi.cep.sepa.flink.test.project;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import java.lang.String;
 
 public class TestProjectParameters extends BindingParameters {
-  private String propertyName;
+  private String mappingFirst;
 
-  private String outputProperty;
+  private String freeText;
 
-  public TestProjectParameters(SepaInvocation graph, String propertyName, String outputProperty) {
+  public TestProjectParameters(SepaInvocation graph, String mappingFirst, String freeText) {
     super(graph);
-    this.propertyName = propertyName;
-    this.outputProperty = outputProperty;
+    this.mappingFirst = mappingFirst;
+    this.freeText = freeText;
   }
 
-  public String getPropertyName() {
-    return propertyName;
+  public String getMappingFirst() {
+    return mappingFirst;
   }
 
-  public String getOutputProperty() {
-    return outputProperty;
+  public String getFreeText() {
+    return freeText;
   }
 }
