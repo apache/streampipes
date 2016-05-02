@@ -1,0 +1,20 @@
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+​
+	<context-param>
+		<param-name>org.restlet.application</param-name>
+		<param-value>
+              ####name####
+		</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>RestletServlet</servlet-name>
+		<servlet-class>
+			org.restlet.ext.servlet.ServerServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RestletServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>

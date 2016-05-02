@@ -64,6 +64,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>testproject</finalName>
+		<finalName>####name####</finalName>
 	</build>
 </project>

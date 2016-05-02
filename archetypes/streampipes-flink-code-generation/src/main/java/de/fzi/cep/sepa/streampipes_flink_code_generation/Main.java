@@ -29,11 +29,13 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
  */
 public class Main {
 	private static String path = "/home/philipp/FZI/";
-	private static String root = path + "aa_flinkTemplatetest/";
+	private static String root = path + "aa_delme_flinkTemplatetest/";
 	private static String target = root + "target/";
 	private static String src = root + "src/main/java/";
 	private static String resources = root + "src/main/resources/";
 	private static String test = root + "src/test/";
+	private static String webInf = root + "WebContent/WEB-INF/";
+
 
 	public static void main(String[] args) throws Exception {
 		String name = "NewTestProject";
@@ -63,12 +65,19 @@ public class Main {
 
 	public static void createProject(SepaDescription sepa, String name, String packageName) throws Exception {
 		createDirectoryStructure();
+
+		// source files
 		Utils.writeToFile(createImplementation(name, packageName), src);
 		Utils.writeToFile(createParameters(name, packageName), src);
 		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new InitGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(createProgram(name, packageName), src);
-		Utils.writeToFile(createPomFile(name, packageName), root + "pom.xml");
+		Utils.writeToFile(createProgram(name, packageName), src);
+
+		// xml files
+		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName);
+		Utils.writeToFile(xmlGenerator.getPomFile(), root + "pom.xml");
+		Utils.writeToFile(xmlGenerator.getWebXmlFile(), webInf + "web.xml");
 	}
 
 	public static void createDirectoryStructure() throws Exception {
@@ -76,6 +85,7 @@ public class Main {
 		success = (new File(src)).mkdirs();
 		success = (new File(resources)).mkdirs();
 		success = (new File(test)).mkdirs();
+		success = (new File(webInf)).mkdirs();
 
 		if (!success) {
 			throw new Exception("Couldn't create folder structure");
@@ -150,10 +160,4 @@ public class Main {
 		return JavaFile.builder(packageName, parameterClass).build();
 	}
 
-
-	public static String createPomFile(String name, String packageName) {
-		String pom = Utils.readResourceFile("pom");
-		pom = pom.replace("####name####", name.toLowerCase());
-		return pom;
-	}
 }
