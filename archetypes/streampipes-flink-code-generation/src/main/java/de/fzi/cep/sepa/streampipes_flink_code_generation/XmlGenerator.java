@@ -1,9 +1,5 @@
 package de.fzi.cep.sepa.streampipes_flink_code_generation;
 
-import com.squareup.javapoet.JavaFile;
-
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-
 public class XmlGenerator {
 	private String name;
 	private String packageName;
