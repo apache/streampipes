@@ -111,6 +111,7 @@
     	<module>semantic-epa-sources-proasense-monitoring</module> 	
     	<module>semantic-epa-sources-demonstrator</module>
     	<module>semantic-epa-samples-embedded</module>
+    	<module>semantic-epa-code-generation</module>
 	</modules>
 
 	<!-- Build Settings -->
