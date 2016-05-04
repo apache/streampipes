@@ -19,9 +19,9 @@ import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 public class InitGenerator extends Generator {
 	private String port;
 
-	public InitGenerator(SepaDescription sepa, String name, String packageName) {
+	public InitGenerator(SepaDescription sepa, String name, String packageName, String port) {
 		super(sepa, name, packageName);
-		port = "8080";
+		this.port = port;
 	}
 
 	public MethodSpec getEpaDeclarers(List<ClassName> controllers) {

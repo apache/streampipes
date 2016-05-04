@@ -82,7 +82,7 @@ public class Main {
 //		Utils.writeToFile(new ImplementationGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ParametersGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ControllerGenerator(sepa, name, packageName).build(), src);
-		Utils.writeToFile(new InitGenerator(sepa, name, packageName).build(), src);
+		Utils.writeToFile(new InitGenerator(sepa, name, packageName, "8080").build(), src);
 		Utils.writeToFile(new ProgramGenerator(sepa, name, packageName).build(), src);
 		Utils.writeToFile(new ConfigGenerator(sepa, name, packageName).build(), src);
 
@@ -92,7 +92,7 @@ public class Main {
 		Utils.writeToFile(xmlGenerator.getWebXmlFile(), webInf + "web.xml");
 	}
 
-	public static void createDirectoryStructure() throws Exception {
+	private static void createDirectoryStructure() throws Exception {
 		boolean success = (new File(target)).mkdirs();
 		success = (new File(src)).mkdirs();
 		success = (new File(resources)).mkdirs();

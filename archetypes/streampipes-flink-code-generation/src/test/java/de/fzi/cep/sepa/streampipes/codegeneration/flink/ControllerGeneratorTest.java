@@ -126,7 +126,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetRuntime() {
-		SepaDescription sepa = getSepa();
+		SepaDescription sepa = TV.getSepa();
 		ControllerGenerator cd = new ControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME);
 
 		String actual = cd.getRuntime().build().toString();
@@ -165,34 +165,6 @@ public class ControllerGeneratorTest {
 		assertEquals(expected, actual);
 	}
 
-	private SepaDescription getSepa() {
-		SepaDescription sepa = new SepaDescription(TV.PATH_NAME, TV.NAME, TV.DESCRIPTION);
 
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#test1").build();
-		eventProperties.add(e1);
-
-		EventStream stream1 = StreamBuilder.createStreamRestriction("localhost/sepa/testproject")
-				.schema(SchemaBuilder.create().properties(eventProperties).build()).build();
-		sepa.addEventStream(stream1);
-
-		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
-		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
-		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "appendedTime", "",
-				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
-		outputStrategy.setEventProperties(appendProperties);
-		strategies.add(outputStrategy);
-		sepa.setOutputStrategies(strategies);
-
-		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties
-				.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "mappingFirst", "Mapping First: ", ""));
-		staticProperties.add(new FreeTextStaticProperty("freeText", "Free Text: ", ""));
-
-		sepa.setStaticProperties(staticProperties);
-
-		return sepa;
-	}
 
 }

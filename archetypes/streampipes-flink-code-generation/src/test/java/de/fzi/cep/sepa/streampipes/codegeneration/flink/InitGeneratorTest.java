@@ -22,7 +22,7 @@ public class InitGeneratorTest {
 		List<ClassName> list = new ArrayList<ClassName>();
 		list.add(ClassName.get(TV.PACKAGE_NAME, TV.NAME + "Controller"));
 
-		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME).getEpaDeclarers(list).toString();
+		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME, "8080").getEpaDeclarers(list).toString();
 		String expected = "@java.lang.Override\n" + 
 				"protected java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer> epaDeclarers() {\n" + 
 				"  java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer> result = new java.util.ArrayList<de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer>();\n" + 
@@ -34,7 +34,7 @@ public class InitGeneratorTest {
 
 	@Test
 	public void testGetSourceDeclarers() {
-		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME).getSourceDeclarers(null).toString();
+		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME, "8080").getSourceDeclarers(null).toString();
 		String expected = "@java.lang.Override\n" + 
 				"protected java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer> sourceDeclarers() {\n" + 
 				"  java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer> result = new java.util.ArrayList<de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer>();\n" + 
@@ -46,7 +46,7 @@ public class InitGeneratorTest {
 
 	@Test
 	public void testGetConsumerEpaDeclarers() {
-		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME).getConsumerEpaDeclarers(null).toString();
+		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME, "8080").getConsumerEpaDeclarers(null).toString();
 		String expected = "@java.lang.Override\n" + 
 				"protected java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer> consumerDeclarers() {\n" + 
 				"  java.util.List<de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer> result = new java.util.ArrayList<de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer>();\n" + 
@@ -57,7 +57,7 @@ public class InitGeneratorTest {
 
 	@Test
 	public void testBuild() {
-		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME).build().toString();
+		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME, "8080").build().toString();
 		String expected = Utils.readResourceFile("expected_Init_java");
 
 		assertEquals(expected, actual);
