@@ -36,6 +36,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		String name = "NewTestProject";
 		String packageName = "de.fzi.cep.sepa.flink.test.project";
+		String version = "0.0.1-SNAPSHOT";
 		
 		SepaDescription sepa = new SepaDescription("sepa/testproject", name, "Test description");
 		
@@ -71,10 +72,10 @@ public class Main {
 		
 		
 
-		createProject(sepa, name, packageName);
+		createProject(sepa, name, packageName, version);
 	}
 
-	public static void createProject(SepaDescription sepa, String name, String packageName) throws Exception {
+	public static void createProject(SepaDescription sepa, String name, String packageName, String version) throws Exception {
 		createDirectoryStructure();
 
 		// source files
@@ -86,7 +87,7 @@ public class Main {
 		Utils.writeToFile(new ConfigGenerator(sepa, name, packageName).build(), src);
 
 		// xml files
-		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName);
+		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName, version);
 		Utils.writeToFile(xmlGenerator.getPomFile(), root + "pom.xml");
 		Utils.writeToFile(xmlGenerator.getWebXmlFile(), webInf + "web.xml");
 	}

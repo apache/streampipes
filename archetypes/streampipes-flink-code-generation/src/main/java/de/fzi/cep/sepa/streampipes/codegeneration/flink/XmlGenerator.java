@@ -5,15 +5,18 @@ import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 public class XmlGenerator {
 	private String name;
 	private String packageName;
+	private String version;
 
-	public XmlGenerator(String name, String packageName) {
+	public XmlGenerator(String name, String packageName, String version) {
 		this.name = name;
 		this.packageName = packageName;
+		this.version = version;
 	}
 
 	public String getPomFile() {
 		String pom = Utils.readResourceFile("pom");
 		pom = pom.replaceAll("####name####", name.toLowerCase());
+		pom = pom.replaceAll("####version####", version);
 		return pom;
 	}
 	
