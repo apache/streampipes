@@ -23,7 +23,7 @@ import com.clarkparsia.empire.annotation.InvalidRdfException;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
-import de.fzi.cep.sepa.manager.generation.ArchetypeManager;
+import de.fzi.cep.sepa.manager.generation.CodeGenerationManager;
 import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.Notifications;
@@ -51,7 +51,7 @@ public class DeploymentImpl extends AbstractRestInterface {
 		
 		SepaDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
 		
-		File f = new ArchetypeManager(config, sepa).getGeneratedFile();
+		File f = new CodeGenerationManager(config, sepa).getGeneratedFile();
 
 	    if (!f.exists()) {
 	        throw new WebApplicationException(404);
