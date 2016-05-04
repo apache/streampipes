@@ -1,13 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>de.fzi.cep.sepa</groupId>
+		<artifactId>semantic-epa-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 
-	<groupId>de.fzi.cep.sepa</groupId>
-	<artifactId>streampipes-flink-code-generation</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>semantic-epa-code-generation</artifactId>
 	<packaging>jar</packaging>
 
-	<name>streampipes-flink-code-generation</name>
+	<name>semantic-epa-code-generation</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -21,9 +24,13 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-model-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
