@@ -69,7 +69,6 @@ public class Matcher {
 					if (rightPrimitive.getRuntimeType() != null && !rightPrimitive.getRuntimeType().equals("")) {
 						if (!leftPrimitive.getRuntimeType().equals(rightPrimitive.getRuntimeType())) 
 							if (!subclassOf(leftPrimitive.getRuntimeType(), rightPrimitive.getRuntimeType())) match = false;
-						System.out.println(match);
 					}
 					
 					//check domain property restriction
@@ -82,7 +81,6 @@ public class Matcher {
 										.anyMatch(lp -> 
 											rp.toString().equals(lp.toString()))))
 							match = false;
-						System.out.println(match);
 					}
 							
 					//if (!matches(leftUris, rightPrimitive.getDomainProperties())) match = false;
