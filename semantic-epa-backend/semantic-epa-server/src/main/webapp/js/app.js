@@ -8,32 +8,32 @@ angular
         contextPath : "/semantic-epa-backend",
         api : "/api/v2",
 		streamEndpointOptions : {
-			endpoint: ["Dot", {radius: 5}],
-			paintStyle: {fillStyle: "grey"},
-			connectorStyle: {strokeStyle: "grey", lineWidth: 4},
-			connector: "Straight",
+			endpoint: ["Dot", {radius:12}],
+			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
+			connector: "StateMachine",
 			isSource: true,
-			anchor: ["Perimeter", {shape: "Circle"}],
+			anchor:"Right",
+			type : "token",
 			connectorOverlays: [
-				["Arrow", {width: 25, length: 20, location: .5, id: "arrow"}],
+				["Arrow", {width: 20, length: 10, location: 0.5, id: "arrow"}],
 			]
 		},
 
 		sepaEndpointOptions : {
-			endpoint: ["Dot", {radius: 5}],
-			paintStyle: {fillStyle: "grey"},
-			connectorStyle: {strokeStyle: "grey", lineWidth: 4},
-			connector: "Straight",
+			endpoint: ["Dot", {radius:12}],
+			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
+			connector: "StateMachine",
 			isSource: true,
 			anchor: "Right",
+			type : "empty",
 			connectorOverlays: [
-				["Arrow", {width: 25, length: 20, location: .5, id: "arrow"}],
+				["Arrow", {width: 25, length: 20, location: 0.5, id: "arrow"}],
 			]
 		},
 
 		leftTargetPointOptions : {
-			endpoint: "Rectangle",
-			paintStyle: {fillStyle: "grey"},
+			endpoint: ["Dot", {radius:12}],
+			type : "empty",
 			anchor: "Left",
 			isTarget: true
 		}

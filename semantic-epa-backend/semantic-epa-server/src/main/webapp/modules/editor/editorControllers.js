@@ -136,7 +136,7 @@ angular.module('streamPipesApp')
        	   	    })
             }
             
-            $scope.showCustomizeDialog = function(elementData, sepaName) {
+            $scope.showCustomizeDialog = function(elementData, sepaName, sourceEndpoint) {
             	$rootScope.state.currentElement = elementData;
             	 $mdDialog.show({
        	   	      controller: CustomizeController,
@@ -148,7 +148,8 @@ angular.module('streamPipesApp')
        	   	      preserveScope:true,
        		   	  locals : {
        		   		  elementData : elementData,
-       		   		  sepaName : sepaName
+       		   		  sepaName : sepaName,
+       		   		  sourceEndpoint : sourceEndpoint
        		      }
        	   	    })
             };
@@ -238,7 +239,6 @@ angular.module('streamPipesApp')
             $scope.displayPipelineById = function(){
                 restApi.getPipelineById($scope.currentModifiedPipeline)
                     .success(function(pipeline){
-                        console.log("Succes, pipeline retrieved by ID");
                         $scope.displayPipeline(pipeline);
                     
                     })
@@ -275,7 +275,6 @@ angular.module('streamPipesApp')
                 connectPipelineElements(pipeline, true);
                 //console.log(json);
                 jsPlumb.repaintEverything();
-                console.log(pipeline);
                 
                 $scope.currentPipelineName = pipeline.name;
                 $scope.currentPipelineDescription = pipeline.description;
@@ -363,7 +362,6 @@ angular.module('streamPipesApp')
                             angular.forEach($scope.options, function(o) {
                             	$scope.selectedOptions.push(o.type);
                             });
-                            console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
                             console.log(error);
@@ -375,7 +373,6 @@ angular.module('streamPipesApp')
                             angular.forEach($scope.options, function(o) {
                             	$scope.selectedOptions.push(o.type);
                             });
-                            console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
                             console.log(error);
@@ -387,7 +384,6 @@ angular.module('streamPipesApp')
                             angular.forEach($scope.options, function(o) {
                             	$scope.selectedOptions.push(o.type);
                             });
-                            console.log($scope.options);
                         }, function (error){
                             $scope.options = [];
                             console.log(error);
@@ -398,8 +394,6 @@ angular.module('streamPipesApp')
 
             $scope.loadBlocks = function(){
                 restApi.getBlocks().then(function(data){
-                    console.log("LOAD BLOCKS")
-                    console.log(data);
                     data.data.forEach(function(block, i, blocks){
                        block.type = "block";
                     });
@@ -523,8 +517,15 @@ angular.module('streamPipesApp')
             };
 
             $scope.streamDropped = function($newElement, endpoints){
-                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
-                    //toggleStyle(e);
+            	
+            	 $newElement.append($('<span>').addClass("help-button").append($compile("<md-icon md-svg-icon='action:ic_help_24px'>")($scope).addClass("green")).click(function(e){
+           	      
+                 	//toggleStyle(e);
+                     //togglePossibleElements(e, $newElement);
+                 }));
+                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green")).click(function(e){
+                	      
+                	//toggleStyle(e);
                     togglePossibleElements(e, $newElement);
                 }));
                 $scope.isStreamInAssembly = true;
@@ -537,7 +538,7 @@ angular.module('streamPipesApp')
             };
 
             $scope.sepaDropped = function($newElement, endpoints){
-                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
+                $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green")).click(function(e){
                     //toggleStyle(e);
                     togglePossibleElements(e, $newElement);
                 }));
@@ -553,7 +554,8 @@ angular.module('streamPipesApp')
                 if (endpoints) {
                     if ($newElement.data("JSON").inputNodes < 2) { //1 InputNode
 
-                        jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
+                        //jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
+                    	jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
                     } else {
                         jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.25));
 
@@ -600,15 +602,68 @@ angular.module('streamPipesApp')
             function initPlumb(){
 
                 $rootScope.state.plumbReady = true;
+                
+                jsPlumb.registerEndpointTypes({
+                	  "empty":{             		  
+                		  paintStyle: { 
+                			  	fillStyle: "white",
+                			    strokeStyle:"#9E9E9E", 
+                			    lineWidth:2
+                			  } 
+                	  },
+                	  "token":{          
+                		  paintStyle: { 
+              			  	fillStyle: "#BDBDBD",
+              			    strokeStyle:"#9E9E9E", 
+              			    lineWidth:2
+              			  } ,
+              			hoverPaintStyle: { 
+            			  	fillStyle: "#BDBDBD",
+            			    strokeStyle:"#4CAF50", 
+            			    lineWidth:4
+            			  } 
+                	  },
+                	  "highlight":{          
+                		  paintStyle: { 
+              			  	fillStyle: "white",
+              			    strokeStyle:"#4CAF50", 
+              			    lineWidth:4
+              			  } 
+                	  }
+                });
+                       
                 jsPlumb.unbind("connection");
+                
+                jsPlumb.bind("connectionDetached", function(info, originalEvent) {
+                	info.targetEndpoint.setType("empty");
+                });
+                
+                jsPlumb.bind("connectionDrag", function(connection) {      	
+                	jsPlumb.selectEndpoints().each(function(endpoint) {
+                		if (endpoint.isTarget && endpoint.connections.length == 0) {
+                				endpoint.setType("highlight");
+                		}
+                	});
+   
+                });
+                jsPlumb.bind("connectionAborted", function(connection) {
+                	jsPlumb.selectEndpoints().each(function(endpoint) {
+                		if (endpoint.isTarget && endpoint.connections.length == 0) {
+                				endpoint.setType("empty");
+                		}
+                	});
+                })
+                
                 jsPlumb.bind("connection", function (info, originalEvent) {
-
+                 	        	 
                     var $target = $(info.target);
+               
                     if (!$target.hasClass('a')){ //class 'a' = do not show customize modal //TODO class a zuweisen
                         createPartialPipeline(info);
                         $rootScope.state.currentPipeline.update()
                             .success(function(data){
                                 if (data.success) {
+                                	info.targetEndpoint.setType("token");
                                     //TODO Objekt im Backend �ndern
                                     modifyPipeline(data.pipelineModifications);
                                     for (var i = 0, sepa; sepa = $rootScope.state.currentPipeline.sepas[i]; i++) {
@@ -616,17 +671,14 @@ angular.module('streamPipesApp')
                                         if ($(id).length > 0) {
                                             if ($(id).data("options") != true) {
                                                 if (!isFullyConnected(id)) {
+                                                	console.log("fully");
                                                     return;
                                                 }
-                                                $scope.showCustomizeDialog($(id), sepa.name);
-//                                                $('#customize-content').html($scope.prepareCustomizeModal($(id)));
-//                                                $(textInputFields).each(function (index, value) {
-//                                                    addAutoComplete(value.fieldName, value.propertyName);
-//                                                });
-//                                                var iwbUri = "https://localhost:8443/resource/?uri=" +sepa.elementId;
-//                                                var string = "Customize " + sepa.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
-//                                                $('#customizeTitle').html(string);
-//                                                $('#customizeModal').modal('show');
+                                                var sourceEndpoint = jsPlumb.selectEndpoints({element : info.targetEndpoint.elementId});
+                                                console.log(sourceEndpoint);
+                                                $scope.showCustomizeDialog($(id), sepa.name, sourceEndpoint);
+                                                console.log("INFO");
+                                                console.log(info);
                                             }
                                         }
                                     }
@@ -636,12 +688,6 @@ angular.module('streamPipesApp')
                                             return;
                                         }
                                         $scope.showCustomizeDialog($(id), $rootScope.state.currentPipeline.action.name);
-//                                        $('#customize-content').html($scope.prepareCustomizeModal($(id)));
-//                                        var iwbUri = "https://localhost:8443/resource/?uri=" +$rootScope.state.currentPipeline.action.elementId;
-//                                        var string = "Customize " + $rootScope.state.currentPipeline.action.name +"  <a target='_blank' href='" +iwbUri +"'<span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></a>";
-//                                        ;
-//                                        $('#customizeTitle').html(string);
-//                                        $('#customizeModal').modal('show');
                                     }
                                 }else{
                                     jsPlumb.detach(info.connection);
@@ -696,10 +742,6 @@ angular.module('streamPipesApp')
 
                                 //Droppable Sepas
                             } else if (ui.draggable.hasClass('sepa')) {
-                                //$newState.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope)).click(function(e){
-                                //    //toggleStyle(e);
-                                //    togglePossibleElements(e, $newState);
-                                //}))
                                 $scope.sepaDropped($newState, true);
 
                                 //Droppable Actions
@@ -770,11 +812,9 @@ angular.module('streamPipesApp')
 
                 addElementToPartialPipeline(element, pipelinePart);
                 $rootScope.state.currentPipeline = pipelinePart;
-
             }
 
             function addElementToPartialPipeline(element, pipelinePart) {
-
                 pipelinePart.addElement(element);
                 var connections = jsPlumb.getConnections({target: element});
                 if (connections.length > 0) {
@@ -876,10 +916,8 @@ angular.module('streamPipesApp')
             }
 
            function initRecs(pipeline, $element) {
-                console.log("Recommending");
                 restApi.recommendPipelineElement(pipeline)
                     .success(function (data) {
-                        console.log(data);
                         if (data.success) {
                             $(".recommended-list", $element).remove();
                             $element.append($("<span><ul>").addClass("recommended-list"));
@@ -917,16 +955,16 @@ angular.module('streamPipesApp')
                             $scope.possibleElements = [];
                             $scope.activePossibleElementFilter = {};
                             $("md-icon", event.currentTarget).remove();
-                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
                             //$scope.$apply();
                             //altes SVG adden
 
                         } else { //Auf anderen Filter geklickt
                             $("md-icon", event.currentTarget).remove();
-                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
 
                             $("md-icon", $scope.activePossibleElementFilter).remove();
-                            $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                            $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
                             if (el.data("possibleElements") !== 'undefined') {
                                 $scope.possibleElements = el.data("possibleElements");
                                 $scope.activePossibleElementFilter = event.currentTarget;
@@ -942,7 +980,7 @@ angular.module('streamPipesApp')
                         $scope.activePossibleElementFilter = event.currentTarget;
                         if (el.data("possibleElements") !== 'undefined') {
                             $("md-icon", event.currentTarget).remove();
-                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
+                            $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
                             $scope.possibleElements = el.data("possibleElements");
                             if (el.hasClass("stream")) {
                                 $scope.selectedTab = 2;
@@ -955,7 +993,7 @@ angular.module('streamPipesApp')
                 }else{
                     if (!$.isEmptyObject($scope.activePossibleElementFilter) && $scope.activePossibleElementFilter != null && $scope.activePossibleElementFilter !== 'undefined'){
                         $("md-icon", $scope.activePossibleElementFilter).remove();
-                        $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
+                        $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
                     }
                     $scope.possibleElements = [];
                     $scope.activePossibleElementFilter = {};
@@ -988,22 +1026,17 @@ angular.module('streamPipesApp')
                                 console.log(i);
                             }
                         });
-
-
                 }
 
                 initTooltips();
             }
 
             function getElementByElementId(elId) {
-
-
                 if (elId.indexOf("sepa") >= 0) { //Sepa
                     return restApi.getSepaById(elId)
 
                 } else {		//Action
                     return restApi.getActionById(elId);
-
                 }
             }
 
@@ -1131,19 +1164,6 @@ angular.module('streamPipesApp')
                     .append($compile("<md-icon md-svg-icon='content:ic_add_circle_24px'>")($scope).addClass("hover-icon").addClass(classString)
                         .attr("aria-label", "Recommended Elements"))
                     .appendTo($element);
-
-
-
-
-
-                //$("<span>")
-                //    .addClass("recommended-button")
-                //    .click(function (e) {
-                //        e.stopPropagation();
-                //        var $recList = $("ul", $element);
-                //        $recList.circleMenu('open');
-                //    })
-                //    .appendTo($element);
             }
 
             function showRecButton(e) {
@@ -1213,37 +1233,15 @@ angular.module('streamPipesApp')
 
                 if (!block) {
                     $scope.addImageOrTextIcon($newState, json, false, 'connectable');
-
-                    //$newState.append(addImageOrTextIcon(json, false, 'connectable').data("JSON", $.extend(true, {}, json)));
-                    //
-                    //imageChecker.imageExists(json.iconUrl, function(exists){
-                    //    if (exists){
-                    //        $('<img>')
-                    //            .attr({
-                    //                src: json.iconUrl,
-                    //                "data-toggle": "tooltip",
-                    //                "data-placement": "top",
-                    //                "data-delay": '{"show": 1000, "hide": 100}',
-                    //                title: json.name
-                    //            })
-                    //            .addClass('connectable-img tt')
-                    //            .appendTo($newState)
-                    //            .data("JSON", $.extend(true, {}, json));
-                    //    }else{
-                    //        addTextIconToElement($newState, $newState.data('JSON').name);
-                    //    }
-                    //});  //Kein icon in JSON angegeben
-
-                } else {
-
-                }
+                } 
+                
                 return $newState;
             }
 
             function getNewTargetPoint(x, y) {
                 return {
-                    endpoint: "Rectangle",
-                    paintStyle: {fillStyle: "grey"},
+                	endpoint: ["Dot", {radius:12}],
+                	type : "empty",
                     anchor: [x, y, -1, 0],
                     isTarget: true
                 };
@@ -1257,7 +1255,6 @@ angular.module('streamPipesApp')
                     if ($(id) !== "undefined") {
                         $(id).data("JSON").staticProperties = modification.staticProperties;
                     }
-                    //clearCurrentElement();
                 }
             }
             function isConnected(element) {
@@ -1469,9 +1466,6 @@ angular.module('streamPipesApp')
 
             function getTopLocation(e, type) {
 
-                //var elCoordsOffset = $(e.currentTarget).position();
-                //var testtop = elCoordsOffset.top + e.offsetY + $('#assembly').position().top;
-                //return testtop;
                 if (type === "static") {
                     var menuHeight = $('#staticContextMenu').height();
                 } else {
@@ -1631,7 +1625,6 @@ angular.module('streamPipesApp')
                 var connections = jsPlumb.getConnections({
                     target : element
                 });
-
                 if ($element.hasClass('connectable-block')){
                     var block = $(element).data("block");
                     this.addBlock(block);
@@ -1888,11 +1881,10 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
   	};
 }
 
-function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, restApi) {
+function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint, restApi) {
     
 	
 	$scope.selectedElement = elementData.data("JSON");
-	console.log($scope.selectedElement);
 	$scope.selection = [];
 	$scope.matchingSelectionLeft = [];
 	$scope.matchingSelectionRight = [];
@@ -1913,7 +1905,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	}
 	
 	$scope.setCurrentStaticProperty = function(staticProperty) {
-		console.log(staticProperty);
 		$scope.currentStaticProperty = staticProperty;
 	}
 	
@@ -1924,7 +1915,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 		info += "This field requires the following specifc input: <b>";
 		return info;
 	}
-	console.log(elementData);
 	    
 	var writeOptions = function(options, selection, elementId) {
 		var anyMatch = false;
@@ -1954,7 +1944,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 				writeOptions(pm.input.options, $scope.selection, pm.elementId);
 			});
 		}
-		console.log(item);
 	});
 	
 	
@@ -1973,7 +1962,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
          });
          
          c.selected = true;
-         console.log(q);
      };
   	
     /**
@@ -2023,6 +2011,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 	        $rootScope.state.currentElement.removeClass("disabled");
 	        $rootScope.$broadcast("SepaElementConfigured", elementData);
 	        $scope.hide();
+	        sourceEndpoint.setType("token");
     	}
     	else $scope.invalid = true;
     }
@@ -2041,7 +2030,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
 			}
     		else if (item.input.type =='TextInput' || item.input.type == 'SliderInput')
     		{
-    			console.log(item.input.properties);
     			if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
     			if (item.input.properties.datatype != undefined) {
     				if (!$scope.typeCheck(item.input.properties.value, item.input.properties.datatype)) {

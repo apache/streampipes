@@ -17,6 +17,9 @@ body {
 	background-attachment: fixed;	
 }
 
+.jsplumb-endpoint {
+	z-index:1;
+}
 .popover {
  border: 1px solid rgb(255,64,129);
  box-shadow: 0 0px 0px;
@@ -359,6 +362,7 @@ body {
 	position:absolute; left:0px; top:0px;
  	height: 300%; 
  	width: 300%; 
+ 	z-index:0;
  	
  	background-color:white;
     background-image: 
@@ -404,7 +408,9 @@ body {
 .nav{
 	height:40px;
 }*/
-
+._jsPlumb_endpoint {
+	z-index:-1;
+}
 .connectable{
 	cursor: move;
 	position:absolute;
@@ -455,11 +461,25 @@ body {
 	/*margin-top: 10.5%;*/
 	/*margin-left: 10.5%;
 }*/
+.help-button {
+	cursor: pointer;
+	position: absolute;
+	left: 80%;
+	top: 80%;
+	height: 40%;
+	width: 40%;
+	background-color: #ffffff;
+	border-radius: 50%;
+	box-shadow: 0 0 2px #555;
+	line-height: 1.6;
+
+}
+
 .recommended-button {
 	cursor: pointer;
 	position: absolute;
-	left: 70%;
-	top: 0;
+	left: 32%;
+	top: 80%;
 	height: 40%;
 	width: 40%;
 	background-color: #ffffff;
@@ -471,8 +491,8 @@ body {
 .possible-button{
 	cursor: pointer;
 	position: absolute;
-	left: -10%;
-	top: 0;
+	left: -15%;
+	top: 80%;
 	height: 40%;
 	width: 40%;
 	background-color: #ffffff;
@@ -622,7 +642,19 @@ h4.panel-title{
 }
 
 .disabled{
-	opacity : 0.3;
+	/*opacity : 0.3;*/
+	border : 2px solid red;
+}
+
+.endpoint-token svg rect {
+	fill:rgb(63,81,181);
+	stroke:rgb(63,81,181);
+}
+
+.endpoint-empty svg rect{
+	fill:white;
+	stroke:rgb(63,81,181);
+	stroke-width:4;
 }
 
 #accordion{
