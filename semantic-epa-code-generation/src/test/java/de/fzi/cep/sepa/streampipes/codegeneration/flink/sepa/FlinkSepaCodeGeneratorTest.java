@@ -1,9 +1,11 @@
-package de.fzi.cep.sepa.streampipes.codegeneration;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import org.junit.Test;
 
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaCodeGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 
 public class FlinkSepaCodeGeneratorTest {

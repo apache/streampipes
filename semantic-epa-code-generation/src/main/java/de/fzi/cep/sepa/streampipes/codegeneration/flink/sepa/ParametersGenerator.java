@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import javax.lang.model.element.Modifier;
 

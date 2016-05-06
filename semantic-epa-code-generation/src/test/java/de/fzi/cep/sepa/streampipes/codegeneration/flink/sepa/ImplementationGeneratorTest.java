@@ -1,9 +1,10 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ImplementationGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 

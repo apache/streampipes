@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes.codegeneration;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import java.io.File;
 import java.net.URI;
@@ -19,11 +19,10 @@ import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.ConfigGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.ControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.InitGenerator;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.ParametersGenerator;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.ProgramGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.XmlGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
