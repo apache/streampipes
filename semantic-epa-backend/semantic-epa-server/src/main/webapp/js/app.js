@@ -10,7 +10,7 @@ angular
 		streamEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "StateMachine",
+			connector: "Straight",
 			isSource: true,
 			anchor:"Right",
 			type : "token",
@@ -22,7 +22,7 @@ angular
 		sepaEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "StateMachine",
+			connector: "Straight",
 			isSource: true,
 			anchor: "Right",
 			type : "empty",
