@@ -6,13 +6,13 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class ConfigGenerator extends Generator {
 
-	public ConfigGenerator(SepaDescription sepa, String name, String packageName) {
+	public ConfigGenerator(ConsumableSEPAElement sepa, String name, String packageName) {
 		super(sepa, name, packageName);
 	}
 

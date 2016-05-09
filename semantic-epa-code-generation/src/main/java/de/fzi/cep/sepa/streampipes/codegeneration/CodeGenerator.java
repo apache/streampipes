@@ -8,16 +8,17 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
 public abstract class CodeGenerator {
 
 	protected String tempFolder;
-	protected SepaDescription element;
+	protected ConsumableSEPAElement element;
 	protected DeploymentConfiguration config;
 
-	public CodeGenerator(DeploymentConfiguration config, SepaDescription element) {
+	public CodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
 		this.tempFolder = RandomStringUtils.randomAlphabetic(8) + config.getArtifactId();
 		this.element = element;
 		this.config = config;

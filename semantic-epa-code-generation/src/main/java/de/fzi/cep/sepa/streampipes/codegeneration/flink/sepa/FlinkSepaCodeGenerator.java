@@ -22,7 +22,7 @@ public class FlinkSepaCodeGenerator extends FlinkCodeGenerator {
 		Utils.writeToFile(new ParametersGenerator(element, name, packageName).build(), src);
 		Utils.writeToFile(new FlinkSepaControllerGenerator(element, name, packageName).build(), src);
 		Utils.writeToFile(new InitGenerator(element, name, packageName, port).build(), src);
-		Utils.writeToFile(new ProgramGenerator(element, name, packageName).build(), src);
+		Utils.writeToFile(new FlinkSepaProgramGenerator(element, name, packageName).build(), src);
 		Utils.writeToFile(new ConfigGenerator(element, name, packageName).build(), src);
 
 		// xml files

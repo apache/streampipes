@@ -1,0 +1,25 @@
+package de.fzi.cep.sepa.flink.test.project;
+
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
+import de.fzi.cep.sepa.flink.FlinkSecRuntime;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import java.io.Serializable;
+import java.util.Map;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSink;
+
+public class TestProjectProgram extends FlinkSecRuntime implements Serializable {
+  public TestProjectProgram(SecInvocation graph) {
+    super(graph);
+  }
+
+  public TestProjectProgram(SecInvocation graph, FlinkDeploymentConfig config) {
+    super(graph, config);
+  }
+
+  @Override
+  public DataStreamSink<Map<String, Object>> getSink(DataStream<Map<String, Object>> convertedStream) {
+    // TODO implement
+    return null;
+  }
+}

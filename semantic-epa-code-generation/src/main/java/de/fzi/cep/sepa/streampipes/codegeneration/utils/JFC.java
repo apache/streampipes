@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.util.Collector;
 
 import com.squareup.javapoet.ClassName;
@@ -53,6 +54,7 @@ public abstract class JFC {
 	public static ClassName EXCEPTION = ClassName.get("", "Exception");
 
 	public static ClassName DATA_STREAM = ClassName.get(DataStream.class);
+	public static ClassName DATA_STREAM_SINK = ClassName.get(DataStreamSink.class);
 	public static ClassName FLAT_MAP_FUNCTION = ClassName.get(FlatMapFunction.class);
 	public static ClassName COLLECTOR = ClassName.get(Collector.class);
 	

@@ -13,9 +13,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
-public class ProgramGenerator extends Generator {
+public class FlinkSepaProgramGenerator extends Generator {
 
-	public ProgramGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public FlinkSepaProgramGenerator(ConsumableSEPAElement element, String name, String packageName) {
 		super(element, name, packageName);
 	}
 

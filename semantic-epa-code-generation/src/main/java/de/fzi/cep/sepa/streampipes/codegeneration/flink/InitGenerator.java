@@ -8,18 +8,18 @@ import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.MethodSpec.Builder;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class InitGenerator extends Generator {
 	private String port;
 
-	public InitGenerator(SepaDescription sepa, String name, String packageName, String port) {
+	public InitGenerator(ConsumableSEPAElement sepa, String name, String packageName, String port) {
 		super(sepa, name, packageName);
 		this.port = port;
 	}

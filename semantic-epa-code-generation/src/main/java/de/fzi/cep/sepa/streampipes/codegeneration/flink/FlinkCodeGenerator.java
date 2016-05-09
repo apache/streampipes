@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
 import java.io.File;
 
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.DirectoryBuilder;
 
@@ -16,7 +16,7 @@ public abstract class FlinkCodeGenerator extends CodeGenerator {
 	protected String src;
 	protected String webInf;
 
-	public FlinkCodeGenerator(DeploymentConfiguration config, SepaDescription element) {
+	public FlinkCodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
 		super(config, element);
 		packageName = config.getGroupId() + "." + config.getArtifactId();
 		name = config.getClassNamePrefix();
