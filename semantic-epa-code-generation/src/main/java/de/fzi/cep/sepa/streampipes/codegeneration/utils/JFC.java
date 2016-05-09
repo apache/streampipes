@@ -17,7 +17,9 @@ import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
+import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
+import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
@@ -25,6 +27,8 @@ import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
@@ -55,7 +59,9 @@ public abstract class JFC {
 	
 	
 	public static ClassName SEPA_DESCRIPTION = ClassName.get(SepaDescription.class);
+	public static ClassName SEC_DESCRIPTION = ClassName.get(SecDescription.class);
 	public static ClassName SEPA_INVOCATION = ClassName.get(SepaInvocation.class);
+	public static ClassName SEC_INVOCATION = ClassName.get(SecInvocation.class);
 	public static ClassName SEPA_UTILS = ClassName.get(SepaUtils.class);
 	public static ClassName EVENT_STREAM = ClassName.get(EventStream.class);
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
@@ -76,5 +82,7 @@ public abstract class JFC {
 
 	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get(FlinkDeploymentConfig.class);
 	public static ClassName FLINK_SEPA_RUNTIME = ClassName.get(FlinkSepaRuntime.class);
+	public static ClassName FLINK_SEC_RUNTIME = ClassName.get(FlinkSecRuntime.class);
 	public static ClassName ABSTRACT_FLINK_AGENT_DECLARER = ClassName.get(AbstractFlinkAgentDeclarer.class);
+	public static ClassName ABSTRACT_FLINK_CONSUMER_DECLARER = ClassName.get(AbstractFlinkConsumerDeclarer.class); 
 }

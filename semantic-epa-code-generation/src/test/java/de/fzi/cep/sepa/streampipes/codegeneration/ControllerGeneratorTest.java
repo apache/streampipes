@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.streampipes.codegeneration;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.FlinkControllerGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 
 public class ControllerGeneratorTest {
@@ -29,7 +29,7 @@ public class ControllerGeneratorTest {
 	public void testGetEventStream() {
 
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		EventStream eventStream = StreamBuilder.createStream(TV.NAME, TV.DESCRIPTION, TV.PATH_NAME)
 				.schema(SchemaBuilder.create().build()).build();
 
@@ -43,7 +43,7 @@ public class ControllerGeneratorTest {
 	@Test
 	public void testGetEventProperties() {
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build());
 
@@ -57,7 +57,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testAppendGetOutputStrategyWithNoEventProperty() {
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -73,7 +73,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testAppendGetOutputStrategyWithEventProperties() {
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -94,7 +94,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetOutputStrategies() {
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
@@ -109,7 +109,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetSupportedGrounding() {
-		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
+		FlinkSepaControllerGenerator cb = new FlinkSepaControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		String actual = cb.getSupportedGrounding(b, null).build().toString();

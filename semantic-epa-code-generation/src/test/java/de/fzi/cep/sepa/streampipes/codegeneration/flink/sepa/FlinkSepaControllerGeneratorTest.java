@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,16 +15,17 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
-public class FlinkControllerGeneratorTest {
+public class FlinkSepaControllerGeneratorTest {
 
 
 	@Test
 	public void testGetRuntime() {
 		SepaDescription sepa = TV.getSepa();
-		FlinkControllerGenerator cd = new FlinkControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME);
+		FlinkSepaControllerGenerator cd = new FlinkSepaControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME);
 
 		String actual = cd.getRuntime().build().toString();
 		String expected = "@java.lang.Override\n"
@@ -59,8 +60,8 @@ public class FlinkControllerGeneratorTest {
 		// TODO remove after I got the answer from Dominik what the difference between uri and pathName is
 		sepa.setUri(TV.PATH_NAME);
 
-		String actual = new FlinkControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME).build().toString();
-		String expected = Utils.readResourceFile("expected_TestProjectController_java");
+		String actual = new FlinkSepaControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME).build().toString();
+		String expected = Utils.readResourceFile("expected_FlinkSepaController_java");
 
 		assertEquals(expected, actual);
 	}

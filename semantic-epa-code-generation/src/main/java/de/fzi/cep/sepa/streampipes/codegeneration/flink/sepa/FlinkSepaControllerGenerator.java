@@ -1,6 +1,4 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink;
-
-import java.util.List;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa;
 
 import javax.lang.model.element.Modifier;
 
@@ -12,28 +10,20 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.streampipes.codegeneration.ControllerGenerator;
-import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
-public class FlinkControllerGenerator extends ControllerGenerator {
+public class FlinkSepaControllerGenerator extends ControllerGenerator {
 
 	private ClassName parameters;
 	private ClassName program;
 	private ClassName config;
 
-	public FlinkControllerGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public FlinkSepaControllerGenerator(ConsumableSEPAElement element, String name, String packageName) {
 		super(element, name, packageName);
 		parameters = ClassName.get(packageName, name + "Parameters");
 		program = ClassName.get(packageName, name + "Program");
@@ -84,7 +74,7 @@ public class FlinkControllerGenerator extends ControllerGenerator {
 
 	@Override
 	public JavaFile build() {
-		MethodSpec declareModel = getDeclareModelCode().build();
+		MethodSpec declareModel = getDeclareModelCode(JFC.SEPA_DESCRIPTION).build();
 		MethodSpec getRuntime = getRuntime().build();
 
 		TypeSpec controllerClass = TypeSpec.classBuilder(name + "Controller").addModifiers(Modifier.PUBLIC)

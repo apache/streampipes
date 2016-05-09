@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 
@@ -87,11 +88,11 @@ public abstract class ControllerGenerator extends Generator {
 		return b.addStatement("desc.setSupportedGrounding($T.getSupportedGrounding())", JFC.STANDARD_TRANSPORT_FORMAT);
 	}
 
-	public Builder getDeclareModelCode() {
+	public Builder getDeclareModelCode(ClassName desc) {
 		Builder b = MethodSpec.methodBuilder("declareModel").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
-				.returns(SepaDescription.class);
+				.returns(desc);
 
-		b.addStatement("$T desc = new $T($S, $S, $S)", JFC.SEPA_DESCRIPTION, JFC.SEPA_DESCRIPTION, element.getUri(),
+		b.addStatement("$T desc = new $T($S, $S, $S)", desc, desc, element.getUri(),
 				element.getName(), element.getDescription());
 
 		for (int i = 0; i < element.getEventStreams().size(); i++) {

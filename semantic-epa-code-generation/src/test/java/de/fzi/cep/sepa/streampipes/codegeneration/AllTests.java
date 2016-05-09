@@ -4,16 +4,21 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.*;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.ConfigGeneratorTest;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.InitGeneratorTest;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.XmlGeneratorTest;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sec.FlinkSecControllerGeneratorTest;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGeneratorTest;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ImplementationGeneratorTest;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ParametersGeneratorTest;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ProgramGeneratorTest;
-import de.fzi.cep.sepa.streampipes.codegeneration.utils.*;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.DirectoryBuilderTest;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.UtilsTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ FlinkControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class, XmlGeneratorTest.class,
+@SuiteClasses({ FlinkSepaControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class, XmlGeneratorTest.class,
 		ProgramGeneratorTest.class, ImplementationGeneratorTest.class, ParametersGeneratorTest.class,
-		ConfigGeneratorTest.class , DirectoryBuilderTest.class})
+		ConfigGeneratorTest.class , DirectoryBuilderTest.class, FlinkSecControllerGeneratorTest.class})
 public class AllTests {
 
 }
