@@ -1,10 +1,10 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink.cep;
+package de.fzi.cep.sepa.streampipes.codegeneration.flink.sec;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class FlinkCepCodeGeneratorTest {
+public class FlinkSecCodeGeneratorTest {
 
 	@Test
 	public void test() {

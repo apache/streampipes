@@ -11,7 +11,7 @@ import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ProgramGeneratorTes
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.*;
 
 @RunWith(Suite.class)
-@SuiteClasses({ ControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class, XmlGeneratorTest.class,
+@SuiteClasses({ FlinkControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class, XmlGeneratorTest.class,
 		ProgramGeneratorTest.class, ImplementationGeneratorTest.class, ParametersGeneratorTest.class,
 		ConfigGeneratorTest.class , DirectoryBuilderTest.class})
 public class AllTests {

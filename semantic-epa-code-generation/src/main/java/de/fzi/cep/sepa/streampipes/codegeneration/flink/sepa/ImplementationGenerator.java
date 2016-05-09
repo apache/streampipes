@@ -8,14 +8,15 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class ImplementationGenerator extends Generator {
 
-	public ImplementationGenerator(SepaDescription sepa, String name, String packageName) {
-		super(sepa, name, packageName);
+	public ImplementationGenerator(ConsumableSEPAElement element, String name, String packageName) {
+		super(element, name, packageName);
 	}
 
 	@Override

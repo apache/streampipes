@@ -2,29 +2,28 @@ package de.fzi.cep.sepa.streampipes.codegeneration;
 
 import com.squareup.javapoet.JavaFile;
 
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 
 public abstract class Generator {
 	protected String name;
 	protected String packageName;
-	protected SepaDescription sepa;
+	protected ConsumableSEPAElement element;
 	
-	public Generator(SepaDescription sepa, String name, String packageName) {
+	public Generator(ConsumableSEPAElement element, String name, String packageName) {
 		super();
-		this.sepa = sepa;
+		this.element = element;
 		this.name = name;
 		this.packageName = packageName;
 	}
 
 	public abstract JavaFile build();
-
 	
-	public SepaDescription getSepa() {
-		return sepa;
+	public ConsumableSEPAElement getElement() {
+		return element;
 	}
 
-	public void setSepa(SepaDescription sepa) {
-		this.sepa = sepa;
+	public void setElement(ConsumableSEPAElement element) {
+		this.element = element;
 	}
 
 	public String getName() {

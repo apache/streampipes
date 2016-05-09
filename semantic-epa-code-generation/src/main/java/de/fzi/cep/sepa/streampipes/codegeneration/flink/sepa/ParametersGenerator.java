@@ -8,6 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 
+import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
@@ -18,15 +19,15 @@ import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class ParametersGenerator extends Generator {
 
-	public ParametersGenerator(SepaDescription sepa, String name, String packageName) {
-		super(sepa, name, packageName);
+	public ParametersGenerator(ConsumableSEPAElement element, String name, String packageName) {
+		super(element, name, packageName);
 	}
 
 	public MethodSpec getConstructor() {
 		Builder b = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
 				.addParameter(JFC.SEPA_INVOCATION, "graph").addStatement("super(graph)");
 
-		for (StaticProperty sp : sepa.getStaticProperties()) {
+		for (StaticProperty sp : element.getStaticProperties()) {
 			b.addParameter(JFC.STRING, sp.getInternalName());
 			b.addStatement("this.$N = $N", sp.getInternalName(), sp.getInternalName());
 		}
@@ -43,7 +44,7 @@ public class ParametersGenerator extends Generator {
 		TypeSpec.Builder parameterClass = TypeSpec.classBuilder(name + "Parameters").addModifiers(Modifier.PUBLIC)
 				.superclass(BindingParameters.class).addMethod(constructor);
 
-		for (StaticProperty sp : sepa.getStaticProperties()) {
+		for (StaticProperty sp : element.getStaticProperties()) {
 			String internalName = sp.getInternalName();
 			parameterClass.addField(JFC.STRING, internalName, Modifier.PRIVATE);
 			MethodSpec getter = MethodSpec.methodBuilder(getterName(internalName)).addModifiers(Modifier.PUBLIC)

@@ -1,8 +1,7 @@
-package de.fzi.cep.sepa.streampipes.codegeneration.flink;
+package de.fzi.cep.sepa.streampipes.codegeneration;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,23 +16,20 @@ import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.FlinkControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
-import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 public class ControllerGeneratorTest {
+
 
 	@Test
 	public void testGetEventStream() {
 
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		EventStream eventStream = StreamBuilder.createStream(TV.NAME, TV.DESCRIPTION, TV.PATH_NAME)
 				.schema(SchemaBuilder.create().build()).build();
 
@@ -47,7 +43,7 @@ public class ControllerGeneratorTest {
 	@Test
 	public void testGetEventProperties() {
 		Builder b = MethodSpec.methodBuilder("testMethod");
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build());
 
@@ -61,7 +57,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testAppendGetOutputStrategyWithNoEventProperty() {
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -77,7 +73,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testAppendGetOutputStrategyWithEventProperties() {
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		AppendOutputStrategy appendStrategy = new AppendOutputStrategy();
@@ -98,7 +94,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetOutputStrategies() {
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
@@ -113,7 +109,7 @@ public class ControllerGeneratorTest {
 
 	@Test
 	public void testGetSupportedGrounding() {
-		ControllerGenerator cb = new ControllerGenerator(null, "", "");
+		FlinkControllerGenerator cb = new FlinkControllerGenerator(null, "", "");
 		Builder b = MethodSpec.methodBuilder("testMethod");
 
 		String actual = cb.getSupportedGrounding(b, null).build().toString();
@@ -123,48 +119,4 @@ public class ControllerGeneratorTest {
 
 		assertEquals(expected, actual);
 	}
-
-	@Test
-	public void testGetRuntime() {
-		SepaDescription sepa = TV.getSepa();
-		ControllerGenerator cd = new ControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME);
-
-		String actual = cd.getRuntime().build().toString();
-		String expected = "@java.lang.Override\n"
-				+ "protected de.fzi.cep.sepa.flink.FlinkSepaRuntime<de.fzi.cep.sepa.flink.test.project.TestProjectParameters> getRuntime(de.fzi.cep.sepa.model.impl.graph.SepaInvocation graph) {\n"
-				+ "  String mappingFirst = de.fzi.cep.sepa.model.util.SepaUtils.getMappingPropertyName(graph, \"mappingFirst\");\n" + 
-				"  String freeText = de.fzi.cep.sepa.model.util.SepaUtils.getFreeTextStaticPropertyValue(graph, \"freeText\");\n"
-				+ "  de.fzi.cep.sepa.flink.test.project.TestProjectParameters staticParam = new de.fzi.cep.sepa.flink.test.project.TestProjectParameters(graph, mappingFirst, freeText);\n"
-				+ "  return new " + TV.PACKAGE_NAME +"."+ TV.NAME
-				+ "Program(staticParam, new de.fzi.cep.sepa.flink.FlinkDeploymentConfig(" + TV.PACKAGE_NAME
-				+ ".Config.JAR_FILE, " + TV.PACKAGE_NAME + ".Config.FLINK_HOST, " + TV.PACKAGE_NAME
-				+ ".Config.FLINK_PORT));\n"
-				+ "}\n";
-
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void testBuild() {
-		SepaDescription sepa = new SepaDescription(TV.PATH_NAME, TV.NAME, TV.DESCRIPTION);
-		List<EventProperty> eventProperties0 = new ArrayList<EventProperty>();
-		eventProperties0.add(PrimitivePropertyBuilder.createPropertyRestriction("http://test.org#mytest").build());
-		EventStream es = StreamBuilder.createStream(TV.PATH_NAME, TV.NAME, TV.DESCRIPTION)
-				.schema(SchemaBuilder.create().properties(eventProperties0).build()).build();
-		sepa.addEventStream(es);
-
-		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
-		strategies.add(outputStrategy);
-		sepa.setOutputStrategies(strategies);
-
-		String actual = new ControllerGenerator(sepa, TV.NAME, TV.PACKAGE_NAME).build().toString();
-		String expected = Utils.readResourceFile("expected_TestProjectController_java");
-
-		assertEquals(expected, actual);
-	}
-
-
-
 }
