@@ -1,0 +1,15 @@
+<archetype xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0 http://maven.apache.org/xsd/archetype-1.0.0.xsd">
+  <id>streampipes-archetype-storm</id>
+  <sources>
+    <source>src/main/java/streams/__streamName__Stream.java</source>
+    <source>src/main/java/sources/__sourceName__Producer.java</source>
+    <source>src/main/java/main/Init.java</source>
+  </sources>
+  <resources>
+  	<resource>src/main/resources/WEB-INF/web.xml</resource>
+  </resources>
+  <testSources>
+   
+  </testSources>
+</archetype>
