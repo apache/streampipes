@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-epa-actions-samples</artifactId>
 	<dependencies>
@@ -25,7 +26,7 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.camel</groupId>
@@ -36,7 +37,7 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-commons</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -75,10 +76,12 @@
 						</goals>
 						<configuration>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>de.fzi.cep.sepa.actions.samples.main.Init</mainClass>
 								</transformer>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
 							<filters>
 
