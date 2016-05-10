@@ -3,7 +3,7 @@
   <parent>
     <artifactId>semantic-epa-parent</artifactId>
     <groupId>de.fzi.cep.sepa</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>semantic-epa-actions-samples</artifactId>
