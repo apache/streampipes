@@ -9,11 +9,11 @@
 	<artifactId>semantic-epa-sources-samples</artifactId>
 
 	<dependencies>
-		 <dependency>
-			<groupId>de.fzi.proveit</groupId>
-			<artifactId>proveit-senslet-model</artifactId>
-			<version>0.0.19-SNAPSHOT</version>
-		</dependency>
+<!-- 		 <dependency> -->
+<!-- 			<groupId>de.fzi.proveit</groupId> -->
+<!-- 			<artifactId>proveit-senslet-model</artifactId> -->
+<!-- 			<version>0.0.19-SNAPSHOT</version> -->
+<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
