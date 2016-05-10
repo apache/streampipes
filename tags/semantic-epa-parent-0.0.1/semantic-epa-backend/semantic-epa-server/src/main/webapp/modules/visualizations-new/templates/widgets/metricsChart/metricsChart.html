@@ -1,0 +1,23 @@
+<div class="bar-chart">
+    <div style="text-align: right;" ng-if="start && end">
+        <span>{{start|date:'HH:mm:ss'}} - {{end|date:'HH:mm:ss'}}</span>&nbsp;
+        <select ng-model="timeFrame" ng-options="opt.label for opt in options"
+                ng-change="timeFrameChanged(timeFrame)"
+                class="form-control" style="width: 200px; display: inline;"></select>
+    </div>
+    <nvd3-line-chart
+            data="data"
+            xAxisTickFormat="xAxisTickFormatFunction()"
+            yAxisTickFormat="yAxisTickFormatFunction()"
+            x="xFunction()"
+            y="yFunction()"
+            showXAxis="true"
+            showYAxis="true"
+            reduceXTicks="true"
+            transitionduration="0"
+            showLegend="true"
+            useInteractiveGuideline="true"
+            nodata="Loading Data..."
+            tooltips="true">
+    </nvd3-line-chart>
+</div>

@@ -1,0 +1,24 @@
+<md-dialog aria-label="Pipeline Display" style="width: 75%">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>{{pipeline.name}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="hide()">
+                <md-icon md-svg-icon="content:ic_clear_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+
+        </div>
+        <md-dialog-content>
+            <div id="pipelineDisplay">
+                <div id="streamDisplay"></div>
+                <div id="sepaDisplay"></div>
+                <div id="actionDisplay"></div>
+            </div>
+        </md-dialog-content class="md-dialog-content">
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button ng-click="saveChanges(pipeline._id)">Save</md-button>
+
+        </div>
+    </md-toolbar>
+</md-dialog>

@@ -1,0 +1,11 @@
+<div>
+    <div class="btn-toolbar">
+        <div class="btn-group" style="float: right;">
+            <button type="button" class="btn btn-default btn-sm" ng-click="changeMode('MINUTES')"
+                    ng-class="{active: mode === 'MINUTES'}">Minutes</button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="changeMode('HOURS')"
+                    ng-class="{active: mode === 'HOURS'}">Hours</button>
+        </div>
+    </div>
+    <div wt-line-chart chart="chart"></div>
+</div>

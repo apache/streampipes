@@ -1,0 +1,35 @@
+<div class="container-fluid">
+					<div class="row">
+						<h1 class="col-md-4 ">Background Knowledge</h1>
+					</div>
+					<div class="row"  style="background-color: white; padding:10px;">
+						<ul id="tabs-1" class="nav nav-tabs" data-tabs="tabs">
+							<li class="active"><a href="#types" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/types', 'typeHierarchy')">Types</a></li>
+							<li><a href="#properties" data-toggle="tab" onclick="getTreeData(standardUrl +'ontology/properties', 'propertyHierarchy')">Properties</a></li>
+						</ul>
+
+						<div id="my-tab-content" class="tab-content">
+							<div class="tab-pane active" id="types">
+								<div class="col-md-4">
+									<h3>Hierarchy</h3>
+									<div id="typeHierarchy"></div>
+								</div>
+								<div class="col-md-6">
+									<h3>Details</h3>
+									<div id="typeHierarchyDetails"></div>
+								</div>
+
+							</div>
+							<div class="tab-pane" id="properties">
+								<div class="col-md-4">
+									<h3>Hierarchy</h3>
+									<div id="propertyHierarchy"></div>
+								</div>
+								<div class="col-md-6">
+									<h3>Details</h3>
+									<div id="propertyHierarchyDetails"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>

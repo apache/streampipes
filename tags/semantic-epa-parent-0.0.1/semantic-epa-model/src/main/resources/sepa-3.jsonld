@@ -1,0 +1,77 @@
+{
+  "@graph" : [ {
+    "@id" : "http://event-processing.org/sepa",
+    "@type" : "owl:Ontology",
+    "imports" : [ "http://topbraid.org/spin/spinmapl", "http://topbraid.org/schema/schema.ttl", "http://spinrdf.org/spin", "http://purl.oclc.org/NET/muo/muo#" ],
+    "owl:versionInfo" : "Created with TopBraid Composer"
+  }, {
+    "@id" : "sepa:EventProperty",
+    "@type" : "rdfs:Class"
+  }, {
+    "@id" : "sepa:EventSchema",
+    "@type" : "rdfs:Class"
+  }, {
+    "@id" : "sepa:EventStream",
+    "@type" : "rdfs:Class"
+  }, {
+    "@id" : "sepa:SemanticEventProducer",
+    "@type" : "rdfs:Class"
+  }, {
+    "@id" : "sepa:hasEventProperty",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "sepa:EventSchema",
+    "range" : "sepa:EventProperty"
+  }, {
+    "@id" : "sepa:hasMeasurementUnit",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "sepa:EventProperty",
+    "range" : "http://purl.oclc.org/NET/muo/muo#UnitOfMeasurement"
+  }, {
+    "@id" : "sepa:hasPropertyName",
+    "@type" : "owl:DatatypeProperty",
+    "domain" : "sepa:EventProperty",
+    "range" : "xsd:string"
+  }, {
+    "@id" : "sepa:hasSchema",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "sepa:EventStream",
+    "range" : "sepa:EventSchema"
+  }, {
+    "@id" : "sepa:hasType",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "sepa:EventProperty",
+    "range" : "rdfs:Resource"
+  }, {
+    "@id" : "sepa:producesStream",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "sepa:SemanticEventProducer",
+    "range" : "sepa:EventStream"
+  } ],
+  "@context" : {
+    "versionInfo" : {
+      "@id" : "http://www.w3.org/2002/07/owl#versionInfo",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    },
+    "imports" : {
+      "@id" : "http://www.w3.org/2002/07/owl#imports",
+      "@type" : "@id"
+    },
+    "range" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#range",
+      "@type" : "@id"
+    },
+    "domain" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#domain",
+      "@type" : "@id"
+    },
+    "owl" : "http://www.w3.org/2002/07/owl#",
+    "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "sepa" : "http://event-processing.org/sepa#",
+    "spin" : "http://spinrdf.org/spin#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "sepa-3" : "http://event-processing.org/sepa-3#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+    "sp" : "http://spinrdf.org/sp#",
+    "spl" : "http://spinrdf.org/spl#"
+  }
+}

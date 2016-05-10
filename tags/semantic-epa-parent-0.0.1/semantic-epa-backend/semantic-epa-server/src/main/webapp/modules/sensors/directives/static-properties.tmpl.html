@@ -1,0 +1,102 @@
+<h3 class="md-display-2">Static Properties</h3>
+<div ng-repeat = "(key, sp) in staticProperties">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+		<div flex="100" layout="row">
+			<div flex="70" layout="row" layout-align="start center"><h4>Static Property {{key+1}}</h4><br/><h5>  {{getType(sp)}}</h5></div>
+			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeStaticProperty(staticProperties, key)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
+		</div>
+		<required-property-values property="sp.properties" disabled="disabled"></required-property-values>
+	    <div ng-if="sp.type == staticPropertyTypes[0].type">
+	    	<md-checkbox ng-checked="domainPropertyRestricted(sp.properties)" ng-click="toggleDomainPropertyRestriction(sp.properties)" aria-label="Domain property requirement" ng-disabled="disabled" >
+        	Supported domain property
+    		</md-checkbox>
+    		<div ng-show="domainPropertyRestricted(sp.properties)">
+	    	<md-input-container>
+	    	<label>Domain Property</label>
+	        <select ng-model="sp.properties.type" placeholder="Select Static Property type" ng-disabled="disabled" >
+          		<option ng-repeat="property in properties" value="{{property.id}}">
+    			{{property.title}}
+    			</option>
+    		</select>
+			</md-input-container>
+			</div>
+	    </div>
+	    <div ng-if="sp.type == staticPropertyTypes[1].type">
+	    	<options element="sp.properties.options" disabled="disabled" ></options>
+	    </div>
+	    <div ng-if="sp.type == staticPropertyTypes[2].type">
+		    <options element="sp.properties.options" disabled="disabled" ></options>
+	    </div>
+	    <div ng-if="sp.type == staticPropertyTypes[3].type">
+	    	<domain-concept-property domain-property="sp.properties" auto-complete-static-property="sp.properties" disabled="disabled" ></domain-concept-property>
+	    </div>
+	    <div ng-if="sp.type == staticPropertyTypes[4].type">
+	    	<md-input-container>
+	    	<label>Event Property Mapping</label>
+	        <select ng-model="sp.properties.mapsFrom" placeholder="Select Static Property type" ng-disabled="disabled">
+				<option ng-selected="isSelectedProperty(sp.properties.mapsFrom, property)" ng-repeat="(firstKey, property) in streams[0].eventSchema.eventProperties" value="{{property.properties.elementName}}">Stream 1 - Property {{firstKey+1}} - {{property.properties.elementName}}
+				</option>
+				<option ng-selected="isSelectedProperty(sp.properties.mapsFrom, property)" ng-repeat="(secondKey, property) in streams[1].eventSchema.eventProperties" value="{{property.properties.elementName}}">Stream 2 - Property {{secondKey+1}} - {{property.properties.elementName}}
+				</option>
+			</select>
+			</md-input-container>
+	    </div>
+	    <div ng-if="sp.type == staticPropertyTypes[5].type">
+		    (computed at runtime)
+	    </div>
+	     <div ng-if="sp.type == staticPropertyTypes[6].type">
+	     <md-input-container>
+	     <h5>Member type</h5>
+	     <div class="row md-padding">	
+		    <select ng-model="sp.properties.memberType" placeholder="Select member type" ng-disabled="disabled" class="md-padding">
+          		<option  value="{{staticPropertyTypes[0].type}}">
+            		<b>{{staticPropertyTypes[0].label}}</b>
+          		</option>
+          		<option  value="{{staticPropertyTypes[3].type}}">
+            		<b>{{staticPropertyTypes[3].label}}</b>
+          		</option>
+			</select>
+			<md-button class="md-accent" ng-click="addMember(sp.properties)" ng-disabled="disabled">Define member type</md-button>
+		</div>
+		</md-input-container>
+		<div ng-if="memberTypeSelected || sp.properties.members.length > 0">
+			<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+				<div flex="100" layout="row">
+					<div flex="70" layout="row" layout-align="start center"><h4>Member</h4><br/></div>
+					<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeMember(sp.properties)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
+				</div>
+			<required-property-values property="sp.properties.members[0].properties" disabled="disabled"></required-property-values>
+				<div ng-if="sp.properties.members[0].type == staticPropertyTypes[0].type">
+				
+					<md-checkbox ng-checked="domainPropertyRestricted(sp.properties.members[0].properties)" ng-click="toggleDomainPropertyRestriction(sp.properties.members[0].properties)" aria-label="Domain property requirement" ng-disabled="disabled" >
+	        			Supported domain property
+	    			</md-checkbox>
+	    			<div ng-show="domainPropertyRestricted(sp.properties.members[0].properties)">
+				    	<md-input-container>
+				    	<label>Domain Property</label>
+				        <select ng-model="sp.properties.members[0].properties.type" placeholder="Select Static Property type" ng-disabled="disabled" >
+			          		<option ng-repeat="property in properties" value="{{property.id}}">
+			    			{{property.title}}
+			    			</option>
+			    		</select>
+						</md-input-container>
+					</div>
+				</div> 
+				<div ng-if="sp.properties.members[0].type == staticPropertyTypes[3].type">
+					<domain-concept-property domain-property="sp.properties.members[0].properties" disabled="disabled" ></domain-concept-property>
+				</div> 
+			</div>
+		</div>
+	    </div>
+	</div>
+</div>
+<div layout="row">
+
+	<select ng-model="newStaticPropertyType" placeholder="Select Static Property type" ng-disabled="disabled" >
+          <option ng-repeat="spt in staticPropertyTypes" value="{{spt.type}}">
+            <b>{{spt.label}}</b>
+          </option>
+	</select>
+	<md-button class="md-accent" ng-click="addStaticProperty(staticProperties, newStaticPropertyType)" ng-disabled="disabled">Add Static Property</md-button>
+</div>	
+<p></p>

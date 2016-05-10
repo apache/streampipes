@@ -1,0 +1,15 @@
+<archetype-descriptor name="streampipes-archetype-storm-topology">
+
+	<fileSets>
+		<fileSet filtered="true" packaged="true">
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.java</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+	<requiredProperties>
+		<requiredProperty key="classNamePrefix">
+		</requiredProperty>
+	</requiredProperties>
+</archetype-descriptor>

@@ -1,0 +1,46 @@
+/**
+ *
+ * This file contains the necessary MapReduce functions for the CouchDB instance.
+ *
+ * Created by robin on 17.06.15.
+ */
+
+
+// user
+{
+    "_id": "_design/user",
+    "language": "javascript",
+    "views": {
+        "pipelines"
+    }
+}
+
+function(doc) {
+    if (doc.pipelines) {
+        for (i=0; i<doc.pipelines.length;i++) {
+            emit (doc.username, doc.pipelines[i]);
+        }
+    }
+}
+
+function(doc) {
+  if (doc.username && doc.password) {
+	emit(doc.username, doc.password)
+  }
+}
+
+
+
+
+// conenction
+
+{
+    "_id": "_design/connection",
+    "language": "javascript",
+    "views": {
+        "frequent": {
+            "map": "function(doc) { if(doc.from && doc.to) { emit([doc.from, doc.to] , 1 ); } }",
+            "reduce": "function (key, values) { return sum(values); }"
+        }
+    }
+}

@@ -1,0 +1,19 @@
+package de.fzi.cep.sepa.flink.test.project;
+
+import java.util.Map;
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
+
+public class TestProject implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
+  private String propertyName;
+
+  public TestProject(String propertyName) {
+    this.propertyName = propertyName;
+  }
+
+  @Override
+  public void flatMap(Map<String, Object> in, Collector<Map<String, Object>> out) throws Exception {
+    Object o = in.get(propertyName);
+    //TODO implement
+  }
+}

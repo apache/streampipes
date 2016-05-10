@@ -1,0 +1,248 @@
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+	<h5>KNOWLEDGE CONFIGURATION </h5>
+	</div>
+	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+		<md-button class="md-accent" ng-click="openNamespaceDialog()">Manage Namespaces</md-button>
+		<md-button class="md-accent" ng-click="openImportDialog()">Manage Vocabularies</md-button>
+	</div>
+	<div layout-fill>
+		<md-tabs md-dynamic-height md-border-bottom>
+				<md-tab label="Concepts" md-on-select="setSelectedTab('CONCEPTS')"></md-tab> 
+				<md-tab label="Properties" md-on-select="setSelectedTab('PROPERTIES')"> </md-tab>
+		</md-tabs>
+	</div>
+	
+</div>
+
+<div flex="100" layout="row" layout-align="center center">
+	<div layout="column" flex="100" ng-if="selectedTab === 'PROPERTIES'">
+				<div layout="row">
+				<md-button class="md-accent" ng-click="openAddElementDialog('Property')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create Property</md-button>
+				</div>
+				<div flex layout="row">
+					<div flex-sm="40" flex-gt-sm="40" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="properties">
+						    <li ng-repeat="item in properties" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadPropertyDetails(item.id)">
+						       <div flex="100" layout="row">
+						        <div flex="70" layout="row" layout-align="start center" class="tree-node-title"> {{item.title}}</div>
+						        <div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteProperty(item.id)" class="md-icon-button tree-node-action" ><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Property"></md-icon></md-button></div>	 
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="propertySelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							{{propertyDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding">
+							<form name="propertyForm" ng-submit="updateProperty()" role="form">
+								<div flex layout="column">
+								<md-input-container> <label>Label</label> <input
+									type="text" ng-model="propertyDetail.rdfsLabel" required> </md-input-container>
+								<md-input-container flex> <label>Description</label>
+								<input type="text" ng-model="propertyDetail.rdfsDescription" required> </md-input-container>
+								</div>
+								<md-divider></md-divider>
+								<h4>Type Definition</h4>
+								<div ng-show="propertyDetail.rangeDefined">
+									<a ng-click="reset()">(Remove Type Definition)</a>
+									<div ng-show="propertyDetail.range.rangeType === 'PRIMITIVE'">
+									<h5>Primitive Property</h5>
+										<md-radio-group ng-model="propertyDetail.range.rdfsDatatype" class="md-accent">
+									          <md-radio-button ng-repeat="primitiveClass in primitiveClasses" ng-value="primitiveClass.id" ng-checked="propertyDetail.range.rdfsDatatype === primitiveClass.id">
+									            <b>{{primitiveClass.title}}</b><br/>
+									            {{primitiveClass.description}}
+									          </md-radio-button>
+									    </md-radio-group>
+									</div>
+									<div ng-show="propertyDetail.range.rangeType === 'QUANTITATIVE_VALUE'">
+									<h5>Quantitative Value</h5>
+									</div>
+									<div ng-show="propertyDetail.rangeType === 'ENUMERATION'">
+									<h5>Enumeration</h5>
+										<md-input-container flex> <label>Minimum Value</label>
+											<input type="text" ng-model="propertyDetail.range.minValue"> </md-input-container>
+										<md-input-container flex> <label>Maximum Value</label>
+											<input type="text" ng-model="propertyDetail.range.maxValue"> </md-input-container>
+										<md-input-container flex> <label>Unit Code</label>
+											<input type="text" ng-model="propertyDetail.range.unitCode"> </md-input-container>
+									</div>
+								
+								</div>
+								<div ng-show="!propertyDetail.rangeDefined">
+									<div layout="column">
+										<md-radio-group ng-model="selectedRangeType" class="md-accent">
+								          <md-radio-button ng-repeat="rt in rangeTypes" ng-value="rt.rangeType">
+								            <b>{{rt.title}}</b><br/>
+								            {{rt.description}}
+								          </md-radio-button>
+									    </md-radio-group>
+									    <md-button class="md-accent" ng-click="addTypeDefinition()" type="button">Add Type Definition</md-button>
+									</div>
+								</div>
+								<md-divider></md-divider>
+								<div class="form-actions">
+								<md-button class="md-accent md-raised" type="submit"
+									ng-disabled="propertyForm.$pristine || propertyForm.$invalid || loading">Save</md-button>
+								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+									<div class="md-warn" ng-show="errorMessagePresent">
+									      <h4>{{errorMessage}}</h4>
+									</div>
+								</div>
+							</form>
+						</md-content>
+					</div>
+				</div>
+			</div>
+			<div layout="column" flex="100" ng-if="selectedTab === 'CONCEPTS'">
+				<div layout="row">
+					<md-button class="md-accent" ng-click="openAddElementDialog('Concept')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Concept</md-button>
+					<md-button class="md-accent" ng-click="openAddElementDialog('Instance')"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon>  Create Instance</md-button>
+				
+				</div>
+				<div flex layout="row">
+					<div flex-sm="30" flex-gt-sm="40" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="concepts">
+						    <li ng-repeat="item in concepts" ui-tree-node>
+						    	<div ui-tree-handle class="tree-node tree-node-content color-concept" ng-click="loadConceptDetails(item.id)">
+							    	<div flex="100" layout="row">
+							        	<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{item.title}}</div>
+							        	<div flex="30" layout="row" layout-align="end center">
+								        	<div flex="20"></div>
+								         	<div flex="40" layout="row" layout-align="start center" class="tree-node-action"><md-button  ng-click="openAddElementDialog('Instance', item.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon></md-button></div> 	 
+											<div flex="40" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteConcept(item.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Concept"></md-icon></md-button></div>	 
+										</div>
+									</div>
+								</div>		
+						      	 <ol ui-tree-nodes="" ng-model="item.nodes">
+								  	<li ng-repeat="node in item.nodes" ui-tree-node>
+								          <div ui-tree-handle class="tree-node tree-nocde-content color-instance" ng-click="loadInstanceDetails(node.id)">
+								          	<div flex="100" layout="row">
+								          		<div flex="70" layout="row" layout-align="start center" class="tree-node-title">{{node.title}}</div>
+								         	 	<div flex="30" layout="row" layout-align="end center" class="tree-node-action"><md-button  ng-click="deleteInstance(node.id)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_remove_circle_outline_24px" aria-label="Delete Instance"></md-icon></md-button></div>	  	
+								         	 </div>
+								          </div>
+								    </li>
+							   	</ol>
+						    </li>
+						  </ol>
+						</div>
+					</div>    
+
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-concept" ng-show="conceptSelected && !instanceSelected">
+						<div class="ontology-panel-title ontology-panel-concept ontology-panel-title-concept">
+							{{conceptDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding" >
+							<form name="conceptForm" ng-submit="updateConcept()" role="form">
+								<div flex layout="column">
+									<md-input-container> <label>Label</label> <input
+										type="text" ng-model="conceptDetail.rdfsLabel" required> </md-input-container>
+									<md-input-container flex> <label>Description</label>
+									<input type="text" ng-model="conceptDetail.rdfsDescription" required> </md-input-container>
+								</div>
+								<md-divider></md-divider><p/>
+								<h4>Properties</h4>
+								
+								<div ng-show="conceptDetail.domainProperties">
+									<div ng-repeat="property in conceptDetail.domainProperties">
+										<div class="md-whiteframe-z1 md-padding">
+											<p><a ng-click="removePropertyFromClass(property)">(Remove this property)</a></p>
+											<b>{{property.elementHeader.title}}</b>
+											<p/>
+											{{property.rdfsLabel}}<br/>
+											<i>{{property.rdfsDescription}}</i>
+										</div>
+									</div>
+								</div>
+								<div ng-show="!conceptDetail.domainProperties || conceptDetail.domainProperties.length == 0">
+									No properties present.
+								</div>
+								<md-divider></md-divider><p/>
+								<h4>Add new Property</h4>
+								<div layout="row">	 
+							        <select ng-model="currentlySelectedClassProperty">
+							          <option ng-repeat="property in properties" value="{{property.id}}">
+							            {{property.title}}
+							          </option>
+							        </select>
+							      <md-button class="md-accent" ng-click="addPropertyToClass(currentlySelectedClassProperty)" type="button">Add Property</md-button>
+							      </div>
+							      <tt>singleSelect = {{currentlySelectedClassProperty}}</tt>
+							      <md-divider></md-divider>
+								 <md-button class="md-accent md-raised" ng-click="storeClass()" type="submit">Save</md-button>	
+							</form>
+						</md-content>
+					</div>
+					<div flex-sm="60" flex-gt-sm="60" layout-sm="column" layout-align="start start" class="ontology-panel-main ontology-panel-instance"  ng-show="instanceSelected">
+						<div class="ontology-panel-title ontology-panel-instance ontology-panel-title-instance">
+							{{instanceDetail.elementHeader.title}}
+						</div>
+						<md-content class="md-padding">
+						<form name="instanceForm" ng-submit="updateInstance()" role="form">
+							<div flex layout="column">
+								<md-input-container> <label>Label</label> <input
+									type="text" ng-model="instanceDetail.rdfsLabel" required> </md-input-container>
+								<md-input-container flex> <label>Description</label>
+								<input type="text" ng-model="instanceDetail.rdfsDescription" required> </md-input-container>
+							</div>
+								<md-divider></md-divider><p/>
+								<h4>Properties</h4>
+								
+								<div ng-show="instanceDetail.domainProperties">
+									<div ng-repeat="property in instanceDetail.domainProperties">
+										<div class="md-whiteframe-z1 md-padding">
+											<p><a ng-click="removePropertyFromInstance(property)">(Remove this property)</a></p>
+											<h4>{{property.elementHeader.title}}</h4>
+											<p/>
+											{{property.rdfsLabel}}<br/>
+											<i>{{property.rdfsDescription}}</i>
+										
+										
+										<div ng-show="property.range.rangeType === 'QUANTITATIVE_VALUE'">
+											<h5>Quantitative Value</h5>
+											<md-input-container flex> <label>Minimum Value</label>
+												<input type="text" ng-model="propertyDetail.range.minValue"> </md-input-container>
+											<md-input-container flex> <label>Maximum Value</label>
+												<input type="text" ng-model="propertyDetail.range.maxValue"> </md-input-container>
+											<md-input-container flex> <label>Unit Code</label>
+												<input type="text" ng-model="propertyDetail.range.unitCode"> </md-input-container>
+										</div>
+										<div ng-show="property.range.rangeType === 'PRIMITIVE'">
+											<div flex layout="column">
+												<b>Primitive Value </b>({{property.range.rdfsDatatype}})
+												<md-input-container flex> <label>Value</label>
+													<input type="text" ng-model="property.range.value"> </md-input-container>
+											</div>
+										</div>
+										<div ng-show="property.range.rangeType === 'ENUMERATION'">
+											<h5>Enumeration</h5>
+											
+										</div>
+										</div>
+									</div>
+									<md-divider></md-divider><p/>
+										<h4>Add new Property</h4>
+										<div layout="row">	 
+							        	<select ng-model="selectedInstanceProperty">
+							          		<option ng-repeat="property in properties" value="{{property.id}}">
+							            		{{property.title}}
+							          		</option>
+							        	</select>
+							      		<md-button class="md-accent" ng-click="addPropertyToInstance()" type="button">Add Property</md-button>
+							      		</div>
+									 <md-button class="md-accent md-raised" ng-click="storeInstance()" type="submit">Save</md-button>	
+								</div>
+						</md-content>
+					</div>
+				</div>
+			</div>
+</div>
+</div>

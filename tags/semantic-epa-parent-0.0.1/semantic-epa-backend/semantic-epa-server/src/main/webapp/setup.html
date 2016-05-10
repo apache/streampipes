@@ -1,0 +1,189 @@
+<div flex layout-fill>
+<div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
+<div flex layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>SETUP</h5>
+</div>
+</div>
+<div flex layout="row" layout-align="center center">
+	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50"
+		class="md-whiteframe-z2" style="padding:10px;">
+		
+		<h1>StreamPipes Setup</h1>
+
+		<h4>Welcome!</h4>
+		
+		<p/>
+		<md-divider/>
+		<md-content layout-padding>
+		<div ng-show="!installationFinished">
+		    <form name="setupForm" role="form" ng-submit="configure()" >
+		    <h3>Database Settings</h3>
+		    <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>CouchDB Protocol</label>
+		        <input ng-model="setup.couchDbProtocol">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>CouchDB Host</label>
+		        <input ng-model="setup.couchDbHost">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>CouchDB Port</label>
+		        <input ng-model="setup.couchDbPort">
+		      </md-input-container>
+		      </div>
+		      <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>CouchDB User Database</label>
+		        <input ng-model="setup.couchDbUserDbName">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>CouchDB Pipeline Database</label>
+		        <input ng-model="setup.couchDbPipelineDbName">
+		      </md-input-container>
+		      </div>
+		      <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>CouchDB Monitoring Database</label>
+		        <input ng-model="setup.couchDbMonitoringDbName">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>CouchDB Connection Database</label>
+		        <input ng-model="setup.couchDbConnectionDbName">
+		      </md-input-container>
+		      </div>
+		       <div flex="100" layout="row">
+			      <div flex="50" layout layout="column">
+		       <md-input-container flex>
+		        <label>Sesame URL</label>
+		        <input ng-model="setup.sesameUrl">
+		      </md-input-container>
+		      </div>
+		         <div flex="50" layout layout="column">
+		      <md-input-container flex>
+		        <label>Sesame Database Name</label>
+		        <input ng-model="setup.sesameDbName">
+		      </md-input-container>
+		      </div>
+		      </div>
+		     <md-divider/>
+		     <h3>Broker Settings</h3>
+		    <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>Kafka Protocol</label>
+		        <input ng-model="setup.kafkaProtocol">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Kafka Host</label>
+		        <input ng-model="setup.kafkaHost">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Kafka Port</label>
+		        <input ng-model="setup.kafkaPort">
+		      </md-input-container>
+		      </div>
+		       <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>Zookeeper Protocol</label>
+		        <input ng-model="setup.zookeeperProtocol">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Zookeeper Host</label>
+		        <input ng-model="setup.zookeeperHost">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Zookeeper Port</label>
+		        <input ng-model="setup.zookeeperPort">
+		      </md-input-container>
+		      </div>
+		       <div layout layout-sm="column">
+		      <md-input-container flex>
+		        <label>JMS Protocol</label>
+		        <input ng-model="setup.jmsProtocol">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>JMS Host</label>
+		        <input ng-model="setup.jmsHost">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Kafka Port</label>
+		        <input ng-model="setup.jmsPort">
+		      </md-input-container>
+		      </div>
+		     <md-divider/>
+		     <div flex layout="column">
+		     <h3>Initial User Settings</h3>
+		      <md-input-container flex>
+		        <label>Email</label>
+		        <input ng-model="setup.adminEmail">
+		      </md-input-container>
+		       <md-input-container flex>
+		        <label>Username</label>
+		        <input ng-model="setup.adminUsername">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>Password</label>
+		        <input type="password" ng-model="setup.adminPassword">
+		      </md-input-container>
+		      </div>
+		       <md-divider/>
+		        <div flex layout="column">
+		     <h3>ProaSense components</h3>
+		      <md-input-container flex>
+		        <label>StreamStory URL</label>
+		        <input ng-model="setup.streamStoryUrl">
+		      </md-input-container>
+		       <md-input-container flex>
+		        <label>PANDDA URL</label>
+		        <input ng-model="setup.panddaUrl">
+		      </md-input-container>
+		      <md-input-container flex>
+		        <label>HIPPO URL</label>
+		        <input type="password" ng-model="setup.hippoUrl">
+		      </md-input-container>
+		        <md-input-container flex>
+		        <label>Human Inspection Report URL</label>
+		        <input type="text" ng-model="setup.humanInspectionReportUrl">
+		      </md-input-container>
+		       <md-input-container flex>
+		        <label>Human Maintenance Report URL</label>
+		        <input type="text" ng-model="setup.humanMaintenanceReportUrl">
+		      </md-input-container>
+		      </div>
+		      <md-divider/>
+		      <h3>App Config</h3>
+		    	<div layout layout-sm="column">
+			      <md-input-container flex>
+			      	  <md-radio-group ng-model="setup.appConfig">
+     						 <md-radio-button value="ProaSense" class="md-primary">ProaSense</md-radio-button>
+			      			 <md-radio-button value="StreamPipes" class="md-primary">StreamPipes</md-radio-button>
+			      		</md-radio-group>
+			      </md-input-container>
+		      	</div>
+		     <div class="form-actions">
+		     <div layout layout-sm="column">
+				<md-button class="md-accent md-raised" type="submit"
+					ng-disabled="setupForm.$pristine || setupForm.$invalid || loading">Install</md-button>
+				<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+			</div>
+				</div>
+		    </form>
+		   </div>
+		    <div ng-show="installationFinished">
+		    <h3>Installation Results</h3>
+		    	<div ng-repeat="msg in installationResults">
+		    	<div flex layout layout-sm="row" style="width:80%" class="center center">
+		    		<div style="width:50%"><h4>{{msg.notifications[0].title}}</h4></div>
+			    		<div style="width:50%">
+			    			<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" style="width: 36px; height: 36px" ng-show="msg.success"></md-icon>
+			    			<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" style="width: 36px; height: 36px" ng-show="!(msg.success)"></md-icon>
+			    		</div>
+		    	</div>
+		    	</div>
+		    	<p/>
+		    	<h3><a ui-sref="streampipes.login" class="md-accent"><md-icon md-svg-icon="navigation:ic_arrow_forward_24px" aria-label="Action" class="md-accent" style="width: 36px; height: 36px"></md-icon>Go to login page</a></h3>
+		    </div>
+		  </md-content>
+	</div>
+</div>
+</div>

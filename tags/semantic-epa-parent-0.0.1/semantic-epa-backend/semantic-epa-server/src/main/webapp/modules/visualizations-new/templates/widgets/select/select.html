@@ -1,0 +1,10 @@
+<div>
+    {{label}} <select ng-model="value" ng-options="opt for opt in options"
+                          class="form-control" style="width: 200px; display: inline;"></select>
+    <button type="button" class="btn btn-default" ng-click="prevValue();">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="nextValue();">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+</div>
