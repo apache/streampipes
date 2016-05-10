@@ -155,7 +155,7 @@
 
 	<!-- Environment Settings -->
 	<scm>
-		<developerConnection>scm:svn:scm:svn:https://ipesvn.fzi.de/svn/icep/semantic-epa-parent/tags/semantic-epa-parent-0.0.1</developerConnection>
+		<developerConnection>scm:svn:https://ipesvn.fzi.de/svn/icep/semantic-epa-parent</developerConnection>
 	</scm>
 	<repositories>
 		<repository>
