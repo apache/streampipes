@@ -4,7 +4,7 @@
 	<parent>
         <artifactId>semantic-epa-parent</artifactId>
         <groupId>de.fzi.cep.sepa</groupId>
-        <version>0.0.1</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 	<artifactId>semantic-epa-sources-mhwirth</artifactId>
 	<packaging>war</packaging>
@@ -12,7 +12,7 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-sources</artifactId>
-			<version>0.0.1</version>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<repositories>

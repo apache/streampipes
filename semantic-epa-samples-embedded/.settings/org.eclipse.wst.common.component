@@ -16,9 +16,6 @@
         <dependent-module archiveName="semantic-epa-runtime-flat-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/semantic-epa-runtime-flat/semantic-epa-runtime-flat">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="semantic-epa-runtime-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/semantic-epa-runtime/semantic-epa-runtime">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="java-output-path" value="/semantic-epa-samples-embedded/target/classes"/>
         <property name="context-root" value="semantic-epa-samples-embedded"/>
     </wb-module>
