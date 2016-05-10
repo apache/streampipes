@@ -117,7 +117,7 @@
 	<!-- Build Settings -->
 	<build>
 		<pluginManagement>
-			<plugins>
+		<!-- 	<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -128,7 +128,7 @@
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
-			</plugins>
+			</plugins> -->
 		</pluginManagement>
 		<plugins>
 			<plugin>
