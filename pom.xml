@@ -5,7 +5,7 @@
 	<!-- The Basics -->
 	<groupId>de.fzi.cep.sepa</groupId>
 	<artifactId>semantic-epa-parent</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<sesame.version>2.7.15</sesame.version>
@@ -155,7 +155,7 @@
 
 	<!-- Environment Settings -->
 	<scm>
-		<developerConnection>scm:svn:https://ipesvn.fzi.de/svn-open/icep/semantic-epa-parent/tags/semantic-epa-parent-0.0.1</developerConnection>
+		<developerConnection>scm:svn:https://ipesvn.fzi.de/svn-open/icep/semantic-epa-parent</developerConnection>
 	</scm>
 	<repositories>
 		<repository>
