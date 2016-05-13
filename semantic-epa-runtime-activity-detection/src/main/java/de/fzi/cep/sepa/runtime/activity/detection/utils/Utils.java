@@ -44,5 +44,10 @@ public class Utils {
 						.add("kafkaPort", params.getKafkaPort()).add("outputTopic", params.getOutputTopic()))
 				.build();
 	}
+	
+	public static JsonObject getModelDetachMessage(String pipelineId, int modelId) {
+		return Json.createObjectBuilder().add("pipelineId", pipelineId)
+		.add("modelId", modelId).build();
+	}
 
 }

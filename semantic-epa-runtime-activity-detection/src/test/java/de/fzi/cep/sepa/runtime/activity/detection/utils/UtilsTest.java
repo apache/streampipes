@@ -69,6 +69,17 @@ public class UtilsTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void testGetModelDetachMessage() {
+		JsonObject actual = Utils.getModelDetachMessage("pipId", 1);
+		JsonObject expected = Json.createObjectBuilder().add("pipelineId", "pipId")
+				.add("modelId", 1).build();
+		
+		assertEquals(expected.toString(), actual.toString());
+				
+
+	}
+
 	public static JsonObject getModelInvocationJsonTemplate(ModelInvocationRequestParameters params) {
 		return Json.createObjectBuilder().add("pipelineId", params.getPipelineId())
 				.add("analyticsOperation", "ActivityDetection") //

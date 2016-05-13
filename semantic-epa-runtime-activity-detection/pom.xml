@@ -7,7 +7,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>activity-detection</artifactId>
+	<artifactId>semantic-epa-implementations-stream-story</artifactId>
 	<packaging>war</packaging>
 
 	<properties>

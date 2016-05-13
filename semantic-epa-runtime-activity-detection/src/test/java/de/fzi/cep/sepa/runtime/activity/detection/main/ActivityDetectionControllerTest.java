@@ -1,12 +1,13 @@
 package de.fzi.cep.sepa.runtime.activity.detection.main;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.*;
+
+import javax.json.Json;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -31,6 +33,7 @@ public class ActivityDetectionControllerTest {
 	public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
 
 	private String tmpUrl;
+	private static String pipelineId = "pip1";
 
 	@Before
 	public void before() {
@@ -44,20 +47,60 @@ public class ActivityDetectionControllerTest {
 	}
 
 	@Test
-	public void testInvokeRuntime() {
-		ModelInvocationRequestParameters params = new ModelInvocationRequestParameters("pip1", 1,
+	public void testInvokeRuntimeSuccessfully() {
+		ModelInvocationRequestParameters params = getTestParams();		
+
+		stubFor(post(urlEqualTo("/invoke"))
+				.withRequestBody(WireMock.equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString()))
+				.willReturn(aResponse().withStatus(200).withHeader("Content-Type", "application/json")));
+
+		SepaInvocation invocation = getTestInvocation();
+		Response actual = new ActivityDetectionController().invokeRuntime(invocation);
+		Response expected = new Response(pipelineId, true);
+
+		assertEquals(expected, actual);
+
+		WireMock.verify(postRequestedFor(urlEqualTo("/invoke"))
+				.withHeader("Content-Type", equalTo("application/json; charset=UTF-8"))
+				.withRequestBody(equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString())));
+	}
+	
+	@Test
+	public void testInvokeRuntimeFailure() {
+		SepaInvocation invocation = getTestInvocation();
+		Response actual = new ActivityDetectionController().invokeRuntime(invocation);
+		Response expected = new Response(pipelineId, false, "There is a problem with Service Stream Story!\n" + 
+				"HTTP/1.1 404 Not Found");
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testDetachRuntime() {
+		stubFor(post(urlEqualTo("/detach"))
+				.willReturn(aResponse().withStatus(200)));
+		
+		String expectedParams = Json.createObjectBuilder().add("pipelineId", pipelineId)
+				.add("modelId", 1).build().toString();
+		
+		
+		Response actual = new ActivityDetectionController().detachRuntime(pipelineId);
+		Response expected = new Response(pipelineId, true);
+		
+
+		assertEquals(expected, actual);
+		WireMock.verify(postRequestedFor(urlEqualTo("/detach"))
+				.withHeader("Content-Type", equalTo("application/json; charset=UTF-8"))
+				.withRequestBody(equalToJson(expectedParams)));
+	
+	}
+
+	private ModelInvocationRequestParameters getTestParams() {
+		return new ModelInvocationRequestParameters(pipelineId, 1,
 				ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort(),
 				AkerVariables.Enriched.topic(), ClientConfiguration.INSTANCE.getKafkaHost(),
 				ClientConfiguration.INSTANCE.getKafkaPort(), "testtopic");
-		stubFor(get(urlEqualTo("/init"))
-				.withRequestBody(WireMock.equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString()))
-				.willReturn(aResponse().withStatus(200).withHeader("Content-Type", "text/html")));
 
-		SepaInvocation invocation = getTestInvocation();
-		new ActivityDetectionController().invokeRuntime(invocation);
-
-		WireMock.verify(WireMock.postRequestedFor(urlEqualTo("/init"))
-				.withRequestBody(WireMock.equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString())));
 	}
 
 	private SepaInvocation getTestInvocation() {
@@ -76,7 +119,7 @@ public class ActivityDetectionControllerTest {
 		outputGrounding.setTransportProtocol(outputProtocol);
 		outputStream.setEventGrounding(outputGrounding);
 		invocation.setOutputStream(outputStream);
-		invocation.setCorrespondingPipeline("pip1");
+		invocation.setCorrespondingPipeline(pipelineId);
 		return invocation;
 
 	}

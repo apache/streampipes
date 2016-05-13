@@ -22,6 +22,8 @@ import org.apache.http.protocol.HTTP;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import com.google.gson.Gson;
+
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
@@ -41,7 +43,7 @@ import de.fzi.cep.sepa.runtime.activity.detection.utils.Utils;
 
 public class ActivityDetectionController implements SemanticEventProcessingAgentDeclarer {
 	public static String STREAMSTORY_URL = "http://streamstory.de/";
-//	private static String STREAMSTORY_URL = "http://localhost:18089/";
+	// private static String STREAMSTORY_URL = "http://localhost:18089/";
 
 	@Override
 	public SepaDescription declareModel() {
@@ -54,7 +56,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 				.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 
 		EventStream stream = EnrichedUtils.getEnrichedStream();
-		
+
 		stream.setEventGrounding(grounding);
 		desc.addEventStream(stream);
 
@@ -68,42 +70,85 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 	protected String getInputTopic(InvocableSEPAElement graph) {
 		return graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 	}
-	
+
 	protected String getOutputTopic(SepaInvocation graph) {
 		return graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName();
 	}
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		String pipelineId = invocationGraph.getCorrespondingPipeline();
-		//TODO what is the modelId
+		// TODO make modelId dynamic
 		int modelId = 1;
+
+		String pipelineId = invocationGraph.getCorrespondingPipeline();
+		String errorMessage = "";
 		String inputTopic = getInputTopic(invocationGraph);
 		String outputTopic = getOutputTopic(invocationGraph);
-		
-		ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId, inputTopic, outputTopic);
+
+		ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId,
+				inputTopic, outputTopic);
 		JsonObject payload = Utils.getModelInvocationMessage(params);
-		
+
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "/init")
-			.useExpectContinue()
-			.version(HttpVersion.HTTP_1_1)
-			.bodyString(payload.toString(), ContentType.APPLICATION_JSON)
-			.execute();
-			
+			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "/invoke").useExpectContinue()
+					.version(HttpVersion.HTTP_1_1).bodyString(payload.toString(), ContentType.APPLICATION_JSON)
+					.execute();
+
+			return handleResponse(res, pipelineId);
 		} catch (ClientProtocolException e) {
+			errorMessage = e.toString();
 			e.printStackTrace();
 		} catch (IOException e) {
+			errorMessage = e.toString();
 			e.printStackTrace();
 		}
-		
-		return new Response(invocationGraph.getElementId(), true);
+
+		return new Response(pipelineId, false, errorMessage);
 	}
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO make modelId dynamic
+		int modelId = 1;
+		String errorMessage = "";
+
+		JsonObject params = Utils.getModelDetachMessage(pipelineId, modelId);
+
+		try {
+			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "/detach").useExpectContinue()
+					.version(HttpVersion.HTTP_1_1).bodyString(params.toString(), ContentType.APPLICATION_JSON)
+					.execute();
+			return handleResponse(res, pipelineId);
+		} catch (ClientProtocolException e) {
+			errorMessage = e.toString();
+			e.printStackTrace();
+		} catch (IOException e) {
+			errorMessage = e.toString();
+			e.printStackTrace();
+		}
+
+		return new Response(pipelineId, false, errorMessage);
+	}
+
+	private Response handleResponse(org.apache.http.client.fluent.Response response, String elementId) {
+		String errorMessage = "";
+		try {
+			HttpResponse resp = response.returnResponse();
+			if (200 == resp.getStatusLine().getStatusCode()) {
+				return new Response(elementId, true);
+			} else {
+				return new Response(elementId, false,
+						"There is a problem with Service Stream Story!\n" + resp.getStatusLine());
+			}
+		} catch (ClientProtocolException e) {
+			errorMessage = e.toString();
+			e.printStackTrace();
+		} catch (IOException e) {
+			errorMessage = e.toString();
+			e.printStackTrace();
+		}
+
+		return new Response(elementId, false, errorMessage);
 	}
 
 }
