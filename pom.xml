@@ -88,7 +88,6 @@
 
 	<modules>
 		<!-- <module>semantic-epa</module> <module>semantic-epa-esper</module> -->
-		<module>semantic-epa-backend</module>
 		<module>semantic-epa-sources</module>
 		<module>semantic-epa-model</module>
 		<module>semantic-epa-sources-samples</module>
@@ -114,6 +113,10 @@
 		<module>semantic-epa-code-generation</module>
 		<module>semantic-epa-client-container</module>
 		<module>semantic-epa-client-standalone</module>
+		<module>semantic-epa-rest</module>
+		<module>semantic-epa-server</module>
+		<module>semantic-epa-storage</module>
+		<module>semantic-epa-model-client</module>
 	</modules>
 
 	<!-- Build Settings -->
