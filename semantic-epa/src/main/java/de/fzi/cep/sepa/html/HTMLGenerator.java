@@ -9,6 +9,10 @@ import java.util.List;
 
 import org.rendersnake.HtmlCanvas;
 
+import de.fzi.cep.sepa.html.model.AgentDescription;
+import de.fzi.cep.sepa.html.model.Description;
+import de.fzi.cep.sepa.html.model.StreamDescription;
+
 public class HTMLGenerator {
 
 	private List<Description> description;

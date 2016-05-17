@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import de.fzi.cep.sepa.html.model.Description;
+
 public class JSONGenerator {
 
 private List<Description> description;

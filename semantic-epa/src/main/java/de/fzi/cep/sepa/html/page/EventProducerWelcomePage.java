@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.html;
+package de.fzi.cep.sepa.html.page;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -6,6 +6,10 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.html.WelcomePageGenerator;
+import de.fzi.cep.sepa.html.model.AgentDescription;
+import de.fzi.cep.sepa.html.model.Description;
+import de.fzi.cep.sepa.html.model.StreamDescription;
 
 public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEventProducerDeclarer> {
 
