@@ -112,6 +112,8 @@
 		<module>semantic-epa-sources-demonstrator</module>
 		<module>semantic-epa-samples-embedded</module>
 		<module>semantic-epa-code-generation</module>
+		<module>semantic-epa-client-container</module>
+		<module>semantic-epa-client-standalone</module>
 	</modules>
 
 	<!-- Build Settings -->
