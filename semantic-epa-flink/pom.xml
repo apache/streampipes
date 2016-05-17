@@ -5,7 +5,6 @@
 		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
-	<groupId>de.fzi.cep.sepa</groupId>
 	<artifactId>semantic-epa-flink</artifactId>
 	<properties>
 		<jackson.version>2.4.2</jackson.version>
@@ -79,6 +78,11 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-runtime</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-client-standalone</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
