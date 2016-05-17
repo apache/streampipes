@@ -2,32 +2,20 @@ package de.fzi.cep.sepa.runtime.activity.detection.main;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.json.JsonObject;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.httpclient.StatusLine;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.apache.http.protocol.HTTP;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -42,14 +30,16 @@ import de.fzi.cep.sepa.runtime.activity.detection.utils.ProaSenseSettings;
 import de.fzi.cep.sepa.runtime.activity.detection.utils.Utils;
 
 public class ActivityDetectionController implements SemanticEventProcessingAgentDeclarer {
-	public static String STREAMSTORY_URL = "http://streamstory.de/";
-	// private static String STREAMSTORY_URL = "http://localhost:18089/";
+//	public static String STREAMSTORY_URL = "http://streamstory.de/";
+//	public static String STREAMSTORY_URL = "http://requestb.in/za5qurza";
+	 public static String STREAMSTORY_URL = "http://localhost:3000/";
 
 	@Override
 	public SepaDescription declareModel() {
 		SepaDescription desc = new SepaDescription("sepa/activitydetection", "ActivityDetection",
 				"ActivityDetection description");
 
+		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding
@@ -57,7 +47,8 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 		EventStream stream = EnrichedUtils.getEnrichedStream();
 
-		stream.setEventGrounding(grounding);
+//		stream.setEventGrounding(grounding);
+		desc.setSupportedGrounding(grounding);
 		desc.addEventStream(stream);
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
@@ -90,11 +81,12 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		JsonObject payload = Utils.getModelInvocationMessage(params);
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "/invoke").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "invoke").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(payload.toString(), ContentType.APPLICATION_JSON)
 					.execute();
-
-			return handleResponse(res, pipelineId);
+			Response ress = handleResponse(res, pipelineId);
+			return ress;
+//			return handleResponse(res, pipelineId);
 		} catch (ClientProtocolException e) {
 			errorMessage = e.toString();
 			e.printStackTrace();
@@ -115,7 +107,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		JsonObject params = Utils.getModelDetachMessage(pipelineId, modelId);
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "/detach").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "detach").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(params.toString(), ContentType.APPLICATION_JSON)
 					.execute();
 			return handleResponse(res, pipelineId);
@@ -132,6 +124,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 	private Response handleResponse(org.apache.http.client.fluent.Response response, String elementId) {
 		String errorMessage = "";
+
 		try {
 			HttpResponse resp = response.returnResponse();
 			if (200 == resp.getStatusLine().getStatusCode()) {
