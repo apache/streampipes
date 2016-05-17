@@ -64,6 +64,11 @@
 			<artifactId>thrift-messages</artifactId>
 			<version>0.5</version>
 		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-client-standalone</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
