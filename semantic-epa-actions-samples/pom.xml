@@ -48,6 +48,11 @@
 			<artifactId>rendersnake</artifactId>
 			<version>1.8</version>
 		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-client-standalone</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
