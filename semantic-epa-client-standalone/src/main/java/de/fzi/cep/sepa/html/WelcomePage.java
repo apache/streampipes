@@ -8,6 +8,7 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.representation.StringRepresentation;
 
+import de.fzi.cep.sepa.html.model.Description;
 import de.fzi.cep.sepa.util.CorsHeaders;
 
 public class WelcomePage extends Restlet {
