@@ -4,14 +4,10 @@ import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
+import com.squareup.javapoet.TypeSpec;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
