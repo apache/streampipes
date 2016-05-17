@@ -1,0 +1,42 @@
+<md-dialog aria-label="Pipeline Status">
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Pipeline Status</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-dialog-content">
+    <div>
+    	<h4><md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="data.success"></md-icon>
+				<md-icon md-svg-icon="alert:ic_warning_24px" aria-label="Action" class="md-accent" ng-show="!data.success"></md-icon> {{data.title}}</h4>
+    	<div ng-repeat="msg in data.elementStatus">
+	    	<div flex="100" class="md-whiteframe-z2">
+	    		<div flex layout="column" class="md-padding">
+		    		<div>
+		    			<b>{{msg.elementName}} </b> at URL <b> {{msg.elementId}}</b>
+				    	<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="msg.success"></md-icon>
+						<md-icon md-svg-icon="alert:ic_warning_24px" aria-label="Action" class="md-accent" ng-show="!msg.success"></md-icon>
+					</div>
+					<div>
+						<div flex layout="column" ng-show="msg.optionalMessage">
+						<b>More Details:</b>
+						<div class="md-padding"><i class="fa fa-terminal">{{msg.optionalMessage}}</i></div>
+						</div>
+					</div>
+				</div>
+	    	</div>
+	    	<p/>
+    	</div>      
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+  </div>
+  </form>
+</md-dialog>

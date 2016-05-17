@@ -1,0 +1,31 @@
+<b>Required type: {{staticProperty.input.properties.requiredClass}}</b>
+	<div layout="column">
+		<div>
+			Instance search:
+		</div>
+		<div>
+			<md-autocomplete
+	          ng-disabled="false"
+	          md-no-cache="false"
+	          md-selected-item="selectedItem"
+	          md-search-text-change="searchTextChange(searchText)"
+	          md-search-text="searchText"
+	          md-selected-item-change="selectedItemChange(item, autoCompleteStaticProperty.elementId, staticProperty.input.properties.supportedProperties)"
+	          md-items="item in querySearch(searchText, autoCompleteStaticProperty.elementId)"
+	          md-item-text="item.label"
+	          md-min-length="0"
+	          placeholder="Label">
+	        <md-item-template>
+	          <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.label}}</span>
+	        </md-item-template>
+	        <md-not-found>
+	          No instances matching "{{searchText}}" were found.
+	        </md-not-found>
+	      </md-autocomplete>
+		</div>
+	</div>
+	<div ng-repeat="supportedProperty in staticProperty.input.properties.supportedProperties">
+    	<md-input-container flex="100" layout="column"> <label>{{supportedProperty.propertyId}}</label>
+			<input name="{{supportedProperty.elementId}}" ng-model="supportedProperty.value"/> 
+		</md-input-container>
+	</div>

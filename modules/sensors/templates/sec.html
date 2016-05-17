@@ -1,0 +1,23 @@
+<md-tabs md-dynamic-height md-border-bottom md-selected="selectedActionIndex"> 
+<md-tab label="Basics">
+		<md-content class="md-padding">
+			<sepa-basics element="selectedAction" disabled="editingDisabled"></sepa-basics>
+		</md-content> 
+		</md-tab> 
+		<md-tab label="Stream Restrictions"> 
+			<md-content class="md-padding">
+			 <stream-restriction element="selectedAction.eventStreams" disabled="editingDisabled"></stream-restriction>
+			<p></p>
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Static Properties"> 
+			<md-content class="md-padding">
+			<static-properties element="selectedAction.staticProperties" streams="selectedAction.eventStreams" disabled="editingDisabled"></static-properties>	
+			</md-content> 
+		</md-tab> 
+		<md-tab label="Supported Grounding"> 
+			<md-content class="md-padding">
+				<supported-grounding grounding="selectedAction.supportedGrounding" disabled="editingDisabled"></supported-grounding> 
+			</md-content> 
+		</md-tab> 
+</md-tabs>

@@ -1,0 +1,163 @@
+<div flex layout-fill>
+<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+<h5>SENSOR CONFIGURATION </h5>
+</div>
+<div layout-fill>
+	<md-tabs md-dynamic-height md-border-bottom>
+	
+			<md-tab label="Data Sources" md-on-select="setSelectedTab('SOURCES')"></md-tab> 
+			<md-tab label="Processing Elements" md-on-select="setSelectedTab('EPAS')"> </md-tab>
+			<md-tab label="Data Sinks" md-on-select="setSelectedTab('SINKS')"> </md-tab>
+	</md-tabs>
+</div>
+</div>
+<div flex="100" layout="row" layout-align="center center">
+	<div layout="column" flex="100" ng-if="selectedTab === 'SOURCES'">
+				<div layout="row">
+					<md-button class="md-accent" ng-click="addNewSource()"><md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>  Create Source</md-button>				
+				</div>
+				<div flex layout="row">
+					<div flex="30" layout="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="sources">
+						    <li ng-repeat="(pointer, source) in sources track by $index" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property">
+						       <div flex="100" layout="row">
+						        	<div flex="60" layout="row" layout-align="start center" class="tree-node-title"> {{source.name}}</div>
+						        	<div flex="20" layout="row" layout-align="end center"><md-button ng-click="loadSourceDetails(pointer)"><md-icon md-svg-icon="action:ic_search_24px" aria-label="Add Concept"></md-icon></md-button>		</div>
+						       		<div flex="20" layout="row" layout-align="end center"><md-button ng-click="getSourceDetailsFromOntology(source.uri)"><md-icon md-svg-icon="content:ic_content_copy_24px" aria-label="Add Concept"></md-icon></md-button>		</div>
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex="70" layout="column" class="ontology-panel-main ontology-panel-property" ng-show="sourceSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							{{selectedSource.name}}
+						</div>
+						<md-content class="md-padding" >
+							<form name="sourceForm" ng-submit="updateConcept()" role="form">
+								  <ng-include src="'modules/sensors/templates/sep.html'"/>
+							      <md-divider></md-divider>
+							</form>
+						</md-content>
+						
+						<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openSourceOptionsDialog(selectedSource.uri, selectedSource, 'Source')">Generate</md-button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div layout="column" flex="100" ng-if="selectedTab === 'EPAS'">
+				<div layout="row" flex="100">
+					<div layout="row" layout-align="start center" flex="60">
+						<md-button class="md-accent" ng-click="addNewSepa()">
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>  Create new Processing Element
+						</md-button>
+					</div>
+					<div layout="row" layout-align="end center" flex="40">		
+						<div ng-show="selectedSepa != undefined">			
+							<md-button  ng-click="loadSepaDetails(selectedSepa.uri, true, false)" class="md-button md-accent" style="width:24px;height:24px;">
+								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Edit"></md-icon>  Modify 
+							</md-button>					
+						</div>		
+					</div>
+				</div>
+				<div flex layout="row">
+					<div flex="20" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="sepas">
+						    <li ng-repeat="sepa in sepas" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadSepaDetails(sepa.uri, true, true)">
+						       <div flex="100" layout="row">
+						        <div flex="100" layout="row" layout-align="start center" class="tree-node-title"> {{sepa.name}}</div>
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="sepaSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							<div flex="100" layout="row">
+								<div layout="row" layout-align="start center" flex="100">{{selectedSepa.name}}</div>	
+							</div>
+						</div>
+						<md-content class="md-padding">
+						
+							<ng-include src="'modules/sensors/templates/sepa.html'"></ng-include>
+								
+							<md-divider></md-divider>
+							<div class="form-actions">
+								<div class="md-warn" ng-show="errorMessagePresent">
+									      <h4>{{errorMessage}}</h4>
+								</div>
+								<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri, selectedSepa, 'Sepa')">Generate</md-button>
+								</div>
+								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
+							</div>
+						</md-content>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			<div layout="column" flex="100" ng-if="selectedTab === 'SINKS'">
+				<div layout="row" flex="100">
+					<div layout="row" layout-align="start center" flex="60">
+						<md-button class="md-accent" ng-click="addNewAction()">
+							<md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Action"></md-icon>  Create new Data Sink
+						</md-button>
+					</div>
+					<div layout="row" layout-align="end center" flex="40">		
+						<div ng-show="selectedAction != undefined">			
+							<md-button  ng-click="loadActionDetails(selectedAction.uri, true, false)" class="md-button md-accent" style="width:24px;height:24px;">
+								<md-icon md-svg-icon="editor:ic_mode_edit_24px" aria-label="Edit"></md-icon>  Modify 
+							</md-button>					
+						</div>		
+					</div>
+				</div>
+				<div flex layout="row">
+					<div flex-sm="20" flex-gt-sm="20" layout-sm="column">
+						<div ui-tree data-drag-enabled="false">
+						  <ol ui-tree-nodes="" ng-model="actions">
+						    <li ng-repeat="action in actions" ui-tree-node>
+						      <div ui-tree-handle class="tree-node tree-node-content color-property" ng-click="loadActionDetails(action.uri, true, true)">
+						       <div flex="100" layout="row">
+						        <div flex="100" layout="row" layout-align="start center" class="tree-node-title"> {{action.name}}</div>
+						       </div>
+						     </div>
+						    </li>
+						  </ol>
+						</div>
+					</div>
+					<div flex-sm="80" flex-gt-sm="80" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="actionSelected">
+						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
+							<div flex="100" layout="row">
+								<div layout="row" layout-align="start center" flex="100">{{selectedAction.name}}</div>	
+							</div>
+						</div>
+						<md-content class="md-padding">
+							<ng-include src="'modules/sensors/templates/sec.html'"></ng-include>
+								
+							<md-divider></md-divider>
+							<div class="form-actions">
+								<div class="md-warn" ng-show="errorMessagePresent">
+									      <h4>{{errorMessage}}</h4>
+								</div>
+								<div layout="row" layout-align="center center">
+									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedAction.uri, selectedAction, 'Sec')">Generate</md-button>
+								</div>
+								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
+							</div>
+					
+						</md-content>
+					</div>
+				</div>
+	</div>
+</div>
+</div>

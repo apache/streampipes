@@ -1,0 +1,56 @@
+<md-dialog aria-label="Manage Namespaces" flex="80">
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Manage Namespaces</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content flex="100" class="md-dialog-content">
+    <div>
+    	<h4>Available Namespaces</h4>
+    	<div ng-repeat="ns in namespaces">
+	    	<md-list-item layout="row" class="md-with-secondary" >
+	    		<div class="md-list-item-text" flex="20" layout="column">
+	    		{{ns.prefix}}
+	    		</div>
+	    		<div class="md-list-item-text" flex="60" layout="column">
+	    		{{ns.namespaceId}}
+	    		</div>
+	    		<div class="md-list-item-text" flex="20" layout="column">
+	    		<md-button  ng-click="deleteNamespace(ns.prefix)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>			
+	    		</div>
+	    	</md-list-item>
+	    	<p/>
+    	</div>  
+    	<div ng-show="addSelected">
+	    	<md-list-item layout="row" class="md-with-secondary" >
+		    		<div class="md-list-item-text" flex="20" layout="column">
+			    		<md-input-container> <label>Prefix</label> <input
+										type="text" ng-model="newNamespace.prefix"> 
+						</md-input-container>
+		    		</div>
+		    		<div class="md-list-item-text" flex="60" layout="column">
+		    			<md-input-container> <label>Name</label> <input
+										type="text" ng-model="newNamespace.namespaceId"> 
+						</md-input-container>
+		    		</div>
+		    		<div class="md-list-item-text" flex="20" layout="column">
+		    		<md-button  ng-click="addNamespace(ns.namespaceId)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>			
+		    		</div>
+		    </md-list-item>
+	    </div>
+    	<md-button ng-click="showAddInput()" class="md-accent">Add Namespace</md-button>			
+	    		    
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+    <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+  </div>
+  </form>
+</md-dialog>

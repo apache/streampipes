@@ -1,0 +1,56 @@
+<div layout="row">
+		<select ng-model="selectedTransportProtocol" placeholder="Select Transport Protocol" ng-disabled="disabled" >
+	          <option ng-repeat="protocol in availableTransportProtocols" value="{{protocol.id}}">
+	            <b>{{protocol.name}}</b>
+	          </option>
+		</select>
+		<md-button class="md-accent" ng-click="addTransportProtocol(grounding)" ng-disabled="disabled">Add Transport Protocol</md-button>
+</div>	
+<div ng-show="grounding.length > 0">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+   		<div flex="100" layout="row" >	
+   			<div flex="70" layout="row" layout-align="start center"><h4>Transport Protocol: {{findProtocol(grounding[0])}}</h4></div>
+   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeTransportProtocol(grounding)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Remove Format"></md-icon></md-button></div>	
+		</div>
+		<div ng-show="grounding[0].type =='de.fzi.cep.sepa.model.impl.KafkaTransportProtocol'">
+			<div flex layout="column">
+				<md-input-container>
+			    	<label>Zookeeper Host</label>
+			        	<input ng-model="grounding[0].properties.zookeeperHost"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Zookeeper Port</label>
+			        	<input ng-model="grounding[0].properties.zookeeperPort"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Kafka Host</label>
+			        	<input ng-model="grounding[0].properties.brokerHostname"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Kafka Port</label>
+			        	<input ng-model="grounding[0].properties.kafkaPort"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Topic Name</label>
+			        	<input ng-model="grounding[0].properties.topicName"  ng-disabled="disabled">
+				</md-input-container>			
+			</div>
+		</div>
+		<div ng-show="grounding[0].type =='de.fzi.cep.sepa.model.impl.JmsTransportProtocol'">
+			<div flex layout="column">		
+				<md-input-container>
+			    	<label>Jms Host</label>
+			        	<input ng-model="grounding[0].properties.brokerHostname"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Jms Port</label>
+			        	<input ng-model="grounding[0].properties.port"  ng-disabled="disabled">
+				</md-input-container>		
+				<md-input-container>
+			    	<label>Topic Name</label>
+			        	<input ng-model="grounding[0].properties.topicName"  ng-disabled="disabled">
+				</md-input-container>			
+			</div>
+		</div>
+	</div>
+</div>
