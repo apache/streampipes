@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
-		<artifactId>semantic-epa-backend</artifactId>
+		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-epa-storage</artifactId>
