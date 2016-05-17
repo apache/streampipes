@@ -42,29 +42,35 @@ angular
 
 		//$location.path("/setup");
 		var bypass;
-
-		restApi.configured().success(function(msg) {
-			if (msg.configured)
-			{
-				authService.authenticate;
-			}
-			else {
-				$rootScope.authenticated = false;
-				$state.go("streampipes.setup");
-			}
-		});
+		
+		if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
+			restApi.configured().success(function(msg) {
+				if (msg.configured)
+				{
+					authService.authenticate;
+				}
+				else {
+					$rootScope.authenticated = false;
+					$state.go("streampipes.setup");
+				}
+			});
+		}
+		
 
 		$rootScope.$on('$stateChangeStart',
 			function(event, toState, toParams, fromState, fromParams){
+			console.log(toState.name);
 				var isLogin = toState.name === "streampipes.login";
 				var isSetup = toState.name === "streampipes.setup";
+				var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
 				var isRegister = toState.name === "streampipes.register";
 				console.log("Setup: " +isSetup +", Login: " +isLogin);
-				if(isLogin || isSetup || isRegister){
+				if(isLogin || isSetup || isRegister || isExternalLogin){
 					return;
 				}
-				if($rootScope.authenticated === false) {
+				else if($rootScope.authenticated === false) {
 					event.preventDefault();
+					console.log("logging in event prevent");
 					$state.go('streampipes.login');
 				}
 
@@ -155,8 +161,25 @@ angular
 					}
 				}
 			})
+			.state('sso', {
+				url: '/sso/:target',
+				views: {
+					"container" : {
+						templateUrl : 'sso.html',
+						controller: 'SsoCtrl'
+					}
+				}
+			})
+			.state('ssosuccess', {
+				url: '/ssosuccess',
+				views: {
+					"container" : {
+						templateUrl : 'sso.html',
+					}
+				}
+			})
 			.state('streampipes.login', {
-				url: '/login',
+				url: '/login/:target',
 				views: {
 					"streampipesView@streampipes" : {
 						templateUrl : 'login.html',
@@ -540,9 +563,16 @@ angular
 			)
 		};
 	})
+	.controller('SsoCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, $state, $stateParams) {
+		 //console.log($stateParams.target);
+		$http.get("/semantic-epa-backend/api/v2/admin/authc").success(function(data){
+			console.log(data);
+           if (!data.success) window.top.location.href = "http://localhost:8080/semantic-epa-backend/#/streampipes/login/" +$stateParams.target;
+           else $state.go("ssosuccess");
+        })
 
-	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, $state) {
-
+	})
+	.controller('LoginCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, $state, $stateParams) {
 		$scope.loading = false;
 		$scope.authenticationFailed = false;
 		$rootScope.title = "ProaSense";
@@ -559,7 +589,11 @@ angular
 						$rootScope.username = response.data.info.authc.principal.username;
 						$rootScope.email = response.data.info.authc.principal.email;
 						$rootScope.authenticated = true;
-						if ($rootScope.appConfig == 'ProaSense') $state.go("home");
+						if ($stateParams.target != "") {
+							console.log("going to " +$stateParams.target);
+								$state.go($stateParams.target);
+						}
+						else if ($rootScope.appConfig == 'ProaSense') $state.go("home");
 						else $state.go("streampipes");
 					}
 					else
@@ -706,6 +740,7 @@ angular
 						if (response.status == 401) {
 							$rootScope.$broadcast("InvalidToken");
 							$rootScope.sessionExpired = true;
+							console.log("GOING ");
 							$state.go("streampipes.login");
 							$timeout(function() {$rootScope.sessionExpired = false;}, 5000);
 						} else if (response.status == 403) {
@@ -721,60 +756,68 @@ angular
 		return httpInterceptor;
 	}])
 	.service('authService', function($http, $rootScope, $location, $state) {
-
-		var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
-			.then(
-			function(response) {
-				if (response.data.success == false)
-				{
-					$rootScope.authenticated = false;
-					$http.get("/semantic-epa-backend/api/v2/setup/configured")
+		console.log($location.path());
+		
+			var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
+				.then(
+				function(response) {
+					if (response.data.success == false)
+					{
+						$rootScope.authenticated = false;
+						$http.get("/semantic-epa-backend/api/v2/setup/configured")
+							.then(function(response) {
+								if (response.data.configured) 
+									{
+										console.log(response.data.appConfig);
+										$rootScope.appConfig = response.data.appConfig;
+										if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
+											console.log("configured 769");
+												$state.go("streampipes.login")//$location.path("/login");
+										}
+									}
+								else $state.go("streampipes.setup")
+							})
+					}
+					else {
+						$rootScope.username = response.data.info.authc.principal.username;
+						$rootScope.email = response.data.info.authc.principal.email;
+						$rootScope.authenticated = true;
+						$http.get("/semantic-epa-backend/api/v2/setup/configured")
 						.then(function(response) {
 							if (response.data.configured) 
 								{
 									console.log(response.data.appConfig);
 									$rootScope.appConfig = response.data.appConfig;
-									$state.go("streampipes.login")//$location.path("/login");
 								}
+						});
+						$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
+							.success(function(notifications){
+								$rootScope.unreadNotifications = notifications
+								//console.log($rootScope.unreadNotifications);
+							})
+							.error(function(msg){
+								console.log(msg);
+							});
+	
+					}
+				},
+				function(response) {
+					$rootScope.username = undefined;
+					$rootScope.authenticated = false;
+					$http.get("/semantic-epa-backend/api/v2/setup/configured")
+						.then(function(conf) {
+							if (conf.data.configured) {
+								console.log("configured 805");
+								$state.go("streampipes.login")
+							}
 							else $state.go("streampipes.setup")
 						})
-				}
-				else {
-					$rootScope.username = response.data.info.authc.principal.username;
-					$rootScope.email = response.data.info.authc.principal.email;
-					$rootScope.authenticated = true;
-					$http.get("/semantic-epa-backend/api/v2/setup/configured")
-					.then(function(response) {
-						if (response.data.configured) 
-							{
-								console.log(response.data.appConfig);
-								$rootScope.appConfig = response.data.appConfig;
-							}
-					});
-					$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
-						.success(function(notifications){
-							$rootScope.unreadNotifications = notifications
-							//console.log($rootScope.unreadNotifications);
-						})
-						.error(function(msg){
-							console.log(msg);
-						});
-
-				}
-			},
-			function(response) {
-				$rootScope.username = undefined;
-				$rootScope.authenticated = false;
-				$http.get("/semantic-epa-backend/api/v2/setup/configured")
-					.then(function(conf) {
-						if (conf.data.configured) $state.go("streampipes.login")
-						else $state.go("streampipes.setup")
-					})
-			});
-
-		return {
-			authenticate: promise
-		};
+				});
+	
+			return {
+				authenticate: promise
+			};
+		
 
 	})
 	.factory('restApi', ['$rootScope', '$http', 'apiConstants', 'authService', function($rootScope, $http, apiConstants, authService) {
