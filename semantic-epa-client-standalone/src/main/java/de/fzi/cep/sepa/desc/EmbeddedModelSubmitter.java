@@ -3,13 +3,11 @@ package de.fzi.cep.sepa.desc;
 import java.util.List;
 
 import org.restlet.Application;
-import org.restlet.Restlet;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.endpoint.RestletConfig;
-import de.fzi.cep.sepa.endpoint.Server;
 
 public abstract class EmbeddedModelSubmitter extends Application {
 
@@ -23,13 +21,13 @@ public abstract class EmbeddedModelSubmitter extends Application {
 	
 	protected abstract String contextPath();
 	
-	@Override
-    public synchronized Restlet createInboundRoot() {
-		Server.INSTANCE.createEmbedded(
-				generateSepaRestlets(epaDeclarers(), sourceDeclarers(), consumerDeclarers(), port(), contextPath()));
-		
-		return Server.INSTANCE.getRouter();
-    }
+//	@Override
+//    public synchronized Restlet createInboundRoot() {
+//		Server.INSTANCE.createEmbedded(
+//				generateSepaRestlets(epaDeclarers(), sourceDeclarers(), consumerDeclarers(), port(), contextPath()));
+//		
+//		return Server.INSTANCE.getRouter();
+//    }
 		
 	private List<RestletConfig> generateSepaRestlets(List<SemanticEventProcessingAgentDeclarer> sepaDeclarers, List<SemanticEventProducerDeclarer> sourceDeclarers, List<SemanticEventConsumerDeclarer> consumerDeclarers, int port, String contextPath)
 	{

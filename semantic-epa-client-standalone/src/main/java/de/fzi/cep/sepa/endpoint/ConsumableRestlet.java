@@ -69,7 +69,7 @@ public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends In
 	protected void createInstanceEndpoint(I graph) {
 		String instanceUri = graph.getUri().replaceFirst(RestletGenerator.REGEX, "");
 		Server.INSTANCE
-			.getRouter()
+			.getComponent().getDefaultHost()
 			.attach(instanceUri, instanceRestlet(graph));
 	}
 	
