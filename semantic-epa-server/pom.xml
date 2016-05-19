@@ -67,11 +67,12 @@
 						<artifactId>tomcat7-maven-plugin</artifactId>
 						<version>2.2</version>
 						<configuration>
-							<url>http://kalmar39.fzi.de/manager/text</url>
-							<server>localhost</server>
 							<path>/semantic-epa-backend</path>
+							<!--<url>http://kalmar39.fzi.de/manager/text</url>
+							<server>localhost</server>
 							<username>Jerry</username>
 							<password>Th3M0u53</password>
+							-->
 						</configuration>
 					</plugin>
 				</plugins>
