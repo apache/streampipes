@@ -7,17 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.fzi.cep.sepa.desc.declarer.*;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
 
 import com.clarkparsia.empire.SupportsRdfId;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.endpoint.RestletConfig;
 import de.fzi.cep.sepa.endpoint.SecRestlet;
 import de.fzi.cep.sepa.endpoint.SepRestlet;
@@ -58,7 +54,7 @@ public class RestletGenerator {
 		this.standalone = true;
 	}
 	
-	public RestletGenerator addRestlets(List<Declarer<?, ?>> declarers) {
+	public RestletGenerator addRestlets(List<InvocableDeclarer<?, ?>> declarers) {
 		addSepaRestlets(declarers
 			.stream()
 			.filter(d -> d instanceof SemanticEventProcessingAgentDeclarer)

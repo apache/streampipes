@@ -9,11 +9,11 @@ public enum Server {
         
         INSTANCE;
         
-        private Component component;
+        private final Component component = new Component();
  
         public boolean create(int port, List<RestletConfig> restletConfigs)
         {
-                this.component = new Component();
+//                this.component = new Component();
                 component.getServers().add(Protocol.HTTP, port);
                 
                 for(RestletConfig config : restletConfigs)
