@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.client.container.rest;
 
 import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
+import de.fzi.cep.sepa.client.container.init.EmbeddedModelSubmitter;
 import de.fzi.cep.sepa.html.HTMLGenerator;
 import de.fzi.cep.sepa.html.page.WelcomePageGeneratorImpl;
 
@@ -12,7 +13,7 @@ public class WelcomePage {
 
 	@GET
 	public String getWelcomePage() {
-        WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl("http://localhost:8080/stream-story/api/v1.1.1/", DeclarersSingleton.getInstance().getDeclarers());
+        WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl(EmbeddedModelSubmitter.getBaseUri(), DeclarersSingleton.getInstance().getDeclarers());
         HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
 		return html.buildHtml();
 	}

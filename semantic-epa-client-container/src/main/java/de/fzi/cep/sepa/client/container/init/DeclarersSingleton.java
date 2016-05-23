@@ -16,7 +16,7 @@ public class DeclarersSingleton {
     private List<SemanticEventConsumerDeclarer> consumerDeclarers;
 
 
-    public DeclarersSingleton() {
+    private DeclarersSingleton() {
         this.epaDeclarers = new ArrayList<>();
         this.producerDeclarers = new ArrayList<>();
         this.consumerDeclarers = new ArrayList<>();
