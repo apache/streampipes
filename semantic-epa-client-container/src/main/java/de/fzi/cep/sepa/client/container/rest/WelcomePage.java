@@ -12,7 +12,7 @@ public class WelcomePage {
 
 	@GET
 	public String getWelcomePage() {
-        WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl("/", DeclarersSingleton.getInstance().getDeclarers());
+        WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl("http://localhost:8080/stream-story/rest/", DeclarersSingleton.getInstance().getDeclarers());
         HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
 		return html.buildHtml();
 	}

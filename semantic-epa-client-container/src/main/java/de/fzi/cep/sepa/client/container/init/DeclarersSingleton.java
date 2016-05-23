@@ -46,10 +46,11 @@ public class DeclarersSingleton {
         }
     }
 
-    //TODO remove this method
     public List<Declarer> getDeclarers() {
         List<Declarer> result = new ArrayList<>();
         result.addAll(epaDeclarers);
+        result.addAll(producerDeclarers);
+        result.addAll(consumerDeclarers);
         return result;
     }
 
