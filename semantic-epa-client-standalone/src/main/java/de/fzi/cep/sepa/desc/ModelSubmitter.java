@@ -3,10 +3,7 @@ package de.fzi.cep.sepa.desc;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.*;
 import de.fzi.cep.sepa.endpoint.RestletConfig;
 import de.fzi.cep.sepa.endpoint.Server;
 
@@ -48,7 +45,7 @@ public class ModelSubmitter {
 		return start(port, restletConfigurations);
 	}
 	
-	public static boolean submitMixed(List<Declarer<?, ?>> declarers, int port) {
+	public static boolean submitMixed(List<InvocableDeclarer<?, ?>> declarers, int port) {
 		List<RestletConfig> restletConfigurations = new RestletGenerator(port)
 		.addRestlets(declarers)
 		.getRestletConfigurations(true);	

@@ -38,7 +38,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 	// TODO make ULSs dynamic
 //	private final String RATE_SEPA_URI = "http://frosch.fzi.de:8090/sepa/streamStopped";
 //	private final String KAFKA_SEC_URI = "http://frosch.fzi.de:8091/kafka";
-	
+
 	private final String RATE_SEPA_URI = "http://ipe-koi05.perimeter.fzi.de:8090/sepa/streamStopped";
 	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
 	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";

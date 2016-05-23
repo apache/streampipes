@@ -1,5 +1,9 @@
 package de.fzi.cep.sepa.client.container.rest;
 
+import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
+import de.fzi.cep.sepa.html.HTMLGenerator;
+import de.fzi.cep.sepa.html.page.WelcomePageGeneratorImpl;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
@@ -8,6 +12,8 @@ public class WelcomePage {
 
 	@GET
 	public String getWelcomePage() {
-		return "";
+        WelcomePageGeneratorImpl welcomePage = new WelcomePageGeneratorImpl("/", DeclarersSingleton.getInstance().getDeclarers());
+        HTMLGenerator html = new HTMLGenerator(welcomePage.buildUris());
+		return html.buildHtml();
 	}
 }

@@ -4,10 +4,10 @@ import java.net.URI;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.html.WelcomePageGenerator;
 import de.fzi.cep.sepa.html.model.AgentDescription;
 import de.fzi.cep.sepa.html.model.Description;
 
+@Deprecated
 public class EventConsumerWelcomePage extends WelcomePageGenerator<SemanticEventConsumerDeclarer>{
 
 	

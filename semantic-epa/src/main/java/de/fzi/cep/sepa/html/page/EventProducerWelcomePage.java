@@ -6,11 +6,11 @@ import java.util.List;
 
 import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.html.WelcomePageGenerator;
 import de.fzi.cep.sepa.html.model.AgentDescription;
 import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.StreamDescription;
+import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
 
+@Deprecated
 public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEventProducerDeclarer> {
 
 	public EventProducerWelcomePage(String baseUri, List<SemanticEventProducerDeclarer> declarers)
@@ -23,8 +23,8 @@ public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEvent
 	{
 		for(SemanticEventProducerDeclarer declarer : declarers)
 		{
-			List<AgentDescription> streams = new ArrayList<AgentDescription>();
-			StreamDescription description = new StreamDescription();
+			List<Description> streams = new ArrayList<Description>();
+			SemanticEventProducerDescription description = new SemanticEventProducerDescription();
 			description.setName(declarer.declareModel().getName());
 			description.setDescription(declarer.declareModel().getDescription());
 			description.setUri(URI.create(baseUri + declarer.declareModel().getUri()));

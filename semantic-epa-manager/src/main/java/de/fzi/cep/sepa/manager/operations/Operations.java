@@ -56,7 +56,7 @@ public class Operations {
 
 	public static PipelineOperationStatus startPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
-		return startPipeline(pipeline, true, true, true);
+		return startPipeline(pipeline, false, true, false);
 	}
 	
 	public static PipelineOperationStatus startPipeline( 
@@ -66,9 +66,10 @@ public class Operations {
 
 	public static PipelineOperationStatus stopPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
-		return stopPipeline(pipeline, true, true, true);
+		return stopPipeline(pipeline, false, true, false);
 	}
-	
+
+
 	public static PipelineOperationStatus stopPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
 		return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();

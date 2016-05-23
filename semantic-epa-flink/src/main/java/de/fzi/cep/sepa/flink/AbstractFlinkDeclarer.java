@@ -1,11 +1,12 @@
 package de.fzi.cep.sepa.flink;
 
 import de.fzi.cep.sepa.desc.declarer.Declarer;
+import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
 
-public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extends InvocableSEPAElement, ER extends FlinkRuntime<I>> implements Declarer<D, I> {
+public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extends InvocableSEPAElement, ER extends FlinkRuntime<I>> implements InvocableDeclarer<D, I> {
 
 	protected I graph;
 	protected ER runtime;

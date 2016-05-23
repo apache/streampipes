@@ -1,22 +1,28 @@
 package de.fzi.cep.sepa.client.container.init;
 
+import de.fzi.cep.sepa.desc.declarer.Declarer;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+public abstract class EmbeddedModelSubmitter implements ServletContextListener {
 
-public abstract class EmbeddedModelSubmitter  {
 
-	protected abstract List<SemanticEventProcessingAgentDeclarer> epaDeclarers();
-	
-	protected abstract List<SemanticEventProducerDeclarer> sourceDeclarers();
-	
-	protected abstract List<SemanticEventConsumerDeclarer> consumerDeclarers();
-	
-	protected abstract int port();
-	
-	protected abstract String contextPath();
-	
-	// add init method
+    public void contextInitialized(ServletContextEvent arg0)
+    {
+        DeclarersSingleton.getInstance().addDeclarers(addDeclarers());
+    }
+
+
+    public void contextDestroyed(ServletContextEvent arg0)
+    {
+    }
+
+    /**
+     * This Method needs to be implemented to instantiate an client container
+     * Use the DeclarersSingleton to register the declarers
+     */
+    public abstract List<Declarer> addDeclarers();
+
 }

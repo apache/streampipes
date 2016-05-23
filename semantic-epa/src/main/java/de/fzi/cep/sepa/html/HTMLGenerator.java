@@ -9,17 +9,16 @@ import java.util.List;
 
 import org.rendersnake.HtmlCanvas;
 
-import de.fzi.cep.sepa.html.model.AgentDescription;
 import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.StreamDescription;
+import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
 
 public class HTMLGenerator {
 
-	private List<Description> description;
+	private List<Description> descriptions;
 	
-	public HTMLGenerator(List<Description> description)
+	public HTMLGenerator(List<Description> descriptions)
 	{
-		this.description = description;
+		this.descriptions = descriptions;
 	}
 	
 	public String buildHtml()
@@ -47,13 +46,13 @@ public class HTMLGenerator {
 						
 				html.h4().write("Copy and paste the following URIs into the pipeline editor to add all elements of this node.")._h4();
 				html.h5();
-				for(Description description : description)
+				for(Description description : descriptions)
 				{
 					html.write(description.getUri().toString() +" ");
 				}
 				html._h5();
 				
-				for(Description description : description)
+				for(Description description : descriptions)
 				{
 					
 					html.h3();
@@ -61,10 +60,10 @@ public class HTMLGenerator {
 					html._h3();
 					html.h4().write("URI: " ).a(href(description.getUri().toString())).content(description.getUri().toString())._h4();
 					html.h4().write("Description: ").write(description.getDescription())._h4();
-					if (description instanceof StreamDescription)
+					if (description instanceof SemanticEventProducerDescription)
 					{
-						StreamDescription streamDescription = (StreamDescription) description;
-						for(AgentDescription agentDesc : streamDescription.getStreams())
+						SemanticEventProducerDescription semanticEventProducerDescription = (SemanticEventProducerDescription) description;
+						for(Description agentDesc : semanticEventProducerDescription.getStreams())
 						{
 							html.h5().write(agentDesc.getName())._h5();
 							html.h5().write("URI: ").a(href(agentDesc.getUri().toString())).content(agentDesc.getUri().toString())._h5();

@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.html.model;
 
 import java.net.URI;
 
-public abstract class Description {
+public class Description {
 
 	String name;
 	String description;
@@ -41,7 +41,5 @@ public abstract class Description {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
 	
 }

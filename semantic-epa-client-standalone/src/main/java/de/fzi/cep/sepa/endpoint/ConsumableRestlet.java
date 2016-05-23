@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -23,11 +24,11 @@ import de.fzi.cep.sepa.transform.Transformer;
 public abstract class ConsumableRestlet<D extends NamedSEPAElement, I extends InvocableSEPAElement> extends AbstractRestlet<D> {
 
 	protected Class<I> clazz;
-	protected Declarer<D, I> declarer;
+	protected InvocableDeclarer<D, I> declarer;
 	
-	protected Map<String, Declarer<D, I>> instanceDeclarers;
+	protected Map<String, InvocableDeclarer<D, I>> instanceDeclarers;
 	
-	public ConsumableRestlet(D desc, Class<I> clazz, Declarer<D, I> declarer)
+	public ConsumableRestlet(D desc, Class<I> clazz, InvocableDeclarer<D, I> declarer)
 	{
 		super(desc);
 		this.clazz = clazz;
