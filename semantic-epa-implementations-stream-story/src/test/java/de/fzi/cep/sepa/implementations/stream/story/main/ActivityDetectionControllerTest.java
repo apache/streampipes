@@ -1,11 +1,11 @@
-package de.fzi.cep.sepa.implementations.stream.story.activitydetection;
+package de.fzi.cep.sepa.implementations.stream.story.main;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
 
 import javax.json.Json;
 
-import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
+import de.fzi.cep.sepa.implementations.stream.story.activitydetection.ActivityDetectionController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,6 +26,8 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
 import de.fzi.cep.sepa.implementations.stream.story.utils.UtilsTest;
 
+import java.util.Arrays;
+
 public class ActivityDetectionControllerTest {
 	private static final int WIREMOCK_PORT = 18089;
 	@Rule
@@ -37,7 +39,7 @@ public class ActivityDetectionControllerTest {
 	@Before
 	public void before() {
 		tmpUrl = ActivityDetectionController.STREAMSTORY_URL;
-		ActivityDetectionController.STREAMSTORY_URL = "http://localhost:" + WIREMOCK_PORT;
+		ActivityDetectionController.STREAMSTORY_URL = "http://localhost:" + WIREMOCK_PORT + "/";
 	}
 
 	@After
@@ -50,8 +52,7 @@ public class ActivityDetectionControllerTest {
 		ModelInvocationRequestParameters params = getTestParams();
 
 		stubFor(post(urlEqualTo("/invoke"))
-				.withRequestBody(WireMock.equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString()))
-				.willReturn(aResponse().withStatus(200).withHeader("Content-Type", "application/json")));
+				.willReturn(aResponse().withStatus(200)));
 
 		SepaInvocation invocation = getTestInvocation();
 		Response actual = new ActivityDetectionController().invokeRuntime(invocation);
@@ -119,6 +120,14 @@ public class ActivityDetectionControllerTest {
 		outputStream.setEventGrounding(outputGrounding);
 		invocation.setOutputStream(outputStream);
 		invocation.setCorrespondingPipeline(pipelineId);
+
+        EventStream inputStream = new EventStream();
+        invocation.setInputStreams(Arrays.asList(inputStream));
+       	EventGrounding inputGrounding = new EventGrounding();
+		TransportProtocol inputProtocol = new KafkaTransportProtocol("", 0, "eu.proasense.internal.sp.internal.outgoing.10000", "", 0);
+        inputGrounding.setTransportProtocol(inputProtocol);
+        inputStream.setEventGrounding(inputGrounding);
+
 		return invocation;
 
 	}
