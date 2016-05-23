@@ -24,6 +24,15 @@ public abstract class Element {
         return toJsonLd(elem);
     }
 
+    protected <T extends  Declarer> Declarer getDeclarerById(List<T> declarers, String id) {
+        for (Declarer declarer : declarers) {
+            if (declarer.declareModel().getUri().equals(id)) {
+                return declarer;
+            }
+        }
+        return null;
+    }
+
     protected <T extends  Declarer> NamedSEPAElement getById(List<T> declarers, String id) {
         NamedSEPAElement desc = null;
         for (Declarer declarer : declarers) {
@@ -45,7 +54,8 @@ public abstract class Element {
 
         //TODO remove this and find a better solution
         if (desc != null) {
-            String uri = EmbeddedModelSubmitter.getBaseUri() + desc.getUri();
+            //TODO check for type
+            String uri = EmbeddedModelSubmitter.getBaseUri()+ "sepa/" + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
         }
