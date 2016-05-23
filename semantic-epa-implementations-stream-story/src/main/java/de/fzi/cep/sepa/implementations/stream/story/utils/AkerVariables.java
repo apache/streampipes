@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.utils;
+package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 public enum AkerVariables {
 

@@ -1,17 +1,12 @@
-package de.fzi.cep.sepa.runtime.activity.detection.utils;
+package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
-import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 public class EnrichedUtils {
 

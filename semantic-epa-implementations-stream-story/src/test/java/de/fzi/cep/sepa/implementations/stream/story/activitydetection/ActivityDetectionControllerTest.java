@@ -1,13 +1,13 @@
-package de.fzi.cep.sepa.runtime.activity.detection.main;
+package de.fzi.cep.sepa.implementations.stream.story.activitydetection;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
 
 import javax.json.Json;
 
+import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,9 +23,8 @@ import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.AkerVariables;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.Utils;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.UtilsTest;
+import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
+import de.fzi.cep.sepa.implementations.stream.story.utils.UtilsTest;
 
 public class ActivityDetectionControllerTest {
 	private static final int WIREMOCK_PORT = 18089;
@@ -48,7 +47,7 @@ public class ActivityDetectionControllerTest {
 
 	@Test
 	public void testInvokeRuntimeSuccessfully() {
-		ModelInvocationRequestParameters params = getTestParams();		
+		ModelInvocationRequestParameters params = getTestParams();
 
 		stubFor(post(urlEqualTo("/invoke"))
 				.withRequestBody(WireMock.equalToJson(UtilsTest.getModelInvocationJsonTemplate(params).toString()))

@@ -11,7 +11,7 @@ public abstract class EmbeddedModelSubmitter implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent arg0)
     {
-        DeclarersSingleton.getInstance().addDeclarers(addDeclarers());
+        init();
     }
 
 
@@ -23,6 +23,6 @@ public abstract class EmbeddedModelSubmitter implements ServletContextListener {
      * This Method needs to be implemented to instantiate an client container
      * Use the DeclarersSingleton to register the declarers
      */
-    public abstract List<Declarer> addDeclarers();
+    public abstract void init();
 
 }

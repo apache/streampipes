@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.main;
+package de.fzi.cep.sepa.implementations.stream.story.main;
 
 public class ModelInvocationRequestParameters {
 	private String pipelineId;

@@ -5,7 +5,6 @@ import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +31,11 @@ public class DeclarersSingleton {
 
     public void addDeclarers(List<Declarer> allDeclarers) {
         for (Declarer d : allDeclarers) {
-            addDeclarer(d);
+            add(d);
         }
     }
 
-    public void addDeclarer(Declarer d) {
+    public DeclarersSingleton add(Declarer d) {
         if (d instanceof SemanticEventProcessingAgentDeclarer) {
             addEpaDeclarer((SemanticEventProcessingAgentDeclarer) d);
         } else if (d instanceof SemanticEventProducerDeclarer) {
@@ -44,6 +43,8 @@ public class DeclarersSingleton {
         } else if (d instanceof SemanticEventConsumerDeclarer) {
             addConsumerDeclarer((SemanticEventConsumerDeclarer) d);
         }
+
+        return getInstance();
     }
 
     public List<Declarer> getDeclarers() {

@@ -33,20 +33,20 @@ public class WelcomePageGeneratorImplTest {
     }
 
     @Test
-    public void buildUrisWithSepaTest() throws URISyntaxException {
+    public void buildUrisWithSepaTest() {
         WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri/", Arrays.asList(getSepaDeclarer()));
         List<Description> actual = wpg.buildUris();
-        Description expected = new Description("sepaname", "sepadescription", new URI("baseUri/sepapathName"));
+        Description expected = new Description("sepaname", "sepadescription", URI.create("baseUri/sepa/sepapathName"));
 
         assertEquals(1, actual.size());
         assertEquals(expected, actual.get(0));
     }
 
     @Test
-    public void buildUrisWithSepTest() throws URISyntaxException {
+    public void buildUrisWithSepTest() {
         WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri/", Arrays.asList(getSepdDeclarer()));
         List<Description> actual = wpg.buildUris();
-        Description expected = new Description("sepname", "sepdescription", new URI("baseUri/seppathName"));
+        Description expected = new Description("sepname", "sepdescription", URI.create("baseUri/sep/seppathName"));
 
         assertEquals(actual.size(), 1);
         Description desc = actual.get(0);
@@ -58,7 +58,7 @@ public class WelcomePageGeneratorImplTest {
 
         SemanticEventProducerDescription sepDesc = (SemanticEventProducerDescription) desc;
         assertEquals(1, sepDesc.getStreams().size());
-        Description expectedStream = new Description("streamname", "streamdescription", new URI("baseUri/streampathName"));
+        Description expectedStream = new Description("streamname", "streamdescription", URI.create("baseUri/stream/streampathName"));
 
         assertEquals(expectedStream, sepDesc.getStreams().get(0));
     }

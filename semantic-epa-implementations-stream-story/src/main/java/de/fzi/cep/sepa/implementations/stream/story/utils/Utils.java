@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.utils;
+package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,11 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.runtime.activity.detection.main.ModelInvocationRequestParameters;
 
 public class Utils {
 	
@@ -26,7 +26,7 @@ public class Utils {
 	}
 	
 	public static ModelInvocationRequestParameters getModelInvocationRequestParameters(String pipelineId, int modelId, String inputTopic,
-			String outputTopic) {
+                                                                                       String outputTopic) {
 		return new ModelInvocationRequestParameters(pipelineId, modelId,
 				ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort(),
 				inputTopic, ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(),

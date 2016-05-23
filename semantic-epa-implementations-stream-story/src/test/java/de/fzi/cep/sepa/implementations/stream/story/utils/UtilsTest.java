@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.utils;
+package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,23 +6,12 @@ import static org.junit.Assert.assertTrue;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-
-import com.clarkparsia.empire.SupportsRdfId.RdfKey;
-import com.clarkparsia.empire.annotation.RdfGenerator;
-import com.clarkparsia.empire.annotation.RdfId;
-import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.runtime.activity.detection.main.ActivityDetectionController;
-import de.fzi.cep.sepa.runtime.activity.detection.main.ModelInvocationRequestParameters;
 
 public class UtilsTest {
 	@Test

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.utils;
+package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;

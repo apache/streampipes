@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.html.page;
 
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.*;
 import de.fzi.cep.sepa.html.model.AgentDescription;
 import de.fzi.cep.sepa.html.model.Description;
 import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
@@ -39,7 +36,13 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         Description desc = new Description();
         desc.setName(declarer.declareModel().getName());
         desc.setDescription(declarer.declareModel().getDescription());
-        desc.setUri(URI.create(baseUri +declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+        String uri = baseUri;
+        if (declarer instanceof SemanticEventConsumerDeclarer) {
+            uri += "sec/";
+        } else if (declarer instanceof SemanticEventProcessingAgentDeclarer) {
+            uri += "sepa/";
+        }
+        desc.setUri(URI.create(uri +declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
         return desc;
     }
 
@@ -48,11 +51,11 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         SemanticEventProducerDescription desc = new SemanticEventProducerDescription();
         desc.setName(declarer.declareModel().getName());
         desc.setDescription(declarer.declareModel().getDescription());
-        desc.setUri(URI.create(baseUri + declarer.declareModel().getUri()));
+        desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         for (EventStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
             ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
-            ad.setUri(URI.create(baseUri + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
+            ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
             ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
             streams.add(ad);
         }

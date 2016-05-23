@@ -65,8 +65,7 @@ public class HTMLGenerator {
 						SemanticEventProducerDescription semanticEventProducerDescription = (SemanticEventProducerDescription) description;
 						for(Description agentDesc : semanticEventProducerDescription.getStreams())
 						{
-							html.h5().write(agentDesc.getName())._h5();
-							html.h5().write("URI: ").a(href(agentDesc.getUri().toString())).content(agentDesc.getUri().toString())._h5();
+							html.h5().b().write(agentDesc.getName())._b()._h5();
 							html.h5().write(agentDesc.getDescription())._h5();
 						
 						}			

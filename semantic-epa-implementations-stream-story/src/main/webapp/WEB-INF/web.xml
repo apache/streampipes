@@ -11,10 +11,10 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <listener>
-    <listener-class>de.fzi.cep.sepa.runtime.activity.detection.main.Init</listener-class>
+    <listener-class>de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit</listener-class>
     </listener>
     <servlet-mapping>
         <servlet-name>Client REST Service</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/api/v1.1.1/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.runtime.activity.detection.main;
+package de.fzi.cep.sepa.implementations.stream.story.activitydetection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,11 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
+import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
+import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
+import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
+import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
@@ -24,10 +29,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.AkerVariables;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.EnrichedUtils;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.ProaSenseSettings;
-import de.fzi.cep.sepa.runtime.activity.detection.utils.Utils;
 
 public class ActivityDetectionController implements SemanticEventProcessingAgentDeclarer {
 //	public static String STREAMSTORY_URL = "http://streamstory.de/";
@@ -36,7 +37,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 	@Override
 	public SepaDescription declareModel() {
-		SepaDescription desc = new SepaDescription("sepa/activitydetection", "ActivityDetection",
+		SepaDescription desc = new SepaDescription("activitydetection", "ActivityDetection",
 				"ActivityDetection description");
 
 		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
