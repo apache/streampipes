@@ -1,10 +1,7 @@
 package de.fzi.cep.sepa.client.container.init;
 
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.List;
 
 public abstract class EmbeddedModelSubmitter implements ServletContextListener {
 

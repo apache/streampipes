@@ -23,8 +23,6 @@ import java.net.URI;
 import java.util.List;
 
 public abstract class Element<D extends Declarer> {
-//    private Map<String, N> runningInstances;
-
     public Element() {
     }
 
@@ -51,20 +49,6 @@ public abstract class Element<D extends Declarer> {
         }
         return null;
     }
-
-
-//    protected void addRunnihjjkngInstance(String id, N instance) {
-//
-//        runningInstances.put(id, instance);
-//    }
-//
-//    protected N getRunningInstance(String id) {
-//        return runningInstances.get(id);
-//    }
-//
-//    protected void removeRunningInstance(String id) {
-//        runningInstances.remove(id);
-//    }
 
     protected <T extends  Declarer> NamedSEPAElement getById(List<T> declarers, String id) {
         NamedSEPAElement desc = null;
