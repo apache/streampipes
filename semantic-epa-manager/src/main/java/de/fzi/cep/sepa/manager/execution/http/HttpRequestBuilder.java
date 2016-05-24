@@ -30,7 +30,8 @@ public class HttpRequestBuilder {
 	public PipelineElementStatus invoke()
 	{
 		try {
-			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
+            Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
+//			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
 			return handleResponse(httpResp);			
 		} catch(Exception e)
 		{

@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.client.container.init;
 
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,6 @@ public class DeclarersSingleton {
         result.addAll(consumerDeclarers);
         return result;
     }
-
 
     public void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {
         epaDeclarers.add(epaDeclarer);

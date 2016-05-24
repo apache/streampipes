@@ -21,10 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Element<N extends InvocableDeclarer> {
-    private Map<String, N> runningInstances;
+//    private Map<String, N> runningInstances;
 
     public Element() {
-        runningInstances = new HashMap<>();
     }
 
     protected <T extends  Declarer> String getJsonLd(List<T> declarers, String id) {
@@ -32,8 +31,8 @@ public abstract class Element<N extends InvocableDeclarer> {
         return toJsonLd(elem);
     }
 
-    protected <T extends  Declarer> Declarer getDeclarerById(List<T> declarers, String id) {
-        for (Declarer declarer : declarers) {
+    protected <T extends  Declarer> T getDeclarerById(List<T> declarers, String id) {
+        for (T declarer : declarers) {
             if (declarer.declareModel().getUri().equals(id)) {
                 return declarer;
             }
@@ -42,13 +41,18 @@ public abstract class Element<N extends InvocableDeclarer> {
     }
 
 
-    protected void addRunningInstance(String id, N instance) {
-        runningInstances.put(id, instance);
-    }
-
-    protected N getRunningInstance(String id) {
-        return runningInstances.get(id);
-    }
+//    protected void addRunnihjjkngInstance(String id, N instance) {
+//
+//        runningInstances.put(id, instance);
+//    }
+//
+//    protected N getRunningInstance(String id) {
+//        return runningInstances.get(id);
+//    }
+//
+//    protected void removeRunningInstance(String id) {
+//        runningInstances.remove(id);
+//    }
 
     protected <T extends  Declarer> NamedSEPAElement getById(List<T> declarers, String id) {
         NamedSEPAElement desc = null;
