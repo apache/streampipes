@@ -10,8 +10,7 @@ public class Response {
 	
 	public Response(String elementId, boolean success)
 	{
-		this.elementId = elementId;
-		this.success = success;
+        this(elementId, success, "");
 	}
 	
 	public Response(String elementId, boolean success, String optionalMessage)
