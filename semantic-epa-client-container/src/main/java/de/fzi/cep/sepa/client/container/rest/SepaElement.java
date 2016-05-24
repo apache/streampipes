@@ -1,38 +1,33 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import com.google.gson.Gson;
 import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
-import de.fzi.cep.sepa.client.container.init.RunningInstances;
-import de.fzi.cep.sepa.client.container.utils.Util;
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.transform.Transformer;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.util.List;
 
 @Path("/sepa")
 public class SepaElement extends InvocableElement<SepaInvocation, SemanticEventProcessingAgentDeclarer> {
 
     public SepaElement() {
+
         super(SepaInvocation.class);
     }
 
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getDescription(@PathParam("id") String elementId) {
-        List<SemanticEventProcessingAgentDeclarer> sepas = DeclarersSingleton.getInstance().getEpaDeclarers();
-        return getJsonLd(sepas, elementId);
+    @Override
+    protected List<SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
+        return DeclarersSingleton.getInstance().getEpaDeclarers();
     }
+
+//    @GET
+//    @Path("{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String getDescription(@PathParam("id") String elementId) {
+//        List<SemanticEventProcessingAgentDeclarer> sepas = DeclarersSingleton.getInstance().getEpaDeclarers();
+//        return getJsonLd(sepas, elementId);
+//    }
 
 //    //TODO remove the Form paramerter thing
 //    @POST
@@ -62,11 +57,6 @@ public class SepaElement extends InvocableElement<SepaInvocation, SemanticEventP
 //        return Util.toResponseString(elementId, false, "Could not find the element with id: " + elementId);
 //    }
 
-    @Override
-    protected List<SemanticEventProcessingAgentDeclarer> getDeclarers() {
-        return DeclarersSingleton.getInstance().getEpaDeclarers();
-    }
-//
 //    @DELETE
 //    @Path("{elementId}/{runningInstanceId}")
 //    @Produces(MediaType.APPLICATION_JSON)

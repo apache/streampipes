@@ -12,18 +12,30 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.transform.Transformer;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;
-import scala.xml.Elem;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class Element<N extends InvocableDeclarer> {
+public abstract class Element<D extends Declarer> {
 //    private Map<String, N> runningInstances;
 
     public Element() {
+    }
+
+    protected abstract List<D> getElementDeclarers();
+
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDescription(@PathParam("id") String elementId) {
+        List<D> declarers = getElementDeclarers();
+        return getJsonLd(declarers, elementId);
     }
 
     protected <T extends  Declarer> String getJsonLd(List<T> declarers, String id) {

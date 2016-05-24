@@ -1,17 +1,12 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.container.init.RunningInstances;
 import de.fzi.cep.sepa.client.container.utils.Util;
 import de.fzi.cep.sepa.desc.declarer.Declarer;
 import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.transform.Transformer;
-import org.openrdf.query.algebra.In;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 
@@ -20,9 +15,9 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class InvocableElement<I extends InvocableSEPAElement, D extends Declarer> extends Element {
+public abstract class InvocableElement<I extends InvocableSEPAElement, D extends Declarer> extends Element<D> {
 
-    protected abstract List<D> getDeclarers();
+    protected abstract List<D> getElementDeclarers();
 
     protected Class<I> clazz;
 
@@ -41,7 +36,7 @@ public abstract class InvocableElement<I extends InvocableSEPAElement, D extends
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
 
-            List<D> sepas = getDeclarers();
+            List<D> sepas = getElementDeclarers();
             InvocableDeclarer sepa = (InvocableDeclarer) getDeclarerById(sepas, elementId);
 
             if (sepa != null) {

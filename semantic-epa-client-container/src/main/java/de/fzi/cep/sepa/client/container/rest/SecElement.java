@@ -20,16 +20,16 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
         super(SecInvocation.class);
     }
 
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getDescription(@PathParam("id") String elementId) {
-        List<SemanticEventConsumerDeclarer> secs = DeclarersSingleton.getInstance().getConsumerDeclarers();
-        return getJsonLd(secs, elementId);
-    }
+//    @GET
+//    @Path("{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String getDescription(@PathParam("id") String elementId) {
+//        List<SemanticEventConsumerDeclarer> secs = DeclarersSingleton.getInstance().getConsumerDeclarers();
+//        return getJsonLd(secs, elementId);
+//    }
 
     @Override
-    protected List<SemanticEventConsumerDeclarer> getDeclarers() {
+    protected List<SemanticEventConsumerDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getConsumerDeclarers();
     }
 

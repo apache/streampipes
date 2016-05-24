@@ -12,13 +12,18 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/sep")
-public class SepElement extends Element {
+public class SepElement extends Element<SemanticEventProducerDeclarer> {
 
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getDescription(@PathParam("id") String elementId) {
-        List<SemanticEventProducerDeclarer> seps = DeclarersSingleton.getInstance().getProducerDeclarers();
-        return getJsonLd(seps, elementId);
+    @Override
+    protected List<SemanticEventProducerDeclarer> getElementDeclarers() {
+        return DeclarersSingleton.getInstance().getProducerDeclarers();
     }
+
+//    @GET
+//    @Path("{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String getDescription(@PathParam("id") String elementId) {
+//        List<SemanticEventProducerDeclarer> seps = DeclarersSingleton.getInstance().getProducerDeclarers();
+//        return getJsonLd(seps, elementId);
+//    }
 }
