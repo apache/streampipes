@@ -4,20 +4,28 @@ import com.clarkparsia.empire.SupportsRdfId;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import de.fzi.cep.sepa.client.container.init.EmbeddedModelSubmitter;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.desc.declarer.*;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.transform.Transformer;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;
+import scala.xml.Elem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class Element {
+public abstract class Element<N extends InvocableDeclarer> {
+    private Map<String, N> runningInstances;
+
+    public Element() {
+        runningInstances = new HashMap<>();
+    }
 
     protected <T extends  Declarer> String getJsonLd(List<T> declarers, String id) {
         NamedSEPAElement elem = getById(declarers, id);
@@ -31,6 +39,15 @@ public abstract class Element {
             }
         }
         return null;
+    }
+
+
+    protected void addRunningInstance(String id, N instance) {
+        runningInstances.put(id, instance);
+    }
+
+    protected N getRunningInstance(String id) {
+        return runningInstances.get(id);
     }
 
     protected <T extends  Declarer> NamedSEPAElement getById(List<T> declarers, String id) {
@@ -54,7 +71,16 @@ public abstract class Element {
 
         //TODO remove this and find a better solution
         if (desc != null) {
-            //TODO check for type
+            String type = "";
+
+            if (desc instanceof SepaDescription) {
+                type = "sepa/";
+            } else if (desc instanceof SepDescription) {
+                type = "sep/";
+            } else if (desc instanceof SecDescription) {
+                type = "sec/";
+            }
+
             String uri = EmbeddedModelSubmitter.getBaseUri()+ "sepa/" + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));

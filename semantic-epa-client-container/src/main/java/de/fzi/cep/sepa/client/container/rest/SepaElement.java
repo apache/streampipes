@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.client.container.rest;
 
 import com.google.gson.Gson;
 import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
+import de.fzi.cep.sepa.client.container.utils.Util;
 import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -26,7 +27,6 @@ public class SepaElement extends Element {
     }
 
     @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String invokeRuntime(@PathParam("id") String elementId, String payload) {
@@ -37,13 +37,17 @@ public class SepaElement extends Element {
             SemanticEventProcessingAgentDeclarer sepa = (SemanticEventProcessingAgentDeclarer) getDeclarerById(sepas, elementId);
 
             if (sepa != null) {
-//                String instanceId = graph.getElementId();
-
                 Gson gson = new Gson();
-                return gson.toJson(sepa.invokeRuntime(graph));
-
+                String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);
+                addRunningInstance(runningInstanceId, sepa.getClass().newInstance());
+                Response resp = getRunningInstance(runningInstanceId).invokeRuntime(graph);
+                return gson.toJson(resp);
             }
         } catch (RDFParseException | IOException | RepositoryException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 
