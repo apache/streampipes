@@ -37,7 +37,7 @@ public abstract class InvocableElement<I extends InvocableSEPAElement, D extends
             I graph = Transformer.fromJsonLd(clazz, payload);
 
             List<D> sepas = getElementDeclarers();
-            InvocableDeclarer sepa = (InvocableDeclarer) getDeclarerById(sepas, elementId);
+            InvocableDeclarer sepa = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (sepa != null) {
                 String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);

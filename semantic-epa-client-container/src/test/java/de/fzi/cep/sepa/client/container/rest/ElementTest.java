@@ -19,25 +19,26 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ElementTest {
-
+public class ElementTest {;
     @Test
     public void getByIdTest() {
         String id = "sepapathName1";
         List<Declarer> declarers = Arrays.asList(getDeclarerImpl(id), getDeclarerImpl("sepapathName2"));
-        SepElement sep = new SepElement();
+        TestElementImpl elem = new TestElementImpl();
+        elem.setDeclarers(declarers);
 
-        NamedSEPAElement namedSEPAElement = sep.getById(declarers, id);
+        NamedSEPAElement namedSEPAElement = elem.getById(id);
 
-        assertEquals(id, namedSEPAElement.getUri());
         assertEquals("sepaname", namedSEPAElement.getName());
         assertEquals("sepadescription", namedSEPAElement.getDescription());
     }
 
     @Test
     public void getByIdIsNullTest() {
-        SepElement sep = new SepElement();
-        NamedSEPAElement actual = sep.getById(new ArrayList<Declarer>(), "");
+        TestElementImpl elem = new TestElementImpl();
+        elem.setDeclarers(new ArrayList<Declarer>());
+
+        NamedSEPAElement actual = elem.getById("");
         assertNull(actual);
     }
 
@@ -73,6 +74,23 @@ public class ElementTest {
         @Override
         public SepaDescription declareModel() {
             return new SepaDescription(id, "sepaname", "sepadescription", "sepaiconUrl");
+        }
+    }
+
+    private class TestElementImpl extends Element<Declarer> {
+        private List<Declarer> declarers = new ArrayList<>();
+
+        public List<Declarer> getDeclarers() {
+            return declarers;
+        }
+
+        public void setDeclarers(List<Declarer> declarers) {
+            this.declarers = declarers;
+        }
+
+        @Override
+        protected List<Declarer> getElementDeclarers() {
+            return declarers;
         }
     }
 }

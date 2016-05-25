@@ -33,16 +33,16 @@ public abstract class Element<D extends Declarer> {
     @Produces(MediaType.APPLICATION_JSON)
     public String getDescription(@PathParam("id") String elementId) {
         List<D> declarers = getElementDeclarers();
-        return getJsonLd(declarers, elementId);
+        return getJsonLd(elementId);
     }
 
-    protected <T extends  Declarer> String getJsonLd(List<T> declarers, String id) {
-        NamedSEPAElement elem = getById(declarers, id);
+    protected String getJsonLd(String id) {
+        NamedSEPAElement elem = getById(id);
         return toJsonLd(elem);
     }
 
-    protected <T extends  Declarer> T getDeclarerById(List<T> declarers, String id) {
-        for (T declarer : declarers) {
+    protected D getDeclarerById(String id) {
+        for (D declarer : getElementDeclarers()) {
             if (declarer.declareModel().getUri().equals(id)) {
                 return declarer;
             }
@@ -50,9 +50,9 @@ public abstract class Element<D extends Declarer> {
         return null;
     }
 
-    protected <T extends  Declarer> NamedSEPAElement getById(List<T> declarers, String id) {
+    protected NamedSEPAElement getById(String id) {
         NamedSEPAElement desc = null;
-        for (Declarer declarer : declarers) {
+        for (Declarer declarer : getElementDeclarers()) {
             if (declarer.declareModel().getUri().equals(id)) {
                 //TODO find a better solution to add the event streams to the SepDescription
                 if (declarer instanceof SemanticEventProducerDeclarer) {
