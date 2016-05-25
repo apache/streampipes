@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;

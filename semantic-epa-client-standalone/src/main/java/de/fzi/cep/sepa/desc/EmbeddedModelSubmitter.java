@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.restlet.Application;
 
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.endpoint.RestletConfig;
 
 public abstract class EmbeddedModelSubmitter extends Application {

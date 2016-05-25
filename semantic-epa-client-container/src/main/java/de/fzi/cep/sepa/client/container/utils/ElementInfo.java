@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.client.container.utils;
 
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 
 public class ElementInfo {

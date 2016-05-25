@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.client.container.init;
 
 import de.fzi.cep.sepa.client.container.utils.ElementInfo;
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 
 import java.util.HashMap;

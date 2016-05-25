@@ -3,7 +3,10 @@ package de.fzi.cep.sepa.desc;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.desc.declarer.*;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.endpoint.RestletConfig;
 import de.fzi.cep.sepa.endpoint.Server;
 

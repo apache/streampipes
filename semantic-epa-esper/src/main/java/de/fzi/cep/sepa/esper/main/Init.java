@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;

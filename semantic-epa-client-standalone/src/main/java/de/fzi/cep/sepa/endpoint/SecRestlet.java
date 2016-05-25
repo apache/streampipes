@@ -9,7 +9,7 @@ import org.restlet.Restlet;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 

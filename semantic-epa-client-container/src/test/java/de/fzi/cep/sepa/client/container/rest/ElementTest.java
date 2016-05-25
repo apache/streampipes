@@ -1,18 +1,13 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
-import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.declarer.Declarer;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import org.junit.Test;
 
-import javax.script.Invocable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

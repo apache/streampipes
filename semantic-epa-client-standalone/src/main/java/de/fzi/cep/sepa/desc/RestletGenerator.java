@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.fzi.cep.sepa.desc.declarer.*;
+import de.fzi.cep.sepa.declarer.*;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.restlet.Restlet;
 

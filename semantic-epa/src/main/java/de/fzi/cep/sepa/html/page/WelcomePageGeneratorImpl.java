@@ -1,11 +1,8 @@
 package de.fzi.cep.sepa.html.page;
 
-import de.fzi.cep.sepa.desc.declarer.*;
-import de.fzi.cep.sepa.html.model.AgentDescription;
+import de.fzi.cep.sepa.declarer.*;
 import de.fzi.cep.sepa.html.model.Description;
 import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
-import de.fzi.cep.sepa.model.ConsumableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 
 import java.net.URI;
 import java.util.ArrayList;

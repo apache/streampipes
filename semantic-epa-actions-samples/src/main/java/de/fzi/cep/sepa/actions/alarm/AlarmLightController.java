@@ -8,7 +8,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;

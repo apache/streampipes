@@ -7,7 +7,7 @@ import java.util.Random;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

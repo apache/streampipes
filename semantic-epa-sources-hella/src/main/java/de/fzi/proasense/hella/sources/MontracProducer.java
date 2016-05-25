@@ -3,8 +3,8 @@ package de.fzi.proasense.hella.sources;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.proasense.hella.streams.MaterialMovementStream;
 

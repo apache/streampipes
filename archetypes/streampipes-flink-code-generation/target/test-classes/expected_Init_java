@@ -1,9 +1,9 @@
 package de.fzi.cep.sepa.flink.test.project;
 
 import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import SemanticEventConsumerDeclarer;
+import SemanticEventProcessingAgentDeclarer;
+import SemanticEventProducerDeclarer;
 import java.lang.Override;
 import java.util.ArrayList;
 import java.util.List;

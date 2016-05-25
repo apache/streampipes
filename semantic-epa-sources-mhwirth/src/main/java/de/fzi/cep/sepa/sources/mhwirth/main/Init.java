@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.mhwirth.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.mhwirth.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.mhwirth.enriched.EnrichedEventProducer;

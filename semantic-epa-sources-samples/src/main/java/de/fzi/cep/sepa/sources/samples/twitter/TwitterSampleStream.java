@@ -16,7 +16,7 @@ import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
 import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;

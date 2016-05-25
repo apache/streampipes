@@ -8,9 +8,9 @@ import de.fzi.cep.sepa.actions.samples.areachart.AreaChartController;
 import de.fzi.cep.sepa.actions.samples.maparea.MapAreaController;
 import de.fzi.cep.sepa.component.main.algorithm.langdetect.LanguageDetectionController;
 import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 
 public class Init extends EmbeddedModelSubmitter {
 

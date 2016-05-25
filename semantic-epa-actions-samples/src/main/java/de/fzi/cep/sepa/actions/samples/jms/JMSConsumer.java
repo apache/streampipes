@@ -10,7 +10,7 @@ import javax.jms.JMSException;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

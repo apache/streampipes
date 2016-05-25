@@ -1,9 +1,9 @@
 package de.fzi.cep.sepa.html.page;
 
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.Declarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.html.model.Description;
 import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -14,7 +14,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import org.junit.Test;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

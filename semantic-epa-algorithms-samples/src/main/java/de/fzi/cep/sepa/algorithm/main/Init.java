@@ -6,7 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.algorithm.languagedetection.LanguageDetectionController;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
 
 public class Init {
 

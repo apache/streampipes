@@ -14,9 +14,9 @@ import com.squareup.javapoet.ClassName;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;

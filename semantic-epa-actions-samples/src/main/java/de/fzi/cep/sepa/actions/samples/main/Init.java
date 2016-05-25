@@ -25,7 +25,7 @@ import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.actions.samples.verticalbar.VerticalBarController;
 import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
 
 public class Init implements Runnable {
 

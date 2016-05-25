@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.client.container.rest;
 
 import de.fzi.cep.sepa.client.container.init.RunningInstances;
 import de.fzi.cep.sepa.client.container.utils.Util;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.declarer.Declarer;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.transform.Transformer;

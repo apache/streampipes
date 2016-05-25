@@ -8,7 +8,7 @@
 //import com.google.gson.JsonSyntaxException;
 //import com.google.gson.reflect.TypeToken;
 //
-//import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+//import EventStreamDeclarer;
 //import de.fzi.cep.sepa.sources.samples.util.Utils;
 //import de.fzi.proveit.senslet.model.Senslet;
 //

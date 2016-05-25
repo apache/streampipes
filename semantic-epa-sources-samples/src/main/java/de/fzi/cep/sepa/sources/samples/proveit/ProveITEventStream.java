@@ -10,7 +10,7 @@
 //import de.fzi.cep.sepa.commons.Utils;
 //import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQConsumer;
 //import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
-//import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+//import EventStreamDeclarer;
 //import de.fzi.cep.sepa.model.impl.EventGrounding;
 //import de.fzi.cep.sepa.model.impl.EventSchema;
 //import de.fzi.cep.sepa.model.impl.EventStream;

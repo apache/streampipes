@@ -1,7 +1,7 @@
 package de.fzi.proasense.hella.main;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;

@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.client.container.init;
 
-import de.fzi.cep.sepa.desc.declarer.Declarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.declarer.Declarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;

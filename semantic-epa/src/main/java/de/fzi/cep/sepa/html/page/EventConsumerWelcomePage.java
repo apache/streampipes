@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.html.page;
 import java.net.URI;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.html.model.AgentDescription;
 import de.fzi.cep.sepa.html.model.Description;
 

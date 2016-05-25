@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fzi.cep.sepa.desc.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.declarer.InvocableDeclarer;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
@@ -15,7 +15,6 @@ import org.restlet.data.Form;
 import org.restlet.data.Method;
 
 import de.fzi.cep.sepa.desc.RestletGenerator;
-import de.fzi.cep.sepa.desc.declarer.Declarer;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.transform.Transformer;

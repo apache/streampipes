@@ -3,8 +3,8 @@ package de.fzi.cep.sepa.sources.samples.proveit;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fzi.cep.sepa.desc.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.desc.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public class ProveITEventProducer implements SemanticEventProducerDeclarer {
