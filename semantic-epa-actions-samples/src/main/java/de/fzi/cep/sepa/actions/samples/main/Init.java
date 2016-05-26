@@ -24,8 +24,7 @@ import de.fzi.cep.sepa.actions.samples.route.RouteController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
 import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.actions.samples.verticalbar.VerticalBarController;
-import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 
 public class Init implements Runnable {
 
@@ -63,7 +62,7 @@ public class Init implements Runnable {
 		//consumers.add(new HistogramController());
 		
 		try {
-			ModelSubmitter.submitConsumer(consumers);
+//			ModelSubmitter.submitConsumer(consumers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

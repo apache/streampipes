@@ -13,10 +13,9 @@ import org.apache.flink.util.Collector;
 import com.squareup.javapoet.ClassName;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.desc.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
@@ -74,7 +73,7 @@ public abstract class JFC {
 	public static ClassName OUTPUT_STRATEGY = ClassName.get(OutputStrategy.class);
 	public static ClassName EP_PROPERTIES = ClassName.get(EpProperties.class);
 	public static ClassName STANDARD_TRANSPORT_FORMAT = ClassName.get(StandardTransportFormat.class);
-	public static ClassName EMBEDDED_MODEL_SUBMITTER = ClassName.get(EmbeddedModelSubmitter.class);
+//	public static ClassName EMBEDDED_MODEL_SUBMITTER = ClassName.get("EmbeddedModelSubmitter.class);
 	public static ClassName SEMANTIC_EVENT_PROCESSING_AGENT_DECLARER = ClassName.get(SemanticEventProcessingAgentDeclarer.class);
 	public static ClassName SEMANTIC_EVENT_PRODUCER_DECLARER = ClassName.get(SemanticEventProducerDeclarer.class);
 	public static ClassName SEMANTIC_EVENT_CONSUMER_DECLARER = ClassName.get(SemanticEventConsumerDeclarer.class);

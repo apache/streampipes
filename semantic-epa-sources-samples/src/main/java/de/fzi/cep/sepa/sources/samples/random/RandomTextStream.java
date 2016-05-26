@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.samples.random;
 
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 

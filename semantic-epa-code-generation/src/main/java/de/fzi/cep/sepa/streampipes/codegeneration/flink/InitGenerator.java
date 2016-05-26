@@ -57,7 +57,7 @@ public class InitGenerator extends Generator {
 		controllers.add(ClassName.get("", name + "Controller"));
 
 		TypeSpec controllerClass = TypeSpec.classBuilder("Init").addModifiers(Modifier.PUBLIC)
-				.superclass(JFC.EMBEDDED_MODEL_SUBMITTER).addMethod(getEpaDeclarers(controllers))
+//				.superclass(JFC.EMBEDDED_MODEL_SUBMITTER).addMethod(getEpaDeclarers(controllers))
 				.addMethod(getSourceDeclarers(null)).addMethod(getConsumerEpaDeclarers(null)).addMethod(getPort())
 				.addMethod(contextPath()).build();
 		return JavaFile.builder(packageName, controllerClass).build();

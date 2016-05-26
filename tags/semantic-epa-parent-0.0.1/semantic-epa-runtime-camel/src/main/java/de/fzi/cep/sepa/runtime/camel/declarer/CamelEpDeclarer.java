@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import de.fzi.cep.sepa.declarer.EpDeclarer;
+import de.fzi.cep.sepa.client.declarer.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;

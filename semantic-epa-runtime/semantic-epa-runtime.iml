@@ -12,7 +12,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="semantic-epa" />
+    <orderEntry type="library" name="Maven: de.fzi.cep.sepa:semantic-epa:0.0.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.rendersnake:rendersnake:1.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="module" module-name="semantic-epa-model" />

@@ -92,7 +92,7 @@
 		<module>semantic-epa-model</module>
 		<module>semantic-epa-sources-samples</module>
 		<module>semantic-epa-commons</module>
-		<module>semantic-epa</module>
+		<module>semantic-epa-client</module>
 		<module>semantic-epa-esper</module>
 		<module>semantic-epa-manager</module>
 		<module>semantic-epa-actions-samples</module>

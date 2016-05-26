@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.sources.mhwirth.mru;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public class MruProducer implements SemanticEventProducerDeclarer {

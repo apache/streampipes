@@ -9,7 +9,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa</artifactId>
+			<artifactId>semantic-epa-client</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

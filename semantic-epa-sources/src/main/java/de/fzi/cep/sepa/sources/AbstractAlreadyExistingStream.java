@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.sources;
 
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
+
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 
 public abstract class AbstractAlreadyExistingStream implements EventStreamDeclarer {
 

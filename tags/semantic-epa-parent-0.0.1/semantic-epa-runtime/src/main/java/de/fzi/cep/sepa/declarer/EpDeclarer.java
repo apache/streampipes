@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.declarer;
+package de.fzi.cep.sepa.client.declarer;
 
 import java.util.HashMap;
 import java.util.Map;

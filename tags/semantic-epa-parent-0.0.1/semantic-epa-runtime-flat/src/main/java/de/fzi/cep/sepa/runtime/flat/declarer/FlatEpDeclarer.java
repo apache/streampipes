@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.runtime.flat.declarer;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.fzi.cep.sepa.declarer.EpDeclarer;
+import de.fzi.cep.sepa.client.declarer.EpDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.flat.FlatEPRuntime;

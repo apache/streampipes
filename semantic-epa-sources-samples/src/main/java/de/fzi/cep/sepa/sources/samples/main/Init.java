@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.desc.ModelSubmitter;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
@@ -57,7 +56,7 @@ public class Init  {
 		declarers.add(new WunderbarProducer2());
 		
 		try {
-			ModelSubmitter.submitProducer(declarers);
+//			ModelSubmitter.submitProducer(declarers);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

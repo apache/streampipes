@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.actions.samples.couchdb;
 import java.util.Arrays;
 
 import de.fzi.cep.sepa.actions.config.ActionConfig;
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;

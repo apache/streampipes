@@ -9,7 +9,7 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;

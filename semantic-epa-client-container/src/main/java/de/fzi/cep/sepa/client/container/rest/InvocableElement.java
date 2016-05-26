@@ -12,11 +12,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.fzi.cep.sepa.client.util.Util;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 
 import de.fzi.cep.sepa.client.container.init.RunningInstances;
-import de.fzi.cep.sepa.client.container.utils.Util;
 import de.fzi.cep.sepa.client.declarer.Declarer;
 import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.client.transform.Transformer;

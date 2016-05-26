@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.actions.samples;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;

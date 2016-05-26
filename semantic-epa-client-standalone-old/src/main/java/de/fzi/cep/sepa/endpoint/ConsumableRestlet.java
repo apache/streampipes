@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fzi.cep.sepa.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
