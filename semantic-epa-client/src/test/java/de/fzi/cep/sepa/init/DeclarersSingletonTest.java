@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import org.junit.Test;
 
 import de.fzi.cep.sepa.client.declarer.Declarer;
