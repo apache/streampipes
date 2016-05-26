@@ -1,12 +1,12 @@
-package de.fzi.cep.sepa.client.container.utils;
+package de.fzi.cep.sepa.client.util;
 
 import com.google.gson.Gson;
-import de.fzi.cep.sepa.client.container.init.EmbeddedModelSubmitter;
+import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import de.fzi.cep.sepa.model.impl.Response;
 
 public class Util {
     public static String getInstanceId(String url, String type, String elemntId) {
-        return url.replace(EmbeddedModelSubmitter.getBaseUri() + type + "/" + elemntId + "/", "");
+        return url.replace(ModelSubmitter.getBaseUri() + type + "/" + elemntId + "/", "");
     }
 
     public static String toResponseString(String elementId, boolean success) {
