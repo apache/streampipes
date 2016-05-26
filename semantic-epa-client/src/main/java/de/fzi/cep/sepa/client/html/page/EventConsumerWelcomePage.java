@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.html.page;
+package de.fzi.cep.sepa.client.html.page;
 
 import java.net.URI;
 import java.util.List;

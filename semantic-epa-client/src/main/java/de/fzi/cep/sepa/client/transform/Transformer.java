@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.transform;
+package de.fzi.cep.sepa.client.transform;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

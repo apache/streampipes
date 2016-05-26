@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.json;
+package de.fzi.cep.sepa.client.json;
 
 import java.io.File;
 import java.io.IOException;

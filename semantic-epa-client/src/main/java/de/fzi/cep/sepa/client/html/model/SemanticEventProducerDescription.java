@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.html.model;
+package de.fzi.cep.sepa.client.html.model;
 
 import java.net.URI;
 import java.util.ArrayList;

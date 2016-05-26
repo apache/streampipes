@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.html;
+package de.fzi.cep.sepa.client.html;
 
 import java.util.List;
 

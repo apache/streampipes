@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.util;
+package de.fzi.cep.sepa.client.util;
 
 import java.util.ArrayList;
 import java.util.List;

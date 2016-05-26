@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.html;
+package de.fzi.cep.sepa.client.html;
 
 import static org.rendersnake.HtmlAttributesFactory.class_;
 import static org.rendersnake.HtmlAttributesFactory.href;

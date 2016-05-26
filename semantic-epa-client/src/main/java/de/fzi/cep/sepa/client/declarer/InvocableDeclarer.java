@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.declarer;
+package de.fzi.cep.sepa.client.declarer;
 
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
