@@ -1,25 +1,29 @@
 package de.fzi.cep.sepa.html.page;
 
-import de.fzi.cep.sepa.declarer.Declarer;
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import org.junit.Test;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import de.fzi.cep.sepa.client.declarer.Declarer;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
+import de.fzi.cep.sepa.client.html.page.WelcomePageGenerator;
+import de.fzi.cep.sepa.client.html.page.WelcomePageGeneratorImpl;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class WelcomePageGeneratorImplTest {
 

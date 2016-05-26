@@ -4,14 +4,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.declarer.Declarer;
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
+import de.fzi.cep.sepa.client.declarer.Declarer;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
 
 public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
 

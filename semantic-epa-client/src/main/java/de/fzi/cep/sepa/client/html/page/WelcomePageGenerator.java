@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.client.html.page;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.Description;
 
 
 public abstract class WelcomePageGenerator<T> {

@@ -4,11 +4,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.html.model.AgentDescription;
-import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.html.model.AgentDescription;
+import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
 
 @Deprecated
 public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEventProducerDeclarer> {

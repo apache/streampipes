@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.rendersnake.HtmlCanvas;
 
-import de.fzi.cep.sepa.html.model.Description;
-import de.fzi.cep.sepa.html.model.SemanticEventProducerDescription;
+import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
 
 public class HTMLGenerator {
 
