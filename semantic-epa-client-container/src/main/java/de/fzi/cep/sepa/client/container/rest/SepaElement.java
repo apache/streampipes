@@ -1,11 +1,12 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
-import de.fzi.cep.sepa.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import java.util.List;
 
 import javax.ws.rs.Path;
-import java.util.List;
+
+import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 @Path("/sepa")
 public class SepaElement extends InvocableElement<SepaInvocation, SemanticEventProcessingAgentDeclarer> {

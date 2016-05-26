@@ -1,11 +1,11 @@
 package de.fzi.cep.sepa.client.container.init;
 
-import de.fzi.cep.sepa.client.container.utils.ElementInfo;
-import de.fzi.cep.sepa.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import de.fzi.cep.sepa.client.container.utils.ElementInfo;
+import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
 
 public enum RunningInstances {
     INSTANCE;

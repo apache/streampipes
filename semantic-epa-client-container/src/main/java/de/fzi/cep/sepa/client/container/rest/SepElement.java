@@ -1,10 +1,11 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
+import java.util.List;
 
 import javax.ws.rs.Path;
-import java.util.List;
+
+import de.fzi.cep.sepa.client.container.init.DeclarersSingleton;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 
 @Path("/sep")
 public class SepElement extends Element<SemanticEventProducerDeclarer> {

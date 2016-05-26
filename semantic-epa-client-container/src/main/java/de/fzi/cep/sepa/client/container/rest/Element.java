@@ -1,28 +1,31 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-import de.fzi.cep.sepa.client.container.init.EmbeddedModelSubmitter;
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.declarer.Declarer;
-import de.fzi.cep.sepa.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.transform.Transformer;
-import org.openrdf.model.Graph;
-import org.openrdf.rio.RDFHandlerException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.util.List;
+
+import org.openrdf.model.Graph;
+import org.openrdf.rio.RDFHandlerException;
+
+import com.clarkparsia.empire.SupportsRdfId;
+import com.clarkparsia.empire.annotation.InvalidRdfException;
+
+import de.fzi.cep.sepa.client.container.init.EmbeddedModelSubmitter;
+import de.fzi.cep.sepa.client.declarer.Declarer;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.transform.Transformer;
+import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
 public abstract class Element<D extends Declarer> {
     public Element() {

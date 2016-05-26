@@ -1,19 +1,27 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import de.fzi.cep.sepa.client.container.init.RunningInstances;
-import de.fzi.cep.sepa.client.container.utils.Util;
-import de.fzi.cep.sepa.declarer.Declarer;
-import de.fzi.cep.sepa.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.transform.Transformer;
+import java.io.IOException;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.util.List;
+import de.fzi.cep.sepa.client.container.init.RunningInstances;
+import de.fzi.cep.sepa.client.container.utils.Util;
+import de.fzi.cep.sepa.client.declarer.Declarer;
+import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.client.transform.Transformer;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.impl.Response;
 
 public abstract class InvocableElement<I extends InvocableSEPAElement, D extends Declarer> extends Element<D> {
 

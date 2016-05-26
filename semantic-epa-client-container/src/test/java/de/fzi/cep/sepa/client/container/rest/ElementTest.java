@@ -1,18 +1,20 @@
 package de.fzi.cep.sepa.client.container.rest;
 
-import de.fzi.cep.sepa.declarer.Declarer;
-import de.fzi.cep.sepa.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import de.fzi.cep.sepa.client.declarer.Declarer;
+import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 public class ElementTest {;
     @Test
