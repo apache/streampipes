@@ -87,7 +87,7 @@ public abstract class Element<D extends Declarer> {
                 type = "sec/";
             }
 
-            String uri = ModelSubmitter.getBaseUri()+ "sepa/" + desc.getUri();
+            String uri = ModelSubmitter.getBaseUri()+ type + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
         }
