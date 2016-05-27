@@ -28,7 +28,7 @@ public class MathController extends FlatEpDeclarer<MathParameter>{
 	@Override
 	public SepaDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("sepa/math", "Math EPA",
+		SepaDescription desc = new SepaDescription("math", "Math EPA",
 				"performs simple calculations on event properties");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {

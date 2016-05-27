@@ -88,6 +88,7 @@ public class Init extends StandaloneModelSubmitter implements Runnable {
 
 		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();
+        new Init().init();
 
 		try {
 //			ModelSubmitter.submitAgent(declarers);

@@ -31,7 +31,7 @@ public class MinShuttleTimeController extends FlatEpDeclarer<MinShuttleTimeParam
 	@Override
 	public SepaDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("sepa/minshuttletime", "Minimum Shuttle Time", "Issues an alert if the minimum shuttle time is reached.");
+		SepaDescription desc = new SepaDescription("minshuttletime", "Minimum Shuttle Time", "Issues an alert if the minimum shuttle time is reached.");
 		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#lacqueringLineId").build();

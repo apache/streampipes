@@ -71,7 +71,7 @@ public class DrillingStartController extends FlatEpDeclarer<DrillingStartParamet
 		schema2.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("sepa/drillingstart", "Driling Start", "Detects start of a drilling process");
+		SepaDescription desc = new SepaDescription("drillingstart", "Driling Start", "Detects start of a drilling process");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

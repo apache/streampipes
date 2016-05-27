@@ -34,7 +34,7 @@ public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/enrich/timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload");
+		SepaDescription desc = new SepaDescription("enrich_timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
 		desc.setEpaTypes(Arrays.asList(EpaType.ENRICH.name()));	
 		//TODO check if needed

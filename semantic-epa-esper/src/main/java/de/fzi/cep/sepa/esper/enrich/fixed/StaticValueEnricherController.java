@@ -57,7 +57,7 @@ public class StaticValueEnricherController extends FlatEpDeclarer<StaticValueEnr
 		schema1.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("sepa/staticValueEnricher", "Static value enricher", "Static Value Enrichment");
+		SepaDescription desc = new SepaDescription("staticValueEnricher", "Static value enricher", "Static Value Enrichment");
 		desc.setEpaTypes(Arrays.asList(EpaType.ENRICH.name()));
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);

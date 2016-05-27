@@ -61,7 +61,7 @@ public class MeetsController extends FlatEpDeclarer<MeetsParameters>{
 		schema2.setEventProperties(eventProperties2);
 		stream2.setEventSchema(schema2);
 		
-		SepaDescription desc = new SepaDescription("sepa/meets", "Geospatial distance", "Detects two location-based streams within a given distance");
+		SepaDescription desc = new SepaDescription("meets", "Geospatial distance", "Detects two location-based streams within a given distance");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

@@ -69,7 +69,7 @@ public class DrillingStopController extends FlatEpDeclarer<DrillingStopParameter
 		schema2.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("sepa/drillingstop", "Driling Stop", "Detects stop of a drilling process");
+		SepaDescription desc = new SepaDescription("drillingstop", "Driling Stop", "Detects stop of a drilling process");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
 		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
 		

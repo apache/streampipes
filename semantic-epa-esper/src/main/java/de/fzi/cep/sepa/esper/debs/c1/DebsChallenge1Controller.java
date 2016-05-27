@@ -32,7 +32,7 @@ public class DebsChallenge1Controller extends FlatEpDeclarer<DebsChallenge1Param
 	
 	@Override
 	public SepaDescription declareModel() {
-			SepaDescription desc = new SepaDescription("sepa/debs/c1", "DEBS Challenge v1",
+			SepaDescription desc = new SepaDescription("debs_c1", "DEBS Challenge v1",
 				"Solves query 1 of the 2015 Debs Challenge", "");
 		try {
 			EventStream stream1 = new EventStream();

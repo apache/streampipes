@@ -30,7 +30,7 @@ public class NumericalFilterController extends FlatEpDeclarer<NumericalFilterPar
 	public SepaDescription declareModel() {
 			
 		
-		SepaDescription desc = new SepaDescription("sepa/numericalfilter", "Numerical Filter", "Numerical Filter Description");
+		SepaDescription desc = new SepaDescription("numericalfilter", "Numerical Filter", "Numerical Filter Description");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Numerical_Filter_Icon_HQ.png");
 		
 		List<EventProperty> propertyRestrictions = new ArrayList<>();

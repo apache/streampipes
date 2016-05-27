@@ -37,7 +37,7 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/eventrate", "Event rate", "Computes current event rate");
+		SepaDescription desc = new SepaDescription("eventrate", "Event rate", "Computes current event rate");
 		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
 		
 		//TODO check if needed

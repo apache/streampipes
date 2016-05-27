@@ -29,7 +29,7 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SepaDescription desc = new SepaDescription("sepa/absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
+		SepaDescription desc = new SepaDescription("absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
 		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

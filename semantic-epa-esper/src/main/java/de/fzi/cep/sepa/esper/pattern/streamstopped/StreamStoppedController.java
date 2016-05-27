@@ -37,7 +37,7 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
+		SepaDescription desc = new SepaDescription("streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
 		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		//TODO check if needed

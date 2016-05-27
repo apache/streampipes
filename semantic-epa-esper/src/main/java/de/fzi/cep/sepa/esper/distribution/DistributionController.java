@@ -37,8 +37,8 @@ public class DistributionController extends FlatEpDeclarer<DistributionParameter
 		EventPropertyPrimitive p1 = EpRequirements.stringReq();
 		schema1.addEventProperty(p1);
 		
-		SepaDescription desc = new SepaDescription("sepa/distribution", "Distribution", "Computes current value distribution");
-		
+		SepaDescription desc = new SepaDescription("distribution", "Distribution", "Computes current value distribution");
+
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);
 		desc.addEventStream(stream1);

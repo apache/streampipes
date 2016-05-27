@@ -35,7 +35,7 @@ public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParam
 	@Override
 	public SepaDescription declareModel() {
 		
-		SepaDescription sepa = new SepaDescription("sepa/grid", "Grid Cell Grouping",
+		SepaDescription sepa = new SepaDescription("grid", "Grid Cell Grouping",
 				"Groups location-based events into cells of a given size");
 		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		try {	

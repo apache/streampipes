@@ -29,7 +29,7 @@ public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 		EventStream stream1 = new EventStream();
 		EventStream stream2 = new EventStream();
 		
-		SepaDescription desc = new SepaDescription("sepa/compose", "Compose EPA", "");
+		SepaDescription desc = new SepaDescription("compose", "Compose EPA", "");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

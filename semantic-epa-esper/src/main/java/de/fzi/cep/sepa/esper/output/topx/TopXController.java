@@ -41,7 +41,7 @@ public class TopXController extends FlatEpDeclarer<TopXParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property");
+		SepaDescription desc = new SepaDescription("topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property");
 		desc.setEpaTypes(Arrays.asList(EpaType.TRANSFORM.name()));	
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());

@@ -41,7 +41,7 @@ public class CountController extends FlatEpDeclarer<CountParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.");
+		SepaDescription desc = new SepaDescription("count", "Count Aggregation", "Performs an aggregation based on a given event property and outputs the number of occurrences.");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Counter_Icon_HQ.png");
 		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
 		//TODO check if needed

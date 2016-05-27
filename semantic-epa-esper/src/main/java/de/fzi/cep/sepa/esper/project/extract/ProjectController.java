@@ -31,7 +31,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/project", "Projection", "Outputs a selectable subset of an input event type");
+		SepaDescription desc = new SepaDescription("project", "Projection", "Outputs a selectable subset of an input event type");
 
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
