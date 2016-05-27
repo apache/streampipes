@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://frosch.fzi.de:8090/sepa/collection",
+    "@id" : "http://frosch.fzi.de:8090/collection",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "Test Collection",
     "sepa:hasOutputStrategy" : {

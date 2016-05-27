@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://localhost:8090/sepa/observenumericalvalue",
+    "@id" : "http://localhost:8090/observenumericalvalue",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "Observe Numerical",
     "sepa:hasOutputStrategy" : {

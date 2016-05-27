@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://frosch.fzi.de:8090/sepa/project/37755a66-5285-4847-9376-3a3ab32bf590-FZI.SEPA.adeOnBIkAtuShFZoORVG",
+    "@id" : "http://frosch.fzi.de:8090/project/37755a66-5285-4847-9376-3a3ab32bf590-FZI.SEPA.adeOnBIkAtuShFZoORVG",
     "@type" : "sepa:SEPAInvocationGraph",
     "sepa:belongsTo" : "http://frosch.fzi.de:8090/sepa/project",
     "sepa:correspondingPipeline" : "37755a66-5285-4847-9376-3a3ab32bf590",

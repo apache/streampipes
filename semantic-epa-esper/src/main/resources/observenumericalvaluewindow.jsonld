@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://frosch.fzi.de:8090/sepa/observenumericalvaluewindow",
+    "@id" : "http://frosch.fzi.de:8090/observenumericalvaluewindow",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "Observe Numerical Value Window",
     "sepa:hasOutputStrategy" : {
