@@ -5,7 +5,7 @@ import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-public abstract class EmbeddedModelSubmitter extends ModelSubmitter implements ServletContextListener {
+public abstract class ContainerModelSubmitter extends ModelSubmitter implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent arg0)
     {

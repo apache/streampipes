@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.esper.aggregate.count.CountController;
@@ -36,7 +37,7 @@ import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 import de.fzi.cep.sepa.hella.minshuttletime.MinShuttleTimeController;
 import de.fzi.cep.sepa.hella.shuttletime.ShuttleTimeController;
 
-public class Init implements Runnable {
+public class Init extends StandaloneModelSubmitter implements Runnable {
 
 	public static void main(String[] args)
 	{
