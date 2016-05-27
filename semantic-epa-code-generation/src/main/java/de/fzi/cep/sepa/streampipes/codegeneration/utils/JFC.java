@@ -34,7 +34,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 /**
  * Java File Classes (JFC)

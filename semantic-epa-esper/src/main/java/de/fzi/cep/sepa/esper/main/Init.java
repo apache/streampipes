@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.esper.absence.AbsenceController;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
@@ -46,47 +47,47 @@ public class Init extends StandaloneModelSubmitter implements Runnable {
 	
 	public void declare()
 	{
-		List<SemanticEventProcessingAgentDeclarer> declarers = new ArrayList<SemanticEventProcessingAgentDeclarer>();
+        DeclarersSingleton.getInstance()
 
-//		declarers.add(new MovementController());
-//		declarers.add(new TextFilterController());
-//		declarers.add(new AndController());
-//		declarers.add(new NumericalFilterController());
-//		declarers.add(new MeetsController());
-//		declarers.add(new EventRateController());
-//		declarers.add(new AggregationController());
-//		declarers.add(new GridEnrichmentController());
-//		declarers.add(new ProjectController());
-//		declarers.add(new CountController());
-//		declarers.add(new TopXController());
-//		declarers.add(new TimestampController());
-//		declarers.add(new MathController());
-//		//declarers.add(new DebsChallenge1Controller());
-//		//declarers.add(new DebsChallenge2Controller());
-//		declarers.add(new DrillingStartController());
-//		declarers.add(new DrillingStopController());
-//		declarers.add(new ComposeController());
-//		declarers.add(new DrillingStartEnrichedController());
-//		//declarers.add(new DrillingStopEnrichedController());
-//		declarers.add(new DistributionController());
-//		declarers.add(new StaticValueEnricherController());
-//		declarers.add(new AbsenceController());
-//		declarers.add(new ObserveNumericalController());
-//		declarers.add(new ObserveNumericalWindowController());
-//		declarers.add(new ShuttleTimeController());
-//		declarers.add(new MinShuttleTimeController());
-//		declarers.add(new TestCollectionController());
-//		declarers.add(new NumberClassificationController());
-//		//declarers.add(new AdvancedTextFilterController());
-//		declarers.add(new SequenceController());
-//		declarers.add(new IncreaseController());
-//		declarers.add(new GeofencingController());
-//		declarers.add(new DurationOfStayController());
-//		declarers.add(new StreamStoppedController());
+		.add(new MovementController())
+		.add(new TextFilterController())
+		.add(new AndController())
+		.add(new NumericalFilterController())
+		.add(new MeetsController())
+		.add(new EventRateController())
+		.add(new AggregationController())
+		.add(new GridEnrichmentController())
+		.add(new ProjectController())
+		.add(new CountController())
+		.add(new TopXController())
+		.add(new TimestampController())
+		.add(new MathController())
+		//.add(new DebsChallenge1Controller())
+		//.add(new DebsChallenge2Controller())
+		.add(new DrillingStartController())
+		.add(new DrillingStopController())
+		.add(new ComposeController())
+		.add(new DrillingStartEnrichedController())
+		//.add(new DrillingStopEnrichedController())
+		.add(new DistributionController())
+		.add(new StaticValueEnricherController())
+		.add(new AbsenceController())
+		.add(new ObserveNumericalController())
+		.add(new ObserveNumericalWindowController())
+		.add(new ShuttleTimeController())
+		.add(new MinShuttleTimeController())
+		.add(new TestCollectionController())
+		.add(new NumberClassificationController())
+		//.add(new AdvancedTextFilterController())
+		.add(new SequenceController())
+		.add(new IncreaseController())
+		.add(new GeofencingController())
+		.add(new DurationOfStayController())
+		.add(new StreamStoppedController());
 
 
 		// Configure external timing for DEBS Challenge
-		//new Thread(new EsperEngineSettings()).start();
+		new Thread(new EsperEngineSettings()).start();
 
 		try {
 //			ModelSubmitter.submitAgent(declarers);

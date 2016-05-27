@@ -19,7 +19,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class FieldRenamerController extends AbstractFlinkAgentDeclarer<FieldRenamerParameters>{
 

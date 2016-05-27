@@ -9,7 +9,7 @@ import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.util.DeclarerUtils;
+import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 

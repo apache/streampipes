@@ -29,7 +29,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParameters>{
 

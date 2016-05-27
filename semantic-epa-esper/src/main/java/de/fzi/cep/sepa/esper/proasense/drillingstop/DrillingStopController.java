@@ -24,7 +24,7 @@ import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class DrillingStopController extends FlatEpDeclarer<DrillingStopParameters>{
 

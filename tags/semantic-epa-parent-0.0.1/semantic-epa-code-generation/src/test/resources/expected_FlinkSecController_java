@@ -9,7 +9,7 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import java.lang.Override;
 import java.util.ArrayList;
 import java.util.List;

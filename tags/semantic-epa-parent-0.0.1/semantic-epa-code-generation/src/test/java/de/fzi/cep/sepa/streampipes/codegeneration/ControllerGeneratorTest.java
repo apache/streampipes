@@ -114,7 +114,7 @@ public class ControllerGeneratorTest {
 
 		String actual = cb.getSupportedGrounding(b, null).build().toString();
 		String expected = "void testMethod() {\n"
-				+ "  desc.setSupportedGrounding(de.fzi.cep.sepa.util.StandardTransportFormat.getSupportedGrounding());\n"
+				+ "  desc.setSupportedGrounding(de.fzi.cep.sepa.client.util.StandardTransportFormat.getSupportedGrounding());\n"
 				+ "}\n";
 
 		assertEquals(expected, actual);

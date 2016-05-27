@@ -12,7 +12,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 import de.fzi.cep.sepa.model.util.SepaUtils;
 
-import de.fzi.cep.sepa.util.DeclarerUtils;
+import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class ${classNamePrefix}Controller extends EpDeclarer<${classNamePrefix}Parameters> {
 

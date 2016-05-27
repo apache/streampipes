@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.io.Resources;
 
+import de.fzi.cep.sepa.client.util.DeclarerUtils;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
@@ -14,7 +15,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.DeclarerUtils;
+//import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class TestCollectionController extends FlatEpDeclarer<TestCollectionParameters>{
 

@@ -15,7 +15,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.DeclarerUtils;
+import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class NumberClassificationController extends FlatEpDeclarer<NumberClassificationParameters> {
 

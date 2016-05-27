@@ -22,7 +22,7 @@ import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.storm.config.StormConfig;
 import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class ${classNamePrefix}Controller extends EpDeclarer<Parameters>{
 	private static String STORM_LOCATION = "FILL_IN STORM_LOCATION";

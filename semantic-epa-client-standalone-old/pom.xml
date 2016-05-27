@@ -5,7 +5,7 @@
     <artifactId>semantic-epa-parent</artifactId>
     <version>0.0.2-SNAPSHOT</version>
   </parent>
-  <artifactId>semantic-epa-client-standalone</artifactId>
+  <artifactId>semantic-epa-client-standalone-old</artifactId>
   <dependencies>
  	<dependency>
 		<groupId>org.restlet.jee</groupId>

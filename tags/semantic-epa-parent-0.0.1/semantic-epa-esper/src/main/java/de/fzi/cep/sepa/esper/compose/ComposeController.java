@@ -19,7 +19,7 @@ import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 

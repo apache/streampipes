@@ -23,7 +23,7 @@ import de.fzi.cep.sepa.storm.config.StormConfig;
 import de.fzi.cep.sepa.storm.sentiment.topology.Name;
 import de.fzi.cep.sepa.storm.utils.Parameters;
 import de.fzi.cep.sepa.storm.utils.Utils;
-import de.fzi.cep.sepa.util.StandardTransportFormat;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class SentimentDetectionController extends CamelEpDeclarer<Parameters>{
 	private static String STORM_LOCATION = "/apache-storm-0.9.5/bin/storm";

@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.util.DeclarerUtils;
+import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalParameters> {
 
