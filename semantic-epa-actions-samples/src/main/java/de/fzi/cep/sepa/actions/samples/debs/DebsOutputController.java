@@ -53,6 +53,7 @@ public class DebsOutputController extends ActionController {
 
 	@Override
 	public Response invokeRuntime(SecInvocation sec) {
+        String pipelineId = sec.getCorrespondingPipeline();
 		String brokerUrl = createKafkaUri(sec);
 		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
@@ -62,16 +63,14 @@ public class DebsOutputController extends ActionController {
 		DebsParameters fileParameters = new DebsParameters(inputTopic, brokerUrl, path);
 		
 		//new Thread(new FileWriter(fileParameters)).start();
-		
-		return null;
+
+        return new Response(pipelineId, true);
 	}
 
-
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 
 	@Override
 	public boolean isVisualizable() {

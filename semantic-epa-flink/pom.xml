@@ -80,10 +80,6 @@
 			<artifactId>semantic-epa-runtime</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-standalone</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
+
 	</dependencies>
 </project>

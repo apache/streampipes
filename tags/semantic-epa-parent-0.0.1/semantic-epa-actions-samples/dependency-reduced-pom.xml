@@ -32,7 +32,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.actions.samples.main.Init</mainClass>
+                  <mainClass>de.fzi.cep.sepa.actions.samples.main.ActionsInit</mainClass>
                 </transformer>
                 <transformer />
               </transformers>

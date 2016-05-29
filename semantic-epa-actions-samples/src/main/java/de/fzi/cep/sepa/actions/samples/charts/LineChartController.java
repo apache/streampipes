@@ -71,11 +71,7 @@ public class LineChartController extends ActionController {
 		return sec;
 	}
 
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public boolean isVisualizable() {
@@ -102,10 +98,14 @@ public class LineChartController extends ActionController {
 		return new LineChartGenerator(lineChart).generateHtml();
 	}
 
-	@Override
-	public Response invokeRuntime(SecInvocation invocationGraph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Response invokeRuntime(SecInvocation invocationGraph) {
+        String pipelineId = invocationGraph.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
+    }
 
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 }

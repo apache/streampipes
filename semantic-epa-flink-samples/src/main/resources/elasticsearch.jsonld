@@ -1,6 +1,6 @@
 {
 	"@graph" : [ {
-		"@id" : "http://localhost:8094/action/elasticsearch",
+		"@id" : "http://localhost:8094/elasticsearch",
 			"@type" : "sepa:SemanticEventConsumer",
 			"sepa:hasIconUrl" : "http://localhost:8080/semantic-epa-backend/img/elasticsearch_icon.png",
 			"sepa:hasName" : "Elastic Search",

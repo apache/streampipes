@@ -32,7 +32,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/enrich/timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
+		SepaDescription desc = new SepaDescription("enrich/timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
 		
 		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
 		Frequency minFrequency = new Frequency(1);

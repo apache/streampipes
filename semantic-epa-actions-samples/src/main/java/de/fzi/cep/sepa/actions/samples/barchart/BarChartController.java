@@ -61,18 +61,16 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 		
 		return sec;
 	}
+    @Override
+    public Response invokeRuntime(SecInvocation invocationGraph) {
+        String pipelineId = invocationGraph.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
+    }
 
-	@Override
-	public Response invokeRuntime(SecInvocation invocationGraph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 
 	@Override
 	public boolean isVisualizable() {

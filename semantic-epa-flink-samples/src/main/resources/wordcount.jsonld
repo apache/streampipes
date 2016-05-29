@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://frosch.fzi.de:8094/sepa/wordcount",
+    "@id" : "http://frosch.fzi.de:8094/wordcount",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "WordCount",
     "sepa:hasOutputStrategy" : {

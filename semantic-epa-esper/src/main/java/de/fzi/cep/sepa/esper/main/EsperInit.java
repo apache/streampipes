@@ -1,9 +1,5 @@
 package de.fzi.cep.sepa.esper.main;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.esper.absence.AbsenceController;
@@ -38,11 +34,11 @@ import de.fzi.cep.sepa.esper.project.extract.ProjectController;
 import de.fzi.cep.sepa.hella.minshuttletime.MinShuttleTimeController;
 import de.fzi.cep.sepa.hella.shuttletime.ShuttleTimeController;
 
-public class Init extends StandaloneModelSubmitter implements Runnable {
+public class EsperInit extends StandaloneModelSubmitter {
 
 	public static void main(String[] args)
 	{
-		new Init().declare();
+		new EsperInit().declare();
 	}
 	
 	public void declare()
@@ -85,21 +81,15 @@ public class Init extends StandaloneModelSubmitter implements Runnable {
 		.add(new DurationOfStayController())
 		.add(new StreamStoppedController());
 
+        DeclarersSingleton.getInstance().setPort(8090);
 
-		// Configure external timing for DEBS Challenge
 		new Thread(new EsperEngineSettings()).start();
-        new Init().init();
+        new EsperInit().init();
 
-		try {
-//			ModelSubmitter.submitAgent(declarers);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
-	@Override
-	public void run() {
-		declare();
-	}
+//	@Override
+//	public void run() {
+//		declare();
+//	}
 }

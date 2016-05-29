@@ -15,6 +15,6 @@
     </listener>
     <servlet-mapping>
         <servlet-name>Client REST Service</servlet-name>
-        <url-pattern>/api/v1.1.1/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>

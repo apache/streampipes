@@ -2,6 +2,8 @@ package de.fzi.cep.sepa.client.standalone.init;
 
 
 import de.fzi.cep.sepa.client.api.*;
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import org.eclipse.jetty.server.Server;
 import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -14,9 +16,10 @@ import java.util.Set;
 
 public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
+
     public void init() {
         URI baseUri = UriBuilder
-                .fromUri(getBaseUri())
+                .fromUri(DeclarersSingleton.getInstance().getBaseUri())
                 .build();
 
         ResourceConfig config = new ResourceConfig(getApiClasses());

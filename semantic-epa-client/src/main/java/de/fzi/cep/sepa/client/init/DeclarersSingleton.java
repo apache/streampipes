@@ -7,6 +7,7 @@ import de.fzi.cep.sepa.client.declarer.Declarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 
 public class DeclarersSingleton {
     private static DeclarersSingleton instance;
@@ -14,12 +15,15 @@ public class DeclarersSingleton {
     private List<SemanticEventProcessingAgentDeclarer> epaDeclarers;
     private List<SemanticEventProducerDeclarer> producerDeclarers;
     private List<SemanticEventConsumerDeclarer> consumerDeclarers;
+    private int port;
+    private String route;
 
 
     private DeclarersSingleton() {
         this.epaDeclarers = new ArrayList<>();
         this.producerDeclarers = new ArrayList<>();
         this.consumerDeclarers = new ArrayList<>();
+        this.route = "/";
     }
 
     public static DeclarersSingleton getInstance() {
@@ -77,5 +81,17 @@ public class DeclarersSingleton {
 
     public List<SemanticEventConsumerDeclarer> getConsumerDeclarers() {
         return consumerDeclarers;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setRoute(String route) {
+        this.route = "/" + route + "/";
+    }
+
+    public String getBaseUri() {
+        return ClientConfiguration.INSTANCE.getHostname() + ":" + port + route;
     }
 }

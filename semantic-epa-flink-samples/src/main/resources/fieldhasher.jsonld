@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://localhost:8094/sepa/fieldhasher",
+    "@id" : "http://localhost:8094/fieldhasher",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "Field Hasher",
     "sepa:hasOutputStrategy" : {

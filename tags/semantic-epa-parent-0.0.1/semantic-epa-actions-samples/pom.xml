@@ -76,7 +76,7 @@
 						<configuration>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>de.fzi.cep.sepa.actions.samples.main.Init</mainClass>
+									<mainClass>de.fzi.cep.sepa.actions.samples.main.ActionsInit</mainClass>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>

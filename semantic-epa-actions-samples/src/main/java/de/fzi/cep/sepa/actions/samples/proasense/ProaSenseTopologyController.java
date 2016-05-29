@@ -70,7 +70,8 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		
 		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		
-		return null;
+        String pipelineId = sec.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+        return new Response(pipelineId, true);
 	}
 
 	@Override

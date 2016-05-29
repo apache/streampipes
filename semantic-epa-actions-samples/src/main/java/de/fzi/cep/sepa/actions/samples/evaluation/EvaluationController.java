@@ -76,8 +76,8 @@ public class EvaluationController extends ActionController {
 		fileWriter = new EvaluationFileWriter(fileParameters);
 		Thread writeThread = new Thread(fileWriter);
 		writeThread.start();
-		
-		return null;
+		String pipelineId = sec.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
 	}
 
 	@Override

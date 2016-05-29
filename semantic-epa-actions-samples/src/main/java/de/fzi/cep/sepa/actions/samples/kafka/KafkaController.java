@@ -86,15 +86,16 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 			kafkaConsumerGroup.run(1);
 			
 			//consumer.setListener(new ProaSenseTopologyPublisher(sec));
-			
-			return null;
+		    String pipelineId = sec.getCorrespondingPipeline();
+            return new Response(pipelineId, true);
 	}
 
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		kafkaConsumerGroup.shutdown();
-		return new Response("", true);
-	}
+
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        kafkaConsumerGroup.shutdown();
+        return new Response(pipelineId, true);
+    }
 
 	@Override
 	public boolean isVisualizable() {

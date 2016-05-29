@@ -69,14 +69,13 @@ public class TableViewController extends ActionController {
 
 	@Override
 	public Response invokeRuntime(SecInvocation invocationGraph) {
-		// TODO Auto-generated method stub
-		return null;
+        String pipelineId = invocationGraph.getCorrespondingPipeline();
+		return new Response(pipelineId, true);
 	}
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
+        return new Response(pipelineId, true);
 	}
 
 	

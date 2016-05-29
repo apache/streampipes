@@ -26,6 +26,7 @@ import de.fzi.cep.sepa.model.impl.Response;
 public abstract class InvocableElement<I extends InvocableSEPAElement, D extends Declarer> extends Element<D> {
 
     protected abstract List<D> getElementDeclarers();
+    protected abstract String getInstanceId(String uri, String elementId);
 
     protected Class<I> clazz;
 
@@ -44,12 +45,12 @@ public abstract class InvocableElement<I extends InvocableSEPAElement, D extends
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
 
-            List<D> sepas = getElementDeclarers();
-            InvocableDeclarer sepa = (InvocableDeclarer) getDeclarerById(elementId);
+            InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
-            if (sepa != null) {
-                String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);
-                RunningInstances.INSTANCE.add(runningInstanceId, graph, sepa.getClass().newInstance());
+            if (declarer != null) {
+//                String runningInstanceId = Util.getInstanceId(graph.getElementId(), "sepa", elementId);
+                String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+                RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                 Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
                 return Util.toResponseString(resp);
             }

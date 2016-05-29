@@ -1,6 +1,6 @@
 {
   "@graph" : [ {
-    "@id" : "http://localhost:8094/sepa/classification/number",
+    "@id" : "http://localhost:8094/classification_number",
     "@type" : "sepa:SemanticEventProcessingAgent",
     "sepa:hasName" : "FlinkNumberClassification",
     "sepa:hasOutputStrategy" : {

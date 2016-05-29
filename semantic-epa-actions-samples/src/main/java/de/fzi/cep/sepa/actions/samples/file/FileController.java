@@ -63,15 +63,16 @@ public class FileController extends ActionController {
 		FileParameters fileParameters = new FileParameters(inputTopic, brokerUrl, path);
 		
 		new Thread(new FileWriter(fileParameters)).start();
-		
-		return null;
+	    String pipelineId = sec.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
+
 	}
 
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 
 	@Override
 	public boolean isVisualizable() {

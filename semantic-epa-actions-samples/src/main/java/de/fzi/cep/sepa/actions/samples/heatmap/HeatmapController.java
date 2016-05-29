@@ -27,7 +27,7 @@ public class HeatmapController extends ActionController {
 
 	@Override
 	public SecDescription declareModel() {
-		SecDescription sec = new SecDescription("maps/heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
+		SecDescription sec = new SecDescription("maps_heatmap", "Heatmap", "Displays a heatmap as Google Maps overlay", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
 		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		
@@ -58,17 +58,16 @@ public class HeatmapController extends ActionController {
 		return sec;
 	}
 
-	@Override
-	public Response invokeRuntime(SecInvocation invocationGraph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Response invokeRuntime(SecInvocation invocationGraph) {
+        String pipelineId = invocationGraph.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
+    }
 
-	@Override
-	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 
 	@Override
 	public boolean isVisualizable() {

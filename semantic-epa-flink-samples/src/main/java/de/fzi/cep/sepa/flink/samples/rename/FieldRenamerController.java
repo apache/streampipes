@@ -34,7 +34,7 @@ public class FieldRenamerController extends AbstractFlinkAgentDeclarer<FieldRena
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/rename", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.");
+		SepaDescription desc = new SepaDescription("rename", "Field Renamer", "Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is needed.");
 		
 		desc.addEventStream(stream1);
 		

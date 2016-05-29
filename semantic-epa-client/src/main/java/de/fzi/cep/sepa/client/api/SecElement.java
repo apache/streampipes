@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.init.RunningInstances;
+import de.fzi.cep.sepa.client.util.Util;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
@@ -25,6 +26,11 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
     @Override
     protected List<SemanticEventConsumerDeclarer> getElementDeclarers() {
         return DeclarersSingleton.getInstance().getConsumerDeclarers();
+    }
+
+    @Override
+    protected String getInstanceId(String uri, String elementId) {
+        return Util.getInstanceId(uri, "sec", elementId);
     }
 
     @GET

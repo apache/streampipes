@@ -79,7 +79,7 @@ public class NotificationController extends ActionController {
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		return null;
+		return new Response(pipelineId, true);
 	}
 
 }

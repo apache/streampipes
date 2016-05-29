@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import de.fzi.cep.sepa.client.declarer.Declarer;
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import de.fzi.cep.sepa.client.transform.Transformer;
 import org.openrdf.model.Graph;
@@ -87,7 +88,7 @@ public abstract class Element<D extends Declarer> {
                 type = "sec/";
             }
 
-            String uri = ModelSubmitter.getBaseUri()+ type + desc.getUri();
+            String uri = DeclarersSingleton.getInstance().getBaseUri()+ type + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
         }

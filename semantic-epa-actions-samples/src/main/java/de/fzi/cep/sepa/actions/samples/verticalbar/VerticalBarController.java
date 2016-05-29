@@ -81,14 +81,15 @@ public class VerticalBarController extends ActionController {
                 return sec;
         }
 
-        @Override
-        public Response invokeRuntime(SecInvocation invocationGraph) {
-                return null;
-        }
+    @Override
+    public Response invokeRuntime(SecInvocation invocationGraph) {
+        String pipelineId = invocationGraph.getCorrespondingPipeline();
+        return new Response(pipelineId, true);
+    }
 
-        @Override
-        public Response detachRuntime(String pipelineId) {
-                return null;
-        }
+    @Override
+    public Response detachRuntime(String pipelineId) {
+        return new Response(pipelineId, true);
+    }
 
 }
