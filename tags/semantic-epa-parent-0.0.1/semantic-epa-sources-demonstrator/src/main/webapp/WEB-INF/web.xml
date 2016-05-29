@@ -8,7 +8,7 @@
 	<context-param>
 		<param-name>org.restlet.application</param-name>
 		<param-value>
-			de.fzi.proasense.demonstrator.sources.Init
+			de.fzi.proasense.demonstrator.sources.SourcesDemonstratorInit
 		</param-value>
 	</context-param>
 	<servlet>

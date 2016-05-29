@@ -8,7 +8,7 @@
 	<context-param>
 		<param-name>org.restlet.application</param-name>
 		<param-value>
-			de.fzi.proasense.hella.main.Init
+			de.fzi.proasense.hella.main.SourcesHellaInit
 		</param-value>
 	</context-param>
 	<servlet>

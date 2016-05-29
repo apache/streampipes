@@ -8,7 +8,7 @@
 	<context-param>
 		<param-name>org.restlet.application</param-name>
 		<param-value>
-			de.fzi.cep.sepa.sources.mhwirth.main.Init
+			de.fzi.cep.sepa.sources.mhwirth.main.SourcesMhwirthInit
 		</param-value>
 	</context-param>
 	<servlet>

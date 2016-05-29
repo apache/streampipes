@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
 import de.fzi.cep.sepa.flink.samples.wordcount.WordCountController;
 
-public class Init extends StandaloneModelSubmitter {
+public class FlinkInit extends StandaloneModelSubmitter {
 
 	public static void main(String[] args) {
         DeclarersSingleton.getInstance()
@@ -21,7 +21,8 @@ public class Init extends StandaloneModelSubmitter {
 				.add(new FieldHasherController())
 				.add(new FieldRenamerController());
 
-        new Init().init(8094);
+        DeclarersSingleton.getInstance().setPort(8094);
+        new FlinkInit().init();
 
 	}
 

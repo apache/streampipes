@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.sources.samples.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
+import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
@@ -20,45 +22,42 @@ import de.fzi.cep.sepa.sources.samples.twitter.TwitterStreamProducer;
 import de.fzi.cep.sepa.sources.samples.wunderbar.WunderbarProducer;
 import de.fzi.cep.sepa.sources.samples.wunderbar.WunderbarProducer2;
 
-public class Init  {
+public class SourcesSamplesInit extends StandaloneModelSubmitter {
 
 	
 	public static void  main(String[] args) 
 	{	
-		new Init().declare();
+		new SourcesSamplesInit().declare();
 	}
 	
 	public void declare() {
-		List<SemanticEventProducerDeclarer> declarers = new ArrayList<SemanticEventProducerDeclarer>();
-
 		ClientConfiguration config = ClientConfiguration.INSTANCE;
 		
-		if (config.isTwitterActive()) declarers.add(new TwitterStreamProducer());
+		if (config.isTwitterActive()) DeclarersSingleton.getInstance().add(new TwitterStreamProducer());
 		if (config.isMhwirthReplayActive())
 		{
-			declarers.add(new DDMProducer());
-			declarers.add(new DrillBitProducer());
-			declarers.add(new EnrichedEventProducer());
-			declarers.add(new RamProducer());
+			DeclarersSingleton.getInstance().add(new DDMProducer())
+			.add(new DrillBitProducer())
+			.add(new EnrichedEventProducer())
+			.add(new RamProducer());
 		}
-		if (config.isRandomNumberActive()) declarers.add(new RandomDataProducer());
-		if (config.isTaxiActive()) declarers.add(new NYCTaxiProducer());
-		if (config.isProveItActive()) declarers.add(new ProveITEventProducer());	
+		if (config.isRandomNumberActive()) DeclarersSingleton.getInstance().add(new RandomDataProducer());
+		if (config.isTaxiActive()) DeclarersSingleton.getInstance().add(new NYCTaxiProducer());
+		if (config.isProveItActive()) DeclarersSingleton.getInstance().add(new ProveITEventProducer());
 		if (config.isHellaReplayActive())
 		{
-			declarers.add(new VisualInspectionProducer());
-			declarers.add(new MontracProducer());
-			declarers.add(new MouldingMachineProducer());
-			declarers.add(new EnvironmentalDataProducer());
+			DeclarersSingleton.getInstance().add(new VisualInspectionProducer())
+			.add(new MontracProducer())
+			.add(new MouldingMachineProducer())
+			.add(new EnvironmentalDataProducer());
 
 		}
-		declarers.add(new WunderbarProducer());
-		declarers.add(new WunderbarProducer2());
-		
-		try {
-//			ModelSubmitter.submitProducer(declarers);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		DeclarersSingleton.getInstance().add(new WunderbarProducer())
+		.add(new WunderbarProducer2());
+
+        DeclarersSingleton.getInstance().setPort(8089);
+
+        new SourcesSamplesInit().init();
+
 	}
 }

@@ -32,7 +32,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.sources.samples.main.Init</mainClass>
+                  <mainClass>de.fzi.cep.sepa.sources.samples.main.SourcesSamplesInit</mainClass>
                 </transformer>
                 <transformer />
               </transformers>
@@ -58,7 +58,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>de.fzi.cep.sepa.sources.samples.main.Init</mainClass>
+              <mainClass>de.fzi.cep.sepa.sources.samples.main.SourcesSamplesInit</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -68,7 +68,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>de.fzi.cep.sepa.sources.samples.main.Init</mainClass>
+              <mainClass>de.fzi.cep.sepa.sources.samples.main.SourcesSamplesInit</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
