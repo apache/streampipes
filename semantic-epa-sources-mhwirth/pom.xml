@@ -16,7 +16,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-standalone</artifactId>
+			<artifactId>semantic-epa-client-container</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
