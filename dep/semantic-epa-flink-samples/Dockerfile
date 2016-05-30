@@ -8,7 +8,7 @@ RUN	tar -zxvf flink-0.10.0-bin-hadoop1-scala_2.10.tgz
 RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
 ADD /flink-conf.yaml ./flink-0.10.0/conf/flink-conf.yaml
-ADD ./de.fzi.cep.sepa/semantic-epa-flink-samples/0.0.1-SNAPSHOT/semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar  /semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar
+ADD ./de.fzi.cep.sepa/semantic-epa-flink-samples/0.0.2-SNAPSHOT/semantic-epa-flink-samples-0.0.2-SNAPSHOT.jar  /semantic-epa-flink-samples.jar
 
 CMD ["./flink-0.10.0/bin/start-local-streaming.sh"]
-ENTRYPOINT ["java", "-jar", "/semantic-epa-flink-samples-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/semantic-epa-flink-samples.jar"]

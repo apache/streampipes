@@ -15,7 +15,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
 public class Utils {
 	
-	public static OutputStrategy getActivityDetection() {
+	public static OutputStrategy getActivityDetectionScheme() {
 		List<EventProperty> outputProperties = new ArrayList<>();
 		outputProperties.add(EpProperties.stringEp("activityId", "http://schema.org/Text"));
 		outputProperties.add(EpProperties.longEp("startTime", "http://schema.org/Date"));
@@ -24,6 +24,19 @@ public class Utils {
 
 		return new FixedOutputStrategy(outputProperties);
 	}
+
+    public static OutputStrategy getPredictedScheme() {
+        List<EventProperty> outputProperties = new ArrayList<>();
+        outputProperties.add(EpProperties.longEp("timestamp", "http://schema.org/Date"));
+		outputProperties.add(EpProperties.stringEp("eventName", "http://schema.org/Text"));
+
+        //TODO
+        outputProperties.add(EpProperties.doubleEp("params", "TODO"));
+        outputProperties.add(EpProperties.stringEp("eventProperties", "TODO"));
+        outputProperties.add(EpProperties.stringEp("pdfType", "TODO"));
+        outputProperties.add(EpProperties.stringEp("timestamps", "TODO"));
+        return new FixedOutputStrategy(outputProperties);
+    }
 	
 	public static ModelInvocationRequestParameters getModelInvocationRequestParameters(String pipelineId, int modelId, String inputTopic,
                                                                                        String outputTopic) {

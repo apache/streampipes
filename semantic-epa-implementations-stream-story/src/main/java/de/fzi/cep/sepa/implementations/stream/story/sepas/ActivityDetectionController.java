@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.implementations.stream.story.activitydetection;
+package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
+import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
 import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
 import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
@@ -31,13 +32,11 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class ActivityDetectionController implements SemanticEventProcessingAgentDeclarer {
-//	public static String STREAMSTORY_URL = "http://streamstory.de/";
-//	public static String STREAMSTORY_URL = "http://requestb.in/za5qurza";
-	 public static String STREAMSTORY_URL = "http://localhost:3000/";
+
 
 	@Override
 	public SepaDescription declareModel() {
-		SepaDescription desc = new SepaDescription("activitydetection", "ActivityDetection",
+		SepaDescription desc = new SepaDescription("sepas", "ActivityDetection",
 				"ActivityDetection description");
 
 		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
@@ -53,7 +52,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		desc.addEventStream(stream);
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(Utils.getActivityDetection());
+		strategies.add(Utils.getActivityDetectionScheme());
 		desc.setOutputStrategies(strategies);
 
 		return desc;
@@ -82,7 +81,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		JsonObject payload = Utils.getModelInvocationMessage(params);
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "invoke").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "invoke").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(payload.toString(), ContentType.APPLICATION_JSON)
 					.execute();
 			Response ress = handleResponse(res, pipelineId);
@@ -108,7 +107,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		JsonObject params = Utils.getModelDetachMessage(pipelineId, modelId);
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(STREAMSTORY_URL + "detach").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "detach").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(params.toString(), ContentType.APPLICATION_JSON)
 					.execute();
 			return handleResponse(res, pipelineId);

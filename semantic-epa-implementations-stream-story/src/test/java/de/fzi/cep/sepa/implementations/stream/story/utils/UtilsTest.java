@@ -16,7 +16,7 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 public class UtilsTest {
 	@Test
 	public void testGetActivityDetection() {
-		OutputStrategy output = Utils.getActivityDetection();
+		OutputStrategy output = Utils.getActivityDetectionScheme();
 
 		assertTrue(output instanceof FixedOutputStrategy);
 
@@ -29,6 +29,23 @@ public class UtilsTest {
 		assertEquals(actual.getEventProperties().get(3).getRuntimeName(), "description");
 
 	}
+
+    @Test
+    public void testGetPredictedScheme() {
+        OutputStrategy output = Utils.getPredictedScheme();
+
+        assertTrue(output instanceof FixedOutputStrategy);
+
+        FixedOutputStrategy actual = (FixedOutputStrategy) output;
+
+        assertEquals(actual.getEventProperties().size(), 6);
+		assertEquals(actual.getEventProperties().get(0).getRuntimeName(), "timestamp");
+		assertEquals(actual.getEventProperties().get(1).getRuntimeName(), "eventName");
+		assertEquals(actual.getEventProperties().get(2).getRuntimeName(), "params");
+		assertEquals(actual.getEventProperties().get(3).getRuntimeName(), "eventProperties");
+        assertEquals(actual.getEventProperties().get(4).getRuntimeName(), "pdfType");
+        assertEquals(actual.getEventProperties().get(5).getRuntimeName(), "timestamps");
+    }
 
 	@Test
 	public void testGetModelInvocationRequestParameters() {

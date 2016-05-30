@@ -1,37 +1,20 @@
 package de.fzi.cep.sepa.implementations.stream.story.main;
 
-import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.client.container.init.ContainerModelSubmitter;
-import de.fzi.cep.sepa.client.declarer.Declarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
-import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
-import de.fzi.cep.sepa.implementations.stream.story.activitydetection.ActivityDetectionController;
-import de.fzi.cep.sepa.sources.mhwirth.ddm.DDMProducer;
+import de.fzi.cep.sepa.implementations.stream.story.sepas.ActivityDetectionController;
 
-import javax.servlet.ServletContextEvent;
 
 public class StreamStoryInit extends ContainerModelSubmitter {
-//public class StreamStoryInit extends StandaloneModelSubmitter {
+    //	public static String STREAMSTORY_URL = "http://streamstory.de/";
+    //	public static String STREAMSTORY_URL = "http://requestb.in/za5qurza";
+    public static String STREAMSTORY_URL = "http://localhost:3000/";
 
     public void init() {
 
         DeclarersSingleton.getInstance().setRoute("stream-story");
         DeclarersSingleton.getInstance()
-                .add(new ActivityDetectionController())
-                .add(new DDMProducer())
-                .add(new TableViewController());
+                .add(new ActivityDetectionController());
 
     }
-
-//    public static void main(String[] args) {
-//        DeclarersSingleton.getInstance().setPort(8081);
-//        DeclarersSingleton.getInstance()
-//                .add(new ActivityDetectionController())
-//                .add(new DDMProducer())
-//                .add(new TableViewController());
-//
-//        new StreamStoryInit().init();
-//    }
-
-
 }

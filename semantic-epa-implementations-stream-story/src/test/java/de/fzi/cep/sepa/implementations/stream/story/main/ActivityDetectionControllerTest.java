@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import javax.json.Json;
 
-import de.fzi.cep.sepa.implementations.stream.story.activitydetection.ActivityDetectionController;
+import de.fzi.cep.sepa.implementations.stream.story.sepas.ActivityDetectionController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,13 +38,13 @@ public class ActivityDetectionControllerTest {
 
 	@Before
 	public void before() {
-		tmpUrl = ActivityDetectionController.STREAMSTORY_URL;
-		ActivityDetectionController.STREAMSTORY_URL = "http://localhost:" + WIREMOCK_PORT + "/";
+		tmpUrl = StreamStoryInit.STREAMSTORY_URL;
+        StreamStoryInit.STREAMSTORY_URL = "http://localhost:" + WIREMOCK_PORT + "/";
 	}
 
 	@After
 	public void after() {
-		ActivityDetectionController.STREAMSTORY_URL = tmpUrl;
+        StreamStoryInit.STREAMSTORY_URL = tmpUrl;
 	}
 
 	@Test
