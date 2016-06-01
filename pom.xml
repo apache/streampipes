@@ -117,6 +117,7 @@
 		<module>semantic-epa-server</module>
 		<module>semantic-epa-storage</module>
 		<module>semantic-epa-model-client</module>
+		<module>semantic-epa-implementations-stream-story</module>
 	</modules>
 
 	<!-- Build Settings -->
