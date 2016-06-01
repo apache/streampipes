@@ -56,7 +56,7 @@ public class Operations {
 
 	public static PipelineOperationStatus startPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
-		return startPipeline(pipeline, false, true, false);
+		return startPipeline(pipeline, true, true, false);
 	}
 	
 	public static PipelineOperationStatus startPipeline( 
@@ -66,7 +66,7 @@ public class Operations {
 
 	public static PipelineOperationStatus stopPipeline( 
 			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
-		return stopPipeline(pipeline, false, true, false);
+		return stopPipeline(pipeline, true, true, false);
 	}
 
 
