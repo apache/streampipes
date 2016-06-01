@@ -127,6 +127,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<finalName>activity-detection</finalName>
+		<finalName>stream-story</finalName>
 	</build>
 </project>
