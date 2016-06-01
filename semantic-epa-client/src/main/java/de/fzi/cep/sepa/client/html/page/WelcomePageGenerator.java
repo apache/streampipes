@@ -19,4 +19,8 @@ public abstract class WelcomePageGenerator<T> {
 	}
 	
 	public abstract List<Description> buildUris();
+
+    public List<Description> getDescriptions() {
+        return descriptions;
+    }
 }
