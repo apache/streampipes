@@ -53,7 +53,7 @@ ADD ./de.fzi.cep.sepa/semantic-epa-sources-hella/0.0.2-SNAPSHOT/semantic-epa-sou
 ADD ./de.fzi.cep.sepa/semantic-epa-sources-mhwirth/0.0.2-SNAPSHOT/semantic-epa-sources-mhwirth-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-mhwirth.war
 ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/0.0.2-SNAPSHOT/semantic-epa-sources-proasense-monitoring-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-monitoring.war
 ADD ./de.fzi.cep.sepa/semantic-epa-sources-demonstrator/0.0.2-SNAPSHOT/semantic-epa-sources-demonstrator-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
-
+ADD ./de.fzi.cep.sepa/semantic-epa-implementations-stream-story/0.0.2-SNAPSHOT/stream-story.war /usr/local/tomcat/webapps/stream-story.war
 
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml
