@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
@@ -36,7 +37,7 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
     @GET
     @Path("{elementId}/{runningInstanceId}")
     @Produces(MediaType.TEXT_HTML)
-    public String getHtml(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+    public Response getHtml(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
 
         InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
         NamedSEPAElement description = RunningInstances.INSTANCE.getDescription(runningInstanceId);
@@ -46,10 +47,23 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
 
             SemanticEventConsumerDeclarer instanceDeclarer = (SemanticEventConsumerDeclarer) runningInstance;
             SecInvocation desctionDeclarer = (SecInvocation) description;
-            return instanceDeclarer.getHtml(desctionDeclarer);
+
+
+            return getResponse(instanceDeclarer.getHtml(desctionDeclarer));
+
 
         } else {
-            return "Error in element " + elementId;
-        }
+            return getResponse("Error in element " + elementId);
+       }
+    }
+
+    private Response getResponse(String text) {
+        return Response.ok() //200
+                    .entity(text)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                    .header("Access-Control-Allow-Credentials", "false")
+                    .header("Access-Control-Max-Age", "60")
+                    .allow("OPTIONS").build();
     }
 }

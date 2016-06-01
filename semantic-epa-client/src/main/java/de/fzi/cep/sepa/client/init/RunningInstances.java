@@ -18,7 +18,12 @@ public enum RunningInstances {
     }
 
     public InvocableDeclarer getInvocation(String id) {
-        return runningInstances.get(id).getInvocation();
+        ElementInfo result = runningInstances.get(id);
+        if (result != null) {
+            return result.getInvocation();
+        } else {
+            return null;
+        }
     }
 
     public NamedSEPAElement getDescription(String id) {
