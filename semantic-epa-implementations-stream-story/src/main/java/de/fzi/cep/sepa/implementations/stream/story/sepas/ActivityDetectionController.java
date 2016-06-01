@@ -7,12 +7,6 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
-import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
-import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
-import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
-import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
-import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
-import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
@@ -20,6 +14,12 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
+import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
+import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
+import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
+import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
+import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
@@ -127,7 +127,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 		try {
 			HttpResponse resp = response.returnResponse();
-			if (200 == resp.getStatusLine().getStatusCode()) {
+			if (200 == resp.getStatusLine().getStatusCode() || 204 == resp.getStatusLine().getStatusCode()) {
 				return new Response(elementId, true);
 			} else {
 				return new Response(elementId, false,
