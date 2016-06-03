@@ -5,17 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSink;
-import org.apache.flink.util.Collector;
-
 import com.squareup.javapoet.ClassName;
 
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
@@ -34,7 +30,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 /**
  * Java File Classes (JFC)
@@ -52,13 +47,11 @@ public abstract class JFC {
 	public static ClassName OBJECT = ClassName.get("", "Object");
 	public static ClassName EXCEPTION = ClassName.get("", "Exception");
 
-	public static ClassName DATA_STREAM = ClassName.get(DataStream.class);
-	public static ClassName DATA_STREAM_SINK = ClassName.get(DataStreamSink.class);
-	public static ClassName FLAT_MAP_FUNCTION = ClassName.get(FlatMapFunction.class);
-	public static ClassName COLLECTOR = ClassName.get(Collector.class);
-	
-	
-	
+	public static ClassName DATA_STREAM = ClassName.get("org.apache.flink.streaming.api.datastream", "DataStream");
+	public static ClassName DATA_STREAM_SINK = ClassName.get("org.apache.flink.streaming.api.datastream", "DataStreamSink");
+	public static ClassName FLAT_MAP_FUNCTION = ClassName.get("org.apache.flink.api.common.functions", "FlatMapFunction");
+	public static ClassName COLLECTOR = ClassName.get("org.apache.flink.util", "Collector");
+
 	public static ClassName SEPA_DESCRIPTION = ClassName.get(SepaDescription.class);
 	public static ClassName SEC_DESCRIPTION = ClassName.get(SecDescription.class);
 	public static ClassName SEPA_INVOCATION = ClassName.get(SepaInvocation.class);

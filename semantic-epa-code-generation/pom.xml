@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
@@ -21,6 +22,56 @@
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-flink</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-runtime</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-shaded-hadoop2</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-optimizer</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-connector-elasticsearch</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-java</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-connector-kafka</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-clients</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.flink</groupId>
+					<artifactId>flink-streaming-java</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.glassfish.jersey.containers</groupId>
+					<artifactId>jersey-container-servlet</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.rendersnake</groupId>
+					<artifactId>rendersnake</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>javax.servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
