@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.flink.samples.enrich.timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
@@ -19,7 +20,6 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampParameters>{
 
@@ -32,7 +32,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("enrich/timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
+		SepaDescription desc = new SepaDescription("enrich_timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
 		
 		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
 		Frequency minFrequency = new Frequency(1);

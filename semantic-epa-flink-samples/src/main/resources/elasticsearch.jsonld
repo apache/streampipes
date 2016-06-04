@@ -12,7 +12,7 @@
 				"@id" : "urn:fzi.de:mappingpropertyunary:WAXGnf"
 				}
 			 ],
-			"sepa:hasURI" : "http://localhost:8094/action/elasticsearch",
+			"sepa:hasURI" : "http://localhost:8094/elasticsearch",
 			"sepa:requires" : {
 				"@id" : "urn:fzi.de:eventstream:RWnLLy"
 			},

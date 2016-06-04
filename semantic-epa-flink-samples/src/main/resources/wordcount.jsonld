@@ -9,7 +9,7 @@
     "sepa:hasStaticProperty" : {
       "@id" : "urn:fzi.de:mappingpropertyunary:swjegv"
     },
-    "sepa:hasURI" : "http://frosch.fzi.de:8094/sepa/wordcount",
+    "sepa:hasURI" : "http://frosch.fzi.de:8094/wordcount",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:QSvrJe"
     },

@@ -11,7 +11,7 @@
     }, {
       "@id" : "urn:fzi.de:oneofstaticproperty:ZplwIQ"
     } ],
-    "sepa:hasURI" : "http://localhost:8094/sepa/fieldhasher",
+    "sepa:hasURI" : "http://localhost:8094/fieldhasher",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:raodkr"
     },
