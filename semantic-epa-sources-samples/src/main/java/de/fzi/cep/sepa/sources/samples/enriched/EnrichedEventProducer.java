@@ -11,7 +11,7 @@ public class EnrichedEventProducer implements SemanticEventProducerDeclarer{
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/enriched", "Enriched Event", "");
+		SepDescription sep = new SepDescription("source_enriched", "Enriched Event", "");
 		return sep;
 	}
 

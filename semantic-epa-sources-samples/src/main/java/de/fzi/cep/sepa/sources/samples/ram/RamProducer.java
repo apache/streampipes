@@ -11,7 +11,7 @@ public class RamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/ram", "Ram", "Ram");
+		SepDescription sep = new SepDescription("source_ram", "Ram", "Ram");
 		return sep;
 	}
 

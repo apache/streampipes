@@ -43,5 +43,11 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 	public boolean isExecutable() {
 		return true;
 	}
+	
+	public static void main(String[] args) {
+		EnrichedStreamReplay esr = new EnrichedStreamReplay();
+		esr.topicName = "FZI.SEPA.SEP.Enriched.Replay";
+		esr.executeStream();
+	}
 
 }

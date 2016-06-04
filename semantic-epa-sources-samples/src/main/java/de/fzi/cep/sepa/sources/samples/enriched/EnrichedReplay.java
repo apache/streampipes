@@ -43,7 +43,7 @@ public class EnrichedReplay implements Runnable {
 								long diff = currentTime - previousTime;		
 								if (diff > 0) 
 								{
-									Thread.sleep(diff);
+									//Thread.sleep(diff);
 								}				
 								previousTime = currentTime;
 								String json = buildJsonString(records);
