@@ -68,6 +68,7 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
 		desc.setOutputStrategies(strategies);
+		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
 		
 		return desc;
