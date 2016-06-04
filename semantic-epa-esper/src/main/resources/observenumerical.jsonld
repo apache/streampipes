@@ -13,7 +13,7 @@
     }, {
       "@id" : "urn:fzi.de:mappingpropertyunary:NSSPcr"
     } ],
-    "sepa:hasURI" : "http://localhost:8090/sepa/observenumericalvalue",
+    "sepa:hasURI" : "http://localhost:8090/observenumericalvalue",
     "sepa:requires" : {
       "@id" : "urn:fzi.de:eventstream:kVQZKA"
     },
