@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.flink.samples.classification.number;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,7 @@ import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -46,7 +47,7 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 		desc.addEventStream(stream1);
 		
 		List<StaticProperty> staticProperties = new ArrayList<>();
-		staticProperties.add(new FreeTextStaticProperty("to_classify", "Field to classify", "Name of the field that should be classified"));
+		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementName()), "to_classify", "Field to classify", "Name of the field that should be classified"));
 		
 		List<SupportedProperty> supportedProperties = new ArrayList<>();
 		supportedProperties.add(new SupportedProperty(SO.MinValue, true));
