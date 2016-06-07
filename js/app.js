@@ -486,12 +486,12 @@ angular
 		   },
 			 {
 				 link : 'streampipes.sensors',
-				 title: 'Sensor Configurator',
+				 title: 'Pipeline Element Generator',
 				 icon: 'social:ic_share_24px'
             },
 			 {
 				 link : 'streampipes.ontology',
-				 title: 'Knowledge Configurator',
+				 title: 'Knowledge Management',
 				 icon: 'social:ic_share_24px'
            },
            {
