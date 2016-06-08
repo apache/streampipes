@@ -118,7 +118,7 @@
 		<module>semantic-epa-storage</module>
 		<module>semantic-epa-model-client</module>
 		<module>semantic-epa-implementations-stream-story</module>
-		<module>semantic-epa-client-osgi</module>
+<!-- 		<module>semantic-epa-client-osgi</module> -->
 		<module>semantic-epa-units</module>
 	</modules>
 
