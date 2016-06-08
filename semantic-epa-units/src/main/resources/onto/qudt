@@ -1,0 +1,1903 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:html="http://uispin.org/html#"
+    xmlns:lm-cat="http://www.linkedmodel.org/catalog/lm#"
+    xmlns:quantity-1.1="http://qudt.org/1.1/schema/quantity#"
+    xmlns:letrs="http://uispin.org/letrs#"
+    xmlns:lm-cat-1.2="http://www.linkedmodel.org/1.2/catalog/lm#"
+    xmlns:arg="http://spinrdf.org/arg#"
+    xmlns:qudt-1.1="http://qudt.org/1.1/schema/qudt#"
+    xmlns:omv="http://omv.ontoware.org/2005/05/ontology#"
+    xmlns:qudt-unit-1.1="http://qudt.org/1.1/vocab/unit#"
+    xmlns:qudt-quantity-1.1="http://qudt.org/1.1/vocab/quantity#"
+    xmlns:quantity="http://qudt.org/schema/quantity#"
+    xmlns:qudt-dimension="http://qudt.org/vocab/dimension#"
+    xmlns:void="http://rdfs.org/ns/void#"
+    xmlns:dtype="http://www.linkedmodel.org/schema/dtype#"
+    xmlns:lmdoc="http://www.linkedmodel.org/oui/lmdoc#"
+    xmlns:tui="http://uispin.org/tui#"
+    xmlns:sp="http://spinrdf.org/sp#"
+    xmlns:style="http://uispin.org/style#"
+    xmlns:qudt-quantity="http://qudt.org/vocab/quantity#"
+    xmlns:voag-1.0="http://voag.linkedmodel.org/1.0/schema/voag#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:let="http://uispin.org/let#"
+    xmlns:dimension="http://qudt.org/schema/dimension#"
+    xmlns:xhtml="http://topbraid.org/xhtml#"
+    xmlns:spl="http://spinrdf.org/spl#"
+    xmlns:unit="http://qudt.org/vocab/unit#"
+    xmlns:sxml="http://topbraid.org/sxml#"
+    xmlns:qudt-cat="http://qudt.org/catalog/qudt#"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions#"
+    xmlns:vaem-1.2="http://www.linkedmodel.org/1.2/schema/vaem#"
+    xmlns:voag="http://voag.linkedmodel.org/schema/voag#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dimension-1.1="http://qudt.org/1.1/schema/dimension#"
+    xmlns:spin="http://spinrdf.org/spin#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:qudt="http://qudt.org/schema/qudt#"
+    xmlns:smf="http://topbraid.org/sparqlmotionfunctions#"
+    xmlns:qudt-cat-11="http://qudt.org/1.1/catalog/qudt#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:composite="http://www.topbraid.org/2007/05/composite.owl#"
+    xmlns:qudt-dimensionalunit-1.1="http://qudt.org/1.1/vocab/dimensionalunit#"
+    xmlns:vaem="http://www.linkedmodel.org/schema/vaem#"
+    xmlns:catalog="http://www.linkedmodel.org/schema/catalog#"
+    xmlns:dtype-1.0="http://www.linkedmodel.org/1.0/schema/dtype#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:css="http://uispin.org/css#"
+    xmlns:ui="http://uispin.org/ui#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:spra="http://spinrdf.org/spra#"
+    xmlns:vann="http://purl.org/vocab/vann/"
+    xmlns:qudt-dimension-1.1="http://qudt.org/1.1/vocab/dimension#"
+    xmlns:catalog-1.0="http://www.linkedmodel.org/1.2/schema/catalog#"
+    xmlns:creativecommons="http://creativecommons.org/ns#"
+    xmlns:spr="http://spinrdf.org/spr#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://qudt.org/schema/qudt" > 
+  <rdf:Description rdf:about="#MolalConcentrationUnit">
+    <rdfs:subClassOf rdf:resource="#ConcentrationUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Molal Concentration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AreaTimeTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area Time Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CountingUnit">
+    <skos:closeMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_amount"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">All units about counts. Examples are Atomic Number, Number, Number per Year, Percent and Sample per Second.</dc:description>
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:subClassOf rdf:resource="#DimensionlessUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Counting Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A0">
+    <owl:onProperty rdf:resource="#description"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PhotometryUnit">
+    <rdfs:subClassOf rdf:resource="#OpticsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Photometry Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    <rdf:first rdf:nodeID="A2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargeLineDensityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The linear charge density is the amount of electric charge in a line. It is measured in coulombs per metre (C/m). Since there are positive as well as negative charges, the charge density can take on negative values. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricChargeDensityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Line Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RespiratoryRateUnit">
+    <rdfs:subClassOf rdf:resource="#BiomedicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Respiratory Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#symbol">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The symbol for a unit is a glyph that is used to represent the unit in a compact form. For example, the symbol for the US Dollar is $. This contrasts with unit:abbreviation, which gives a short alphanumeric abbreviation for the unit. (I.e. USD for US Dollar).</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#literal"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">symbol</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#typePrefix">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">type prefix</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A3">
+    <owl:withRestrictions rdf:nodeID="A4"/>
+    <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CurvatureUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The canonicall example of extrinsic curvature is that of a circle, which has curvature equal to the inverse of its radius everywhere. Smaller circles bend more sharply, and hence have higher curvature. The curvature of a smooth curve is defined as the curvature of its osculating circle at each point. The osculating circle of a sufficiently smooth plane curve at a given point on the curve is the circle whose center lies on the inner normal line and whose curvature is the same as that of the given curve at that point. This circle is tangent to the curve at the given point.&#xD;
+&#xD;
+That is, given a point P on a smooth curve C, the curvature of C at P is defined to be 1/R where R is the radius of the osculating circle of C at P. The magnitude of curvature at points on physical curves can be measured in diopters (also spelled dioptre) — this is the convention in optics. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Curvature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SystemOfNaturalUnits">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Natural_units"/>
+    <skos:closeMatch rdf:resource="http://dbpedia.org/resource/Category:Natural_units"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">In physics, natural units are physical units of measurement based only on universal physical constants. For example the elementary charge e is a natural unit of electric charge, or the speed of light c is a natural unit of speed. A purely natural system of units is defined in such a way that some set of selected universal physical constants are normalized to unity; that is, their numerical values in terms of these units become exactly 1. Examples are Planck Units and Atomic Units. Atomic units (au or a.u.) form a system of natural units which is especially convenient for atomic physics calculations. There are two different kinds of atomic units, which one might name Hartree atomic units[1] and Rydberg atomic units, which differ in the choice of the unit of mass and charge. Planck units are unique among systems of natural units, because they are not defined in terms of properties of any prototype, physical object, or even elementary particle.  [Wikipeda]</dc:description>
+    <rdfs:subClassOf rdf:resource="#SystemOfUnits"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">System of natural units</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LengthUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_length"/>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Length Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PowerPerAreaUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Power Per Area Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#NotUsedWithSIUnit">
+    <owl:disjointWith rdf:resource="#UsedWithSIUnit"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A type specification for all units that are not used in the SI standard.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#NonSIUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Not Used With SI Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DerivedUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A DerivedUnit is a type specification for units that are derived from other units.</dc:description>
+    <rdfs:subClassOf rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Derived Unit</rdfs:label>
+    <rdf:type rdf:nodeID="A5"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A6">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UEM</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VolumeThermalExpansionUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When the temperature of a substance changes, the energy that is stored in the intermolecular bonds between atoms changes. When the stored energy increases, so does the length of the molecular bonds. As a result, solids typically expand in response to heating and contract on cooling; this dimensional response to temperature change is expressed by its coefficient of thermal expansion.&#xD;
+&#xD;
+Different coefficients of thermal expansion can be defined for a substance depending on whether the expansion is measured by:&#xD;
+&#xD;
+    * linear thermal expansion&#xD;
+    * area thermal expansion&#xD;
+    * volumetric thermal expansion&#xD;
+&#xD;
+These characteristics are closely related. The volumetric thermal expansion coefficient can be defined for both liquids and solids. The linear thermal expansion can only be defined for solids, and is common in engineering applications.&#xD;
+&#xD;
+Some substances expand when cooled, such as freezing water, so they have negative thermal expansion coefficients. &#xD;
+&#xD;
+For exactly isotropic materials, the volumetric thermal expansion coefficient is very closely approximated as three times the linear coefficient. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermalExpansionUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Volume Thermal Expansion Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#elementKind">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">element kind</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Unit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_measure"/>
+    <rdfs:subClassOf rdf:nodeID="A7"/>
+    <rdfs:subClassOf rdf:nodeID="A8"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="A9"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A unit of measure, or unit, is a particular quantity value that has been chosen as a scale for measuring other quantities the same kind (more generally of equivalent dimension). For example, the meter is a quantity of length that has been rigorously defined and standardized by the BIPM (International Board of Weights and Measures). Any measurement of the length can be expressed as a number multiplied by the unit meter. More formally, the value of a physical quantity Q with respect to a unit (U) is expressed as the scalar multiple of a real number (n) and U, as  Q = nU.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A10"/>
+    <rdfs:subClassOf rdf:nodeID="A11"/>
+    <rdfs:subClassOf rdf:nodeID="A12"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Unit</rdfs:label>
+    <rdfs:subClassOf rdf:nodeID="A13"/>
+    <rdfs:subClassOf rdf:nodeID="A14"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MagnetomotiveForceUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetomotive force is any physical cause that produces magnetic flux. In other words, it is a field of magnetism (measured in tesla) that has area (measured in square meters), so that (Tesla)(Area)= Flux. It is analogous to electromotive force or voltage in electricity. MMF usually describes electric wire coils in a way so scientists can measure or predict the actual force a wire coil can generate. [Wikipedia]&#xD;
+&#xD;
+This class contains the following instance(s): "Ampere turn", "Gilbert", "Oersted centimeter", "Unit pole".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetomotive Force Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SpecificHeatVolumeUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class contains units of measure for specific heat capacity at a constant volume.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specific Heat Volume Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A2">
+    <xsd:maxLength rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1024</xsd:maxLength>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemAllowedUnit">
+    <owl:inverseOf rdf:resource="#allowedUnitOfSystem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit system with a unit of measure that is not defined by or part of the system, but is allowed for use within the system. An allowed unit must be convertible to some dimensionally eqiuvalent unit that is defined by the system.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#systemUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">allowed unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnergyAndWorkPerMassAmountOfSubstance">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label>Energy and work per mass amount of substance</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RadianceUnit">
+    <rdfs:subClassOf rdf:resource="#RadiometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Radiance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AngularMassUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The units of angular mass have dimensions of mass * area. They are used to measure the moment of inertia.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Angular Mass Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PhysicalUnit">
+    <rdfs:subClassOf rdf:nodeID="A15"/>
+    <rdfs:subClassOf rdf:resource="#ScienceAndEngineeringUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Physical Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#conversionCoefficient">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">conversion coefficient</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ComputingUnit">
+    <skos:closeMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_information"/>
+    <rdfs:subClassOf rdf:nodeID="A16"/>
+    <rdfs:subClassOf rdf:resource="#ScienceAndEngineeringUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Computing Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#InverseAmountOfSubstanceUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Inverse Amount Of Substance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalEnergyUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Energy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectrochemistryUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electrochemistry Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A17">
+    <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#float">100.00</xsd:maxInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="#basisElement">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">basis element</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TemperaturePerTimeUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Temperature per time unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#description">
+    <rdfs:subPropertyOf rdf:resource="http://www.linkedmodel.org/schema/vaem#description"/>
+    <rdfs:range rdf:resource="#string1024"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">description</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricFluxDensityUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricChargeDensityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Flux Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#unit">
+    <owl:inverseOf rdf:resource="#unitFor"/>
+    <dc:description>A reference to the unit of measure of a quantity (variable or constant) of interest.</dc:description>
+    <rdfs:range rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VolumeUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_volume"/>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Volume Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#abbreviation">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An abbreviation for a unit is a short (usually 5 characters or less) string that is used in place of the full name for the unit in contexts where space is limited, or where using the abbreviation will enhance readability.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">abbreviation</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RadiologyUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_radiation_dose"/>
+    <rdfs:subClassOf rdf:nodeID="A18"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Radiology Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A19">
+    <xsd:maxInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">100</xsd:maxInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://voag.linkedmodel.org/schema/voag#hasLicenseType">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MolarHeatCapacityUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Molar Heat Capacity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassAmountOfSubstanceTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Amount Of Substance Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnergyPerAreaUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Units that quantify energy per unit area.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Energy Per Area Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#coherentUnitSystem">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A system of units is coherent with respect to a system of quantities and equations if the system of units is chosen in such a way that the equations between numerical values have exactly the same form (including the numerical factors) as the corresponding equations between the quantities. In such a coherent system, no numerical factor other than the number 1 ever occurs in the expressions for the derived units in terms of the base units.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#unitSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coherent unit system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LengthTemperatureTimeUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Length Temperature Time Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DimensionlessUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Dimensionless Unit is a quantity for which all the exponents of the factors corresponding to the base quantities in its quantity dimension are zero.</dc:description>
+    <rdfs:subClassOf rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimensionless Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/title">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">title</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargeDensityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The linear, surface, or volume charge density is the amount of electric charge in a line, surface, or volume. It is measured in coulombs per metre (C/m), square metre (C/m^2), or cubic metre (C/m^3), respectively. Since there are positive as well as negative charges, the charge density can take on negative values. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A20">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    <rdf:first rdf:nodeID="A17"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnergyPerElectricChargeUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ratio of energy to electric charge arises repeatedly in electrodynamics. It is the dimensional equivalent to the electrostatic potential and electromotive force. In both cases, the SI unit is the volt, or newton meters per coulomb.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Energy per Electric Charge Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A21">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UB</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A22">
+    <owl:onProperty rdf:resource="#order"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#NonSIUnit">
+    <owl:disjointWith rdf:resource="#SIUnit"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Non-SI unit. Typically an imperial measure.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Non SI Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CurrentPerAngleUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Current Per Angle Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnergyDensityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Units that measure energy density, i.e. energy per unit volume.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Energy Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalEnergyLengthUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Energy Length Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalResistivityUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Resistivity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A23">
+    <owl:withRestrictions rdf:nodeID="A1"/>
+    <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PowerUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_power"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Power Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AtomicChargeUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The electric charge of an ion, equal to the number of electrons the atom has gained or lost in its ionization multiplied by the charge on one electron.  This class contains the following instance(s): "atomic number".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#AtomicPhysicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Atomic Charge Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CapacitanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_capacitance"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Capacitance is a measure of the amount of electric charge stored (or separated) for a given electric potential.&#xD;
+&#xD;
+This class contains the following instance(s): "Abfarad", "Farad", "MicroFarad", "NanoFarad", "PicoFarad", "Statfarad".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Capacitance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MagneticFluxUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_magnetic_flux"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetic flux is a measure of quantity of magnetism, taking into account the strength and the extent of a magnetic field. The SI unit of magnetic flux is the weber (in derived units: volt-seconds), and the unit of magnetic field is the weber per square meter, or tesla. [Wikipedia]&#xD;
+&#xD;
+This class contains the following instance(s): "Maxwell", "Unit pole", "Weber".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetic Flux Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ExposureUnit">
+    <rdfs:subClassOf rdf:resource="#RadiologyUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Exposure Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargeVolumeDensityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The volume charge density is the amount of electric charge in a volume. It is measured in coulombs per cubic metre (C/m^3).  Since there are positive as well as negative charges, the charge density can take on negative values. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricChargeDensityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Volume Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LuminousIntensityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_luminous_intensity"/>
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luminous Intensity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemPrefixUnit">
+    <owl:inverseOf rdf:resource="#prefixUnitOfSystem"/>
+    <rdfs:subPropertyOf rdf:resource="#systemDefinedUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">prefix unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A24">
+    <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0.00</xsd:minInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AngleUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_angle"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">All units relating to specificaiton of angles. </dc:description>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:subClassOf rdf:resource="#DimensionlessUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Angle unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemCoherentDerivedUnit">
+    <owl:inverseOf rdf:resource="#coherentDerivedUnitOfSystem"/>
+    <rdfs:subPropertyOf rdf:resource="#systemDerivedUnit"/>
+    <rdfs:subPropertyOf rdf:resource="#systemCoherentUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coherent derived unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#referenceThing">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">reference thing</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MagneticFluxDensityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_magnetic_flux_density"/>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetic Flux Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AngularVelocityUnit">
+    <rdfs:subClassOf rdf:resource="#VelocityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Angular Velocity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#dimensionInverse">
+    <owl:inverseOf rdf:resource="#dimensionInverse"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dimension inverse</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LinearVelocityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_velocity"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Velocity units measure change of length per unit time. Examples include meters per second, miles per hour, knots, etc. </qudt:description>
+    <rdfs:subClassOf rdf:resource="#VelocityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Velocity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A25">
+    <owl:onProperty rdf:resource="#currencyExponent"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemUnit">
+    <owl:inverseOf rdf:resource="#unitOfSystem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a system of units with a unit of measure that is either a) defined by the system, or b) accepted for use by the system and is convertible to a unit of equivalent dimension that is defined by the system. Systems of units may distinguish between base and derived units. Base units are the units which measure the base quantities for the corresponding system of quantities. The base units are used to define units for all other quantities as products of powers of the base units. Such units are called derived units for the system.</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">system unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/rights">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">rights</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#QuantityKindCategory">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quantity Kind Category</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PrefixUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prefixes are either binary or decimal.</dc:description>
+    <rdfs:subClassOf rdf:resource="#DimensionlessUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prefix Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AreaThermalExpansionUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When the temperature of a substance changes, the energy that is stored in the intermolecular bonds between atoms changes. When the stored energy increases, so does the length of the molecular bonds. As a result, solids typically expand in response to heating and contract on cooling; this dimensional response to temperature change is expressed by its coefficient of thermal expansion.&#xD;
+&#xD;
+Different coefficients of thermal expansion can be defined for a substance depending on whether the expansion is measured by:&#xD;
+&#xD;
+    * linear thermal expansion&#xD;
+    * area thermal expansion&#xD;
+    * volumetric thermal expansion&#xD;
+&#xD;
+These characteristics are closely related. The volumetric thermal expansion coefficient can be defined for both liquids and solids. The linear thermal expansion can only be defined for solids, and is common in engineering applications.&#xD;
+&#xD;
+Some substances expand when cooled, such as freezing water, so they have negative thermal expansion coefficients.&#xD;
+&#xD;
+For exactly isotropic materials, the area thermal expansion coefficient is very closely approximated as twice the linear coefficient.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermalExpansionUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area Thermal Expansion Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#UsedWithSIUnit">
+    <owl:disjointWith rdf:resource="#NotUsedWithSIUnit"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A type specification for all units that are used in the SI standard.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#NonSIUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Used With SI Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#unitSystem">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">unit system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#conversionOffset">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">conversion offset</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassAmountOfSubstanceUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Amount Of Substance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ChemistryUnit">
+    <rdfs:subClassOf rdf:nodeID="A26"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chemistry Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LinearAccelerationUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_acceleration"/>
+    <rdfs:subClassOf rdf:resource="#AccelerationUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Acceleration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#exactConstant">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">exact constant</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ResistanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_resistance"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electrical resistance is a ratio of the degree to which an object opposes an electric current through it, measured in ohms. Its reciprocal quantity is electrical conductance measured in siemens.&#xD;
+&#xD;
+This class contains the following instance(s): "Abohm", "Ohm", "Statohm".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Resistance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemDerivedUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a system of units to a unit of measure that is defined within the system in terms of the base units for the system. That is, the derived unit is defined as a product of the base units for the system raised to some rational power.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#systemDefinedUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">derived unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A27">
+    <owl:onProperty rdf:resource="#abbreviation"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RateOfReturnUnit">
+    <rdfs:subClassOf rdf:resource="#FinancialUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Rate Of Return Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AmountOfSubstanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_amount_of_substance"/>
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amount Of Substance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DataRateUnit">
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:subClassOf rdf:resource="#ComputingUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A28">
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+    <rdf:first rdf:nodeID="A19"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#definedUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemDefinedUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure with the unit system that defines the unit.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#unitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">defined unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/description">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">description</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#referenceUnit">
+    <rdfs:subPropertyOf rdf:resource="#referenceThing"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">reference unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TemperatureUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_temperature"/>
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A16">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UCPG</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/subject">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">subject</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/creator">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">creator</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A29">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UAP</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CommunicationsUnit">
+    <rdfs:subClassOf rdf:nodeID="A30"/>
+    <rdfs:subClassOf rdf:resource="#ScienceAndEngineeringUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Communications Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#baseDimensionEnumeration">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property associates a system of quantities with an enumeration that enumerates the base dimensions of the system in canonical order.</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">base dimension enumeration</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LogarithmicUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Logarithmic units are abstract mathematical units that can be used to express any quantities (physical or mathematical) that are defined on a logarithmic scale, that is, as being proportional to the value of a logarithm function. Examples of logarithmic units include common units of information and entropy, such as the bit, and the byte, as well as units of relative signal strength magnitude such as the decibel.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Logarithmic Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricCurrentUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_current"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric current is the flow (movement) of electric charge. The SI unit of electric current is the ampere, and electric current is measured using an ammeter. This class contains the following instance(s): "Abampere", "Ampere", "Biot", "Statampere".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Current Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A14">
+    <owl:onProperty rdf:resource="#symbol"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SIUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:SI_units"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An SI unit</qudt:description>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SI Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AreaAngleUnit">
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area Angle Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricCurrentDensityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric current density is a measure of the density of flow of a conserved charge. Usually the charge is the electric charge, in which case the associated current density is the electric current per unit area of cross section, but the term current density can also be applied to other conserved quantities. It is defined as a vector whose magnitude is the current per cross-sectional area. [Wikipedia]&#xD;
+&#xD;
+In SI units, the electric current density is measured in amperes per square metre. This class contains the following instance(s): "Ampere per square meter".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Current Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A31">
+    <owl:onProperty rdf:resource="#element"/>
+    <owl:allValuesFrom rdf:resource="#EnumeratedValue"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalDiffusivityUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Diffusivity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A32">
+    <owl:onProperty rdf:resource="#literal"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalConductivityUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Conductivity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A33">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UST</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#integerPercentage">
+    <owl:equivalentClass rdf:nodeID="A3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">integer percentage</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VideoFrameRateUnit">
+    <rdfs:subClassOf rdf:resource="#ComputingUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Video Frame Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnergyAndWorkUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_energy"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Energy And Work Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#literal">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">literal</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#baseQuantityKindOfSystem">
+    <owl:inverseOf rdf:resource="#systemBaseQuantityKind"/>
+    <rdfs:subPropertyOf rdf:resource="#quantityKindOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">base quantity kind of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AtomicPhysicsUnit">
+    <rdfs:subClassOf rdf:nodeID="A29"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Atomic Physics Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AbsorbedDoseUnit">
+    <rdfs:subClassOf rdf:resource="#RadiologyUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Absorbed Dose Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A5">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UD</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#currencyExponent">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The currency exponent indicates the number of decimal places between a major currency unit and its minor currency unit. For example, the US dollar is the major currency unit of the United States, and the US cent is the minor currency unit. Since one cent is 1/100 of a dollar, the US dollar has a currency exponent of 2. However, the Japanese Yen has no minor currency units, so the yen has a currency exponent of 0.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">currency exponent</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DecimalPrefixUnit">
+    <rdfs:subClassOf rdf:resource="#PrefixUnit"/>
+    <rdfs:subClassOf rdf:resource="#SIUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Decimal Prefix Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MagneticFieldStrengthUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_magnetic_induction"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A magnetic field is a vector field that permeates space and which can exert a magnetic force on moving electric charges and on magnetic dipoles (such as permanent magnets). [Wikipedia] The strength of a magnetic field at a point in space is the magnitude of the field vector at that point.&#xD;
+&#xD;
+This class contains the following instance(s): "Ampere per meter", "Ampere turn per inch", "Ampere turn per meter", "Oersted".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Magnetic Field Strength Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A13">
+    <owl:onProperty rdf:resource="#conversionOffset"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemDefinedUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit system with a unit of measure that is defined by the system.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#systemUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">defined unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#generalization">
+    <owl:inverseOf rdf:resource="#specialization"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a quantity kind to its generalization. A quantity kind, PARENT, is a generalization of the quantity kind CHILD only if&#xD;
+&#xD;
+1. PARENT and CHILD have the same dimensions in every system of quantities;&#xD;
+2. Every unit that is a measure of quantities of kind CHILD is also a valid measure of quantities of kind PARENT.</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">generalization</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalExpansionUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When the temperature of a substance changes, the energy that is stored in the intermolecular bonds between atoms changes. When the stored energy increases, so does the length of the molecular bonds. As a result, solids typically expand in response to heating and contract on cooling; this dimensional response to temperature change is expressed by its coefficient of thermal expansion.&#xD;
+&#xD;
+Different coefficients of thermal expansion can be defined for a substance depending on whether the expansion is measured by:&#xD;
+&#xD;
+    * linear thermal expansion&#xD;
+    * area thermal expansion&#xD;
+    * volumetric thermal expansion&#xD;
+&#xD;
+These characteristics are closely related. The volumetric thermal expansion coefficient can be defined for both liquids and solids. The linear thermal expansion can only be defined for solids, and is common in engineering applications.&#xD;
+&#xD;
+Some substances expand when cooled, such as freezing water, so they have negative thermal expansion coefficients. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Expansion Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A34">
+    <owl:onProperty rdf:resource="#symbol"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SerumOrPlasmaLevelUnit">
+    <rdfs:subClassOf rdf:resource="#BiomedicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Serum Or Plasma Level Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MolarConcentrationUnit">
+    <rdfs:subClassOf rdf:resource="#ConcentrationUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Molar Concentration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CoefficientOfHeatTransferUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Coefficient Of Heat Transfer Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A35">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">USE</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#positiveDeltaLimit">
+    <dc:description>A positive change limit between consecutive sample values for a parameter. The Positive Delta may be the encoded value or engineering units value depending on whether or not a Calibrator is defined.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Positive delta limit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#coherentDerivedUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemCoherentDerivedUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure to the unit system in which the unit is derived from the system's base units with a proportionality constant of one.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#coherentUnitOfSystem"/>
+    <rdfs:subPropertyOf rdf:resource="#derivedUnitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">derived unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A36">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UFC</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TimeUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_time"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Units that measure time.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Time Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ActivityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_radioactivity"/>
+    <rdfs:subClassOf rdf:resource="#RadiologyUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Activity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SignalDetectionThresholdUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Signal relative to an underlying signal</qudt:description>
+    <rdfs:subClassOf rdf:resource="#CommunicationsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Signal Detection Threshold Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#order">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">order</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#HeartRateUnit">
+    <rdfs:subClassOf rdf:resource="#BiomedicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Heart Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A12">
+    <owl:onProperty rdf:resource="#uneceCommonCode"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SIDerivedUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:SI_derived_units"/>
+    <owl:disjointWith rdf:resource="#SIBaseUnit"/>
+    <rdfs:subClassOf rdf:resource="#DerivedUnit"/>
+    <rdfs:subClassOf rdf:resource="#SIUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SI Derived Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricFluxUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Flux Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#floatPercentage">
+    <owl:equivalentClass rdf:nodeID="A37"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">float percentage</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AccelerationUnit">
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Acceleration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PermittivityUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Permittivity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MechanicsUnit">
+    <rdfs:subClassOf rdf:nodeID="A38"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mechanics Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ConcentrationUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Concentration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A39">
+    <owl:onProperty rdf:resource="#systemUnit"/>
+    <owl:allValuesFrom rdf:resource="#Unit"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PressureOrStressRateUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pressure or stress rate</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#unitFor">
+    <owl:inverseOf rdf:resource="#unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">unit for</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#vectorMagnitude">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">vector magnitude</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A40">
+    <owl:onProperty rdf:resource="#description"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A10">
+    <owl:onProperty rdf:resource="#abbreviation"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SpecificHeatPressureUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class contains units of measure for specific heat capacity at a constant pressure.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specific Heat Pressure Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#string1024">
+    <owl:equivalentClass rdf:nodeID="A23"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">string1024</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#relativeStandardUncertainty">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The relative standard uncertainty of a measurement is the (absolute) standard uncertainty divided by the magnitude of the exact value.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">relative standard uncertainty</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#quantityKindOfSystem">
+    <owl:inverseOf rdf:resource="#systemQuantityKind"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">quantity kind of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#standardUncertainty">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The standard uncertainty of a quantity is the estimated standard deviation of the mean taken from a series of measurements.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">standard uncertainty</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#BendingMomentOrTorqueUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_torque"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bending Moment Or Torque Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#allowedUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemAllowedUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure with a unit system that does not define the unit, but allows its use within the system. An allowed unit must be convertible to some dimensionally eqiuvalent unit that is defined by the system.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#unitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">allowed unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemBaseQuantityKind">
+    <owl:inverseOf rdf:resource="#baseQuantityKindOfSystem"/>
+    <rdfs:subPropertyOf rdf:resource="#systemQuantityKind"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">system base quantity kind</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ForcePerElectricChargeUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Force Per Electric Charge Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A41">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UF</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#prefixUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemPrefixUnit"/>
+    <rdfs:subPropertyOf rdf:resource="#definedUnitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">prefix unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A42">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UBM</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#code">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A unit code is a numeric string that uniquely identifies a unit </dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">code</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemQuantityKind">
+    <owl:inverseOf rdf:resource="#quantityKindOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">system quantity kind</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AbsorbedDoseRateUnit">
+    <rdfs:subClassOf rdf:resource="#RadiologyUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Absorbed Dose Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LinearMomentumUnit">
+    <rdfs:subClassOf rdf:resource="#MomentumUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Momentum Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#valueQuantity">
+    <owl:inverseOf rdf:resource="#quantityValue"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value for quantity</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_mass"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A43">
+    <owl:onProperty rdf:resource="#element"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TimeSquaredUnit">
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Time Squared Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A8">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">U</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemDimension">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">system dimension</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PlaneAngleUnit">
+    <rdfs:subClassOf rdf:resource="#AngleUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Plane Angle Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#value">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A property to relate an observable thing with a quantity value (qud:QuantityValue)</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#HeatFlowRateUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Heat Flow Rate Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://voag.linkedmodel.org/schema/voag#withAttributionTo">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">with attribution to</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SolidAngleUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The solid angle subtended by a surface S is defined as the surface area of a unit sphere covered by the surface S's projection onto the sphere. A solid angle is related to the surface of a sphere in the same way an ordinary angle is related to the circumference of a circle. Since the total surface area of the unit sphere is 4*pi, the measure of solid angle will always be between 0 and 4*pi.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#AngleUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Solid Angle Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A9">
+    <owl:onProperty rdf:resource="#conversionMultiplier"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A44">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UH</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EventUnit">
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Event Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassPerVolumeUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_density"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Per Volume Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A45">
+    <owl:onProperty rdf:resource="#systemUnit"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DoseEquivalentUnit">
+    <rdfs:subClassOf rdf:resource="#RadiologyUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dose Equivalent Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RadiometryUnit">
+    <rdfs:subClassOf rdf:resource="#OpticsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Radiometry Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A46">
+    <owl:onProperty rdf:resource="#default"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#FrequencyUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_frequency"/>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Frequency Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VelocityUnit">
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Velocity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MomentumUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Momentum Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A47">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UTD</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#specialization">
+    <owl:inverseOf rdf:resource="#generalization"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a quantity kind to its specialization(s). For example, linear velocity and angular velocity are both specializations of velocity.</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">specialization</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#DynamicViscosityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_dynamic_viscosity"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dynamic Viscosity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalResistanceUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Resistance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A48">
+    <owl:onProperty rdf:resource="#default"/>
+    <owl:allValuesFrom rdf:resource="#EnumeratedValue"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A11">
+    <owl:onProperty rdf:resource="#description"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MicrobialFormationUnit">
+    <rdfs:subClassOf rdf:resource="#BiomedicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Microbial Formation Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AtomicMassUnit">
+    <rdfs:subClassOf rdf:resource="#AtomicPhysicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Atomic Mass Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#element">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An element of an enumeration</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">element</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A30">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UCMN</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#HeatCapacityAndEntropyUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Heat Capacity And Entropy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A49">
+    <owl:onProperty rdf:resource="#abbreviation"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SpecificEnergyUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Units which quantify specific energy, i.e. energy per unit mass.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specific Energy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A50">
+    <owl:onProperty rdf:resource="#description"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TimeAreaUnit">
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Time Area Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CatalyticActivityUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_catalytic_activity"/>
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Catalytic Activity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A51">
+    <owl:onProperty rdf:resource="#code"/>
+    <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#numericValue">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">numeric value</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemDerivedQuantityKind">
+    <owl:inverseOf rdf:resource="#derivedQuantityKindOfSystem"/>
+    <rdfs:subPropertyOf rdf:resource="#systemQuantityKind"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">system derived quantity kind</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SpaceAndTimeUnit">
+    <rdfs:subClassOf rdf:nodeID="A33"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Space And Time Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TurbidityUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turbidity is the cloudiness or haziness of a fluid caused by individual particles (suspended solids) that are generally invisible to the naked eye, similar to smoke in air.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#BiomedicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Turbidity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A7">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#conversionMultiplier">
+    <skos:closeMatch rdf:resource="http://dbpedia.org/resource/Conversion_of_units"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">conversion multiplier</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#closeMatch">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#FinancialUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class contains units that measure financial quantities, such as currency, transactions, rates of return, etc.</qudt:description>
+    <rdfs:subClassOf rdf:nodeID="A41"/>
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Financial Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SIBaseUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:SI_base_units"/>
+    <owl:disjointWith rdf:resource="#SIDerivedUnit"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">All SI units are derived from the SI Base units</qudt:description>
+    <rdfs:subClassOf rdf:resource="#BaseUnit"/>
+    <rdfs:subClassOf rdf:resource="#SIUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SI Base Unit</rdfs:label>
+    <rdf:type rdf:nodeID="A52"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ForceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_force"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Force Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AngularAccelerationUnit">
+    <rdfs:subClassOf rdf:resource="#AccelerationUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Angular Acceleration Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LuminanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_luminance"/>
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luminance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThrustToMassRatioUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thrust To Mass Ratio Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A26">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UCHM</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermalInsulanceUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermal Insulance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#negativeDeltaLimit">
+    <dc:description>A negative change limit between consecutive sample values for a parameter. The Negative Delta may be the encoded value or engineering units value depending on whether or not a Calibrator is defined.</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">negative delta limit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#Enumeration">
+    <rdfs:subClassOf rdf:resource="http://www.linkedmodel.org/schema/dtype#Enumeration"/>
+    <rdfs:subClassOf rdf:nodeID="A46"/>
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Enumeration"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class is for describing the enumerations themselves. Having an enumerated value is one concept.  Having a way to descrive the set of enumerated valies is a distinct need. An enumeration is a collection of enumeration elements. In some cases it is necesaary to refer to the enumeration as opposed to one of its values.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A43"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Enumeration</rdfs:label>
+    <rdfs:subClassOf rdf:nodeID="A48"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:nodeID="A40"/>
+    <rdfs:subClassOf rdf:nodeID="A31"/>
+    <rdfs:subClassOf rdf:nodeID="A49"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#unitOfSystem">
+    <owl:inverseOf rdf:resource="#systemUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure with a system of units that either a) defines the unit or b) allows the unit to be used within the system.</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PowerPerElectricChargeUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The ratio of power to electric charge is proportional to the rate of change of electric potential.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Energy per Electric Charge Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#exactMatch">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#EnumeratedValue">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class is for all enumerated and/or coded values.  For example, it contains the dimension objects that are the basis elements in some abstract vector space associated with a quantity kind system. Another use is for the base dimensions for quantity systems. Each quantity kind system that defines a base set has a corresponding ordered enumeration whose elements are the dimension objects for the base quantity kinds. The order of the dimensions in the enumeration determines the canonical order of the basis elements in the corresponding abstract vector space.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A32"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Enumerated Value</rdfs:label>
+    <rdfs:subClassOf rdf:nodeID="A22"/>
+    <rdfs:subClassOf rdf:nodeID="A34"/>
+    <rdfs:subClassOf rdf:resource="http://www.linkedmodel.org/schema/dtype#EnumeratedValue"/>
+    <rdfs:subClassOf rdf:nodeID="A51"/>
+    <rdfs:subClassOf rdf:nodeID="A0"/>
+    <rdfs:subClassOf rdf:nodeID="A27"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LengthTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Length Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricDipoleMomentUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The electric dipole moment (or electric dipole for short) is a measure of the polarity of a system of electric charges. [Wikipedia]&#xD;
+&#xD;
+This class has the following instance(s): "Coulomb meter", "Debye".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Dipole Moment Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#KinematicViscosityUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Kinematic Viscosity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#BiomedicalUnit">
+    <rdfs:subClassOf rdf:nodeID="A42"/>
+    <rdfs:subClassOf rdf:resource="#ScienceAndEngineeringUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Biomedical Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VolumePerMassUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Volume per mass unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#InformationEntropyUnit">
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:subClassOf rdf:resource="#LogarithmicUnit"/>
+    <rdfs:subClassOf rdf:resource="#ComputingUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Information Entropy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MolarEnergyUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Molar Energy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#OpticsUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Light Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SystemOfUnits">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Systems_of_units"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A system of units is a set of units which are chosen as the reference scales for some set of quantity kinds together with the definitions of each unit. Units may be defined by experimental observation or by proportion to another unit not included in the system. If the unit system is explicitly associated with a quantity kind system, then the unit system must define at least one unit for each quantity kind.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A50"/>
+    <rdfs:subClassOf rdf:nodeID="A39"/>
+    <rdfs:subClassOf rdf:nodeID="A45"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">System of Units</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemBaseUnit">
+    <owl:inverseOf rdf:resource="#baseUnitOfSystem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a system of units to a base unit defined within the system. The base units of a system are used to define the derived units of the system by expressing the derived units as products of the base units raised to a rational power.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#systemCoherentUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">base unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ScienceAndEngineeringUnit">
+    <rdfs:subClassOf rdf:nodeID="A35"/>
+    <rdfs:subClassOf rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Science And Engineering Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#exactMatch">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">exact match</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A18">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UROY</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A37">
+    <owl:withRestrictions rdf:nodeID="A53"/>
+    <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#baseUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemBaseUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure to the system of units in which it is defined as a base unit for the system. The base units of a system are used to define the derived units of the system by expressing the derived units as products of the base units raised to a rational power.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#coherentUnitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">base unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#HumanUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">units for measuring human resources</qudt:description>
+    <rdfs:subClassOf rdf:nodeID="A44"/>
+    <rdfs:subClassOf rdf:resource="#ResourceUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Human Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#quantity">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">a property to relate an observable thing with a quantity (qud:Quantity)</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">quantity</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#GravitationalAttractionUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gravitational Attraction Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassPerAreaUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Per Area Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#IlluminanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_illuminance"/>
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Illuminance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AreaUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_area"/>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassPerTimeUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Per Time Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricityAndMagnetismUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The class of units used to measure the properties of electricity and magnetism.</qudt:description>
+    <rdfs:subClassOf rdf:nodeID="A6"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electricity And Magnetism Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PermeabilityUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Permeability Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ResourceUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Resource Unit is a unit for measuring the amount of various types of resources.</dc:description>
+    <rdfs:subClassOf rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Resource Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A52">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">USI</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A53">
+    <rdf:rest rdf:nodeID="A20"/>
+    <rdf:first rdf:nodeID="A24"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AngularMomentumUnit">
+    <rdfs:subClassOf rdf:resource="#MomentumUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Angular Momentum Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LuminousEfficacyUnit">
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luminous Efficacy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AreaTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Area Temperature Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LinearThermalExpansionUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">When the temperature of a substance changes, the energy that is stored in the intermolecular bonds between atoms changes. When the stored energy increases, so does the length of the molecular bonds. As a result, solids typically expand in response to heating and contract on cooling; this dimensional response to temperature change is expressed by its coefficient of thermal expansion.&#xD;
+&#xD;
+Different coefficients of thermal expansion can be defined for a substance depending on whether the expansion is measured by:&#xD;
+&#xD;
+    * linear thermal expansion&#xD;
+    * area thermal expansion&#xD;
+    * volumetric thermal expansion&#xD;
+&#xD;
+These characteristics are closely related. The volumetric thermal expansion coefficient can be defined for both liquids and solids. The linear thermal expansion can only be defined for solids, and is common in engineering applications.&#xD;
+&#xD;
+Some substances expand when cooled, such as freezing water, so they have negative thermal expansion coefficients. [Wikipedia]</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ThermalExpansionUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Thermal Expansion Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LuminousEnergyUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_luminous_energy"/>
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luminous Energy Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#quantityValue">
+    <owl:inverseOf rdf:resource="#valueQuantity"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">quantity value</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#coherentUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemCoherentUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A coherent unit of measurement for a unit system is a defined unit that may be expressed as a product of powers of the system's base units with the proportionality factor of one.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#definedUnitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coherent unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#BinaryPrefixUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Binary_prefix"/>
+    <rdfs:subClassOf rdf:resource="#PrefixUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Binary Prefix Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#BaseUnit">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Base Unit is a unit adopted by convention for a base quantity.</dc:description>
+    <rdfs:subClassOf rdf:resource="#Unit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Base Unit</rdfs:label>
+    <rdf:type rdf:nodeID="A21"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedClass"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/elements/1.1/contributor">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">contributor</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RadiantIntensityUnit">
+    <rdfs:subClassOf rdf:resource="#RadiometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Radiant Intensity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VolumePerTimeSquaredUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Volume per Time Squared Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ForcePerLengthUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Force Per Length Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LinearEnergyTransferUnit">
+    <rdfs:subClassOf rdf:resource="#AtomicPhysicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Linear Energy Transfer Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#InductanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_inductance"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An electric current flowing around a circuit produces a magnetic field and hence a magnetic flux through the circuit. The ratio of the magnetic flux to the current is called the inductance, or more accurately self-inductance of the circuit. [Wikipedia]&#xD;
+&#xD;
+This class contains the following instance(s): "Abhenry", "Henry", "Micro Henry", "Milli Henry", "Stathenry".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Inductance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargeUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_charge"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric charge is a fundamental conserved property of some subatomic particles, which determines their electromagnetic interaction. Electrically charged matter is influenced by, and produces, electromagnetic fields. The interaction between a moving charge and an electromagnetic field is the source of the electromagnetic force, which is one of the four fundamental forces.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargePerAmountOfSubstanceUnit">
+    <rdfs:subClassOf rdf:resource="#ElectrochemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Per Amount Of Substance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#default">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The default element in an enumeration</dc:description>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">default</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A38">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UMH</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A54">
+    <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</xsd:minInclusive>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricFieldStrengthUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The strength of the electric field at a given point is defined as the force that would be exerted on a positive test charge of +1 coulomb placed at that point; the direction of the field is given by the direction of that force. Electric fields contain electrical energy with energy density proportional to the square of the field intensity. The electric field is to charge as gravitational acceleration is to mass and force density is to volume.</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Field Strength Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#VolumePerTimeUnit">
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A "Space And Time" Unit with the following instance(s): "Cubic foot per minute", "Cubic foot per second", "Cubic inch per minute", "Cubic meter per second", "Cubic yard per minute", "Gallon per day", "Gallon per minute".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#SpaceAndTimeUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Volume Per Time Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#SpecificHeatCapacityUnit">
+    <rdfs:subClassOf rdf:resource="#ThermodynamicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Specific Heat Capacity Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#systemCoherentUnit">
+    <owl:inverseOf rdf:resource="#coherentUnitOfSystem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A coherent unit of measurement for a unit system is a defined unit that may be expressed as a product of powers of the system's base units with the proportionality factor of one.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#systemDefinedUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coherent unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DeprecatedProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#derivedUnitOfSystem">
+    <owl:inverseOf rdf:resource="#systemDerivedUnit"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This property relates a unit of measure to the system of units in which it is defined as a derived unit. That is, the derived unit is defined as a product of the base units for the system raised to some rational power.</dc:description>
+    <rdfs:subPropertyOf rdf:resource="#definedUnitOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">derived unit of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ConductanceUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_electrical_conductance"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electrical conductance is the inverse of electrical resistance. It measures the ease with which electricity flows along a path through an electrical element.&#xD;
+&#xD;
+This class contains the following instance(s): "Abmho", "Mho", "Siemens", "Statmho".</qudt:description>
+    <rdfs:subClassOf rdf:resource="#ElectricityAndMagnetismUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Conductance Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#MassPerLengthUnit">
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Mass Per Length Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#CurrencyUnit">
+    <rdfs:subClassOf rdf:nodeID="A36"/>
+    <rdfs:subClassOf rdf:nodeID="A25"/>
+    <rdfs:subClassOf rdf:resource="#FinancialUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Currency Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ElectricChargeAreaDensityUnit">
+    <rdfs:subClassOf rdf:resource="#ElectricChargeDensityUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Electric Charge Area Density Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#uneceCommonCode">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UNECE common code</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#RF-PowerUnit">
+    <rdfs:subClassOf rdf:resource="#CommunicationsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">RF-Power Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="">
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/creator"/>
+    <vaem:hasAspectScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Basic treatment of quantities and units. No dimensional treatment in this graph.</vaem:hasAspectScope>
+    <vaem:revisionNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.1</vaem:revisionNumber>
+    <voag:withAttributionTo rdf:resource="#NASA-ARC-Attribution"/>
+    <voag:withAttributionTo rdf:resource="http://voag.linkedmodel.org/schema/voag#TopQuadrantAttribution"/>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Daniel Mekonnen</dc:contributor>
+    <vaem:lastUpdated rdf:datatype="http://www.w3.org/2001/XMLSchema#string">$LastChangedDate: 2011-06-01 14:56:40 -0700 (Wed, 01 Jun 2011) $</vaem:lastUpdated>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">$Id: OSG_qudt-(v1.1).ttl 4989 2011-06-01 21:56:40Z RalphHodgson $</owl:versionInfo>
+    <vaem:namespacePrefix rdf:datatype="http://www.w3.org/2001/XMLSchema#string">qudt</vaem:namespacePrefix>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quantities, Units, Dimensions and Types (QUDT) Ontology Version 1.1</dc:title>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/author"/>
+    <vaem:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://qudt.org/schema/qudt</vaem:namespace>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/subject"/>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+    <vaem:usesNonImportedResource rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <vaem:usesNonImportedResource rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <voag:hasLicenseType rdf:resource="voag:CC-SHAREALIKE_3PT0-US"/>
+    <vaem:hasDomainScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Science, Medicine and Engineering</vaem:hasDomainScope>
+    <vaem:specificity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</vaem:specificity>
+    <owl:versionIRI rdf:resource="http://qudt.org/1.1/schema/qudt"/>
+    <vaem:intent rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Provides a schema for describing Units of Measure</vaem:intent>
+    <dc:subject rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quantities, Units, Dimensions and Types</dc:subject>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Irene Polikoff</dc:contributor>
+    <vaem:hasCatalogEntry rdf:resource="http://qudt.org/catalog/qudt#QUDT-SchemaCatalogEntry"/>
+    <vaem:dateCreated rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2011-01-06T09:30:49</vaem:dateCreated>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/rights"/>
+    <dc:rights rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The QUDT Ontologies are issued under a Creative Commons Attribution Share Alike 3.0 United States License. Attribution should be made to NASA Ames Research Center and TopQuadrant, Inc.</dc:rights>
+    <vaem:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The QUDT, or 'Quantity, Unit, Dimension and Type' collection of ontologies define the base classes properties, and restrictions used for modeling physical quantities, units of measure, and their dimensions in various measurement systems. The goal of the QUDT ontology is to provide a unified model of, measurable quantities, units for measuring different kinds of quantities, the numerical values of quantities in different units of measure and the data structures and data types used to store and manipulate these objects in software. This OWL schema is a foundation for a basic treatment of units.</vaem:description>
+    <vaem:hasDisciplineScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">All disciplines</vaem:hasDisciplineScope>
+    <vaem:usesNonImportedResource rdf:resource="voag:CC-SHAREALIKE_3PT0-US"/>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/contributor"/>
+    <vaem:hasRole rdf:resource="http://www.linkedmodel.org/schema/vaem#SchemaGraph"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quantities, Units, Dimensions and Types (QUDT) - Level 1</rdfs:label>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ralph Hodgson</dc:contributor>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">David Price</dc:contributor>
+    <vaem:acronym rdf:datatype="http://www.w3.org/2001/XMLSchema#string">QUDT</vaem:acronym>
+    <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">James E. Masters</dc:creator>
+    <owl:imports rdf:resource="http://www.linkedmodel.org/schema/dtype"/>
+    <owl:imports rdf:resource="http://www.linkedmodel.org/schema/vaem"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A15">
+    <owl:onProperty rdf:resource="#typePrefix"/>
+    <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UPHS</owl:hasValue>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#quantityKind">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">quantity kind</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#AmountOfSubstanceTemperatureUnit">
+    <rdfs:subClassOf rdf:resource="#ChemistryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Amount of substance temperature unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A4">
+    <rdf:rest rdf:nodeID="A28"/>
+    <rdf:first rdf:nodeID="A54"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#derivedQuantityKindOfSystem">
+    <owl:inverseOf rdf:resource="#systemDerivedQuantityKind"/>
+    <rdfs:subPropertyOf rdf:resource="#quantityKindOfSystem"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">derived quantity kind of system</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ThermodynamicsUnit">
+    <skos:closeMatch rdf:resource="http://dbpedia.org/resource/Category:Thermodynamics"/>
+    <qudt:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermodynamics units are units that provide reference scales for quantifying the conversion of energy into work, as well as heat and its relation to macroscopic variables such as temperature and pressure.</qudt:description>
+    <rdfs:subClassOf rdf:nodeID="A47"/>
+    <rdfs:subClassOf rdf:resource="#PhysicalUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thermodynamics Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#LuminousFluxUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_luminous_flux"/>
+    <rdfs:subClassOf rdf:resource="#PhotometryUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luminous Flux Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#PressureOrStressUnit">
+    <skos:exactMatch rdf:resource="http://dbpedia.org/resource/Category:Units_of_pressure"/>
+    <rdfs:subClassOf rdf:resource="#MechanicsUnit"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Pressure Or Stress Unit</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+</rdf:RDF>
+
+<!-- Created with TopBraid -->

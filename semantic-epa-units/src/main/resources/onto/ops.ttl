@@ -1,0 +1,326 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix qudt:    <http://qudt.org/schema/qudt#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix ops:     <http://www.openphacts.org/units/> .
+@prefix quantity:<http://qudt.org/schema/quantity#> .
+
+ops:Molar
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Molar"^^xsd:string ;
+ qudt:abbreviation "M"^^xsd:string ;
+ qudt:conversionMultiplier
+  1000 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ;
+ qudt:symbol "mol/dm^3"^^xsd:string ;
+ skos:exactMatch <http://dbpedia.org/resource/Molar_concentration> .
+
+ops:Millimolar    
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Millimolar"^^xsd:string ;
+ qudt:abbreviation "mM"^^xsd:string ;
+ qudt:conversionMultiplier
+  1 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "mmol/dm^3"^^xsd:string .
+
+ops:Micromolar
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Micromolar"^^xsd:string ;
+ qudt:abbreviation "μM"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μmol/dm^3"^^xsd:string .
+
+ops:Nanomolar
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Nanomolar"^^xsd:string ;
+ qudt:abbreviation "nM"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ;
+ qudt:symbol "nmol/dm^3"^^xsd:string .
+
+ops:Picomolar
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Picomolar"^^xsd:string ;
+ qudt:abbreviation "pM"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ;
+ qudt:symbol "pmol/dm^3"^^xsd:string .
+
+ops:Femtomolar
+ rdf:type qudt:MolarConcentrationUnit , qudt:SIDerivedUnit ;
+ rdfs:label "Femtomolar"^^xsd:string ;
+ qudt:abbreviation "fM"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ;
+ qudt:symbol "fmol/dm^3"^^xsd:string .
+
+ops:GramPerLiter
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Gram per Liter"^^xsd:string ;
+ qudt:abbreviation "g/L"^^xsd:string ;
+ qudt:conversionMultiplier 1.0 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "g/dm^3"^^xsd:string .
+
+ops:GramPerMilliliter
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Gram per Milliliter"^^xsd:string ;
+ qudt:abbreviation "g/mL"^^xsd:string ;
+ qudt:conversionMultiplier 1000000.0 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "g/cm^3"^^xsd:string .
+
+ops:MilligramPerMilliliter
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Milligram per Milliliter"^^xsd:string ;
+ qudt:abbreviation "mg/mL"^^xsd:string ;
+ qudt:conversionMultiplier 1000.0 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "mg/cm^3"^^xsd:string .
+
+ops:MicrogramPerMilliliter 
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Microgram per Milliliter"^^xsd:string ;
+ qudt:abbreviation "μg/mL"^^xsd:string ;
+ qudt:conversionMultiplier 1.0 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "μg/cm^3"^^xsd:string .
+
+ops:NanogramPerMilliliter 
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Nanogram per Milliliter"^^xsd:string ;
+ qudt:abbreviation "ng/mL"^^xsd:string ;
+ qudt:conversionMultiplier 0.001 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "ng/cm^3"^^xsd:string .
+
+ops:PicogramPerMilliliter
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Picogram per Milliliter"^^xsd:string ;
+ qudt:abbreviation "pg/mL"^^xsd:string ;
+ qudt:conversionMultiplier 0.000001 ;
+ qudt:conversionOffset 0.0 ;
+ qudt:symbol "pg/cm^3"^^xsd:string .
+
+ops:MilligramPerDeciliter 
+ rdf:type qudt:MassPerVolumeUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Milligram per Deciliter"^^xsd:string ;
+ qudt:abbreviation "mg/dL"^^xsd:string ;
+ qudt:conversionMultiplier 100.0 ;
+ qudt:conversionOffset 0.0 .
+
+ops:Nanometer
+ rdf:type qudt:LengthUnit, qudt:SIDerivedUnit, qudt:DerivedUnit ;
+ rdfs:label "Nanometer"^^xsd:string ;
+ qudt:abbreviation "nm"^^xsd:string ;
+ qudt:conversionMultiplier 0.00000001 ;
+ qudt:conversionOffset 0.0 .
+ 
+ops:SquareAngstrom
+ rdf:type qudt:AreaUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Square Ångström"^^xsd:string ;
+ qudt:abbreviation "Å^2"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.00000000000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "Å^2"^^xsd:string .
+
+ops:Milligram
+ rdf:type qudt:MassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Milligram"^^xsd:string ;
+ qudt:abbreviation "mg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "mg"^^xsd:string .
+
+ops:Microgram
+ rdf:type qudt:MassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Microgram"^^xsd:string ;
+ qudt:abbreviation "μg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μg"^^xsd:string .
+
+ops:Nanogram
+ rdf:type qudt:MassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Nanogram"^^xsd:string ;
+ qudt:abbreviation "ng"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μg"^^xsd:string .
+
+ops:Picogram
+ rdf:type qudt:MassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Picogram"^^xsd:string ;
+ qudt:abbreviation "pg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "pg"^^xsd:string .
+
+ops:Femtogram
+ rdf:type qudt:MassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Femtogram"^^xsd:string ;
+ qudt:abbreviation "fg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "fg"^^xsd:string .
+
+ops:MilligramPerKilogram
+ rdf:type qudt:SIDerivedUnit ;
+ rdfs:label "Milligram per Kilogram"^^xsd:string ;
+ qudt:abbreviation "mg/kg"^^xsd:string ;
+ qudt:symbol "mg/kg"^^xsd:string .
+
+ops:Millimole
+ rdf:type qudt:AmountOfSubstanceUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Millimole"^^xsd:string ;
+ qudt:abbreviation "mmol"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "mmol"^^xsd:string .
+
+ops:Micromole
+ rdf:type qudt:AmountOfSubstanceUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Micromole"^^xsd:string ;
+ qudt:abbreviation "μmol"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μmol"^^xsd:string .
+
+ops:Nanomole
+ rdf:type qudt:AmountOfSubstanceUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Nanomole"^^xsd:string ;
+ qudt:abbreviation "nmol"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "nmol"^^xsd:string .
+
+ops:Picomole
+ rdf:type qudt:AmountOfSubstanceUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Picomole"^^xsd:string ;
+ qudt:abbreviation "pmol"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "pmol"^^xsd:string .
+
+ops:Femtomole
+ rdf:type qudt:AmountOfSubstanceUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Femtomole"^^xsd:string ;
+ qudt:abbreviation "fmol"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000000000000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "fmol"^^xsd:string .
+
+ops:Milliliter
+ rdf:type qudt:VolumeUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Milliliter"^^xsd:string ;
+ qudt:abbreviation "mL"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "mL"^^xsd:string .
+
+ops:Microliter
+ rdf:type qudt:VolumeUnit, qudt:SIDerivedUnit ;
+ rdfs:label "Microliter"^^xsd:string ;
+ qudt:abbreviation "μL"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μL"^^xsd:string .
+
+ops:PartsPerMillion
+ rdf:type qudt:QuantityKind ;
+ qudt:quantityKind quantity:DimensionlessRatio ;
+ rdfs:label "Parts per Million"^^xsd:string ;
+ qudt:symbol "ppm"^^xsd:string .
+
+ops:LiterPerKilogram
+ rdf:type qudt:VolumePerMassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "liter per kilogram"^^xsd:string ;
+ qudt:abbreviation "l/kg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "l/kg"^^xsd:string .
+
+ops:MilliliterPerKilogram
+ rdf:type qudt:VolumePerMassUnit, qudt:SIDerivedUnit ;
+ rdfs:label "milliliter per kilogram"^^xsd:string ;
+ qudt:abbreviation "ml/kg"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.000001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "ml/kg"^^xsd:string .
+
+ops:LiterPerSecond
+ rdf:type qudt:VolumePerTimeUnit, qudt:SIDerivedUnit ;
+ rdfs:label "liter per second"^^xsd:string ;
+ qudt:abbreviation "L/s"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.001 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "L/s"^^xsd:string .
+
+ops:LiterPerMinute
+ rdf:type qudt:VolumePerTimeUnit, qudt:SIDerivedUnit ;
+ rdfs:label "liter per minute"^^xsd:string ;
+ qudt:abbreviation "L/min"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.06 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "L/min"^^xsd:string .
+
+ops:MicroliterPerMinute
+ rdf:type qudt:VolumePerTimeUnit, qudt:SIDerivedUnit ;
+ rdfs:label "microliter per minute"^^xsd:string ;
+ qudt:abbreviation "μL/min"^^xsd:string ;
+ qudt:conversionMultiplier
+  0.00000006 ;
+ qudt:conversionOffset
+  "0.0"^^xsd:double ; 
+ qudt:symbol "μL/min"^^xsd:string .
+
+  

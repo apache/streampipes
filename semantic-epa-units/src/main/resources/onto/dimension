@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:html="http://uispin.org/html#"
+    xmlns:lm-cat="http://www.linkedmodel.org/catalog/lm#"
+    xmlns:quantity-1.1="http://qudt.org/1.1/schema/quantity#"
+    xmlns:letrs="http://uispin.org/letrs#"
+    xmlns:lm-cat-1.2="http://www.linkedmodel.org/1.2/catalog/lm#"
+    xmlns:arg="http://spinrdf.org/arg#"
+    xmlns:qudt-1.1="http://qudt.org/1.1/schema/qudt#"
+    xmlns:omv="http://omv.ontoware.org/2005/05/ontology#"
+    xmlns:qudt-unit-1.1="http://qudt.org/1.1/vocab/unit#"
+    xmlns:qudt-quantity-1.1="http://qudt.org/1.1/vocab/quantity#"
+    xmlns:quantity="http://qudt.org/schema/quantity#"
+    xmlns:qudt-dimension="http://qudt.org/vocab/dimension#"
+    xmlns:void="http://rdfs.org/ns/void#"
+    xmlns:dtype="http://www.linkedmodel.org/schema/dtype#"
+    xmlns:lmdoc="http://www.linkedmodel.org/oui/lmdoc#"
+    xmlns:tui="http://uispin.org/tui#"
+    xmlns:sp="http://spinrdf.org/sp#"
+    xmlns:style="http://uispin.org/style#"
+    xmlns:qudt-quantity="http://qudt.org/vocab/quantity#"
+    xmlns:voag-1.0="http://voag.linkedmodel.org/1.0/schema/voag#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:let="http://uispin.org/let#"
+    xmlns:dimension="http://qudt.org/schema/dimension#"
+    xmlns:xhtml="http://topbraid.org/xhtml#"
+    xmlns:spl="http://spinrdf.org/spl#"
+    xmlns:unit="http://qudt.org/vocab/unit#"
+    xmlns:sxml="http://topbraid.org/sxml#"
+    xmlns:qudt-cat="http://qudt.org/catalog/qudt#"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions#"
+    xmlns:vaem-1.2="http://www.linkedmodel.org/1.2/schema/vaem#"
+    xmlns:voag="http://voag.linkedmodel.org/schema/voag#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:dimension-1.1="http://qudt.org/1.1/schema/dimension#"
+    xmlns:spin="http://spinrdf.org/spin#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:qudt="http://qudt.org/schema/qudt#"
+    xmlns:smf="http://topbraid.org/sparqlmotionfunctions#"
+    xmlns:qudt-cat-11="http://qudt.org/1.1/catalog/qudt#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:composite="http://www.topbraid.org/2007/05/composite.owl#"
+    xmlns:qudt-dimensionalunit-1.1="http://qudt.org/1.1/vocab/dimensionalunit#"
+    xmlns:vaem="http://www.linkedmodel.org/schema/vaem#"
+    xmlns:catalog="http://www.linkedmodel.org/schema/catalog#"
+    xmlns:dtype-1.0="http://www.linkedmodel.org/1.0/schema/dtype#"
+    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+    xmlns:css="http://uispin.org/css#"
+    xmlns:ui="http://uispin.org/ui#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:spra="http://spinrdf.org/spra#"
+    xmlns:vann="http://purl.org/vocab/vann/"
+    xmlns:qudt-dimension-1.1="http://qudt.org/1.1/vocab/dimension#"
+    xmlns:catalog-1.0="http://www.linkedmodel.org/1.2/schema/catalog#"
+    xmlns:creativecommons="http://creativecommons.org/ns#"
+    xmlns:spr="http://spinrdf.org/spr#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://qudt.org/schema/dimension" > 
+  <rdf:Description rdf:nodeID="A0">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#referenceQuantity"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://qudt.org/schema/qudt#referenceQuantity">
+    <rdfs:subPropertyOf rdf:resource="http://qudt.org/schema/qudt#referenceThing"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">reference quantity</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://qudt.org/schema/qudt#dimensionInverse">
+    <owl:inverseOf rdf:resource="http://qudt.org/schema/qudt#dimensionInverse"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dimension inverse</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://qudt.org/schema/qudt#DimensionVector">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A dimension vector is an association between a quantity kind and a rational number. The quantity kind serves as the basis vector in an abstract vector space, and the rational number is the vector magnitude. The abstract vector space is determined by the chosen set of base quantity kinds for a quantity system.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A1"/>
+    <rdfs:subClassOf rdf:nodeID="A2"/>
+    <rdfs:subClassOf rdf:nodeID="A3"/>
+    <rdfs:subClassOf rdf:nodeID="A4"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimension Vector</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A1">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#vectorMagnitude"/>
+    <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A2">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#basisElement"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A5">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#referenceQuantity"/>
+    <owl:allValuesFrom rdf:resource="http://qudt.org/schema/qudt#QuantityKind"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A4">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#vectorMagnitude"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:cardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="">
+    <vaem:revisionNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.1</vaem:revisionNumber>
+    <vaem:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">QUDT, or the 'Quantity, Unit, Dimension and Types' ontology defines the base classes properties, and restrictions used for modeling physical quantities, units of measure, and their dimensions in various measurement systems. In physics and science, dimensional analysis is a tool to find or check relations among physical quantities by using their dimensions. The dimension of a physical quantity is the combination of the basic physical dimensions (usually mass, length, time, electric charge, and temperature) which describe it; for example, speed has the dimension length / time, and may be measured in meters per second, miles per hour, or other units.</vaem:description>
+    <voag:hasLicenseType rdf:resource="voag:CC-SHAREALIKE_3PT0-US"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">QUDT Dimension Ontology</rdfs:label>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/rights"/>
+    <vaem:specificity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</vaem:specificity>
+    <voag:hasCatalogEntry rdf:resource="http://qudt.org/catalog/qudt#QUDT-DIMENSION-SchemaCatalogEntry"/>
+    <vaem:acronym rdf:datatype="http://www.w3.org/2001/XMLSchema#string">QUDT</vaem:acronym>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ralph Hodgson</dc:contributor>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/subject"/>
+    <vaem:hasDisciplineScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">All disciplines</vaem:hasDisciplineScope>
+    <vaem:hasRole rdf:resource="http://www.linkedmodel.org/schema/vaem#SchemaGraph"/>
+    <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string">James E. Masters</dc:creator>
+    <voag:withAttributionTo rdf:resource="http://voag.linkedmodel.org/schema/voag#TopQuadrantAttribution"/>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">David Price</dc:contributor>
+    <vaem:namespacePrefix rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dimension</vaem:namespacePrefix>
+    <vaem:hasDomainScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Science, Medicine and Engineering</vaem:hasDomainScope>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">$Id: OSG_dimension-(v1.1).ttl 4988 2011-06-01 20:34:19Z RalphHodgson $</owl:versionInfo>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/author"/>
+    <dc:rights rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The QUDT Ontologies are issued under a Creative Commons Attribution Share Alike 3.0 United States License. Attribution should be made to NASA Ames Research Center and TopQuadrant, Inc.</dc:rights>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Irene Polikoff</dc:contributor>
+    <vaem:usesNonImportedResource rdf:resource="voag:CC-SHAREALIKE_3PT0-US"/>
+    <dc:subject rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quantities, Units, and Dimensions</dc:subject>
+    <owl:versionIRI rdf:resource="http://qudt.org/1.1/schema/quantity"/>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/contributor"/>
+    <vaem:lastUpdated rdf:datatype="http://www.w3.org/2001/XMLSchema#string">$LastChangedDate: 2011-06-01 13:34:19 -0700 (Wed, 01 Jun 2011) $</vaem:lastUpdated>
+    <vaem:dateCreated rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2010-12-30T11:17:52</vaem:dateCreated>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/title"/>
+    <vaem:usesNonImportedResource rdf:resource="http://www.w3.org/2004/02/skos/core#exactMatch"/>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string">QUDT Dimension Ontology Version 1.1</dc:title>
+    <vaem:hasAspectScope rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Basic treatment of quantities and units. No dimensional treatment in this graph.</vaem:hasAspectScope>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/creator"/>
+    <owl:versionIRI rdf:resource="http://qudt.org/1.1/schema/dimension"/>
+    <vaem:usesNonImportedResource rdf:resource="http://www.w3.org/2004/02/skos/core#closeMatch"/>
+    <vaem:usesNonImportedResource rdf:resource="http://purl.org/dc/elements/1.1/description"/>
+    <voag:withAttributionTo rdf:resource="http://qudt.org/schema/qudt#NASA-ARC-Attribution"/>
+    <vaem:namespace rdf:datatype="http://www.w3.org/2001/XMLSchema#string">http://qudt.org/schema/dimension</vaem:namespace>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <vaem:intent rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The intent of the QUDT Dimensions Ontology is to provide an OWL Schema for dimensional specificaiton and analysis of units of measure.</vaem:intent>
+    <owl:imports rdf:resource="http://qudt.org/schema/qudt"/>
+    <owl:imports rdf:resource="http://www.linkedmodel.org/schema/dtype"/>
+    <owl:imports rdf:resource="http://www.linkedmodel.org/schema/vaem"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A3">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#basisElement"/>
+    <owl:allValuesFrom rdf:resource="http://qudt.org/schema/qudt#QuantityKind"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://qudt.org/schema/qudt#dimensionVector">
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">dimension vector</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A6">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#dimensionVector"/>
+    <owl:allValuesFrom rdf:resource="http://qudt.org/schema/qudt#DimensionVector"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://qudt.org/schema/qudt#Dimension">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A dimension is a relationship between a quantity system, a quantity kind of that system, and one or more dimension vectors. There is one dimension vector for each of the system's base quantity kinds. The vector's magnitude determines the exponent of the base dimension for the referenced quantity kind.</dc:description>
+    <rdfs:subClassOf rdf:nodeID="A7"/>
+    <rdfs:subClassOf rdf:nodeID="A6"/>
+    <rdfs:subClassOf rdf:nodeID="A5"/>
+    <rdfs:subClassOf rdf:nodeID="A0"/>
+    <rdfs:subClassOf rdf:resource="http://qudt.org/schema/qudt#EnumeratedValue"/>
+    <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dimension</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="A7">
+    <owl:onProperty rdf:resource="http://qudt.org/schema/qudt#dimensionVector"/>
+    <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</owl:minCardinality>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+  </rdf:Description>
+</rdf:RDF>
+
+<!-- Created with TopBraid -->
