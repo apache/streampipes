@@ -38,9 +38,11 @@ public abstract class ControllerGenerator extends Generator {
 
 		for (int i = 0; i < eventProperties.size(); i++) {
 			// TODO check for type
-			b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i,
-					JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
-			b.addStatement("eventProperties$L.add(e$L)", n, i);
+			if (eventProperties.get(i).getDomainProperties() != null && eventProperties.get(i).getDomainProperties().size() > 0) {
+				b.addStatement("$T e$L = $T.createPropertyRestriction($S).build()", JFC.EVENT_PROPERTY, i,
+						JFC.PRIMITIVE_PROPERTY_BUILDER, eventProperties.get(i).getDomainProperties().get(0));
+				b.addStatement("eventProperties$L.add(e$L)", n, i);
+			}
 		}
 
 		return b;

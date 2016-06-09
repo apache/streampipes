@@ -9,10 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.JavaFile;
 
 public class Utils {
 
+	private final static String PROPERTY_SEPARATOR = "-";
+	
 	public static String readResourceFile(String fileName) {
 		ClassLoader classLoader = Utils.class.getClassLoader();
 		String normalizedRoute = classLoader.getResource(fileName).getFile();
@@ -67,5 +70,9 @@ public class Utils {
 			System.out.println("Error: Could not write to file: " + location);
 		}
 	}
-
+	
+	public static String toCamelCase(String propertyName) {
+		return CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, propertyName);
+	}
+	
 }

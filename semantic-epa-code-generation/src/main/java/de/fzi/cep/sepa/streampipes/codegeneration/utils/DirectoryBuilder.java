@@ -21,7 +21,8 @@ public abstract class DirectoryBuilder {
 	}
 
 	private static boolean createDirectory(String dir) {
-		dir = dir.replaceAll("/", File.separator);
+		String escapedSeparator = File.separator.equals("\\") ? "\\\\" : File.separator;
+		dir = dir.replaceAll("/", escapedSeparator);
 		if (dir != null) {
 			return (new File(dir)).mkdirs();
 		} else {

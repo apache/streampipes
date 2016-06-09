@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 public class ParametersGenerator extends Generator {
 
@@ -24,8 +25,9 @@ public class ParametersGenerator extends Generator {
 				.addParameter(JFC.SEPA_INVOCATION, "graph").addStatement("super(graph)");
 
 		for (StaticProperty sp : element.getStaticProperties()) {
-			b.addParameter(JFC.STRING, sp.getInternalName());
-			b.addStatement("this.$N = $N", sp.getInternalName(), sp.getInternalName());
+			String internalNameCamelCased = Utils.toCamelCase(sp.getInternalName());
+			b.addParameter(JFC.STRING, internalNameCamelCased);
+			b.addStatement("this.$N = $N", internalNameCamelCased, internalNameCamelCased);
 		}
 
 		return b.build();
@@ -41,7 +43,7 @@ public class ParametersGenerator extends Generator {
 				.superclass(BindingParameters.class).addMethod(constructor);
 
 		for (StaticProperty sp : element.getStaticProperties()) {
-			String internalName = sp.getInternalName();
+			String internalName = Utils.toCamelCase(sp.getInternalName());
 			parameterClass.addField(JFC.STRING, internalName, Modifier.PRIVATE);
 			MethodSpec getter = MethodSpec.methodBuilder(getterName(internalName)).addModifiers(Modifier.PUBLIC)
 				.returns(JFC.STRING).addStatement("return " + internalName).build();
