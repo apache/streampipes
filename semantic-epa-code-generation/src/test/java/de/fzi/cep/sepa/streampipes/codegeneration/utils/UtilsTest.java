@@ -60,4 +60,20 @@ public class UtilsTest {
 		
 		assertEquals(expected, actual.trim());
 	}
+
+	@Test
+	public void testToCamelCaseNoSpecialCharacter() {
+		String expected = "testCamelCase";
+		String actual = Utils.toCamelCase("testCamelCase");
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testToCamelCaseWithSpecialCharacter() {
+		String expected = "testCamelCase";
+		String actual = Utils.toCamelCase("test-camel-case");
+
+		assertEquals(expected, actual);
+	}
 }

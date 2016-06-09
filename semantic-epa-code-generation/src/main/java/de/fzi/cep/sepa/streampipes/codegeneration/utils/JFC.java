@@ -7,9 +7,11 @@ import java.util.Map;
 
 import com.squareup.javapoet.ClassName;
 
+import de.fzi.cep.sepa.client.container.init.ContainerModelSubmitter;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
+import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
@@ -67,10 +69,13 @@ public abstract class JFC {
 	public static ClassName EP_PROPERTIES = ClassName.get(EpProperties.class);
 	public static ClassName STANDARD_TRANSPORT_FORMAT = ClassName.get(StandardTransportFormat.class);
 //	public static ClassName EMBEDDED_MODEL_SUBMITTER = ClassName.get("EmbeddedModelSubmitter.class);
-	public static ClassName SEMANTIC_EVENT_PROCESSING_AGENT_DECLARER = ClassName.get(SemanticEventProcessingAgentDeclarer.class);
-	public static ClassName SEMANTIC_EVENT_PRODUCER_DECLARER = ClassName.get(SemanticEventProducerDeclarer.class);
-	public static ClassName SEMANTIC_EVENT_CONSUMER_DECLARER = ClassName.get(SemanticEventConsumerDeclarer.class);
+//	public static ClassName SEMANTIC_EVENT_PROCESSING_AGENT_DECLARER = ClassName.get(SemanticEventProcessingAgentDeclarer.class);
+//	public static ClassName SEMANTIC_EVENT_PRODUCER_DECLARER = ClassName.get(SemanticEventProducerDeclarer.class);
+//	public static ClassName SEMANTIC_EVENT_CONSUMER_DECLARER = ClassName.get(SemanticEventConsumerDeclarer.class);
 	public static ClassName CLIENT_CONFIGURATION = ClassName.get(ClientConfiguration.class);
+
+	public static ClassName CONTAINER_MODEL_SUBMITTER = ClassName.get(ContainerModelSubmitter.class);
+	public static ClassName DECLARERS_SINGLETON = ClassName.get(DeclarersSingleton.class);
 
 
 

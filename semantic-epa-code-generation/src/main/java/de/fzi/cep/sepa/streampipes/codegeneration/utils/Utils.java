@@ -72,7 +72,13 @@ public class Utils {
 	}
 	
 	public static String toCamelCase(String propertyName) {
-		return CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, propertyName);
+		if (propertyName.contains("-")) {
+			return CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, propertyName);
+		} else {
+			return propertyName;
+		}
+
 	}
+
 	
 }

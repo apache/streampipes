@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.flink.test.project;
 
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
@@ -12,7 +13,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import java.lang.Override;
 import java.util.ArrayList;
 import java.util.List;
