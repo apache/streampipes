@@ -1,5 +1,5 @@
 angular
-    .module('streamPipesDirectives', ['ngMaterial'])
+    .module('streamPipesApp')
     .directive('sepaBasics', function() {
     	return {
     		restrict : 'E',
@@ -10,17 +10,6 @@ angular
     		}
     	}
     }) 
-    .directive('iframeAutoSize', function() {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.on('load', function() {
-                console.log(element[0]);
-                var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
-                element.css('height', iFrameHeight);
-            });
-        }
-    }})
      .directive('sepaStreamDetail', function() {
     	return {
     		restrict : 'E',
@@ -32,6 +21,22 @@ angular
     		
     		controller: function($scope, $element) {
     			
+    			$scope.activeStreamTab = "basics";
+    			 
+    			
+    			$scope.selectStreamTab = function(name) {
+    				$scope.activeStreamTab = name;
+    			}
+    			
+    			$scope.isStreamTabSelected = function(name) {
+    				return $scope.activeStreamTab == name;
+    			}
+    			
+    			$scope.getStreamActiveTabCss = function(name) {
+    				if (name == $scope.activeStreamTab) return "md-fab md-accent md-mini";
+    				else return "md-fab md-accent md-mini wizard-inactive";
+    			}
+    			
     			$scope.addProperty = function(properties) {
     				properties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeName" : "", "runtimeType" : "", "domainProperties" : []}});
     			}
@@ -42,82 +47,20 @@ angular
     		}
     	}
     }) 
-     .directive('transportFormat', function() {
+    .directive('unit', function() {
     	return {
     		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/transport-format.tmpl.html',
+    		templateUrl : 'modules/sensors/directives/unit.tmpl.html',
+    		transclude: true,
     		scope : {
-    			grounding : "=grounding",
-    			disabled : "=disabled"
+    			field : "=field",
+    			disabled: "=disabled"
     		},
     		
     		controller: function($scope, $element) {
     			
-    			$scope.availableTransportFormats = [{"id" : "thrift", "name" : "ProaSense Thrift", "rdf" : ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#thrift"]}, {"id": "json", "name" : "JSON", "rdf" : ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#json"]}];
-    			$scope.selectedTransportFormat = "";
     			
-    			var getFormat = function() {
-    				if ($scope.selectedTransportFormat == 'thrift') return $scope.availableTransportFormats[0].rdf;
-    				else return $scope.availableTransportFormats[1].rdf;
-    			}
-    			
-    			$scope.addTransportFormat = function(transportFormats) {
-    				transportFormats.push({"rdfType" : getFormat()});
-    			}
-    			
-    			$scope.removeTransportFormat = function(transportFormats) {
-    				transportFormats.splice(0, 1);
-    			}
-    			
-    			$scope.findFormat = function(transportFormat) {
-    				if (transportFormat == undefined) return "";
-    				else {
-	    				if (transportFormat.rdfType.indexOf($scope.availableTransportFormats[0].rdf[2]) != -1) return $scope.availableTransportFormats[0].name;
-	    				else return $scope.availableTransportFormats[1].name;
-    				}
-    			}
-    		}
-    	}
-    }) 
-    .directive('transportProtocol', function() {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/transport-protocol.tmpl.html',
-    		scope : {
-    			grounding : "=grounding",
-    			disabled : "=disabled"
-    		},
-    		
-    		controller: function($scope, $element) {
-    			
-    			$scope.availableTransportProtocols = [{"id" : "kafka", "name" : "Apache Kafka", "type" : "de.fzi.cep.sepa.model.impl.KafkaTransportProtocol"}, {"id": "jms", "name" : "JMS", "type" : "de.fzi.cep.sepa.model.impl.JmsTransportProtocol"}];
-    			$scope.selectedTransportProtocol = "";
-    			
-    			$scope.addTransportProtocol = function(transportProtocols) {
-    				if ($scope.selectedTransportProtocol == $scope.availableTransportProtocols[0].id) $scope.addKafkaProtocol(transportProtocols);
-    				else $scope.addJmsProtocol(transportProtocols);
-    			};
-    			
-    			$scope.addKafkaProtocol = function(transportProtocols) {
-    				transportProtocols.push({"type" : $scope.availableTransportProtocols[0].type, "properties" : {"zookeeperHost" : "", "zookeeperPort" : 2181, "brokerHostname" : "", "kafkaPort" : 9092, "topicName" : ""}});
-    			}
-    			
-    			$scope.addJmsProtocol = function(transportProtocols) {
-    				transportProtocols.push({"type" : $scope.availableTransportProtocols[1].type, "properties" : {"brokerHostname" : "", "port" : 61616, "topicName" : ""}});
-    			}
-    			
-    			$scope.removeTransportProtocol = function(transportProtocols) {
-    				transportProtocols.splice(0, 1);
-    			}
-    			
-    			$scope.findProtocol = function(transportProtocol) {
-    				if (transportProtocol == undefined) return "";
-    				else {
-    					if (transportProtocol.type == $scope.availableTransportProtocols[0].type) return $scope.availableTransportProtocols[0].name;
-    					else return $scope.availableTransportProtocols[1].name;
-    				}
-    			} 
-    		}
+       		}
     	}
     }) 
     .directive('requiredPropertyValues', function() {
@@ -129,56 +72,7 @@ angular
     			disabled : "=disabled"
     		}
     	}
-    })
-    .directive('datatypeProperty', function() {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/datatype-property.tmpl.html',
-    		scope : {
-    			runtimeType : "=",
-    			disabled : "=disabled",
-    			dpMode : "=dpMode"
-    		},
-    		controller: function($scope, $element) {
-    			
-    			$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
-	        	                           {"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
-	        	                           {"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
-	        	                           {"title" : "Long", "description" : "A whole numerical datatype, e.g., '2332313993'", "id" : "http://www.w3.org/2001/XMLSchema#long"},
-	        	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];    	
-
-    			console.log($scope.dpMode);
-    			if ($scope.dpMode == 'restriction')
-    				$scope.primitiveClasses.push( {"title" : "Number", "description" : "Any numerical value", "id" : "http://schema.org/Number"});
-    		}
-    	}
-    })
-    .directive('domainProperty', function(restApi) {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/domain-property.tmpl.html',
-    		scope : {
-    			property : "=",
-    			disabled : "=disabled"
-    		},
-    		controller: function($scope, $element) {
-    			
-    			$scope.domainProperties = [];
-	        	
-	        	$scope.loadProperties = function(){
-	                restApi.getOntologyProperties()
-	                    .success(function(propertiesData){
-	                        $scope.domainProperties = propertiesData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
-	            
-	            $scope.loadProperties();
-    		}
-    	}
-    })
+    }) 
     .directive('propertyRestriction', function(restApi) {
     	return {
 	        restrict: 'E',
@@ -263,106 +157,6 @@ angular
 		    	};
     		}
     	}
-    }).directive('staticProperties', function(restApi) {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/static-properties.tmpl.html',
-    		scope : {
-    			staticProperties : "=element",
-    			streams : '=',
-    			disabled : "=disabled"
-    		},
-    		controller: function($scope, $element) {
-    			
-    			$scope.staticPropertyTypes = [{label : "Text Input", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty"},
-   				                           {label : "Single-Value Selection", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty"},
-   				                           {label : "Multi-Value Selection", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty"},
-   				                           {label : "Domain Concept", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty"},
-   				                           {label : "Single-Value Mapping Property", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary"},
-   				                           {label : "Multi-Value Mapping Property", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary"},
-   				                           {label : "Collection", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty"}];
-
-    			$scope.newStaticPropertyType = $scope.staticPropertyTypes[0].type;
-    			$scope.memberTypeSelected = false;
-    			
-    			
-    			$scope.isSelectedProperty = function(mapsFrom, property) {
-    				if (property.properties.elementName == mapsFrom) return true;
-    				return false;
-    			}; 			
-    			
-	            $scope.addStaticProperty = function(staticProperties, type) {
-	    			if (staticProperties == undefined) staticProperties = [];
-	    			 staticProperties.push($scope.getNewStaticProperty(type));
-	    		}
-	            
-	            $scope.getNewStaticProperty = function(type) {
-	            	if (type === $scope.staticPropertyTypes[0].type)
-	            		return {"type" : $scope.staticPropertyTypes[0].type, "properties" : {"label" : "", "description" : ""}};
-	            	else if (type === $scope.staticPropertyTypes[1].type)
-		            	return {"type" : $scope.staticPropertyTypes[1].type, "properties" : {"label" : "", "description" : "", "options" : []}};
-		            else if (type === $scope.staticPropertyTypes[2].type)
-	            		return {"type" : $scope.staticPropertyTypes[2].type, "properties" : {"label" : "", "description" : "", "options" : []}};
-	            	else if (type === $scope.staticPropertyTypes[3].type)
-		            	return {"type" : $scope.staticPropertyTypes[3].type, "properties" : {"label" : "", "description" : "", "supportedProperties" : []}};
-		            else if (type === $scope.staticPropertyTypes[4].type)
-		            	return {"type" : $scope.staticPropertyTypes[4].type, "properties" : {"label" : "", "description" : ""}};
-		            else if (type === $scope.staticPropertyTypes[5].type)
-		            	return {"type" : $scope.staticPropertyTypes[5].type, "properties" : {"label" : "", "description" : ""}};
-		            else if (type === $scope.staticPropertyTypes[6].type)
-			            return {"type" : $scope.staticPropertyTypes[6].type, "properties" : {"label" : "", "description" : "", "memberType" : "", "members" : []}};  
-	            }
-	    		
-		    	$scope.removeStaticProperty = function(staticProperties, staticPropertyIndex) {
-		    		   staticProperties.splice(staticPropertyIndex, 1);
-		    	};
-		    	
-		    	$scope.getType = function(property) {
-		    		var label;
-		    		angular.forEach($scope.staticPropertyTypes, function(value) {
-		    			if (value.type == property.type) label = value.label;
-		    		});
-		    		return label;
-		    	};
-		    	
-		    	$scope.domainPropertyRestricted = function(property) {
-		    		if (property.type == undefined) return false;
-		    		return true;
-		    	};
-		    
-		    	$scope.toggleDomainPropertyRestriction = function(property) {
-			    	if (property.type != undefined) property.type = undefined;
-			    	else property.type = $scope.properties[0].id;
-		    	}
-		    	
-		    	$scope.addMember = function(property) {
-		    		property.members.push(angular.copy($scope.getNewStaticProperty(property.memberType)));
-		    		$scope.memberTypeSelected = true;
-		    	}
-		    	
-		    	$scope.removeMember = function(property) {
-		    		property.members = [];
-		    		property.memberType = '';
-		    		$scope.memberTypeSelected = false;
-		    	}
-    		},
-    		link: function($scope, element, attrs) {	
-    			
-    			$scope.properties = [];
-	
-	        	$scope.loadProperties = function(){
-	                restApi.getOntologyProperties()
-	                    .success(function(propertiesData){
-	                        $scope.properties = propertiesData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
-		    	
-		    	$scope.loadProperties();
-    		}
-    	}
     }).directive('options', function() {
     	return {
     		restrict : 'E',
@@ -382,77 +176,6 @@ angular
 		    		   options.splice(index, 1);
 		    	};
     		}		
-    	}
-    }).directive('domainConceptProperty', function(restApi) {
-    	return {
-    		restrict : 'AE',
-    		templateUrl : 'modules/sensors/directives/domain-concept-property.tmpl.html',
-    		scope : {
-    			domainProperty : "=domainProperty",
-    			disabled : "=disabled"
-    		},
-    		link: function(scope, element, attrs) {
-    			  		
-    			scope.concepts = [];
-    			scope.properties = [];
-    			    			
-    			scope.loadProperties = function(){
-	                restApi.getOntologyProperties()
-	                    .success(function(propertiesData){
-	                        scope.properties = propertiesData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
-    			
-	            scope.loadConcepts = function(){
-	                restApi.getOntologyConcepts()
-	                    .success(function(conceptsData){
-	                        scope.concepts = conceptsData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
-		    	
-		    	scope.loadProperties();
-		    	scope.loadConcepts();
-		    	
-		    	
-    		},
-    		controller: function($scope, $element) {
-    			
-    			$scope.addSupportedProperty = function(supportedProperties) {   
-	    			if (supportedProperties == undefined) supportedProperties = [];
-	    			 supportedProperties.push({"propertyId" : ""});
-	    		}
-	            
-	            $scope.removeSupportedProperty = function(supportedProperties, index) {   	
-	    			 supportedProperties.splice(index, 1);
-	            }		
-	            
-	            $scope.conceptRestricted = function(domainProperty) {
-		    		if (domainProperty.requiredClass == undefined) return false;
-		    		return true;
-		    	};
-		    
-		    	$scope.toggleConceptRestriction = function(domainProperty) {
-			    	if ($scope.conceptRestricted(domainProperty)) domainProperty.requiredClass = undefined;
-			    	else domainProperty.requiredClass = $scope.concepts[0].id;
-		    	}
-		    	
-		    	$scope.conceptSelected = function(conceptId, currentConceptId)
-		    	{
-		    		if (conceptId == currentConceptId) return true;
-		    		return false;
-		    	}
-		    	
-		    	$scope.isSelectedProperty = function(availableProperty, selectedProperty) {
-   				 if (availableProperty == selectedProperty) return true;
-   				 return false;
-   			 }
-    		}
     	}
     }).directive('outputStrategy', function() {
     	return {
@@ -504,47 +227,6 @@ angular
 		    	};
     		}		
     	}
-    }).directive('eventProperties', function(restApi) {
-    	return {
-	        restrict: 'E',
-	        templateUrl: 'modules/sensors/directives/property.tmpl.html',
-	        scope : {
-	        	properties : "=properties",
-    			disabled : "=disabled"
-	        },
-	        link: function($scope, element, attrs) {
-
-	        	$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
-	        	                           {"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
-	        	                           {"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
-	        	                           {"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];    	
-
-	        	$scope.existingProperties = [];
-	        	
-	        	$scope.loadProperties = function(){
-	                restApi.getOntologyProperties()
-	                    .success(function(propertiesData){
-	                        $scope.existingProperties = propertiesData;
-	                    })
-	                    .error(function(msg){
-	                        console.log(msg);
-	                    });
-	            };
-	        	
-	            $scope.addProperty = function(properties) {
-	    			if (properties == undefined) $scope.properties.eventProperties = [];
-	    			 $scope.properties.eventProperties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeType" : "", "domainProperties" : [""]}});
-	    		}
-	    		
-		    	$scope.removeProperty = function(properties, propertyIndex) {
-		    		   properties.splice(propertyIndex, 1);
-		    	};
-		    	
-		    	$scope.loadProperties();
-		    	
-	        }
-    	}
-    	
     }).directive('supportedGrounding', function() {
     	return {
 	        restrict: 'E',
@@ -701,83 +383,6 @@ angular
     			 $scope.removeDomainConceptRow = function(members, property) {
     				 members.splice(property, 1);
     			 }
-    		 }
-    	}
-    }).directive('domainConceptInput', function(restApi) {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/editor/directives/domain-concept-input.tmpl.html',
-    		scope : {
-    			staticProperty : "=",
-    			autoCompleteStaticProperty : "="
-    		},
-    		controller: function($scope, $element)  {
-    			 
-    			$scope.querySearch = querySearch;
-    			$scope.selectedItemChange = selectedItemChange;
-    			$scope.searchTextChange   = searchTextChange;
-    			     		
-    			$scope.availableDomainProperties = {};
-    				
-				$scope.loadDomainConcepts = function(item) {
-					var query = {};
-					query.requiredClass = item.input.properties.requiredClass;
-					query.requiredProperties = [];
-					angular.forEach(item.input.properties.supportedProperties, function(p) {
-						var propertyObj = {};
-						propertyObj.propertyId = p.propertyId;
-						query.requiredProperties.push(propertyObj);
-					});
-					
-					restApi.getDomainKnowledgeItems(query)
-						.success(function(queryResponse){
-			                if (!$scope.availableDomainProperties[item.elementId])
-			            	{
-			            		$scope.availableDomainProperties[item.elementId] = {};
-			            	}
-			                angular.forEach(queryResponse.requiredProperties, function(resp) {
-			                    	angular.forEach(resp.queryResponse, function(instanceResult) {
-			                    	if (!$scope.availableDomainProperties[item.elementId][resp.propertyId])
-			                    		$scope.availableDomainProperties[item.elementId][resp.propertyId] = [];
-			                    	var instanceData = {label : instanceResult.label, description : instanceResult.description, propertyValue : instanceResult.propertyValue};
-			                    	$scope.availableDomainProperties[item.elementId][resp.propertyId].push(instanceData);
-			                	});
-			                });
-			            })
-			            .error(function(msg){
-			                console.log(msg);
-			            });
-				}
-    				
-    			function querySearch (query, staticPropertyId) {
-    			    	var result = [];
-    			    	var i = 0;
-    			    	angular.forEach($scope.availableDomainProperties[staticPropertyId], function(values) {
-    			    		if (values.length > 0 && i == 0)
-    						{
-    			    			var position = 0;
-    			    			angular.forEach(values, function(value) {
-    			    				if (query == undefined || value.label.substring(0, query.length) === query) result.push({label : value.label, description: value.description, position : position});
-    			    				position++;
-    			    			})
-    			        		i++;
-    						}		
-    			    	});
-    			    	return result;
-    			}
-    			    
-			    function searchTextChange(text) {
-			    
-			    }
-    			    
-			    function selectedItemChange(item, staticPropertyId, supportedProperties) {
-			    	angular.forEach(supportedProperties, function(supportedProperty) {
-			    	    supportedProperty.value = $scope.availableDomainProperties[staticPropertyId][supportedProperty.propertyId][item.position].propertyValue;
-			    	});
-    			}
-			    
-			    $scope.loadDomainConcepts($scope.autoCompleteStaticProperty);	
- 
     		 }
     	}
     });

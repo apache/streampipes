@@ -1,11 +1,8 @@
-<small>Datatype</small><br/>
-	     <select ng-model="runtimeType" ng-disabled="disabled">
-          	<option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}" ng-selected="runtimeType == primitive.id" ng-disabled="disabled">
+ <md-input-container style="width:100%">
+        <label>Datatype</label>
+	     <md-select ng-model="runtimeType" ng-disabled="disabled">
+          	<md-option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}" ng-selected="runtimeType == primitive.id" ng-disabled="disabled">
          		{{primitive.title}} - {{primitive.description}}
-         	</option>
-         </select>
-<!-- 	    <select ng-model="runtimeType" disabled="disabled"> -->
-<!-- 		          <option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}" ng-selected="runtimeType == primitive.id"> -->
-<!-- 		            {{primitive.title}} - {{primitive.description}} -->
-<!-- 		          </option> -->
-<!-- 		</select> -->
+         	</md-option>
+         </md-select>
+</md-input-container>

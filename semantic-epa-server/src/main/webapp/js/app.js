@@ -1,7 +1,23 @@
 'use strict';
 
 angular
-    .module('streamPipesApp', ['ngMaterial', 'ngMdIcons', 'ngRoute', 'ngCookies', 'angular-loading-bar', 'useravatar', 'schemaForm', 'ui.router', 'ngPrettyJson', 'ui.tree', 'ng-context-menu', 'ngFileUpload', 'duScroll', 'streamPipesDirectives', 'ui.dashboard', 'angularjs-dropdown-multiselect', 'rt.popup', 'btford.markdown'])
+    .module('streamPipesApp', ['ngMaterial', 
+                               'ngMdIcons', 
+                               'ngRoute', 
+                               'ngCookies', 
+                               'angular-loading-bar', 
+                               'useravatar', 
+                               'schemaForm', 
+                               'ui.router', 
+                               'ngPrettyJson', 
+                               'ui.tree', 
+                               'ng-context-menu', 
+                               'ngFileUpload', 
+                               'duScroll', 
+                               'ui.dashboard', 
+                               'angularjs-dropdown-multiselect', 
+                               'rt.popup', 
+                               'btford.markdown'])
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
@@ -1182,6 +1198,18 @@ angular
  	
  	restApi.getRunningVisualizations = function() {
  		return $http.get("/semantic-epa-backend/api/visualizations");
+ 	}
+ 	
+ 	restApi.getAllUnits = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/units/instances");
+ 	}
+ 	
+ 	restApi.getAllUnitTypes = function() {
+ 		return $http.get("/semantic-epa-backend/api/v2/units/types");
+ 	}
+ 	
+ 	restApi.getUnit = function(resource) {
+ 		return $http.get("/semantic-epa-backend/api/v2/units/instances/" +encodeURIComponent(resource));
  	}
  	
  	restApi.getEpaCategories = function() {
