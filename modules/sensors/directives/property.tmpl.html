@@ -1,10 +1,5 @@
 <div ng-repeat = "(key2, property) in properties.eventProperties track by $index">
-   	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
-   		<div flex="100" layout="row" >	
-   			<div flex="70" layout="row" layout-align="start center"><h4>Property {{key2+1}}</h4></div>
-   			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeProperty(properties.eventProperties, key2)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
-	</div>
-
+<collapsible list="properties.eventProperties", index="key2">
 	<md-input-container>
    	<label>Label</label>
        <input ng-model="property.properties.label" ng-disabled="disabled" >
@@ -22,11 +17,6 @@
 		</select>
    	</md-input-container>
    	
-   	<md-input-container>
-   	<label>Runtime name</label>
-       <input ng-model="property.properties.runtimeName" ng-disabled="disabled" >
-   	</md-input-container>
-
     <md-input-container>
    	<label>Domain Property</label>
        <select ng-model="property.properties.domainProperties[0]" ng-disabled="disabled">
@@ -34,7 +24,12 @@
 		            {{p.title}}
 		          </option>
 		</select>
-   	</md-input-container>  	    
-</div>
+   	</md-input-container>  	
+   	
+   	<md-input-container>
+   	<label>Runtime name</label>
+       <input ng-model="property.properties.runtimeName" ng-disabled="disabled" >
+   	</md-input-container>    
+</collapsible>
 </div>
 <md-button class="md-accent" ng-click="addProperty(properties.eventProperties)" ng-disabled="disabled" >Add property</md-button>

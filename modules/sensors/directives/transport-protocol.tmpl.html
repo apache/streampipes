@@ -1,13 +1,14 @@
+<div class="md-padding">
 <div layout="row">
 		<select ng-model="selectedTransportProtocol" placeholder="Select Transport Protocol" ng-disabled="disabled" >
 	          <option ng-repeat="protocol in availableTransportProtocols" value="{{protocol.id}}">
 	            <b>{{protocol.name}}</b>
 	          </option>
 		</select>
-		<md-button class="md-accent" ng-click="addTransportProtocol(grounding)" ng-disabled="disabled">Add Transport Protocol</md-button>
+		<md-button class="md-accent" ng-click="addTransportProtocol(grounding)" ng-disabled="disabled || grounding.length > 0">Add Transport Protocol</md-button>
 </div>	
 <div ng-show="grounding.length > 0">
-	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
+	<div layout="column" flex="100" class="panel-margin ontology-panel-pipeline-configurator">
    		<div flex="100" layout="row" >	
    			<div flex="70" layout="row" layout-align="start center"><h4>Transport Protocol: {{findProtocol(grounding[0])}}</h4></div>
    			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeTransportProtocol(grounding)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Remove Format"></md-icon></md-button></div>	
@@ -53,4 +54,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>

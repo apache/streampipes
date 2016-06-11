@@ -26,6 +26,11 @@ angular.module('streamPipesApp')
 	
 	$scope.selectedTab = "SOURCES";
 	
+	$scope.activeProducerTab = "basics";
+	$scope.activeStreamTab = "basics";
+	
+	$scope.showHints = false;
+	
 	$scope.setSelectedTab = function(type) {
 		$scope.selectedTab = type;
 	}
@@ -35,6 +40,19 @@ angular.module('streamPipesApp')
 	
 	}
 	
+	$scope.selectProducerTab = function(name) {
+		$scope.activeProducerTab = name;
+	}
+	
+	$scope.isProducerTabSelected = function(name) {
+		return $scope.activeProducerTab == name;
+	}
+	
+	$scope.getProducerActiveTabCss = function(name) {
+		if (name == $scope.activeProducerTab) return "md-fab md-accent";
+		else return "md-fab md-accent wizard-inactive";
+	}
+		
 	
 	$scope.removeStream = function(eventStreams, stream) {
 		eventStreams.splice(stream, 1);
@@ -65,6 +83,8 @@ angular.module('streamPipesApp')
 		$scope.streamSelected = false;
 		$scope.selectedStream = "";
 		$scope.editingDisabled = false;
+		$scope.activeProducerTab = "basics";
+		$scope.activeStreamTab = "basics";
 	}
 	
 	$scope.addStream = function(element) {
@@ -209,6 +229,20 @@ angular.module('streamPipesApp')
     $scope.loadEcCategories();
     $scope.loadEpaCategories();
     
+})
+.filter('startsWithLetter', function () {
+    return function (items, fromLetter, toLetter) {
+        var filtered = [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var firstLetter = item.name.substring(0, 1).toLowerCase();
+            if ((!fromLetter || firstLetter >= fromLetter)
+                && (!toLetter || firstLetter <= toLetter)) {
+                filtered.push(item);
+            }
+        }
+        return filtered;
+    };
 });
 
 function DownloadDialogController($scope, $mdDialog, restApi, elementId, elementData, elementType, $http, $rootScope) {

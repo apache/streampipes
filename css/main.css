@@ -12,9 +12,56 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ccc',GradientType=0 ); /* IE6-9 */
 	
 	font-family: 'Doppio One', sans-serif;
-	height: 100vh;
+	height: auto !important;
 	width: 100%;
 	background-attachment: fixed;	
+}
+
+.md-padding-left {
+	padding-left:16px;
+}
+
+md-input-container.md-default-theme label, md-input-container label, md-input-container.md-default-theme .md-placeholder, md-input-container .md-placeholder {
+	color: rgba(0,0,0,0.66);
+}
+
+md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md-select-value.md-select-placeholder {
+	color: rgba(0,0,0,0.66);
+}
+
+.wizard-row:before {
+    top: 50px;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 80%;
+    left: 10%;
+    margin-right:auto;
+    height: 1px;
+    background-color: #ccc;
+    z-order: 0;
+}
+
+.wizard-row-stream {
+    position: relative;
+    z-index: 1;
+    
+}
+
+ .wizard-row-stream:before {
+        border-top: 1px solid #ccc;
+        content:"";
+        margin: 0 auto; /* this centers the line to the full width specified */
+        position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+        top: 37%; left: 0; right: 0; bottom: 0;
+        width: 95%;
+        z-index: -1;
+    }
+
+.wizard-inactive {
+	background-color: white !important;
+    color: black !important;
+    border: 2px solid rgb(255,64,129) !important;
 }
 
 .jsplumb-endpoint {
@@ -104,7 +151,7 @@ body {
 .ontology-panel-main {
 	margin-top: 5px;
 	margin-bottom: 5px;
-	border-radius: 5px;
+	border-radius: 0px;
 }
 
 .ontology-panel-title {
@@ -119,6 +166,10 @@ body {
 
 .ontology-panel-property {
 	 border: 1px solid #009688;
+}
+
+.ontology-panel-pipeline-configurator {
+	 border: 1px solid rgb(63, 81, 181);
 }
 
 .ontology-panel-title-concept {
