@@ -17,6 +17,7 @@ angular
                                'ui.dashboard', 
                                'angularjs-dropdown-multiselect', 
                                'rt.popup', 
+                               'angular-clipboard',
                                'btford.markdown'])
     .constant("apiConstants", {
         url: "http://localhost",

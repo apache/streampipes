@@ -1,0 +1,46 @@
+<div flex="100" class="md-padding">
+	<div flex="100" layout="column" style="width:100%">	
+		<h5 class="md-subhead">Implementation</h5>
+		<md-input-container class="md-padding-left">
+			 	<md-radio-group ng-model="deployment.outputType" class="md-padding-left" style="display:inline;">
+			 	 		<md-radio-button value="IMPLEMENTATION">I'd like to generate a runtime implementation.</md-radio-button>
+					    <md-radio-button value="DESCRIPTION">I'd like to generate the description only.</md-radio-button>
+					   	</md-radio-group>	
+		</md-input-container> 
+		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider> 
+		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION'">  
+		 	<h5 class="md-subhead">Code generation options</h5>
+				    <div flex="100" layout="row"> 
+					    <md-input-container>
+					    	<label>Class name prefix</label>
+					        <input ng-model="deployment.classNamePrefix">
+					    </md-input-container>
+						<md-input-container flex> 
+		    				<md-button ng-click="generateDescription()" class="md-accent" ng-click="">Generate code</md-button>
+		    			</md-input-container>
+					</div>
+		</div>  
+		 <div flex="100" ng-show="deployment.outputType == 'IMPLEMENTATION'">  
+		 	<h5 class="md-subhead">Runtime implementation</h5>
+				    <md-radio-group ng-model="deployment.deploymentType" class="md-padding-left" style="display:inline;">
+				     	 <md-radio-button value="ACTION">Custom implementation</md-radio-button>
+					     <md-radio-button value="ACTION_FLINK">Apache Flink sink</md-radio-button>
+					   
+					 </md-radio-group> 	
+			<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+		 	<deployment-type deployment="deployment"/>
+		    <md-input-container flex> 
+		    	<md-button ng-click="generateImplementation()" class="md-accent" ng-click="">Generate Implementation</md-button>
+		    </md-input-container>
+		</div>
+		
+		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+		<div flex="100" layout="row" layout-align="center center" ng-if="deployment.outputType == 'DESCRIPTION' && resultReturned">
+			<div flex="100" layout="column">
+				<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+				<h5 class="md-subhead">Description</h5>
+				<generated-element-description jsonld="jsonld" java="java" element="element"/>
+			</div>
+		</div>
+	</div>
+</div>

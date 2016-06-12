@@ -1,65 +1,49 @@
 <div flex="100" class="md-padding">
 	<div flex="100" layout="column" style="width:100%">	
-		 <div flex="100" layout="row">
-		   <md-input-container>
-		    	<h4>Implementation</h4>
-			 	<md-radio-group ng-model="deployment.outputType" class="md-padding" style="display:inline;">
-			 	 		<md-radio-button value="OUTPUT_IMPLEMENTATION">I'd like to generate a runtime implementation.</md-radio-button>
-					    <md-radio-button value="DESCRIPTION_ONLY">I'd like to generate the description only.</md-radio-button>
+		<h5 class="md-subhead">Implementation</h5>
+		   <md-input-container class="md-padding-left">
+			 	<md-radio-group ng-model="deployment.outputType" class="md-padding-left" style="display:inline;">
+			 	 		<md-radio-button value="IMPLEMENTATION">I'd like to generate a runtime implementation.</md-radio-button>
+					    <md-radio-button value="DESCRIPTION">I'd like to generate the description only.</md-radio-button>
 					   	</md-radio-group>	
 			</md-input-container> 
-		 </div>   
 		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider> 
-		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION_ONLY'">  
-		 	<div flex="100">			
-				<h4>Code generation options</h4>
-				    <div flex="100" layout="row"> 
-					    <md-input-container>
-					    	<label>Class name prefix</label>
-					        <input ng-model="deployment.classNamePrefix">
-					    </md-input-container>
-						<md-input-container flex> 
-		    				<md-button ng-click="directImport()" class="md-accent" ng-click="">Generate code</md-button>
-		    			</md-input-container>
-					</div>
-			</div>  
+		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION'">  
+		 	<h5 class="md-subhead">Code generation options</h5>
+				    <div flex="100" layout="row" class="md-padding-left">
+				    	<div layout="row"> 
+						    <md-input-container>
+						    	<label>Class name prefix</label>
+						        <input ng-model="deployment.classNamePrefix">
+						    </md-input-container>
+					    </div>
+					    <div flex="100" layout="column"> 
+			    			<md-button ng-click="generateDescription()" class="md-accent">Generate code</md-button>
+		    			</div>
+					</div> 
 		</div>  
-		 <div flex="100" ng-show="deployment.outputType == 'OUTPUT_IMPLEMENTATION'">  
-		 	<div flex="100">			
-				<h4>Runtime implementation</h4>
-				    <md-radio-group ng-model="deployment.adapterType" class="md-padding" style="display:inline;">
-				     	 <md-radio-button value="Custom">Custom adapter</md-radio-button>
-					     <md-radio-button value="Flink">Apache Flink</md-radio-button>
-					     <md-radio-button value="Esper">Esper</md-radio-button>
-					     <md-radio-button value="Storm">Apache Storm</md-radio-button>
-					 </md-radio-group> 	
-			</div>  
+		<div flex="100" ng-show="deployment.outputType == 'IMPLEMENTATION'">  
+		 	<h5 class="md-subhead">Runtime implementation</h5>
+				    <md-radio-group ng-model="deployment.deploymentType" class="md-padding-left" style="display:inline;">
+				     	 <md-radio-button value="SEPA_ALGORITHM">Custom implementation</md-radio-button>
+					     <md-radio-button value="SEPA_FLINK">Apache Flink</md-radio-button>
+					     <md-radio-button value="SEPA_ESPER">Esper</md-radio-button>
+					     <md-radio-button value="SEPA_STORM">Apache Storm</md-radio-button>
+					 </md-radio-group> 	  
 			<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-		 	<deployment-type deployment="deployment"/>
-			    <md-input-container flex> 
-			    	<md-button ng-click="generateImplementation()" class="md-accent" ng-click="">Generate Implementation</md-button>
-			    </md-input-container>
-			   </div>
-		</div>
-		
-		
+			<div flex="100" layout="column">
+			 	<deployment-type deployment="deployment"/>
+			</div>
+		 	<div flex="100" layout="column"> 
+		    	<md-button ng-click="generateImplementation()" class="md-accent">Generate Implementation</md-button>
+		    </div>
+		</div> 	
 		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
-		<div flex layout="row" layout-align="center center" ng-show="directImportResult">
-			<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50">
-				
-				<md-content class="md-padding">
-				<div flex layout="row"><h3>{{result.elementName}}</h3> 
-				<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="result.success"></md-icon>
-				<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!(result.success)"></md-icon>
-					    		
-				</div>
-				<div ng-repeat = "detail in result.notifications">
-					<div>{{detail.title}}</div>
-					<div>{{detail.description}}</div>
-					<md-divider/>
-				</div>
-				
-				</md-content>
+		<div flex="100" layout="row" layout-align="center center" ng-if="deployment.outputType == 'DESCRIPTION' && resultReturned">
+			<div flex="100" layout="column">
+				<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+				<h5 class="md-subhead">Description</h5>
+				<generated-element-description jsonld="jsonld" java="java" element="element"/>
 			</div>
 		</div>
 	</div>
