@@ -12,11 +12,11 @@
 		Static Properties
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('supportedGrounding')" aria-label="Deployment" ng-click="selectConsumerTab('supportedGrounding')">5</md-button>
+		<md-button ng-class="getConsumerActiveTabCss('supportedGrounding')" aria-label="Deployment" ng-click="selectConsumerTab('supportedGrounding')">4</md-button>
 		Supported Grounding
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('deployment')" aria-label="Deployment" ng-click="selectConsumerTab('deployment')">6</md-button>
+		<md-button ng-class="getConsumerActiveTabCss('deployment')" aria-label="Deployment" ng-click="selectConsumerTab('deployment')">5</md-button>
 		Deployment
 	</div>
 </div>
@@ -35,6 +35,6 @@
 		<supported-grounding grounding="selectedAction.supportedGrounding" disabled="editingDisabled"></supported-grounding> 
 	</collapsible>
 	<collapsible title-label="'Deployment'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('deployment')">
-	Deployment
+		<sink-deployment element="selectedAction" disabled="disabled" style="width:100%;"/>
 	</collapsible>
 </div>

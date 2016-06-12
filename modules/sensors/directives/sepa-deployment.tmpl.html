@@ -4,19 +4,12 @@
 		   <md-input-container>
 		    	<h4>Implementation</h4>
 			 	<md-radio-group ng-model="deployment.outputType" class="md-padding" style="display:inline;">
-			 	 		<md-radio-button value="DIRECT_IMPORT">Specified streams are already available on the message broker (no adapter implementation needed). </md-radio-button>
-					    <md-radio-button value="OUTPUT_IMPLEMENTATION">I'd like to implement an adapter based on this description.</md-radio-button>
+			 	 		<md-radio-button value="OUTPUT_IMPLEMENTATION">I'd like to implement an adapter based on this description.</md-radio-button>
 					    <md-radio-button value="DESCRIPTION_ONLY">I'd like to generate the description only.</md-radio-button>
 					   	</md-radio-group>	
 			</md-input-container> 
 		 </div>   
-		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-		 <div ng-show="deployment.outputType == 'DIRECT_IMPORT'">
-		 	<md-input-container flex> 
-		    		<md-button ng-click="directImport()" class="md-accent" ng-click="">Add this source</md-button>
-		    </md-input-container>
-		  
-		 </div>  
+		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider> 
 		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION_ONLY'">  
 		 	<div flex="100">			
 				<h4>Code generation options</h4>
@@ -33,12 +26,12 @@
 		</div>  
 		 <div flex="100" ng-show="deployment.outputType == 'OUTPUT_IMPLEMENTATION'">  
 		 	<div flex="100">			
-				<h4>Adapter Type (beta)</h4>
+				<h4>Runtime implementation</h4>
 				    <md-radio-group ng-model="deployment.adapterType" class="md-padding" style="display:inline;">
 				     	 <md-radio-button value="Custom">Custom adapter</md-radio-button>
-					     <md-radio-button value="OPC">OPC adapter</md-radio-button>
-					     <md-radio-button value="File">File adapter</md-radio-button>
-					     <md-radio-button value="MySql">MySQL adapter</md-radio-button>
+					     <md-radio-button value="Flink">Apache Flink</md-radio-button>
+					     <md-radio-button value="Esper">Esper</md-radio-button>
+					     <md-radio-button value="Storm">Apache Storm</md-radio-button>
 					 </md-radio-group> 	
 			</div>  
 			<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>

@@ -1,0 +1,33 @@
+<div flex="100">			
+	<h4>Deployment type</h4>
+	    <md-radio-group ng-model="deployment.deploymentMethod" class="md-padding" style="display:inline;">
+		     <md-radio-button value="STANDALONE">Standalone (integrated web server)</md-radio-button>
+		     <md-radio-button value="EMBEDDED">Servlet Container (e.g., Apache Tomcat)</md-radio-button>
+		     <md-radio-button value="OSGI">OSGI Bundle</md-radio-button>
+		 </md-radio-group> 
+	<div flex="100" layout="row">
+		<div flex="25">
+	        <md-input-container>
+		    	<label>GroupId</label>
+		        <input ng-model="deployment.groupId">
+		    </md-input-container>
+		</div>
+		<div flex="25">
+		    <md-input-container>
+		    	<label>ArtifactId</label>
+		        <input ng-model="deployment.artifactId">
+		    </md-input-container>  
+		</div>
+		<div flex="25"> 
+		    <md-input-container>
+		    	<label>Class Prefix</label>
+		        <input ng-model="deployment.classNamePrefix">
+		    </md-input-container>
+		</div>
+		<div flex="25">
+		    <md-input-container>
+		    	<label>Port</label>
+		        <input ng-model="deployment.port">
+		    </md-input-container>  
+		</div>
+</div>
