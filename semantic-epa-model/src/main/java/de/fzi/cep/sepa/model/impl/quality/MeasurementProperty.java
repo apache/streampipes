@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
@@ -18,6 +17,10 @@ public class MeasurementProperty extends UnnamedSEPAElement {
 
 	public MeasurementProperty() {
 		super();
+	}
+	
+	public MeasurementProperty(MeasurementProperty other) {
+		super(other);
 	}
 
 }

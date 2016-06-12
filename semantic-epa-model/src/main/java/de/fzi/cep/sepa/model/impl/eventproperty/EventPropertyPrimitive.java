@@ -30,7 +30,8 @@ public class EventPropertyPrimitive extends EventProperty {
 	private String runtimeType;
 	
 	@RdfProperty("sepa:hasMeasurementUnit")
-	private String measurementUnit;
+	@OneToOne(cascade = {CascadeType.ALL})
+	private URI measurementUnit;
 	
 	@RdfProperty("sepa:valueSpecification")
 	@OneToOne(cascade = {CascadeType.ALL})
@@ -57,14 +58,14 @@ public class EventPropertyPrimitive extends EventProperty {
 			String measurementUnit, List<URI> subClassOf) {
 		super(runtimeName, subClassOf);
 		this.runtimeType = runtimeType;
-		this.measurementUnit = measurementUnit;
+		//this.measurementUnit = measurementUnit;
 	}
 
 	public EventPropertyPrimitive(String propertyType, String propertyName,
 			String measurementUnit, List<URI> subClassOf, List<EventPropertyQualityDefinition> qualities) {
 		super(propertyName, subClassOf, qualities);
 		this.runtimeType = propertyType;
-		this.measurementUnit = measurementUnit;
+		//this.measurementUnit = measurementUnit;
 	}
 	
 	public String getRuntimeType() {
@@ -74,10 +75,10 @@ public class EventPropertyPrimitive extends EventProperty {
 		this.runtimeType = propertyType;
 	}
 	
-	public String getMeasurementUnit() {
+	public URI getMeasurementUnit() {
 		return measurementUnit;
 	}
-	public void setMeasurementUnit(String measurementUnit) {
+	public void setMeasurementUnit(URI measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
 

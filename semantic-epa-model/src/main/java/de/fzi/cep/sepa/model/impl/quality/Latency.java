@@ -10,7 +10,7 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
 @RdfsClass("ssn:Latency")
 @Entity
-public class Latency extends EventPropertyQualityDefinition {
+public class Latency extends EventStreamQualityDefinition {
 
 	private static final long serialVersionUID = -9211064635743833555L;
 	
@@ -19,6 +19,11 @@ public class Latency extends EventPropertyQualityDefinition {
 
 	public Latency() {
 		super();
+	}
+	
+	public Latency(Latency other) {
+		super(other);
+		this.quantityValue = other.getQuantityValue();
 	}
 	
 	public Latency(float quantityValue) {
@@ -35,7 +40,7 @@ public class Latency extends EventPropertyQualityDefinition {
 	
 
 	//@Override
-	public int compareTo(EventPropertyQualityDefinition o) {
+	public int compareTo(EventStreamQualityDefinition o) {
 		Latency other = (Latency) o;
 		if (other.getQuantityValue() == this.getQuantityValue()) {
 			return 0;

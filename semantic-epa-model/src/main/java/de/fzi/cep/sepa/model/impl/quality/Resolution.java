@@ -25,6 +25,11 @@ public class Resolution extends EventPropertyQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 	
+	public Resolution(Resolution other) {
+		super(other);
+		this.quantityValue = other.getQuantityValue();
+	}
+	
 	public float getQuantityValue() {
 		return quantityValue;
 	}

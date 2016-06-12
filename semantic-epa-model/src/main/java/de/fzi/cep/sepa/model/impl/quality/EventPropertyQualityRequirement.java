@@ -40,6 +40,12 @@ public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 		this.minimumPropertyQuality = minimumPropertyQuality;
 		this.maximumPropertyQuality = maximumPropertyQuality;
 	}
+	
+	public EventPropertyQualityRequirement(EventPropertyQualityRequirement other) {
+		super(other);
+		this.minimumPropertyQuality = other.getMinimumPropertyQuality();
+		this.maximumPropertyQuality = other.getMaximumPropertyQuality();
+	}
 
 	public EventPropertyQualityDefinition getMinimumPropertyQuality() {
 		return minimumPropertyQuality;

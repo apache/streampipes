@@ -37,12 +37,13 @@ public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 		this.maximumStreamQuality = maximumStreamQuality;
 	}
 	
+	public EventStreamQualityRequirement(EventStreamQualityRequirement other) {
+		this.minimumStreamQuality = other.getMinimumStreamQuality();
+		this.maximumStreamQuality = other.getMaximumStreamQuality();
+	}
+	
 	public EventStreamQualityRequirement() {
 		super();
-	}
-
-	public EventStreamQualityRequirement(EventStreamQualityRequirement s) {
-		// TODO Auto-generated constructor stub
 	}
 
 	public EventStreamQualityDefinition getMinimumStreamQuality() {

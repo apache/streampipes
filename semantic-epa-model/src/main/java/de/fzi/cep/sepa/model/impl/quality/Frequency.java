@@ -23,6 +23,11 @@ public class Frequency extends EventStreamQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 	
+	public Frequency(Frequency other) {
+		super(other);
+		this.quantityValue = other.getQuantityValue();
+	}
+	
 	/**
 	 * The unit of qualityValue is Hertz [Hz]
 	 */

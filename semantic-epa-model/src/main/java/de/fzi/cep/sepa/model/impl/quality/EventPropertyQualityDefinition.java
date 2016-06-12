@@ -15,4 +15,11 @@ public abstract class EventPropertyQualityDefinition extends MeasurementProperty
 
 	private static final long serialVersionUID = -3849772043514528797L;
 	
+	public EventPropertyQualityDefinition() {
+		super();
+	}
+	
+	public EventPropertyQualityDefinition(EventPropertyQualityDefinition other) {
+		super(other);
+	}
 }

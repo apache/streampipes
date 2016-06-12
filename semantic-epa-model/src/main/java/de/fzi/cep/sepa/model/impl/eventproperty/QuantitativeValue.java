@@ -10,7 +10,9 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 	 "dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "so", "http://schema.org/"})
 @RdfsClass("so:QuantitativeValue")
 @Entity
-public class QuantitativeValue {
+public class QuantitativeValue extends ValueSpecification {
+
+	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("so:minValue")
 	private int minValue;
@@ -21,11 +23,23 @@ public class QuantitativeValue {
 	@RdfProperty("so:unitCode")
 	private String unitCode;
 	
-	public QuantitativeValue(int minValue, int maxValue, String unitCode) {
+	@RdfProperty("so:step")
+	private double step;
+	
+	public QuantitativeValue(int minValue, int maxValue, String unitCode, double step) {
 		super();
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.unitCode = unitCode;
+		this.step = step;
+	}
+	
+	public QuantitativeValue(QuantitativeValue other) {
+		super(other);
+		this.minValue = other.getMinValue();
+		this.maxValue = other.getMaxValue();
+		this.unitCode = other.getUnitCode();
+		this.step = other.getStep();
 	}
 
 	public int getMinValue() {
@@ -51,6 +65,13 @@ public class QuantitativeValue {
 	public void setUnitCode(String unitCode) {
 		this.unitCode = unitCode;
 	}
-	
-	
+
+	public double getStep() {
+		return step;
+	}
+
+	public void setStep(double step) {
+		this.step = step;
+	}
+		
 }

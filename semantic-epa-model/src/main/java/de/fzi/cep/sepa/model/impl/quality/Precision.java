@@ -25,6 +25,11 @@ public class Precision extends EventPropertyQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 	
+	public Precision(Precision other) {
+		super(other);
+		this.quantityValue = other.getQuantityValue();
+	}
+	
 	public float getQuantityValue() {
 		return quantityValue;
 	}

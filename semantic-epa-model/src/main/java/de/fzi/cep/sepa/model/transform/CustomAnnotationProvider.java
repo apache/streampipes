@@ -69,7 +69,10 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy.class,
 				de.fzi.cep.sepa.model.impl.output.UriPropertyMapping.class,
 				de.fzi.cep.sepa.model.impl.quality.MeasurementCapability.class,
-				de.fzi.cep.sepa.model.impl.quality.MeasurementObject.class
+				de.fzi.cep.sepa.model.impl.quality.MeasurementObject.class,
+				de.fzi.cep.sepa.model.impl.eventproperty.ValueSpecification.class,
+				de.fzi.cep.sepa.model.impl.eventproperty.Enumeration.class,
+				de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue.class
 		);
 	}
 

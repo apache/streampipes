@@ -29,6 +29,12 @@ public class MeasurementRange extends EventPropertyQualityDefinition {
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 	}
+	
+	public MeasurementRange(MeasurementRange other) {
+		super(other);
+		this.minValue = other.getMinValue();
+		this.maxValue = other.getMaxValue();
+	}
 
 	public float getMinValue() {
 		return minValue;

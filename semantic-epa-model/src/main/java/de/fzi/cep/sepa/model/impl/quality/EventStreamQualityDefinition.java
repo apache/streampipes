@@ -20,7 +20,7 @@ public class EventStreamQualityDefinition extends MeasurementProperty {
 	}
 
 	public EventStreamQualityDefinition(EventStreamQualityDefinition o) {
-		// TODO Auto-generated constructor stub
+		super(o);
 	}
 
 

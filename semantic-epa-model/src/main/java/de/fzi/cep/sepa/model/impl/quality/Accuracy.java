@@ -22,6 +22,11 @@ public class Accuracy extends EventPropertyQualityDefinition {
 		this.quantityValue = quantityValue;
 	}
 	
+	public Accuracy(Accuracy other) {
+		super(other);
+		this.quantityValue = other.getQuantityValue();
+	}
+	
 	@RdfProperty("sepa:hasQuantityValue")
 	float quantityValue;
 
