@@ -29,7 +29,7 @@
 		<event-properties properties="stream.eventSchema.eventProperties" disabled="disabled" style="width:100%"/>
 	</div>
 	<collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('quality')">	
-		<stream-quality-definitions property="stream.eventQuality.eventPropertyQualities" disabled="disabled" style="width:100%"/>
+		<stream-quality-definitions property="stream.hasEventStreamQualities" disabled="disabled" style="width:100%"/>
 	</collapsible>
 	<collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('format')">
 		<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>

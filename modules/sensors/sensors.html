@@ -211,7 +211,7 @@
 	                  							 <md-menu-content>
 	                  							 	<div ng-repeat="action in actions | startsWithLetter:'a':'f' | orderBy: 'name'"> 
 								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(selectedAction.uri, true, true)">&nbsp;{{action.name}}</md-button>
+															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
 														</md-menu-item>
 								 					</div>	
 	                  							 </md-menu-content>
@@ -223,7 +223,7 @@
 	                  							 <md-menu-content>
 	                  							 	<div ng-repeat="action in actions | startsWithLetter:'g':'m' | orderBy: 'name'"> 
 								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(selectedAction.uri, true, true)">&nbsp;{{action.name}}</md-button>
+															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
 														</md-menu-item>
 								 					</div>	
 	                  							 </md-menu-content>
@@ -235,7 +235,7 @@
 	                  							 <md-menu-content>
 	                  							 	<div ng-repeat="action in actions | startsWithLetter:'n':'s' | orderBy: 'name'"> 
 								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(selectedAction.uri, true, true)">&nbsp;{{action.name}}</md-button>
+															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
 														</md-menu-item>
 								 					</div>	
 	                  							 </md-menu-content>
@@ -247,7 +247,7 @@
 	                  							 <md-menu-content>
 	                  							 	<div ng-repeat="action in actions | startsWithLetter:'t':'z' | orderBy: 'name'"> 
 								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(selectedAction.uri, true, true)">&nbsp;{{action.name}}</md-button>
+															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
 														</md-menu-item>
 								 					</div>	
 	                  							 </md-menu-content>
@@ -259,28 +259,14 @@
 						</div>			
 					</div>
 				</div>
-
-				<div flex layout="row">
-					<div flex-sm="90" flex-gt-sm="90" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="actionSelected">
-						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
-							<div flex="100" layout="row">
-								<div layout="row" layout-align="start center" flex="100">{{selectedAction.name}}</div>	
-							</div>
-						</div>
-						<md-content class="md-padding">
-							<ng-include src="'modules/sensors/templates/sec.html'"></ng-include>
-								
-							<md-divider></md-divider>
-							<div class="form-actions">
-								<div class="md-warn" ng-show="errorMessagePresent">
-									      <h4>{{errorMessage}}</h4>
-								</div>
-								<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedAction.uri, selectedAction, 'Sec')">Generate</md-button>
-								</div>
-								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
-							</div>
-					
+				<div flex="100" layout="row" layout-align="center center" class="md-padding">	
+					<div flex="100" layout="column" ng-if="actionSelected">				
+						<div flex="none" layout-wrap layout="row">
+							<h4 class="md-display-1">{{selectedAction.name == '' ? 'Unnamed Element' : selectedAction.name}}</h4>
+						</div>		
+						<md-content class="md-padding" >
+							  <ng-include src="'modules/sensors/templates/sec.html'"/>
+						      <md-divider></md-divider>
 						</md-content>
 					</div>
 				</div>

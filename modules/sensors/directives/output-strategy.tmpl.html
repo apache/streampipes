@@ -1,5 +1,5 @@
 <div ng-repeat = "(key, strategy) in strategies">
-	<collapsible title-label="getType(strategy)" list="strategies" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
+	<collapsible title-label="getType(strategy)" list="strategies" index="key" disabled="disabled" subtitle="true" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
 		<div ng-show="strategy.type == outputStrategyTypes[0].type">
 			<event-properties properties="strategy.properties.eventProperties" disabled="disabled"></event-properties>
 		</div>

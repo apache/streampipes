@@ -29,6 +29,7 @@ angular.module('streamPipesApp')
 	$scope.activeProducerTab = "basics";
 	$scope.activeStreamTab = "basics";
 	$scope.activeEpaTab = "basics";
+	$scope.activeConsumerTab = "basics";
 	
 	$scope.showHints = false;
 	
@@ -64,6 +65,19 @@ angular.module('streamPipesApp')
 	
 	$scope.getEpaActiveTabCss = function(name) {
 		if (name == $scope.activeEpaTab) return "md-fab md-accent";
+		else return "md-fab md-accent wizard-inactive";
+	}
+	
+	$scope.selectConsumerTab = function(name) {
+		$scope.activeConsumerTab = name;
+	}
+	
+	$scope.isConsumerTabSelected = function(name) {
+		return $scope.activeConsumerTab == name;
+	}
+	
+	$scope.getConsumerActiveTabCss = function(name) {
+		if (name == $scope.activeConsumerTab) return "md-fab md-accent";
 		else return "md-fab md-accent wizard-inactive";
 	}
 		
