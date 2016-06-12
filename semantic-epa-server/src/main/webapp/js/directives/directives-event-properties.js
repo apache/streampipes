@@ -67,14 +67,14 @@ angular
 	            };
 	        	
 	            $scope.addProperty = function(properties) {
-	    			if (properties == undefined) $scope.properties.eventProperties = [];
-	    			 $scope.properties.eventProperties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeType" : "", "domainProperties" : [""]}});
-	    		}
+	            	console.log(properties);
+	    			if (properties == undefined) properties = [];
+	    			 properties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeType" : "", "domainProperties" : [""]}});
+	    			 console.log("properties sie");
+	    			 console.log($scope.properties.length);
+	            }
 	    		
-		    	$scope.removeProperty = function(properties, propertyIndex) {
-		    		   properties.splice(propertyIndex, 1);
-		    	};
-		    	
+	       
 		    	$scope.loadProperties();
 		    	
 	        }

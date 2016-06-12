@@ -1,12 +1,8 @@
-<h3 class="md-display-2">Stream Restrictions</h3>
-	<div ng-repeat = "(key, restriction) in streams track by $index">
-		<div layout="column" flex="100" class="panel-margin ontology-panel-property">
-			<div flex="100" layout="row">
-				<div flex="70" layout="row" layout-align="start center"><h4>Stream {{key+1}}</h4></div>
-				<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled"  ng-click="removeStreamRestriction(key, streams)" class="md-icon-button tree-node-action"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
-			</div>
-		    <property-restriction element="restriction" disabled="disabled" ></property-restriction>
-	    </div>
-	</div>
-	<md-button class="md-accent" ng-click="addStreamRestriction(streams)" ng-disabled="streams.length >= 2 || disabled">Add Stream Restriction</md-button>
-	<p></p>
+<div ng-repeat = "(key, restriction) in streams track by $index">
+<collapsible title-label="'Stream ' +(key+1)" list="streams" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
+	    <property-restriction element="restriction" disabled="disabled" ></property-restriction>
+</collapsible>
+<p/>
+</div>
+<md-button class="md-accent" ng-click="addStreamRestriction(streams)" ng-disabled="streams.length >= 2 || disabled">Add stream requirement</md-button>
+<p></p>

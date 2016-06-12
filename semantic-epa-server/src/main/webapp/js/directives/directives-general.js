@@ -22,7 +22,8 @@ angular
     			disabled: "=disabled",
     			removable: "=removable",
     			titleLabel: "=titleLabel",
-    			collapsible: "=collapsible"
+    			collapsible: "=collapsible",
+    			subtitle: "="
     		},
     		
     		controller: function($scope, $element) {

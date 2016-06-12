@@ -1,35 +1,56 @@
-<div ng-repeat = "(key2, property) in properties.eventProperties track by $index">
-<collapsible list="properties.eventProperties", index="key2">
-	<md-input-container>
-   	<label>Label</label>
-       <input ng-model="property.properties.label" ng-disabled="disabled" >
-   	</md-input-container>
-   	<md-input-container>
-   	<label>Description</label>
-       <input ng-model="property.properties.description" ng-disabled="disabled" >
-   	</md-input-container>
-   	<md-input-container>
-   	<label>Datatype</label>
-       <select ng-model="property.properties.runtimeType" ng-disabled="disabled">
-		          <option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}" ng-selected="property.properties.runtimeType == p.id">
-		            {{primitive.title}} - {{primitive.description}}
-		          </option>
-		</select>
-   	</md-input-container>
-   	
-    <md-input-container>
-   	<label>Domain Property</label>
-       <select ng-model="property.properties.domainProperties[0]" ng-disabled="disabled">
-		          <option ng-repeat="p in existingProperties" value="{{p.id}}" ng-selected="property.properties.domainProperties[0] == p.id">
-		            {{p.title}}
-		          </option>
-		</select>
-   	</md-input-container>  	
-   	
-   	<md-input-container>
-   	<label>Runtime name</label>
-       <input ng-model="property.properties.runtimeName" ng-disabled="disabled" >
-   	</md-input-container>    
+<div flex="100" ng-repeat = "(key2, property) in properties track by $index">
+<collapsible list="properties" index="$index" title-label="'Property ' +($index+1)" disabled="disabled" removable="!disabled" collapsible="true" layout-fill>			
+					<h5 class="md-subhead">Basics</h5>
+					<div flex="100" layout-fill layout="row" class="md-padding">
+						<div flex="33"> 
+							<md-input-container style="width:100%">
+						    	<label>Label</label>
+						        <input ng-model="property.properties.label" required ng-disabled="disabled">
+						    </md-input-container>   
+					  	</div>
+					  	<div flex="67">
+							<md-input-container style="width:100%">
+						    	<label>Description</label>
+						        <input ng-model="property.properties.description" required ng-disabled="disabled">
+						    </md-input-container> 
+						</div>
+				    </div>
+				    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+				    <h5 class="md-subhead">Runtime Settings</h5>
+					<div flex="100" layout-fill layout="row" class="md-padding">
+						<div flex="33"> 
+							<md-input-container style="width:100%">
+						    	<label>Runtime Name</label>
+						        <input ng-model="property.properties.runtimeName" required ng-disabled="disabled">
+						    </md-input-container>   
+					  	</div>
+					  	<div flex="33">
+							<datatype-property runtime-type="property.properties.runtimeType" dp-mode="capability" disabled="disabled"/>
+						</div>
+						<div flex="33">
+				    		<domain-property property="property.properties.domainProperties[0]" disabled="disabled" />
+				    	</div>
+				    </div>
+				    <advanced-settings index="$index">
+					    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+						<h3 class="md-subhead">Measurement Unit</h3>
+					    <div flex="100" layout="row">
+							<measurement-unit disabled="disabled" property="property.properties.measurementUnit" style="width:100%;"/>
+						</div>	 
+					    
+					    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+						<h3 class="md-subhead">Value Specification</h3>
+					    <div flex="100" layout="row">
+							<value-specification property="property.properties.valueSpecification" runtime-type="property.properties.runtimeType" disabled="disabled" style="width:100%;"/>
+						</div>	 
+						
+						<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+						<h3 class="md-subhead">Property qualities</h3>
+						<div flex="100" layout="row">
+							<property-quality-definitions property="property.properties.eventPropertyQualities" disabled="disabled" style="width:100%"/>
+						</div>
+					</advanced-settings>	
 </collapsible>
 </div>
-<md-button class="md-accent" ng-click="addProperty(properties.eventProperties)" ng-disabled="disabled" >Add property</md-button>
+<div ng-if="properties.length == 0">No event properties configured yet.</div>
+<md-button class="md-accent" ng-disabled="disabled" ng-click="addProperty(properties)">Add Property</md-button>

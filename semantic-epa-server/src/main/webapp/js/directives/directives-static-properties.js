@@ -49,10 +49,6 @@ angular
 		            else if (type === $scope.staticPropertyTypes[6].type)
 			            return {"type" : $scope.staticPropertyTypes[6].type, "properties" : {"label" : "", "description" : "", "memberType" : "", "members" : []}};  
 	            }
-	    		
-		    	$scope.removeStaticProperty = function(staticProperties, staticPropertyIndex) {
-		    		   staticProperties.splice(staticPropertyIndex, 1);
-		    	};
 		    	
 		    	$scope.getType = function(property) {
 		    		var label;

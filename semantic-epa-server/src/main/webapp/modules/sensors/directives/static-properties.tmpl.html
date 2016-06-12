@@ -1,10 +1,5 @@
-<h3 class="md-display-2">Static Properties</h3>
 <div ng-repeat = "(key, sp) in staticProperties">
-	<div layout="column" flex="100" class="panel-margin ontology-panel-property">
-		<div flex="100" layout="row">
-			<div flex="70" layout="row" layout-align="start center"><h4>Static Property {{key+1}}</h4><br/><h5>  {{getType(sp)}}</h5></div>
-			<div flex="30" layout="row" layout-align="end center"><md-button ng-disabled="disabled" ng-click="removeStaticProperty(staticProperties, key)" class="md-icon-button tree-node-action" style="width:24px;height:24px;"><md-icon md-svg-icon="content:ic_clear_24px" aria-label="Delete Restriction"></md-icon></md-button></div>	
-		</div>
+	<collapsible title-label="'Static Property ' +(key2+1) +' ' +getType(sp)" list="staticProperties" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
 		<required-property-values property="sp.properties" disabled="disabled"></required-property-values>
 	    <div ng-if="sp.type == staticPropertyTypes[0].type">
 	    	<md-checkbox ng-checked="domainPropertyRestricted(sp.properties)" ng-click="toggleDomainPropertyRestriction(sp.properties)" aria-label="Domain property requirement" ng-disabled="disabled" >
@@ -88,15 +83,15 @@
 			</div>
 		</div>
 	    </div>
-	</div>
+	</collapsible>
 </div>
 <div layout="row">
 
-	<select ng-model="newStaticPropertyType" placeholder="Select Static Property type" ng-disabled="disabled" >
-          <option ng-repeat="spt in staticPropertyTypes" value="{{spt.type}}">
+	<md-select ng-model="newStaticPropertyType" placeholder="Select Static Property type" ng-disabled="disabled" >
+          <md-option ng-repeat="spt in staticPropertyTypes" value="{{spt.type}}">
             <b>{{spt.label}}</b>
-          </option>
-	</select>
+          </md-option>
+	</md-select>
 	<md-button class="md-accent" ng-click="addStaticProperty(staticProperties, newStaticPropertyType)" ng-disabled="disabled">Add Static Property</md-button>
 </div>	
 <p></p>
