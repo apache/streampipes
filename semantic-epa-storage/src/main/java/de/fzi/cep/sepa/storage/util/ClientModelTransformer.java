@@ -227,7 +227,7 @@ public class ClientModelTransformer {
 								{
 									if (tempProperty instanceof EventPropertyPrimitive)
 									{
-										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getRuntimeType(), option.getHumanDescription()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit(), tempProperty.getDomainProperties());
+										EventPropertyPrimitive newProperty = new EventPropertyPrimitive(((EventPropertyPrimitive) tempProperty).getRuntimeType(), option.getHumanDescription()+j, ((EventPropertyPrimitive) tempProperty).getMeasurementUnit().toString(), tempProperty.getDomainProperties());
 										newProperty.setRdfId(new URIKey(URI.create(tempProperty.getRdfId().toString() +j)));
 										matchedProperty = newProperty;
 									}
