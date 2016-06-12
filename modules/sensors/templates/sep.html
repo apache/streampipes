@@ -13,10 +13,10 @@
 	</div>
 </div>
 <div flex="100" class="md-whiteframe-z1">
-	<div flex="100" ng-if="isProducerTabSelected('basics')">
+	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" subtitle="false" layout-fill ng-if="isProducerTabSelected('basics')">
 		<sepa-basics element="selectedSource" disabled="editingDisabled"></sepa-basics>
-	</div> 
-	<div flex="100" ng-if="isProducerTabSelected('streams')">
+	</collapsible> 
+	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isProducerTabSelected('streams')">
 				<sepa-streams element="selectedSource.eventStreams" disabled="editingDisabled"></sepa-streams>
 					<div class="md-padding">
 						<md-list-item class="md-3-line" ng-repeat="(key, stream) in selectedSource.eventStreams track by $index">
@@ -44,8 +44,8 @@
 					     	<sepa-stream-detail stream="selectedStream" disabled="editingDisabled"></sepa-stream-detail> 
 					   </div>
 				   </div>
-	</div>
-	<div flex="100" class="ontology-panel-main ontology-panel-pipeline-configurator md-padding" ng-if="isProducerTabSelected('deployment')">
-		Deployment
-	</div>
+	</collapsible>
+	<collapsible title-label="'Deployment'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isProducerTabSelected('deployment')">
+		<stream-deployment element="selectedSource" disabled="disabled" style="width:100%;"/>
+	</collapsible>
 </div>

@@ -1,11 +1,9 @@
-<h3 class="md-display-2">Supported Grounding</h3>
-
-<h4>Message Brokers</h4>
+<h4>Transport Protocols</h4>
 	<md-input-container flex> 
 		<md-checkbox ng-checked="kafkaSelected(grounding.transportProtocols)" ng-click="toggleKafka(grounding.transportProtocols)" ng-disabled="disabled" >Supports Kafka Protocol</md-checkbox>
 		<md-checkbox ng-checked="jmsSelected(grounding.transportProtocols)" ng-click="toggleJms(grounding.transportProtocols)" ng-disabled="disabled" >Supports JMS Protocol</md-checkbox>
 	</md-input-container>
-<h4>Message Formats</h4>
+<h4>Transport Formats</h4>
 	<md-input-container flex> 
 		<md-checkbox ng-checked="jsonSelected(grounding.transportFormats)" ng-click="toggleJson(grounding.transportFormats)" ng-disabled="disabled" >Supports JSON format</md-checkbox>
 		<md-checkbox ng-checked="thriftSelected(grounding.transportFormats)" ng-click="toggleThrift(grounding.transportFormats)" ng-disabled="disabled" >Supports ProaSense Thrift format</md-checkbox>

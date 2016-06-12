@@ -78,10 +78,6 @@
 							      <md-divider></md-divider>
 							</form>
 						</md-content>
-						
-						<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openSourceOptionsDialog(selectedSource.uri, selectedSource, 'Source')">Generate</md-button>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -168,27 +164,14 @@
 						</div>			
 					</div>
 				</div>
-				<div flex layout="row" layout-align="center center">
-					<div flex="90" layout-sm="column" class="ontology-panel-main ontology-panel-property" ng-show="sepaSelected">
-						<div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
-							<div flex="100" layout="row">
-								<div layout="row" layout-align="start center" flex="100">{{selectedSepa.name}}</div>	
-							</div>
-						</div>
-						<md-content class="md-padding">
-						
-							<ng-include src="'modules/sensors/templates/sepa.html'"></ng-include>
-								
-							<md-divider></md-divider>
-							<div class="form-actions">
-								<div class="md-warn" ng-show="errorMessagePresent">
-									      <h4>{{errorMessage}}</h4>
-								</div>
-								<div layout="row" layout-align="center center">
-									<md-button class="md-accent md-raised" ng-click="openDownloadDialog(selectedSepa.uri, selectedSepa, 'Sepa')">Generate</md-button>
-								</div>
-								<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>		
-							</div>
+				<div flex="100" layout="row" layout-align="center center" class="md-padding">	
+					<div flex="100" layout="column" ng-if="sepaSelected">				
+						<div flex="none" layout-wrap layout="row">
+							<h4 class="md-display-1">{{selectedSepa.name == '' ? 'Unnamed Element' : selectedSepa.name}}</h4>
+						</div>		
+						<md-content class="md-padding" >
+							  <ng-include src="'modules/sensors/templates/sepa.html'"/>
+						      <md-divider></md-divider>
 						</md-content>
 					</div>
 				</div>

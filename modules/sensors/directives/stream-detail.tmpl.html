@@ -26,71 +26,15 @@
 		<sepa-basics element="stream" disabled="disabled"></sepa-basics>
 	</collapsible>
 	<div layout="column" layout-align="center center" flex="100" layout-fill ng-if="isStreamTabSelected('schema')">
-			
-				<collapsible list="stream.eventSchema.eventProperties" index="$index" title-label="'Property'" disabled="disabled" removable="true" collapsible="true" layout-fill ng-repeat="property in stream.eventSchema.eventProperties">	
-					
-					<h5 class="md-subhead">Basics</h5>
-					<div flex="100" layout-fill layout="row" class="md-padding">
-						<div flex="33"> 
-							<md-input-container style="width:100%">
-						    	<label>Label</label>
-						        <input ng-model="property.properties.label" required ng-disabled="disabled">
-						    </md-input-container>   
-					  	</div>
-					  	<div flex="67">
-							<md-input-container style="width:100%">
-						    	<label>Description</label>
-						        <input ng-model="property.properties.description" required ng-disabled="disabled">
-						    </md-input-container> 
-						</div>
-				    </div>
-				    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-				    <h5 class="md-subhead">Runtime Settings</h5>
-					<div flex="100" layout-fill layout="row" class="md-padding">
-						<div flex="33"> 
-							<md-input-container style="width:100%">
-						    	<label>Runtime Name</label>
-						        <input ng-model="property.properties.runtimeName" required ng-disabled="disabled">
-						    </md-input-container>   
-					  	</div>
-					  	<div flex="33">
-							<datatype-property runtime-type="property.properties.runtimeType" dp-mode="capability" disabled="disabled"/>
-						</div>
-						<div flex="33">
-				    		<domain-property property="property.properties.domainProperties[0]" disabled="disabled" />
-				    	</div>
-				    </div>
-				    <advanced-settings index="$index">
-					    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-						<h3 class="md-subhead">Measurement Unit</h3>
-					    <div flex="100" layout="row">
-							<measurement-unit disabled="disabled" property="property.properties.measurementUnit" style="width:100%;"/>
-						</div>	 
-					    
-					    <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-						<h3 class="md-subhead">Value Specification</h3>
-					    <div flex="100" layout="row">
-							<value-specification property="property.properties.valueSpecification" runtime-type="property.properties.runtimeType" disabled="disabled" style="width:100%;"/>
-						</div>	 
-						
-						<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
-						<h3 class="md-subhead">Property qualities</h3>
-						<div flex="100" layout="row">
-							<property-quality-definitions property="property.properties.eventPropertyQualities" disabled="disabled" style="width:100%"/>
-						</div>
-					</advanced-settings>	
-				 </collapsible>
-			
-			<div ng-if="stream.eventSchema.eventProperties.length == 0">No event properties configured yet.</div>
-			<md-button class="md-accent" ng-disabled="disabled" ng-click="addProperty(stream.eventSchema.eventProperties)">Add Property</md-button>
+		<event-properties properties="stream.eventSchema.eventProperties" disabled="disabled" style="width:100%"/>
 	</div>
 	<collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('quality')">	
-				<stream-quality-definitions property="property.properties.eventPropertyQualities" disabled="disabled" style="width:100%"/>
+		<stream-quality-definitions property="stream.eventQuality.eventPropertyQualities" disabled="disabled" style="width:100%"/>
 	</collapsible>
 	<collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('format')">
-				<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
+		<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
 	</collapsible>
 	<collapsible title-label="'Transport Protocol'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('protocol')">
-				<transport-protocol grounding="stream.eventGrounding.transportProtocols" disabled="disabled"></transport-protocol>
+		<transport-protocol grounding="stream.eventGrounding.transportProtocols" disabled="disabled"></transport-protocol>
 	</collapsible>
 </div>
