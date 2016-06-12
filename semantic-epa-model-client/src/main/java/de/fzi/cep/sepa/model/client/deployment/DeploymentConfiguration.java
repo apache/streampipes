@@ -13,6 +13,7 @@ public class DeploymentConfiguration {
 	
 	private DeploymentType deploymentType;
 	private DeploymentMethod deploymentMethod;
+	private OutputType outputType;
 
 	private String elementType;
 	
@@ -96,5 +97,13 @@ public class DeploymentConfiguration {
 	public void setElementType(String elementType) {
 		this.elementType = elementType;
 	}
-			
+
+	public OutputType getOutputType() {
+		return outputType;
+	}
+
+	public void setOutputType(OutputType outputType) {
+		this.outputType = outputType;
+	}
+				
 }
