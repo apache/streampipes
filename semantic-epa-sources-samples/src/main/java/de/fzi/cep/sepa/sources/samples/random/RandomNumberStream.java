@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -18,7 +18,6 @@ import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
-import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
@@ -40,7 +39,6 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 
 		List<EventPropertyQualityDefinition> randomValueQualities = new ArrayList<EventPropertyQualityDefinition>();
-		randomValueQualities.add(new Latency(0));
 		randomValueQualities.add(new Accuracy((float) 0.5));
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

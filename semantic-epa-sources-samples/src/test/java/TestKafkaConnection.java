@@ -36,7 +36,7 @@ public class TestKafkaConnection implements IMessageListener<byte[]> {
 	
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "eu.proasense.internal.sp.internal.outgoing.moulding");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "FZI.SEPA.4ee6e8b4-f0e6-4c19-8b77-a2e1c55749b2");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {

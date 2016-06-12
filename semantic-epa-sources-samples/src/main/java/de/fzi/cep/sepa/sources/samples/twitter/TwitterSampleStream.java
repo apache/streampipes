@@ -9,37 +9,36 @@ import javax.jms.JMSException;
 
 import org.codehaus.jettison.json.JSONObject;
 
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
-import de.fzi.cep.sepa.model.impl.quality.Frequency;
-import de.fzi.cep.sepa.model.impl.quality.Latency;
-import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.SimpleEvent;
-import eu.proasense.internal.VariableType;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.Frequency;
+import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
+import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import eu.proasense.internal.ComplexValue;
+import eu.proasense.internal.SimpleEvent;
+import eu.proasense.internal.VariableType;
 
 public class TwitterSampleStream implements EventStreamDeclarer {
 
@@ -58,8 +57,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 
 		List<EventPropertyQualityDefinition> timestampQualities = new ArrayList<EventPropertyQualityDefinition>();
-		timestampQualities.add(new Latency(1));
-
+		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(PrimitivePropertyBuilder.createProperty(XSD._string, "content", SO.Text).build());
 		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "timestamp", "",
