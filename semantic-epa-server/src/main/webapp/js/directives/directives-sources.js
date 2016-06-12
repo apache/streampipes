@@ -37,18 +37,4 @@ angular
     		}
     	}
     }) 
-    .directive('streamDeployment', function() {
-    	return {
-    		restrict : 'E',
-    		templateUrl : 'modules/sensors/directives/stream-deployment.tmpl.html',
-    		scope : {
-    			selectedSource : "=stream",
-    			disabled : "=disabled"
-    		},
-    		
-    		controller: function($scope, $element) {
-    			
-    			
-    		}
-    	}
-    }) ;
+     ;
