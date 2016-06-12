@@ -1,10 +1,10 @@
 <div class="md-padding">	
 	<div layout="row">
-		<select ng-model="selectedTransportFormat" placeholder="Select Transport Format" ng-disabled="disabled" >
-	          <option ng-repeat="format in availableTransportFormats" value="{{format.id}}">
+		<md-select ng-model="selectedTransportFormat" placeholder="Select Transport Format" ng-disabled="disabled" >
+	          <md-option ng-repeat="format in availableTransportFormats" value="{{format.id}}">
 	            <b>{{format.name}}</b>
-	          </option>
-		</select>
+	          </md-option>
+		</md-select>
 		<md-button class="md-accent" ng-click="addTransportFormat(grounding)" ng-disabled="disabled || grounding.length > 0">Add Transport Format</md-button>
 	</div>	
 	<div ng-show="grounding.length > 0">
