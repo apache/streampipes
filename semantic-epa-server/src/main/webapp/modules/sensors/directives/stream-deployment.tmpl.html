@@ -1,15 +1,13 @@
 <div flex="100" class="md-padding">
 	<div flex="100" layout="column" style="width:100%">	
-		 <div flex="100" layout="row">
-		   <md-input-container>
-		    	<h4>Implementation</h4>
-			 	<md-radio-group ng-model="deployment.outputType" class="md-padding" style="display:inline;">
+		 <h5 class="md-subhead">Implementation</h5>
+		   <md-input-container class="md-padding-left">
+			 	<md-radio-group ng-model="deployment.outputType" class="md-padding-left" style="display:inline;">
 			 	 		<md-radio-button value="DIRECT_IMPORT">Specified streams are already available on the message broker (no adapter implementation needed). </md-radio-button>
-					    <md-radio-button value="OUTPUT_IMPLEMENTATION">I'd like to implement an adapter based on this description.</md-radio-button>
-					    <md-radio-button value="DESCRIPTION_ONLY">I'd like to generate the description only.</md-radio-button>
+					    <md-radio-button value="IMPLEMENTATION">I'd like to implement an adapter based on this description.</md-radio-button>
+					    <md-radio-button value="DESCRIPTION">I'd like to generate the description only.</md-radio-button>
 					   	</md-radio-group>	
-			</md-input-container> 
-		 </div>   
+			</md-input-container>   
 		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
 		 <div ng-show="deployment.outputType == 'DIRECT_IMPORT'">
 		 	<md-input-container flex> 
@@ -17,30 +15,26 @@
 		    </md-input-container>
 		  
 		 </div>  
-		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION_ONLY'">  
-		 	<div flex="100">			
-				<h4>Code generation options</h4>
+		 <div flex="100" ng-show="deployment.outputType == 'DESCRIPTION'">  
+		 	<h5 class="md-subhead">Code generation options</h5>
 				    <div flex="100" layout="row"> 
 					    <md-input-container>
 					    	<label>Class name prefix</label>
 					        <input ng-model="deployment.classNamePrefix">
 					    </md-input-container>
 						<md-input-container flex> 
-		    				<md-button ng-click="directImport()" class="md-accent" ng-click="">Generate code</md-button>
+		    				<md-button ng-click="generateDescription()" class="md-accent" ng-click="">Generate code</md-button>
 		    			</md-input-container>
 					</div>
-			</div>  
 		</div>  
-		 <div flex="100" ng-show="deployment.outputType == 'OUTPUT_IMPLEMENTATION'">  
-		 	<div flex="100">			
-				<h4>Adapter Type (beta)</h4>
+		 <div flex="100" ng-show="deployment.outputType == 'IMPLEMENTATION'">  
+		 	<h5 class="md-subhead">Adapter type (beta)</h5>
 				    <md-radio-group ng-model="deployment.adapterType" class="md-padding" style="display:inline;">
 				     	 <md-radio-button value="Custom">Custom adapter</md-radio-button>
 					     <md-radio-button value="OPC">OPC adapter</md-radio-button>
 					     <md-radio-button value="File">File adapter</md-radio-button>
 					     <md-radio-button value="MySql">MySQL adapter</md-radio-button>
 					 </md-radio-group> 	
-			</div>  
 			<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
 		 	<deployment-type deployment="deployment"/>
 			    <md-input-container flex> 
@@ -49,8 +43,14 @@
 			   </div>
 		</div>
 		
-		
 		<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+		<div flex="100" layout="row" layout-align="center center" ng-if="deployment.outputType == 'DESCRIPTION' && resultReturned">
+			<div flex="100" layout="column">
+				<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+				<h5 class="md-subhead">Description</h5>
+				<generated-element-description jsonld="jsonld" java="java" element="element"/>
+			</div>
+		</div>
 		<div flex layout="row" layout-align="center center" ng-show="directImportResult">
 			<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50">
 				
