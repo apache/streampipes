@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
@@ -23,7 +24,6 @@ import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
-import de.fzi.cep.sepa.model.impl.quality.Latency;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
@@ -34,7 +34,6 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 
 public class AggregationController extends FlatEpDeclarer<AggregationParameter> {
 
@@ -45,7 +44,6 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 		EventPropertyPrimitive e1 = EpRequirements.numberReq();
 
 		List<EventPropertyQualityRequirement> numberQualities = new ArrayList<EventPropertyQualityRequirement>();
-		numberQualities.add(new EventPropertyQualityRequirement(new Latency(1), new Latency(50)));
 		numberQualities.add(new EventPropertyQualityRequirement(null, new Accuracy(20)));
 
 		e1.setRequiresEventPropertyQualities(numberQualities);
