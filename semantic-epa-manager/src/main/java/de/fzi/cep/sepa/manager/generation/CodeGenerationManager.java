@@ -4,7 +4,6 @@ import java.io.File;
 
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaCodeGenerator;
 
 public class CodeGenerationManager {
 
@@ -16,12 +15,11 @@ public class CodeGenerationManager {
 		this.config = config;
 		this.element = element;
 	}
-	
+
 	public File getGeneratedFile()
 	{
-		// TODO check for config.getDeploymentType() 
-		return new FlinkSepaCodeGenerator(config, element).createProject();
-		//return null;
-		
+		// TODO check for config.getDeploymentType()
+//		return new FlinkSepaCodeGenerator(config, element).createProject();
+		return null;
 	}
 }

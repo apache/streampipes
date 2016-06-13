@@ -12,13 +12,13 @@ import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 
-public abstract class CodeGenerator {
+public abstract class CodeGenerator_RENAME {
 
 	protected String tempFolder;
 	protected ConsumableSEPAElement element;
 	protected DeploymentConfiguration config;
 
-	public CodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
+	public CodeGenerator_RENAME(DeploymentConfiguration config, ConsumableSEPAElement element) {
 		this.tempFolder = RandomStringUtils.randomAlphabetic(8) + config.getArtifactId();
 		this.element = element;
 		this.config = config;
@@ -44,6 +44,8 @@ public abstract class CodeGenerator {
 			e.printStackTrace();
 		}
 	}
+
+	public abstract File getGeneratedFile();
 
 	protected abstract void create();
 

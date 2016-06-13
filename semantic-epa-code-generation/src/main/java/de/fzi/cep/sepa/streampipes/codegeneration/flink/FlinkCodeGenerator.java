@@ -4,10 +4,10 @@ import java.io.File;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
-import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator_RENAME;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.DirectoryBuilder;
 
-public abstract class FlinkCodeGenerator extends CodeGenerator {
+public abstract class FlinkCodeGenerator extends CodeGenerator_RENAME {
 	protected String packageName;
 	protected String name;
 	protected String version;
@@ -23,7 +23,7 @@ public abstract class FlinkCodeGenerator extends CodeGenerator {
 		version = "0.0.2-SNAPSHOT";
 		port = Integer.toString(config.getPort());
 		
-		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;
+		src = getTempDir() + "src" + File.separator + "api" + File.separator + "java" + File.separator;
 		webInf = getTempDir() + "WebContent" + File.separator + "WEB-INF" + File.separator;
 
 	}
@@ -31,7 +31,7 @@ public abstract class FlinkCodeGenerator extends CodeGenerator {
 	@Override
 	protected void createDirectoryStructure() {
 		String r = getTempDir(); 
-		String dirs[] = {r + "target/", src, r + "src/main/resources/", r + "src/test/", webInf};
+		String dirs[] = {r + "target/", src, r + "src/api/resources/", r + "src/test/", webInf};
 
 		boolean success = DirectoryBuilder.createDirectories(dirs);
 

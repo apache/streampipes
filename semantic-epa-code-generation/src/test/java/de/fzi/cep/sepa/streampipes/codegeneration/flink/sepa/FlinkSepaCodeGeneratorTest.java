@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaCodeGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator_RENAME;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 
 public class FlinkSepaCodeGeneratorTest {
@@ -15,7 +14,7 @@ public class FlinkSepaCodeGeneratorTest {
 		DeploymentConfiguration con = new DeploymentConfiguration("com.example.com", "time", "TimeStamp", 8080);
 		SepaDescription sepa = TV.getSepa();
 
-		CodeGenerator cg = new FlinkSepaCodeGenerator(con, sepa);
+		CodeGenerator_RENAME cg = new FlinkSepaCodeGenerator(con, sepa);
 
 		cg.createProject();
 	}
