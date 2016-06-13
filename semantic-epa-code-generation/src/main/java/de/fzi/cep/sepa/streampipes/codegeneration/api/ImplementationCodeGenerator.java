@@ -2,18 +2,15 @@ package de.fzi.cep.sepa.streampipes.codegeneration.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.util.Date;
 
-import com.squareup.javapoet.MethodSpec;
-import de.fzi.cep.sepa.streampipes.codegeneration.ZipFileGenerator;
-import de.fzi.cep.sepa.streampipes.codegeneration.api.CodeGenerator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.streampipes.codegeneration.ZipFileGenerator;
 
 public abstract class ImplementationCodeGenerator extends CodeGenerator {
 
@@ -65,7 +62,7 @@ public abstract class ImplementationCodeGenerator extends CodeGenerator {
 				+ File.separator;
 		createFolder(generatedProjects);
 
-		String zipFolder = generatedProjects + new Timestamp(System.currentTimeMillis()) + "_";
+		String zipFolder = generatedProjects + new Date().getTime() + "_";
 		File outputFile = new File(zipFolder + config.getArtifactId() + ".zip");
 		new ZipFileGenerator(new File(getTempDir()), outputFile).makeZip();
 		return outputFile;

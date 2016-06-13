@@ -25,8 +25,8 @@ public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 		version = "0.0.2-SNAPSHOT";
 		port = Integer.toString(config.getPort());
 		
-		src = getTempDir() + "src" + File.separator + "api" + File.separator + "java" + File.separator;
-		webInf = getTempDir() + "WebContent" + File.separator + "WEB-INF" + File.separator;
+		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;
+		webInf = getTempDir() + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator;
 
 	}
 

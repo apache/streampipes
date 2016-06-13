@@ -20,7 +20,7 @@ public class ConfigGenerator extends Generator {
 	public JavaFile build() {
 		FieldSpec jar = FieldSpec.builder(JFC.STRING, "JAR_FILE")
 			    .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-			    .initializer("$S" , "./" + name + "-0.0.1-SNAPSHOT.jar")
+			    .initializer("$S" , "./" + name + "-0.0.2-SNAPSHOT.jar")
 			    .build();
 
 		FieldSpec flinkHost = FieldSpec.builder(JFC.STRING, "FLINK_HOST")
