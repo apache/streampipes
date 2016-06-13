@@ -24,7 +24,7 @@ public class FlinkSecCodeGenerator extends FlinkCodeGenerator {
 
 		// xml files
 		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName, version);
-		Utils.writeToFile(xmlGenerator.getPomFile(), getTempDir() + "pom.xml");
+		Utils.writeToFile(xmlGenerator.getPomFile(true), getTempDir() + "pom.xml");
 		Utils.writeToFile(xmlGenerator.getWebXmlFile(), webInf + "web.xml");
 
 	}

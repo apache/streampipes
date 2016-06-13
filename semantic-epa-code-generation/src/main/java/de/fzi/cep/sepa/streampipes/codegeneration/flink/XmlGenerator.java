@@ -13,7 +13,7 @@ public class XmlGenerator {
 		this.version = version;
 	}
 
-	public String getPomFile() {
+	public String getPomFile(boolean standalone) {
 		String pom = Utils.readResourceFile("pom");
 		pom = pom.replaceAll("####name####", name.toLowerCase());
 		pom = pom.replaceAll("####version####", version);

@@ -17,7 +17,7 @@ public class InitGeneratorTest {
 
 	@Test
 	public void testBuild() {
-		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME).build().toString();
+		String actual = new InitGenerator(null, TV.NAME, TV.PACKAGE_NAME, true).build().toString();
 		String expected = Utils.readResourceFile("expected_Init_java");
 
 		assertEquals(expected, actual);

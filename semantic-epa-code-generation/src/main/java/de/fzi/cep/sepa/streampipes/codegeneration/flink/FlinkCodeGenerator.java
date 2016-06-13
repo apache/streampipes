@@ -4,10 +4,12 @@ import java.io.File;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
-import de.fzi.cep.sepa.streampipes.codegeneration.CodeGenerator_RENAME;
+import de.fzi.cep.sepa.streampipes.codegeneration.api.ImplementationCodeGenerator;
+import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.DirectoryBuilder;
+import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
-public abstract class FlinkCodeGenerator extends CodeGenerator_RENAME {
+public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 	protected String packageName;
 	protected String name;
 	protected String version;
@@ -42,6 +44,11 @@ public abstract class FlinkCodeGenerator extends CodeGenerator_RENAME {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public String getDeclareModel() {
+		return new FlinkSepaControllerGenerator(element, name, packageName).getDeclareModelCode(JFC.SEPA_DESCRIPTION).build().toString();
 	}
 
 }

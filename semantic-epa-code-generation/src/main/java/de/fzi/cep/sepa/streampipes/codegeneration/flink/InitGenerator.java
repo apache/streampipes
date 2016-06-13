@@ -14,8 +14,11 @@ import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 
 public class InitGenerator extends Generator {
 
-	public InitGenerator(ConsumableSEPAElement sepa, String name, String packageName) {
+	private boolean standalone;
+	public InitGenerator(ConsumableSEPAElement sepa, String name, String packageName, boolean standalone) {
 		super(sepa, name, packageName);
+
+		this.standalone = standalone;
 	}
 
 	@Override

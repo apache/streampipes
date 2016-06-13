@@ -12,7 +12,7 @@ public class XmlGeneratorTest {
 
 	@Test
 	public void testGetPom() {
-		String actual = new XmlGenerator(TV.NAME, "", "0.0.1-SNAPSHOT").getPomFile();
+		String actual = new XmlGenerator(TV.NAME, "", "0.0.1-SNAPSHOT").getPomFile(true);
 		String expected = Utils.readResourceFile("expected_pom_xml");
 
 		assertEquals(expected, actual);

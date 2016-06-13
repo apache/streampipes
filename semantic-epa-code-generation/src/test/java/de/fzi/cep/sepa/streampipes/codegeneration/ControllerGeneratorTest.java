@@ -5,6 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.squareup.javapoet.JavaFile;
+import de.fzi.cep.sepa.model.client.ConsumableSEPAElement;
+import de.fzi.cep.sepa.model.client.SEPAElement;
+import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import org.junit.Test;
 
 import com.squareup.javapoet.MethodSpec;
@@ -23,7 +27,6 @@ import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaController
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 
 public class ControllerGeneratorTest {
-
 
 	@Test
 	public void testGetEventStream() {

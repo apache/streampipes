@@ -17,7 +17,9 @@ import de.fzi.cep.sepa.model.client.deployment.ElementType;
 import de.fzi.cep.sepa.streampipes.codegeneration.api.CodeGenerator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.openrdf.rio.RDFHandlerException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
@@ -39,6 +41,9 @@ import de.fzi.cep.sepa.model.util.GsonSerializer;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
+import static org.glassfish.jersey.media.multipart.MultiPartMediaTypes.MULTIPART_MIXED;
+import static org.glassfish.jersey.media.multipart.MultiPartMediaTypes.MULTIPART_MIXED_TYPE;
+
 
 @Path("/v2/users/{username}/deploy")
 public class DeploymentImpl extends AbstractRestInterface {
@@ -52,11 +57,12 @@ public class DeploymentImpl extends AbstractRestInterface {
 		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
 
 		NamedSEPAElement element = getElement(config, model);
+
 		if (element == null) {
-			//TODO wo sind die helper funktionen
+			throw new WebApplicationException(500);
 		}
-		
-		File f = CodeGenerator.getGenerator(config, element).getGeneratedFile();
+
+		File f = CodeGenerator.getCodeGenerator(config, element).getGeneratedFile();
 
 	    if (!f.exists()) {
 	        throw new WebApplicationException(404);
@@ -78,8 +84,6 @@ public class DeploymentImpl extends AbstractRestInterface {
 		} else {
 			return null;
 		}
-
-
 	}
 	
 	@POST
@@ -130,24 +134,25 @@ public class DeploymentImpl extends AbstractRestInterface {
 	
 	@POST
 	@Path("/description")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response getDescription(@FormDataParam("config") String deploymentConfig, @FormDataParam("model") String model) {
 		
 		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
-		Class<? extends NamedSEPAElement> targetClass;
-		
-		if (config.getElementType().equals("Sepa")) targetClass = SepaDescription.class;
-		else if (config.getElementType().equals("Sec")) targetClass = SecDescription.class; 
-		else targetClass = SepDescription.class;
-		
-		NamedSEPAElement element = GsonSerializer.getGsonWithIds().fromJson(model, targetClass);
-		
+
+		NamedSEPAElement element = getElement(config, model);
+
+		String java = CodeGenerator.getCodeGenerator(config, element).getDeclareModel();
 		File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() +RandomStringUtils.randomAlphabetic(8) +File.separator +makeName(element.getName()) +".jsonld");
 		
 		try {
 			FileUtils.write(file, Utils.asString(new JsonLdTransformer().toJsonLd(element)));
-			return Response.ok(file).header("Content-Disposition",
+
+			MultiPart multiPart = new MultiPart()
+				.bodyPart(new BodyPart(file, MediaType.APPLICATION_JSON_TYPE))
+				.bodyPart(new BodyPart(java, MediaType.TEXT_PLAIN_TYPE));
+
+			return Response.ok(multiPart, MULTIPART_MIXED_TYPE).header("Content-Disposition",
 	                "attachment; filename=" +file.getName()).build();
 		} catch (RDFHandlerException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException

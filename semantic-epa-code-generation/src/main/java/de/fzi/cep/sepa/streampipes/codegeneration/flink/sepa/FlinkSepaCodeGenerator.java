@@ -10,8 +10,12 @@ import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 
 public class FlinkSepaCodeGenerator extends FlinkCodeGenerator {
 
-	public FlinkSepaCodeGenerator(DeploymentConfiguration config, SepaDescription element) {
+	private boolean standalone;
+
+
+	public FlinkSepaCodeGenerator(DeploymentConfiguration config, SepaDescription element, boolean standalone) {
 		super(config, element);
+		this.standalone = standalone;
 	}
 
 	@Override
@@ -21,15 +25,17 @@ public class FlinkSepaCodeGenerator extends FlinkCodeGenerator {
 		// source files
 		Utils.writeToFile(new ParametersGenerator(element, name, packageName).build(), src);
 		Utils.writeToFile(new FlinkSepaControllerGenerator(element, name, packageName).build(), src);
-		Utils.writeToFile(new InitGenerator(element, name, packageName).build(), src);
+		Utils.writeToFile(new InitGenerator(element, name, packageName, standalone).build(), src);
 		Utils.writeToFile(new FlinkSepaProgramGenerator(element, name, packageName).build(), src);
 		Utils.writeToFile(new ConfigGenerator(element, name, packageName).build(), src);
 
 		// xml files
 		XmlGenerator xmlGenerator = new XmlGenerator(name, packageName, version);
-		Utils.writeToFile(xmlGenerator.getPomFile(), getTempDir() + "pom.xml");
+		Utils.writeToFile(xmlGenerator.getPomFile(standalone), getTempDir() + "pom.xml");
 		Utils.writeToFile(xmlGenerator.getWebXmlFile(), webInf + "web.xml");
 
 	}
+
+
 
 }
