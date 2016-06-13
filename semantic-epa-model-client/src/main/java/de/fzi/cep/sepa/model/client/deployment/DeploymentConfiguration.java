@@ -14,6 +14,11 @@ public class DeploymentConfiguration {
 	private DeploymentType deploymentType;
 	private ElementType elementType;
 	private OutputType outputType;
+	private RuntimeType runtimeType;
+
+	public DeploymentConfiguration() {
+
+	}
 
 	public DeploymentConfiguration(String groupId, String artifactId,
 			String classNamePrefix, int port) {
@@ -82,6 +87,18 @@ public class DeploymentConfiguration {
 
 	public void setElementType(ElementType elementType) {
 		this.elementType = elementType;
+	}
+
+	public ElementType getElementType() {
+		return elementType;
+	}
+
+	public RuntimeType getRuntimeType() {
+		return runtimeType;
+	}
+
+	public void setRuntimeType(RuntimeType runtimeType) {
+		this.runtimeType = runtimeType;
 	}
 
 	public OutputType getOutputType() {
