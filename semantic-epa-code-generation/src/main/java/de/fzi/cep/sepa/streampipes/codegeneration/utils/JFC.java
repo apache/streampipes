@@ -7,10 +7,6 @@ import java.util.Map;
 
 import com.squareup.javapoet.ClassName;
 
-import de.fzi.cep.sepa.client.container.init.ContainerModelSubmitter;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
@@ -74,7 +70,7 @@ public abstract class JFC {
 //	public static ClassName SEMANTIC_EVENT_CONSUMER_DECLARER = ClassName.get(SemanticEventConsumerDeclarer.class);
 	public static ClassName CLIENT_CONFIGURATION = ClassName.get(ClientConfiguration.class);
 
-	public static ClassName CONTAINER_MODEL_SUBMITTER = ClassName.get(ContainerModelSubmitter.class);
+	public static ClassName CONTAINER_MODEL_SUBMITTER = ClassName.get("de.fzi.cep.sepa.client.container.init", "ContainerModelSubmitter");
 	public static ClassName DECLARERS_SINGLETON = ClassName.get(DeclarersSingleton.class);
 
 
