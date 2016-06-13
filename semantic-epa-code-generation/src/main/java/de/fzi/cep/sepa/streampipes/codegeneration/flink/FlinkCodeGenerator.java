@@ -20,7 +20,7 @@ public abstract class FlinkCodeGenerator extends CodeGenerator {
 		super(config, element);
 		packageName = config.getGroupId() + "." + config.getArtifactId();
 		name = config.getClassNamePrefix();
-		version = "0.0.1-SNAPSHOT";
+		version = "0.0.2-SNAPSHOT";
 		port = Integer.toString(config.getPort());
 		
 		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;
