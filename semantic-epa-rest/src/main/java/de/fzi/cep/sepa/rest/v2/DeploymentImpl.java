@@ -13,6 +13,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.fzi.cep.sepa.model.client.deployment.ElementType;
+import de.fzi.cep.sepa.streampipes.codegeneration.api.CodeGenerator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -48,10 +50,13 @@ public class DeploymentImpl extends AbstractRestInterface {
 	public Response getFile(@FormDataParam("config") String deploymentConfig, @FormDataParam("model") String model) {
 	    
 		DeploymentConfiguration config = fromJson(deploymentConfig, DeploymentConfiguration.class);
+
+		NamedSEPAElement element = getElement(config, model);
+		if (element == null) {
+			//TODO wo sind die helper funktionen
+		}
 		
-		SepaDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
-		
-		File f = new CodeGenerationManager(config, sepa).getGeneratedFile();
+		File f = CodeGenerator.getGenerator(config, element).getGeneratedFile();
 
 	    if (!f.exists()) {
 	        throw new WebApplicationException(404);
@@ -60,6 +65,21 @@ public class DeploymentImpl extends AbstractRestInterface {
 	    return Response.ok(f)
 	            .header("Content-Disposition",
 	                    "attachment; filename=" +f.getName()).build();
+	}
+
+	public static NamedSEPAElement getElement(DeploymentConfiguration config, String model) {
+
+		if (config.getElementType() == ElementType.SEP) {
+			return GsonSerializer.getGsonWithIds().fromJson(model, SepDescription.class);
+		} else if (config.getElementType() == ElementType.SEPA) {
+			return GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
+		} else if (config.getElementType() == ElementType.SEC) {
+			return GsonSerializer.getGsonWithIds().fromJson(model, SecDescription.class);
+		} else {
+			return null;
+		}
+
+
 	}
 	
 	@POST
