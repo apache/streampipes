@@ -33,6 +33,29 @@ angular.module('streamPipesApp')
 	
 	$scope.showHints = false;
 	
+	$scope.deploymentSettings = [{"elementType" : "SEPA", 
+		"outputTypes" :  [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
+		                 {"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."}],
+		"runtimeType" : {"title" : "Runtime implementation", "runtimeTypes" :[{"type" : "ALGORITHM", "description" : "Custom implementation"},
+						  {"type" : "ESPER", "description" : "Esper"},
+						  {"type" : "FLINK", "description" : "Apache Flink"},
+						  {"type" : "STORM", "description" : "Apache Storm"}]}},
+	  {"elementType" : "SEP", 
+			"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to implement an adapter based on this description."},
+			                 {"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
+			                 {"type" : "DIRECT_IMPORT", "description" : "Specified streams are already available on the message broker (no adapter implementation needed)."}],
+			"runtimeType" : {"title" : "Adapter type (beta)", "runtimeTypes" : [{"type" : "CUSTOM", "description" : "Custom adapter"},
+							  {"type" : "OPC", "description" : "OPC adapter"},
+							  {"type" : "FILE", "description" : "File adapter"},
+							  {"type" : "MYSQL", "description" : "MySQL adapter"}]}},
+	  {"elementType" : "SEC", 
+			"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
+			                 {"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
+			                ],
+			"runtimeTypes" : {"title" : "Runtime implementation", "runtimeTypes" : [{"type" : "ACTION", "description" : "Custom implementation"},
+							  {"type" : "ACTION_FLINK", "description" : "Apache Flink"},
+							 ]}}];
+	
 	$scope.setSelectedTab = function(type) {
 		$scope.selectedTab = type;
 	}
