@@ -12,11 +12,9 @@ public class DeploymentConfiguration {
 	private int port;
 	
 	private DeploymentType deploymentType;
-	private DeploymentMethod deploymentMethod;
+	private ElementType elementType;
 	private OutputType outputType;
 
-	private String elementType;
-	
 	public DeploymentConfiguration(String groupId, String artifactId,
 			String classNamePrefix, int port) {
 		super();
@@ -82,19 +80,7 @@ public class DeploymentConfiguration {
 		this.deploymentType = deploymentType;
 	}
 
-	public DeploymentMethod getDeploymentMethod() {
-		return deploymentMethod;
-	}
-
-	public void setDeploymentMethod(DeploymentMethod deploymentMethod) {
-		this.deploymentMethod = deploymentMethod;
-	}
-
-	public String getElementType() {
-		return elementType;
-	}
-
-	public void setElementType(String elementType) {
+	public void setElementType(ElementType elementType) {
 		this.elementType = elementType;
 	}
 
