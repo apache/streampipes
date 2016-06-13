@@ -12,11 +12,11 @@
 		Deployment
 	</div>
 </div>
-<div flex="100" class="md-whiteframe-z1">
-	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" subtitle="false" layout-fill ng-if="isProducerTabSelected('basics')">
+<div flex="100" layout-wrap class="md-whiteframe-z1">
+	<collapsible layout-wrap title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" subtitle="false" ng-if="isProducerTabSelected('basics')">
 		<sepa-basics element="selectedSource" disabled="editingDisabled"></sepa-basics>
 	</collapsible> 
-	<collapsible title-label="'Streams'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isProducerTabSelected('streams')">
+	<collapsible title-label="'Streams'" disabled="disabled" removable="false" collapsible="false" ng-if="isProducerTabSelected('streams')">
 				<sepa-streams element="selectedSource.eventStreams" disabled="editingDisabled"></sepa-streams>
 					<div class="md-padding">
 						<md-list-item class="md-3-line" ng-repeat="(key, stream) in selectedSource.eventStreams track by $index">
@@ -46,6 +46,6 @@
 				   </div>
 	</collapsible>
 	<collapsible title-label="'Deployment'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isProducerTabSelected('deployment')">
-		<stream-deployment element="selectedSource" disabled="disabled" style="width:100%;"/>
+		<deployment element="selectedSource" deployment-settings="deploymentSettings[1]" disabled="disabled" style="width:100%;"/>
 	</collapsible>
 </div>

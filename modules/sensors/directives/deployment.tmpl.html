@@ -3,8 +3,7 @@
 		<h5 class="md-subhead">Implementation</h5>
 		   <md-input-container class="md-padding-left">
 			 	<md-radio-group ng-model="deployment.outputType" class="md-padding-left" style="display:inline;">
-			 	 		<md-radio-button value="IMPLEMENTATION">I'd like to generate a runtime implementation.</md-radio-button>
-					    <md-radio-button value="DESCRIPTION">I'd like to generate the description only.</md-radio-button>
+			 	 		<md-radio-button value="{{outputType.type}}" ng-repeat="outputType in deploymentSettings.outputTypes">{{outputType.description}}</md-radio-button>
 					   	</md-radio-group>	
 			</md-input-container> 
 		 <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider> 
@@ -23,12 +22,9 @@
 					</div> 
 		</div>  
 		<div flex="100" ng-show="deployment.outputType == 'IMPLEMENTATION'">  
-		 	<h5 class="md-subhead">Runtime implementation</h5>
-				    <md-radio-group ng-model="deployment.deploymentType" class="md-padding-left" style="display:inline;">
-				     	 <md-radio-button value="SEPA_ALGORITHM">Custom implementation</md-radio-button>
-					     <md-radio-button value="SEPA_FLINK">Apache Flink</md-radio-button>
-					     <md-radio-button value="SEPA_ESPER">Esper</md-radio-button>
-					     <md-radio-button value="SEPA_STORM">Apache Storm</md-radio-button>
+		 	<h5 class="md-subhead">{{deployment.runtimeType.title}}</h5>
+				    <md-radio-group ng-model="deployment.runtimeType" class="md-padding-left" style="display:inline;">
+				     	 <md-radio-button value="{{runtimeType.type}}" ng-repeat="runtimeType in deploymentSettings.runtimeType.runtimeTypes">{{runtimeType.description}}</md-radio-button>
 					 </md-radio-group> 	  
 			<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
 			<div flex="100" layout="column">

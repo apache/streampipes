@@ -86,11 +86,17 @@
 				data : getFormData(deploymentConfig, model)});
 			}
 		
-		deploymentService.generateDescription = function(deploymentConfig, model) {
+		deploymentService.generateDescriptionJava = function(deploymentConfig, model) {
 			return $http({method: 'POST', 
-				responseType : 'arraybuffer', 
+				headers: {'Accept' : 'text/plain', 'Content-Type': undefined}, 
+				url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/description/java', 
+				data : getFormData(deploymentConfig, model)});
+		}
+		
+		deploymentService.generateDescriptionJsonld = function(deploymentConfig, model) {
+			return $http({method: 'POST', 
 				headers: {'Accept' : 'application/json', 'Content-Type': undefined}, 
-				url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/description', 
+				url: '/semantic-epa-backend/api/v2/users/' +$rootScope.email +'/deploy/description/jsonld', 
 				data : getFormData(deploymentConfig, model)});
 		}
 		

@@ -20,21 +20,21 @@
 		Transport Protocol
 	</div>
 </div>
-<div flex="100" layout="column" layout-fill layout-align="center center">
+<div flex="100" layout="column" layout-wrap layout-align="center center">
 
-	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('basics')">	
+	<collapsible layout-wrap title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('basics')" style="width:100%">	
 		<sepa-basics element="stream" disabled="disabled"></sepa-basics>
 	</collapsible>
-	<div layout="column" layout-align="center center" flex="100" layout-fill ng-if="isStreamTabSelected('schema')">
+	<div layout="column" layout-align="center center" flex="100" ng-if="isStreamTabSelected('schema')">
 		<event-properties properties="stream.eventSchema.eventProperties" disabled="disabled" style="width:100%"/>
 	</div>
-	<collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('quality')">	
+	<collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('quality')">	
 		<stream-quality-definitions property="stream.hasEventStreamQualities" disabled="disabled" style="width:100%"/>
 	</collapsible>
-	<collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('format')">
+	<collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('format')">
 		<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
 	</collapsible>
-	<collapsible title-label="'Transport Protocol'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isStreamTabSelected('protocol')">
+	<collapsible title-label="'Transport Protocol'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('protocol')">
 		<transport-protocol grounding="stream.eventGrounding.transportProtocols" disabled="disabled"></transport-protocol>
 	</collapsible>
 </div>
