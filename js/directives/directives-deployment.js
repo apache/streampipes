@@ -88,6 +88,8 @@ angular
     			$scope.getFileName = function(filename) {
     				if (/.+\\/gi.test(filename))
     					return filename.replace(/.+\\/g, "");
+    				else if (/.+\//gi.test(filename))
+    					return filename.replace(/.+\//g, "");
     				else
     					return filename;
     			}
@@ -96,6 +98,10 @@ angular
     				if (/.+\\/gi.test(filename)) {
     					var directory = /.+\\/gi.exec(filename)[0];
     					return directory.replace(/\\/g, "/");
+    				}
+    				else if (/.+\//gi.test(filename)) {
+    					var directory = /.+\//gi.exec(filename)[0];
+    					return directory.replace(/\//g, "/");
     				}
     				else return "/";
     			}
