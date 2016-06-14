@@ -1,7 +1,13 @@
 package de.fzi.cep.sepa.actions.slack.sec;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
+
 import de.fzi.cep.sepa.actions.slack.config.SlackConfig;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.commons.Utils;
@@ -9,17 +15,21 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
-import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.EcType;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.impl.staticproperty.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.Option;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 //
 
@@ -82,6 +92,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
         EventStream stream = StreamBuilder.createStream("", "","").schema(SchemaBuilder.create().build()).build();
         SecDescription desc = new SecDescription("slack_sink", "Slack Notification", "Slack bot to send notifications directly into your slack");
         desc.setEcTypes(Arrays.asList(EcType.ACTUATOR.name()));
+        desc.setIconUrl(SlackConfig.iconBaseUrl + "/slack_icon.png");
         stream.setUri(SlackConfig.serverUrl +"/" + Utils.getRandomString());
         desc.addEventStream(stream);
 
