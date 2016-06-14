@@ -1,4 +1,4 @@
-/* http://prismjs.com/download.html?themes=prism-okaidia&languages=clike+javascript+java+json&plugins=line-highlight+line-numbers+highlight-keywords */
+/* http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike+javascript+java+json&plugins=line-highlight+line-numbers */
 /**
  * okaidia theme for JavaScript, CSS and HTML
  * Loosely based on Monokai textmate theme by http://www.monokai.nl/
@@ -131,7 +131,7 @@ pre[data-line] {
 	left: 0;
 	right: 0;
 	padding: inherit 0;
-	margin-top: 1em; /* Same as .prismâ€™s padding-top */
+	margin-top: 1em; /* Same as .prism’s padding-top */
 
 	background: hsla(24, 20%, 50%,.08);
 	background: -moz-linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));

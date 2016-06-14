@@ -18,6 +18,7 @@ angular
                                'angularjs-dropdown-multiselect', 
                                'rt.popup', 
                                'angular-clipboard',
+                               'ngSanitize',
                                'btford.markdown'])
 	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 

@@ -42,5 +42,12 @@
 				<generated-element-description jsonld="jsonld" java="java" element="element"/>
 			</div>
 		</div>
+		<div flex="100" layout="row" layout-align="center center" ng-if="deployment.outputType == 'IMPLEMENTATION' && resultReturned">
+			<div flex="100" layout="column">
+				<md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
+				<h5 class="md-subhead">Generated Implementation</h5>
+				<generated-element-implementation zip-file="zipFile" element="element"/>
+			</div>
+		</div>
 	</div>
 </div>

@@ -1,0 +1,28 @@
+<div flex="100" style="border: 1px solid rgb(63,81,181);">
+	<div class="assemblyOptions" style="padding:0px;margin:0px;">
+	       <md-button class="md-icon-button" aria-label="Download" ng-click="downloadZip()">
+	       	<md-icon md-svg-icon="file:ic_file_download_24px" style="color: white;"> </md-icon>
+	       	<md-tooltip md-direction="top">
+				Download
+			</md-tooltip>
+	       </md-button>
+	</div>	
+	<div flex="100" layout="row">
+		<div flex="30" class="md-padding-left">
+			<h5 class="md-subhead">Generated files</h5>
+			<md-list flex class="md-dense">
+				<md-list-item class="md-2-line" ng-repeat="file in extractedFiles track by $index">
+					<md-button class="md-icon-button md-secondary" ng-click="openFile(file)"><md-icon class="md-icon-avatar" md-svg-icon="action:ic_search_24px" classstyle="color: rgb(63,81,181);"></md-icon></md-button>   	
+	          		<div class="md-list-item-text" >
+	          			<h4>{{file.fileNameLabel}}</h4>
+	            		<p style="font-size:12px;">{{file.fileNameDescription}}</p>
+	          		</div>
+				</md-list-item>
+			</md-list>
+		</div>
+		<div flex="70">
+			<pre nag-prism source="{{currentFileContents}}" class="language-java" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'java' && loadingCompleted"/>
+		    <pre nag-prism source="{{currentFileContents}}" class="language-xml" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'xml' && loadingCompleted"/>
+		</div>
+	</div>
+</div>
