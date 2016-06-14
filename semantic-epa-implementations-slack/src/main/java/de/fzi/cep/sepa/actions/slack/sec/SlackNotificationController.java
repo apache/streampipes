@@ -54,7 +54,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
         String userChannel = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "contact"))).getValue();
 
         String aggregateOperation = SepaUtils.getOneOfProperty(invocationGraph, "user_channel");
-        boolean sendToUser = aggregateOperation == "User" ? true : false;
+        boolean sendToUser = aggregateOperation.equals("User") ? true : false;
 
 
         List<String> properties = SepaUtils.getMultipleMappingPropertyNames(invocationGraph, "message", true);
