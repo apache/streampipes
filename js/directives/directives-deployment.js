@@ -131,6 +131,8 @@ angular
     			$scope.zipFile = "";
     			
     			$scope.generateImplementation = function() {			
+    				$scope.resultReturned = false;
+    				$scope.loading = true;
     				deploymentService.generateImplementation($scope.deployment, $scope.element)
     					.success(function(data, status, headers, config) {
     					    //$scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");

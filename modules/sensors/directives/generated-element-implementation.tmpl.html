@@ -21,8 +21,8 @@
 			</md-list>
 		</div>
 		<div flex="70">
-			<pre nag-prism source="{{currentFileContents}}" class="language-java" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'java' && loadingCompleted"/>
-		    <pre nag-prism source="{{currentFileContents}}" class="language-xml" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'xml' && loadingCompleted"/>
+			<pre nag-prism source="{{currentFileContents}}" class="language-java line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'java' && loadingCompleted"/>
+		    <pre nag-prism source="{{currentFileContents}}" class="language-xml line-numbers" style="margin-top:0px;border-radius:0px;" ng-if="getLanguage(currentFileName) == 'xml' && loadingCompleted"/>
 		</div>
 	</div>
 </div>
