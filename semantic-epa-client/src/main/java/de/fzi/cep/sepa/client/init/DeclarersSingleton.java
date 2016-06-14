@@ -64,10 +64,11 @@ public class DeclarersSingleton {
     }
 
     public void addProducerDeclarer(SemanticEventProducerDeclarer sourceDeclarer) {
+    	checkAndStartExecutableStreams(sourceDeclarer);
         producerDeclarers.add(sourceDeclarer);
     }
 
-    public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
+	public void addConsumerDeclarer(SemanticEventConsumerDeclarer consumerDeclarer) {
         consumerDeclarers.add(consumerDeclarer);
     }
 
@@ -94,4 +95,11 @@ public class DeclarersSingleton {
     public String getBaseUri() {
         return ClientConfiguration.INSTANCE.getHostname() + ":" + port + route;
     }
+    
+    private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {
+		sourceDeclarer.getEventStreams()
+			.stream()
+			.filter(s -> s.isExecutable())
+			.forEach(es -> es.executeStream());
+	}
 }
