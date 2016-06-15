@@ -1,8 +1,8 @@
 package de.fzi.cep.sepa.sources.samples.enriched;
 
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
@@ -23,7 +23,6 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 		grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
 		this.topicName = grounding.getTransportProtocol().getTopicName();
-
 		stream.setEventGrounding(grounding);
 		stream.setEventSchema(EnrichedUtils.getEnrichedSchema());
 		stream.setName("Enriched Stream Replay");

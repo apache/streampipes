@@ -11,7 +11,7 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 	
 	@Override
 	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/random", "Random", "Random Event Producer");		
+		SepDescription sep = new SepDescription("source_random", "Random", "Random Event Producer");		
 		return sep;
 	}
 
