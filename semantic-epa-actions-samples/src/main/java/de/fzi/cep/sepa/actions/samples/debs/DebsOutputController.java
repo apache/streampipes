@@ -24,7 +24,7 @@ public class DebsOutputController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		
-		SecDescription sec = new SecDescription("file/debs", "Debs Challenge Output Generator", "", "");
+		SecDescription sec = new SecDescription("debs", "Debs Challenge Output Generator", "", "");
 		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
