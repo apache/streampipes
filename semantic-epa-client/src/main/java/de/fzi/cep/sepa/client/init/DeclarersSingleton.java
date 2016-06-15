@@ -100,6 +100,6 @@ public class DeclarersSingleton {
 		sourceDeclarer.getEventStreams()
 			.stream()
 			.filter(s -> s.isExecutable())
-			.forEach(es -> es.executeStream());
+			.forEach(es -> { es.declareModel(sourceDeclarer.declareModel()); es.executeStream(); });
 	}
 }
