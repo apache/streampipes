@@ -88,6 +88,7 @@ public enum ClientConfiguration {
 	private int elasticsearchPort;
 
 	private String slackToken;
+
 	private String streamStoryUrl;
 	
 	private PropertiesConfiguration config;

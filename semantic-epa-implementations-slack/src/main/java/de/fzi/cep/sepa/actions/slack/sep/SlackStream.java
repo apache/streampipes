@@ -71,18 +71,19 @@ public class SlackStream implements EventStreamDeclarer {
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session)
             {
+                String botName = session.sessionPersona().getUserName();
                 SlackChannel channelOnWhichMessageWasPosted = event.getChannel();
                 String messageContent = event.getMessageContent();
                 SlackUser messageSender = event.getSender();
 
-                JSONObject object = new JSONObject();
+                if (!messageSender.getUserName().equals(botName)) {
+                    JSONObject object = new JSONObject();
+                    object.put("timestamp", System.currentTimeMillis());
+                    object.put("author", messageSender.getUserName());
+                    object.put("message", messageContent);
 
-                object.put("timestamp", System.currentTimeMillis());
-                object.put("author", messageSender.getUserName());
-                object.put("message", messageContent);
-
-                producer.publish(object.toString().getBytes());
-
+                    producer.publish(object.toString().getBytes());
+                }
             }
         };
 

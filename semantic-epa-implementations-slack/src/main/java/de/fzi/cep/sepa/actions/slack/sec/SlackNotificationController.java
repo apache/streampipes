@@ -42,49 +42,55 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
     @Override
     public Response invokeRuntime(SecInvocation invocationGraph) {
-        String authToken = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "auth_token"))).getValue();
+//        String authToken = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "auth_token"))).getValue();
+        String authToken = ClientConfiguration.INSTANCE.getSlackToken();
 
-        // Initialize slack session
-        SlackSession session = SlackSessionFactory.createWebSocketSlackSession(authToken);
-        try {
-            session.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new Response(invocationGraph.getElementId(), false, e.toString());
-        }
-
-        String userChannel = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "contact"))).getValue();
-
-        String aggregateOperation = SepaUtils.getOneOfProperty(invocationGraph, "user_channel");
-        boolean sendToUser = aggregateOperation.equals("User") ? true : false;
-
-        if (sendToUser) {
-            SlackUser user = session.findUserByUserName(userChannel);
-            if (user == null) {
-                return new Response(invocationGraph.getElementId(), false, "The user: '" + userChannel + "' does not exists");
+        if (authToken != null) {
+            // Initialize slack session
+            SlackSession session = SlackSessionFactory.createWebSocketSlackSession(authToken);
+            try {
+                session.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new Response(invocationGraph.getElementId(), false, e.toString());
             }
+
+            String userChannel = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "contact"))).getValue();
+
+            String aggregateOperation = SepaUtils.getOneOfProperty(invocationGraph, "user_channel");
+            boolean sendToUser = aggregateOperation.equals("User") ? true : false;
+
+            if (sendToUser) {
+                SlackUser user = session.findUserByUserName(userChannel);
+                if (user == null) {
+                    return new Response(invocationGraph.getElementId(), false, "The user: '" + userChannel + "' does not exists");
+                }
+            } else {
+                SlackChannel channel = session.findChannelByName(userChannel);
+                if (channel == null) {
+                    return new Response(invocationGraph.getElementId(), false, "The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
+                }
+                ;
+            }
+
+
+            List<String> properties = SepaUtils.getMultipleMappingPropertyNames(invocationGraph, "message", true);
+
+            SlackNotificationParameters params = new SlackNotificationParameters(authToken, sendToUser, userChannel, properties, session);
+
+            slackNotification = new SlackNotification(params);
+
+            String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
+
+            kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
+                    new String[]{consumerTopic}, slackNotification);
+            kafkaConsumerGroup.run(1);
+
+
+            return new Response(invocationGraph.getElementId(), true);
         } else {
-            SlackChannel channel = session.findChannelByName(userChannel);
-            if (channel == null) {
-                return new Response(invocationGraph.getElementId(), false, "The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
-            };
+            return new Response(invocationGraph.getElementId(), false, "There is no authentication slack token defined in the client config");
         }
-
-
-        List<String> properties = SepaUtils.getMultipleMappingPropertyNames(invocationGraph, "message", true);
-
-        SlackNotificationParameters params = new SlackNotificationParameters(authToken, sendToUser, userChannel, properties, session);
-
-        slackNotification = new SlackNotification(params);
-
-        String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
-
-        kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-                new String[] {consumerTopic}, slackNotification);
-        kafkaConsumerGroup.run(1);
-
-
-        return new Response(invocationGraph.getElementId(), true);
     }
 
     @Override
@@ -112,7 +118,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
         List<StaticProperty> staticProperties = new ArrayList<>();
 
-        staticProperties.add(new FreeTextStaticProperty("auth_token", "Slack Bot auth-token", "Enter the token of your slack bot"));
+//        staticProperties.add(new FreeTextStaticProperty("auth_token", "Slack Bot auth-token", "Enter the token of your slack bot"));
         staticProperties.add(new FreeTextStaticProperty("contact", "Sent to", "Enter the username or channel you want to notify"));
 
         OneOfStaticProperty userChannel = new OneOfStaticProperty("user_channel", "User or Channel", "Decide wether you want to sent a notification to a user or to a channel");

@@ -11,7 +11,7 @@ public class SlackProducer implements SemanticEventProducerDeclarer {
 
     @Override
     public List<EventStreamDeclarer> getEventStreams() {
-        return Arrays.asList(new SlackStream("random", "description"));
+        return Arrays.asList(new SlackStream("Slack Bot", "Reads all messages from slack"));
     }
 
     @Override
