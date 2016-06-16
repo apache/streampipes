@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 import de.fzi.cep.sepa.actions.slack.config.SlackConfig;
@@ -55,6 +57,18 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
         String aggregateOperation = SepaUtils.getOneOfProperty(invocationGraph, "user_channel");
         boolean sendToUser = aggregateOperation.equals("User") ? true : false;
+
+        if (sendToUser) {
+            SlackUser user = session.findUserByUserName(userChannel);
+            if (user == null) {
+                return new Response(invocationGraph.getElementId(), false, "The user: '" + userChannel + "' does not exists");
+            }
+        } else {
+            SlackChannel channel = session.findChannelByName(userChannel);
+            if (channel == null) {
+                return new Response(invocationGraph.getElementId(), false, "The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
+            };
+        }
 
 
         List<String> properties = SepaUtils.getMultipleMappingPropertyNames(invocationGraph, "message", true);
