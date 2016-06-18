@@ -87,39 +87,38 @@
 	</dependencyManagement>
 
 	<modules>
-		<!-- <module>semantic-epa</module> <module>semantic-epa-esper</module> -->
-		<module>semantic-epa-sources</module>
-		<module>semantic-epa-model</module>
-		<module>semantic-epa-sources-samples</module>
-		<module>semantic-epa-commons</module>
+		<module>semantic-epa-actions-samples</module>
+		<module>semantic-epa-algorithms-samples</module>
 		<module>semantic-epa-client</module>
+		<module>semantic-epa-client-container</module>
+		<module>semantic-epa-client-standalone</module>
+		<module>semantic-epa-client-osgi</module>
+		<module>semantic-epa-code-generation</module>
+		<module>semantic-epa-commons</module>
 		<module>semantic-epa-esper</module>
 		<module>semantic-epa-manager</module>
-		<module>semantic-epa-actions-samples</module>
-		<module>semantic-epa-implementations-slack</module>
-		<module>semantic-epa-algorithms-samples</module>
-		<module>semantic-epa-storm-topology</module>
-		<module>semantic-epa-sources-hella</module>
-		<module>semantic-epa-sources-mhwirth</module>
-		<module>semantic-epa-storm-topology-sentiment-new</module>
-		<module>semantic-epa-kpi</module>
+		<module>semantic-epa-model</module>
+		<module>semantic-epa-model-client</module>	
 		<module>semantic-epa-flink</module>
 		<module>semantic-epa-flink-samples</module>
+		<module>semantic-epa-implementations-slack</module>
+		<module>semantic-epa-implementations-stream-story</module>
+		<module>semantic-epa-kpi</module>
+		<module>semantic-epa-rest</module>
 		<module>semantic-epa-runtime</module>
 		<module>semantic-epa-runtime-camel</module>
 		<module>semantic-epa-runtime-flat</module>
-		<module>semantic-epa-sources-proasense-monitoring</module>
-		<module>semantic-epa-sources-demonstrator</module>
 		<module>semantic-epa-samples-embedded</module>
-		<module>semantic-epa-code-generation</module>
-		<module>semantic-epa-client-container</module>
-		<module>semantic-epa-client-standalone</module>
-		<module>semantic-epa-rest</module>
 		<module>semantic-epa-server</module>
+		<module>semantic-epa-sources</module>
+		<module>semantic-epa-sources-demonstrator</module>
+		<module>semantic-epa-sources-hella</module>
+		<module>semantic-epa-sources-mhwirth</module>	
+		<module>semantic-epa-sources-proasense-monitoring</module>
 		<module>semantic-epa-storage</module>
-		<module>semantic-epa-model-client</module>
-		<module>semantic-epa-implementations-stream-story</module>
-<!-- 		<module>semantic-epa-client-osgi</module> -->
+		<module>semantic-epa-storm-topology</module>
+		<module>semantic-epa-storm-topology-sentiment-new</module>
+		<module>semantic-epa-sources-samples</module>
 		<module>semantic-epa-units</module>
 	</modules>
 
