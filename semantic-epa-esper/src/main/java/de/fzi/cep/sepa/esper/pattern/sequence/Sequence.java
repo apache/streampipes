@@ -31,10 +31,10 @@ public class Sequence extends EsperEventEngine<SequenceParameters> {
 		PatternExpr p1 = Patterns.filter(fixEventName(leftStream.getInName()), "a");
 		PatternExpr p2 = Patterns.filter(fixEventName(rightStream.getInName()), "b");
 		
-		PatternEveryExpr everyExpr = Patterns.every(Patterns.followedBy(p1, p2));
-		
-		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), everyExpr);
-				
+		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), Patterns.followedBy(p1, p2));
+		PatternEveryExpr everyExpr = Patterns.every(pattern);
+		model.setFromClause(FromClause.create(PatternStream.create(everyExpr)));
+						
 		model.setFromClause(FromClause.create(PatternStream.create(pattern)));
 		
 //		Expression left = Expressions.property("a." +params.getMatchingProperties().get(0));

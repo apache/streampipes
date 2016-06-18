@@ -30,10 +30,9 @@ public class And extends EsperEventEngine<AndParameters> {
 		PatternExpr p1 = Patterns.filter(fixEventName(leftStream.getInName()), "a");
 		PatternExpr p2 = Patterns.filter(fixEventName(rightStream.getInName()), "b");
 		
-		PatternEveryExpr everyExpr = Patterns.every(Patterns.and(p1, p2));
-		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), everyExpr);
-				
-		model.setFromClause(FromClause.create(PatternStream.create(pattern)));
+		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), Patterns.and(p1, p2));
+		PatternEveryExpr everyExpr = Patterns.every(pattern);
+		model.setFromClause(FromClause.create(PatternStream.create(everyExpr)));
 		
 //		Expression left = Expressions.property("a." +params.getMatchingProperties().get(0));
 //		Expression right = Expressions.property("b." +params.getMatchingProperties().get(1));
@@ -48,7 +47,6 @@ public class And extends EsperEventEngine<AndParameters> {
 //		}
 		//model.setWhereClause(matchingExpr);
 		
-		System.out.println(model.toEPL());
 		return makeStatementList(model.toEPL());
 	}
 
