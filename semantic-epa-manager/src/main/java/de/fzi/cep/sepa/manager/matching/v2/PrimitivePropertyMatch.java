@@ -27,7 +27,7 @@ public class PrimitivePropertyMatch extends AbstractMatcher<EventPropertyPrimiti
 	}
 
 	private String buildText(EventPropertyPrimitive requirement) {
-		if (requirement == null) return "-";
+		if (requirement == null || requirement.getDomainProperties() == null) return "-";
 		return "Required domain properties: " +requirement.getDomainProperties().size() +", "
 				+"required data type: " +requirement.getRuntimeType();
 	}
