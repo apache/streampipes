@@ -27,10 +27,11 @@ public class And extends EsperEventEngine<AndParameters> {
 		InputStreamParameters leftStream = params.getInputStreamParams().get(0);
 		InputStreamParameters rightStream = params.getInputStreamParams().get(1);
 		
-		PatternEveryExpr p1 = Patterns.everyFilter(fixEventName(leftStream.getInName()), "a");
-		PatternEveryExpr p2 = Patterns.everyFilter(fixEventName(rightStream.getInName()), "b");
+		PatternExpr p1 = Patterns.filter(fixEventName(leftStream.getInName()), "a");
+		PatternExpr p2 = Patterns.filter(fixEventName(rightStream.getInName()), "b");
 		
-		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), Patterns.and(p1, p2));
+		PatternEveryExpr everyExpr = Patterns.every(Patterns.and(p1, p2));
+		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), everyExpr);
 				
 		model.setFromClause(FromClause.create(PatternStream.create(pattern)));
 		
