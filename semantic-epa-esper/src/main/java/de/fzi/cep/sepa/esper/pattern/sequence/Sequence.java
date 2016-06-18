@@ -33,7 +33,7 @@ public class Sequence extends EsperEventEngine<SequenceParameters> {
 		
 		PatternEveryExpr everyExpr = Patterns.every(Patterns.followedBy(p1, p2));
 		
-		PatternExpr pattern = Patterns.timerWithin(1, everyExpr);
+		PatternExpr pattern = Patterns.timerWithin(params.getDuration(), everyExpr);
 				
 		model.setFromClause(FromClause.create(PatternStream.create(pattern)));
 		
