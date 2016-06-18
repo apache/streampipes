@@ -226,40 +226,6 @@ angular.module('streamPipesApp')
             });
     };
     
-    $scope.openSourceOptionsDialog = function(elementId, elementData, elementType){
-		 $mdDialog.show({
-	   	      controller: SourceOptionsDialogController,
-	   	      templateUrl: 'modules/sensors/templates/sourceOptionsDialog.tmpl.html',
-	   	      parent: angular.element(document.body),
-	   	      clickOutsideToClose:true,
-	   	      scope:$scope,
-	   	      preserveScope:true,
-		   	  locals : {
-		   		  elementId : elementId,
-		   		  elementData : elementData,
-		   		  elementType : elementType
-		      }
-	   	    })
-	 }
-    
-    
-    $scope.openDownloadDialog = function(elementId, elementData, elementType){
-    	console.log(elementData);
-		 $mdDialog.show({
-	   	      controller: DownloadDialogController,
-	   	      templateUrl: 'modules/sensors/templates/downloadDialog.tmpl.html',
-	   	      parent: angular.element(document.body),
-	   	      clickOutsideToClose:true,
-	   	      scope:$scope,
-	   	      preserveScope:true,
-		   	  locals : {
-		   		  elementId : elementId,
-		   		  elementData : elementData,
-		   		  elementType : elementType
-		      }
-	   	    })
-	 }
-    
     $scope.loadEpaCategories = function() {
     	 restApi.getEpaCategories()
          .success(function(epas){
@@ -280,18 +246,4 @@ angular.module('streamPipesApp')
     $scope.loadEcCategories();
     $scope.loadEpaCategories();
     
-})
-.filter('startsWithLetter', function () {
-    return function (items, fromLetter, toLetter) {
-        var filtered = [];
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            var firstLetter = item.name.substring(0, 1).toLowerCase();
-            if ((!fromLetter || firstLetter >= fromLetter)
-                && (!toLetter || firstLetter <= toLetter)) {
-                filtered.push(item);
-            }
-        }
-        return filtered;
-    };
 });
