@@ -136,6 +136,21 @@ angular.module('streamPipesApp')
        	   	    })
             }
             
+            $scope.showMatchingErrorDialog = function(elementData) {
+            	$mdDialog.show({
+         	   	      controller: MatchingErrorController,
+         	   	      templateUrl: 'modules/editor/templates/matchingErrorDialog.tmpl.html',
+         	   	      parent: angular.element(document.body),
+         	   	      clickOutsideToClose:true,
+         	   	      scope:$scope,
+         	   	      rootScope:$rootScope,
+         	   	      preserveScope:true,
+         		   	  locals : {
+         		   		  elementData : elementData,
+         		      }
+         	   	    })
+            }
+            
             $scope.showCustomizeDialog = function(elementData, sepaName, sourceEndpoint) {
             	$rootScope.state.currentElement = elementData;
             	 $mdDialog.show({
@@ -691,7 +706,7 @@ angular.module('streamPipesApp')
                                     }
                                 }else{
                                     jsPlumb.detach(info.connection);
-                                    displayErrors(data);
+                                    $scope.showMatchingErrorDialog(data);
                                 }
                             })
                             .error(function(data){
@@ -1878,6 +1893,18 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
     
     $scope.hide = function() {
   		$mdDialog.hide();
+  	};
+}
+
+function MatchingErrorController($scope, $rootScope, $mdDialog, elementData) {
+	$scope.msg = elementData;
+	console.log(elementData);
+	$scope.hide = function() {
+  		$mdDialog.hide();
+  	};
+  	
+  	$scope.cancel = function() {
+  	    $mdDialog.cancel();
   	};
 }
 
