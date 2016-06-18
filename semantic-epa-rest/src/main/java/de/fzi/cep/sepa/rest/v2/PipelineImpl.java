@@ -25,6 +25,7 @@ import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 import de.fzi.cep.sepa.rest.api.AbstractRestInterface;
 import de.fzi.cep.sepa.rest.api.v2.PipelineOperation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -177,6 +178,8 @@ public class PipelineImpl extends AbstractRestInterface implements PipelineOpera
 			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION.title(), NotificationType.NO_MATCHING_FORMAT_CONNECTION.description(), e.getMessage()));
 		} catch(NoMatchingProtocolException e) {
 			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
+		} catch (InvalidConnectionException e) {
+			return toJson(e.getErrorLog());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
