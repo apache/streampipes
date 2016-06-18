@@ -6,11 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
-import de.fzi.cep.sepa.manager.matching.validator.ConnectionValidator;
+import de.fzi.cep.sepa.manager.matching.v2.ElementVerification;
+import de.fzi.cep.sepa.manager.matching.v2.mapping.MappingPropertyCalculator;
 import de.fzi.cep.sepa.manager.util.ClientModelUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
 import de.fzi.cep.sepa.messages.PipelineModification;
@@ -26,14 +23,13 @@ import de.fzi.cep.sepa.model.client.StaticProperty;
 import de.fzi.cep.sepa.model.client.StaticPropertyType;
 import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.client.connection.Connection;
+import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 import de.fzi.cep.sepa.model.client.input.CheckboxInput;
 import de.fzi.cep.sepa.model.client.input.Option;
 import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.client.input.ReplaceOutputInput;
 import de.fzi.cep.sepa.model.client.input.SelectFormInput;
 import de.fzi.cep.sepa.model.client.input.SelectInput;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -86,91 +82,35 @@ public class PipelineValidationHandler {
 		pipelineModificationMessage = new PipelineModificationMessage();
 	}
 
-	/**
-	 * 
-	 * @return
-	 * @throws NoMatchingFormatException 
-	 * @throws NoMatchingSchemaException 
-	 * @throws NoMatchingProtocolException 
-	 */
-	public PipelineValidationHandler validateConnection()
-			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException {
-		// determines if root element and current ancestor can be matched
-		boolean schemaMatch = false;
-		boolean formatMatch = false;
-		boolean protocolMatch = false;
-
+	public PipelineValidationHandler validateConnection() throws InvalidConnectionException {
+		
+		ElementVerification verifier = new ElementVerification();
+		boolean verified = true;
 		// current root element can be either an action or a SEPA
 		de.fzi.cep.sepa.model.ConsumableSEPAElement rightElement = ClientModelUtils.transformConsumable(clientRootElement);
 		List<String> connectedTo = clientRootElement.getConnectedTo();
+			
+		Iterator<String> it = connectedTo.iterator();
 		
-		if (connectedTo.size() == 1) {
-			EventStream rightEventStream = rightElement.getEventStreams().get(0);
-			EventSchema rightEventSchema = rightEventStream.getEventSchema();
-			EventGrounding rightEventGrounding = rightElement.getSupportedGrounding();
-			
-			List<EventSchema> leftEventSchema;
-			EventGrounding leftEventGrounding;
-			
-			SEPAElement leftRootElement = TreeUtils.findSEPAElement(connectedTo.get(0), pipeline.getSepas(), pipeline
-					.getStreams());
-			if (leftRootElement instanceof StreamClient) {
-				EventStream leftEventStream = ClientModelUtils.transformStream(leftRootElement);
-				leftEventSchema = asList(leftEventStream.getEventSchema());
-				leftEventGrounding = leftEventStream.getEventGrounding();
-			} else {
-				invocationGraphs = makeInvocationGraphs(leftRootElement);
-				SepaInvocation ancestor = findInvocationGraph(invocationGraphs, leftRootElement.getDOM());
-				EventStream ancestorOutputStream = ancestor.getOutputStream();
-				leftEventSchema = asList(ancestorOutputStream.getEventSchema());
-				leftEventGrounding = ancestor.getSupportedGrounding();
+		while(it.hasNext())
+		{		
+			String domId = it.next();
+			SEPAElement element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
+			if (element instanceof StreamClient) {
+				EventStream leftEventStream = (EventStream) ClientModelUtils.transform(element);
 				
+				if (!(verifier.verify(leftEventStream, rightElement))) verified = false;
+				System.out.println("Verified" +verified);
 			}
-			schemaMatch = ConnectionValidator.validateSchema(
-					leftEventSchema,
-					asList(rightEventSchema));
-			
-			formatMatch = ConnectionValidator.validateTransportFormat(leftEventGrounding, rightEventGrounding);
-			protocolMatch = ConnectionValidator.validateTransportProtocol(new EventGrounding(leftEventGrounding), new EventGrounding(rightEventGrounding));
-		} else if (connectedTo.size() == 2) {
-			
-			SepaDescription sepa = (SepaDescription) rightElement;
-			Iterator<String> it = connectedTo.iterator();
-			List<EventStream> incomingStreams = new ArrayList<>();
-			while(it.hasNext())
+			else
 			{
-				String domId = it.next();
-				SEPAElement element = TreeUtils.findSEPAElement(domId, pipeline.getSepas(), pipeline.getStreams());
-				if (element instanceof StreamClient) incomingStreams.add((EventStream) ClientModelUtils.transform(element));
-				else
-				{
-					invocationGraphs.addAll(makeInvocationGraphs(element));
-					SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
-					EventStream incomingStream = ancestor.getOutputStream();
-					incomingStream.setEventGrounding(ancestor.getSupportedGrounding());
-					incomingStreams.add(incomingStream);
-				}			
-			}
-		
-			schemaMatch = ConnectionValidator.validateSchema(
-					asList(incomingStreams.get(0).getEventSchema()),
-					asList(incomingStreams.get(1).getEventSchema()),
-					asList(sepa.getEventStreams().get(0)
-							.getEventSchema()),
-					asList(sepa.getEventStreams().get(1)
-							.getEventSchema()));
+				invocationGraphs.addAll(makeInvocationGraphs(element));
+				SepaInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+				if (!(verifier.verify(ancestor, rightElement))) verified = false;
+			}			
+		}			
 			
-			formatMatch = ConnectionValidator.validateTransportFormat(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
-			protocolMatch = ConnectionValidator.validateTransportProtocol(incomingStreams.get(0).getEventGrounding(), incomingStreams.get(1).getEventGrounding(), sepa.getSupportedGrounding());
-			
-		}
-		if (!schemaMatch)
-			throw new NoMatchingSchemaException();
-		if (!formatMatch)
-			throw new NoMatchingFormatException();
-		if (!protocolMatch)
-			throw new NoMatchingProtocolException();
-
+		if (!verified) throw new InvalidConnectionException(verifier.getErrorLog());
 		return this;
 	}
 
@@ -384,12 +324,10 @@ public class PipelineValidationHandler {
 			
 			if (sepa.getEventStreams().get(i).getEventSchema().getEventProperties().contains(rightProperty))
 			{
-				
-				List<EventProperty> leftMatchingProperties = new Matcher().matchesProperties(
-						rightProperty, leftStream.getEventSchema()
-								.getEventProperties());
+				List<EventProperty> offeredMatchingProperties = new MappingPropertyCalculator()
+					.matchesProperties(leftStream.getEventSchema().getEventProperties(), rightProperty);
 	
-				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
+				for (EventProperty matchedStreamProperty : offeredMatchingProperties) {
 					options.add(new Option(matchedStreamProperty
 							.getElementId().toString(),
 							matchedStreamProperty.getRuntimeName()));
@@ -397,11 +335,11 @@ public class PipelineValidationHandler {
 			}
 			else
 			{
-				List<EventProperty> leftMatchingProperties = new Matcher().matchesPropertiesList(
-						rightProperty, leftStream.getEventSchema()
-								.getEventProperties());
+				List<EventProperty> offeredMatchingProperties = new MappingPropertyCalculator().matchesPropertiesList(
+						leftStream.getEventSchema()
+								.getEventProperties(), rightProperty);
 	
-				for (EventProperty matchedStreamProperty : leftMatchingProperties) {
+				for (EventProperty matchedStreamProperty : offeredMatchingProperties) {
 					options.add(new Option(matchedStreamProperty
 							.getElementId().toString(),
 							matchedStreamProperty.getRuntimeName()));
@@ -447,11 +385,6 @@ public class PipelineValidationHandler {
 		return (SepaInvocation) TreeUtils.findByDomId(domId, invocationGraphs);
 	}
 	
-	private <T> List<T> asList(T object)
-	{
-		return Utils.createList(object);
-	}
-	
 	private List<Option> convertCustomOutput(List<EventProperty> eventProperties, List<Option> options) {
 		
 		for(EventProperty p : eventProperties)
@@ -469,5 +402,6 @@ public class PipelineValidationHandler {
 		}
 		return options;
 	}
+	
 
 }
