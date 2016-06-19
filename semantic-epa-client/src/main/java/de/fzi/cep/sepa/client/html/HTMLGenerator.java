@@ -76,7 +76,6 @@ public class HTMLGenerator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println(html.toHtml());
 			return html.toHtml();
 	 }
 }
