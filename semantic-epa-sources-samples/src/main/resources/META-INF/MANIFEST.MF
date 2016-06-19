@@ -4,7 +4,7 @@ Bundle-Name: StreamStory3 bundle
 Bundle-SymbolicName: de.fzi.streamstory3
 Bundle-Version: 1.0.0
 Bundle-Activator: de.fzi.cep.sepa.sources.samples.main.SourcesSamplesInit
-Import-Package: javax.ws.rs,javax.ws.rs.core,org.osgi.framework,javax.xml,javax.xml.datatype,org.osgi.service.cm,org.osgi.util.tracker,javax.servlet,org.osgi.service.http,org.glassfish.jersey.servlet
+Import-Package: javax.management,javax.ws.rs,javax.ws.rs.core,org.osgi.framework,javax.xml,javax.xml.datatype,org.osgi.service.cm,org.osgi.util.tracker,javax.servlet,org.osgi.service.http,org.glassfish.jersey.servlet
 Export-Package: de.fzi.cep.sepa.client.osgi.init
 Streampipes-App-Name: Sample Sources
 Streampipes-App-Description: Includes several sources that can be used as a starting point.
