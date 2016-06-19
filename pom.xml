@@ -120,6 +120,9 @@
 		<module>semantic-epa-storm-topology-sentiment-new</module>
 		<module>semantic-epa-sources-samples</module>
 		<module>semantic-epa-units</module>
+		<module>semantic-epa-appstore</module>
+		<module>semantic-epa-appstore-deployer</module>
+		<module>semantic-epa-appstore-shared</module>
 	</modules>
 
 	<!-- Build Settings -->
