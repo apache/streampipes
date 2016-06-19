@@ -5,10 +5,10 @@
 </div>
 <div layout-fill>
 	<md-tabs md-dynamic-height md-border-bottom>
-	
+			<md-tab label="Marketplace" md-on-select="setSelectedTab('MARKETPLACE')"> </md-tab>
 			<md-tab label="Import from Endpoint" md-on-select="setSelectedTab('ENDPOINT')"></md-tab> 
 			<md-tab label="Import from URL" md-on-select="setSelectedTab('URL')"> </md-tab>
-			<md-tab label="Import Pipelines" md-on-select="setSelectedTab('PIPELINES')"> </md-tab>
+			<md-tab label="Import Pipelines" md-on-select="setSelectedTab('PIPELINES')"> </md-tab>			
 	</md-tabs>
 </div>
 </div>
@@ -16,6 +16,11 @@
 <div flex layout="row" layout-align="center center">
 	<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50">
 		<md-content class="md-padding">
+		
+		<div flex-sm="100" flex-gt-sm="80" layout-sm="column" ng-if="selectedTab === 'MARKETPLACE'">
+			<marketplace/>
+		</div>
+		
 		<div flex-sm="100" flex-gt-sm="80" layout-sm="column" ng-if="selectedTab === 'ENDPOINT'">
 			<form name="addFromEndpointForm" ng-submit="addFromEndpoint()" role="form">
 				<div flex layout="column">

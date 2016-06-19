@@ -1,0 +1,33 @@
+<div flex="100" layout="row">
+	<div flex="100" layout="row" ng-repeat="app in availableApps">
+		<div flex="20" layout="row" style="margin:10px;">
+			<span class="connectable-element">{{elementTextIcon(app.appName)}}</span>
+			</span>
+		</div>
+		<div flex="80" layout="row" style="margin:10px;">
+			<div flex="100" layout="column" layout-align="left">
+				<div layout="row">
+					<div flex layout="column">
+						<h2 class="md-title">{{app.appName}}</h2>
+						<p>{{app.appDescription}}</p>	
+					</div>
+				</div>		
+				<div flex layout="row" layout-align="end end">	
+					<div flex layout="row" layout-align="end end">
+						<span flex flex-order="1" layout="row" layout-align="end end" ng-if="!app.installed">
+							<md-button aria-label="As Favorite" class="md-accent" ng-click="showInstallationDialog(app)"> 
+								<md-icon md-svg-icon="file:ic_cloud_download_24px" aria-label="Action"></md-icon>&nbsp;&nbsp;{{installLabel}}&nbsp;&nbsp;  
+							</md-button>
+						</span>
+						 <span flex flex-order="1" layout="row" layout-align="end end" ng-if="app.installed" >
+	  						<md-progress-circular md-mode="indeterminate" class="md-accent" ng-show="uninstalling"></md-progress-circular>
+							<md-button aria-label="As Favorite" class="md-accent" ng-click="showUninstallConfirmDialog($event, app)"> 
+								<md-icon md-svg-icon="action:ic_delete_24px" aria-label="Action" class="md-accent"></md-icon>&nbsp;&nbsp;Uninstall&nbsp;&nbsp;  
+							</md-button> 
+						</span>
+					</div>								
+				</div>
+			</div>
+		</div>
+	</div>					
+</div>
