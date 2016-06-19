@@ -387,6 +387,22 @@
  	restApi.getEpCategories = function() {
  		return $http.get("/semantic-epa-backend/api/v2/categories/ep");
  	}
+ 	
+ 	restApi.getAvailableApps = function(elementId) {
+	    	return $http.get(urlBase() +"/marketplace");
+ 	}
+ 	
+ 	restApi.installApp = function(bundleInfo) {
+		 return $http.post(urlBase() +"/marketplace/install", bundleInfo);
+	}
+ 	
+ 	restApi.uninstallApp = function(bundleInfo) {
+		 return $http.post(urlBase() +"/marketplace/uninstall", bundleInfo);
+	}
+ 	
+ 	restApi.getTargetPods = function() {
+ 		return $http.get(urlBase() +"/marketplace/pods");
+ 	}
 	
 	    return restApi;
 	}])

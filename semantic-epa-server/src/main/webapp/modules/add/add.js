@@ -8,7 +8,7 @@ angular.module('streamPipesApp')
 	$scope.loading = false;
 	$scope.marketplace = false;
 	
-	$scope.selectedTab = "ENDPOINT";
+	$scope.selectedTab = "MARKETPLACE";
 	
 	$scope.setSelectedTab = function(type) {
 		$scope.selectedTab = type;

@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.commons.config;
 
+import java.util.List;
+
 public class WebappConfigurationSettings {
 
 	private String couchDbProtocol;
@@ -38,6 +40,8 @@ public class WebappConfigurationSettings {
 	private String couchDbNotificationDbName;
 	
 	private String appConfig;
+	private String marketplaceUrl;
+	private List<String> podUrls;
 	
 	
 	
@@ -275,7 +279,22 @@ public class WebappConfigurationSettings {
 	public void setAppConfig(String appConfig) {
 		this.appConfig = appConfig;
 	}
-	
+
+	public String getMarketplaceUrl() {
+		return marketplaceUrl;
+	}
+
+	public void setMarketplaceUrl(String marketplaceUrl) {
+		this.marketplaceUrl = marketplaceUrl;
+	}
+
+	public List<String> getPodUrls() {
+		return podUrls;
+	}
+
+	public void setPodUrls(List<String> podUrls) {
+		this.podUrls = podUrls;
+	}
 	
 	
 }

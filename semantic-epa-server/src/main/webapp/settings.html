@@ -144,6 +144,29 @@
 			      		</md-radio-group>
 			      </md-input-container>
 		      	</div>
+		     <md-divider/>
+		      <h3>Marketplace Settings</h3>
+		    	<div layout layout-sm="column">
+			      <md-input-container flex>
+					        <label>Marketplace URL</label>
+					        <input type="text" ng-model="setup.marketplaceUrl">
+				  </md-input-container>
+				  
+		      	</div>
+		      </md-divider/>
+		      <h3>Stream Processing Pods</h3>
+		      
+		      	<div flex="100" layout="column" ng-repeat="podUrl in setup.podUrls track by $index">
+		      	  <div flex layout="row">
+			       <md-input-container flex>
+				        <label>Pod Url</label>
+				        <input type="text" ng-model="setup.podUrls[$index]">
+				   </md-input-container>
+				   <md-button ng-click="removePod(setup.podUrls, $index)">Remove pod</md-button>
+				   </div>
+				</div>
+			   <md-button ng-click="addPod(setup.podUrls)">Add pod</md-button>
+		 
 		     <div class="form-actions">
 		     <div layout layout-sm="column">
 				<md-button class="md-accent md-raised" type="submit"

@@ -91,6 +91,10 @@ public enum ClientConfiguration {
 
 	private String streamStoryUrl;
 	
+	private String podHostname;
+	private int podPort;
+	private String podDeploymentDirectory;
+	
 	private PropertiesConfiguration config;
 	
 	ClientConfiguration()
@@ -160,7 +164,11 @@ public enum ClientConfiguration {
 			properties.put("elasticsearchHost", "ipe-koi05.fzi.de");
 			properties.put("elasticsearchPort", 9300);
 
+			properties.put("podHostname", "localhost");
+			properties.put("podPort", 8081);
+			properties.put("podDeploymentDirectory", "/opt/felix/dropin");
 
+			
 			properties.put("streamStoryUrl", "");
 			
 			
@@ -238,6 +246,10 @@ public enum ClientConfiguration {
 			
 			this.elasticsearchPort = config.getInt("elasticsearchPort");
 			this.elasticsearchHost = config.getString("elasticsearchHost");
+			
+			this.podHostname = config.getString("podHostname");
+			this.podPort = config.getInt("podPort");
+			this.podDeploymentDirectory = config.getString("podDeploymentDirectory");
 
 			this.slackToken = config.getString("slackToken");
 
@@ -442,6 +454,18 @@ public enum ClientConfiguration {
 
 	public String getSlackToken() {
 		return slackToken;
+	}
+	
+	public String getPodHostname() {
+		return podHostname;
+	}
+
+	public int getPodPort() {
+		return podPort;
+	}
+
+	public String getPodDeploymentDirectory() {
+		return podDeploymentDirectory;
 	}
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException

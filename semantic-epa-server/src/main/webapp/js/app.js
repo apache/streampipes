@@ -374,6 +374,15 @@ angular
 				$scope.showToast("Fatal error, contact administrator");
 			});
 		}
+		
+		$scope.addPod = function(podUrls) {
+			if (podUrls == undefined) podUrls = [];
+			podUrls.push("localhost");
+		}
+		
+		$scope.removePod = function(podUrls, index) {
+			podUrls.splice(index, 1);
+		}
 
 		$scope.showToast = function(string) {
 			$mdToast.show(

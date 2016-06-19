@@ -1,0 +1,56 @@
+<md-dialog aria-label="Pipeline Status">
+  <form>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Installation</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-dialog-content">
+    <div>
+    	<h4>You are about to install {{app.appName}}.</h4>
+    	<div flex="100">
+    	<h5>Select a target pod</h5>
+    	<md-select ng-model="app.targetPodUrl" placeholder="Target pod" ng-disabled="disabled" >
+	          <md-option ng-repeat="targetPod in availableTargetPods track by $index" value="{{targetPod}}">
+	            <b>{{targetPod}}</b>
+	          </md-option>
+		</md-select>
+    	</div> 
+    	<div flex layout="row" layout-align="center center" ng-repeat = "result in installationMessage.importMessages" ng-if="installed">
+		<div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50" class="md-whiteframe-z1">	
+				<md-content class="md-padding">
+				<div flex layout="row"><h3>{{result.elementName}}</h3> <md-progress-circular class="md-accent" style="width:12px;height:12px;" md-mode="indeterminate" ng-show="result.loading"></md-progress-circular>
+				<md-icon md-svg-icon="action:ic_done_24px" aria-label="Action" class="md-accent" ng-show="result.success"></md-icon>
+				<md-icon md-svg-icon="alert:ic_error_24px" aria-label="Action" class="md-accent" ng-show="!(result.success)"></md-icon>
+					    		
+				</div>
+				<div ng-repeat = "detail in result.details">
+					<div ng-show="!result.loading">{{detail.title}}</div>
+					<div ng-show="!result.loading">{{detail.description}}</div>
+					<md-divider/>
+				</div>
+				
+				</md-content>
+			</div>
+		</div>  
+    </div>
+  </md-dialog-content>
+  <div class="md-actions" layout="row">
+
+   <md-button ng-click="hide()" style="margin-right:20px;" >
+      Close
+    </md-button>
+
+    <span flex flex-order="1" layout="row" layout-align="end end">
+	  <md-progress-circular md-mode="indeterminate" class="md-accent" ng-show="installing"></md-progress-circular>
+	  	<md-button class="md-accent" ng-click="installApp(app)" style="margin-right:20px;" ng-disabled="installing">
+	      <md-icon md-svg-icon="file:ic_cloud_download_24px" aria-label="Action"></md-icon>&nbsp;&nbsp;{{installLabel}}&nbsp;&nbsp;  
+	    </md-button>
+    </span>
+  </div>
+  </form>
+</md-dialog>

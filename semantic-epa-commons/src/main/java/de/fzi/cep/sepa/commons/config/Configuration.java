@@ -3,6 +3,9 @@ package de.fzi.cep.sepa.commons.config;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -83,6 +86,9 @@ public class Configuration {
 	
 	public String APP_CONFIG;
 	
+	public String MARKETPLACE_URL;
+	public List<String> POD_URLS;
+	
 	/**
 	 * Constructor loads config data from config file.
 	 */
@@ -146,6 +152,9 @@ public class Configuration {
 					HUMAN_MAINTENANCE_REPORT_URL = config.getString("humanMaintenanceReportUrl");
 					
 					APP_CONFIG= config.getString("appConfig");
+					
+					POD_URLS = Arrays.asList(config.getStringArray("podUrls"));
+					MARKETPLACE_URL = config.getString("marketplaceUrl");
 		
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -216,6 +225,11 @@ public class Configuration {
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
 					
 					APP_CONFIG = "StreamPipes";
+					
+					POD_URLS = new ArrayList<>();
+					POD_URLS.add("http://localhost:8081");
+					
+					MARKETPLACE_URL = "http://ipe-koi15.fzi.de:8080";
 	}
 
 	public static Configuration getInstance() {

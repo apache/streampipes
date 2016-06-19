@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
 
@@ -73,6 +74,8 @@ public class ConfigurationManager {
 		settings.setHumanInspectionReportUrl(cfg.HUMAN_INSPECTION_REPORT_URL);
 		settings.setHumanMaintenanceReportUrl(cfg.HUMAN_MAINTENANCE_REPORT_URL);
 		settings.setAppConfig(cfg.APP_CONFIG);
+		settings.setMarketplaceUrl(cfg.MARKETPLACE_URL);
+		settings.setPodUrls(cfg.POD_URLS);
 		
 		return settings;
 	}
@@ -130,12 +133,24 @@ public class ConfigurationManager {
 		
 		properties.put("appConfig", settings.getAppConfig());
 		
+		properties.put("marketplaceUrl", settings.getMarketplaceUrl());
+		properties.put("podUrls", toField(settings.getPodUrls()));
+		
 		
 		if (!pathToFile.exists()) pathToFile.mkdir();
 		if (!file.exists()) file.createNewFile();
 	
 		properties.store(new FileWriter(file), "");
 		Configuration.update();
+	}
+
+	private static Object toField(List<String> podUrls) {
+		String result = "";
+		for(int i = 0; i < podUrls.size(); i++)  {
+			result = result +podUrls.get(i);
+			if (i != (podUrls.size() - 1)) result = result +",";
+		}
+		return result;
 	}
 
 }

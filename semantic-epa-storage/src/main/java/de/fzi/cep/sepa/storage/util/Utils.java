@@ -92,6 +92,12 @@ public class Utils {
 		return dbClient;
 	}
 	
+	public static CouchDbClient getCouchDbAppStorageClient() {
+		Configuration cfg = Configuration.getInstance();
+		CouchDbClient dbClient = new CouchDbClient(props(cfg, "apps"));
+		return dbClient;
+	}
+	
 	private static CouchDbProperties props(Configuration cfg, String dbname)
 	{
 		return new CouchDbProperties(dbname, true, cfg.COUCHDB_PROTOCOL, cfg.COUCHDB_HOSTNAME, cfg.COUCHDB_PORT, null, null);	

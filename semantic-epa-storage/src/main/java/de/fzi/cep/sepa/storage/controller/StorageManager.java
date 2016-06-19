@@ -20,6 +20,7 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
+import de.fzi.cep.sepa.storage.api.AppStorage;
 import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.api.ContextStorage;
@@ -28,6 +29,7 @@ import de.fzi.cep.sepa.storage.api.NotificationStorage;
 import de.fzi.cep.sepa.storage.api.PipelineCategoryStorage;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.impl.AppStorageImpl;
 import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
 import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
 import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
@@ -194,6 +196,10 @@ public enum StorageManager {
 	
 	public PipelineCategoryStorage getPipelineCategoryStorageApi() {
 		return new PipelineCategoryStorageImpl();
+	}
+	
+	public AppStorage getAppStorageApi() {
+		return new AppStorageImpl();
 	}
 	
 	public ContextStorage getContextStorage() {

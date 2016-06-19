@@ -10,7 +10,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.10</artifactId>
-			<version>0.8.2.1</version>
+			<version>0.8.2.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>log4j</groupId>
@@ -65,27 +65,27 @@
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-jmx</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-throwingproviders</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
