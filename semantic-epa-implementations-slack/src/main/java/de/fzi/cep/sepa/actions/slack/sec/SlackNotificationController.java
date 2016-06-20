@@ -67,7 +67,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
                 }
             } else {
                 SlackChannel channel = session.findChannelByName(userChannel);
-                if (channel == null || channel.getId() != null) {
+                if (channel == null || channel.getId() == null) {
                     return new Response(invocationGraph.getElementId(), false, "The channel: '" + userChannel + "' does not exists or the bot has no rights to access it");
                 }
                 ;
