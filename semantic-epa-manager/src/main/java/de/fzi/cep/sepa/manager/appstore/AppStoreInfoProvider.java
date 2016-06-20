@@ -56,7 +56,6 @@ public class AppStoreInfoProvider {
 	public AppInstallationMessage installApplication(String username, BundleInfo bundle) {
 		Gson gson = new Gson();
 		bundle.setAppStoreUrl(getAppStoreUrl());
-		
 		try {
 			String response = Request.Post(bundle.getTargetPodUrl() +POD_URL)
 				.bodyString(gson.toJson(bundle), ContentType.APPLICATION_JSON)
@@ -64,9 +63,15 @@ public class AppStoreInfoProvider {
 				.returnContent()
 				.asString();
 			InstallationStatus installationStatus = gson.fromJson(response, InstallationStatus.class);
-
 			if (installationStatus.isSuccess()) {
-				List<Message> importMessages = new GraphInstaller(extractUrls(bundle), username).install();
+				// wait a few seconds until the bundle is deployed
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				List<String> urls = extractUrls(bundle);
+				List<Message> importMessages = new GraphInstaller(urls, username).install();
 				bundle.setInstalled(true);
 				bundle.setInstallationTimestamp(System.currentTimeMillis());
 				StorageManager.INSTANCE.getAppStorageApi().storeBundle(bundle);
@@ -105,10 +110,10 @@ public class AppStoreInfoProvider {
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			String response = Request
-					.Delete(bundle.getTargetPodUrl())
+					.Post(storedBundle.getTargetPodUrl() +POD_URL +"/uninstall")
 					.bodyString(gson.toJson(bundle), ContentType.APPLICATION_JSON)
 					.execute()
 					.returnContent()
@@ -116,8 +121,12 @@ public class AppStoreInfoProvider {
 			
 			UninstallStatus status = gson.fromJson(response, UninstallStatus.class);
 			if (status.isSuccess()) return Notifications.success("Application uninstalled.");
-			else return Notifications.error("Error occurred during uninstall.");
+			else {
+				System.out.println("client status");
+				return Notifications.error("Error occurred during uninstall.");
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Notifications.error("An error occurred during uninstall.");
 		}
 		
@@ -138,6 +147,7 @@ public class AppStoreInfoProvider {
 	}
 	
 	private String makeLocalInstalledBundleUrl(BundleInfo bundle) {
+		System.out.println(bundle.getTargetPodUrl() +"/" +bundle.getAppContextPath());
 		return bundle.getTargetPodUrl() +"/" +bundle.getAppContextPath();
 	}
 	
