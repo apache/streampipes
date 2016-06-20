@@ -85,8 +85,8 @@
 					<groupId>org.openrdf.sesame</groupId>
 					<artifactId>sesame-queryparser-sparql</artifactId>
 				</exclusion>
-				
-				
+
+
 				<exclusion>
 					<groupId>org.semarglproject</groupId>
 					<artifactId>semargl-sesame</artifactId>
@@ -132,7 +132,12 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
-			<version>4.4</version>
+			<version>4.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient</artifactId>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
