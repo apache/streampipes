@@ -121,6 +121,7 @@ function InstallationController($scope, restApi, $mdDialog, app) {
         	$scope.installLabel = "Installed";
         	$scope.installationMessage = message;
         	console.log(message);
+        	$scope.loadAvailableApps();
         })
         .error(function (error) {
             $scope.status = 'Unable to load actions: ' + error.message;
