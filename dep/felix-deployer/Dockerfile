@@ -39,7 +39,6 @@ ADD ${felix_base}/org.apache.felix.webconsole.plugins.ds/${felix_webconsole_ds}/
 ADD ${felix_base}/org.apache.felix.webconsole.plugins.event/${felix_webconsole_event}/org.apache.felix.webconsole.plugins.event-${felix_webconsole_event}.jar /opt/felix/current/bundle/
 
 ADD http://central.maven.org/maven2/com/eclipsesource/jaxrs/jersey-all/2.22.1/jersey-all-2.22.1.jar /opt/felix/current/bundle/
-ADD ./de.fzi.cep.sepa/semantic-epa-appstore/0.0.2-SNAPSHOT/semantic-epa-appstore-0.0.2-SNAPSHOT.jar  /opt/felix/current/bundle/
 ADD ./de.fzi.cep.sepa/semantic-epa-appstore-deployer/0.0.2-SNAPSHOT/semantic-epa-appstore-deployer-0.0.2-SNAPSHOT.jar  /opt/felix/current/bundle/
 
 
