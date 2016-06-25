@@ -3,8 +3,6 @@ package de.fzi.cep.sepa.model.transform;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.persistence.EntityManager;
-
 import org.openrdf.model.Graph;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;

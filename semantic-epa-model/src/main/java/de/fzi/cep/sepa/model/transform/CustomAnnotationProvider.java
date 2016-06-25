@@ -78,7 +78,7 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 
 	public static String getAnnotatedClassesAsString() {
 		String result = "";
-		for(Class clazz : getAnnotatedClasses())
+		for(Class<?> clazz : getAnnotatedClasses())
 		{
 			result += clazz.getCanonicalName();
 		}

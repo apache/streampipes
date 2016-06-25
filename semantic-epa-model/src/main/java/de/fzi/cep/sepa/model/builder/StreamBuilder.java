@@ -1,14 +1,11 @@
 package de.fzi.cep.sepa.model.builder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 
 public class StreamBuilder {

@@ -11,9 +11,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import de.fzi.cep.sepa.model.AbstractSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-
 public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T>{
 
 	@Override
@@ -35,7 +32,6 @@ public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<
 	public JsonElement serialize(T src, Type typeOfSrc,
 			JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
-		System.out.println(src.getClass().getCanonicalName());
         result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
         result.add("properties", context.serialize(src, src.getClass()));
  

@@ -39,12 +39,14 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 	public ConsumableSEPAElement()
 	{
 		super();
+		this.eventStreams = new ArrayList<>();
 		this.staticProperties = new ArrayList<>();
 	}
 	
 	public ConsumableSEPAElement(String uri, String name, String description, String iconUrl)
 	{
 		super(uri, name, description, iconUrl);
+		this.eventStreams = new ArrayList<>();
 		this.staticProperties = new ArrayList<>();
 	}
 	

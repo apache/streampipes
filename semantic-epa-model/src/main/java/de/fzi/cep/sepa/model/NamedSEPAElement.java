@@ -32,6 +32,7 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	
 	public NamedSEPAElement(String uri)
 	{
+		super();
 		this.uri = uri;
 	}
 	

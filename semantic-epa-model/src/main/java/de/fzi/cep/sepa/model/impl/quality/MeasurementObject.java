@@ -16,6 +16,7 @@ import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 @Entity
 public class MeasurementObject extends UnnamedSEPAElement{
 
+	private static final long serialVersionUID = 4391097898611686930L;
 	
 	@RdfProperty("sepa:measuresObject")
 	URI measuresObject;

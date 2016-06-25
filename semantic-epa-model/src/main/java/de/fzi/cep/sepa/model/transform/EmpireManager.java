@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.model.transform;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -21,9 +20,6 @@ import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
-import com.clarkparsia.empire.util.EmpireUtil;
-
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public enum EmpireManager {
 
@@ -71,13 +67,7 @@ public enum EmpireManager {
 	{
 		return tempStorageManager;
 	}
-	
-	private void fixTempEmpire()
-	{
-		 List<SepDescription> list = EmpireUtil.all(tempStorageManager, 
-				 SepDescription.class); 
-	}
-	
+		
 	public boolean clearRepository() {
 		try {
 
