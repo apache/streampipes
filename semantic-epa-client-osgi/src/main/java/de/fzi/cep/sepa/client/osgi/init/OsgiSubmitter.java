@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.client.osgi.init;
 
-	import java.util.Dictionary;
+import java.util.Dictionary;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import de.fzi.cep.sepa.client.init.ModelSubmitter;
 
-	public abstract class OsgiSubmitter extends ModelSubmitter implements BundleActivator {
+public abstract class OsgiSubmitter extends ModelSubmitter implements BundleActivator {
 
 		private BundleContext bc;
 	    private ServiceTracker tracker;
