@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
@@ -6,6 +7,8 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-epa-algorithms-samples</artifactId>
+	<packaging>war</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
@@ -14,7 +17,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-standalone</artifactId>
+			<artifactId>semantic-epa-client-container</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
