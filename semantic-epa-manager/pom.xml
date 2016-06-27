@@ -10,6 +10,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-appstore-shared</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
