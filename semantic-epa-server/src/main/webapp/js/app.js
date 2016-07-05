@@ -326,7 +326,9 @@ angular
 			hippoUrl : '',
 			humanInspectionReportUrl : '',
 			humanMaintenanceReportUrl : '',
-			appConfig : 'StreamPipes'
+			appConfig : 'StreamPipes',
+			marketplaceUrl : '',
+			podUrls : []
 		};
 
 		$scope.configure = function() {
@@ -349,6 +351,15 @@ angular
 					.hideDelay(3000)
 			);
 		};
+
+		$scope.addPod = function(podUrls) {
+			if (podUrls == undefined) podUrls = [];
+			podUrls.push("localhost");
+		}
+
+		$scope.removePod = function(podUrls, index) {
+			podUrls.splice(index, 1);
+		}
 
 	})
 	.controller('SettingsCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
