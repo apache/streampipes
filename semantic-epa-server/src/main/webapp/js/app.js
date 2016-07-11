@@ -19,7 +19,8 @@ angular
                                'rt.popup', 
                                'angular-clipboard',
                                'ngSanitize',
-                               'btford.markdown'])
+                               'btford.markdown',
+								'datatorrent.mlhrTable'])
 	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 
 		//$location.path("/setup");
