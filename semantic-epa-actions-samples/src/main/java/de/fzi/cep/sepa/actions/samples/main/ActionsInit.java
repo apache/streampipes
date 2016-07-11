@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.actions.samples.main;
 
 import de.fzi.cep.sepa.actions.alarm.AlarmLightController;
+import de.fzi.cep.sepa.actions.dashboard.DashboardController;
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
 import de.fzi.cep.sepa.actions.samples.charts.LineChartController;
 import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
@@ -35,6 +36,7 @@ public class ActionsInit extends StandaloneModelSubmitter {
 		.add(new LineChartController())
 		.add(new MapsController())
 		.add(new TableViewController())
+				
 		.add(new FileController())
 		.add(new MultiRowTableController())
 		.add(new DebsOutputController())
@@ -52,6 +54,7 @@ public class ActionsInit extends StandaloneModelSubmitter {
 		.add(new CouchDbController())
         .add(new NumberController())
         .add(new VerticalBarController())
+		.add(new DashboardController())
         .add(new AlarmLightController());
 		//.add(new HistogramController())
 

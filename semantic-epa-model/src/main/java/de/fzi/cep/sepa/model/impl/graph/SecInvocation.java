@@ -28,7 +28,13 @@ public class SecInvocation extends InvocableSEPAElement{
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:ecType")
 	protected List<String> ecTypes;
-	
+
+	public SecInvocation(SecInvocation sec) {
+		super(sec);
+		this.ecTypes = sec.getEcTypes();
+
+	}
+
 	public SecInvocation(SecDescription sec)
 	{
 		super();

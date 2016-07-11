@@ -47,7 +47,7 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 		this.belongsTo = other.getBelongsTo();
 		this.correspondingPipeline = other.getCorrespondingPipeline();
 		this.inputStreams = new Cloner().streams(other.getInputStreams());
-		this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+		if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
 		this.domId = other.getDomId();
 		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
 	}

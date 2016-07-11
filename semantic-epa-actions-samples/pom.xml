@@ -65,7 +65,13 @@
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
-	</dependencies>
+		<dependency>
+			<groupId>org.lightcouch</groupId>
+			<artifactId>lightcouch</artifactId>
+			<version>0.1.8</version>
+		</dependency>
+
+</dependencies>
 
 	<build>
 		<plugins>
