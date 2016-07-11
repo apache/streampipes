@@ -1,0 +1,174 @@
+/* main root element */
+
+.mlhr-table-wrapper {
+  position: relative;
+}
+
+/* styles for both header- and rows- tables */
+
+.mlhr-table {
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* the visible table header */
+
+.mlhr-header-table {
+  border-bottom: none;
+}
+
+.mlhr-header-table thead > tr > th {
+  border-width: 1px;
+}
+
+/* the invisible table header; used for correct column widths */
+
+.mlhr-rows-table thead {
+  height: 0;
+}
+
+.mlhr-rows-table > thead > tr > th {
+  border-width: 0;
+  padding: 0;
+}
+
+.mlhr-rows-table-wrapper {
+  overflow: auto;
+}
+
+.mlhr-rows-table > tbody + tbody {
+  border-top: none;
+}
+
+/* general styles for all cells in both tables */
+
+.mlhr-table th {
+  white-space: nowrap;
+  position: relative;
+}
+
+.mlhr-table td {
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+/* this type of cell is used to show messages like "loading" */
+
+.mlhr-table td.space-holder-row-cell {
+  text-align: center;
+}
+
+/* search input */
+
+.mlhr-table tr.mlhr-table-filter-row td input {
+  max-width: 100%;
+  border-radius: 5px;
+  border: 1px solid #CCC;
+  outline: none;
+  text-indent: 2px;
+}
+
+.mlhr-table tr.mlhr-table-filter-row td {
+  position: relative;
+}
+
+/* button to clear search */
+
+.mlhr-table tr.mlhr-table-filter-row td .clear-search-btn {
+  position: absolute;
+  border-radius: 50%;
+  border: none;
+  right: 1em;
+  top: 30%;
+  font-size: 12px;
+  opacity: 0.2;
+  color: white;
+  background-color: black;
+  padding: 0;
+  width: 15px;
+  line-height: 15px;
+}
+
+/* activated search input, as in when there is text in it */
+
+.mlhr-table tr.mlhr-table-filter-row td input.active {
+  background-color: #3D82C2;
+  color: #FFF;
+  border-color: #747474;
+}
+
+/* placeholder object for when columns are being sorted */
+
+.mlhr-table .mlhr-table-column-placeholder {
+  background-color: #DDD;
+}
+
+/* handle to grab in order to resize a column */
+
+.mlhr-table th .column-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  border-width: 0 1px;
+  cursor: col-resize;
+  border-color: #DDD;
+  border-style: solid;
+}
+
+/* this class is applied to a .column-resizer 
+when a discreet width has been set on it */
+
+.mlhr-table th .column-resizer.discreet-width {
+  background-color: #DDD;
+}
+
+/* wrapper for text in a th */
+
+.mlhr-table th .column-text {
+  max-width: 100%;
+  overflow: hidden;
+  display: block;
+}
+
+/* the element showing what the new width will be */
+
+.mlhr-table th .column-resizer-marquee {
+  left: 0;
+  top: 0;
+  height: 100%;
+  border: 1px dotted #DEDEDE;
+  position: absolute;
+}
+
+/* sorting icons */
+
+.mlhr-table th span.sorting-icon {
+  font-size: 10px;
+  margin-left: 10px;
+}
+
+.mlhr-table th span.glyphicon-sort {
+  opacity: 0.2;
+}
+
+.mlhr-table th.sortable-column {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* dummy row */
+
+.mlhr-table-dummy-row {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAlCAYAAACDKIOpAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABtJREFUeNpiuHv37n+G////MzAxAMHQIQACDAC7twbaN2nkgwAAAABJRU5ErkJggg==');
+  background-repeat: repeat;
+}
+
+table tbody .mlhr-table-dummy-row td {
+  border-top: none;
+}
