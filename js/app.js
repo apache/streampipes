@@ -144,6 +144,11 @@ angular
              link : 'streampipes.visualizations',
              title: 'Visualizations',
              icon: 'editor:ic_insert_chart_24px'
+           },
+           {
+             link : 'streampipes.dashboard',
+             title: 'Dashboard',
+             icon: 'editor:ic_insert_chart_24px'
            }
 //           },
 //           {

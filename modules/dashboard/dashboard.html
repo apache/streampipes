@@ -1,0 +1,33 @@
+<div flex layout-fill>
+	<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+		<div flex="none" layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+			<h5>New Fancy Dashbord</h5>
+		</div>
+
+	</div>
+
+			<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+				<thead>
+					<tr>
+						<th>Quantity</th>
+						<th>Quantity</th>
+						<th>Quantity</th>
+						<th>Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<tr ng-repeat="im in ils">
+						<td>{{im.randomString}}</td>
+						<td>{{im.randomValue}}</td>
+						<td>{{im.count}}</td>
+					</tr>
+				</tbody>
+			</table>
+
+
+
+
+
+	</div>
+</div>

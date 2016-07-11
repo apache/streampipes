@@ -131,6 +131,15 @@
 					}
 				}
 			})
+			.state('streampipes.dashboard', {
+				url: '/dashboard',
+				views: {
+					"streampipesView@streampipes" : {
+						templateUrl : 'modules/dashboard/dashboard.html',
+						controller: 'DashCtrl'
+					}
+				}
+			})
 //			.state('streampipes.marketplace', {
 //				url: '/marketplace',
 //				views: {
