@@ -42,7 +42,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 		algorithmSelection.addOption(new Option("SHA1"));
 		algorithmSelection.addOption(new Option("SHA2"));
 		algorithmSelection.addOption(new Option("MD5"));
-		
+		staticProperties.add(algorithmSelection);
 		desc.setStaticProperties(staticProperties);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
