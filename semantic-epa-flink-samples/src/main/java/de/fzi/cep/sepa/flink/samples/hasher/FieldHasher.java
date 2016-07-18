@@ -1,11 +1,12 @@
 package de.fzi.cep.sepa.flink.samples.hasher;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-public class FieldHasher implements FlatMapFunction<Map<String, Object>, Map<String, Object>>{
+public class FieldHasher implements Serializable, FlatMapFunction<Map<String, Object>, Map<String, Object>>{
 
 	private HashAlgorithm hashAlgorithm;
 	private String propertyName;
