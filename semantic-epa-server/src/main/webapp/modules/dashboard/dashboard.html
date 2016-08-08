@@ -5,9 +5,9 @@
 		</div>
 	</div>
 
-
 	<div flex layout-align="center center" style="padding:10px;">
-		<div flex dashboard="dashboardOptions"></div>
+     <md-button ng-click="addWidget();" type="button" class="md-raised md-accent">Add</md-button>
+		<div ng-if="rerender" flex dashboard="dashboardOptions"></div>
 	</div>
 
 
