@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-standalone</artifactId>
+			<artifactId>semantic-epa-client-osgi</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -32,6 +32,15 @@
 				dependencies except flink and it's transitive dependencies. The resulting 
 				fat-jar can be executed on a cluster. Change the value of Program-Class if 
 				your program entry point changes. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -79,10 +88,10 @@
 							</filters>
 							<transformers>
 								<!-- add Main-Class to manifest file -->
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>de.fzi.cep.sepa.flink.samples.FlinkInit</mainClass>
-								</transformer>
+								<!-- <transformer -->
+								<!-- implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> -->
+								<!-- <mainClass>de.fzi.cep.sepa.flink.samples.FlinkInit</mainClass> -->
+								<!-- </transformer> -->
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 								<transformer
