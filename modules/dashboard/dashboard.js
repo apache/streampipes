@@ -9,12 +9,18 @@ angular.module('streamPipesApp')
 		$http.get(couchDbServer + '/visualization/_all_docs?include_docs=true')
 			.success(function(data) {
 				possibleVisualizations = data.rows;
+
+				// get the names for each pipeline
+				angular.forEach(possibleVisualizations, function(vis) {
+					$http.get(couchDbServer + '/pipeline/' + vis.doc.pipelineId)
+						.success(function(pipeline) {
+							vis.doc.name = pipeline.name;
+						});
+				});
 			});
 
 
-
 		$scope.addWidget = function() {
-
 			$mdDialog.show({
 				controller: AddWidgetController,
 				templateUrl: 'modules/dashboard/add-widget-template/add-widget-template.html',

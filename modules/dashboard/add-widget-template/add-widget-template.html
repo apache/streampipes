@@ -18,7 +18,7 @@
 						<span> Select Datastream</span>
 					</md-select-header>
 					<md-select ng-model="selectedVis">
-						<md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.pipelineId }}</md-option>
+						<md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.name }}</md-option>
 					</md-select>
 				</md-input-container>
 			</md-dialog-content>
