@@ -70,6 +70,10 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
+          <artifactId>semantic-epa-appstore-shared</artifactId>
+          <groupId>de.fzi.cep.sepa</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>semantic-epa-model-client</artifactId>
           <groupId>de.fzi.cep.sepa</groupId>
         </exclusion>
