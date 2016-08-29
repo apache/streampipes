@@ -19,7 +19,7 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 			
 
 			return {
-				name: 'wt-top-n',
+				name: 'table',
 				title: widget.id,
 				dataAttrName: 'data',
 				dataModelType: SocketConnectionDataModel,
