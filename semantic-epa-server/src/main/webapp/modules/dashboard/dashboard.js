@@ -69,7 +69,7 @@ angular.module('streamPipesApp')
 
 					var widget = {};
 					widget.selectedProperties = selectedProperties;
-					widget.visType = $scope.selectedVisType;
+					widget.visType = $scope.selectedType;
 					widget.vis = $scope.selectedVis;
 					widget.id = $scope.selectedVis._id;
 
