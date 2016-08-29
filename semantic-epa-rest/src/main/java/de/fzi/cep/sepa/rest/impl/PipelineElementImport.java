@@ -28,9 +28,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 @Path("/v2/users/{username}/element")
-public class PipelineElementImpl extends AbstractRestInterface {
+public class PipelineElementImport extends AbstractRestInterface {
 
-	static Logger  LOG = LoggerFactory.getLogger(PipelineElementImpl.class);
+	static Logger  LOG = LoggerFactory.getLogger(PipelineElementImport.class);
 
 	@POST
 	@Path("/batch")

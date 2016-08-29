@@ -9,12 +9,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import de.fzi.cep.sepa.messages.Notifications;
-import de.fzi.cep.sepa.model.client.PipelineCategory;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/users/{username}/pipelinecategories")
-public class PipelineCategoryImpl extends AbstractRestInterface {
+public class PipelineCategory extends AbstractRestInterface {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -25,7 +24,7 @@ public class PipelineCategoryImpl extends AbstractRestInterface {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addCategory(@PathParam("username") String username, String pipelineCategory) {
-		PipelineCategory category = fromJson(pipelineCategory, PipelineCategory.class);
+		de.fzi.cep.sepa.model.client.PipelineCategory category = fromJson(pipelineCategory, de.fzi.cep.sepa.model.client.PipelineCategory.class);
 		boolean success = StorageManager.INSTANCE.getPipelineCategoryStorageApi().addPipelineCategory(category);
 		if (success) return toJson(Notifications.success("Category successfully stored. "));
 		else return toJson(Notifications.error("Could not create category."));

@@ -23,7 +23,7 @@ import de.fzi.cep.sepa.rest.notifications.NotificationListener;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/setup")
-public class SetupImpl implements ISetup {
+public class Setup implements ISetup {
 
 	@GET
     @Path("/configured")

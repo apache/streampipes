@@ -24,14 +24,13 @@ import de.fzi.cep.sepa.messages.NotificationType;
 import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.SuccessMessage;
-import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 import de.fzi.cep.sepa.rest.api.IPipeline;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/users/{username}/pipelines")
-public class PipelineImpl extends AbstractRestInterface implements IPipeline {
+public class Pipeline extends AbstractRestInterface implements IPipeline {
 
 	
 	@Override
@@ -133,7 +132,7 @@ public class PipelineImpl extends AbstractRestInterface implements IPipeline {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String addPipeline(@PathParam("username") String username, String pipeline)
 	{
-		Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, Pipeline.class);
+		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		String pipelineId = UUID.randomUUID().toString();
 		serverPipeline.setPipelineId(pipelineId);
 		serverPipeline.setRunning(false);
@@ -191,7 +190,7 @@ public class PipelineImpl extends AbstractRestInterface implements IPipeline {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public String overwritePipeline(@PathParam("username") String username, String pipeline) {
-		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(Utils.getGson().fromJson(pipeline, Pipeline.class));
+		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class));
 		return toJson(Notifications.success("Pipeline modified"));
 	}
 
