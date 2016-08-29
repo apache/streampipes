@@ -24,7 +24,7 @@ angular.module('ui.dashboard')
     return {
       restrict: 'A',
       templateUrl: function(element, attr) {
-        return attr.templateUrl ? attr.templateUrl : 'modules/dashboard/templates/widget-frame.html';
+        return attr.templateUrl ? attr.templateUrl : '';
       },
       scope: true,
 

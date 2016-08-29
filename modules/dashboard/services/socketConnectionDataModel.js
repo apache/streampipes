@@ -15,12 +15,14 @@ angular.module('streamPipesApp').factory('SocketConnectionDataModel', ['WidgetDa
 		 var passcode = 'admin';
 		 var self = this;
 
+
 		 $http.get(couchDbServer + '/visualization/' + this.id)
 			 .success(function(data) {
 
-				 var topic = 'ws://' + data['broker'] + '/topic/' + data['pipelineId'];
+			   var brokerUrl = 'ws://' + data['broker'];
+         var inputTopic = '/topic/' + data['pipelineId'];
 
-				 client = Stomp.client(topic);
+				 client = Stomp.client(brokerUrl + inputTopic);
 
 				 // Uncomment these lines to get all the wesocket messages to the console
 				 //  client.debug = function (str) {
