@@ -1,6 +1,6 @@
 
 angular.module('streamPipesApp')
-	.controller('DashCtrl', ['$rootScope', '$scope', '$http', 'RandomTopNDataModel', '$mdDialog', 'Widgets', function($rootScope, $scope, $http, RandomTopNDataModel, $mdDialog, Widgets) {
+	.controller('DashCtrl', ['$rootScope', '$scope', '$http', '$mdDialog', 'Widgets', function($rootScope, $scope, $http, $mdDialog, Widgets) {
 		var couchDbServer = 'http://127.0.0.1:5984';
 
 		$scope.rerender = true;

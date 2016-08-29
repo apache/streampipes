@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('streamPipesApp')
-    .directive('wtTopN', function () {
+    .directive('tableWidget', function () {
         return {
             restrict: 'A',
             replace: true,
-            templateUrl: 'modules/dashboard/templates/topn/topn.html',
+            templateUrl: 'modules/dashboard/templates/table/table.html',
             scope: {
                 data: '='
             },
