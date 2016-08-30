@@ -10,11 +10,11 @@ import javax.ws.rs.Produces;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.rest.api.ICategory;
+import de.fzi.cep.sepa.rest.api.IPipelineElementCategory;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 @Path("/v2/categories")
-public class Category extends AbstractRestInterface implements ICategory {
+public class PipelineElementCategory extends AbstractRestInterface implements IPipelineElementCategory {
 
 	@GET
 	@Path("/ep")

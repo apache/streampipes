@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.rest.api;
 
-public interface ICategory {
+public interface IPipelineElementCategory {
 
 	String getEps();
 	

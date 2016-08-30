@@ -19,7 +19,7 @@ public class StreamPipesApplication extends Application {
         // APIs
         apiClasses.add(AppStore.class);
         apiClasses.add(Authentication.class);
-        apiClasses.add(Category.class);
+        apiClasses.add(PipelineElementCategory.class);
         apiClasses.add(Deployment.class);
         apiClasses.add(Icon.class);
         apiClasses.add(Notification.class);
