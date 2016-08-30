@@ -37,11 +37,7 @@
 
 			<!-- Select Scheme -->
 			<md-dialog-content ng-show="page == 'select-scheme'">
-				<md-input-container>
-					<h3>Select Columns</h3>
-					<md-checkbox ng-model="prop.isSelected" ng-repeat="prop in selectedVis.schema.eventProperties" aria-label="{{prop.properties.runtimeName}}">
-						  {{prop.properties.runtimeName}}
-						</md-checkbox>
+				<md-input-container id="scheme-selection">
 				</md-input-container>
 			</md-dialog-content>
 		</div>
