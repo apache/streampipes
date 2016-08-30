@@ -8,9 +8,7 @@ angular.module('streamPipesApp').factory('TableDataModel', ['SocketConnectionDat
 
 	function TableDataModel(id) {
 		SocketConnectionDataModel.call(this, id);
-
 	}
-
 
 	TableDataModel.prototype.newData = function(message) {
 		if (dataArray.length > dataArrayLength - 1) {

@@ -1,5 +1,5 @@
 angular.module('streamPipesApp')
-	.factory('AddWidget', ['Widgets', '$compile', function(Widgets, $compile) {
+	.factory('AddWidget', ['Widgets', '$compile', 'WidgetDefinitions', function(Widgets, $compile, WidgetDefinitions) {
 
 		function AddWidget($scope, $mdDialog, possibleVisualizations, rerenderDashboard) {
 			$scope.page = 'select-viz';
@@ -9,7 +9,7 @@ angular.module('streamPipesApp')
 			// This is the object that the user manipulates
 			$scope.selectedVis = {};
 
-			$scope.possibleVisTypes = ['table'];
+			$scope.possibleVisTypes = WidgetDefinitions.getAllNames();
 			$scope.selectedVisType = '';
 
 			$scope.next = function() {
