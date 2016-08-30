@@ -53,7 +53,6 @@ public enum StorageManager {
 	private EntityManager storageManager;
 
 	private RepositoryConnection conn;
-	private RepositoryConnection dbpediaConn;
 	
 	private Repository repository;
 	private Repository bkrepo;
@@ -93,18 +92,6 @@ public enum StorageManager {
 			return false;
 		}
 	}
-	
-//	private boolean initDbPediaEndpoint() {
-//		SPARQLRepository repo = new SPARQLRepository("http://dbpedia.org/sparql");
-//		try {
-//			repo.initialize();
-//			dbpediaConn = repo.getConnection();
-//			return true;
-//		} catch (RepositoryException e) {
-//			e.printStackTrace();
-//			return false;
-//		}		  
-//	}
 
 	private boolean initEmpire() {
 		
@@ -140,10 +127,6 @@ public enum StorageManager {
 	
 	public Repository getRepository() {
 		return bkrepo;
-	}
-	
-	public RepositoryConnection getDbpediaConnection() {
-		return dbpediaConn;
 	}
 
 	public StorageRequests getStorageAPI() {

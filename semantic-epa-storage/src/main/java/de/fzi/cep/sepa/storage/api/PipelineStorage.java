@@ -8,27 +8,27 @@ import de.fzi.cep.sepa.model.client.VirtualSensor;
 
 public interface PipelineStorage {
 
-	public List<Pipeline> getAllPipelines();
+	List<Pipeline> getAllPipelines();
 
-	public List<Pipeline> getAllUserPipelines();
-	
-	public List<RunningVisualization> getRunningVisualizations();
-	
-	public void storeVisualization(RunningVisualization vizualization);
-	
-	public void deleteVisualization(String pipelineId);
-	
-	public void storePipeline(Pipeline pipeline);
-	
-	public void updatePipeline(Pipeline pipeline);
-	
-	public Pipeline getPipeline(String pipelineId);
-	
-	public void deletePipeline(String pipelineId);
-	
-	public <T> void store(T object);
-	
-	public void storeVirtualSensor(String username, VirtualSensor virtualSensor);
-	
-	public List<VirtualSensor> getVirtualSensors(String username);
+	List<Pipeline> getAllUserPipelines();
+
+	List<RunningVisualization> getRunningVisualizations();
+
+	void storeVisualization(RunningVisualization vizualization);
+
+	void deleteVisualization(String pipelineId);
+
+	void storePipeline(Pipeline pipeline);
+
+	void updatePipeline(Pipeline pipeline);
+
+	Pipeline getPipeline(String pipelineId);
+
+	void deletePipeline(String pipelineId);
+
+	void store(Pipeline object);
+
+	void storeVirtualSensor(String username, VirtualSensor virtualSensor);
+
+	List<VirtualSensor> getVirtualSensors(String username);
 }

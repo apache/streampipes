@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.storage.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
@@ -9,58 +10,50 @@ import de.fzi.cep.sepa.appstore.shared.BundleInfo;
 import de.fzi.cep.sepa.storage.api.AppStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
-public class AppStorageImpl implements AppStorage {
+public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
 
-	@Override
-	public BundleInfo getBundleById(String bundleId) {
-		CouchDbClient dbClient = Utils.getCouchDbAppStorageClient();
-        try {
-            BundleInfo bundleInfo = dbClient.find(BundleInfo.class, bundleId);
-            dbClient.shutdown();
-            return bundleInfo;
-        } catch (NoDocumentException e) {
+    public AppStorageImpl() {
+        super(Utils.getCouchDbAppStorageClient(), BundleInfo.class);
+    }
+
+    @Override
+    public BundleInfo getBundleById(String bundleId) {
+        Optional<BundleInfo> info = getItem(bundleId);
+        if (info.isPresent()) {
+            return info.get();
+        } else {
             return null;
         }
-	}
+    }
 
-	@Override
-	public List<BundleInfo> getInstalledBundles() {
-		 CouchDbClient dbClient = Utils.getCouchDbAppStorageClient();
-    	 List<BundleInfo> bundles = dbClient.view("_all_docs")
-    			  .includeDocs(true)
-    			  .query(BundleInfo.class);
-    	 
-    	 return bundles;
-	}
+    @Override
+    public List<BundleInfo> getInstalledBundles() {
+        return getAll();
+    }
 
-	@Override
-	public boolean updateBundle(BundleInfo bundleInfo) {
-		CouchDbClient dbClient = Utils.getCouchDbAppStorageClient();
-        dbClient.update(bundleInfo);
-        dbClient.shutdown();
+    @Override
+    public boolean updateBundle(BundleInfo bundleInfo) {
+        update(bundleInfo);
         return true;
-	}
+    }
 
-	@Override
-	public boolean deleteBundle(BundleInfo bundleInfo) {
-		 CouchDbClient dbClientPipeline = Utils.getCouchDbAppStorageClient();
-	        try {
-	            BundleInfo removeBundleInfo = dbClientPipeline.find(BundleInfo.class, bundleInfo.getId());
-	            dbClientPipeline.remove(removeBundleInfo);
-	            dbClientPipeline.shutdown();
-	            return true;
-	        } catch (NoDocumentException e) {
-	            e.printStackTrace();
-	            return false;
-	        }
-	}
+    @Override
+    public boolean deleteBundle(BundleInfo bundleInfo) {
+        try {
+            BundleInfo removeBundleInfo = dbClient.find(BundleInfo.class, bundleInfo.getId());
+            dbClient.remove(removeBundleInfo);
+            dbClient.shutdown();
+            return true;
+        } catch (NoDocumentException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-	@Override
-	public boolean storeBundle(BundleInfo bundleInfo) {
-		CouchDbClient dbClient = Utils.getCouchDbAppStorageClient();
-        dbClient.save(bundleInfo);
-        dbClient.shutdown();
+    @Override
+    public boolean storeBundle(BundleInfo bundleInfo) {
+        add(bundleInfo);
         return true;
-	}
+    }
 
 }

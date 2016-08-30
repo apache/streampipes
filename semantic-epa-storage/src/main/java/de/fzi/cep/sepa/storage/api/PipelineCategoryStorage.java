@@ -6,10 +6,10 @@ import de.fzi.cep.sepa.model.client.PipelineCategory;
 
 public interface PipelineCategoryStorage {
 
-	public List<PipelineCategory> getPipelineCategories();
+	List<PipelineCategory> getPipelineCategories();
 	
-	public boolean addPipelineCategory(PipelineCategory pipelineCategory);
+	boolean addPipelineCategory(PipelineCategory pipelineCategory);
 	
-	public boolean deletePipelineCategory(String categoryId);
+	boolean deletePipelineCategory(String categoryId);
 	
 }
