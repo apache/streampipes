@@ -1,11 +1,10 @@
 'use strict';
 
-angular.module('streamPipesApp').factory('Widgets', ['$http', 'TableDataModel', 
-	function ($http, TableDataModel) {
+angular.module('streamPipesApp').factory('Widgets', ['$http', 'WidgetDefinitions',
+	function ($http, WidgetDefinitions) {
 
 	var widgets = new Array();
 	var client;
-
 
 	var createNewWidget = function(widget) {
 		var id = widgets.length + 1;
@@ -20,14 +19,15 @@ angular.module('streamPipesApp').factory('Widgets', ['$http', 'TableDataModel',
 		var widget = widgets[id];
 
 		var name = widget.vis.name + '[' + widget.visType + ']';
-		var directive = getDirectiveName(widget.visType);
-		
+		var directive = WidgetDefinitions.getDirectiveName(widget.visType);
+		var dataModel = WidgetDefinitions.getDataModel(widget.visType);
+
 		return {
 			name: name,
 			directive: directive,
 			title: widget.id,
 			dataAttrName: 'data',
-			dataModelType: TableDataModel,
+			dataModelType: dataModel,
 			dataModelArgs: widget.id,
 			attrs: {
 			          'widget-id': id
@@ -48,21 +48,9 @@ angular.module('streamPipesApp').factory('Widgets', ['$http', 'TableDataModel',
 		return result;
 	}
 
-	var getDirectiveName = function(name) {
-		switch(name) {
-		    case "table":
-						return 'table-widget'
-		        break;
-		    default:
-		        console.log('Widget Directive not supported')
-		}
-	
-	}
-
-	return {
+		return {
 		add: createNewWidget,
 		get: getWidgetById,	
-		//getWidgetDefinition: getWidgetDashboardDefinition,
 		getAllWidgetDefinitions: getAllWidgetDefinitions
 	};
 }]);
