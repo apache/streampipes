@@ -29,18 +29,11 @@ angular.module('streamPipesApp').factory('SocketConnectionDataModel', ['WidgetDa
 				 //  	console.log(str);
 				 //  };
 
-				 var dataArray = [];
-				 var dataArrayLength = 5;
-
 				 // the client is notified when it is connected to the server.
 				 var onConnect = function (frame) {
 
 					 client.subscribe(inputTopic, function (message) {
-						 dataArray.push(JSON.parse(message.body));
-						 if (dataArray.length > dataArrayLength) {
-							 dataArray = dataArray.slice(Math.max(dataArray.length - dataArrayLength, 1));
-						 }
-						 self.updateScope(dataArray);
+					   self.newData(message);
 					 });
 				 };
 
@@ -55,6 +48,10 @@ angular.module('streamPipesApp').factory('SocketConnectionDataModel', ['WidgetDa
 			 console.log("Disconnected websocket connection");
 		 })
 	 };
+
+	 SocketConnectionDataModel.prototype.newData = function(message) {
+		// to be overridden by subclasses
+	 }
 
 	 return SocketConnectionDataModel;
  }]);

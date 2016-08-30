@@ -34,7 +34,7 @@ angular.module('streamPipesApp')
 		};
 
 		// TODO Helper to add new Widgets to the dashboard
-		// A better solution is needed
+		// Find a better solution
 		var rerenderDashboard = function() {
 			$scope.rerender = false;
 			setTimeout(function() {
