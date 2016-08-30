@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDataModel', function ($http, SocketConnectionDataModel) {
+angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDataModel', 'TableDataModel', function ($http, SocketConnectionDataModel, TableDataModel) {
 
 	var widgets = new Array();
 	var client;
@@ -17,7 +17,7 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 	var getWidgetDashboardDefinition = function(id) {
 		var widget = getWidgetById(id);
 
-		var name = widget.vis.name + '_' + widget.visType;
+		var name = widget.vis.name + '[' + widget.visType + ']';
 		var directive = getDirectiveName(widget.visType);
 		
 		return {
@@ -25,7 +25,7 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 			directive: directive,
 			title: widget.id,
 			dataAttrName: 'data',
-			dataModelType: SocketConnectionDataModel,
+			dataModelType: TableDataModel,
 			dataModelArgs: widget.id,
 			attrs: {
 			          'widget-id': widget.id
