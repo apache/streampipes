@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineStorage {
 
-    //CouchDbClient dbClient = Utils.getCouchDBClient();
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     public PipelineStorageImpl() {
@@ -87,7 +86,6 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
         List<RunningVisualization> result = new ArrayList<>();
         for (RunningVisualization v : visualizations)
             if (v.getConsumerUrl() != null) result.add(v);
-        dbClient.shutdown();
         return result;
     }
 
@@ -106,7 +104,6 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
                 if (viz.getPipelineId() != null)
                     if (viz.getPipelineId().equals(pipelineId))
                         dbClient.remove(viz);
-            dbClient.shutdown();
         } catch (NoDocumentException e) {
             e.printStackTrace();
         }
@@ -117,7 +114,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
     @Override
     public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
         dbClient.save(virtualSensor);
-        dbClient.shutdown();
+        //dbClient.shutdown();
     }
 
     @Override

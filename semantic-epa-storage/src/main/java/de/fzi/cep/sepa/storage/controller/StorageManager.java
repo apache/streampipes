@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
+import de.fzi.cep.sepa.storage.api.*;
+import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -20,26 +22,6 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
-import de.fzi.cep.sepa.storage.api.AppStorage;
-import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
-import de.fzi.cep.sepa.storage.api.ConnectionStorage;
-import de.fzi.cep.sepa.storage.api.ContextStorage;
-import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
-import de.fzi.cep.sepa.storage.api.NotificationStorage;
-import de.fzi.cep.sepa.storage.api.PipelineCategoryStorage;
-import de.fzi.cep.sepa.storage.api.PipelineStorage;
-import de.fzi.cep.sepa.storage.api.StorageRequests;
-import de.fzi.cep.sepa.storage.impl.AppStorageImpl;
-import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
-import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
-import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
-import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
-import de.fzi.cep.sepa.storage.impl.MonitoringDataStorageImpl;
-import de.fzi.cep.sepa.storage.impl.NotificationStorageImpl;
-import de.fzi.cep.sepa.storage.impl.PipelineCategoryStorageImpl;
-import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
-import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
-import de.fzi.cep.sepa.storage.impl.UserStorage;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
@@ -59,6 +41,15 @@ public enum StorageManager {
 	
 	private InMemoryStorage inMemoryStorage;
 	private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
+
+	private AppStorage appStorage;
+	private ConnectionStorage connectionStorage;
+	private MonitoringDataStorage monitoringDataStorage;
+	private NotificationStorage notificationStorage;
+	private PipelineCategoryStorage pipelineCategoryStorage;
+	private PipelineStorage pipelineStorage;
+	private SepaInvocationStorage sepaInvocationStorage;
+	private UserStorage userStorage;
 	
 	private boolean inMemoryInitialized = false;
 
@@ -86,11 +77,23 @@ public enum StorageManager {
 		try {
 			repository = new HTTPRepository(SERVER, REPOSITORY_ID);	
 			conn = repository.getConnection();
+
+			// init couchdb storage
+            this.userStorage = new UserStorage();
+			this.appStorage = new AppStorageImpl();
+			this.connectionStorage = new ConnectionStorageImpl();
+			this.monitoringDataStorage = new MonitoringDataStorageImpl();
+			this.notificationStorage = new NotificationStorageImpl();
+			this.pipelineCategoryStorage = new PipelineCategoryStorageImpl();
+			this.pipelineStorage = new PipelineStorageImpl();
+			this.sepaInvocationStorage = new SepaInvocationStorageImpl();
 				
 			return true;
 		} catch (Exception e) {
+            e.printStackTrace();
 			return false;
 		}
+
 	}
 
 	private boolean initEmpire() {
@@ -145,7 +148,7 @@ public enum StorageManager {
 	}
 	
 	public PipelineStorage getPipelineStorageAPI() {
-		return new PipelineStorageImpl();
+		return pipelineStorage;
 	}
 	
 	public StorageRequests getSesameStorage() {
@@ -158,10 +161,10 @@ public enum StorageManager {
 	}
 	
 	public ConnectionStorage getConnectionStorageApi() {
-		return new ConnectionStorageImpl();
+		return connectionStorage;
 	}
 
-	public UserStorage getUserStorageAPI() { return new UserStorage(); }
+	public UserStorage getUserStorageAPI() { return userStorage; }
 	
 	public UserService getUserService() {
 		return new UserService(getUserStorageAPI());
@@ -169,20 +172,20 @@ public enum StorageManager {
 
 	public MonitoringDataStorage getMonitoringDataStorageApi()
 	{
-		return new MonitoringDataStorageImpl();
+		return monitoringDataStorage;
 	}
 	
 	public NotificationStorage getNotificationStorageApi()
 	{
-		return new NotificationStorageImpl();
+		return notificationStorage;
 	}
 	
 	public PipelineCategoryStorage getPipelineCategoryStorageApi() {
-		return new PipelineCategoryStorageImpl();
+		return pipelineCategoryStorage;
 	}
 	
 	public AppStorage getAppStorageApi() {
-		return new AppStorageImpl();
+		return appStorage;
 	}
 	
 	public ContextStorage getContextStorage() {

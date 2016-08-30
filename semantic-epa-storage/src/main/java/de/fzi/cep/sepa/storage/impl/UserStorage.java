@@ -34,7 +34,6 @@ public class UserStorage extends Storage<User> {
         // TODO improve
         List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
         if (users.size() != 1) LOG.error("None or to many users with matching username");
-        dbClient.shutdown();
         return users.get(0);
     }
 

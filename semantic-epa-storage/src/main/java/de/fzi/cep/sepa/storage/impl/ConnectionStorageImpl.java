@@ -28,7 +28,6 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 	@Override
 	public void addConnection(Connection connection) {
 		dbClient.save(connection);
-		dbClient.shutdown();
 	}
 
 	@Override

@@ -18,12 +18,7 @@ public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
 
     @Override
     public BundleInfo getBundleById(String bundleId) {
-        Optional<BundleInfo> info = getItem(bundleId);
-        if (info.isPresent()) {
-            return info.get();
-        } else {
-            return null;
-        }
+        return getWithNullIfEmpty(bundleId);
     }
 
     @Override
@@ -42,7 +37,6 @@ public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
         try {
             BundleInfo removeBundleInfo = dbClient.find(BundleInfo.class, bundleInfo.getId());
             dbClient.remove(removeBundleInfo);
-            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             e.printStackTrace();

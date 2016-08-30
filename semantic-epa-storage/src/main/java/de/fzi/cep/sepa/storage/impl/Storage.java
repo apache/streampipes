@@ -24,7 +24,7 @@ public abstract class Storage<T> {
     public Optional<T> getItem(String key) {
         try {
             T result = dbClient.find(targetClass, key);
-            dbClient.shutdown();
+            //dbClient.shutdown();
             return Optional.of(result);
         } catch (NoDocumentException e) {
             return Optional.empty();
@@ -35,7 +35,7 @@ public abstract class Storage<T> {
         List<T> allResults = dbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(targetClass);
-        dbClient.shutdown();
+        //dbClient.shutdown();
 
         if (allResults != null)
             return allResults;
@@ -46,7 +46,7 @@ public abstract class Storage<T> {
 
     public boolean add(T item) {
         Response response = dbClient.save(item);
-        dbClient.shutdown();
+        //dbClient.shutdown();
         if (response.getError() != null)
             return false;
         return true;
@@ -57,7 +57,7 @@ public abstract class Storage<T> {
         try {
             T result = dbClient.find(targetClass, key);
             dbClient.remove(result);
-            dbClient.shutdown();
+            //dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
@@ -67,7 +67,7 @@ public abstract class Storage<T> {
     public boolean update(T item) {
         try {
             dbClient.update(item);
-            dbClient.shutdown();
+            //dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
@@ -81,5 +81,10 @@ public abstract class Storage<T> {
         } else {
             return null;
         }
+    }
+
+    public void cleanup() {
+        // TODO call when application context is destroyed
+        dbClient.shutdown();
     }
 }

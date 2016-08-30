@@ -9,8 +9,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.api.SepaInvocationStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
-import java.util.Optional;
-
 public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implements SepaInvocationStorage {
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
@@ -21,7 +19,6 @@ public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implement
     @Override
     public Response storeSepaInvocation(SepaInvocation sepaInvocation) {
         Response response = dbClient.save(sepaInvocation);
-        dbClient.shutdown();
         return response;
     }
 
@@ -35,7 +32,6 @@ public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implement
     public boolean removeSepaInvovation(String sepaInvocationId, String sepaInvocationRev) {
         try {
             dbClient.remove(sepaInvocationId, sepaInvocationRev);
-            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
