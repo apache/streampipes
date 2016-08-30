@@ -1,6 +1,6 @@
 
 angular.module('streamPipesApp')
-	.controller('DashCtrl', ['$rootScope', '$scope', '$http', '$mdDialog', 'Widgets', function($rootScope, $scope, $http, $mdDialog, Widgets) {
+	.controller('DashCtrl', ['$rootScope', '$scope', '$http', '$mdDialog', 'Widgets', 'AddWidget', function($rootScope, $scope, $http, $mdDialog, Widgets, AddWidget) {
 		var couchDbServer = 'http://127.0.0.1:5984';
 
 		$scope.rerender = true;
@@ -22,16 +22,19 @@ angular.module('streamPipesApp')
 
 		$scope.addWidget = function() {
 			$mdDialog.show({
-				controller: AddWidgetController,
+				controller: AddWidget,
 				templateUrl: 'modules/dashboard/add-widget-template/add-widget-template.html',
 				parent: angular.element(document.body),
 				clickOutsideToClose:true,
 				locals : {
-					possibleVisualizations: possibleVisualizations
+					possibleVisualizations: possibleVisualizations,
+					rerenderDashboard: rerenderDashboard
 				}
 			});
 
 		};
+
+		var widgetDefinitions = Widgets.getAllWidgetDefinitions();
 
 		// TODO Helper to add new Widgets to the dashboard
 		// Find a better solution
@@ -39,71 +42,26 @@ angular.module('streamPipesApp')
 			$scope.rerender = false;
 			setTimeout(function() {
 				$scope.$apply(function () {
+					$scope.dashboardOptions.widgetDefinitions = Widgets.getAllWidgetDefinitions();
 					$scope.rerender = true;
 				});
 			}, 100);
 		}
 
-		function AddWidgetController($scope, $mdDialog, possibleVisualizations) {
 
-			$scope.page = 'select-viz';
-
-			$scope.possibleVisualizations = possibleVisualizations;
-			$scope.selectedVis = {};
-
-			$scope.possibleVisTypes = ['table'];
-			$scope.selectedVisType = '';
-
-			$scope.next = function() {
-				if ($scope.page == 'select-viz') {
-					$scope.page = 'select-type';
-				} else if ($scope.page == 'select-type') {
-					$scope.page = 'select-scheme';
-				} else {
-					var selectedProperties = [];
-					$scope.selectedVis.schema.eventProperties.forEach(function(entry) {
-						if (entry.isSelected) {
-							selectedProperties.push(entry);
-						}
-					});
-
-					var widget = {};
-					widget.selectedProperties = selectedProperties;
-					widget.visType = $scope.selectedType;
-					widget.vis = $scope.selectedVis;
-					widget.id = $scope.selectedVis._id;
-
-					Widgets.add(widget);
-
-					widgetDefinitions.push(
-						Widgets.getWidgetDefinition(widget.id)
-						);
-
-					rerenderDashboard();
-
-					$mdDialog.cancel();
-				}
-			}
-
-			$scope.cancel = function() {
-				$mdDialog.cancel();
-			};
-		}
-
-
-		var widgetDefinitions = [
-			{
-				name: 'wt-time',
-				style: {
-					width: '33%'
-				}
-			}, {
-				name: 'wt-random',
-				style: {
-					width: '33%'
-				}
-			}
-		];
+		//var widgetDefinitions = [
+			//{
+				//name: 'wt-time',
+				//style: {
+					//width: '33%'
+				//}
+			//}, {
+				//name: 'wt-random',
+				//style: {
+					//width: '33%'
+				//}
+			//}
+		//];
 
 
 		var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {

@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDataModel', 'TableDataModel', function ($http, SocketConnectionDataModel, TableDataModel) {
+angular.module('streamPipesApp').factory('Widgets', ['$http', 'TableDataModel', 
+	function ($http, TableDataModel) {
 
 	var widgets = new Array();
 	var client;
 
 
 	var createNewWidget = function(widget) {
-		widgets[widget.id] = widget;
+		var id = widgets.length + 1;
+		widgets[id] = widget;
 	}
 
 	var getWidgetById = function(id) {
@@ -15,7 +17,7 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 	}
 
 	var getWidgetDashboardDefinition = function(id) {
-		var widget = getWidgetById(id);
+		var widget = widgets[id];
 
 		var name = widget.vis.name + '[' + widget.visType + ']';
 		var directive = getDirectiveName(widget.visType);
@@ -28,12 +30,22 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 			dataModelType: TableDataModel,
 			dataModelArgs: widget.id,
 			attrs: {
-			          'widget-id': widget.id
+			          'widget-id': id
 			        },
 			style: {
 				width: '30%'
 			}
 		}
+	}
+
+	var getAllWidgetDefinitions = function() {
+		var result = [];
+
+		angular.forEach(widgets, function(w, key) {
+			result.push(getWidgetDashboardDefinition(key));	
+		});
+
+		return result;
 	}
 
 	var getDirectiveName = function(name) {
@@ -50,6 +62,7 @@ angular.module('streamPipesApp').factory('Widgets', ['$http','SocketConnectionDa
 	return {
 		add: createNewWidget,
 		get: getWidgetById,	
-		getWidgetDefinition: getWidgetDashboardDefinition
+		//getWidgetDefinition: getWidgetDashboardDefinition,
+		getAllWidgetDefinitions: getAllWidgetDefinitions
 	};
 }]);
