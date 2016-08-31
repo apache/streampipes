@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('streamPipesApp')
-	.directive('tableWidget',['Widgets', function (Widgets) {
+	.directive('tableWidget',['Widgets', '$filter', function (Widgets, $filter) {
 		return {
 			restrict: 'A',
 			replace: true,
@@ -17,6 +17,16 @@ angular.module('streamPipesApp')
 					]
 				};
 
+				var formatDate = function(value) {
+					return $filter('date')(value, 'yyyy-MM-dd HH:mm:ss');	
+				}
+
+				var isDate = function(eventProperty) {
+					if (eventProperty.properties.domainProperties.indexOf('http://schema.org/DateTime')>-1) {
+						return true;	
+					}
+					return false;
+				}
 
 				//Add the colums that where selected by the user
 				var widgetConfig = Widgets.get($scope.widgetId);
@@ -25,7 +35,13 @@ angular.module('streamPipesApp')
 
 					if (prop.isSelected) {
 						var name = prop.properties.runtimeName;
-						$scope.columns.push({ id: name, key: name, label: name });
+						var column = { id: name, key: name, label: name};
+						
+						if (isDate(prop)) {
+							column.format = formatDate;
+						}
+
+						$scope.columns.push(column);
 					}
 				});
 
