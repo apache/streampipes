@@ -10,8 +10,6 @@ import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
@@ -19,8 +17,8 @@ import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 public class TestUtils {
 
@@ -45,13 +43,13 @@ public class TestUtils {
 		sepDescription.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test1")));
 		EventStream offer = stream.declareModel(sepDescription);
 		offer.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test2")));
-		SepaDescription requirement = (new AggregationController().declareModel());
+		SepaDescription requirement = (agent.declareModel());
 		requirement.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test3")));
 		Pipeline pipeline = new Pipeline();
-		StreamClient offeredClientModel = ClientModelTransformer.toStreamClientModel(sepDescription, offer);
+		EventStream offeredClientModel = offer;
 		offeredClientModel.setDOM("A");
-		
-		SEPAClient requiredClientModel = ClientModelTransformer.toSEPAClientModel(requirement);
+
+		SepaInvocation requiredClientModel = new SepaInvocation(requirement);
 		requiredClientModel.setDOM("B");
 		requiredClientModel.setConnectedTo(Arrays.asList("A"));
 		

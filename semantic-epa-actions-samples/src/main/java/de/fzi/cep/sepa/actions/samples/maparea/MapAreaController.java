@@ -51,7 +51,7 @@ public class MapAreaController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maparea", "Map area view", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);

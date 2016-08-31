@@ -1,19 +1,23 @@
 package de.fzi.cep.sepa.rest.api;
 
 
+import de.fzi.cep.sepa.model.client.Pipeline;
+
+import javax.ws.rs.core.Response;
+
 public interface IPipeline extends IPipelineElement {
 	
-	String addPipeline(String username, String pipeline);
-	
-	String start(String username, String pipelineId);
-	
-	String stop(String username, String pipelineId);
-	
-	String recommend(String pipeline);
-	
-	String update(String pipeline);
-	
-	String overwritePipeline(String username, String pipeline);
+	Response addPipeline(String username, String pipeline);
 
-	String getPipelineStatus(String username, String pipelineId);
+	Response start(String username, String pipelineId);
+
+	Response stop(String username, String pipelineId);
+
+	Response recommend(Pipeline pipeline);
+
+	Response update(Pipeline pipeline);
+
+	Response overwritePipeline(String username, String pipeline);
+
+	Response getPipelineStatus(String username, String pipelineId);
 }

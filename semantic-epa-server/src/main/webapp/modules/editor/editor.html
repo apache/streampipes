@@ -76,7 +76,7 @@
 	</div>
 	<div flex id="editor-icon-stand" class="icon-stand">
 
-		<span ng-repeat="element in currentElements |filter: elName| filter: possibleFilter | filter: selectFilter | orderBy: 'name' " my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-if="element.type !== 'block'">
+		<span ng-repeat="element in currentElements | filter: elName| filter: possibleFilter | filter: selectFilter | orderBy: 'name' " my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-if="element.type !== 'block'">
 		</span>
 		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " class="block tt"  data-target="testMenu" ng-if="element.type == 'block'" my-data-bind>
 			<div class="block-name tt">{{element.name}}</div>

@@ -46,7 +46,7 @@ public class ObserveNumericalWindowController extends FlatEpDeclarer<ObserveNume
 
 		SepaDescription desc = new SepaDescription("observenumericalvaluewindow", "Observe Numerical Value Window",
 				"");
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 
 		desc.addEventStream(stream1);
 

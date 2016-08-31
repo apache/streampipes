@@ -52,7 +52,7 @@ public class NumberController extends ActionController {
         public SecDescription declareModel() {
                 SecDescription sec = new SecDescription("number", "Number", "Displays a colored circle with value", "");
                 //sec.setIconUrl(ActionConfig.iconBaseUrl + "/---.png");
-                sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+                sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
                 
                 List<EventProperty> eventProperties = new ArrayList<EventProperty>();
                 EventProperty e1 = EpRequirements.numberReq();

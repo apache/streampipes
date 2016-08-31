@@ -7,7 +7,7 @@ import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.appstore.AppStoreInfoProvider;
 import de.fzi.cep.sepa.manager.execution.http.PipelineExecutor;
-import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
 import de.fzi.cep.sepa.messages.AppInstallationMessage;
@@ -30,7 +30,7 @@ public class Operations {
 	
 	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial)
 			throws Exception {
-		PipelineValidationHandler validator = new PipelineValidationHandler(
+		PipelineVerificationHandler validator = new PipelineVerificationHandler(
 				pipeline, isPartial);
 		return validator
 		.validateConnection()

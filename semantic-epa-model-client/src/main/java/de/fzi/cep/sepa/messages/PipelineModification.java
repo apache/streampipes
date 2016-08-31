@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.messages;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.client.ErrorDescription;
-import de.fzi.cep.sepa.model.client.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public class PipelineModification {
 

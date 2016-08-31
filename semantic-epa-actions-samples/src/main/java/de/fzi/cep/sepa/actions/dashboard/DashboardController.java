@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.actions.dashboard;
 
-import com.google.gson.Gson;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
@@ -35,7 +34,7 @@ public class DashboardController extends ActionController {
         EventStream stream = StreamBuilder.createStream("", "","").schema(SchemaBuilder.create().build()).build();
         SecDescription desc = new SecDescription("dashboard_sink", "Dashboard Sink", "This sink will be used to define that the data can be vizualized");
 //        desc.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
-        desc.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+        desc.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
         stream.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
         desc.addEventStream(stream);
 

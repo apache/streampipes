@@ -27,11 +27,11 @@ public class SecInvocation extends InvocableSEPAElement{
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:ecType")
-	protected List<String> ecTypes;
+	protected List<String> category;
 
 	public SecInvocation(SecInvocation sec) {
 		super(sec);
-		this.ecTypes = sec.getEcTypes();
+		this.category = sec.getCategory();
 
 	}
 
@@ -45,14 +45,15 @@ public class SecInvocation extends InvocableSEPAElement{
 		this.setSupportedGrounding(sec.getSupportedGrounding());
 		this.setStaticProperties(sec.getStaticProperties());
 		this.setBelongsTo(sec.getRdfId().toString());
-		this.ecTypes = sec.getEcTypes();
+		this.category = sec.getCategory();
+		this.setStreamRequirements(sec.getEventStreams());
 		//this.setUri(belongsTo +"/" +getElementId());
 	}
 	
 	public SecInvocation(SecDescription sec, String domId)
 	{
 		this(sec);
-		this.setDomId(domId);
+		this.setDOM(domId);
 	}
 	
 	public SecInvocation()
@@ -69,12 +70,12 @@ public class SecInvocation extends InvocableSEPAElement{
 		this.staticProperties = staticProperties;
 	}
 
-	public List<String> getEcTypes() {
-		return ecTypes;
+	public List<String> getCategory() {
+		return category;
 	}
 
-	public void setEcTypes(List<String> ecTypes) {
-		this.ecTypes = ecTypes;
+	public void setCategory(List<String> category) {
+		this.category = category;
 	}
 		
 }

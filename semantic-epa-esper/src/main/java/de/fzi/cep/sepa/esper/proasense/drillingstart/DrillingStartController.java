@@ -80,7 +80,7 @@ public class DrillingStartController extends FlatEpDeclarer<DrillingStartParamet
 		stream2.setEventSchema(schema2);
 		desc.addEventStream(stream1);
 		desc.addEventStream(stream2);
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		List<EventProperty> appendProperties = new ArrayList<EventProperty>();			

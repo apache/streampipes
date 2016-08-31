@@ -33,6 +33,8 @@ import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.Transformer;
 import de.fzi.sepa.model.client.util.Utils;
 
+import javax.ws.rs.core.Response;
+
 public abstract class AbstractRestInterface {
 
 	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
@@ -72,7 +74,7 @@ public abstract class AbstractRestInterface {
 			return de.fzi.cep.sepa.commons.Utils.asString(new JsonLdTransformer().toJsonLd(object));
 		} catch (RDFHandlerException | IllegalArgumentException
 				| IllegalAccessException | SecurityException | InvocationTargetException | ClassNotFoundException | InvalidRdfException e) {
-			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
 		}
 	}
 	
@@ -92,21 +94,16 @@ public abstract class AbstractRestInterface {
 		return Transformer.fromJsonLd(clazz, payload);
 	}
 	
-	protected String constructSuccessMessage(Notification... notifications)
+	protected Response constructSuccessMessage(Notification... notifications)
 	{
-		return constructMessage(new SuccessMessage(notifications));
+		return statusMessage(new SuccessMessage(notifications));
 	}
 	
-	protected String constructErrorMessage(Notification... notifications)
+	protected Response constructErrorMessage(Notification... notifications)
 	{
-		return constructMessage(new ErrorMessage(notifications));
+		return statusMessage(new ErrorMessage(notifications));
 	}
-	
-	
-	private String constructMessage(Message message)
-	{
-		return toJson(message);
-	}
+
 
 	protected String getCurrentUsername() throws AuthenticationException {
 		if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -127,6 +124,19 @@ public abstract class AbstractRestInterface {
 	@SuppressWarnings("deprecation")
 	protected String decode(String encodedString) {
 		return URLDecoder.decode(encodedString);
+	}
+
+	protected Response statusMessage(Message message) {
+		return Response
+				.ok()
+				.entity(message)
+				.build();
+	}
+
+	protected <T> Response ok(T entity) {
+		return Response
+				.ok(entity)
+				.build();
 	}
 	
 }

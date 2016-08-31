@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -25,6 +26,7 @@ import de.fzi.cep.sepa.messages.Notifications;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
+import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import de.fzi.cep.sepa.rest.api.IPipeline;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
@@ -34,14 +36,14 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 
 	
 	@Override
-	public String getAvailable(String username) {
+	public Response getAvailable(String username) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public String getFavorites(String username) {
+	public Response getFavorites(String username) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -49,19 +51,20 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/own")
+	@GsonWithIds
 	@Override
-	public String getOwn(@PathParam("username") String username) {
-		return Utils.getGson().toJson(userService.getOwnPipelines(username));
+	public Response getOwn(@PathParam("username") String username) {
+		return ok(userService.getOwnPipelines(username));
 	}
 
 	@Override
-	public String addFavorite(String username, String elementUri) {
+	public Response addFavorite(String username, String elementUri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String removeFavorite(String username, String elementUri) {
+	public Response removeFavorite(String username, String elementUri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -69,59 +72,62 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{pipelineId}/status")
+	@GsonWithIds
 	@Override
-	public String getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-		return Utils.getGson().toJson(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
+	public Response getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+		return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
 	}
 	
 	@DELETE
 	@Path("/{pipelineId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
+	@GsonWithIds
+	public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
 		StorageManager.INSTANCE.getPipelineStorageAPI().deletePipeline(elementUri);
-		return toJson(Notifications.success("Pipeline deleted"));
+		return statusMessage(Notifications.success("Pipeline deleted"));
 	}
 
 	@Override
-	public String getAsJsonLd(String elementUri) {
-		// TODO Auto-generated method stub
+	public Response getAsJsonLd(String elementUri) {
 		return null;
 	}
 
-	
 	@GET
 	@Path("/{pipelineId}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@GsonWithIds
 	@Override
-	public String getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-		return toJson(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId));
+	public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+		return ok(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId));
 	}
 
 	@Path("/{pipelineId}/start")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
+	@GsonWithIds
+	public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
 		de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
 		PipelineOperationStatus status = Operations.startPipeline(pipeline);
-		return toJson(status);
+		return ok(status);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR));
 		}
 	}
 	
 	@Path("/{pipelineId}/stop")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
+	@GsonWithIds
+	public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
 			de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
 			PipelineOperationStatus status = Operations.stopPipeline(pipeline);
-			return toJson(status);
+			return ok(status);
 			} catch (Exception e)
 			{
 				return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
@@ -130,7 +136,8 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addPipeline(@PathParam("username") String username, String pipeline)
+	@GsonWithIds
+	public Response addPipeline(@PathParam("username") String username, String pipeline)
 	{
 		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		String pipelineId = UUID.randomUUID().toString();
@@ -140,16 +147,17 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 		userService.addOwnPipeline(username, serverPipeline);
 		SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
 		message.addNotification(new Notification("id", pipelineId));
-		return toJson(message);
+		return ok(message);
 	}
 
 	@Path("/recommend")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String recommend(String pipeline)
+	@GsonWithIds
+	public Response recommend(de.fzi.cep.sepa.model.client.Pipeline pipeline)
 	{
 		try {
-			return toJson(Operations.findRecommendedElements(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class)));
+			return ok(Operations.findRecommendedElements(pipeline));
 		} catch (JsonSyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch (NoSuitableSepasAvailableException e) {
@@ -164,10 +172,11 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@Path("/update")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String update(String pipeline)
+	@GsonWithIds
+	public Response update(de.fzi.cep.sepa.model.client.Pipeline pipeline)
 	{
 		try {
-			return toJson(Operations.validatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class), true));
+			return ok(Operations.validatePipeline(pipeline, true));
 		} catch (JsonSyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		} catch(NoMatchingSchemaException e) {
@@ -177,7 +186,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 		} catch(NoMatchingProtocolException e) {
 			return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
 		} catch (InvalidConnectionException e) {
-			return toJson(e.getErrorLog());
+			return ok(e.getErrorLog());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
@@ -188,10 +197,11 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@PUT
 	@Path("/{pipelineId}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@GsonWithIds
 	@Override
-	public String overwritePipeline(@PathParam("username") String username, String pipeline) {
+	public Response overwritePipeline(@PathParam("username") String username, String pipeline) {
 		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class));
-		return toJson(Notifications.success("Pipeline modified"));
+		return statusMessage(Notifications.success("Pipeline modified"));
 	}
 
 }

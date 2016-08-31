@@ -45,7 +45,7 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		schema.setEventProperties(Arrays.asList(e1, e2, e3, e4));
 		
 		SepaDescription desc = new SepaDescription("durationofstay", "Duration of Stay", "Calculates the duration of stay of a location-based object within a specified radius around a specified point-based coordinate.");
-		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
+		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema);

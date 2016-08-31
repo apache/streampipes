@@ -31,7 +31,7 @@ public class ShuttleTimeController extends FlatEpDeclarer<ShuttleTimeParameters>
 	public SepaDescription declareModel() {
 		
 		SepaDescription desc = new SepaDescription("shuttletime", "Shuttle Time", "Calculates the time a shuttle needs between the lacquering line and each moulding machine.");
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#montracEvent").build();
 		EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#shuttleId").build();

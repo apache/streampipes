@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -45,6 +46,7 @@ public class SepDescription extends NamedSEPAElement {
 	{
 		super(other);
 		this.eventStreams = new Cloner().streams(other.getEventStreams());
+		this.eventStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
 	}
 	
 	public SepDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams)

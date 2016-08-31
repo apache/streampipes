@@ -31,7 +31,7 @@ public class BarChartController implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("bar", "Bar charts", "Real-Time bar chart", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/barchart_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 	
 		EventPropertyList outputProperty = new EventPropertyList();
 		outputProperty.setRuntimeName("output");

@@ -36,12 +36,12 @@ public class EventStream extends NamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventStreamQualityDefinition")
-	List<EventStreamQualityDefinition> hasEventStreamQualities;
+	transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventStreamQualityRequirement")
-	List<EventStreamQualityRequirement> requiresEventStreamQualities;
+	transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
 	@OneToOne(fetch = FetchType.EAGER,
 		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -59,8 +59,9 @@ public class EventStream extends NamedSEPAElement {
 	@RdfProperty("sepa:measurementObject")
 	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	protected List<MeasurementObject> measurementObject;
-	
-	
+
+	protected List<String> category;
+
 	public EventStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
 			EventGrounding eventGrounding, 
 			EventSchema eventSchema) {
@@ -159,5 +160,11 @@ public class EventStream extends NamedSEPAElement {
 		this.measurementObject = measurementObject;
 	}
 
-		
+    public List<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<String> category) {
+        this.category = category;
+    }
 }

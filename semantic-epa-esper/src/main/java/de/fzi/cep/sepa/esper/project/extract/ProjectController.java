@@ -35,7 +35,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
-		desc.setEpaTypes(Arrays.asList(EpaType.TRANSFORM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.TRANSFORM.name()));
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(new CustomOutputStrategy());
 		desc.setOutputStrategies(strategies);

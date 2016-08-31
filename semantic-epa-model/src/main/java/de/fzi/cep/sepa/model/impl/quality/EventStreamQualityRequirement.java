@@ -22,11 +22,11 @@ public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventStreamQuality")
-	EventStreamQualityDefinition minimumStreamQuality;
+	transient EventStreamQualityDefinition minimumStreamQuality;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:maximumEventStreamQuality")
-	EventStreamQualityDefinition maximumStreamQuality;
+	transient EventStreamQualityDefinition maximumStreamQuality;
 
 	public EventStreamQualityRequirement(EventStreamQualityDefinition minimumStreamQuality,
 			EventStreamQualityDefinition maximumStreamQuality) {
@@ -38,8 +38,9 @@ public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 	}
 	
 	public EventStreamQualityRequirement(EventStreamQualityRequirement other) {
-		this.minimumStreamQuality = other.getMinimumStreamQuality();
-		this.maximumStreamQuality = other.getMaximumStreamQuality();
+		super(other);
+		//this.minimumStreamQuality = other.getMinimumStreamQuality();
+		//this.maximumStreamQuality = other.getMaximumStreamQuality();
 	}
 	
 	public EventStreamQualityRequirement() {

@@ -1,19 +1,20 @@
 package de.fzi.cep.sepa.model.client;
 
-import java.util.List;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
+import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
 
 public abstract class ElementComposition {
 
 	@OneToMany(cascade=CascadeType.ALL)
-	protected List<SEPAClient> sepas;
+	protected List<SepaInvocation> sepas;
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	protected List<StreamClient> streams;
+	protected List<EventStream> streams;
 	
 	protected String name;
 	protected String description;
@@ -21,19 +22,19 @@ public abstract class ElementComposition {
 	protected String pipelineId;
 	//protected String rev;
 	
-	public List<SEPAClient> getSepas() {
+	public List<SepaInvocation> getSepas() {
 		return sepas;
 	}
 
-	public void setSepas(List<SEPAClient> sepas) {
+	public void setSepas(List<SepaInvocation> sepas) {
 		this.sepas = sepas;
 	}
 
-	public List<StreamClient> getStreams() {
+	public List<EventStream> getStreams() {
 		return streams;
 	}
 
-	public void setStreams(List<StreamClient> streams) {
+	public void setStreams(List<EventStream> streams) {
 		this.streams = streams;
 	}
 	

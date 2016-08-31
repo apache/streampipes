@@ -19,6 +19,8 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	@RdfId
 	@RdfProperty("sepa:elementName")
 	protected String elementName;
+
+	protected String elementId;
 	
 	public UnnamedSEPAElement()
 	{

@@ -5,9 +5,8 @@ import java.util.List;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.client.SEPAClient;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.SEPAElement;
-import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -25,13 +24,13 @@ public class TreeUtils {
 	 * @return a SEPA-client element
 	 */
 	
-	public static SEPAElement findSEPAElement(String id, List<SEPAClient> sepas, List<StreamClient> streams)
+	public static NamedSEPAElement findSEPAElement(String id, List<SepaInvocation> sepas, List<EventStream> streams)
 	{ 
-		List<SEPAElement> allElements = new ArrayList<>();
+		List<NamedSEPAElement> allElements = new ArrayList<>();
 		allElements.addAll(sepas);
 		allElements.addAll(streams);
 		
-		for(SEPAElement element : allElements)
+		for(NamedSEPAElement element : allElements)
 		{
 			if (id.equals(element.getDOM())) return element;
 		}
@@ -49,7 +48,7 @@ public class TreeUtils {
 	{
 		for(InvocableSEPAElement graph : graphs)
 		{
-			if (graph.getDomId().equals(id)) 
+			if (graph.getDOM().equals(id))
 				{
 					return graph;
 				}

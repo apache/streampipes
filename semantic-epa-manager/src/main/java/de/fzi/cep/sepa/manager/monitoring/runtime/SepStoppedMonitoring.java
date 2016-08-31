@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fzi.cep.sepa.model.impl.EventStream;
 import org.json.JSONObject;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
@@ -20,7 +21,6 @@ import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.StreamClient;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 
@@ -40,10 +40,10 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		try {
 			Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
 
-			List<StreamClient> allStreams = new ArrayList<>();
+			List<EventStream> allStreams = new ArrayList<>();
 			pipeline.getStreams().forEach((s) -> allStreams.add(s));
 
-			for (StreamClient s : allStreams) {
+			for (EventStream s : allStreams) {
 				if (streamToObserver.get(s.getElementId()) == null) {
 					List<PipelineObserver> po = new ArrayList<>();
 					po.add(observer);
@@ -81,9 +81,9 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 	public boolean remove(PipelineObserver observer) {
 
 		Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
-		List<StreamClient> streams = pipeline.getStreams();
+		List<EventStream> streams = pipeline.getStreams();
 
-		for (StreamClient sc : streams) {
+		for (EventStream sc : streams) {
 			String streamId = sc.getElementId();
 			List<PipelineObserver> po = streamToObserver.get(streamId);
 			if (po.size() == 1) {

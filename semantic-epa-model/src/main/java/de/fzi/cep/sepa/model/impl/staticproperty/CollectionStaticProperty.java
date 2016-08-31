@@ -33,11 +33,11 @@ public class CollectionStaticProperty extends StaticProperty {
 	private String memberType;
 
 	public CollectionStaticProperty() {
-		super();
+		super(StaticPropertyType.CollectionStaticProperty);
 	}
 
 	public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members, String memberType) {
-		super(internalName, label, description);
+		super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
 		this.members = members;
 		this.memberType = memberType;
 	}

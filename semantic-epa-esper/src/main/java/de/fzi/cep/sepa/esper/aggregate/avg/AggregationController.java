@@ -58,7 +58,7 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 		SepaDescription desc = new SepaDescription("aggregation", "Aggregation",
 				"Performs different aggregation functions");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
+		desc.setCategory(Arrays.asList(EpaType.AGGREGATE.name()));
 		// TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl + desc.getElementId());
 

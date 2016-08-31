@@ -2,6 +2,9 @@ package de.fzi.cep.sepa.rest.application;
 
 
 import de.fzi.cep.sepa.rest.impl.*;
+import de.fzi.cep.sepa.rest.serializer.GsonClientModelProvider;
+import de.fzi.cep.sepa.rest.serializer.GsonWithIdProvider;
+import de.fzi.cep.sepa.rest.serializer.GsonWithoutIdProvider;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -36,6 +39,11 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(Setup.class);
         apiClasses.add(VirtualSensor.class);
         apiClasses.add(Visualization.class);
+
+        // Serializers
+        apiClasses.add(GsonWithIdProvider.class);
+        apiClasses.add(GsonWithoutIdProvider.class);
+        apiClasses.add(GsonClientModelProvider.class);
 
         return apiClasses;
 

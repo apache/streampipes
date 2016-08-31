@@ -4,6 +4,8 @@ package de.fzi.cep.sepa.model;
 import com.clarkparsia.empire.annotation.RdfId;
 import com.clarkparsia.empire.annotation.RdfProperty;
 
+import java.util.List;
+
 /**
  * named SEPA elements, can be accessed via the URI provided in @RdfId
  *
@@ -24,8 +26,14 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	@RdfProperty("sepa:hasURI")
 	@RdfId
 	protected String uri;
-	
-	public NamedSEPAElement()
+
+    protected String elementId;
+
+	protected String DOM;
+    protected List<String> connectedTo;
+
+
+    public NamedSEPAElement()
 	{
 		super();
 	}
@@ -56,6 +64,8 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.name = other.getName();
 		this.iconUrl = other.getIconUrl();
 		this.uri = other.getUri();
+		this.DOM = other.getDOM();
+        this.connectedTo = other.getConnectedTo();
 	}
 
 	public String getName() {
@@ -94,4 +104,21 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	{
 		return uri;
 	}
+
+	public void setDOM(String DOM) {
+		this.DOM = DOM;
+	}
+
+	public String getDOM() {
+		return DOM;
+	}
+
+    public List<String> getConnectedTo() {
+        return connectedTo;
+    }
+
+    public void setConnectedTo(List<String> connectedTo) {
+        this.connectedTo = connectedTo;
+    }
+
 }

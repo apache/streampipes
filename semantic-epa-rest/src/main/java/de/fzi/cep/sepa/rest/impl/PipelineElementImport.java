@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
@@ -35,7 +36,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@POST
 	@Path("/batch")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addBatch(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
+	public Response addBatch(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
 	{
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
@@ -45,28 +46,29 @@ public class PipelineElementImport extends AbstractRestInterface {
 			{
 				for(JsonElement jsonObj : element.getAsJsonArray())
 				{
-					 response.add(new JsonParser().parse(addElement(username, jsonObj.getAsString(), publicElement)));
+					// TODO check
+					 //response.add(new JsonParser().parse(addElement(username, jsonObj.getAsString(), publicElement)));
 				}
 			}
-			return response.toString();
+			return ok(response.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
+			return statusMessage(Notifications.error(NotificationType.PARSE_ERROR));
 		}
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
+	public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
 	{
-		if (!authorized(username)) return toJson(Notifications.error(NotificationType.UNAUTHORIZED));
+		if (!authorized(username)) return ok(Notifications.error(NotificationType.UNAUTHORIZED));
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
 			String payload = parseURIContent(uri);
-			return toJson(Operations.verifyAndAddElement(payload, username, publicElement));
+			return ok(Operations.verifyAndAddElement(payload, username, publicElement));
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
-			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
+			return statusMessage(Notifications.error(NotificationType.PARSE_ERROR));
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
@@ -76,13 +78,13 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@PUT
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateElement(@PathParam("username") String username, @PathParam("id") String uri)
+	public Response updateElement(@PathParam("username") String username, @PathParam("id") String uri)
 	{
-		if (!authorized(username)) return toJson(Notifications.error(NotificationType.UNAUTHORIZED));
+		if (!authorized(username)) return ok(Notifications.error(NotificationType.UNAUTHORIZED));
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
 			String payload = parseURIContent(uri);
-			return toJson(Operations.verifyAndUpdateElement(payload, username));
+			return ok(Operations.verifyAndUpdateElement(payload, username));
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
@@ -95,7 +97,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@Path("/{id}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
+	public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
 		
 		try {
 			if (requestor.getSEPAById(elementId) != null) 
@@ -117,20 +119,20 @@ public class PipelineElementImport extends AbstractRestInterface {
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
 		}
-		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
+		return ok(constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification()));
 	}
 	
 	@Path("{id}/jsonld")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getActionAsJsonLd(@PathParam("id") String elementId)
+	public Response getActionAsJsonLd(@PathParam("id") String elementId)
 	{
 		elementId = decode(elementId);
 		try {
-			if (requestor.getSEPAById(elementId) != null) return toJsonLd(requestor.getSEPAById(elementId));
-			else if (requestor.getSEPById(elementId) != null) return toJsonLd(requestor.getSEPById(elementId));
-			else if (requestor.getSECById(elementId) != null) return toJsonLd(requestor.getSECById(elementId));
-			else return toJson(Notifications.create(NotificationType.UNKNOWN_ERROR));
+			if (requestor.getSEPAById(elementId) != null) return ok(toJsonLd(requestor.getSEPAById(elementId)));
+			else if (requestor.getSEPById(elementId) != null) return ok(toJsonLd(requestor.getSEPById(elementId)));
+			else if (requestor.getSECById(elementId) != null) return ok(toJsonLd(requestor.getSECById(elementId)));
+			else return ok(Notifications.create(NotificationType.UNKNOWN_ERROR));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}

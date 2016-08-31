@@ -38,7 +38,7 @@ public class AlarmLightController implements SemanticEventConsumerDeclarer {
 		stream1.setEventSchema(schema1);
 		
 		SecDescription desc = new SecDescription("alarm", "Alarm Light", "Switches the alarm light on or off.");
-		desc.setEcTypes(Arrays.asList(EcType.ACTUATOR.name()));
+		desc.setCategory(Arrays.asList(EcType.ACTUATOR.name()));
 		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
 		desc.addEventStream(stream1);
 		

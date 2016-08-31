@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.manager.matching.v2;
 
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class TestElementVerification extends TestCase {
 		SepaDescription requirement = (new AggregationController().declareModel());
 		
 		ElementVerification verifier = new ElementVerification();
-		boolean match = verifier.verify(offer, requirement);
+		boolean match = verifier.verify(offer, new SepaInvocation(requirement));
 		
 		verifier.getErrorLog().forEach(e -> System.out.println(e.getTitle()));
 		assertTrue(match);

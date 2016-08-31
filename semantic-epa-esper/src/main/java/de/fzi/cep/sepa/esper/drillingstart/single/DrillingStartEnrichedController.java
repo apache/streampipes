@@ -71,7 +71,7 @@ public class DrillingStartEnrichedController extends FlatEpDeclarer<DrillingStar
 		
 		SepaDescription desc = new SepaDescription("drillingstartenriched", "Drilling Status", "Detects a status change in a drilling process (drilling and cooling)");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Start_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);

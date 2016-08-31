@@ -15,7 +15,7 @@ public class CouchDbController  implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("couchdb", "CouchDB", "Stores events in a couchdb database.");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/couchdb_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
+		sec.setCategory(Arrays.asList(EcType.STORAGE.name()));
 		return sec;
 	}
 

@@ -35,37 +35,24 @@
   		<div layout="column" class="customize-item-main">
   			<div class="customize-item-title" layout="row" flex="100">
   				<div flex="80" layout="row" layout-align="start center"> 
-  					{{staticProperty.name}}
+  					{{staticProperty.properties.label}}
   				</div>
   				<div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
   					<i class="material-icons" ng-click="setCurrentStaticProperty(staticProperty)" style="color: white;" popup-show="modules/editor/templates/popup.html" popup-placement="bottom">help</i>
   				</div>
   			</div>	
   			<div class="customize-item-content">
-		  		<div ng-show="staticProperty.type=='STATIC_PROPERTY'">
-		  			<div ng-show="staticProperty.input.type == 'RadioInput'">	
-			  			<md-input-container flex="100" layout="column">
-			  				<md-radio-group ng-model="selection[staticProperty.elementId]" class="md-accent" name="{{staticProperty.elementId}}">
-					          <md-radio-button ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
-					            <b>{{option.humanDescription}}</b><br/>
-					          </md-radio-button>
-							</md-radio-group>
-						</md-input-container>
+		  			<div ng-show="staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
+			  			<oneof static-property="staticProperty"></oneof>
 					</div>
-		  			<div ng-show="staticProperty.input.type == 'TextInput'">
-			  			<md-input-container flex="100" layout="column"> <label>{{staticProperty.description}}</label>
-							<input name="{{staticProperty.elementId}}" ng-model="staticProperty.input.properties.value"/> 
-						</md-input-container>
+		  			<div ng-show="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
+						<freetext static-property="staticProperty"></freetext>
 					</div>	
-					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
-						 <div ng-repeat="option in staticProperty.input.properties.options">
-				            <md-checkbox ng-model="option.selected">
-				              {{option.humanDescription}}
-				            </md-checkbox>
-				          </div>
+					<div ng-show="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
+						 <any static-property="staticProperty"></any>
 					</div>		
-					<div ng-if="staticProperty.input.type == 'SliderInput'">
-						<md-input-container flex="100" layout="column"> <label>{{staticProperty.description}}</label>
+					<div ng-if="staticProperty.properties.staticPropertyType == 'SliderInput'">
+						<md-input-container flex="100" layout="column"> <label>{{staticProperty.properties.description}}</label>
 							<input name="{{staticProperty.elementId}}" type="text" ng-model="staticProperty.input.properties.value"> 
 							<md-slider flex min="{{staticProperty.input.properties.minValue}}" max="{{staticProperty.input.properties.maxValue}}" step="{{staticProperty.input.properties.step}}" ng-model="staticProperty.input.properties.value" class>
       						</md-slider>
@@ -74,37 +61,16 @@
 					<div ng-if="staticProperty.input.type == 'DomainConceptInput'">
 						<domain-concept-input static-property="staticProperty" auto-complete-static-property="staticProperty"></domain-concept-input>		
 					</div>	
-					<div ng-if="staticProperty.input.type == 'MultipleValueInput'">
-						<multiple-value-input static-property="staticProperty"></multiple-value-input>					
-					</div>							
-				</div>	
-				<div ng-show="staticProperty.type=='MAPPING_PROPERTY'">
-					<div ng-show="staticProperty.input.type == 'SelectFormInput'">
-						<md-select ng-model="selection[staticProperty.elementId]"  placeholder="{{staticProperty.description}}">
-				          <md-option ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
-				            <b>{{option.humanDescription}}</b><br/>
-				          </md-option>
-				        </md-select>
+
+					<div ng-show="staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
+						<mapping-property-unary static-property="staticProperty"></mapping-property-unary>
 					</div>	
-					<div ng-show="staticProperty.input.type == 'CheckboxInput'">
-						 <div ng-repeat="option in staticProperty.input.properties.options">
-				            <md-checkbox ng-model="option.selected" name="{{option.elementId}}">
-				              {{option.humanDescription}}
-				            </md-checkbox>
-				          </div>
+					<div ng-show="staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
+
 					</div>	
-				</div>
-				<div ng-show="staticProperty.type=='MATCHING_PROPERTY'">
-					<md-select ng-model="matchingSelectionLeft[staticProperty.elementId]"  placeholder="Left Stream Property">
-				          <md-option ng-repeat="option in staticProperty.input.properties.optionLeft" ng-value="option.elementId">
-				            <b>{{option.humanDescription}}</b><br/>
-				          </md-option>
-				     </md-select>
-				     <md-select ng-model="matchingSelectionRight[staticProperty.elementId]"  placeholder="Right Stream Property">
-				          <md-option ng-repeat="option in staticProperty.input.properties.optionRight" ng-value="option.elementId">
-				            <b>{{option.humanDescription}}</b><br/>
-				          </md-option>
-				     </md-select>
+
+				<div ng-show="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
+					<matching-property static-property="staticProperty"></matching-property>
 				</div>
 				<div ng-show="staticProperty.type=='REPLACE_OUTPUT'">
 					<div ng-repeat="replaceOutput in staticProperty.input.properties.propertyMapping">

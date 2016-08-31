@@ -46,7 +46,7 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 		SepaDescription desc = new SepaDescription("movement", "Movement Analysis",
 				"Movement Analysis Enricher");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_1_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
+		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
 		try {
 			EventStream stream1 = new EventStream();
 

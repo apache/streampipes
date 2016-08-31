@@ -1,9 +1,11 @@
 package de.fzi.cep.sepa.rest.api;
 
 
+import javax.ws.rs.core.Response;
+
 public interface IVirtualSensor {
 
-	String getVirtualSensors(String username);
+	Response getVirtualSensors(String username);
 	
-	String addVirtualSensor(String username, String virtualSensorDescription);
+	Response addVirtualSensor(String username, String virtualSensorDescription);
 }

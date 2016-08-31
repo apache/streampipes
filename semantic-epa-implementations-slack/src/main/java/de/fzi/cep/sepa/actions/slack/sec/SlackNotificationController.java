@@ -111,7 +111,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
     public SecDescription declareModel() {
         EventStream stream = StreamBuilder.createStream("", "","").schema(SchemaBuilder.create().build()).build();
         SecDescription desc = new SecDescription("slack_sink", "Slack Notification", "Slack bot to send notifications directly into your slack");
-        desc.setEcTypes(Arrays.asList(EcType.ACTUATOR.name()));
+        desc.setCategory(Arrays.asList(EcType.ACTUATOR.name()));
         desc.setIconUrl(SlackConfig.iconBaseUrl + "/slack_icon.png");
         stream.setUri(SlackConfig.serverUrl +"/" + Utils.getRandomString());
         desc.addEventStream(stream);

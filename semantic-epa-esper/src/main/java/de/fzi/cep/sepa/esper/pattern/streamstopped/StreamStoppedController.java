@@ -17,7 +17,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -38,7 +37,7 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());

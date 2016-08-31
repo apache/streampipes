@@ -47,7 +47,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 		
 		SepaDescription desc = new SepaDescription("textfilter", "Text Filter", "Text Filter Description");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
 		
 		//TODO check if needed

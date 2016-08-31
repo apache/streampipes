@@ -1,19 +1,22 @@
 package de.fzi.cep.sepa.rest.api;
 
+
+import javax.ws.rs.core.Response;
+
 public interface IPipelineElement {
 
-	String getAvailable(String username);
-	String getFavorites(String username);
-	String getOwn(String username);
-	
-	String addFavorite(String username, String elementUri);
-	
-	String removeFavorite(String username, String elementUri);
-	String removeOwn(String username, String elementUri);
-	
-	String getAsJsonLd(String elementUri);
-	
-	String getElement(String username, String elementUri);
+	Response getAvailable(String username);
+	Response getFavorites(String username);
+	Response getOwn(String username);
+
+	Response addFavorite(String username, String elementUri);
+
+	Response removeFavorite(String username, String elementUri);
+	Response removeOwn(String username, String elementUri);
+
+	Response getAsJsonLd(String elementUri);
+
+	Response getElement(String username, String elementUri);
 	
 	
 }
