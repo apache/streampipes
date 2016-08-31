@@ -30,6 +30,9 @@ public class DashboardController extends ActionController {
 
     private KafkaConsumerGroup kafkaConsumerGroup;
 
+    private String visualizationId;
+    private String visualizationRev;
+
     @Override
     public SecDescription declareModel() {
         EventStream stream = StreamBuilder.createStream("", "","").schema(SchemaBuilder.create().build()).build();
@@ -81,12 +84,28 @@ public class DashboardController extends ActionController {
         dbClient.setGsonBuilder(de.fzi.cep.sepa.model.util.GsonSerializer.getGsonBuilder());
         org.lightcouch.Response res = dbClient.save(new DashboardParameters(inv));
 
+        if (res.getError() == null) {
+            visualizationId = res.getId();
+            visualizationRev = res.getRev();
+        }
+
+        return res.getError() == null;
+    }
+
+    private boolean removeFromCouchDB() {
+        CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
+        org.lightcouch.Response res = dbClient.remove(visualizationId, visualizationRev);
+
         return res.getError() == null;
     }
 
     @Override
     public Response detachRuntime(String pipelineId) {
-        //TODO
-        return null;
+        if (!removeFromCouchDB()) {
+            return new Response(pipelineId, false, "There was an error while deleting pipeline: '" + pipelineId + "'");
+        } else {
+            kafkaConsumerGroup.shutdown();
+            return new Response(pipelineId, true);
+        }
     }
 }
