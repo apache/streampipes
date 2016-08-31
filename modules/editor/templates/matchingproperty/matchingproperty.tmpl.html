@@ -1,0 +1,10 @@
+<md-select ng-model="matchingSelectionLeft[staticProperty.elementId]"  placeholder="Left Stream Property">
+    <md-option ng-repeat="option in staticProperty.input.properties.optionLeft" ng-value="option.elementId">
+        <b>{{option.humanDescription}}</b><br/>
+    </md-option>
+</md-select>
+<md-select ng-model="matchingSelectionRight[staticProperty.elementId]"  placeholder="Right Stream Property">
+    <md-option ng-repeat="option in staticProperty.input.properties.optionRight" ng-value="option.elementId">
+        <b>{{option.humanDescription}}</b><br/>
+    </md-option>
+</md-select>
