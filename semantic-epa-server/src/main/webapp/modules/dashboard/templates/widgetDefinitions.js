@@ -1,11 +1,16 @@
-angular.module('streamPipesApp').factory('WidgetDefinitions', ['TableDataModel', function(TableDataModel) {
+angular.module('streamPipesApp').factory('WidgetDefinitions', ['TableDataModel', 'NumberDataModel', function(TableDataModel, NumberDataModel) {
 	//Register the new widgets here
 	var widgetTypes = {
 			table: {
 				name: 'table',
 				directive: 'table-widget',
 				dataModel: TableDataModel,
-			}	
+			},
+			number: {
+				name: 'number',
+				directive: 'number-widget',
+				dataModel: NumberDataModel,
+			}
 		}	
 
 	var getDataModel = function(name) {
