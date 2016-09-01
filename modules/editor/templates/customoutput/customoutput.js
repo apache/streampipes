@@ -4,7 +4,7 @@ angular.module('streamPipesApp')
             restrict : 'E',
             templateUrl : 'modules/editor/templates/customoutput/customoutput.tmpl.html',
             scope : {
-                staticProperty : "="
+                outputStrategy : "="
             },
             controller: function($scope, $element) {
 

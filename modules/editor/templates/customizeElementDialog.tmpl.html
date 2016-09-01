@@ -57,7 +57,6 @@
                         <domain-concept-input static-property="staticProperty"
                                               auto-complete-static-property="staticProperty"></domain-concept-input>
                     </div>
-
                     <div ng-show="staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
                         <mapping-property-unary static-property="staticProperty"></mapping-property-unary>
                     </div>
@@ -67,11 +66,35 @@
                     <div ng-show="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
                         <matching-property static-property="staticProperty"></matching-property>
                     </div>
-                    <div ng-show="staticProperty.type=='REPLACE_OUTPUT'">
-                        <replace-output output-strategy="todo"></replace-output>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
+            <div layout="column" class="customize-item-main">
+                <div ng-show="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
+
+                    <div class="customize-item-title" layout="row" flex="100">
+                        <div flex="80" layout="row" layout-align="start center">
+                            Replace property
+                        </div>
                     </div>
-                    <div ng-show="staticProperty.type=='CUSTOM_OUTPUT'">
-                       <custom-output output-strategy="todo"></custom-output>
+                    <div class="customize-item-content">
+                        <replace-output output-strategy="outputStrategy"></replace-output>
+                    </div>
+
+                </div>
+                <div ng-show="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
+
+                    <div class="customize-item-title" layout="row" flex="100">
+                        <div flex="80" layout="row" layout-align="start center">
+                            Select Output
+                        </div>
+                        <div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
+
+                        </div>
+                    </div>
+                    <div class="customize-item-content">
+                        <custom-output output-strategy="outputStrategy"></custom-output>
                     </div>
                 </div>
             </div>

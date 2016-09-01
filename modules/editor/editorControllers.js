@@ -89,6 +89,7 @@ angular.module('streamPipesApp')
             $scope.selectFilter = function (value, index, array) {
                 if ($scope.selectedOptions.length > 0) {
                     var found = false;
+                    if (value.category.length == 0) value.category[0] = "UNCATEGORIZED";
                     angular.forEach(value.category, function (c) {
                         if ($scope.selectedOptions.indexOf(c) > -1) found = true;
                     });
@@ -1263,6 +1264,9 @@ angular.module('streamPipesApp')
                     id = "#" + modification.domId;
                     if ($(id) !== "undefined") {
                         $(id).data("JSON").staticProperties = modification.staticProperties;
+
+                            $(id).data("JSON").outputStrategies = modification.outputStrategies;
+
                     }
                 }
             }
