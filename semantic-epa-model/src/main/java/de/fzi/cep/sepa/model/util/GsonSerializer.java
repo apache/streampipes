@@ -14,6 +14,8 @@ import de.fzi.cep.sepa.model.impl.quality.*;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
+import java.net.URI;
+
 public class GsonSerializer {
 
 	public static Gson getGson()
@@ -40,6 +42,7 @@ public class GsonSerializer {
 		builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
 		builder.registerTypeAdapter(EcType.class, new EcTypeAdapter());
 		builder.registerTypeAdapter(EpaType.class, new EpaTypeAdapter());
+		builder.registerTypeAdapter(URI.class, new UriSerializer());
         builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
         builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
         builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());

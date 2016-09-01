@@ -18,14 +18,15 @@ import de.fzi.cep.sepa.model.client.Pipeline;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 
-import de.fzi.cep.sepa.model.client.input.RadioGroupInput;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.staticproperty.*;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -100,9 +101,6 @@ public class PipelineVerificationHandler {
             List<String> connectedTo = rdfRootElement.getConnectedTo();
             String domId = rdfRootElement.getDOM();
 
-            List<StaticProperty> currentStaticProperties = rdfRootElement
-                    .getStaticProperties();
-
             for (int i = 0; i < connectedTo.size(); i++) {
                 NamedSEPAElement element = TreeUtils.findSEPAElement(rdfRootElement
                         .getConnectedTo().get(i), pipeline.getSepas(), pipeline
@@ -116,16 +114,21 @@ public class PipelineVerificationHandler {
                         SepaInvocation ancestor = (SepaInvocation) TreeUtils.findByDomId(
                                 connectedTo.get(i), invocationGraphs);
 
+                        updateStaticProperties(ancestor.getOutputStream());
+                        updateOutputStrategy(ancestor.getOutputStream());
 
                     } else if (element instanceof EventStream) {
 
                         EventStream stream = (EventStream) element;
 
                         updateStaticProperties(stream);
+                        updateOutputStrategy(stream);
                     }
                     if (currentSEPA.getStreamRequirements().size() - 1 == i) {
                         PipelineModification modification = new PipelineModification(
                                 domId, rdfRootElement.getElementId(), rdfRootElement.getStaticProperties());
+                        if (rdfRootElement instanceof SepaInvocation)
+                            modification.setOutputStrategies(((SepaInvocation) rdfRootElement).getOutputStrategies());
                         pipelineModificationMessage
                                 .addPipelineModification(modification);
                     }
@@ -139,43 +142,73 @@ public class PipelineVerificationHandler {
 
     private void updateStaticProperties(EventStream stream) {
 
-        for (StaticProperty property : rdfRootElement.getStaticProperties()) {
-            if (property instanceof MappingProperty) {
-                try {
-                    MappingProperty mappingProperty = (MappingProperty) property;
+        rdfRootElement.getStaticProperties().stream().filter(property -> property instanceof MappingProperty).forEach(property -> {
+            try {
+                MappingProperty mappingProperty = (MappingProperty) property;
+                mappingProperty.setMapsFromOptions(new ArrayList<>());
 
-                    if (mappingProperty.getMapsFrom() != null) {
-                        EventProperty mapsFromProperty = TreeUtils
-                                .findEventProperty(mappingProperty.getMapsFrom().toString(), rdfRootElement.getStreamRequirements());
+                if (mappingProperty.getMapsFrom() != null) {
+                    ((MappingProperty) property)
+                            .setMapsFromOptions(findSupportedEventProperties(stream,
+                                    rdfRootElement.getStreamRequirements(),
+                                    mappingProperty.getMapsFrom()));
+                } else {
+                    for (EventProperty streamProperty : stream
+                            .getEventSchema().getEventProperties()) {
 
-                        ((MappingProperty) property).setMapsFromOptions(new MappingPropertyCalculator().matchesProperties(stream.getEventSchema().getEventProperties(), mapsFromProperty));
-                    } else {
-                        for (EventProperty streamProperty : stream
-                                .getEventSchema().getEventProperties()) {
-                            if (mappingProperty.getMapsFromOptions() == null) {
-                                mappingProperty.setMapsFromOptions(new ArrayList<>());
-                            }
-                            if ((streamProperty instanceof EventPropertyPrimitive) || streamProperty instanceof EventPropertyList)
-                            {
-                                mappingProperty.getMapsFromOptions().add(streamProperty);
-                            } else {
-                                mappingProperty.getMapsFromOptions().addAll(addNestedProperties((EventPropertyNested) streamProperty));
-                            }
+                        if ((streamProperty instanceof EventPropertyPrimitive) || streamProperty instanceof EventPropertyList) {
+                            mappingProperty.getMapsFromOptions().add(streamProperty);
+                        } else {
+                            mappingProperty.getMapsFromOptions().addAll(addNestedProperties((EventPropertyNested) streamProperty));
                         }
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        });
+    }
+
+    private List<EventProperty> findSupportedEventProperties(EventStream streamOffer, List<EventStream> streamRequirements, URI mapsFrom) {
+        EventProperty mapsFromProperty = TreeUtils
+                .findEventProperty(mapsFrom.toString(), rdfRootElement.getStreamRequirements());
+
+        return new MappingPropertyCalculator().matchesProperties(streamOffer.getEventSchema().getEventProperties(), mapsFromProperty);
+    }
+
+    private void updateOutputStrategy(EventStream stream) {
+        if (rdfRootElement instanceof SepaInvocation) {
+            ((SepaInvocation) rdfRootElement)
+                    .getOutputStrategies()
+                    .stream()
+                    .filter(strategy -> strategy instanceof CustomOutputStrategy)
+                    .forEach(strategy -> {
+                        CustomOutputStrategy outputStrategy = (CustomOutputStrategy) strategy;
+                        outputStrategy.setProvidesProperties(stream.getEventSchema().getEventProperties());
+                    });
+
+            ((SepaInvocation) rdfRootElement)
+                    .getOutputStrategies()
+                    .stream()
+                    .filter(strategy -> strategy instanceof ReplaceOutputStrategy)
+                    .forEach(strategy -> {
+                        ReplaceOutputStrategy outputStrategy = (ReplaceOutputStrategy) strategy;
+
+                        for (UriPropertyMapping mapping : outputStrategy.getReplaceProperties()) {
+                            if (mapping.getReplaceFrom() != null) {
+                                mapping.setReplaceWithOptions(findSupportedEventProperties(stream, rdfRootElement.getStreamRequirements(), mapping.getReplaceFrom()));
+                            } else {
+                                mapping.setReplaceWithOptions(stream.getEventSchema().getEventProperties());
+                            }
+                        }
+                    });
         }
     }
 
-    private List<EventProperty> addNestedProperties(EventPropertyNested properties)
-    {
+    private List<EventProperty> addNestedProperties(EventPropertyNested properties) {
         List<EventProperty> options = new ArrayList<>();
-        for(EventProperty p : properties.getEventProperties())
-        {
+        for (EventProperty p : properties.getEventProperties()) {
             if (p instanceof EventPropertyPrimitive) options.add(p);
             else options.addAll(addNestedProperties(properties));
         }

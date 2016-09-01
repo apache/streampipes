@@ -1,10 +1,10 @@
-<div ng-repeat="replaceOutput in staticProperty.input.properties.propertyMapping">
-    <md-select ng-model="selection[replaceOutput.elementId]"  placeholder="{{staticProperty.description}}">
-        <md-option ng-repeat="option in replaceOutput.input.options" ng-value="option.elementId">
-            <b>{{option.humanDescription}}</b><br/>
+<div ng-repeat="replaceOutput in outputStrategy.properties.replaceProperties">
+    <md-select ng-model="selection[replaceOutput.elementName]"  placeholder="Replace property">
+        <md-option ng-repeat="property in replaceOutput.replaceWithOptions" ng-value="property.properties.elementName">
+            <b>{{property.properties.runtimeName}}</b><br/>
         </md-option>
     </md-select>
-    <div ng-show="replaceOutput.renameAllowed">
+    <div ng-show="replaceOutput.renamingAllowed">
         <md-input-container flex> <label>New property name</label>
             <input ng-model="replaceOutput.runtimeName"/>
         </md-input-container>

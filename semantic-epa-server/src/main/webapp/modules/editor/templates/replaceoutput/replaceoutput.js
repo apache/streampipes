@@ -7,7 +7,7 @@ angular.module('streamPipesApp')
                 outputStrategy : "="
             },
             controller: function($scope, $element) {
-
+                console.log($scope.outputStrategy);
             }
         }
 
