@@ -1,5 +1,5 @@
-<md-select ng-model="selection[staticProperty.elementId]"  placeholder="{{staticProperty.description}}">
-    <md-option ng-repeat="option in staticProperty.input.properties.options" ng-value="option.elementId">
-        <b>{{option.humanDescription}}</b><br/>
+<md-select ng-model="selection[staticProperty.properties.elementName]"  placeholder="{{staticProperty.properties.description}}">
+    <md-option ng-repeat="option in staticProperty.properties.mapsFromOptions" ng-value="option.properties.propertyId">
+        <b>{{option.properties.runtimeName}}</b><br/>
     </md-option>
 </md-select>

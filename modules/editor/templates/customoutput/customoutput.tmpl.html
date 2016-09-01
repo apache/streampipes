@@ -1,0 +1,7 @@
+<div ng-show="staticProperty.input.type == 'CheckboxInput'">
+    <div ng-repeat="option in staticProperty.input.properties.options">
+        <md-checkbox ng-model="option.selected" name="{{option.elementId}}">
+            {{option.humanDescription}}
+        </md-checkbox>
+    </div>
+</div>
