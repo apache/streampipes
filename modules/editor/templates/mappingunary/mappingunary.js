@@ -8,6 +8,9 @@ angular.module('streamPipesApp')
             },
             controller: function($scope, $element) {
 
+                $scope.staticProperty.validator = function() {
+                    return $scope.staticProperty.properties.mapsTo;
+                }
             }
         }
 

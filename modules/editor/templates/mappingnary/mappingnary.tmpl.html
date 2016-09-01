@@ -1,5 +1,5 @@
 <div ng-repeat="option in staticProperty.properties.mapsFromOptions">
-    <md-checkbox ng-model="option.selected" name="{{option.properties.propertyId}}">
+    <md-checkbox ng-checked="exists(option, staticProperty)" ng-click="toggle(option, staticProperty)" name="{{option.properties.elementName}}">
         {{option.properties.runtimeName}}
     </md-checkbox>
 </div>
