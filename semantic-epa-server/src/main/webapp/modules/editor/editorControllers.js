@@ -2028,26 +2028,40 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     $scope.validate = function () {
         $scope.validationErrors = [];
         var valid = true;
-        angular.forEach($scope.selectedElement.staticProperties, function (item) {
-            if (item.input.type == 'RadioInput' || item.input.type == 'SelectFormInput') {
-                var optionSelected = false;
-                angular.forEach(item.input.properties.options, function (option) {
-                    if (option.selected) optionSelected = true;
-                });
-                if (!optionSelected) valid = false;
-            }
-            else if (item.input.type == 'TextInput' || item.input.type == 'SliderInput') {
-                if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
-                if (item.input.properties.datatype != undefined) {
-                    if (!$scope.typeCheck(item.input.properties.value, item.input.properties.datatype)) {
-                        valid = false;
-                        $scope.validationErrors.push(item.name + " must be of type " + item.input.properties.datatype);
-                    }
 
-                }
-            }
-
+        angular.forEach($scope.selectedElement.staticProperties, function(staticProperty) {
+            valid = staticProperty.validator();
+            console.log("error");
         });
+
+        angular.forEach($scope.selectedElement.outputStrategies, function(strategy) {
+            console.log(strategy);
+            valid = strategy.validator();
+        });
+
+            console.log("Valid: " +valid);
+
+        // TODO
+        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
+        //     if (item.input.type == 'RadioInput' || item.input.type == 'SelectFormInput') {
+        //         var optionSelected = false;
+        //         angular.forEach(item.input.properties.options, function (option) {
+        //             if (option.selected) optionSelected = true;
+        //         });
+        //         if (!optionSelected) valid = false;
+        //     }
+        //     else if (item.input.type == 'TextInput' || item.input.type == 'SliderInput') {
+        //         if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
+        //         if (item.input.properties.datatype != undefined) {
+        //             if (!$scope.typeCheck(item.input.properties.value, item.input.properties.datatype)) {
+        //                 valid = false;
+        //                 $scope.validationErrors.push(item.name + " must be of type " + item.input.properties.datatype);
+        //             }
+        //
+        //         }
+        //     }
+        //
+        // });
         return valid;
     }
 

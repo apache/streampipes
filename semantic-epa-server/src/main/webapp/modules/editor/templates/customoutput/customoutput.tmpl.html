@@ -1,5 +1,5 @@
 <div ng-repeat="property in outputStrategy.properties.providesProperties">
-    <md-checkbox ng-model="outputStrategy.properties.producesProperties" name="{{property.properties.elementName}}">
+    <md-checkbox ng-checked="exists(property, outputStrategy)" ng-click="toggle(property, outputStrategy)" name="{{property.properties.elementName}}">
         {{property.properties.runtimeName}}
     </md-checkbox>
 </div>
