@@ -35,7 +35,6 @@ public class Operations {
 		return validator
 		.validateConnection()
 		.computeMappingProperties()
-		.computeMatchingProperties()
 		.storeConnection()
 		.getPipelineModificationMessage();
 	}

@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.model.impl.staticproperty;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
@@ -8,6 +9,7 @@ import javax.persistence.MappedSuperclass;
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -20,6 +22,8 @@ public abstract class MappingProperty extends StaticProperty {
 	
 	@RdfProperty("sepa:mapsFrom")
 	protected URI mapsFrom;
+
+	private List<EventProperty> mapsFromOptions;
 	
 	protected MappingProperty()
 	{
@@ -34,6 +38,7 @@ public abstract class MappingProperty extends StaticProperty {
 	{
 		super(other);
 		this.mapsFrom = other.getMapsFrom();
+        //this.mapsFromOptions = other.getMapsFromOptions();
 	}
 	
 	protected MappingProperty(StaticPropertyType type, URI mapsFrom, String internalName, String label, String description)
@@ -53,5 +58,13 @@ public abstract class MappingProperty extends StaticProperty {
 
 	public void setMapsFrom(URI mapsFrom) {
 		this.mapsFrom = mapsFrom;
-	}	
+	}
+
+	public List<EventProperty> getMapsFromOptions() {
+		return mapsFromOptions;
+	}
+
+	public void setMapsFromOptions(List<EventProperty> mapsFromOptions) {
+		this.mapsFromOptions = mapsFromOptions;
+	}
 }

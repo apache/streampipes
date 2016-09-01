@@ -61,7 +61,6 @@ public class ElementRecommender {
             } catch (NoMatchingProtocolException e) {
             } catch (Exception e) {
                 //e.printStackTrace();
-                e.printStackTrace();
             }
         }
 

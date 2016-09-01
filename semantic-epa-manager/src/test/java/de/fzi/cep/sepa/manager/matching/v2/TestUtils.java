@@ -2,6 +2,8 @@ package de.fzi.cep.sepa.manager.matching.v2;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.clarkparsia.empire.SupportsRdfId;
 
@@ -59,5 +61,27 @@ public class TestUtils {
 		
 		return pipeline;
 	}
+
+	public static Pipeline makePipeline(List<EventStream> streams, List<SepaInvocation> epas) {
+		Pipeline pipeline = new Pipeline();
+
+		pipeline.setStreams(streams.stream().map(s -> new EventStream(s)).collect(Collectors.toList()));
+		pipeline.setSepas(epas.stream().map(s -> new SepaInvocation(s)).collect(Collectors.toList()));
+
+		return pipeline;
+	}
+
+    public static SepaInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId, String... connectedTo) {
+        SepaInvocation invocation = new SepaInvocation(declarer.declareModel());
+        invocation.setDOM(domId);
+        invocation.setConnectedTo(Arrays.asList(connectedTo));
+        return invocation;
+    }
+
+    public static EventStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
+        EventStream stream = new EventStream(streamDec.declareModel(declarer.declareModel()));
+        stream.setDOM(domId);
+        return stream;
+    }
 	
 }

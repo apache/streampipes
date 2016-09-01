@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.client.user.Element;
 
 public class Filter {

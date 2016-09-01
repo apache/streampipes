@@ -1,5 +1,5 @@
 angular.module('streamPipesApp')
-    .directive('mappinPropertyNary', function ($interval) {
+    .directive('mappingPropertyNary', function ($interval) {
         return {
             restrict : 'E',
             templateUrl : 'modules/editor/templates/mappingnary/mappingnary.tmpl.html',
@@ -8,6 +8,7 @@ angular.module('streamPipesApp')
             },
             controller: function($scope, $element) {
 
+                console.log($scope.staticProperty);
             }
         }
 

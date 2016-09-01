@@ -6,7 +6,6 @@ import java.util.List;
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.client.SEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -67,10 +66,10 @@ public class TreeUtils {
 				{
 					for(EventProperty sp : ((EventPropertyList) p).getEventProperties())
 					{
-						if (sp.getRdfId().toString().equals(uri)) return sp;
+						if (sp.getElementId().toString().equals(uri)) return sp;
 					}
 				}
-				if (p.getRdfId().toString().equals(uri))
+				if (p.getElementId().toString().equals(uri))
 					return p;
 			}
 		}
