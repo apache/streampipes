@@ -573,13 +573,14 @@ angular.module('streamPipesApp')
             };
             $scope.actionDropped = function ($newElement, endpoints) {
                 $scope.isActionInAssembly = true;
-
+console.log($newElement.data("JSON"));
                 $newElement
                     .addClass("connectable action");
 
                 if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState) {
                     $newElement
                         .addClass('disabled');
+                    console.log("disabled");
                 }
                 if (endpoints) {
                     jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
@@ -1609,7 +1610,7 @@ angular.module('streamPipesApp')
             var json = $(element).data("JSON");
             angular.copy(json, this);
             this.DOM = element.id;
-            this.connectedTo = element.Id;
+            this.connectedTo = [];
 
         };
 
@@ -1982,36 +1983,36 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
     $scope.saveProperties = function () {
 
         $scope.invalid = false;
-        angular.forEach($scope.selectedElement.staticProperties, function (item) {
-            if ($scope.selection[item.elementId] != undefined) {
-                angular.forEach(item.input.properties.options, function (option) {
-                    if (option.elementId == $scope.selection[item.elementId])
-                        option.selected = true;
-                });
-            }
-            if (item.type == 'REPLACE_OUTPUT') {
-                angular.forEach(item.input.properties.propertyMapping, function (pm) {
-                    if ($scope.selection[pm.elementId] != undefined) {
-                        angular.forEach(pm.input.options, function (o) {
-                            if (o.elementId == $scope.selection[pm.elementId])
-                                o.selected = true;
-                        })
-                    }
-                })
-            }
-        });
-        angular.forEach($scope.selectedElement.staticProperties, function (item) {
-            if ($scope.matchingSelectionLeft[item.elementId] != undefined) {
-                angular.forEach(item.input.properties.optionLeft, function (option) {
-                    if (option.elementId == $scope.matchingSelectionLeft[item.elementId])
-                        option.selected = true;
-                });
-                angular.forEach(item.input.properties.optionRight, function (option) {
-                    if (option.elementId == $scope.matchingSelectionRight[item.elementId])
-                        option.selected = true;
-                });
-            }
-        });
+        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
+        //     if ($scope.selection[item.elementId] != undefined) {
+        //         angular.forEach(item.input.properties.options, function (option) {
+        //             if (option.elementId == $scope.selection[item.elementId])
+        //                 option.selected = true;
+        //         });
+        //     }
+        //     if (item.type == 'REPLACE_OUTPUT') {
+        //         angular.forEach(item.input.properties.propertyMapping, function (pm) {
+        //             if ($scope.selection[pm.elementId] != undefined) {
+        //                 angular.forEach(pm.input.options, function (o) {
+        //                     if (o.elementId == $scope.selection[pm.elementId])
+        //                         o.selected = true;
+        //                 })
+        //             }
+        //         })
+        //     }
+        // });
+        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
+        //     if ($scope.matchingSelectionLeft[item.elementId] != undefined) {
+        //         angular.forEach(item.input.properties.optionLeft, function (option) {
+        //             if (option.elementId == $scope.matchingSelectionLeft[item.elementId])
+        //                 option.selected = true;
+        //         });
+        //         angular.forEach(item.input.properties.optionRight, function (option) {
+        //             if (option.elementId == $scope.matchingSelectionRight[item.elementId])
+        //                 option.selected = true;
+        //         });
+        //     }
+        // });
 
         console.log($scope.selectedElement.staticProperties);
         if ($scope.validate()) {
@@ -2030,13 +2031,13 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         var valid = true;
 
         angular.forEach($scope.selectedElement.staticProperties, function(staticProperty) {
-            valid = staticProperty.validator();
+            //valid = staticProperty.validator();
             console.log("error");
         });
 
         angular.forEach($scope.selectedElement.outputStrategies, function(strategy) {
             console.log(strategy);
-            valid = strategy.validator();
+            //valid = strategy.validator();
         });
 
             console.log("Valid: " +valid);
