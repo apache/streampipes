@@ -7,6 +7,7 @@ import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.appstore.AppStoreInfoProvider;
 import de.fzi.cep.sepa.manager.execution.http.PipelineExecutor;
+import de.fzi.cep.sepa.manager.execution.http.PipelineStorageService;
 import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
@@ -15,6 +16,7 @@ import de.fzi.cep.sepa.messages.Message;
 import de.fzi.cep.sepa.messages.PipelineModificationMessage;
 import de.fzi.cep.sepa.messages.PipelineOperationStatus;
 import de.fzi.cep.sepa.messages.RecommendationMessage;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.client.Pipeline;
 
 
@@ -57,6 +59,10 @@ public class Operations {
 	public static RecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
 	{
 		return new ElementRecommender(partialPipeline).findRecommendedElements();
+	}
+
+	public static void storePipeline(Pipeline pipeline) {
+		new PipelineStorageService(pipeline).addPipeline();
 	}
 
 	public static PipelineOperationStatus startPipeline( 

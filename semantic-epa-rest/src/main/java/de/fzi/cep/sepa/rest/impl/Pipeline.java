@@ -143,7 +143,8 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 		pipeline.setPipelineId(pipelineId);
 		pipeline.setRunning(false);
 		pipeline.setCreatedByUser(username);
-		userService.addOwnPipeline(username, pipeline);
+		//userService.addOwnPipeline(username, pipeline);
+		Operations.storePipeline(pipeline);
 		SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
 		message.addNotification(new Notification("id", pipelineId));
 		return ok(message);

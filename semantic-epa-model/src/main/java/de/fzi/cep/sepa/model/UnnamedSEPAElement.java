@@ -15,7 +15,7 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	private static final long serialVersionUID = 8051137255998890188L;
 	
 	private static final String prefix = "urn:fzi.de:";
-	
+
 	@RdfId
 	@RdfProperty("sepa:elementName")
 	protected String elementName;
@@ -26,12 +26,14 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	{
 		super();
 		this.elementName = prefix + this.getClass().getSimpleName().toLowerCase() +":" +RandomStringUtils.randomAlphabetic(6);
+        this.elementId = elementName;
 	}
 	
 	public UnnamedSEPAElement(UnnamedSEPAElement other)
 	{
 		super(other);
 		this.elementName = other.getElementName();
+        this.elementId = other.getElementId();
 	}
 	
 	public UnnamedSEPAElement(String elementName)
@@ -41,17 +43,20 @@ public abstract class UnnamedSEPAElement extends AbstractSEPAElement {
 	}
 
 	public String getElementName() {
-	
+
 		return elementName;
 	}
 
 	public void setElementName(String elementName) {
 		this.elementName = elementName;
 	}
-	
+
 	public String getElementId()
 	{
 		return elementName;
 	}
 
+	public void setElementId(String elementId) {
+		this.elementName = elementId;
+	}
 }

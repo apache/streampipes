@@ -33,7 +33,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 		
 		SepaDescription desc = new SepaDescription("project", "Projection", "Outputs a selectable subset of an input event type");
 
-		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId() +"/stream");
 		desc.addEventStream(stream1);
 		desc.setCategory(Arrays.asList(EpaType.TRANSFORM.name()));
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();

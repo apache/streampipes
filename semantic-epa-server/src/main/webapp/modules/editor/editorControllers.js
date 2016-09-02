@@ -443,6 +443,7 @@ angular.module('streamPipesApp')
                     .success(function (sepas) {
                         $.each(sepas, function (i, sepa) {
                             sepa.type = 'sepa';
+                            console.log(sepa);
                         });
                         $scope.currentElements = sepas;
                         $timeout(function () {

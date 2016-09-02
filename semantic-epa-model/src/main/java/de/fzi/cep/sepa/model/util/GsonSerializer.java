@@ -70,6 +70,7 @@ public class GsonSerializer {
 			@Override
 			public boolean shouldSkipField(FieldAttributes f) {
 				if (f.getName().equals("elementName")) return true;
+                if (f.getName().equals("elementId")) return true;
 				return false;
 			}
 			

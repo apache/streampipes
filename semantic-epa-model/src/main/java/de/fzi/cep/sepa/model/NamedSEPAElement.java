@@ -56,6 +56,7 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.uri = uri;
 		this.name = name;
 		this.description = description;
+		this.elementId = uri;
 	}
 
 	public NamedSEPAElement(NamedSEPAElement other) {
@@ -66,6 +67,7 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.uri = other.getUri();
 		this.DOM = other.getDOM();
         this.connectedTo = other.getConnectedTo();
+		this.elementId = other.getElementId();
 	}
 
 	public String getName() {
@@ -99,10 +101,14 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	public void setUri(String uri) {
 		this.uri = uri;
 	}	
-	
+
 	public String getElementId()
 	{
 		return uri;
+	}
+
+	public void setElementId(String elementId) {
+		this.uri = elementId;
 	}
 
 	public void setDOM(String DOM) {

@@ -1,8 +1,11 @@
 package de.fzi.cep.sepa.manager.execution.http;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import org.lightcouch.DocumentConflictException;
 
 import de.fzi.cep.sepa.commons.GenericTree;
@@ -39,12 +42,14 @@ public class PipelineExecutor {
 	
 	public PipelineOperationStatus startPipeline()
 	{
-		GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-		InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, pipeline.getPipelineId());
-		List<InvocableSEPAElement> graphs = builder.buildGraph();
-		
-		SecInvocation sec = getSECInvocationGraph(graphs);
-		
+
+		List<SepaInvocation> sepas = pipeline.getSepas();
+		SecInvocation sec = pipeline.getAction();
+
+		List<InvocableSEPAElement> graphs = new ArrayList<>();
+		graphs.addAll(sepas);
+		graphs.add(sec);
+
 		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).invokeGraphs();
 		
 		if (status.isSuccess()) 
@@ -105,13 +110,7 @@ public class PipelineExecutor {
 	{
 		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
 	}
-	
-	private SecInvocation getSECInvocationGraph(List<InvocableSEPAElement> graphs)
-	{
-		for (InvocableSEPAElement graph : graphs)
-			if (graph instanceof SecInvocation) return (SecInvocation) graph;
-		throw new IllegalArgumentException("No action element available");
-	}
+
 	
 	public static void main(String[] args)
 	{
