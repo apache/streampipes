@@ -8,6 +8,10 @@ angular.module('streamPipesApp')
             },
             controller: function($scope, $element) {
 
+
+                $scope.staticProperty.validator = function() {
+                    return $scope.staticProperty.properties.value && $scope.staticProperty.properties.value != "";
+                }
             }
         }
 

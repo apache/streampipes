@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 
 public interface IPipeline extends IPipelineElement {
 	
-	Response addPipeline(String username, String pipeline);
+	Response addPipeline(String username, Pipeline pipeline);
 
 	Response start(String username, String pipelineId);
 
@@ -17,7 +17,7 @@ public interface IPipeline extends IPipelineElement {
 
 	Response update(Pipeline pipeline);
 
-	Response overwritePipeline(String username, String pipeline);
+	Response overwritePipeline(String username, Pipeline pipeline);
 
 	Response getPipelineStatus(String username, String pipelineId);
 }

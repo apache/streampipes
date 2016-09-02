@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.storage.util;
 
+import de.fzi.cep.sepa.model.util.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
@@ -9,7 +10,7 @@ public class Utils {
 
 	public static CouchDbClient getCouchDbPipelineClient() {
 		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_PIPELINE_DB));
-		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	
@@ -26,13 +27,13 @@ public class Utils {
 
 	public static CouchDbClient getCouchDbUserClient() {
 		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_USER_DB));
-		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbBlockClient() {
 		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "blocks"));
-		dbClient.setGsonBuilder(de.fzi.sepa.model.client.util.Utils.getGsonBuilder());
+		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	

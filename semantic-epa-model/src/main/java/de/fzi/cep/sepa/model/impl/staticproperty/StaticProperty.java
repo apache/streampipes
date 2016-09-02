@@ -30,7 +30,7 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	@RdfProperty("so:valueRequired")
 	protected boolean valueRequired;
 
-	private StaticPropertyType staticPropertyType;
+	protected StaticPropertyType staticPropertyType;
 	
 	
 	public StaticProperty()
@@ -45,9 +45,8 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	
 	public StaticProperty(StaticProperty other)
 	{
+		super(other);
 		this.description = other.getDescription();
-		//this.elementId = other.getElementId();
-		this.elementName = other.getElementName();
 		this.internalName = other.getInternalName();
 		this.valueRequired = other.isValueRequired();
 		this.staticPropertyType = other.getStaticPropertyType();

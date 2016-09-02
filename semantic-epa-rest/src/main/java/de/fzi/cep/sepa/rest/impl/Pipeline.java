@@ -137,14 +137,13 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
-	public Response addPipeline(@PathParam("username") String username, String pipeline)
+	public Response addPipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.Pipeline pipeline)
 	{
-		de.fzi.cep.sepa.model.client.Pipeline serverPipeline = Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class);
 		String pipelineId = UUID.randomUUID().toString();
-		serverPipeline.setPipelineId(pipelineId);
-		serverPipeline.setRunning(false);
-		serverPipeline.setCreatedByUser(username);
-		userService.addOwnPipeline(username, serverPipeline);
+		pipeline.setPipelineId(pipelineId);
+		pipeline.setRunning(false);
+		pipeline.setCreatedByUser(username);
+		userService.addOwnPipeline(username, pipeline);
 		SuccessMessage message = Notifications.success(NotificationType.PIPELINE_STORAGE_SUCCESS);
 		message.addNotification(new Notification("id", pipelineId));
 		return ok(message);
@@ -199,8 +198,8 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response overwritePipeline(@PathParam("username") String username, String pipeline) {
-		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(Utils.getGson().fromJson(pipeline, de.fzi.cep.sepa.model.client.Pipeline.class));
+	public Response overwritePipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 		return statusMessage(Notifications.success("Pipeline modified"));
 	}
 

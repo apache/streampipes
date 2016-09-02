@@ -44,7 +44,7 @@ public abstract class InvocableElement<I extends InvocableSEPAElement, D extends
 
         try {
             I graph = Transformer.fromJsonLd(clazz, payload);
-
+System.out.println(payload);
             InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
             if (declarer != null) {

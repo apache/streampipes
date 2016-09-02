@@ -23,6 +23,7 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
@@ -107,7 +108,6 @@ public class PipelineVerificationHandler {
                         .getStreams());
 
                 if (element instanceof SepaInvocation || element instanceof EventStream) {
-                    InvocableSEPAElement currentSEPA = rdfRootElement;
 
                     if (element instanceof SepaInvocation) {
 
@@ -123,8 +123,10 @@ public class PipelineVerificationHandler {
 
                         updateStaticProperties(stream);
                         updateOutputStrategy(stream);
+
                     }
-                    if (currentSEPA.getStreamRequirements().size() - 1 == i) {
+
+                    if (rdfRootElement.getStreamRequirements().size() - 1 == i) {
                         PipelineModification modification = new PipelineModification(
                                 domId, rdfRootElement.getElementId(), rdfRootElement.getStaticProperties());
                         if (rdfRootElement instanceof SepaInvocation)

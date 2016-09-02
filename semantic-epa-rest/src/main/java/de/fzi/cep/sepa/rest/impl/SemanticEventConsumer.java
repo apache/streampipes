@@ -58,7 +58,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
 		List<SecDescription> secs = Filter.byUri(requestor.getAllSECs(), userService.getOwnActionUris(username));
-		List<SecDescription> si = secs.stream().map(s -> new SecDescription(s)).collect(Collectors.toList());
+		List<SecInvocation> si = secs.stream().map(s -> new SecInvocation(new SecInvocation(s))).collect(Collectors.toList());
 		return ok(si);
 	}
 
