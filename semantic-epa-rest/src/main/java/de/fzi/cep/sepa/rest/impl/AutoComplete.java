@@ -6,6 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -25,10 +26,10 @@ public class AutoComplete extends AbstractRestInterface {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getItem(@QueryParam("propertyName") String propertyName, @QueryParam("term") String term) {
+    public Response getItem(@QueryParam("propertyName") String propertyName, @QueryParam("term") String term) {
         AutocompleteResult result = new AutocompleteResult();
         String query = QueryBuilder.getAutocompleteSuggestion(propertyName);
-        System.out.println(query);
+
         try {
             TupleQueryResult queryResult = new QueryExecutor(StorageManager.INSTANCE.getRepository()).executeQuery(query);
             while (queryResult.hasNext()) {
@@ -41,16 +42,16 @@ public class AutoComplete extends AbstractRestInterface {
 
             e.printStackTrace();
         }
-        return toJson(result);
+        return ok(result);
     }
 
     @POST
     @Path("/domain")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getOntologyQueryResult(String ontologyQuery) {
-        OntologyQuery query = fromJson(ontologyQuery, OntologyQuery.class);
-
-        return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getOntologyResult(query));
+    public Response getOntologyQueryResult(OntologyQuery ontologyQuery) {
+        return ok(StorageManager
+                .INSTANCE
+                .getBackgroundKnowledgeStorage().getOntologyResult(ontologyQuery));
     }
 
 }

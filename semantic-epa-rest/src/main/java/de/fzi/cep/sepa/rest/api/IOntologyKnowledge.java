@@ -1,43 +1,47 @@
 package de.fzi.cep.sepa.rest.api;
 
-public interface IOntologyKnowledge {
-	
-	String getPropertyHierarchy();
-	
-	String getProperty(String propertyId);
-	
-	String addProperty(String elementData);
-	
-	String updateProperty(String propertyId, String propertyData);
-	
-	String deleteProperty(String propertyId);
-	
-	
-	String getTypeHiearchy();
-	
-	String getType(String typeId);
-	
-	String addType(String elementData);
-	
-	String updateType(String typeId, String elementData);
-	
-	String deleteType(String typeId);
-	
-	
-	String addInstance(String elementData);
-	
-	String getInstance(String instanceId);
-	
-	String updateInstance(String instanceId, String elementData);
-	
-	String deleteInstance(String instanceId);
-	
-	
-	String getNamespaces();
+import de.fzi.cep.sepa.model.client.ontology.*;
 
-	String addNamespace(String namespace);
+import javax.ws.rs.core.Response;
+
+public interface IOntologyKnowledge {
+
+	Response getPropertyHierarchy();
+
+	Response getProperty(String propertyId);
+
+	Response addProperty(Resource elementData);
+
+	Response updateProperty(String propertyId, Property propertyData);
+
+	Response deleteProperty(String propertyId);
+
+
+	Response getTypeHiearchy();
+
+	Response getType(String typeId);
+
+	Response addType(Resource elementData);
+
+	Response updateType(String typeId, Concept elementData);
+
+	Response deleteType(String typeId);
+
+
+	Response addInstance(Resource elementData);
+
+	Response getInstance(String instanceId);
+
+	Response updateInstance(String instanceId, Instance elementData);
+
+	Response deleteInstance(String instanceId);
 	
-	String deleteNamespace(String prefix);
+	
+	Response getNamespaces();
+
+	Response addNamespace(Namespace namespace);
+	
+	Response deleteNamespace(String prefix);
 
 	
 	

@@ -9,50 +9,68 @@ import javax.ws.rs.Produces;
 
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import de.fzi.cep.sepa.rest.api.INotification;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 @Path("/v2/users/{username}/notifications")
 public class Notification extends AbstractRestInterface implements INotification {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Override
-	public String getNotifications() {
-		return toJson(StorageManager.INSTANCE.getNotificationStorageApi().getAllNotifications());
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @GsonWithIds
+    @Override
+    public Response getNotifications() {
+        return ok(StorageManager
+                .INSTANCE
+                .getNotificationStorageApi()
+                .getAllNotifications());
+    }
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/unread")
-	@Override
-	public String getUnreadNotifications() {
-		return toJson(StorageManager.INSTANCE.getNotificationStorageApi().getUnreadNotifications());
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/unread")
+    @Override
+    public Response getUnreadNotifications() {
+        return ok(StorageManager
+                .INSTANCE
+                .getNotificationStorageApi()
+                .getUnreadNotifications());
+    }
 
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{notificationId}")
-	@Override
-	public String deleteNotification(@PathParam("notificationId") String notificationId) {
-		boolean success = StorageManager.INSTANCE.getNotificationStorageApi().deleteNotification(notificationId);
-		if (success) return toJson(Notifications.success("Notification deleted"));
-		else return toJson(Notifications.error("Could not delete notification"));
-		
-	}
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{notificationId}")
+    @Override
+    public Response deleteNotification(@PathParam("notificationId") String notificationId) {
+        boolean success = StorageManager
+                .INSTANCE
+                .getNotificationStorageApi()
+                .deleteNotification(notificationId);
+        if (success) {
+            return ok(Notifications.success("Notification deleted"));
+        } else {
+            return ok(Notifications.error("Could not delete notification"));
+        }
 
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{notificationId}")
-	@Override
-	public String modifyNotificationStatus(@PathParam("notificationId") String notificationId) {
-		boolean success = StorageManager.INSTANCE.getNotificationStorageApi().changeNotificationStatus(notificationId);
-		if (success) return toJson(Notifications.success("Ok"));
-		else return toJson(Notifications.error("Error"));
-	}
+    }
 
-	
-
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{notificationId}")
+    @Override
+    public Response modifyNotificationStatus(@PathParam("notificationId") String notificationId) {
+        boolean success = StorageManager
+                .INSTANCE
+                .getNotificationStorageApi()
+                .changeNotificationStatus(notificationId);
+        if (success) {
+            return ok(Notifications.success("Ok"));
+        } else {
+            return ok(Notifications.error("Error"));
+        }
+    }
 }

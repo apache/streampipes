@@ -104,13 +104,12 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Path("/{elementUri}/jsonld")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	@GsonWithIds
 	@Override
-	public Response getAsJsonLd(@PathParam("elementUri") String elementUri) {
+	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return ok(toJsonLd(requestor.getSEPAById(elementUri)));
+			return toJsonLd(requestor.getSEPAById(elementUri));
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage()));
+			return toJson(constructErrorMessage(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage())));
 		}
 	}
 	

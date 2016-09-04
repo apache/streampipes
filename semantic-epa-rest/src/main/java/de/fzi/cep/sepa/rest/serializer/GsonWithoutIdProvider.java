@@ -20,6 +20,6 @@ public class GsonWithoutIdProvider extends GsonJerseyProvider {
 
     @Override
     protected Gson getGsonSerializer() {
-        return GsonSerializer.getGsonWithoutIds();
+        return GsonSerializer.getGsonWithIds();
     }
 }

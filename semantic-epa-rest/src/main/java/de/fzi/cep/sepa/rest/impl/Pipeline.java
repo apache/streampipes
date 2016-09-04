@@ -88,7 +88,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	}
 
 	@Override
-	public Response getAsJsonLd(String elementUri) {
+	public String getAsJsonLd(String elementUri) {
 		return null;
 	}
 

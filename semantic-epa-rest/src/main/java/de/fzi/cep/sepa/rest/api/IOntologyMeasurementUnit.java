@@ -1,10 +1,12 @@
 package de.fzi.cep.sepa.rest.api;
 
+import javax.ws.rs.core.Response;
+
 public interface IOntologyMeasurementUnit {
 
-	String getAllUnits();
-	
-	String getUnit(String resourceUri);
+	Response getAllUnits();
 
-	String getAllUnitTypes();
+	Response getUnit(String resourceUri);
+
+	Response getAllUnitTypes();
 }

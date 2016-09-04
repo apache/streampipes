@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -21,7 +22,6 @@ import de.fzi.cep.sepa.model.client.ontology.Property;
 import de.fzi.cep.sepa.model.client.ontology.Resource;
 import de.fzi.cep.sepa.rest.api.IOntologyKnowledge;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/ontology")
 public class OntologyKnowledge extends AbstractRestInterface implements IOntologyKnowledge {
@@ -30,9 +30,9 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getTypeHiearchy() {
+	public Response getTypeHiearchy() {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getClassHierarchy());
+			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getClassHierarchy());
 		} catch (QueryEvaluationException | RepositoryException
 				| MalformedQueryException e) {
 			return null;
@@ -44,9 +44,9 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getPropertyHierarchy() {
+	public Response getPropertyHierarchy() {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getPropertyHierarchy());
+			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getPropertyHierarchy());
 		} catch (RepositoryException | MalformedQueryException
 				| QueryEvaluationException e) {
 			// TODO Auto-generated catch block
@@ -59,12 +59,12 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getProperty(@PathParam("propertyId") String propertyId) {
+	public Response getProperty(@PathParam("propertyId") String propertyId) {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getProperty(propertyId));
+			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getProperty(propertyId));
 		} catch (QueryEvaluationException | RepositoryException
 				| MalformedQueryException e) {
-			return toJson(Notifications.error("Could not load details"));
+			return ok(Notifications.error("Could not load details"));
 		}
 	}
 
@@ -72,27 +72,30 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getType(@PathParam("typeId") String typeId) {
+	public Response getType(@PathParam("typeId") String typeId) {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getConcept(typeId));
+			return ok(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getConcept(typeId));
 		} catch (QueryEvaluationException | RepositoryException
 				| MalformedQueryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return typeId;
+		return ok(typeId);
 	}
 
 	@Override
 	@Path("/namespaces")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getNamespaces() {
+	public Response getNamespaces() {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getNamespaces());
+			return ok(StorageManager
+					.INSTANCE
+					.getBackgroundKnowledgeStorage()
+					.getNamespaces());
 		} catch (RepositoryException e) {
 			e.printStackTrace();
-			return toJson(Notifications.error("Could not connect to Sesame storage"));
+			return ok(Notifications.error("Could not connect to Sesame storage"));
 		}
 	}
 	
@@ -100,61 +103,102 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/namespaces")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addNamespace(String namespace) {
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().addNamespace(fromJson(namespace, Namespace.class));
-		if (success) return toJson(Notifications.success("Namespace successfully added."));
-		else return toJson(Notifications.error("Could not add namespace. "));
+	public Response addNamespace(Namespace namespace) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.addNamespace(namespace);
+		if (success) {
+			return ok(Notifications.success("Namespace successfully added."));
+		}
+		else {
+			return ok(Notifications.error("Could not add namespace. "));
+		}
 	}
 
 	@Override
 	@Path("/namespaces/{prefix}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteNamespace(@PathParam("prefix") String prefix) {
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteNamespace(prefix);
-		if (success) return toJson(Notifications.success("Namespace successfully removed."));
-		else return toJson(Notifications.error("Could not remove namespace. "));
+	public Response deleteNamespace(@PathParam("prefix") String prefix) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.deleteNamespace(prefix);
+		if (success) {
+			return ok(Notifications.success("Namespace successfully removed."));
+		}
+		else {
+			return ok(Notifications.error("Could not remove namespace. "));
+		}
 	}
 
 	@Override
 	@Path("/properties")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addProperty(String elementData) {
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().addProperty(fromJson(elementData, Resource.class));
-		if (success) return toJson(Notifications.success("Property successfully added."));
-		else return toJson(Notifications.error("Could not add property. "));
+	public Response addProperty(Resource elementData) {
+		boolean success = StorageManager
+                .INSTANCE
+                .getBackgroundKnowledgeStorage()
+                .addProperty(elementData);
+		if (success) {
+			return ok(Notifications.success("Property successfully added."));
+		}
+		else {
+			return ok(Notifications.error("Could not add property. "));
+		}
 	}
 
 	@Override
 	@Path("/types")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addType(String elementData) {
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().addConcept(fromJson(elementData, Resource.class));
-		if (success) return toJson(Notifications.success("Concept successfully added."));
-		else return toJson(Notifications.error("Could not add concept. "));
+	public Response addType(Resource elementData) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.addConcept(elementData);
+		if (success) {
+			return ok(Notifications.success("Concept successfully added."));
+		}
+		else {
+			return ok(Notifications.error("Could not add concept. "));
+		}
 	}
 
 	@Override
 	@Path("/instances")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addInstance(String elementData) {
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().addIndividual(fromJson(elementData, Resource.class));
-		if (success) return toJson(Notifications.success("Instance successfully added."));
-		else return toJson(Notifications.error("Could not add instance. "));
+	public Response addInstance(Resource elementData) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.addIndividual(elementData);
+		if (success) {
+			return ok(Notifications.success("Instance successfully added."));
+		}
+		else {
+			return ok(Notifications.error("Could not add instance. "));
+		}
 	}
 
 	@Override
 	@Path("/properties/{propertyId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateProperty(@PathParam("propertyId") String propertyId, String propertyData) {
-		Property property = Utils.getGson().fromJson(propertyData, Property.class);
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().updateProperty(property);
-		if (success) return toJson(Notifications.success("Property successfully updated."));
-		else return toJson(Notifications.error("Could not update property. "));
+	public Response updateProperty(@PathParam("propertyId") String propertyId, Property propertyData) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.updateProperty(propertyData);
+		if (success) {
+			return ok(Notifications.success("Property successfully updated."));
+		}
+		else {
+			return ok(Notifications.error("Could not update property. "));
+		}
 		
 	}
 
@@ -162,23 +206,32 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/types/{typeId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateType(@PathParam("typeId") String typeId, String typeData) {
-		Concept concept = Utils.getGson().fromJson(typeData, Concept.class);
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().updateConcept(concept);
-		if (success) return toJson(Notifications.success("Concept successfully updated."));
-		else return toJson(Notifications.error("Could not update concept. "));
+	public Response updateType(@PathParam("typeId") String typeId, Concept concept) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.updateConcept(concept);
+		if (success) {
+			return ok(Notifications.success("Concept successfully updated."));
+		}
+		else {
+			return ok(Notifications.error("Could not update concept. "));
+		}
 	}
 	
 	@Path("/instances/{instanceId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getInstance(@PathParam("instanceId") String instanceId) {
+	public Response getInstance(@PathParam("instanceId") String instanceId) {
 		try {
-			return toJson(StorageManager.INSTANCE.getBackgroundKnowledgeStorage().getInstance(instanceId));
+			return ok(StorageManager
+					.INSTANCE
+					.getBackgroundKnowledgeStorage()
+					.getInstance(instanceId));
 		} catch (QueryEvaluationException | RepositoryException
 				| MalformedQueryException e) {
-			return toJson(Notifications.error("Instance not found"));
+			return ok(Notifications.error("Instance not found"));
 		}
 	}
 
@@ -186,41 +239,43 @@ public class OntologyKnowledge extends AbstractRestInterface implements IOntolog
 	@Path("/instances/{instanceId}")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateInstance(@PathParam("instanceId") String instanceId, String elementData) {
-		Instance instance = Utils.getGson().fromJson(elementData, Instance.class);
-		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().updateInstance(instance);
-		if (success) return toJson(Notifications.success("Instance successfully updated."));
-		else return toJson(Notifications.error("Could not update instance. "));
+	public Response updateInstance(@PathParam("instanceId") String instanceId, Instance instance) {
+		boolean success = StorageManager
+				.INSTANCE
+				.getBackgroundKnowledgeStorage()
+				.updateInstance(instance);
+		if (success) return ok(Notifications.success("Instance successfully updated."));
+		else return ok(Notifications.error("Could not update instance. "));
 	}
 
 	@Override
 	@Path("/properties/{propertyId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteProperty(@PathParam("propertyId") String propertyId) {
+	public Response deleteProperty(@PathParam("propertyId") String propertyId) {
 		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(propertyId);
-		if (success) return toJson(Notifications.success("Property successfully deleted."));
-		else return toJson(Notifications.error("Could not delete property. "));
+		if (success) return ok(Notifications.success("Property successfully deleted."));
+		else return ok(Notifications.error("Could not delete property. "));
 	}
 
 	@Override
 	@Path("/types/{typeId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteType(@PathParam("typeId") String typeId) {
+	public Response deleteType(@PathParam("typeId") String typeId) {
 		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(typeId);
-		if (success) return toJson(Notifications.success("Concept successfully deleted."));
-		else return toJson(Notifications.error("Could not delete concept. "));
+		if (success) return ok(Notifications.success("Concept successfully deleted."));
+		else return ok(Notifications.error("Could not delete concept. "));
 	}
 
 	@Override
 	@Path("/instances/{instanceId}")
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteInstance(@PathParam("instanceId") String instanceId) {
+	public Response deleteInstance(@PathParam("instanceId") String instanceId) {
 		boolean success = StorageManager.INSTANCE.getBackgroundKnowledgeStorage().deleteResource(instanceId);
-		if (success) return toJson(Notifications.success("Instance successfully deleted."));
-		else return toJson(Notifications.error("Could not delete instance. "));
+		if (success) return ok(Notifications.success("Instance successfully deleted."));
+		else return ok(Notifications.error("Could not delete instance. "));
 	}
 
 }

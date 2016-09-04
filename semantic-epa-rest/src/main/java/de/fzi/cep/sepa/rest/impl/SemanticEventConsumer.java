@@ -103,13 +103,12 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Path("/{elementUri}/jsonld")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	@GsonWithIds
 	@Override
-	public Response getAsJsonLd(@PathParam("elementUri") String elementUri) {
+	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return ok(toJsonLd(requestor.getSECById(elementUri)));
+			return toJsonLd(requestor.getSECById(elementUri));
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
 		}
 	}
 	

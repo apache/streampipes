@@ -4,18 +4,19 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.rest.api.IVisualization;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/visualizations")
-public class Visualization implements IVisualization {
+public class Visualization extends AbstractRestInterface implements IVisualization {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRunningVisualizations() {
-		return Utils.getGson().toJson(StorageManager.INSTANCE.getPipelineStorageAPI().getRunningVisualizations());
+	public Response getRunningVisualizations() {
+		return ok(StorageManager.INSTANCE.getPipelineStorageAPI().getRunningVisualizations());
 	}
 
 }

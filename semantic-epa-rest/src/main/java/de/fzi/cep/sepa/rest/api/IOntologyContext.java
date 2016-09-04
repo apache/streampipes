@@ -1,13 +1,16 @@
 package de.fzi.cep.sepa.rest.api;
 
+import de.fzi.cep.sepa.model.client.ontology.Context;
+
+import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
 
 public interface IOntologyContext {
 
-	String getAvailableContexts();
-	
-	String addContext(InputStream inputFile, String json);
-	
-	String deleteContext(String contextId);
+	Response getAvailableContexts();
+
+	Response addContext(InputStream inputFile, Context contextInfo);
+
+	Response deleteContext(String contextId);
 }

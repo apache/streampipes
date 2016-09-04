@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.rest.api.IOntologyMeasurementUnit;
 import de.fzi.cep.sepa.units.UnitProvider;
@@ -16,24 +17,30 @@ public class OntologyMeasurementUnit extends AbstractRestInterface implements IO
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	@Path("/instances")
-	public String getAllUnits() {
-		return toJson(UnitProvider.INSTANCE.getAvailableUnits());
+	public Response getAllUnits() {
+		return ok(UnitProvider
+				.INSTANCE
+				.getAvailableUnits());
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	@Path("/types")
-	public String getAllUnitTypes() {
-		return toJson(UnitProvider.INSTANCE.getAvailableUnitTypes());
+	public Response getAllUnitTypes() {
+		return ok(UnitProvider
+				.INSTANCE
+				.getAvailableUnitTypes());
 	}
 
 	@GET
 	@Path("/instances/{resourceId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getUnit(@PathParam("resourceId") String resourceUri) {
-		return toJson(UnitProvider.INSTANCE.getUnit(resourceUri));
+	public Response getUnit(@PathParam("resourceId") String resourceUri) {
+		return ok(UnitProvider
+				.INSTANCE
+				.getUnit(resourceUri));
 	}
 
 }

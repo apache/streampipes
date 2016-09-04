@@ -1954,7 +1954,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
                 if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
                     console.log(item);
                     angular.forEach(item.properties.options, function (option) {
-                            if (!item.properties.currentSelection) {
+                            if (item.properties.currentSelection) {
                                 if (option.elementId == item.properties.currentSelection.elementId) {
                                     option.selected = true;
                                 }
@@ -1972,7 +1972,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
             $rootScope.state.currentElement.removeClass("disabled");
             $rootScope.$broadcast("SepaElementConfigured", elementData);
             $scope.hide();
-            sourceEndpoint.setType("token");
+            //sourceEndpoint.setType("token");
         }
         else $scope.invalid = true;
     }
@@ -1990,12 +1990,24 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
                 });
                 if (!anyOccurrence) valid = false;
             } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
-                if (!staticProperty.properties.value) valid = false;
+                if (!staticProperty.properties.value) {
+                    valid = false;
+                }
                 if (staticProperty.properties.requiredDatatype) {
-                    if (!$scope.typeCheck(staticProperty.properties.value)) {
+                    if (!$scope.typeCheck(staticProperty.properties.value, staticProperty.properties.requiredDatatype)) {
                         valid = false;
                         $scope.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
                     }
+                }
+            } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
+                if (!staticProperty.properties.mapsTo) {
+                    valid = false;
+                }
+
+            } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyNary') {
+                if (!staticProperty.properties.mapsTo ||
+                    !staticProperty.properties.mapsTo.length > 0) {
+                    valid = false;
                 }
             }
         });
@@ -2007,9 +2019,9 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
                 }
             }
             // TODO add replace output strategy
+            // TODO add support for replace output strategy
         });
 
-        console.log("Valid: " + valid);
         return valid;
     }
 

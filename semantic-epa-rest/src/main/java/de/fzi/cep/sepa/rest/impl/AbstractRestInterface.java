@@ -49,25 +49,7 @@ public abstract class AbstractRestInterface {
 		userStorage = StorageManager.INSTANCE.getUserStorageAPI();
 		userService = StorageManager.INSTANCE.getUserService();
 	}
-	
-	protected <T> T fromJson(String payload, Class<T> clazz)
-	{
-		return Utils.getGson().fromJson(payload, clazz);
-	}
-	
-	protected <T> String toJson(T object)
-	{
-		return Utils.getGson().toJson(object);
-	}
-	
-	protected <T> T fromJsonWithCustomBuilder(String payload, Class<T> clazz, boolean keepIds) {
-		return GsonSerializer.getGson(keepIds).fromJson(payload, clazz);
-	}
-	
-	protected <T> String toJsonWithCustomBuilder(T object, boolean keepIds) {
-		return GsonSerializer.getGson(keepIds).toJson(object);
-	}
-	
+
 	protected <T> String toJsonLd(T object)
 	{
 		try {
@@ -137,6 +119,10 @@ public abstract class AbstractRestInterface {
 		return Response
 				.ok(entity)
 				.build();
+	}
+
+	protected <T> String toJson(T element) {
+		return GsonSerializer.getGson().toJson(element);
 	}
 	
 }

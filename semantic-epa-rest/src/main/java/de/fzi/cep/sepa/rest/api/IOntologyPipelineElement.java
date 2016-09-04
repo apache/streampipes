@@ -1,17 +1,19 @@
 package de.fzi.cep.sepa.rest.api;
 
+import javax.ws.rs.core.Response;
+
 public interface IOntologyPipelineElement {
 
-	String getStreams();
-	
-	String getSepas();
-	
-	String getActions();
-	
-	String getStream(String streamId, boolean keepIds);
-	
-	String getSepa(String sepaId, boolean keepIds);
-	
-	String getAction(String actionId, boolean keepIds);
+	Response getStreams();
+
+	Response getSepas();
+
+	Response getActions();
+
+	Response getStream(String streamId, boolean keepIds);
+
+	Response getSepa(String sepaId, boolean keepIds);
+
+	Response getAction(String actionId, boolean keepIds);
 	
 }

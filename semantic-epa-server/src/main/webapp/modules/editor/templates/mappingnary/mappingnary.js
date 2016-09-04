@@ -34,11 +34,6 @@ angular.module('streamPipesApp')
                     console.log(index);
                     staticProperty.properties.mapsTo.splice(index, 1);
                 }
-
-                $scope.staticProperty.validator = function() {
-                    return $scope.staticProperty.properties.mapsTo &&
-                        $scope.staticProperty.properties.mapsTo.length > 0;
-                }
                 
             }
         }

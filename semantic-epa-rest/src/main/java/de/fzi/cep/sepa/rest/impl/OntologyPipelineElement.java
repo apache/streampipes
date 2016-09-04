@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -21,6 +22,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
+import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import de.fzi.cep.sepa.rest.api.IOntologyPipelineElement;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
@@ -30,58 +32,62 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 	@Override
 	@Path("/sources")
 	@GET
+	@GsonWithIds
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getStreams() {
+	public Response getStreams() {
 		List<SepDescription> result = new ArrayList<>();
 		List<SepDescription> sesameSeps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
 		
 		for(SepDescription sep : sesameSeps)
 			result.add(new SepDescription(sep));
-		return GsonSerializer.getGson().toJson(result);
+		return ok(result);
 	}
 	
 	@Path("/sources/{sourceId}")
 	@GET
+	@GsonWithIds
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
+	public Response getSourceDetails(@PathParam("sourceId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 		
 		try {
 			SepDescription sepaDescription = new SepDescription(StorageManager.INSTANCE.getStorageAPI().getSEPById(sepaId));
-			return getGson(keepIds).toJson(sepaDescription);
+			return ok(sepaDescription);
 		} catch (URISyntaxException e) {
-			return toJson(Notifications.error("Error"));
+			return ok(Notifications.error("Error"));
 		}
 	}
 
 	@Override
 	@Path("/sepas")
+	@GsonWithIds
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getSepas() {
+	public Response getSepas() {
 		JsonArray result = new JsonArray();
 		List<SepaDescription> sesameSepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
 		
 		for(SepaDescription sepa : sesameSepas)
 			result.add(getHeader(sepa.getUri(), sepa.getName()));
-		return GsonSerializer.getGson().toJson(result);
+		return ok(result);
 		
 	}
 
 	@Override
 	@Path("/actions")
 	@GET
+	@GsonWithIds
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getActions() {
+	public Response getActions() {
 		List<SecDescription> result = new ArrayList<>();
 		List<SecDescription> sesameSecs = StorageManager.INSTANCE.getStorageAPI().getAllSECs();
 		
 		for(SecDescription sec : sesameSecs)
 			result.add(new SecDescription(sec));
-		return GsonSerializer.getGson().toJson(result);
+		return ok(result);
 	}
 
 	@Override
-	public String getStream(String streamId, @QueryParam("keepIds") boolean keepIds) {
+	public Response getStream(String streamId, @QueryParam("keepIds") boolean keepIds) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -90,13 +96,13 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getSepa(@PathParam("sepaId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
+	public Response getSepa(@PathParam("sepaId") String sepaId, @QueryParam("keepIds") boolean keepIds) {
 		
 		try {
 			SepaDescription sepaDescription = new SepaDescription(StorageManager.INSTANCE.getStorageAPI().getSEPAById(sepaId));
-			return getGson(keepIds).toJson(sepaDescription);
+			return ok(sepaDescription);
 		} catch (URISyntaxException e) {
-			return toJson(Notifications.error("Error"));
+			return ok(Notifications.error("Error"));
 		}
 	}
 
@@ -104,20 +110,15 @@ public class OntologyPipelineElement extends AbstractRestInterface implements IO
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
+	public Response getAction(@PathParam("actionId") String actionId, @QueryParam("keepIds") boolean keepIds) {
 		try {
 			SecDescription secDescription = new SecDescription(StorageManager.INSTANCE.getStorageAPI().getSECById(actionId));
-			return getGson(keepIds).toJson(secDescription);
+			return ok(secDescription);
 		} catch (URISyntaxException e) {
-			return toJson(Notifications.error("Error"));
+			return ok(Notifications.error("Error"));
 		}
 	}
-	
-	public static void main(String[] args)
-	{
-		new OntologyPipelineElement().getSepas();
-	}
-	
+
 	private JsonObject getHeader(String uri, String name)
 	{
 		JsonObject jsonObj = new JsonObject();

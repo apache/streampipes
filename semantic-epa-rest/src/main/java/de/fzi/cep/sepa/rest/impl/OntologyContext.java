@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -23,32 +24,45 @@ public class OntologyContext extends AbstractRestInterface implements IOntologyC
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String getAvailableContexts() {
-		return toJson(StorageManager.INSTANCE.getContextStorage().getAvailableContexts());
+	public Response getAvailableContexts() {
+		return ok(StorageManager
+				.INSTANCE
+				.getContextStorage()
+				.getAvailableContexts());
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Override
-	public String addContext(@FormDataParam("file") InputStream inputFile, @FormDataParam("context") String json) {
+	public Response addContext(@FormDataParam("file") InputStream inputFile, @FormDataParam("context") de.fzi.cep.sepa.model.client.ontology.Context contextInfo) {
 		
-		de.fzi.cep.sepa.model.client.ontology.Context contextInfo = fromJson(json, de.fzi.cep.sepa.model.client.ontology.Context.class);
 		contextInfo.setInputStream(inputFile);
 		
-		boolean success = StorageManager.INSTANCE.getContextStorage().addContext(contextInfo);
-		if (success) return toJson(Notifications.success("Context successfully added."));
-		else return toJson(Notifications.error("Could not add context."));
+		boolean success = StorageManager
+                .INSTANCE
+                .getContextStorage()
+                .addContext(contextInfo);
+		if (success) {
+			return ok(Notifications.success("Context successfully added."));
+		}
+		else {
+			return ok(Notifications.error("Could not add context."));
+		}
 	}
 
 	@DELETE
 	@Path("/{contextId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public String deleteContext(@PathParam("contextId") String contextId) {
+	public Response deleteContext(@PathParam("contextId") String contextId) {
 		boolean success = StorageManager.INSTANCE.getContextStorage().deleteContext(contextId);
-		if (success) return toJson(Notifications.success("Context successfully deleted."));
-		else return toJson(Notifications.error("Could not delete context."));
+		if (success) {
+			return ok(Notifications.success("Context successfully deleted."));
+		}
+		else {
+			return ok(Notifications.error("Could not delete context."));
+		}
 	}
 
 }

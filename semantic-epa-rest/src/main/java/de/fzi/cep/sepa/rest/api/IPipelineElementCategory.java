@@ -1,11 +1,13 @@
 package de.fzi.cep.sepa.rest.api;
 
+import javax.ws.rs.core.Response;
+
 public interface IPipelineElementCategory {
 
-	String getEps();
-	
-	String getEpaCategories();
-	
-	String getEcCategories();
+	Response getEps();
+
+	Response getEpaCategories();
+
+	Response getEcCategories();
 	
 }

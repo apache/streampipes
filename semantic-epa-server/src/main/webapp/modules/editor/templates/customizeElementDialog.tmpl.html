@@ -44,26 +44,26 @@
                     </div>
                 </div>
                 <div class="customize-item-content">
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
                         <oneof static-property="staticProperty"></oneof>
                     </div>
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
                         <freetext static-property="staticProperty"></freetext>
                     </div>
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
                         <any static-property="staticProperty"></any>
                     </div>
                     <div ng-if="staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
                         <domain-concept-input static-property="staticProperty"
                                               auto-complete-static-property="staticProperty"></domain-concept-input>
                     </div>
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
                         <mapping-property-unary static-property="staticProperty"></mapping-property-unary>
                     </div>
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
                         <mapping-property-nary static-property="staticProperty"></mapping-property-nary>
                     </div>
-                    <div ng-show="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
                         <matching-property static-property="staticProperty"></matching-property>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
         </div>
         <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
             <div layout="column" class="customize-item-main">
-                <div ng-show="outputStrategy.type == 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
+                <div ng-if="outputStrategy.type == 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
 
                     <div class="customize-item-title" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">
@@ -83,7 +83,7 @@
                     </div>
 
                 </div>
-                <div ng-show="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
+                <div ng-if="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
 
                     <div class="customize-item-title" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">

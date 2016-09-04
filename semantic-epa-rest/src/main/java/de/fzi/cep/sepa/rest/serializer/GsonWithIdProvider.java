@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.rest.serializer;
 import com.google.gson.Gson;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
+import de.fzi.sepa.model.client.util.Utils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -21,6 +22,6 @@ public class GsonWithIdProvider extends GsonJerseyProvider {
 
     @Override
     protected Gson getGsonSerializer() {
-        return GsonSerializer.getGsonWithIds();
+        return Utils.getGson();
     }
 }

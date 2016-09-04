@@ -119,7 +119,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
 		}
-		return ok(constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification()));
+		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 	
 	@Path("{id}/jsonld")

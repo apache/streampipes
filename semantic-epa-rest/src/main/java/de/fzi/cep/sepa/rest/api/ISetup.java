@@ -1,12 +1,16 @@
 package de.fzi.cep.sepa.rest.api;
 
+import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
+
+import javax.ws.rs.core.Response;
+
 public interface ISetup {
 
-	String isConfigured();
+	Response isConfigured();
 
-	String configure(String json);
+	Response configure(WebappConfigurationSettings settings);
 
-	String getConfiguration();
+	Response getConfiguration();
 
-	String updateConfiguration(String json);
+	Response updateConfiguration(WebappConfigurationSettings settings);
 }

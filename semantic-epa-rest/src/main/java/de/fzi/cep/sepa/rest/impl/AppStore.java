@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.appstore.shared.BundleInfo;
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
@@ -17,31 +18,31 @@ public class AppStore extends AbstractRestInterface {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAvailableApps() {
-		return toJson(Operations.getAvailableApps());
+	public Response getAvailableApps() {
+		return ok(Operations.getAvailableApps());
 	}
 	
 	@POST
 	@Path("/install")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String installApp(@PathParam("username") String username, String json) {
-		return toJson(Operations.installApp(username, fromJson(json, BundleInfo.class)));
+	public Response installApp(@PathParam("username") String username, BundleInfo bundleInfo) {
+		return ok(Operations.installApp(username, bundleInfo));
 	}
 	
 	@POST
 	@Path("/uninstall")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String uninstallApp(@PathParam("username") String username, String json) {
-		return toJson(Operations.uninstallApp(username, fromJson(json, BundleInfo.class)));
+	public Response uninstallApp(@PathParam("username") String username, BundleInfo bundleInfo) {
+		return ok(Operations.uninstallApp(username, bundleInfo));
 	}
 	
 	@GET
 	@Path("/pods")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTargetPods() {
-		return toJson(ConfigurationManager.getWebappConfigurationFromProperties().getPodUrls());
+	public Response getTargetPods() {
+		return ok(ConfigurationManager.getWebappConfigurationFromProperties().getPodUrls());
 	}
 	
 }
