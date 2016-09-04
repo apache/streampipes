@@ -6,7 +6,7 @@ angular.module('streamPipesApp')
             scope : {
                 staticProperty : "="
             },
-            controller: function($scope, $element) {
+            link: function ($scope) {
 
                 $scope.toggle = function(property, staticProperty) {
                     if ($scope.exists(property, staticProperty)) {
@@ -18,19 +18,20 @@ angular.module('streamPipesApp')
 
                 $scope.exists = function(property, staticProperty) {
                     if (!staticProperty.properties.mapsTo) return false;
-                    return staticProperty.properties.mapsTo.indexOf(property.properties.elementName) > -1;
+                    return staticProperty.properties.mapsTo.indexOf(property.properties.elementId) > -1;
                 }
 
                 var add = function(property, staticProperty) {
                     if (!staticProperty.properties.mapsTo) {
                         staticProperty.properties.mapsTo = [];
                     }
-                    staticProperty.properties.mapsTo.push(property.properties.elementName);
+                    staticProperty.properties.mapsTo.push(property.properties.elementId);
                     console.log(staticProperty);
                 }
 
                 var remove = function(property, staticProperty) {
-                    var index = staticProperty.properties.mapsTo.indexOf(property.elementName);
+                    var index = staticProperty.properties.mapsTo.indexOf(property.properties.elementId);
+                    console.log(index);
                     staticProperty.properties.mapsTo.splice(index, 1);
                 }
 
@@ -38,6 +39,7 @@ angular.module('streamPipesApp')
                     return $scope.staticProperty.properties.mapsTo &&
                         $scope.staticProperty.properties.mapsTo.length > 0;
                 }
+                
             }
         }
 

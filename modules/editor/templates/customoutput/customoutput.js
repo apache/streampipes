@@ -6,7 +6,7 @@ angular.module('streamPipesApp')
             scope : {
                 outputStrategy : "="
             },
-            controller: function($scope, $element) {
+            link: function ($scope) {
                 $scope.toggle = function(property, outputStrategy) {
                     if ($scope.exists(property, outputStrategy)) {
                         remove(property, outputStrategy);
@@ -36,6 +36,7 @@ angular.module('streamPipesApp')
                     return $scope.outputStrategy.properties.eventProperties &&
                         $scope.outputStrategy.properties.eventProperties.length > 0;
                 }
+
             }
         }
 
