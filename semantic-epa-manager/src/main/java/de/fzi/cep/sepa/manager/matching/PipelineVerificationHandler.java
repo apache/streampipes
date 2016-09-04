@@ -102,6 +102,7 @@ public class PipelineVerificationHandler {
             List<String> connectedTo = rdfRootElement.getConnectedTo();
             String domId = rdfRootElement.getDOM();
 
+
             for (int i = 0; i < connectedTo.size(); i++) {
                 NamedSEPAElement element = TreeUtils.findSEPAElement(rdfRootElement
                         .getConnectedTo().get(i), pipeline.getSepas(), pipeline
@@ -114,15 +115,15 @@ public class PipelineVerificationHandler {
                         SepaInvocation ancestor = (SepaInvocation) TreeUtils.findByDomId(
                                 connectedTo.get(i), invocationGraphs);
 
-                        updateStaticProperties(ancestor.getOutputStream());
-                        updateOutputStrategy(ancestor.getOutputStream());
+                        updateStaticProperties(ancestor.getOutputStream(), i);
+                        updateOutputStrategy(ancestor.getOutputStream(), i);
 
                     } else if (element instanceof EventStream) {
 
                         EventStream stream = (EventStream) element;
 
-                        updateStaticProperties(stream);
-                        updateOutputStrategy(stream);
+                        updateStaticProperties(stream, i);
+                        updateOutputStrategy(stream, i);
 
                     }
 
@@ -142,34 +143,38 @@ public class PipelineVerificationHandler {
         return this;
     }
 
-    private void updateStaticProperties(EventStream stream) {
+    private void updateStaticProperties(EventStream stream, Integer count) {
 
-        rdfRootElement.getStaticProperties().stream().filter(property -> property instanceof MappingProperty).forEach(property -> {
-            try {
-                MappingProperty mappingProperty = (MappingProperty) property;
-                mappingProperty.setMapsFromOptions(new ArrayList<>());
+        rdfRootElement
+                .getStaticProperties()
+                .stream()
+                .filter(property -> property instanceof MappingProperty)
+                .forEach(property -> {
+                    try {
+                        MappingProperty mappingProperty = (MappingProperty) property;
+                        mappingProperty.setMapsFromOptions(new ArrayList<>());
 
-                if (mappingProperty.getMapsFrom() != null) {
-                    ((MappingProperty) property)
-                            .setMapsFromOptions(findSupportedEventProperties(stream,
-                                    rdfRootElement.getStreamRequirements(),
-                                    mappingProperty.getMapsFrom()));
-                } else {
-                    for (EventProperty streamProperty : stream
-                            .getEventSchema().getEventProperties()) {
-
-                        if ((streamProperty instanceof EventPropertyPrimitive) || streamProperty instanceof EventPropertyList) {
-                            mappingProperty.getMapsFromOptions().add(streamProperty);
+                        if (mappingProperty.getMapsFrom() != null) {
+                            ((MappingProperty) property)
+                                    .setMapsFromOptions(findSupportedEventProperties(stream,
+                                            rdfRootElement.getStreamRequirements(),
+                                            mappingProperty.getMapsFrom()));
                         } else {
-                            mappingProperty.getMapsFromOptions().addAll(addNestedProperties((EventPropertyNested) streamProperty));
-                        }
-                    }
-                }
+                            for (EventProperty streamProperty : stream
+                                    .getEventSchema().getEventProperties()) {
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+                                if ((streamProperty instanceof EventPropertyPrimitive) || streamProperty instanceof EventPropertyList) {
+                                    mappingProperty.getMapsFromOptions().add(streamProperty);
+                                } else {
+                                    mappingProperty.getMapsFromOptions().addAll(addNestedProperties((EventPropertyNested) streamProperty));
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private List<EventProperty> findSupportedEventProperties(EventStream streamOffer, List<EventStream> streamRequirements, URI mapsFrom) {
@@ -179,7 +184,8 @@ public class PipelineVerificationHandler {
         return new MappingPropertyCalculator().matchesProperties(streamOffer.getEventSchema().getEventProperties(), mapsFromProperty);
     }
 
-    private void updateOutputStrategy(EventStream stream) {
+    private void updateOutputStrategy(EventStream stream, Integer count) {
+
         if (rdfRootElement instanceof SepaInvocation) {
             ((SepaInvocation) rdfRootElement)
                     .getOutputStrategies()
@@ -187,7 +193,17 @@ public class PipelineVerificationHandler {
                     .filter(strategy -> strategy instanceof CustomOutputStrategy)
                     .forEach(strategy -> {
                         CustomOutputStrategy outputStrategy = (CustomOutputStrategy) strategy;
-                        outputStrategy.setProvidesProperties(stream.getEventSchema().getEventProperties());
+                        if (count == 0) {
+                            outputStrategy.setProvidesProperties(new ArrayList<>());
+                        }
+                        if (outputStrategy.isOutputRight() && count > 0)
+                            outputStrategy.setProvidesProperties(stream.getEventSchema().getEventProperties());
+                        else {
+                            if (outputStrategy.getProvidesProperties() == null) {
+                                outputStrategy.setProvidesProperties(new ArrayList<>());
+                            }
+                            outputStrategy.getProvidesProperties().addAll(stream.getEventSchema().getEventProperties());
+                        }
                     });
 
             ((SepaInvocation) rdfRootElement)

@@ -1,15 +1,15 @@
 angular.module('streamPipesApp')
     .directive('freetext', function ($interval) {
         return {
-            restrict : 'E',
-            templateUrl : 'modules/editor/templates/freetext/freetext.tmpl.html',
-            scope : {
-                staticProperty : "="
+            restrict: 'E',
+            templateUrl: 'modules/editor/templates/freetext/freetext.tmpl.html',
+            scope: {
+                staticProperty: "="
             },
-            controller: function($scope, $element) {
+            link: function ($scope) {
 
 
-                $scope.staticProperty.validator = function() {
+                $scope.staticProperty.validator = function () {
                     return $scope.staticProperty.properties.value && $scope.staticProperty.properties.value != "";
                 }
             }

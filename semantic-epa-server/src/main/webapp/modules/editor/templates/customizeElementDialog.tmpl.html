@@ -53,7 +53,7 @@
                     <div ng-show="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
                         <any static-property="staticProperty"></any>
                     </div>
-                    <div ng-if="staticProperty.input.type == 'DomainConceptInput'">
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
                         <domain-concept-input static-property="staticProperty"
                                               auto-complete-static-property="staticProperty"></domain-concept-input>
                     </div>
@@ -71,7 +71,7 @@
         </div>
         <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
             <div layout="column" class="customize-item-main">
-                <div ng-show="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
+                <div ng-show="outputStrategy.type == 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
 
                     <div class="customize-item-title" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">

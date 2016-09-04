@@ -6,8 +6,50 @@ angular.module('streamPipesApp')
             scope : {
                 staticProperty : "="
             },
-            controller: function($scope, $element) {
+            link: function($scope) {
 
+                $scope.staticProperty.properties.currentSelection;
+
+                var loadSavedProperty = function() {
+                    angular.forEach($scope.staticProperty.properties.options, function(option) {
+                        if (option.selected) {
+                            $scope.currentSelection = option;
+                        }
+                    });
+                }
+
+                $scope.toggleOption = function(option, options) {
+                    console.log(option);
+                    angular.forEach(options, function(o) {
+                        if (o.elementId == option.elementId) {
+                            o.selected = true;
+                        } else {
+                            o.selected = false;
+                        }
+                    });
+                }
+
+                $scope.exists = function(option, options) {
+                    angular.forEach(options, function(o) {
+                        if (o.elementId == option.elementId) {
+                            if (o.selected) return true;
+                            return false;
+                        }
+                    });
+                }
+
+                $scope.staticProperty.validator = function() {
+                    return selected($scope.staticProperty.properties.options);
+                }
+
+                var selected = function(options) {
+                    angular.forEach(options, function(o) {
+                        if (o.selected) return true;
+                    });
+                    return false;
+                }
+                
+                loadSavedProperty();
             }
         }
 

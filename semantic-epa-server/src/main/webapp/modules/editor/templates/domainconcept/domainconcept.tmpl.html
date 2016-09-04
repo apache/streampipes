@@ -1,4 +1,4 @@
-<b>Required type: {{staticProperty.input.properties.requiredClass}}</b>
+<b>Required type: {{staticProperty.properties.requiredClass}}</b>
 <div layout="column">
     <div>
         Instance search:
@@ -10,7 +10,7 @@
                 md-selected-item="selectedItem"
                 md-search-text-change="searchTextChange(searchText)"
                 md-search-text="searchText"
-                md-selected-item-change="selectedItemChange(item, autoCompleteStaticProperty.elementId, staticProperty.input.properties.supportedProperties)"
+                md-selected-item-change="selectedItemChange(item, autoCompleteStaticProperty.elementId, staticProperty.properties.supportedProperties)"
                 md-items="item in querySearch(searchText, autoCompleteStaticProperty.elementId)"
                 md-item-text="item.label"
                 md-min-length="0"
@@ -24,7 +24,7 @@
         </md-autocomplete>
     </div>
 </div>
-<div ng-repeat="supportedProperty in staticProperty.input.properties.supportedProperties">
+<div ng-repeat="supportedProperty in staticProperty.properties.supportedProperties">
     <md-input-container flex="100" layout="column"> <label>{{supportedProperty.propertyId}}</label>
         <input name="{{supportedProperty.elementId}}" ng-model="supportedProperty.value"/>
     </md-input-container>

@@ -443,7 +443,6 @@ angular.module('streamPipesApp')
                     .success(function (sepas) {
                         $.each(sepas, function (i, sepa) {
                             sepa.type = 'sepa';
-                            console.log(sepa);
                         });
                         $scope.currentElements = sepas;
                         $timeout(function () {
@@ -574,7 +573,7 @@ angular.module('streamPipesApp')
             };
             $scope.actionDropped = function ($newElement, endpoints) {
                 $scope.isActionInAssembly = true;
-console.log($newElement.data("JSON"));
+                console.log($newElement.data("JSON"));
                 $newElement
                     .addClass("connectable action");
 
@@ -672,7 +671,6 @@ console.log($newElement.data("JSON"));
                             .success(function (data) {
                                 if (data.success) {
                                     info.targetEndpoint.setType("token");
-                                    //TODO Objekt im Backend �ndern
                                     modifyPipeline(data.pipelineModifications);
                                     for (var i = 0, sepa; sepa = $rootScope.state.currentPipeline.sepas[i]; i++) {
                                         var id = "#" + sepa.DOM;
@@ -1267,7 +1265,7 @@ console.log($newElement.data("JSON"));
                     if ($(id) !== "undefined") {
                         $(id).data("JSON").staticProperties = modification.staticProperties;
 
-                            $(id).data("JSON").outputStrategies = modification.outputStrategies;
+                        $(id).data("JSON").outputStrategies = modification.outputStrategies;
 
                     }
                 }
@@ -1282,7 +1280,7 @@ console.log($newElement.data("JSON"));
             }
 
             function isFullyConnected(element) {
-                return $(element).data("JSON").inputNodes == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputNodes;
+                return $(element).data("JSON").inputStreams == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
             }
 
             function addAutoComplete(input, datatype) {
@@ -1898,7 +1896,6 @@ function MatchingErrorController($scope, $rootScope, $mdDialog, elementData) {
 
 function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint, restApi) {
 
-
     $scope.selectedElement = elementData.data("JSON");
     $scope.selection = [];
     $scope.matchingSelectionLeft = [];
@@ -1931,36 +1928,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         return info;
     }
 
-    var writeOptions = function (options, selection, elementId) {
-        var anyMatch = false;
-        angular.forEach(options, function (option) {
-            if (option.selected) {
-                selection[elementId] = option.elementId;
-                anyMatch = true;
-            }
-        });
-        console.log(options[0]);
-        if (!anyMatch) $scope.selection[elementId] = options[0].elementId;
-    }
-
-    angular.forEach($scope.selectedElement.staticProperties, function (item) {
-
-        console.log($scope.selectedElement.staticProperties);
-        if (item.properties.staticPropertyType == 'OneOfStaticProperty' || item.properties.staticPropertyType == 'SelectFormInput') {
-            writeOptions(item.properties.options, $scope.selection, item.elementId);
-        }
-        if (item.properties.staticPropertyType == 'RadioGroupInput') {
-            writeOptions(item.properties.optionLeft, $scope.matchingSelectionLeft, item.elementId);
-            writeOptions(item.properties.optionRight, $scope.matchingSelectionRight, item.elementId);
-        }
-        if (item.properties.staticPropertyType == 'ReplaceOutputInput') {
-            angular.forEach(item.properties.propertyMapping, function (pm) {
-                writeOptions(pm.options, $scope.selection, pm.elementId);
-            });
-        }
-    });
-
-
     $scope.hide = function () {
         $mdDialog.hide();
     };
@@ -1983,39 +1950,22 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
      */
     $scope.saveProperties = function () {
 
-        $scope.invalid = false;
-        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
-        //     if ($scope.selection[item.elementId] != undefined) {
-        //         angular.forEach(item.input.properties.options, function (option) {
-        //             if (option.elementId == $scope.selection[item.elementId])
-        //                 option.selected = true;
-        //         });
-        //     }
-        //     if (item.type == 'REPLACE_OUTPUT') {
-        //         angular.forEach(item.input.properties.propertyMapping, function (pm) {
-        //             if ($scope.selection[pm.elementId] != undefined) {
-        //                 angular.forEach(pm.input.options, function (o) {
-        //                     if (o.elementId == $scope.selection[pm.elementId])
-        //                         o.selected = true;
-        //                 })
-        //             }
-        //         })
-        //     }
-        // });
-        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
-        //     if ($scope.matchingSelectionLeft[item.elementId] != undefined) {
-        //         angular.forEach(item.input.properties.optionLeft, function (option) {
-        //             if (option.elementId == $scope.matchingSelectionLeft[item.elementId])
-        //                 option.selected = true;
-        //         });
-        //         angular.forEach(item.input.properties.optionRight, function (option) {
-        //             if (option.elementId == $scope.matchingSelectionRight[item.elementId])
-        //                 option.selected = true;
-        //         });
-        //     }
-        // });
+        angular.forEach($scope.selectedElement.staticProperties, function (item) {
+                if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
+                    console.log(item);
+                    angular.forEach(item.properties.options, function (option) {
+                            if (!item.properties.currentSelection) {
+                                if (option.elementId == item.properties.currentSelection.elementId) {
+                                    option.selected = true;
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        )
+        ;
 
-        console.log($scope.selectedElement.staticProperties);
         if ($scope.validate()) {
             $rootScope.state.currentElement.data("options", true);
             $rootScope.state.currentElement.data("JSON").staticProperties = $scope.selectedElement.staticProperties;
@@ -2031,39 +1981,35 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         $scope.validationErrors = [];
         var valid = true;
 
-        angular.forEach($scope.selectedElement.staticProperties, function(staticProperty) {
-            //valid = staticProperty.validator();
-            console.log("error");
+        angular.forEach($scope.selectedElement.staticProperties, function (staticProperty) {
+            if (staticProperty.properties.staticPropertyType === 'OneOfStaticProperty' ||
+                staticProperty.properties.staticPropertyType === 'AnyStaticProperty') {
+                var anyOccurrence = false;
+                angular.forEach(staticProperty.properties.options, function (option) {
+                    if (option.selected) anyOccurrence = true;
+                });
+                if (!anyOccurrence) valid = false;
+            } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
+                if (!staticProperty.properties.value) valid = false;
+                if (staticProperty.properties.requiredDatatype) {
+                    if (!$scope.typeCheck(staticProperty.properties.value)) {
+                        valid = false;
+                        $scope.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
+                    }
+                }
+            }
         });
 
-        angular.forEach($scope.selectedElement.outputStrategies, function(strategy) {
-            console.log(strategy);
-            //valid = strategy.validator();
+        angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
+            if (strategy.type == 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy') {
+                if (!strategy.properties.eventProperties && !strategy.properties.eventProperties.length > 0) {
+                    valid = false;
+                }
+            }
+            // TODO add replace output strategy
         });
 
-            console.log("Valid: " +valid);
-
-        // TODO
-        // angular.forEach($scope.selectedElement.staticProperties, function (item) {
-        //     if (item.input.type == 'RadioInput' || item.input.type == 'SelectFormInput') {
-        //         var optionSelected = false;
-        //         angular.forEach(item.input.properties.options, function (option) {
-        //             if (option.selected) optionSelected = true;
-        //         });
-        //         if (!optionSelected) valid = false;
-        //     }
-        //     else if (item.input.type == 'TextInput' || item.input.type == 'SliderInput') {
-        //         if (item.input.properties.value == '' || item.input.properties.value == undefined) valid = false;
-        //         if (item.input.properties.datatype != undefined) {
-        //             if (!$scope.typeCheck(item.input.properties.value, item.input.properties.datatype)) {
-        //                 valid = false;
-        //                 $scope.validationErrors.push(item.name + " must be of type " + item.input.properties.datatype);
-        //             }
-        //
-        //         }
-        //     }
-        //
-        // });
+        console.log("Valid: " + valid);
         return valid;
     }
 

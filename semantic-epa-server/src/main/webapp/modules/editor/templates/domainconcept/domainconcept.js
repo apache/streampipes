@@ -7,7 +7,7 @@ angular.module('streamPipesApp')
             staticProperty : "=",
             autoCompleteStaticProperty : "="
         },
-        controller: function($scope, $element)  {
+        link: function ($scope) {
 
             $scope.querySearch = querySearch;
             $scope.selectedItemChange = selectedItemChange;
@@ -17,9 +17,9 @@ angular.module('streamPipesApp')
 
             $scope.loadDomainConcepts = function(item) {
                 var query = {};
-                query.requiredClass = item.input.properties.requiredClass;
+                query.requiredClass = item.properties.requiredClass;
                 query.requiredProperties = [];
-                angular.forEach(item.input.properties.supportedProperties, function(p) {
+                angular.forEach(item.properties.supportedProperties, function(p) {
                     var propertyObj = {};
                     propertyObj.propertyId = p.propertyId;
                     query.requiredProperties.push(propertyObj);
@@ -73,7 +73,10 @@ angular.module('streamPipesApp')
             }
 
             $scope.loadDomainConcepts($scope.autoCompleteStaticProperty);
-
+            
+            $scope.staticProperty.validator = function() {
+                return true;
+            }
         }
     }
 });
