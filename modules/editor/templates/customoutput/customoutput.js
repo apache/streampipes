@@ -31,12 +31,7 @@ angular.module('streamPipesApp')
                     var index = outputStrategy.properties.eventProperties.indexOf(property);
                     outputStrategy.properties.eventProperties.splice(index, 1);
                 }
-
-                $scope.outputStrategy.validator = function() {
-                    return $scope.outputStrategy.properties.eventProperties &&
-                        $scope.outputStrategy.properties.eventProperties.length > 0;
-                }
-
+                
             }
         }
 

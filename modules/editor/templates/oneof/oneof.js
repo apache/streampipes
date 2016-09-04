@@ -13,7 +13,7 @@ angular.module('streamPipesApp')
                 var loadSavedProperty = function() {
                     angular.forEach($scope.staticProperty.properties.options, function(option) {
                         if (option.selected) {
-                            $scope.currentSelection = option;
+                            $scope.staticProperty.properties.currentSelection = option;
                         }
                     });
                 }
@@ -38,16 +38,6 @@ angular.module('streamPipesApp')
                     });
                 }
 
-                $scope.staticProperty.validator = function() {
-                    return selected($scope.staticProperty.properties.options);
-                }
-
-                var selected = function(options) {
-                    angular.forEach(options, function(o) {
-                        if (o.selected) return true;
-                    });
-                    return false;
-                }
                 
                 loadSavedProperty();
             }
