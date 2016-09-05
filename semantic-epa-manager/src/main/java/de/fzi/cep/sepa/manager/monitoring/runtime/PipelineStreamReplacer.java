@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;

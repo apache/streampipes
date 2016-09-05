@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.manager.monitoring.runtime;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.impl.quality.MeasurementCapability;

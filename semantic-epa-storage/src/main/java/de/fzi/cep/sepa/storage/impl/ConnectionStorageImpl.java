@@ -14,16 +14,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import de.fzi.cep.sepa.messages.ElementRecommendation;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendation;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
-public class ConnectionStorageImpl extends Storage<ElementRecommendation> implements ConnectionStorage {
+public class ConnectionStorageImpl extends Storage<PipelineElementRecommendation> implements ConnectionStorage {
 
 
 	public ConnectionStorageImpl() {
-		super(ElementRecommendation.class);
+		super(PipelineElementRecommendation.class);
 	}
 	@Override
 	public void addConnection(Connection connection) {
@@ -33,7 +33,7 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 	}
 
 	@Override
-	public List<ElementRecommendation> getRecommendedElements(String from) {
+	public List<PipelineElementRecommendation> getRecommendedElements(String from) {
 		// doesn't work as required object array is not created by lightcouch
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
@@ -50,10 +50,10 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 		return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
 
-	private List<ElementRecommendation> handleResponse(JsonObject jsonObject) {
-		List<ElementRecommendation> recommendations = new ArrayList<>();
+	private List<PipelineElementRecommendation> handleResponse(JsonObject jsonObject) {
+		List<PipelineElementRecommendation> recommendations = new ArrayList<>();
 		JsonArray jsonArray = jsonObject.get("rows").getAsJsonArray();
-		jsonArray.forEach(resultObj -> recommendations.add(new ElementRecommendation(resultObj.getAsJsonObject().get("key").getAsJsonArray().get(1).getAsString(), "", "")));
+		jsonArray.forEach(resultObj -> recommendations.add(new PipelineElementRecommendation(resultObj.getAsJsonObject().get("key").getAsJsonArray().get(1).getAsString(), "", "")));
 		return recommendations;
 	}
 

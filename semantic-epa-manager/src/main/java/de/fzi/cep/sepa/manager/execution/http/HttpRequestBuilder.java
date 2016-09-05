@@ -2,21 +2,18 @@ package de.fzi.cep.sepa.manager.execution.http;
 
 import java.io.IOException;
 
-import org.apache.http.Consts;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.messages.PipelineElementStatus;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementStatus;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
-import org.apache.http.params.CoreProtocolPNames;
 
 public class HttpRequestBuilder {
 

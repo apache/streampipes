@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.rest.api.IOntologyContext;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 

@@ -3,8 +3,7 @@ package de.fzi.cep.sepa.manager.matching.v2;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.messages.MatchingResultMessage;
-import de.fzi.cep.sepa.model.ConsumableSEPAElement;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;

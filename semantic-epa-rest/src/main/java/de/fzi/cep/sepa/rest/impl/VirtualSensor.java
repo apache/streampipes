@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
 import de.fzi.cep.sepa.rest.api.IVirtualSensor;
-import de.fzi.sepa.model.client.util.Utils;
+import de.fzi.cep.sepa.model.client.util.Utils;
 
 @Path("/v2/users/{username}/block")
 public class VirtualSensor extends AbstractRestInterface implements IVirtualSensor {

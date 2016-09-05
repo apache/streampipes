@@ -19,13 +19,14 @@ import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.*;
 
-import de.fzi.cep.sepa.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -64,7 +65,6 @@ public class PipelineElementImport extends AbstractRestInterface {
 	}
 
 	private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
-System.out.println(uri);
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
 			String payload = parseURIContent(uri);

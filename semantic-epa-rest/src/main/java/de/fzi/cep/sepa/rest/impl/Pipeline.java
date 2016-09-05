@@ -20,16 +20,15 @@ import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.Notification;
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.Notifications;
-import de.fzi.cep.sepa.messages.PipelineOperationStatus;
-import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.client.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineOperationStatus;
+import de.fzi.cep.sepa.model.client.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import de.fzi.cep.sepa.rest.api.IPipeline;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/users/{username}/pipelines")
 public class Pipeline extends AbstractRestInterface implements IPipeline {
@@ -108,7 +107,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
-		de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
+		de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = userService.getPipeline(username, pipelineId);
 		PipelineOperationStatus status = Operations.startPipeline(pipeline);
 		return ok(status);
 		} catch (Exception e)
@@ -125,7 +124,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
-			de.fzi.cep.sepa.model.client.Pipeline pipeline = userService.getPipeline(username, pipelineId);
+			de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = userService.getPipeline(username, pipelineId);
 			PipelineOperationStatus status = Operations.stopPipeline(pipeline);
 			return ok(status);
 			} catch (Exception e)
@@ -137,7 +136,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
-	public Response addPipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.Pipeline pipeline)
+	public Response addPipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline)
 	{
 		String pipelineId = UUID.randomUUID().toString();
 		pipeline.setPipelineId(pipelineId);
@@ -154,7 +153,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
-	public Response recommend(de.fzi.cep.sepa.model.client.Pipeline pipeline)
+	public Response recommend(de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline)
 	{
 		try {
 			return ok(Operations.findRecommendedElements(pipeline));
@@ -173,7 +172,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
-	public Response update(de.fzi.cep.sepa.model.client.Pipeline pipeline)
+	public Response update(de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline)
 	{
 		try {
 			return ok(Operations.validatePipeline(pipeline, true));
@@ -199,7 +198,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response overwritePipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+	public Response overwritePipeline(@PathParam("username") String username, de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline) {
 		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 		return statusMessage(Notifications.success("Pipeline modified"));
 	}

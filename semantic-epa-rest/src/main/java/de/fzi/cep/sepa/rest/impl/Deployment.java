@@ -12,7 +12,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openrdf.rio.RDFHandlerException;
 
@@ -21,8 +20,8 @@ import com.clarkparsia.empire.annotation.InvalidRdfException;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.model.client.deployment.ElementType;

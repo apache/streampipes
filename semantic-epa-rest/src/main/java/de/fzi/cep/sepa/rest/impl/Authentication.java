@@ -24,13 +24,11 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
-import com.google.gson.Gson;
-
 import de.fzi.cep.sepa.commons.config.ConfigurationManager;
-import de.fzi.cep.sepa.messages.ErrorMessage;
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.Notifications;
-import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.client.messages.ErrorMessage;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.client.user.RegistrationData;
 import de.fzi.cep.sepa.model.client.user.Role;
 import de.fzi.cep.sepa.model.client.user.ShiroAuthenticationRequest;
@@ -39,7 +37,6 @@ import de.fzi.cep.sepa.model.client.user.ShiroAuthenticationResponseFactory;
 import de.fzi.cep.sepa.model.client.user.User;
 import de.fzi.cep.sepa.rest.api.IAuthentication;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/admin")
 public class Authentication extends AbstractRestInterface implements IAuthentication {

@@ -1,26 +1,21 @@
 package de.fzi.cep.sepa.manager.execution.http;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import org.lightcouch.DocumentConflictException;
 
-import de.fzi.cep.sepa.commons.GenericTree;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
 import de.fzi.cep.sepa.manager.execution.status.SepMonitoringManager;
-import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.manager.util.TemporaryGraphStorage;
-import de.fzi.cep.sepa.messages.PipelineOperationStatus;
-import de.fzi.cep.sepa.messages.PipelineStatusMessage;
-import de.fzi.cep.sepa.messages.PipelineStatusMessageType;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineOperationStatus;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineStatusMessage;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineStatusMessageType;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.RunningVisualization;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
@@ -89,7 +84,7 @@ public class PipelineExecutor {
 		return status;
 	}
 	
-	private void setPipelineStarted(de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+	private void setPipelineStarted(Pipeline pipeline) {
 		System.out.println("Updating pipeline: " +pipeline.getName());
 		pipeline.setRunning(true);
 		pipeline.setStartedAt(new Date().getTime());
@@ -101,7 +96,7 @@ public class PipelineExecutor {
 		}
 	}
 	
-	private void setPipelineStopped(de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+	private void setPipelineStopped(Pipeline pipeline) {
 		pipeline.setRunning(false);
 		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 	}

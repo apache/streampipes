@@ -9,7 +9,7 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.messages.ProaSenseNotificationMessage;
+import de.fzi.cep.sepa.model.client.messages.ProaSenseNotificationMessage;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import eu.proasense.internal.RecommendationEvent;
 

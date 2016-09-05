@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.storage.api;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.messages.ProaSenseNotificationMessage;
+import de.fzi.cep.sepa.model.client.messages.ProaSenseNotificationMessage;
 
 public interface NotificationStorage {
 

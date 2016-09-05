@@ -3,15 +3,13 @@ package de.fzi.cep.sepa.storage.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.RunningVisualization;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
 import org.apache.shiro.SecurityUtils;
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

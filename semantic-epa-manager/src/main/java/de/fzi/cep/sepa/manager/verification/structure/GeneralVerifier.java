@@ -3,7 +3,7 @@ package de.fzi.cep.sepa.manager.verification.structure;
 import java.util.List;
 
 import de.fzi.cep.sepa.manager.verification.messages.VerificationResult;
-import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 
 public class GeneralVerifier<T extends NamedSEPAElement> extends AbstractVerifier {

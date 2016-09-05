@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.rest.api.IVisualization;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/visualizations")
 public class Visualization extends AbstractRestInterface implements IVisualization {

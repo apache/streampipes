@@ -2,8 +2,7 @@ package de.fzi.cep.sepa.storage.api;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.RunningVisualization;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
 
 public interface PipelineStorage {

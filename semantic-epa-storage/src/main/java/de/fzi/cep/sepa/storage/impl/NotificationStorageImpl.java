@@ -7,7 +7,7 @@ import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fzi.cep.sepa.messages.ProaSenseNotificationMessage;
+import de.fzi.cep.sepa.model.client.messages.ProaSenseNotificationMessage;
 import de.fzi.cep.sepa.storage.api.NotificationStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 

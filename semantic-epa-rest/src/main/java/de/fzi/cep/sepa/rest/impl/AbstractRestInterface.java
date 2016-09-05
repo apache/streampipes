@@ -16,11 +16,11 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
-import de.fzi.cep.sepa.messages.ErrorMessage;
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notification;
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.SuccessMessage;
+import de.fzi.cep.sepa.model.client.messages.ErrorMessage;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.SuccessMessage;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import de.fzi.cep.sepa.model.util.GsonSerializer;
@@ -31,7 +31,6 @@ import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.impl.UserStorage;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.Transformer;
-import de.fzi.sepa.model.client.util.Utils;
 
 import javax.ws.rs.core.Response;
 

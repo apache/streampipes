@@ -9,9 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.sepa.model.client.util.Utils;
 
 @Path("/v2/users/{username}/pipelinecategories")
 public class PipelineCategory extends AbstractRestInterface {
@@ -27,7 +26,7 @@ public class PipelineCategory extends AbstractRestInterface {
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCategory(@PathParam("username") String username, de.fzi.cep.sepa.model.client.PipelineCategory pipelineCategory) {
+	public Response addCategory(@PathParam("username") String username, de.fzi.cep.sepa.model.client.pipeline.PipelineCategory pipelineCategory) {
 		boolean success = StorageManager
 				.INSTANCE
 				.getPipelineCategoryStorageApi()

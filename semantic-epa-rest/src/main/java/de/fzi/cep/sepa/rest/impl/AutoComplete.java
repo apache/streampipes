@@ -14,8 +14,8 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
 
-import de.fzi.cep.sepa.messages.AutocompleteItem;
-import de.fzi.cep.sepa.messages.AutocompleteResult;
+import de.fzi.cep.sepa.model.client.messages.AutocompleteItem;
+import de.fzi.cep.sepa.model.client.messages.AutocompleteResult;
 import de.fzi.cep.sepa.model.client.ontology.OntologyQuery;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.ontology.QueryExecutor;

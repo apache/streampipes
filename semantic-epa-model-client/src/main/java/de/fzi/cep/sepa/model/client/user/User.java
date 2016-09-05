@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 
 import javax.persistence.Entity;
 
