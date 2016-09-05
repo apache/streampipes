@@ -133,13 +133,7 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 				Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
 				yProperty, 8000L); // TODO reduce param overhead
 
-		try {
-			invokeEPRuntime(staticParam, MovementAnalysis::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, MovementAnalysis::new, sepa);
 
 	}
 }

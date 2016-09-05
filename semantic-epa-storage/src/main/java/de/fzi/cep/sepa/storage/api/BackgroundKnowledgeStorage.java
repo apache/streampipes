@@ -17,42 +17,42 @@ import de.fzi.cep.sepa.model.client.ontology.Property;
 
 public interface BackgroundKnowledgeStorage {
 
-	public List<OntologyNode> getClassHierarchy() throws QueryEvaluationException, RepositoryException, MalformedQueryException;
+	List<OntologyNode> getClassHierarchy() throws QueryEvaluationException, RepositoryException, MalformedQueryException;
 	
-	public List<OntologyNode> getPropertyHierarchy() throws RepositoryException, MalformedQueryException, QueryEvaluationException;
-	
-	
-	public Property getProperty(String typeId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
-	
-	public Concept getConcept(String conceptId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
-	
-	public Instance getInstance(String instanceId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
+	List<OntologyNode> getPropertyHierarchy() throws RepositoryException, MalformedQueryException, QueryEvaluationException;
 	
 	
-	public boolean addProperty(Resource resource);
+	Property getProperty(String typeId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
 	
-	public boolean addConcept(Resource resource);
+	Concept getConcept(String conceptId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
 	
-	public boolean addIndividual(Resource resource);
+	Instance getInstance(String instanceId) throws QueryEvaluationException, RepositoryException, MalformedQueryException;
 	
 	
-	public boolean updateProperty(Property property);
+	boolean addProperty(Resource resource);
 	
-	public boolean updateConcept(Concept concept);
+	boolean addConcept(Resource resource);
 	
-	public boolean updateInstance(Instance instance);
+	boolean addIndividual(Resource resource);
 	
-	public List<Namespace> getNamespaces() throws RepositoryException;
 	
-	public boolean addNamespace(Namespace namespace);
+	boolean updateProperty(Property property);
 	
-	public boolean deleteNamespace(String prefix);
+	boolean updateConcept(Concept concept);
 	
-	public boolean deleteResource(String resourceId);
+	boolean updateInstance(Instance instance);
 	
-	public OntologyQuery getOntologyResult(OntologyQuery query);
+	List<Namespace> getNamespaces() throws RepositoryException;
 	
-	public boolean initialize();
+	boolean addNamespace(Namespace namespace);
+	
+	boolean deleteNamespace(String prefix);
+	
+	boolean deleteResource(String resourceId);
+	
+	OntologyQuery getOntologyResult(OntologyQuery query);
+	
+	boolean initialize();
 	
 	
 }

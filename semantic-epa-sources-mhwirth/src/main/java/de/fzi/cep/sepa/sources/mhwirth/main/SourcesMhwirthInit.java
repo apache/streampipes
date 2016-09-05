@@ -1,13 +1,6 @@
 package de.fzi.cep.sepa.sources.mhwirth.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.container.init.ContainerModelSubmitter;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.sources.mhwirth.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.mhwirth.drillbit.DrillBitProducer;

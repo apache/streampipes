@@ -6,5 +6,5 @@ import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 
 public interface Matcher<L, R> {
 
-	public boolean match(L offer, R requirement, List<MatchingResultMessage> errorLog);
+	boolean match(L offer, R requirement, List<MatchingResultMessage> errorLog);
 }

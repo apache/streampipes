@@ -1,10 +1,5 @@
 import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
-import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
-
-import org.apache.http.client.fluent.Content;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 
 /**
  * Created by robin on 10.10.14.

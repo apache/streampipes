@@ -4,5 +4,5 @@ import java.util.function.Consumer;
 
 public interface EPConsumer extends Consumer<Object>{
 
-	public void accept(Object event);
+	void accept(Object event);
 }

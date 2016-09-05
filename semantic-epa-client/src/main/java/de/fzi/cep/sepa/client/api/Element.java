@@ -14,7 +14,6 @@ import de.fzi.cep.sepa.client.declarer.Declarer;
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
-import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import de.fzi.cep.sepa.client.transform.Transformer;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;

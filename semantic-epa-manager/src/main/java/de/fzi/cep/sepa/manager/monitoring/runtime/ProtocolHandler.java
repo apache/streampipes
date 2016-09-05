@@ -5,7 +5,7 @@ import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 
 public interface ProtocolHandler {
 
-	public IMessagePublisher getPublisher();
-	public IMessageListener getConsumer();
+	IMessagePublisher getPublisher();
+	IMessageListener getConsumer();
 	
 }

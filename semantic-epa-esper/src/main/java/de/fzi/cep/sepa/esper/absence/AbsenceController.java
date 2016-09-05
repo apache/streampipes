@@ -61,13 +61,7 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 		
 		AbsenceParameters staticParam = new AbsenceParameters(sepa, selectProperties, timeWindowSize);
-		
-		try {
-			invokeEPRuntime(staticParam, Absence::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Absence::new, sepa);
 	}
 }

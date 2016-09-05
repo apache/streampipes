@@ -8,7 +8,6 @@ import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.*;
-import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.*;

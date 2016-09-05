@@ -2,8 +2,6 @@ package de.fzi.cep.sepa.sources.samples.taxi.test;
 
 import de.fzi.cep.sepa.sources.samples.taxi.NYCTaxiStream;
 
-import javax.jms.JMSException;
-
 /**
  * Created by robin on 19.03.15.
  */

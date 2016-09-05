@@ -1,26 +1,5 @@
 package de.fzi.cep.sepa.esper.filter.text;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.runtime.param.EngineParameters;
-
 public class Test {
 
 	public static void main(String[] args) throws Exception {

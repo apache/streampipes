@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface LineParser {
 
-	public Map<String, Object> parseLine(String[] line);
+	Map<String, Object> parseLine(String[] line);
 }

@@ -6,5 +6,5 @@ import de.fzi.cep.sepa.model.client.messages.Message;
 
 public interface InstallationStep {
 
-	public List<Message> install();
+	List<Message> install();
 }

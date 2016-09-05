@@ -94,13 +94,8 @@ public class NumberClassificationController extends FlatEpDeclarer<NumberClassif
 		NumberClassificationParameters staticParam = new NumberClassificationParameters(sepa, propertyName, outputProperty,
 				domainConceptData);
 
-		try {
-			invokeEPRuntime(staticParam, NumberClassification::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, NumberClassification::new, sepa);
+
 	}
 
 }

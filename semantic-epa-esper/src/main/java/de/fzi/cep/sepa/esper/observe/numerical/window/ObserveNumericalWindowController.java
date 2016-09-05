@@ -110,13 +110,8 @@ public class ObserveNumericalWindowController extends FlatEpDeclarer<ObserveNume
 		ObserveNumericalWindowParameters params = new ObserveNumericalWindowParameters(invocationGraph, valueLimit,
 				threshold, toObserve, windowType, windowSize, groupBy, messageName, averageName);
 
-		try {
-			invokeEPRuntime(params, ObserveNumericalWindow::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+		return submit(params, ObserveNumericalWindow::new, invocationGraph);
+
 	}
 
 }

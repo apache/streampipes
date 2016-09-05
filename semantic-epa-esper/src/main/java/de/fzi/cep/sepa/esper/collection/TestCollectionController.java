@@ -48,14 +48,9 @@ public class TestCollectionController extends FlatEpDeclarer<TestCollectionParam
 				.collect(Collectors.toList());
 		
 		TestCollectionParameters staticParam = new TestCollectionParameters(sepa, propertyName, domainConceptData);
-		
-		try {
-			invokeEPRuntime(staticParam, TestCollection::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, TestCollection::new, sepa);
+
 	}
 
 }

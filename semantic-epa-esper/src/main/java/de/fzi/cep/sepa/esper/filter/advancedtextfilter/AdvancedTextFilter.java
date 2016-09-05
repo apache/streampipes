@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.soda.EPStatementObjectModel;
-import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
@@ -51,7 +50,5 @@ public class AdvancedTextFilter extends EsperEventEngine<AdvancedTextFilterParam
 		}
 		return junction;
 	}
-
-	
 
 }

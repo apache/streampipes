@@ -106,13 +106,7 @@ public class CountController extends FlatEpDeclarer<CountParameter>{
 		}
 		
 		CountParameter staticParam = new CountParameter(sepa, timeWindowSize, groupBy, timeScale, selectProperties);
-		
-		try {
-			invokeEPRuntime(staticParam, Count::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Count::new, sepa);
 	}
 }

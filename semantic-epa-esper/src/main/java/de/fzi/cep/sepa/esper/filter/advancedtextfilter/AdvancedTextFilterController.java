@@ -42,13 +42,7 @@ public class AdvancedTextFilterController extends FlatEpDeclarer<AdvancedTextFil
 				.collect(Collectors.toList());
 					
 		AdvancedTextFilterParameters staticParam = new AdvancedTextFilterParameters(sepa, operation, propertyName, keywords);
-		
-		try {
-			invokeEPRuntime(staticParam, AdvancedTextFilter::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, AdvancedTextFilter::new, sepa);
 	}
 }

@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.storage.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;

@@ -91,14 +91,8 @@ public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalP
 		
 		ObserveNumericalParameters params = new ObserveNumericalParameters(invocationGraph, valueLimit, threshold, value, outputProperty);
 
+		return submit(params, ObserveNumerical::new, invocationGraph);
 
-		try {
-			invokeEPRuntime(params, ObserveNumerical::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
 	}
 
 }

@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -17,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
-
 import com.espertech.esper.client.EventBean;
 import com.google.gson.Gson;
 
@@ -30,9 +27,7 @@ import de.fzi.cep.sepa.esper.debs.c1.OutputType;
 import de.fzi.cep.sepa.esper.debs.c1.StatusEvent;
 import de.fzi.cep.sepa.esper.debs.c1.TaxiDataInputProvider;
 import de.fzi.cep.sepa.esper.debs.c2.CellDataBest;
-import de.fzi.cep.sepa.esper.debs.c2.DebsChallenge2;
 import de.fzi.cep.sepa.esper.debs.c2.DebsOutputC2;
-import de.fzi.cep.sepa.esper.enrich.grid.CellOption;
 
 public class Challenge1FileWriter implements Writer {
 	

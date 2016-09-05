@@ -165,13 +165,8 @@ public class DebsChallenge2Controller extends FlatEpDeclarer<DebsChallenge2Param
 				latProperty2Name, 
 				lngProperty2Name,
 				selectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, DebsChallenge2::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, DebsChallenge2::new, sepa);
+
 	}
 }

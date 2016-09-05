@@ -1,13 +1,11 @@
 package de.fzi.cep.sepa.hella.minshuttletime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;
-import de.fzi.cep.sepa.hella.shuttletime.MouldingMachine;
 
 
 public class MinShuttleTime extends EsperEventEngine<MinShuttleTimeParameters> {

@@ -108,14 +108,8 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		String partitionMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-partition");
 		String timestampMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-timestamp");
 		DurationOfStayParameters params = new DurationOfStayParameters(invocationGraph, geofencingData, latitudeMapping, longitudeMapping, partitionMapping, timestampMapping);
-		
-		try {
-			invokeEPRuntime(params, DurationOfStay::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, DurationOfStay::new, invocationGraph);
 	}
 
 }

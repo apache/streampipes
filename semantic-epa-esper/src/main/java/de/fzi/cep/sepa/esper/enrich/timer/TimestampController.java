@@ -80,13 +80,8 @@ public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 				sepa, 
 				appendTimePropertyName,
 				selectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, TimestampEnrichment::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, TimestampEnrichment::new, sepa);
+
 	}
 }

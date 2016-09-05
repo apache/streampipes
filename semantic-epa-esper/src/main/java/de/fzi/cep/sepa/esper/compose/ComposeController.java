@@ -62,14 +62,9 @@ public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 		}
 		
 		ComposeParameters staticParam = new ComposeParameters(sepa);
-		
-		try {
-			invokeEPRuntime(staticParam, Compose::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Compose::new, sepa);
+
 	}
 
 }
