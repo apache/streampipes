@@ -13,7 +13,7 @@ import de.fzi.cep.sepa.storage.util.Utils;
 public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
 
     public AppStorageImpl() {
-        super(Utils.getCouchDbAppStorageClient(), BundleInfo.class);
+        super(BundleInfo.class);
     }
 
     @Override
@@ -35,8 +35,10 @@ public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
     @Override
     public boolean deleteBundle(BundleInfo bundleInfo) {
         try {
+            CouchDbClient dbClient = getCouchDbClient();
             BundleInfo removeBundleInfo = dbClient.find(BundleInfo.class, bundleInfo.getId());
             dbClient.remove(removeBundleInfo);
+            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             e.printStackTrace();
@@ -50,4 +52,8 @@ public class AppStorageImpl extends Storage<BundleInfo> implements AppStorage {
         return true;
     }
 
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbAppStorageClient();
+    }
 }

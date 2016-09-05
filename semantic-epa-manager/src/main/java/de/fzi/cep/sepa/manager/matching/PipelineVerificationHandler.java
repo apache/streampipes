@@ -236,8 +236,13 @@ public class PipelineVerificationHandler {
     public PipelineVerificationHandler storeConnection() {
         String fromId = rdfRootElement.getConnectedTo().get(rdfRootElement.getConnectedTo().size() - 1);
         NamedSEPAElement sepaElement = TreeUtils.findSEPAElement(fromId, pipeline.getSepas(), pipeline.getStreams());
-
-        Connection connection = new Connection(sepaElement.getElementId(), rdfRootElement.getBelongsTo());
+        String sourceId;
+        if (sepaElement instanceof EventStream) {
+            sourceId = sepaElement.getElementId();
+        } else {
+            sourceId = ((InvocableSEPAElement) sepaElement).getBelongsTo();
+        }
+        Connection connection = new Connection(sourceId, rdfRootElement.getBelongsTo());
         StorageManager.INSTANCE.getConnectionStorageApi().addConnection(connection);
         return this;
     }

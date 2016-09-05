@@ -23,11 +23,13 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 
 
 	public ConnectionStorageImpl() {
-		super(Utils.getCouchDbConnectionClient(), ElementRecommendation.class);
+		super(ElementRecommendation.class);
 	}
 	@Override
 	public void addConnection(Connection connection) {
+		CouchDbClient dbClient = getCouchDbClient();
 		dbClient.save(connection);
+		dbClient.shutdown();
 	}
 
 	@Override
@@ -43,8 +45,9 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 	}
 	
 	private String buildQuery(String from)  {
+			CouchDbClient dbClient = getCouchDbClient();
 			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
-			return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
+		return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
 
 	private List<ElementRecommendation> handleResponse(JsonObject jsonObject) {
@@ -61,5 +64,10 @@ public class ConnectionStorageImpl extends Storage<ElementRecommendation> implem
 			e.printStackTrace();
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	protected CouchDbClient getCouchDbClient() {
+		return Utils.getCouchDbConnectionClient();
 	}
 }

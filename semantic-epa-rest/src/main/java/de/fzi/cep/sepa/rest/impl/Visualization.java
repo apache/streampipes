@@ -16,7 +16,7 @@ public class Visualization extends AbstractRestInterface implements IVisualizati
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRunningVisualizations() {
-		return ok(StorageManager.INSTANCE.getPipelineStorageAPI().getRunningVisualizations());
+		return ok(StorageManager.INSTANCE.getVisualizationStorageApi().getRunningVisualizations());
 	}
 
 }

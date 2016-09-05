@@ -13,18 +13,17 @@ import java.util.Optional;
  */
 public abstract class Storage<T> {
 
-    protected CouchDbClient dbClient;
     private Class<T> targetClass;
 
-    public Storage(CouchDbClient dbClient, Class<T> targetClass) {
-        this.dbClient = dbClient;
+    public Storage(Class<T> targetClass) {
         this.targetClass = targetClass;
     }
 
     public Optional<T> getItem(String key) {
         try {
+            CouchDbClient dbClient = getCouchDbClient();
             T result = dbClient.find(targetClass, key);
-            //dbClient.shutdown();
+            dbClient.shutdown();
             return Optional.of(result);
         } catch (NoDocumentException e) {
             return Optional.empty();
@@ -32,10 +31,11 @@ public abstract class Storage<T> {
     }
 
     public List<T> getAll() {
+        CouchDbClient dbClient = getCouchDbClient();
         List<T> allResults = dbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(targetClass);
-        //dbClient.shutdown();
+        dbClient.shutdown();
 
         if (allResults != null)
             return allResults;
@@ -45,8 +45,9 @@ public abstract class Storage<T> {
     }
 
     public boolean add(T item) {
+        CouchDbClient dbClient = getCouchDbClient();
         Response response = dbClient.save(item);
-        //dbClient.shutdown();
+        dbClient.shutdown();
         if (response.getError() != null)
             return false;
         return true;
@@ -55,9 +56,10 @@ public abstract class Storage<T> {
 
     public boolean delete(String key) {
         try {
+            CouchDbClient dbClient = getCouchDbClient();
             T result = dbClient.find(targetClass, key);
             dbClient.remove(result);
-            //dbClient.shutdown();
+            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
@@ -66,8 +68,9 @@ public abstract class Storage<T> {
 
     public boolean update(T item) {
         try {
+            CouchDbClient dbClient = getCouchDbClient();
             dbClient.update(item);
-            //dbClient.shutdown();
+            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
@@ -83,8 +86,6 @@ public abstract class Storage<T> {
         }
     }
 
-    public void cleanup() {
-        // TODO call when application context is destroyed
-        dbClient.shutdown();
-    }
+    protected abstract CouchDbClient getCouchDbClient();
+
 }

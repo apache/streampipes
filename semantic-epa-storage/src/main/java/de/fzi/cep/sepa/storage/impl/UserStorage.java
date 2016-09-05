@@ -21,7 +21,7 @@ public class UserStorage extends Storage<User> {
     Logger LOG = LoggerFactory.getLogger(UserStorage.class);
 
     public UserStorage() {
-        super(Utils.getCouchDbUserClient(), User.class);
+        super(User.class);
     }
     
     public List<User> getAllUsers()
@@ -32,6 +32,7 @@ public class UserStorage extends Storage<User> {
 
     public User getUser(String username) {
         // TODO improve
+        CouchDbClient dbClient = getCouchDbClient();
         List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
         if (users.size() != 1) LOG.error("None or to many users with matching username");
         return users.get(0);
@@ -63,8 +64,13 @@ public class UserStorage extends Storage<User> {
     * @return True if user exists exactly once, false otherwise
     */
    public boolean checkUser(String username) {
+       CouchDbClient dbClient = getCouchDbClient();
        List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
        return users.size() == 1;
    }
 
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbUserClient();
+    }
 }

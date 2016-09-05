@@ -12,12 +12,6 @@ public interface PipelineStorage {
 
 	List<Pipeline> getAllUserPipelines();
 
-	List<RunningVisualization> getRunningVisualizations();
-
-	void storeVisualization(RunningVisualization vizualization);
-
-	void deleteVisualization(String pipelineId);
-
 	void storePipeline(Pipeline pipeline);
 
 	void updatePipeline(Pipeline pipeline);

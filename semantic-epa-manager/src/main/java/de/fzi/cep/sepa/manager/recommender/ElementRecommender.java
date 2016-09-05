@@ -40,7 +40,7 @@ public class ElementRecommender {
         String rootNodeElementId;
         try {
             InvocableSEPAElement sepaElement = getRootNode();
-            rootNodeElementId = sepaElement.getElementId();
+            rootNodeElementId = sepaElement.getBelongsTo();
             connectedTo = sepaElement.getDOM();
         } catch (NoSepaInPipelineException e) {
             connectedTo = pipeline.getStreams().get(0).getDOM();
@@ -53,12 +53,11 @@ public class ElementRecommender {
                 Pipeline tempPipeline = cloner.deepClone(pipeline);
                 SepaInvocation newSepa = generateSepaClient(sepa, connectedTo);
                 tempPipeline.getSepas().add(newSepa);
-                new PipelineVerificationHandler(tempPipeline, true).validateConnection().getPipelineModificationMessage();
+                new PipelineVerificationHandler(tempPipeline, true)
+                        .validateConnection()
+                        .getPipelineModificationMessage();
                 addPossibleElements(sepa);
                 tempPipeline.setSepas(new ArrayList<>());
-            } catch (NoMatchingSchemaException e) {
-            } catch (NoMatchingFormatException e) {
-            } catch (NoMatchingProtocolException e) {
             } catch (Exception e) {
                 //e.printStackTrace();
             }

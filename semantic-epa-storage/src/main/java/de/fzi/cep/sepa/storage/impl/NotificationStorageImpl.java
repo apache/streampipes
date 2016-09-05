@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.storage.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ public class NotificationStorageImpl extends Storage<ProaSenseNotificationMessag
     Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
     public NotificationStorageImpl() {
-        super(Utils.getCouchDbNotificationClient(), ProaSenseNotificationMessage.class);
+        super(ProaSenseNotificationMessage.class);
     }
 
     @Override
@@ -54,4 +55,8 @@ public class NotificationStorageImpl extends Storage<ProaSenseNotificationMessag
         return msgs.stream().filter(m -> !m.isRead()).collect(Collectors.toList());
     }
 
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbNotificationClient();
+    }
 }

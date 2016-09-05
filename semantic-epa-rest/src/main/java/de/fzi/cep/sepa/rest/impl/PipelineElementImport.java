@@ -3,6 +3,8 @@ package de.fzi.cep.sepa.rest.impl;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -17,10 +19,9 @@ import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.Notification;
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.messages.*;
 
+import de.fzi.cep.sepa.messages.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,16 +42,13 @@ public class PipelineElementImport extends AbstractRestInterface {
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
 			JsonElement element = new JsonParser().parse(parseURIContent(uri, "application/json"));
-			JsonArray response = new JsonArray();
-			if (element.isJsonArray())
-			{
-				for(JsonElement jsonObj : element.getAsJsonArray())
-				{
-					// TODO check
-					 //response.add(new JsonParser().parse(addElement(username, jsonObj.getAsString(), publicElement)));
+			List<Message> messages = new ArrayList<>();
+			if (element.isJsonArray()) {
+				for(JsonElement jsonObj : element.getAsJsonArray()) {
+					 messages.add(verifyAndAddElement(jsonObj.getAsString(), username, publicElement));
 				}
 			}
-			return ok(response.toString());
+			return ok(messages);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return statusMessage(Notifications.error(NotificationType.PARSE_ERROR));
@@ -62,16 +60,19 @@ public class PipelineElementImport extends AbstractRestInterface {
 	public Response addElement(@PathParam("username") String username, @FormParam("uri") String uri, @FormParam("publicElement") boolean publicElement)
 	{
 		if (!authorized(username)) return ok(Notifications.error(NotificationType.UNAUTHORIZED));
+		return ok(verifyAndAddElement(uri, username, publicElement));
+	}
+
+	private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
+System.out.println(uri);
 		try {
 			uri = URLDecoder.decode(uri, "UTF-8");
 			String payload = parseURIContent(uri);
-			return ok(Operations.verifyAndAddElement(payload, username, publicElement));
-		} catch (URISyntaxException | IOException e) {
-			e.printStackTrace();
-			return statusMessage(Notifications.error(NotificationType.PARSE_ERROR));
-		} catch (SepaParseException e) {
-			e.printStackTrace();
-			return constructErrorMessage(new Notification(NotificationType.PARSE_ERROR.title(), NotificationType.PARSE_ERROR.description(), e.getMessage()));
+			return Operations.verifyAndAddElement(payload, username, publicElement);
+		} catch (Exception e) {
+            e.printStackTrace();
+			return Notifications.error(NotificationType.PARSE_ERROR);
+
 		}
 	}
 	
@@ -137,4 +138,8 @@ public class PipelineElementImport extends AbstractRestInterface {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
+
+    public static void main(String[] args) {
+        new PipelineElementImport().addBatch("riemer@fzi.de", "http://localhost:8090", true);
+    }
 }

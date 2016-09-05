@@ -126,7 +126,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(requestor.getSEPAById(elementUri));
+			return ok(new SepaInvocation(new SepaInvocation(requestor.getSEPAById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

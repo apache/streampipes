@@ -6,9 +6,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
-import com.sun.deploy.config.Config;
-import de.fzi.cep.sepa.commons.config.ConfigurationManager;
-import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
 import de.fzi.cep.sepa.storage.api.*;
 import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
@@ -45,15 +42,6 @@ public enum StorageManager {
 	private InMemoryStorage inMemoryStorage;
 	private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
 
-	private AppStorage appStorage;
-	private ConnectionStorage connectionStorage;
-	private MonitoringDataStorage monitoringDataStorage;
-	private NotificationStorage notificationStorage;
-	private PipelineCategoryStorage pipelineCategoryStorage;
-	private PipelineStorage pipelineStorage;
-	private SepaInvocationStorage sepaInvocationStorage;
-	private UserStorage userStorage;
-	
 	private boolean inMemoryInitialized = false;
 
 	StorageManager() {
@@ -89,21 +77,6 @@ public enum StorageManager {
 			return false;
 		}
 
-	}
-
-	private void initCouchDb(boolean shutdownExisting) {
-
-		// init couchdb storage
-        if (ConfigurationManager.isConfigured()) {
-            this.userStorage = new UserStorage();
-            this.appStorage = new AppStorageImpl();
-            this.connectionStorage = new ConnectionStorageImpl();
-            this.monitoringDataStorage = new MonitoringDataStorageImpl();
-            this.notificationStorage = new NotificationStorageImpl();
-            this.pipelineCategoryStorage = new PipelineCategoryStorageImpl();
-            this.pipelineStorage = new PipelineStorageImpl();
-            this.sepaInvocationStorage = new SepaInvocationStorageImpl();
-        }
 	}
 
 	private boolean initEmpire() {
@@ -158,7 +131,7 @@ public enum StorageManager {
 	}
 	
 	public PipelineStorage getPipelineStorageAPI() {
-		return pipelineStorage;
+		return new PipelineStorageImpl();
 	}
 	
 	public StorageRequests getSesameStorage() {
@@ -197,13 +170,13 @@ public enum StorageManager {
 	public AppStorage getAppStorageApi() {
 		return new AppStorageImpl();
 	}
+
+	public VisualizationStorage getVisualizationStorageApi() {
+		return new VisualizationStorageImpl();
+	}
 	
 	public ContextStorage getContextStorage() {
 		return new ContextStorageImpl(bkrepo);
-	}
-
-	public void reloadCouchDb() {
-		this.initCouchDb(true);
 	}
 
 }

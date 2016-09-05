@@ -57,7 +57,7 @@ public class PipelineExecutor {
 			String uri = sec.getUri();
 			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "http://proasense.nissatech.com/actions");
 			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
-			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().storeVisualization(viz);
+			if (visualize) StorageManager.INSTANCE.getVisualizationStorageApi().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
@@ -77,7 +77,7 @@ public class PipelineExecutor {
 		
 		if (status.isSuccess())
 		{
-			if (visualize) StorageManager.INSTANCE.getPipelineStorageAPI().deleteVisualization(pipeline.getPipelineId());
+			if (visualize) StorageManager.INSTANCE.getVisualizationStorageApi().deleteVisualization(pipeline.getPipelineId());
 			if (storeStatus) setPipelineStopped(pipeline);
 			
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
