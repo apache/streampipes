@@ -19,29 +19,30 @@ import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.storage.api.ConnectionStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
-public class ConnectionStorageImpl implements ConnectionStorage {
+public class ConnectionStorageImpl extends Storage<ElementRecommendation> implements ConnectionStorage {
 
+
+	public ConnectionStorageImpl() {
+		super(Utils.getCouchDbConnectionClient(), ElementRecommendation.class);
+	}
 	@Override
 	public void addConnection(Connection connection) {
-		CouchDbClient dbClient = Utils.getCouchDbConnectionClient();
 		dbClient.save(connection);
-		dbClient.shutdown();
 	}
 
 	@Override
 	public List<ElementRecommendation> getRecommendedElements(String from) {
-		CouchDbClient dbClient = Utils.getCouchDbConnectionClient();
 		// doesn't work as required object array is not created by lightcouch
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
-		query = buildQuery(dbClient, from);
+		query = buildQuery(from);
 		Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
 		if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
 		else return Collections.emptyList();
 		
 	}
 	
-	private String buildQuery(CouchDbClient dbClient, String from)  {
+	private String buildQuery(String from)  {
 			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
 			return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
@@ -53,12 +54,6 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 		return recommendations;
 	}
 
-	public static void main(String[] args)
-	{
-		List<ElementRecommendation> recs = new ConnectionStorageImpl().getRecommendedElements("http://localhost:8089/taxi/sample");
-		recs.forEach(rec -> System.out.println(rec.getElementId()));
-	}
-	
 	private Optional<JsonObject> getFrequentConnections(String query) {
 		try {
 			return Optional.of((JsonObject)new JsonParser().parse(Request.Get(query).execute().returnContent().asString()));
@@ -67,5 +62,4 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 			return Optional.empty();
 		}
 	}
-
 }

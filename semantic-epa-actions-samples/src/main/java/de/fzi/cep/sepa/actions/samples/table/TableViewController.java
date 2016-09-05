@@ -25,7 +25,7 @@ public class TableViewController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("table", "Table", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		

@@ -38,7 +38,7 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("eventrate", "Event rate", "Computes current event rate");
-		desc.setEpaTypes(Arrays.asList(EpaType.AGGREGATE.name()));
+		desc.setCategory(Arrays.asList(EpaType.AGGREGATE.name()));
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());

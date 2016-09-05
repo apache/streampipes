@@ -39,7 +39,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		SepaDescription desc = new SepaDescription("sepas", "ActivityDetection",
 				"ActivityDetection description");
 
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding

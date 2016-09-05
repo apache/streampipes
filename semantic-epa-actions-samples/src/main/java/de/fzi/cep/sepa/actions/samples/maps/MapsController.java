@@ -30,7 +30,7 @@ public class MapsController extends ActionController {
 		
 		SecDescription sec = new SecDescription("maps", "Map view", "Displays location-based events on a map", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);

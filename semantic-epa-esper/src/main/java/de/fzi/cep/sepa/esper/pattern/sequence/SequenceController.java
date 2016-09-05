@@ -38,7 +38,7 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		
 		SepaDescription desc = new SepaDescription("sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Sequence_Icon_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));	
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));

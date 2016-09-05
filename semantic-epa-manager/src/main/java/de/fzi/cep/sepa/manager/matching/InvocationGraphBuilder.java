@@ -77,6 +77,8 @@ public class InvocationGraphBuilder {
 					
 					thisGraph = (SepaInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
+
+					thisGraph.setStreamRequirements(Arrays.asList());
 					
 					EventSchema outputSchema;
 					EventStream outputStream = new EventStream();

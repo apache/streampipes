@@ -36,7 +36,6 @@ public class QueryExecutor {
 	
 	public void executeUpdate(String sparqlUpdate) throws UpdateExecutionException, RepositoryException, MalformedQueryException 
 	{
-		System.out.println(sparqlUpdate);
 		RepositoryConnection connection = repository.getConnection();
 		Update tupleQuery;
 		tupleQuery = connection.prepareUpdate(QueryLanguage.SPARQL, sparqlUpdate);

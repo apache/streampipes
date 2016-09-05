@@ -26,39 +26,39 @@ public class SecDescription extends ConsumableSEPAElement{
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:ecType")
-	protected List<String> ecTypes;
+	protected List<String> category;
 	
 	public SecDescription(String uri, String name, String description, String iconUrl)
 	{
 		super(uri, name, description, iconUrl);
 		this.eventStreams = new ArrayList<>();
-		this.ecTypes = new ArrayList<>();
+		this.category = new ArrayList<>();
 	}
 	
 	public SecDescription(SecDescription other)
 	{
 		super(other);
-		this.ecTypes = new Cloner().ecTypes(other.getEcTypes());
+		this.category = new Cloner().ecTypes(other.getCategory());
 	}
 	
 	public SecDescription(String uri, String name, String description)
 	{
 		this(uri, name, description, "");
-		this.ecTypes = new ArrayList<>();
+		this.category = new ArrayList<>();
 	}
 	
 	public SecDescription()
 	{
 		super();
-		this.ecTypes = new ArrayList<>();
+		this.category = new ArrayList<>();
 	}
 
-	public List<String> getEcTypes() {
-		return ecTypes;
+	public List<String> getCategory() {
+		return category;
 	}
 
-	public void setEcTypes(List<String> ecTypes) {
-		this.ecTypes = ecTypes;
+	public void setCategory(List<String> category) {
+		this.category = category;
 	}
 
 	

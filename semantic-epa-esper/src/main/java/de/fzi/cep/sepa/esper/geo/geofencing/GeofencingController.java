@@ -43,7 +43,7 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 		schema.setEventProperties(Arrays.asList(e1, e2, e3));
 		
 		SepaDescription desc = new SepaDescription("geofencing", "Geofencing", "Detects whether a location-based stream moves inside a (circular) area around a given point described as latitude-longitude pair.");
-		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
+		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema);

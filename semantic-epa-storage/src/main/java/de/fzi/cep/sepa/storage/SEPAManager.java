@@ -76,39 +76,4 @@ public enum SEPAManager {
 		}
 		return result;
 	}
-	/*
-	public List<EventStream> getEventStreamById(String id)
-	{
-		List<EventStream> result = new ArrayList<EventStream>();
-		for(EventStream s : storedEventStreams)
-		{
-			if (s.getElementId().equals(id))
-				result.add(s);
-		}
-		return result;
-	}
-	
-	public List<SEP> getSEPsByEventStream(String id)
-	{
-		List<SEP> result = new ArrayList<SEP>();
-		for(SEP s : storedSEPs)
-		{
-			if (s.getEventStreamId().equals(id))
-				result.add(s);
-		}
-		return result;
-	}
-	
-	public List<EventStream> getEventStreamsByDomain(String domain)
-	{
-		List<EventStream> result = new ArrayList<EventStream>();
-		for(EventStream s : storedEventStreams)
-		{
-			for(Domain d : s.getDomain())
-			if (d.toString().equals(domain))
-				result.add(s);
-		}
-		return result;
-	}
-	*/
 }

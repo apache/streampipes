@@ -26,7 +26,7 @@ public class HistogramController implements SemanticEventConsumerDeclarer{
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("histogram", "Histogram", "Generates a histogram for time-series data", "http://localhost:8080/img");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

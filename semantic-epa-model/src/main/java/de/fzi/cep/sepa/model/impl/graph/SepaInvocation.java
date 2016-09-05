@@ -45,7 +45,7 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:epaType")
-	protected List<String> epaTypes;
+	protected List<String> category;
 	
 	public SepaInvocation(SepaDescription sepa)
 	{
@@ -57,8 +57,9 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.setSupportedGrounding(sepa.getSupportedGrounding());
 		this.setStaticProperties(sepa.getStaticProperties());
 		this.setOutputStrategies(sepa.getOutputStrategies());
-		this.setBelongsTo(sepa.getRdfId().toString());
-		this.epaTypes = sepa.getEpaTypes();
+		this.setBelongsTo(sepa.getElementId().toString());
+		this.category = sepa.getCategory();
+		this.setStreamRequirements(sepa.getEventStreams());
 		//this.setUri(belongsTo +"/" +getElementId());		
 	}
 	
@@ -68,13 +69,13 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
 		if (other.getOutputStream() != null) this.outputStream =  new Cloner().stream(other.getOutputStream());
 		this.pathName = other.getPathName();
-		this.epaTypes = new Cloner().epaTypes(other.getEpaTypes());
+		this.category = new Cloner().epaTypes(other.getCategory());
 	}
 
 	public SepaInvocation(SepaDescription sepa, String domId)
 	{
 		this(sepa);
-		this.domId = domId;
+		this.DOM = domId;
 	}
 	
 	public SepaInvocation()
@@ -130,12 +131,12 @@ public class SepaInvocation extends InvocableSEPAElement implements Serializable
 		this.outputStrategies = outputStrategies;
 	}
 
-	public List<String> getEpaTypes() {
-		return epaTypes;
+	public List<String> getCategory() {
+		return category;
 	}
 
-	public void setEpaTypes(List<String> epaTypes) {
-		this.epaTypes = epaTypes;
+	public void setCategory(List<String> category) {
+		this.category = category;
 	}
 	
 }

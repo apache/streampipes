@@ -29,13 +29,13 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	
 	@RdfProperty("sepa:belongsTo")
 	protected String belongsTo;
-	
-	protected String domId;
-	
+
 	protected EventGrounding supportedGrounding;
 	
 	@RdfProperty("sepa:correspondingPipeline")
 	protected String correspondingPipeline;
+
+	protected List<EventStream> streamRequirements;
 	
 	public InvocableSEPAElement() {
 		super();
@@ -47,8 +47,9 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 		this.belongsTo = other.getBelongsTo();
 		this.correspondingPipeline = other.getCorrespondingPipeline();
 		this.inputStreams = new Cloner().streams(other.getInputStreams());
+        if (other.getStreamRequirements() != null) this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
 		if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
-		this.domId = other.getDomId();
+		this.DOM = other.getDOM();
 		if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
 	}
 	
@@ -56,10 +57,6 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 		super(uri, name, description, iconUrl);
 	}
 
-	public String getDomId() {
-		return domId;
-	}
-	
 	public boolean addStaticProperty(StaticProperty staticProperty)
 	{
 		return staticProperties.add(staticProperty);
@@ -79,10 +76,6 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
 	public void setStaticProperties(List<StaticProperty> staticProperties) {
 		this.staticProperties = staticProperties;
-	}
-
-	public void setDomId(String domId) {
-		this.domId = domId;
 	}
 
 	public String getBelongsTo() {
@@ -107,6 +100,13 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
 	public void setCorrespondingPipeline(String correspondingPipeline) {
 		this.correspondingPipeline = correspondingPipeline;
-	}	
-		
+	}
+
+	public List<EventStream> getStreamRequirements() {
+		return streamRequirements;
+	}
+
+	public void setStreamRequirements(List<EventStream> streamRequirements) {
+		this.streamRequirements = streamRequirements;
+	}
 }

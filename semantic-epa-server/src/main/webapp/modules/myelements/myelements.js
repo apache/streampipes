@@ -2,8 +2,7 @@ angular.module('streamPipesApp')
 .controller('MyElementsCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog) {
 	
 	$scope.currentElements = {};
-	
-	 $scope.tabs = [
+    $scope.tabs = [
 		            {
 		                  title : 'Data Sources',
 		                  type: 'source'
@@ -17,11 +16,22 @@ angular.module('streamPipesApp')
 		                  type: 'action'
 		            }
 		            ];
+    $scope.currentTabType = $scope.tabs[0].type;
 
-	$scope.loadCurrentElements = function(type) {
+    $scope.getElementId = function(element) {
+        if ($scope.currentTabType == 'source') {
+            return element.uri;
+        } else {
+            return element.belongsTo;
+        }
+    }
+    
+    $scope.loadCurrentElements = function(type) {
+        console.log(type);
 		if (type == 'source')  { $scope.loadOwnSources();  }
 		else if (type == 'sepa') { $scope.loadOwnSepas();  }
 		else if (type == 'action') { $scope.loadOwnActions(); }
+        $scope.currentTabType = type;
 	}
 	
     $scope.loadOwnActions = function () {
@@ -47,6 +57,7 @@ angular.module('streamPipesApp')
     $scope.loadOwnSources = function () {
         restApi.getOwnSources()
             .success(function (sources) {
+                console.log(sources);
             	$scope.currentElements = sources;
             })
             .error(function (error) {
@@ -82,11 +93,11 @@ angular.module('streamPipesApp')
    } 
    
    $scope.remove = function(elementUri, type) {
+	   console.log(elementUri);
 		  restApi.del(elementUri).success(function (msg) {
 			  $scope.showToast(msg.notifications[0].title);
-		  }).then(function() {
-			  $scope.loadCurrentElements(type);
-		  })
+              $scope.loadCurrentElements(type);
+		  });
 	   } 
    
    $scope.jsonld = function(event, elementUri) {

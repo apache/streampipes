@@ -39,7 +39,7 @@ public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 		schema.setEventProperties(Arrays.asList(e1));
 		
 		SepaDescription desc = new SepaDescription("increase", "Increase", "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));	
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));

@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.manager.matching;
 
+import de.fzi.cep.sepa.esper.geo.geofencing.GeofencingController;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -19,14 +20,32 @@ public class TestPipelineValidationHandler extends TestCase {
 				new RandomNumberStreamJson(), 
 				new AggregationController());
 		
-		PipelineValidationHandler handler;
+		PipelineVerificationHandler handler;
 		try {
-			handler = new PipelineValidationHandler(pipeline, true);
+			handler = new PipelineVerificationHandler(pipeline, true);
 			handler.validateConnection();
 		} catch (Exception e2) {
 			fail(e2.getMessage());
 		}
 		
 		assertTrue(true);
+	}
+
+	@Test
+	public void testNegativePipelineValidation() {
+
+		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
+				new RandomNumberStreamJson(),
+				new GeofencingController());
+
+		PipelineVerificationHandler handler;
+		try {
+			handler = new PipelineVerificationHandler(pipeline, true);
+			handler.validateConnection();
+            assertFalse(true);
+		} catch (Exception e2) {
+			assertTrue(true);
+		}
+
 	}
 }

@@ -27,9 +27,11 @@ public class CustomOutputStrategy extends OutputStrategy {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:producesProperty")
 	List<EventProperty> eventProperties;
-	
+
 	@RdfProperty("sepa:outputRight")
 	protected boolean outputRight;
+
+    private List<EventProperty> providesProperties;
 	
 	public CustomOutputStrategy()
 	{
@@ -69,7 +71,12 @@ public class CustomOutputStrategy extends OutputStrategy {
 	public void setOutputRight(boolean outputRight) {
 		this.outputRight = outputRight;
 	}
-	
-	
-	
+
+    public List<EventProperty> getProvidesProperties() {
+        return providesProperties;
+    }
+
+    public void setProvidesProperties(List<EventProperty> providesProperties) {
+        this.providesProperties = providesProperties;
+    }
 }

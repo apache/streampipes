@@ -1,6 +1,8 @@
 package de.fzi.cep.sepa.model.impl.output;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -10,14 +12,13 @@ import com.clarkparsia.empire.annotation.RdfsClass;
 
 import de.fzi.cep.sepa.model.UnnamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:UriPropertyMapping")
 @Entity
 public class UriPropertyMapping extends UnnamedSEPAElement {
-
-	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("sepa:replaceFrom")
 	private URI replaceFrom;
@@ -36,19 +37,23 @@ public class UriPropertyMapping extends UnnamedSEPAElement {
 	
 	@RdfProperty("sepa:domainPropertyCastAllowed")
 	private boolean domainPropertyCastAllowed;
+
+	private List<EventProperty> replaceWithOptions;
 	
 	public UriPropertyMapping() {
 		super();
+		this.replaceWithOptions = new ArrayList<>();
 	}
 	
 	public UriPropertyMapping(UriPropertyMapping other) {
 		super();
 		this.replaceFrom = other.getReplaceFrom();
-		this.replaceWith = other.getReplaceWith();
+		if (this.replaceWith != null) this.replaceWith = new Cloner().property(other.getReplaceWith());
 		this.replaceTo = other.getReplaceTo();
 		this.renamingAllowed = other.isRenamingAllowed();
 		this.typeCastAllowed = other.isTypeCastAllowed();
 		this.domainPropertyCastAllowed = other.isDomainPropertyCastAllowed();
+		this.replaceWithOptions = new Cloner().properties(other.getReplaceWithOptions());
 	}
 
 	public URI getReplaceFrom() {
@@ -98,5 +103,12 @@ public class UriPropertyMapping extends UnnamedSEPAElement {
 	public void setReplaceTo(URI replaceTo) {
 		this.replaceTo = replaceTo;
 	}
-			
+
+	public List<EventProperty> getReplaceWithOptions() {
+		return replaceWithOptions;
+	}
+
+	public void setReplaceWithOptions(List<EventProperty> replaceWithOptions) {
+		this.replaceWithOptions = replaceWithOptions;
+	}
 }

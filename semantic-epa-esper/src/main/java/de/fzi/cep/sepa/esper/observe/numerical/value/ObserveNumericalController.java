@@ -45,7 +45,7 @@ public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalP
 
 		SepaDescription desc = new SepaDescription("observenumerical", "Observe Numerical",
 				"Throws an alert when value exceeds a threshold value");
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 
 		desc.addEventStream(stream1);
 

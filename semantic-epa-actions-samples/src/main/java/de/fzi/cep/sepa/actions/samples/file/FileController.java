@@ -26,7 +26,7 @@ public class FileController extends ActionController {
 		
 		SecDescription sec = new SecDescription("file", "File Output", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/file_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
+		sec.setCategory(Arrays.asList(EcType.STORAGE.name()));
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());

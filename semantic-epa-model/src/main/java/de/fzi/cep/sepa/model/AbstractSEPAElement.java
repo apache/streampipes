@@ -39,5 +39,5 @@ public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 	public void setRdfId(RdfKey arg0) {
 		myId.setRdfId(arg0);	
 	}
-		
+
 }

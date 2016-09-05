@@ -55,7 +55,7 @@ public class VerticalBarController extends ActionController {
         @Override
         public SecDescription declareModel() {
                 SecDescription sec = new SecDescription("verticalBar", "VerticalBar", "Displays the current value in dependence to a max and min value.");
-                sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+                sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
                 EventStream stream1 = new EventStream();
                 EventSchema schema1 = new EventSchema();
 

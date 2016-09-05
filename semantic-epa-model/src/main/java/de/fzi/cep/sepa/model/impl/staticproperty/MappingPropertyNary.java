@@ -23,7 +23,7 @@ public class MappingPropertyNary extends MappingProperty {
 	
 	public MappingPropertyNary()
 	{
-		super();
+		super(StaticPropertyType.MappingPropertyNary);
 		this.mapsTo = new ArrayList<>();
 	}
 	
@@ -34,13 +34,13 @@ public class MappingPropertyNary extends MappingProperty {
 	
 	public MappingPropertyNary(URI mapsFrom, String internalName, String label, String description)
 	{
-		super(mapsFrom, internalName, label, description);	
+		super(StaticPropertyType.MappingPropertyNary, mapsFrom, internalName, label, description);
 		this.mapsTo = new ArrayList<>();
 	}
 	
 	public MappingPropertyNary(String internalName, String label, String description)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.MappingPropertyNary, internalName, label, description);
 		this.mapsTo = new ArrayList<>();
 	}
 

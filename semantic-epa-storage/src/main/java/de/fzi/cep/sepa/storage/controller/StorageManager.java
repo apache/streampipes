@@ -6,6 +6,11 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
+import com.sun.deploy.config.Config;
+import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
+import de.fzi.cep.sepa.storage.api.*;
+import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -20,26 +25,6 @@ import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
-import de.fzi.cep.sepa.storage.api.AppStorage;
-import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
-import de.fzi.cep.sepa.storage.api.ConnectionStorage;
-import de.fzi.cep.sepa.storage.api.ContextStorage;
-import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
-import de.fzi.cep.sepa.storage.api.NotificationStorage;
-import de.fzi.cep.sepa.storage.api.PipelineCategoryStorage;
-import de.fzi.cep.sepa.storage.api.PipelineStorage;
-import de.fzi.cep.sepa.storage.api.StorageRequests;
-import de.fzi.cep.sepa.storage.impl.AppStorageImpl;
-import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
-import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
-import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
-import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
-import de.fzi.cep.sepa.storage.impl.MonitoringDataStorageImpl;
-import de.fzi.cep.sepa.storage.impl.NotificationStorageImpl;
-import de.fzi.cep.sepa.storage.impl.PipelineCategoryStorageImpl;
-import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
-import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
-import de.fzi.cep.sepa.storage.impl.UserStorage;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 
@@ -53,13 +38,21 @@ public enum StorageManager {
 	private EntityManager storageManager;
 
 	private RepositoryConnection conn;
-	private RepositoryConnection dbpediaConn;
 	
 	private Repository repository;
 	private Repository bkrepo;
 	
 	private InMemoryStorage inMemoryStorage;
 	private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
+
+	private AppStorage appStorage;
+	private ConnectionStorage connectionStorage;
+	private MonitoringDataStorage monitoringDataStorage;
+	private NotificationStorage notificationStorage;
+	private PipelineCategoryStorage pipelineCategoryStorage;
+	private PipelineStorage pipelineStorage;
+	private SepaInvocationStorage sepaInvocationStorage;
+	private UserStorage userStorage;
 	
 	private boolean inMemoryInitialized = false;
 
@@ -87,24 +80,31 @@ public enum StorageManager {
 		try {
 			repository = new HTTPRepository(SERVER, REPOSITORY_ID);	
 			conn = repository.getConnection();
+
+			//initCouchDb(false);
 				
 			return true;
 		} catch (Exception e) {
+            e.printStackTrace();
 			return false;
 		}
+
 	}
-	
-//	private boolean initDbPediaEndpoint() {
-//		SPARQLRepository repo = new SPARQLRepository("http://dbpedia.org/sparql");
-//		try {
-//			repo.initialize();
-//			dbpediaConn = repo.getConnection();
-//			return true;
-//		} catch (RepositoryException e) {
-//			e.printStackTrace();
-//			return false;
-//		}		  
-//	}
+
+	private void initCouchDb(boolean shutdownExisting) {
+
+		// init couchdb storage
+        if (ConfigurationManager.isConfigured()) {
+            this.userStorage = new UserStorage();
+            this.appStorage = new AppStorageImpl();
+            this.connectionStorage = new ConnectionStorageImpl();
+            this.monitoringDataStorage = new MonitoringDataStorageImpl();
+            this.notificationStorage = new NotificationStorageImpl();
+            this.pipelineCategoryStorage = new PipelineCategoryStorageImpl();
+            this.pipelineStorage = new PipelineStorageImpl();
+            this.sepaInvocationStorage = new SepaInvocationStorageImpl();
+        }
+	}
 
 	private boolean initEmpire() {
 		
@@ -141,10 +141,6 @@ public enum StorageManager {
 	public Repository getRepository() {
 		return bkrepo;
 	}
-	
-	public RepositoryConnection getDbpediaConnection() {
-		return dbpediaConn;
-	}
 
 	public StorageRequests getStorageAPI() {
 		if (!inMemoryInitialized)
@@ -162,7 +158,7 @@ public enum StorageManager {
 	}
 	
 	public PipelineStorage getPipelineStorageAPI() {
-		return new PipelineStorageImpl();
+		return pipelineStorage;
 	}
 	
 	public StorageRequests getSesameStorage() {
@@ -206,5 +202,8 @@ public enum StorageManager {
 		return new ContextStorageImpl(bkrepo);
 	}
 
+	public void reloadCouchDb() {
+		this.initCouchDb(true);
+	}
 
 }

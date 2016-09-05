@@ -28,7 +28,7 @@ public class AnyStaticProperty extends StaticProperty {
 	
 	
 	public AnyStaticProperty() {
-		super();
+		super(StaticPropertyType.AnyStaticProperty);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -38,7 +38,7 @@ public class AnyStaticProperty extends StaticProperty {
 	}
 
 	public AnyStaticProperty(String internalName, String label, String description) {
-		super(internalName, label, description);
+		super(StaticPropertyType.AnyStaticProperty, internalName, label, description);
 		// TODO Auto-generated constructor stub
 	}
 

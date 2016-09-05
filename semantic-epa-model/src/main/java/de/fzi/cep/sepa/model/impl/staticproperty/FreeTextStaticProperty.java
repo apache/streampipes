@@ -37,7 +37,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	protected PropertyValueSpecification valueSpecification;
 	
 	public FreeTextStaticProperty() {
-		super();
+		super(StaticPropertyType.FreeTextStaticProperty);
 	}
 	
 	public FreeTextStaticProperty(FreeTextStaticProperty other) {
@@ -50,24 +50,24 @@ public class FreeTextStaticProperty extends StaticProperty {
 	
 	public FreeTextStaticProperty(String internalName, String label, String description)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description, URI type)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
 		this.requiredDomainProperty = type;
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description, URI type, URI mapsTo)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
 		this.mapsTo = mapsTo;
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description, PropertyValueSpecification valueSpecification)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
 		this.valueSpecification = valueSpecification;
 	}
 

@@ -25,7 +25,7 @@ public class UserService {
 	public List<Pipeline> getPublicPipelines(String username)
 	{
 		List<Pipeline> pipelines = new ArrayList<>();
-		userStorage
+		userStorage()
 				.getAllUsers()
 				.stream()
 				.map(u -> u.getPipelines().stream().filter(p -> p.isPublicElement()).collect(Collectors.toList())).forEach(pipelines::addAll);
@@ -173,8 +173,7 @@ public class UserService {
         user.removePreferredSource(elementId);
         dbClient.update(user);
         dbClient.shutdown();
-    } 
-    
+    }
 
     /**
      * 
@@ -244,6 +243,10 @@ public class UserService {
     public List<String> getFavoriteSourceUris(String username)
     {
     	return userStorage.getUser(username).getPreferredSources();
+    }
+
+    private UserStorage userStorage() {
+        return StorageManager.INSTANCE.getUserStorageAPI();
     }
     
     /**

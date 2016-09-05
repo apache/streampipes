@@ -30,7 +30,7 @@ public class LineChartController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("chart", "Line Chart", "Generates a line chart");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/line_chart_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		List<String> domains = new ArrayList<String>();
 		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
 		domains.add(Domain.DOMAIN_PROASENSE.toString());

@@ -24,7 +24,7 @@ public class MatchingStaticProperty extends StaticProperty{
 
 	public MatchingStaticProperty()
 	{
-		super();
+		super(StaticPropertyType.MatchingStaticProperty);
 	}
 	
 	public MatchingStaticProperty(MatchingStaticProperty other) {
@@ -35,11 +35,11 @@ public class MatchingStaticProperty extends StaticProperty{
 	
 	public MatchingStaticProperty(String internalName, String label, String description)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
 	}
 	
 	public MatchingStaticProperty(String internalName, String label, String description, URI matchLeft, URI matchRight) {
-		super(internalName, label, description);
+		super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
 		this.matchLeft = matchLeft;
 		this.matchRight = matchRight;
 	}

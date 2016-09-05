@@ -29,7 +29,7 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("gauge", "Gauge", "Monitors numeric values");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/gauge_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();

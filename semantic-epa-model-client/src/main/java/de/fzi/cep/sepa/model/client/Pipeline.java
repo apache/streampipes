@@ -7,12 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 import com.google.gson.annotations.SerializedName;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 @Entity
 public class Pipeline extends ElementComposition {
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	private ActionClient action;
+	private SecInvocation action;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	private boolean running;
@@ -27,11 +28,11 @@ public class Pipeline extends ElementComposition {
 	private @SerializedName("_id") String pipelineId;
     private @SerializedName("_rev") String rev;
 	
-	public ActionClient getAction() {
+	public SecInvocation getAction() {
 		return action;
 	}
 
-	public void setAction(ActionClient action) {
+	public void setAction(SecInvocation action) {
 		this.action = action;
 	}
 
