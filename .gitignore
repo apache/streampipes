@@ -51,3 +51,5 @@ fabric.properties
 # Maven
 */log/*
 */target/*
+
+dist/
