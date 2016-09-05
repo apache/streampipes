@@ -4,7 +4,7 @@ httpInterceptor.$inject = ['$log'];
 
 export default function httpInterceptor ($log) {
 
-	httpInterceptor.$inject = ["$rootScope", "$q", "$timeout", "$state"];
+	//httpInterceptor.$inject = ["$rootScope", "$q", "$timeout", "$state"];
 	var httpInterceptor = function($rootScope, $q, $timeout, $state) {
 		return function(promise) {
 			console.log("intercept");
