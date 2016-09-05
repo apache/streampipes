@@ -69,6 +69,10 @@
 
 	var _services2 = _interopRequireDefault(_services);
 
+	var _delme = __webpack_require__(/*! ./delme */ 15);
+
+	var _delme2 = _interopRequireDefault(_delme);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	//import restApi from './services/rest-api.service'
@@ -79,12 +83,6 @@
 	//import spServices from './services/services.module'
 
 
-	//import ngRoute from 'npm/angular-route';
-	//import ngCookies from 'npm/angular-cookies';
-	//import angularLoadingBar from 'npm/angular-loading-bar';
-	//import useravatar from 'lib/useravatar';
-	//import schemaForm from 'npm/angular-schema-form';
-	var MODULE_NAME = 'streamPipesApp';
 	//import ngPrettyJson from 'npm/ng-prettyjson';
 	//import uiTree from 'npm/angular-ui-tree';
 	//import ng-context-menu from '';
@@ -99,9 +97,15 @@
 	//import spConstants from './constants'
 
 	//import ngMaterial from 'npm/angular-material';
+	var MODULE_NAME = 'streamPipesApp';
+	//import ngRoute from 'npm/angular-route';
+	//import ngCookies from 'npm/angular-cookies';
+	//import angularLoadingBar from 'npm/angular-loading-bar';
+	//import useravatar from 'lib/useravatar';
+	//import schemaForm from 'npm/angular-schema-form';
 	exports.default = _angular2.default.module(MODULE_NAME, [
 	//'ngMaterial', 
-	'ngMdIcons', _services2.default,
+	'ngMdIcons', _delme2.default, _services2.default,
 	//'spConstants',
 	//'sp-services',
 	//'ngRoute', 
@@ -109,9 +113,7 @@
 	//'angularLoadingBar', 
 	//'useravatar', 
 	//'schemaForm', 
-	_angularUiRouter2.default])
-	//.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
-	.run(function ($rootScope, $location, restApi, authService, $state, $urlRouter) {
+	_angularUiRouter2.default]).run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 
 		//$location.path("/setup");
 		var bypass;
@@ -143,15 +145,15 @@
 			}
 		});
 
-		//$rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-		//authService.authenticate;
-		//});
-		//$rootScope.state = new objectProvider.State();
-		//$rootScope.state.sources = false;
-		//$rootScope.state.sepas = false;
-		//$rootScope.state.actions = false;
-		//$rootScope.state.adjustingPipelineState = false;
-		//$rootScope.state.adjustingPipeline = {};
+		$rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
+			authService.authenticate;
+		});
+		$rootScope.state = new objectProvider.State();
+		$rootScope.state.sources = false;
+		$rootScope.state.sepas = false;
+		$rootScope.state.actions = false;
+		$rootScope.state.adjustingPipelineState = false;
+		$rootScope.state.adjustingPipeline = {};
 	});
 
 	//.controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce, $http, $state) {
@@ -17746,17 +17748,37 @@
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _restApi = __webpack_require__(/*! ./rest-api.service */ 8);
+	var _imageChecker = __webpack_require__(/*! ./image-checker.service */ 8);
+
+	var _imageChecker2 = _interopRequireDefault(_imageChecker);
+
+	var _restApi = __webpack_require__(/*! ./rest-api.service */ 9);
 
 	var _restApi2 = _interopRequireDefault(_restApi);
 
-	var _auth = __webpack_require__(/*! ./auth.service */ 9);
+	var _auth = __webpack_require__(/*! ./auth.service */ 10);
 
 	var _auth2 = _interopRequireDefault(_auth);
 
+	var _domainProperties = __webpack_require__(/*! ./domain-properties.service */ 11);
+
+	var _domainProperties2 = _interopRequireDefault(_domainProperties);
+
+	var _httpInterceptor = __webpack_require__(/*! ./http-interceptor.service */ 12);
+
+	var _httpInterceptor2 = _interopRequireDefault(_httpInterceptor);
+
+	var _measurementUnits = __webpack_require__(/*! ./measurement-units.service */ 13);
+
+	var _measurementUnits2 = _interopRequireDefault(_measurementUnits);
+
+	var _deployment = __webpack_require__(/*! ./deployment.service */ 14);
+
+	var _deployment2 = _interopRequireDefault(_deployment);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _angular2.default.module('sp.services', [_constants2.default]).service('authService', _auth2.default).factory('restApi', _restApi2.default).name;
+	exports.default = _angular2.default.module('sp.services', [_constants2.default]).factory('imageChecker', _imageChecker2.default).service('authService', _auth2.default).factory('restApi', _restApi2.default).factory('domainPropertiesService', _domainProperties2.default).factory('httpInterceptor', _httpInterceptor2.default).factory('measurementUnits', _measurementUnits2.default).factory('deploymentService', _deployment2.default).name;
 
 /***/ },
 /* 6 */
@@ -17830,6 +17852,53 @@
 
 /***/ },
 /* 8 */
+/*!*******************************************!*\
+  !*** ./services/image-checker.service.js ***!
+  \*******************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = imageChecker;
+	function imageChecker() {
+		var imageChecker = {};
+
+		imageChecker.imageExists = function (url, callback) {
+			if (url == null || url === 'undefined') {
+				callback(false);
+				return;
+			}
+			var img = new Image();
+			img.onload = function () {
+				callback(true);
+			};
+			img.onerror = function () {
+				callback(false);
+			};
+			img.src = url;
+		};
+		imageChecker.imageExistsBoolean = function (url) {
+			if (url == null || url === 'undefined') {
+				return false;
+			}
+			var img = new Image();
+			img.onload = function () {
+				callback(true);
+			};
+			img.onerror = function () {
+				callback(false);
+			};
+			img.src = url;
+		};
+
+		return imageChecker;
+	};
+
+/***/ },
+/* 9 */
 /*!**************************************!*\
   !*** ./services/rest-api.service.js ***!
   \**************************************/
@@ -17841,11 +17910,6 @@
 		value: true
 	});
 	exports.default = restApi;
-	//import angular from 'npm/angular';
-
-	//export default angular.module('sp.services', []).
-	//factory('restApi', restApi);
-
 	restApi.$inject = ['$rootScope', '$http', 'apiConstants', 'authService'];
 
 	function restApi($rootScope, $http, apiConstants, authService) {
@@ -18254,7 +18318,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 10 */
 /*!**********************************!*\
   !*** ./services/auth.service.js ***!
   \**********************************/
@@ -18316,6 +18380,429 @@
 			authenticate: promise
 		};
 	};
+
+/***/ },
+/* 11 */
+/*!***********************************************!*\
+  !*** ./services/domain-properties.service.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = domainProperties;
+
+	var _restApi = __webpack_require__(/*! ./rest-api.service */ 9);
+
+	var _restApi2 = _interopRequireDefault(_restApi);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	domainProperties.$inject = ['$http', 'restApi'];
+
+	function domainProperties($http, restApi) {
+		var domainPropertiesService = {};
+
+		var availableDomainProperties;
+
+		restApi.getOntologyProperties().success(function (propertiesData) {
+			availableDomainProperties = propertiesData;
+		}).error(function (msg) {
+			console.log(msg);
+		});
+
+		domainPropertiesService.getDomainProperties = function () {
+			return availableDomainProperties;
+		};
+
+		return domainPropertiesService;
+	};
+
+/***/ },
+/* 12 */
+/*!**********************************************!*\
+  !*** ./services/http-interceptor.service.js ***!
+  \**********************************************/
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = httpInterceptor;
+	//TODO check if this service is still needed
+	// and if it works ;)
+	httpInterceptor.$inject = ['$log'];
+
+	function httpInterceptor($log) {
+
+		httpInterceptor.$inject = ["$rootScope", "$q", "$timeout", "$state"];
+		var httpInterceptor = function httpInterceptor($rootScope, $q, $timeout, $state) {
+			return function (promise) {
+				console.log("intercept");
+				return promise.then(function (response) {
+					return response;
+				}, function (response) {
+					if (response.status == 401) {
+						$rootScope.$broadcast("InvalidToken");
+						$rootScope.sessionExpired = true;
+						console.log("GOING ");
+						$state.go("streampipes.login");
+						$timeout(function () {
+							$rootScope.sessionExpired = false;
+						}, 5000);
+					} else if (response.status == 403) {
+						$rootScope.$broadcast("InsufficientPrivileges");
+					} else {
+						// Here you could handle other status codes, e.g. retry a 404
+					}
+					return $q.reject(response);
+				});
+			};
+		};
+		return httpInterceptor;
+	};
+
+/***/ },
+/* 13 */
+/*!***********************************************!*\
+  !*** ./services/measurement-units.service.js ***!
+  \***********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = measurementUnits;
+	measurementUnits.$inject = ['$http', 'restApi'];
+
+	function measurementUnits($http, restApi) {
+		var measurementUnitsService = {};
+
+		var allMeasurementUnits = {};
+		var allMeasurementUnitTypes = {};
+
+		var updateUnits = function updateUnits() {
+			restApi.getAllUnits().success(function (measurementUnits) {
+				allMeasurementUnits = measurementUnits;
+			}).error(function (msg) {
+				console.log(msg);
+			});
+		};
+
+		var updateUnitTypes = function updateUnitTypes() {
+			restApi.getAllUnitTypes().success(function (measurementUnits) {
+				allMeasurementUnitTypes = measurementUnits;
+			}).error(function (msg) {
+				console.log(msg);
+			});
+		};
+
+		updateUnits();
+		updateUnitTypes();
+
+		measurementUnitsService.getUnits = function () {
+			return allMeasurementUnits;
+		};
+
+		measurementUnitsService.getUnitTypes = function () {
+			return allMeasurementUnitTypes;
+		};
+
+		measurementUnitsService.updateUnits = function () {
+			updateUnits();
+		};
+
+		measurementUnitsService.updateUnitTypes = function () {
+			updateUnitTypes;
+		};
+
+		return measurementUnitsService;
+	};
+
+/***/ },
+/* 14 */
+/*!****************************************!*\
+  !*** ./services/deployment.service.js ***!
+  \****************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = deploymentService;
+	deploymentService.$inject = ['$http', '$rootScope', 'restApi'];
+	//.factory('deploymentService', function($http, $rootScope, restApi) {
+	function deploymentService($http, $rootScope, restApi) {
+
+		var deploymentService = {};
+
+		deploymentService.updateElement = function (deploymentConfig, model) {
+			return $http({ method: 'POST',
+				headers: { 'Accept': 'application/json', 'Content-Type': undefined },
+				url: '/semantic-epa-backend/api/v2/users/' + $rootScope.email + '/deploy/update',
+				data: getFormData(deploymentConfig, model) });
+		};
+
+		deploymentService.generateImplementation = function (deploymentConfig, model) {
+			return $http({ method: 'POST',
+				responseType: 'arraybuffer',
+				headers: { 'Accept': 'application/zip', 'Content-Type': undefined },
+				url: '/semantic-epa-backend/api/v2/users/' + $rootScope.email + '/deploy/implementation',
+				data: getFormData(deploymentConfig, model) });
+		};
+
+		deploymentService.generateDescriptionJava = function (deploymentConfig, model) {
+			return $http({ method: 'POST',
+				headers: { 'Accept': 'text/plain', 'Content-Type': undefined },
+				url: '/semantic-epa-backend/api/v2/users/' + $rootScope.email + '/deploy/description/java',
+				data: getFormData(deploymentConfig, model) });
+		};
+
+		deploymentService.generateDescriptionJsonld = function (deploymentConfig, model) {
+			return $http({ method: 'POST',
+				headers: { 'Accept': 'application/json', 'Content-Type': undefined },
+				url: '/semantic-epa-backend/api/v2/users/' + $rootScope.email + '/deploy/description/jsonld',
+				data: getFormData(deploymentConfig, model) });
+		};
+
+		var getFormData = function getFormData(deploymentConfig, model) {
+			var formData = new FormData();
+			formData.append("config", angular.toJson(deploymentConfig));
+			formData.append("model", angular.toJson(model));
+			return formData;
+		};
+
+		return deploymentService;
+	};
+
+/***/ },
+/* 15 */
+/*!******************!*\
+  !*** ./delme.js ***!
+  \******************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _angular = __webpack_require__(/*! npm/angular */ 1);
+
+	var _angular2 = _interopRequireDefault(_angular);
+
+	var _services = __webpack_require__(/*! ./services/services.module */ 5);
+
+	var _services2 = _interopRequireDefault(_services);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _angular2.default.module('sp.delme', [_services2.default]).service('objectProvider', ['$http', 'restApi', 'imageChecker', function ($http, restApi, imageChecker) {
+	    var oP = this;
+
+	    this.Stream = function (element) {
+
+	        var json = $(element).data("JSON");
+	        _angular2.default.copy(json, this);
+	        this.DOM = element.id;
+	    };
+	    this.Sepa = function (element) {
+
+	        var json = $(element).data("JSON");
+	        _angular2.default.copy(json, this);
+	        this.DOM = element.id;
+	        this.connectedTo = [];
+	    };
+	    this.Action = function (element) {
+	        var json = $(element).data("JSON");
+	        _angular2.default.copy(json, this);
+	        this.DOM = element.id;
+	        this.connectedTo = [];
+	    };
+
+	    this.Pipeline = function () {
+	        this.name = "";
+	        this.description = "";
+	        this.streams = [];
+	        this.sepas = [];
+	        this.action = {};
+	        this.addElement = function (element) {
+
+	            var $element = $(element);
+	            var connections = jsPlumb.getConnections({
+	                target: element
+	            });
+	            if ($element.hasClass('connectable-block')) {
+	                var block = $(element).data("block");
+	                this.addBlock(block);
+	            }
+
+	            if ($element.hasClass('action')) {
+
+	                this.action = new oP.Action(element);
+
+	                for (var i = 0; i < connections.length; i++) {
+	                    var conObjId = "#" + connections[i].sourceId;
+	                    var $conObj = $(conObjId);
+
+	                    if ($conObj.hasClass('connectable-block')) {
+	                        var block = $conObj.data("block");
+	                        this.action.connectedTo.push(block.sepas[block.outputIndex].DOM);
+	                        //this.addBlock($conObj.data("block"), this.action);
+	                    } else {
+	                        this.action.connectedTo.push(connections[i].sourceId);
+	                    }
+	                }
+	            } else if ($element.hasClass('sepa')) {
+	                var el = new oP.Sepa(element);
+
+	                el.staticProperties = $element.data("JSON").staticProperties;
+	                el.connectedTo = [];
+	                for (var i = 0; i < connections.length; i++) {
+	                    var conObjId = "#" + connections[i].sourceId;
+	                    var $conObj = $(conObjId);
+
+	                    if ($conObj.hasClass('connectable-block')) {
+	                        var block = $conObj.data("block");
+	                        el.connectedTo.push(block.sepas[block.outputIndex].DOM);
+	                        //this.addBlock($conObj.data("block"));
+	                    } else {
+	                        el.connectedTo.push(connections[i].sourceId);
+	                    }
+	                }
+	                this.sepas.push(el);
+	            } else if ($element.hasClass('stream')) {
+	                var el = new oP.Stream(element);
+	                this.streams.push(el);
+	            }
+	        };
+	        this.addBlock = function (block) {
+	            //connectedElement.connectedTo.push(block.pipeline.sepas[block.outputIndex].DOM)
+	            for (var i in block.sepas) {
+	                this.sepas.push(block.sepas[i]); //TODO evtl keine Referenz?
+	            }
+	            for (var i in block.streams) {
+	                this.streams.push(block.streams[i]);
+	            }
+	        };
+
+	        this.update = function (info, success) {
+	            var pipeline = this;
+	            return restApi.updatePartialPipeline(pipeline);
+	        };
+
+	        this.send = function () {
+	            var pipeline = this;
+	            return restApi.storePipeline(pipeline);
+	        };
+	    };
+
+	    this.State = function () {
+	        this.adjustingPipelineState = false;
+	        this.plumbReady = false;
+	        this.sources = {};
+	        this.sepas = {};
+	        this.actions = {};
+	        this.currentElement = {};
+	        this.currentPipeline = new oP.Pipeline();
+	        this.adjustingPipeline = {};
+	    };
+
+	    this.recElement = function (json) {
+	        this.json = json;
+	        this.name = json.name;
+	        this.getjQueryElement = function () {
+	            var element = this;
+	            var $el = $('<a style="text-decoration: none">').data("recObject", element);
+	            addImageOrTextIcon($el, element.json, true, 'recommended');
+
+	            return $el;
+	        };
+	    };
+
+	    this.Block = function (name, description, pipeline) {
+
+	        var oi;
+	        for (var i in pipeline.sepas) {
+	            if (jsPlumb.getConnections({ source: pipeline.sepas[i].DOM }).length == 0) {
+	                oi = i;
+	                break;
+	            }
+	        }
+	        this.name = name;
+	        this.description = description;
+	        this.outputIndex = oi;
+	        this.sepas = $.extend([], pipeline.sepas);
+	        this.streams = $.extend([], pipeline.streams);
+
+	        this.getjQueryElement = function () {
+	            var block = this;
+	            var $inner = $('<div>').addClass("block-img-container");
+	            addImageOrTextIcon($inner, block, false, 'block');
+	            return $('<div>').data("block", $.extend({}, this)).addClass("connectable-block").append($('<div>').addClass("block-name tt").text(block.name).attr({
+	                "data-toggle": "tooltip",
+	                "data-placement": "top",
+	                "data-delay": '{"show": 100, "hide": 100}',
+	                title: block.description
+	            })).append($inner);
+	        };
+	    };
+
+	    function addImageOrTextIcon($element, json, small, type) {
+	        var iconUrl = "";
+	        if (type == 'block') {
+	            iconUrl = json.streams[0].iconUrl;
+	        } else {
+	            iconUrl = json.iconUrl;
+	        }
+	        imageChecker.imageExists(iconUrl, function (exists) {
+	            if (exists) {
+	                var $img = $('<img>').attr("src", iconUrl).data("JSON", $.extend(true, {}, json));
+	                if (type == 'draggable') {
+	                    $img.addClass("draggable-img tt");
+	                } else if (type == 'connectable') {
+	                    $img.addClass('connectable-img tt');
+	                } else if (type == 'block') {
+	                    $img.addClass('block-img tt');
+	                } else if (type == 'recommended') {
+	                    $img.addClass('recommended-item-img tt');
+	                }
+	                $element.append($img);
+	            } else {
+	                var name = "";
+	                if (type == 'block') {
+	                    name = json.streams[0].name;
+	                } else {
+	                    name = json.name;
+	                }
+	                var $span = $("<span>").text(getElementIconText(name) || "N/A").attr({
+	                    "data-toggle": "tooltip",
+	                    "data-placement": "top",
+	                    "data-delay": '{"show": 1000, "hide": 100}',
+	                    title: name
+	                }).data("JSON", $.extend(true, {}, json));
+	                if (small) {
+	                    $span.addClass("element-text-icon-small");
+	                } else {
+	                    $span.addClass("element-text-icon");
+	                }
+	                $element.append($span);
+	            }
+	        });
+	    }
+
+	    //return oP;
+	}]).name;
 
 /***/ }
 /******/ ]);

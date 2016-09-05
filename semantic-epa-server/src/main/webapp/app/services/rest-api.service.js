@@ -1,8 +1,3 @@
-//import angular from 'npm/angular';
-
-//export default angular.module('sp.services', []).
-//factory('restApi', restApi);
-
 restApi.$inject = ['$rootScope', '$http', 'apiConstants', 'authService'];
 
 export default function restApi($rootScope, $http, apiConstants, authService) {
