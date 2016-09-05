@@ -65,11 +65,14 @@
 
 	var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
 
-	var _services = __webpack_require__(/*! ./services */ 5);
+	var _services = __webpack_require__(/*! ./services/services.module */ 5);
 
 	var _services2 = _interopRequireDefault(_services);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//import restApi from './services/rest-api.service'
+	//import authService from './services/auth.service'
 
 	//import restApi from './services/rest-api.service'
 	//import authService from './services/auth.service'
@@ -17724,9 +17727,9 @@
 
 /***/ },
 /* 5 */
-/*!***************************!*\
-  !*** ./services/index.js ***!
-  \***************************/
+/*!*************************************!*\
+  !*** ./services/services.module.js ***!
+  \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17739,17 +17742,60 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _constants = __webpack_require__(/*! ../constants/ */ 6);
+	var _constants = __webpack_require__(/*! ../constants/constants.module */ 6);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _restApi = __webpack_require__(/*! ./rest-api.service */ 7);
+	var _restApi = __webpack_require__(/*! ./rest-api.service */ 8);
 
 	var _restApi2 = _interopRequireDefault(_restApi);
 
+	var _auth = __webpack_require__(/*! ./auth.service */ 9);
+
+	var _auth2 = _interopRequireDefault(_auth);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _angular2.default.module('sp.services', []).factory('restApi', _restApi2.default).constant("apiConstants", {
+	exports.default = _angular2.default.module('sp.services', [_constants2.default]).service('authService', _auth2.default).factory('restApi', _restApi2.default).name;
+
+/***/ },
+/* 6 */
+/*!***************************************!*\
+  !*** ./constants/constants.module.js ***!
+  \***************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _angular = __webpack_require__(/*! npm/angular */ 1);
+
+	var _angular2 = _interopRequireDefault(_angular);
+
+	var _generalConstants = __webpack_require__(/*! ./general.constants.js */ 7);
+
+	var _generalConstants2 = _interopRequireDefault(_generalConstants);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _angular2.default.module('sp.constans', []).constant("apiConstants", _generalConstants2.default).name;
+
+/***/ },
+/* 7 */
+/*!****************************************!*\
+  !*** ./constants/general.constants.js ***!
+  \****************************************/
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = {
 		url: "http://localhost",
 		port: "8080",
 		contextPath: "/semantic-epa-backend",
@@ -17780,84 +17826,27 @@
 			anchor: "Left",
 			isTarget: true
 		}
-	}).service('authService', function authService($http, $rootScope, $location, $state) {
-		console.log($location.path());
-
-		var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc").then(function (response) {
-			if (response.data.success == false) {
-				$rootScope.authenticated = false;
-				$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (response) {
-					if (response.data.configured) {
-						console.log(response.data.appConfig);
-						$rootScope.appConfig = response.data.appConfig;
-						if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
-							console.log("configured 769");
-							$state.go("streampipes.login"); //$location.path("/login");
-						}
-					} else $state.go("streampipes.setup");
-				});
-			} else {
-				$rootScope.username = response.data.info.authc.principal.username;
-				$rootScope.email = response.data.info.authc.principal.email;
-				$rootScope.authenticated = true;
-				$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (response) {
-					if (response.data.configured) {
-						console.log(response.data.appConfig);
-						$rootScope.appConfig = response.data.appConfig;
-					}
-				});
-				$http.get("/semantic-epa-backend/api/v2/users/" + $rootScope.email + "/notifications").success(function (notifications) {
-					$rootScope.unreadNotifications = notifications;
-					//console.log($rootScope.unreadNotifications);
-				}).error(function (msg) {
-					console.log(msg);
-				});
-			}
-		}, function (response) {
-			$rootScope.username = undefined;
-			$rootScope.authenticated = false;
-			$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (conf) {
-				if (conf.data.configured) {
-					console.log("configured 805");
-					$state.go("streampipes.login");
-				} else $state.go("streampipes.setup");
-			});
-		});
-
-		return {
-			authenticate: promise
-		};
-	}).name;
+	};
 
 /***/ },
-/* 6 */
-/*!****************************!*\
-  !*** ./constants/index.js ***!
-  \****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _angular = __webpack_require__(/*! npm/angular */ 1);
-
-	var _angular2 = _interopRequireDefault(_angular);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _angular2.default.module('sp.constans', []).name;
-
-/***/ },
-/* 7 */
+/* 8 */
 /*!**************************************!*\
   !*** ./services/rest-api.service.js ***!
   \**************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = restApi;
+	//import angular from 'npm/angular';
+
+	//export default angular.module('sp.services', []).
+	//factory('restApi', restApi);
+
+	restApi.$inject = ['$rootScope', '$http', 'apiConstants', 'authService'];
 
 	function restApi($rootScope, $http, apiConstants, authService) {
 
@@ -17960,7 +17949,7 @@
 		};
 
 		restApi.getOwnStreams = function (source) {
-			return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.elementId) + "/streams");
+			return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.uri) + "/streams");
 		};
 
 		restApi.add = function (elementUri, ispublic) {
@@ -18264,7 +18253,69 @@
 		return restApi;
 	};
 
-	restApi.$inject('$rootScope', '$http', 'apiConstants', 'authService');
+/***/ },
+/* 9 */
+/*!**********************************!*\
+  !*** ./services/auth.service.js ***!
+  \**********************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = authService;
+	authService.$inject = ['$http', '$rootScope', '$location', '$state'];
+
+	function authService($http, $rootScope, $location, $state) {
+		console.log($location.path());
+
+		var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc").then(function (response) {
+			if (response.data.success == false) {
+				$rootScope.authenticated = false;
+				$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (response) {
+					if (response.data.configured) {
+						console.log(response.data.appConfig);
+						$rootScope.appConfig = response.data.appConfig;
+						if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
+							console.log("configured 769");
+							$state.go("streampipes.login"); //$location.path("/login");
+						}
+					} else $state.go("streampipes.setup");
+				});
+			} else {
+				$rootScope.username = response.data.info.authc.principal.username;
+				$rootScope.email = response.data.info.authc.principal.email;
+				$rootScope.authenticated = true;
+				$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (response) {
+					if (response.data.configured) {
+						console.log(response.data.appConfig);
+						$rootScope.appConfig = response.data.appConfig;
+					}
+				});
+				$http.get("/semantic-epa-backend/api/v2/users/" + $rootScope.email + "/notifications").success(function (notifications) {
+					$rootScope.unreadNotifications = notifications;
+					//console.log($rootScope.unreadNotifications);
+				}).error(function (msg) {
+					console.log(msg);
+				});
+			}
+		}, function (response) {
+			$rootScope.username = undefined;
+			$rootScope.authenticated = false;
+			$http.get("/semantic-epa-backend/api/v2/setup/configured").then(function (conf) {
+				if (conf.data.configured) {
+					console.log("configured 805");
+					$state.go("streampipes.login");
+				} else $state.go("streampipes.setup");
+			});
+		});
+
+		return {
+			authenticate: promise
+		};
+	};
 
 /***/ }
 /******/ ]);
