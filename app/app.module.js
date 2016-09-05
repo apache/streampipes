@@ -7,7 +7,7 @@ import ngMdIcons from 'npm/angular-material-icons';
 //import angularLoadingBar from 'npm/angular-loading-bar';
 //import useravatar from 'lib/useravatar';
 //import schemaForm from 'npm/angular-schema-form';
-//import uiRouter from 'npm/angular-ui-router';
+import uiRouter from 'npm/angular-ui-router';
 //import ngPrettyJson from 'npm/ng-prettyjson';
 //import uiTree from 'npm/angular-ui-tree';
 //import ng-context-menu from '';
@@ -19,18 +19,29 @@ import ngMdIcons from 'npm/angular-material-icons';
 //import ngSanitize from 'npm/angular-sanitize';
 //import btfordMarkdown from 'npm/angular-markdown-directive';
 
+//import spConstants from './constants'
+import spServices from './services'
+
+//import restApi from './services/rest-api.service'
+//import authService from './services/auth.service'
+//import spServices from './services/services.module'
+
+
 const MODULE_NAME = 'streamPipesApp';
 
-angular
+export default angular
 	.module(MODULE_NAME, [
 		 //'ngMaterial', 
 															 'ngMdIcons', 
+															 spServices,
+															 //'spConstants',
+															 //'sp-services',
                                //'ngRoute', 
                                //'ngCookies', 
                                //'angularLoadingBar', 
                                //'useravatar', 
                                //'schemaForm', 
-                               //'uiRouter', 
+															 uiRouter, 
                                //'ngPrettyJson', 
                                //'uiTree', 
                                //'ng-context-menu', 
@@ -43,44 +54,43 @@ angular
 			//'btfordMarkdown'
 		])
 	//.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
-	.run(function() {
-		console.log('la')
+	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter) {
 
-		////$location.path("/setup");
-		//var bypass;
+		//$location.path("/setup");
+		var bypass;
 		
-		//if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-			//restApi.configured().success(function(msg) {
-				//if (msg.configured)
-				//{
-					//authService.authenticate;
-				//}
-				//else {
-					//$rootScope.authenticated = false;
-					//$state.go("streampipes.setup");
-				//}
-			//});
-		//}
+		if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
+			restApi.configured().success(function(msg) {
+				if (msg.configured)
+				{
+					authService.authenticate;
+				}
+				else {
+					$rootScope.authenticated = false;
+					$state.go("streampipes.setup");
+				}
+			});
+		}
 		
 
-		//$rootScope.$on('$stateChangeStart',
-			//function(event, toState, toParams, fromState, fromParams){
-			//console.log(toState.name);
-				//var isLogin = toState.name === "streampipes.login";
-				//var isSetup = toState.name === "streampipes.setup";
-				//var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
-				//var isRegister = toState.name === "streampipes.register";
-				//console.log("Setup: " +isSetup +", Login: " +isLogin);
-				//if(isLogin || isSetup || isRegister || isExternalLogin){
-					//return;
-				//}
-				//else if($rootScope.authenticated === false) {
-					//event.preventDefault();
-					//console.log("logging in event prevent");
-					//$state.go('streampipes.login');
-				//}
+		$rootScope.$on('$stateChangeStart',
+			function(event, toState, toParams, fromState, fromParams){
+			console.log(toState.name);
+				var isLogin = toState.name === "streampipes.login";
+				var isSetup = toState.name === "streampipes.setup";
+				var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
+				var isRegister = toState.name === "streampipes.register";
+				console.log("Setup: " +isSetup +", Login: " +isLogin);
+				if(isLogin || isSetup || isRegister || isExternalLogin){
+					return;
+				}
+				else if($rootScope.authenticated === false) {
+					event.preventDefault();
+					console.log("logging in event prevent");
+					$state.go('streampipes.login');
+				}
 
-			//})
+			})
 
 		//$rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 			//authService.authenticate;
@@ -458,5 +468,4 @@ angular
 		//}
 	//});
 
-export default MODULE_NAME;
 

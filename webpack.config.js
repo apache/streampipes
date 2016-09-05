@@ -8,8 +8,8 @@ const BowerWebpackPlugin = require("bower-webpack-plugin");
 
 // define Webpack configuration object to be exported
 let config = {
-	context: `${__dirname}/js`,
-	entry: './app.js',
+	context: `${__dirname}/app`,
+	entry: './app.module.js',
 	output: {
 		path: `${__dirname}/dist`,
 		filename: 'bundle.js'

@@ -1,25 +1,6 @@
  angular
     .module('streamPipesApp')
-    .factory('domainPropertiesService', function($http, restApi){
-    	var domainPropertiesService = {};
-    	
-    	var availableDomainProperties;
-    	
-    	restApi.getOntologyProperties()
-        .success(function(propertiesData){
-            availableDomainProperties = propertiesData;
-        })
-        .error(function(msg){
-            console.log(msg);
-        });
-    	
-    	domainPropertiesService.getDomainProperties = function() {
-    		return availableDomainProperties;
-    	}
-    	
-    	return domainPropertiesService;
-    	
-    }).factory('measurementUnitsService', function($http, restApi){
+ .factory('measurementUnitsService', function($http, restApi){
     	var measurementUnitsService = {};
     	
     	var allMeasurementUnits = {};
