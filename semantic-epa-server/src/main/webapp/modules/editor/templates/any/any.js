@@ -6,9 +6,9 @@ angular.module('streamPipesApp')
             scope : {
                 staticProperty : "="
             },
-            link: function ($scope) {
+            link: function (scope) {
 
-                $scope.toggle = function(option, options) {
+                scope.toggle = function(option, options) {
                     console.log(option.name);
                     angular.forEach(options, function(o) {
                         if (o.elementId === option.elementId) {
@@ -17,24 +17,12 @@ angular.module('streamPipesApp')
                     });
                 }
 
-                $scope.exists = function(option, options) {
+                scope.exists = function(option, options) {
                    angular.forEach(options, function(o) {
                         if (o.elementId === option.elementId) {
                             return option.selected;
                         }
                     });
-                }
-
-                $scope.staticProperty.validator = function() {
-                    console.log("validate");
-                    return selected($scope.staticProperty.properties.options);
-                }
-
-                var selected = function(options) {
-                    angular.forEach(options, function(o) {
-                        if (o.selected) return true;
-                    });
-                    return false;
                 }
 
             }

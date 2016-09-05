@@ -6,6 +6,9 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
+import com.sun.deploy.config.Config;
+import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
 import de.fzi.cep.sepa.storage.api.*;
 import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
@@ -78,15 +81,7 @@ public enum StorageManager {
 			repository = new HTTPRepository(SERVER, REPOSITORY_ID);	
 			conn = repository.getConnection();
 
-			// init couchdb storage
-            this.userStorage = new UserStorage();
-			this.appStorage = new AppStorageImpl();
-			this.connectionStorage = new ConnectionStorageImpl();
-			this.monitoringDataStorage = new MonitoringDataStorageImpl();
-			this.notificationStorage = new NotificationStorageImpl();
-			this.pipelineCategoryStorage = new PipelineCategoryStorageImpl();
-			this.pipelineStorage = new PipelineStorageImpl();
-			this.sepaInvocationStorage = new SepaInvocationStorageImpl();
+			//initCouchDb(false);
 				
 			return true;
 		} catch (Exception e) {
@@ -94,6 +89,21 @@ public enum StorageManager {
 			return false;
 		}
 
+	}
+
+	private void initCouchDb(boolean shutdownExisting) {
+
+		// init couchdb storage
+        if (ConfigurationManager.isConfigured()) {
+            this.userStorage = new UserStorage();
+            this.appStorage = new AppStorageImpl();
+            this.connectionStorage = new ConnectionStorageImpl();
+            this.monitoringDataStorage = new MonitoringDataStorageImpl();
+            this.notificationStorage = new NotificationStorageImpl();
+            this.pipelineCategoryStorage = new PipelineCategoryStorageImpl();
+            this.pipelineStorage = new PipelineStorageImpl();
+            this.sepaInvocationStorage = new SepaInvocationStorageImpl();
+        }
 	}
 
 	private boolean initEmpire() {
@@ -161,10 +171,10 @@ public enum StorageManager {
 	}
 	
 	public ConnectionStorage getConnectionStorageApi() {
-		return connectionStorage;
+		return new ConnectionStorageImpl();
 	}
 
-	public UserStorage getUserStorageAPI() { return userStorage; }
+	public UserStorage getUserStorageAPI() { return new UserStorage(); }
 	
 	public UserService getUserService() {
 		return new UserService(getUserStorageAPI());
@@ -172,25 +182,28 @@ public enum StorageManager {
 
 	public MonitoringDataStorage getMonitoringDataStorageApi()
 	{
-		return monitoringDataStorage;
+		return new MonitoringDataStorageImpl();
 	}
 	
 	public NotificationStorage getNotificationStorageApi()
 	{
-		return notificationStorage;
+		return new NotificationStorageImpl();
 	}
 	
 	public PipelineCategoryStorage getPipelineCategoryStorageApi() {
-		return pipelineCategoryStorage;
+		return new PipelineCategoryStorageImpl();
 	}
 	
 	public AppStorage getAppStorageApi() {
-		return appStorage;
+		return new AppStorageImpl();
 	}
 	
 	public ContextStorage getContextStorage() {
 		return new ContextStorageImpl(bkrepo);
 	}
 
+	public void reloadCouchDb() {
+		this.initCouchDb(true);
+	}
 
 }

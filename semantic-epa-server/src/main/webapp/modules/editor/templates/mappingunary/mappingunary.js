@@ -6,11 +6,8 @@ angular.module('streamPipesApp')
             scope : {
                 staticProperty : "="
             },
-            link: function ($scope) {
-
-                $scope.staticProperty.validator = function() {
-                    return $scope.staticProperty.properties.mapsTo;
-                }
+            link: function (scope) {
+                
 
             }
         }
