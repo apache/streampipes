@@ -99,7 +99,7 @@ function restApi($rootScope, $http, apiConstants, authService) {
 	}
 
 	restApi.getOwnStreams = function(source){
-		return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.elementId) + "/streams");
+		return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.uri) + "/streams");
 
 	};
 

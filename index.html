@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html ng-app="streamPipesApp" lang="EN" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -111,6 +111,19 @@
 	<!--<script type="text/javascript" src="modules/dashboard/lib/mlhr-table.js"></script>-->
 	<!-- Dashboard -->
 
+	<!-- Changes Dominik -->
+    <!--<script type="text/javascript" src="modules/editor/templates/any/any.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/freetext/freetext.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/oneof/oneof.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/domainconcept/domainconcept.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/customoutput/customoutput.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/mappingnary/mappingnary.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/mappingunary/mappingunary.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/matchingproperty/matchingproperty.js"></script>-->
+    <!--<script type="text/javascript" src="modules/editor/templates/replaceoutput/replaceoutput.js"></script>-->
+	<!-- Changes Dominik -->
+
+
 
 	<link rel="stylesheet" href="css/jsplumb.css"/>
 	<link rel="stylesheet" href="css/toastr.css"/>
@@ -141,57 +154,57 @@
 </head>
 
 <body layout="row">
-<div flex layout="column" tabIndex="-1" role="main" id ="topDiv">
-	
-	<div ui-view="top"></div>
-	<div ui-view="container" flex layout="column" layout-fill style="min-height: 100vh"></div>
+<div flex layout="column" tabIndex="-1" role="main" id="topDiv">
+
+    <div ui-view="top"></div>
+    <div ui-view="container" flex layout="column" layout-fill style="min-height: 100vh"></div>
 
 </div>
 
-<div id ="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Manage</h4>
-			</div>
-			<div class="modal-body">
-				<div id="elementList">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" >
-						Close
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+<div id="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">Manage</h4>
+            </div>
+            <div class="modal-body">
+                <div id="elementList">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 <div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Tutorial</h4>
-			</div>
-			<div class="modal-body">
-				<div id="tutorial-content">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
-						Close
-					</button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">Tutorial</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tutorial-content">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

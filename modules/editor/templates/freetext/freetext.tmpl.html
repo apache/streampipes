@@ -1,0 +1,15 @@
+<div ng-if="!staticProperty.properties.valueSpecification">
+    <md-input-container flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
+        <input name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"/>
+    </md-input-container>
+</div>
+<div ng-if="staticProperty.properties.valueSpecification">
+    <md-input-container flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
+        <input name="{{staticProperty.properties.elementName}}" type="text" ng-model="staticProperty.properties.value">
+        <md-slider flex min="{{staticProperty.properties.valueSpecification.minValue}}"
+                   max="{{staticProperty.properties.valueSpecification.maxValue}}"
+                   step="{{staticProperty.properties.valueSpecification.step}}"
+                   ng-model="staticProperty.properties.value" class>
+        </md-slider>
+    </md-input-container>
+</div>
