@@ -32,31 +32,6 @@ let config = {
 					presets: ['es2015']
 				}
 			}
-			//{
-			//test: /(\.js)$/,
-			//loader: 'babel',
-			//exclude: /(node_modules)/
-			//}, 
-			//{
-			//test: /\.(woff|woff2)$/,
-			//loader: 'url?limit=10000&mimetype=application/font-woff'
-			//},
-			//{
-			//test: /\.(eot|svg|ttf)$/,
-			//loader: 'file'
-			//},
-			//{
-			//test: /\.js?$/,
-			//include: `${__dirname}/app`, 
-			//loader: 'babel'
-			//}
-			//],
-			//preLoaders: [
-			//{
-			//test: /\.js?$/,
-			//exclude: /node_modules/,
-			//loader: 'jshint'
-			//}
 		]
 	},
 	plugins: [
@@ -64,12 +39,6 @@ let config = {
 		new ngAnnotatePlugin({
 			add: true
 		}),
-		new BowerWebpackPlugin(),
-		//new webpack.optimize.UglifyJsPlugin({
-		//compress: {
-		//warnings: false
-		//}
-		//})
 	]
 };
 

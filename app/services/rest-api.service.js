@@ -1,4 +1,11 @@
-function restApi($rootScope, $http, apiConstants, authService) {
+//import angular from 'npm/angular';
+
+//export default angular.module('sp.services', []).
+//factory('restApi', restApi);
+
+restApi.$inject = ['$rootScope', '$http', 'apiConstants', 'authService'];
+
+export default function restApi($rootScope, $http, apiConstants, authService) {
 
 	var restApi = {};
 
@@ -404,6 +411,3 @@ function restApi($rootScope, $http, apiConstants, authService) {
 
 	return restApi;
 };
-
-
-restApi.$inject('$rootScope', '$http', 'apiConstants', 'authService')

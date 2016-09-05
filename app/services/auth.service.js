@@ -1,4 +1,4 @@
-import angular from 'npm/angular';
+authService.$inject = ['$http', '$rootScope', '$location', '$state'];
 
 export default function authService ($http, $rootScope, $location, $state) {
 		console.log($location.path());

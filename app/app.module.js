@@ -20,7 +20,9 @@ import uiRouter from 'npm/angular-ui-router';
 //import btfordMarkdown from 'npm/angular-markdown-directive';
 
 //import spConstants from './constants'
-import spServices from './services'
+import spServices from './services/services.module'
+//import restApi from './services/rest-api.service'
+//import authService from './services/auth.service'
 
 //import restApi from './services/rest-api.service'
 //import authService from './services/auth.service'
