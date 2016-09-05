@@ -6,30 +6,40 @@ angular.module('streamPipesApp')
             scope : {
                 outputStrategy : "="
             },
-            link: function ($scope) {
-                $scope.toggle = function(property, outputStrategy) {
-                    if ($scope.exists(property, outputStrategy)) {
-                        remove(property, outputStrategy);
+            link: function (scope) {
+                scope.toggle = function(property) {
+                    if (scope.exists(property)) {
+                        remove(property);
                     } else {
-                        add(property, outputStrategy);
+                        add(property);
                     }
                 }
 
-                $scope.exists = function(property, outputStrategy) {
-                    if (!outputStrategy.properties.eventProperties) return false;
-                    return outputStrategy.properties.eventProperties.indexOf(property) > -1;
+                scope.exists = function(property) {
+                   if (!scope.outputStrategy.properties.eventProperties) {
+                       return false;
+                   } else {
+                       var valid = false;
+                       angular.forEach(scope.outputStrategy.properties.eventProperties, function(p) {
+                           if (property.properties.elementId === p.properties.elementId) {
+                               valid = true;
+                           }
+                       });
+                       return valid;
+                   }
                 }
 
-                var add = function(property, outputStrategy) {
-                    if (!outputStrategy.properties.eventProperties) {
-                        outputStrategy.properties.eventProperties = [];
+                var add = function(property) {
+                    if (!scope.outputStrategy.properties.eventProperties) {
+                        scope.outputStrategy.properties.eventProperties = [];
                     }
-                    outputStrategy.properties.eventProperties.push(property);
+                    scope.outputStrategy.properties.eventProperties.push(property);
+
                 }
 
-                var remove = function(property, outputStrategy) {
-                    var index = outputStrategy.properties.eventProperties.indexOf(property);
-                    outputStrategy.properties.eventProperties.splice(index, 1);
+                var remove = function(property) {
+                    var index = scope.outputStrategy.properties.eventProperties.indexOf(property);
+                    scope.outputStrategy.properties.eventProperties.splice(index, 1);
                 }
                 
             }

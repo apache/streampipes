@@ -6,8 +6,8 @@ angular.module('streamPipesApp')
             scope : {
                 outputStrategy : "="
             },
-            link: function ($scope) {
-                console.log($scope.outputStrategy);
+            link: function (scope) {
+               
             }
         }
 

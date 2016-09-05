@@ -71,7 +71,7 @@
         </div>
         <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
             <div layout="column" class="customize-item-main">
-                <div ng-if="outputStrategy.type == 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
+                <div ng-if="outputStrategy.type === 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
 
                     <div class="customize-item-title" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">
@@ -83,7 +83,7 @@
                     </div>
 
                 </div>
-                <div ng-if="outputStrategy.type=='de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
+                <div ng-if="outputStrategy.type === 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
 
                     <div class="customize-item-title" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">

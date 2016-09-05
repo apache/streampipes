@@ -301,7 +301,6 @@ angular.module('streamPipesApp')
             }
 
             function connectPipelineElements(json, detachable) {
-                console.log("connectPipelineElements()");
                 var source, target;
                 var sourceEndpoint;
                 var targetEndpoint
@@ -422,7 +421,6 @@ angular.module('streamPipesApp')
                 var promises = [];
                 restApi.getOwnSources()
                     .then(function (sources) {
-                        console.log(sources);
                         sources.data.forEach(function (source, i, sources) {
                             //promises.push(restApi.getOwnStreams(source));
                             source.eventStreams.forEach(function (stream) {
@@ -430,7 +428,6 @@ angular.module('streamPipesApp')
                                 tempStreams = tempStreams.concat(stream);
                             });
                             $scope.currentElements = tempStreams;
-                            console.log($scope.currentElements);
                         });
                     }, function (msg) {
                         console.log(msg);
@@ -471,7 +468,6 @@ angular.module('streamPipesApp')
             };
 
             var makeDraggable = function () {
-                console.log("MAKING DRAGGABLE");
                 $('.draggable-icon').draggable({
                     revert: 'invalid',
                     helper: 'clone',
@@ -573,14 +569,12 @@ angular.module('streamPipesApp')
             };
             $scope.actionDropped = function ($newElement, endpoints) {
                 $scope.isActionInAssembly = true;
-                console.log($newElement.data("JSON"));
                 $newElement
                     .addClass("connectable action");
 
                 if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState) {
                     $newElement
                         .addClass('disabled');
-                    console.log("disabled");
                 }
                 if (endpoints) {
                     jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
@@ -677,14 +671,10 @@ angular.module('streamPipesApp')
                                         if ($(id).length > 0) {
                                             if ($(id).data("options") != true) {
                                                 if (!isFullyConnected(id)) {
-                                                    console.log("fully");
                                                     return;
                                                 }
                                                 var sourceEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
-                                                console.log(sourceEndpoint);
                                                 $scope.showCustomizeDialog($(id), sepa.name, sourceEndpoint);
-                                                console.log("INFO");
-                                                console.log(info);
                                             }
                                         }
                                     }
@@ -713,8 +703,6 @@ angular.module('streamPipesApp')
             }
 
             function initAssembly() {
-                console.log("INIT ASSEMBLY")
-
                 $('#assembly').droppable({
                     tolerance: "fit",
                     drop: function (element, ui) {
@@ -771,7 +759,6 @@ angular.module('streamPipesApp')
 
                     })
                     .on('click', ".recommended-item", function (e) {
-                        console.log(e);
                         e.stopPropagation();
                         createAndConnect(this);
                     });
@@ -816,7 +803,6 @@ angular.module('streamPipesApp')
                 var element = info.target;
 
                 addElementToPartialPipeline(element, pipelinePart);
-                console.log(pipelinePart);
                 $rootScope.state.currentPipeline = pipelinePart;
             }
 
@@ -1046,7 +1032,6 @@ angular.module('streamPipesApp')
             }
 
             function createAndConnect(target) {
-                console.log(target);
                 var json = $("a", $(target)).data("recObject").json;
                 var $parentElement = $(target).parents(".connectable");
                 var x = $parentElement.position().left;
@@ -1284,7 +1269,6 @@ angular.module('streamPipesApp')
             }
 
             function addAutoComplete(input, datatype) {
-                console.log(input);
                 $("#" + input).autocomplete({
                     source: function (request, response) {
                         $.ajax({
@@ -1317,7 +1301,6 @@ angular.module('streamPipesApp')
                     toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Block Creation Error");
                     return;
                 }
-                console.log(blockData);
 
                 if (blockData.length == 2 && blockData[1] === "on") {
                     restApi.saveBlock(block)
@@ -1372,7 +1355,6 @@ angular.module('streamPipesApp')
 
             function createBlock() {
                 var blockData = $('#blockNameForm').serializeArray(); //TODO SAVE
-                console.log(blockData);
                 var blockPipeline = new objectProvider.Pipeline();
                 $('.ui-selected').each(function () {
                     var $el = $(this)
@@ -1468,7 +1450,6 @@ angular.module('streamPipesApp')
                     var menuWidth = $('#assemblyContextMenu').width();
                 }
                 var mainCoords = $('#main').position();
-                console.log(mainCoords);
                 var mouseWidth = e.pageX;
                 var pageWidth = $(window).width();
 
@@ -1491,7 +1472,6 @@ angular.module('streamPipesApp')
                 var pageHeight = $(window).height();
 
                 if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
-                    console.log("scroll");
                     return mouseHeight - menuHeight;
                 }
 
@@ -1568,7 +1548,6 @@ angular.module('streamPipesApp')
                 elem.attr({'data-toggle': "tooltip", 'data-placement': "top", 'title': scope.element.name});
                 elem.tooltip();
                 if (scope.$last) {
-                    console.log("BROADCASTING");
                     $rootScope.$broadcast("elements.loaded");
                 }
             }
@@ -1859,7 +1838,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
                                 }
                             })
                             .error(function (data) {
-                                toastRightTop("error", "Could not delete Pipeline")
+                                toastRightTop("error", "Could not delete Pipeline");
                                 console.log(data);
                             })
 
@@ -1972,7 +1951,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
             $rootScope.state.currentElement.removeClass("disabled");
             $rootScope.$broadcast("SepaElementConfigured", elementData);
             $scope.hide();
-            //sourceEndpoint.setType("token");
+            sourceEndpoint.setType("token");
         }
         else $scope.invalid = true;
     }

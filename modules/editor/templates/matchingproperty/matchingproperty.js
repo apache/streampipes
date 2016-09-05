@@ -1,17 +1,13 @@
 angular.module('streamPipesApp')
     .directive('matchingProperty', function ($interval) {
         return {
-            restrict : 'E',
-            templateUrl : 'modules/editor/templates/matchingproperty/matchingproperty.tmpl.html',
-            scope : {
-                staticProperty : "="
+            restrict: 'E',
+            templateUrl: 'modules/editor/templates/matchingproperty/matchingproperty.tmpl.html',
+            scope: {
+                staticProperty: "="
             },
-            link: function ($scope) {
-                
+            link: function (scope) {
 
-                $scope.staticProperty.validator = function() {
-                    return true;
-                }
             }
         }
 
