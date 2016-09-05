@@ -1038,7 +1038,7 @@ angular.module('streamPipesApp')
                 var y = $parentElement.position().top;
                 var coord = {'x': x + 200, 'y': y};
                 var $target;
-                if (json.elementId.indexOf("sepa") > 0) { //Sepa Element
+                if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
                     $target = $scope.sepaDropped(createNewAssemblyElement(json, coord), true);
                 } else {
                     $target = $scope.actionDropped(createNewAssemblyElement(json, coord), true);
@@ -1951,7 +1951,7 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
             $rootScope.state.currentElement.removeClass("disabled");
             $rootScope.$broadcast("SepaElementConfigured", elementData);
             $scope.hide();
-            sourceEndpoint.setType("token");
+            if (sourceEndpoint) sourceEndpoint.setType("token");
         }
         else $scope.invalid = true;
     }
