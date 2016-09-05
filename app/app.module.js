@@ -21,6 +21,7 @@ import uiRouter from 'npm/angular-ui-router';
 
 //import spConstants from './constants'
 import spServices from './services/services.module'
+import delme from './delme'
 //import restApi from './services/rest-api.service'
 //import authService from './services/auth.service'
 
@@ -35,6 +36,7 @@ export default angular
 	.module(MODULE_NAME, [
 		 //'ngMaterial', 
 															 'ngMdIcons', 
+															 delme,
 															 spServices,
 															 //'spConstants',
 															 //'sp-services',
@@ -55,8 +57,7 @@ export default angular
                                //'ngSanitize',
 			//'btfordMarkdown'
 		])
-	//.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
-	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter) {
+	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 
 		//$location.path("/setup");
 		var bypass;
@@ -94,15 +95,15 @@ export default angular
 
 			})
 
-		//$rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-			//authService.authenticate;
-		//});
-		//$rootScope.state = new objectProvider.State();
-		//$rootScope.state.sources = false;
-		//$rootScope.state.sepas = false;
-		//$rootScope.state.actions = false;
-		//$rootScope.state.adjustingPipelineState = false;
-		//$rootScope.state.adjustingPipeline = {};
+		$rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
+			authService.authenticate;
+		});
+		$rootScope.state = new objectProvider.State();
+		$rootScope.state.sources = false;
+		$rootScope.state.sepas = false;
+		$rootScope.state.actions = false;
+		$rootScope.state.adjustingPipelineState = false;
+		$rootScope.state.adjustingPipeline = {};
 
 	})
 	
