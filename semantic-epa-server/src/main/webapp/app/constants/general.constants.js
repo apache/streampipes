@@ -1,5 +1,7 @@
- angular
-    .module('streamPipesApp')
+import angular from 'npm/angular';
+
+export default angular
+    .module('sp.constans')
     .constant("apiConstants", {
         url: "http://localhost",
         port: "8080",
