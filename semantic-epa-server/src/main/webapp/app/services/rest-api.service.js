@@ -416,11 +416,19 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getAuthc = function() {
-		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/admin/authc")
+		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/admin/authc");
 	}
 
 	restApi.login = function(credentials) {
-		return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/admin/login", credentials)
+		return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/admin/login", credentials);
+	}
+
+	restApi.setupInstall = function(setup) {
+			return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/setup/install", setup);
+	}
+
+	restApi.register = function(payload) {
+			return $http.post(getServerUrl() +"/semantic-epa-backend/api/v2/admin/register", payload);
 	}
 
 	return restApi;
