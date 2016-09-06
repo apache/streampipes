@@ -15,7 +15,13 @@
 			<param-name>cors.supportedMethods</param-name>
 			<param-value>GET, POST, HEAD, PUT, DELETE</param-value>
 		</init-param>
+		<init-param>
+			<param-name>cors.supportedHeaders</param-name>
+			<param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+		</init-param>
 	</filter>
+
+
 
 	<filter-mapping>
 		<filter-name>ShiroFilter</filter-name>

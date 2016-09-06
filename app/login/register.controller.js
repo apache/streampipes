@@ -1,6 +1,6 @@
-RegisterCtrl.$inject = ['$scope', '$timeout', '$mdSidenav', '$mdUtil', '$log', '$http'];
+RegisterCtrl.$inject = ['$scope', 'restApi'];
 
-export default function RegisterCtrl($scope, $timeout, $mdSidenav, $mdUtil, $log, $http) {
+export default function RegisterCtrl($scope, restApi) {
 
 		$scope.loading = false;
 		$scope.registrationFailed = false;
@@ -26,7 +26,7 @@ export default function RegisterCtrl($scope, $timeout, $mdSidenav, $mdUtil, $log
 			$scope.registrationSuccess = false;
 			$scope.errorMessage = "";
 
-			$http.post("/semantic-epa-backend/api/v2/admin/register", payload)
+			restApi.register()
 				.then(
 					function(response) {
 						$scope.loading = false;

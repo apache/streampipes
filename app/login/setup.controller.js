@@ -1,6 +1,6 @@
-LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$http', 'restApi', '$mdToast'];
+SetupCtr.$inject = ['$scope', '$location', 'restApi', '$mdToast'];
 
-export default function SetupCtr($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
+export default function SetupCtr($scope, $location, restApi, $mdToast) {
 
 		$scope.installationFinished = false;
 		$scope.installationSuccessful = false;
@@ -43,7 +43,7 @@ export default function SetupCtr($rootScope, $scope, $timeout, $log, $location, 
 
 		$scope.configure = function() {
 			$scope.loading = true;
-			$http.post("/semantic-epa-backend/api/v2/setup/install", $scope.setup).success(function(data) {
+			restApi.setupInstall.success(function(data) {
 				$scope.installationFinished = true;
 				$scope.installationResults = data;
 				$scope.loading = false;
