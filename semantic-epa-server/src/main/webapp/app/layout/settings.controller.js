@@ -1,6 +1,6 @@
 SettingsCtrl.$inject = ['$rootScope', '$scope', 'restApi', '$mdToast'];
 
-function SettingsCtrl($rootScope, $scope, restApi, $mdToast) {
+export default function SettingsCtrl($rootScope, $scope, restApi, $mdToast) {
 
 		$scope.loading = false;
 

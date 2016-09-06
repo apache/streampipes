@@ -1,7 +1,6 @@
 authService.$inject = ['$http', '$rootScope', '$location', '$state', 'restApi'];
 
 export default function authService ($http, $rootScope, $location, $state, restApi) {
-		console.log($location.path());
 
 		//var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
 
