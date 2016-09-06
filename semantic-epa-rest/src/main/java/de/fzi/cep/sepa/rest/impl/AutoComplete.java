@@ -21,7 +21,7 @@ import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.ontology.QueryExecutor;
 import de.fzi.cep.sepa.storage.sparql.QueryBuilder;
 
-@Path("/autocomplete")
+@Path("/v2/autocomplete")
 public class AutoComplete extends AbstractRestInterface {
 
     @GET
