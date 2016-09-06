@@ -56,7 +56,7 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		int timeWindowSize = Integer.parseInt(
 				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 		

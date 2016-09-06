@@ -49,6 +49,7 @@ public class UserStorage extends Storage<User> {
     public boolean emailExists(String email)
     {
     	List<User> users = getAll();
+        System.out.println(users.size());
     	return users.stream().anyMatch(u -> u.getEmail().equals(email));
     }
     

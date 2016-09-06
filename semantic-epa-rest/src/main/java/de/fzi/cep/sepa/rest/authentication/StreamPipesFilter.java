@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by robin on 21.05.15.
  */
 
-public class StreamPipeFilter extends UserFilter {
+public class StreamPipesFilter extends UserFilter {
     private static final String message = "Access denied!";
 
     @Override
