@@ -36,7 +36,8 @@ let config = {
 		]
 	},
 	devServer: {
-		contentBase: `${__dirname}/`
+		contentBase: `${__dirname}/`,
+		port: 8081
 		//inline: true
 	},
 	plugins: [

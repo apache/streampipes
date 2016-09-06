@@ -27,6 +27,11 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
+	<filter-mapping>
+		<filter-name>CORS</filter-name>
+		<url-pattern>/img/*</url-pattern>
+	</filter-mapping>
+
 	<listener>
 		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 	</listener>
