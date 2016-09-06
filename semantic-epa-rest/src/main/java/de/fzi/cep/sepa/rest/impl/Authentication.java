@@ -92,7 +92,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         Set<Role> roles = new HashSet<Role>();
         roles.add(data.getRole());
-
+System.out.println(data.getEmail());
         if (StorageManager.INSTANCE.getUserStorageAPI().emailExists(data.getEmail())) {
 			return ok(Notifications.error("This email address already exists. Please choose another address."));
 		}

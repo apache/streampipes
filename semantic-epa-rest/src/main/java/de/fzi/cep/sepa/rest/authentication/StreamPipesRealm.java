@@ -28,13 +28,13 @@ import java.util.List;
  *
  * Created by robin on 26.04.15.
  */
-public  class StreamPipeRealm implements Realm {
+public  class StreamPipesRealm implements Realm {
 
-    Logger LOG = LoggerFactory.getLogger(StreamPipeRealm.class);
+    Logger LOG = LoggerFactory.getLogger(StreamPipesRealm.class);
 
     SimpleCredentialsMatcher credentialsMatcher;
 
-    public StreamPipeRealm() {
+    public StreamPipesRealm() {
         this.credentialsMatcher = new SimpleCredentialsMatcher();
     }
 
@@ -92,15 +92,5 @@ public  class StreamPipeRealm implements Realm {
         }
 
         return null;
-        //System.out.println(authenticationToken.getPrincipal().toString());
-
-        //Get AuthenticationInfo from System
-       /* SimpleAuthenticationInfo info = new SimpleAuthenticationInfo();
-        SimplePrincipalCollection principals = new SimplePrincipalCollection();
-        principals.add("username", this.getName());
-        info.setPrincipals(principals);
-        info.setCredentials("password");*/
-
-
     }
 }
