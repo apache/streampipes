@@ -2,8 +2,8 @@ package de.fzi.cep.sepa.manager.matching;
 
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.manager.matching.v2.TestUtils;
-import de.fzi.cep.sepa.messages.PipelineModificationMessage;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;

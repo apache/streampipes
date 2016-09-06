@@ -107,14 +107,9 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 		String longitudeMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-longitude");
 		String partitionMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-partition");
 		GeofencingParameters params = new GeofencingParameters(invocationGraph, getOperation(operation), geofencingData, latitudeMapping, longitudeMapping, partitionMapping);
-		
-		try {
-			invokeEPRuntime(params, Geofencing::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, Geofencing::new, invocationGraph);
+
 	}
 
 	private GeofencingOperation getOperation(String operation) {

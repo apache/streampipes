@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 

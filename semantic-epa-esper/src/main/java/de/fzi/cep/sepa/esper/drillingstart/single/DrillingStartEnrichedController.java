@@ -46,15 +46,9 @@ public class DrillingStartEnrichedController extends FlatEpDeclarer<DrillingStar
 				minTorque,
 				latPropertyName,
 				lngPropertyName);
-	
-		try {
-			invokeEPRuntime(staticParam, DrillingStartEnriched::new, sepa);
-			new Thread(new EnrichedDataSimulator(staticParam.getInputStreamParams().get(0).getInName())).start();
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, DrillingStartEnriched::new, sepa);
+
 	}
 	
 	@Override

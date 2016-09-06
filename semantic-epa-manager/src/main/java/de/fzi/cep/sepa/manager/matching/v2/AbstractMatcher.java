@@ -2,9 +2,9 @@ package de.fzi.cep.sepa.manager.matching.v2;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.messages.MatchingResultFactory;
-import de.fzi.cep.sepa.messages.MatchingResultMessage;
-import de.fzi.cep.sepa.messages.MatchingResultType;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultFactory;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultType;
 
 public abstract class AbstractMatcher<L, R> implements Matcher<L, R>{
 

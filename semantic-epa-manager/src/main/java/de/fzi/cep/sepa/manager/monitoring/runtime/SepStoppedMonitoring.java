@@ -20,7 +20,7 @@ import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
 import de.fzi.cep.sepa.commons.messaging.IMessageListener;
 import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
 

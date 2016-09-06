@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import de.fzi.cep.sepa.rest.api.INotification;
 import de.fzi.cep.sepa.storage.controller.StorageManager;

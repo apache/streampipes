@@ -124,13 +124,8 @@ public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParam
 				latPropertyName, 
 				lngPropertyName,
 				selectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, GridEnrichment::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, GridEnrichment::new, sepa);
+
 	}
 }

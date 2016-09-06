@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.client.standalone.init;
 
 import de.fzi.cep.sepa.client.api.*;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import org.eclipse.jetty.server.Server;
 import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;

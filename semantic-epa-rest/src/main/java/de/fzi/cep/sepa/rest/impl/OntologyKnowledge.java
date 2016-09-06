@@ -14,7 +14,7 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryException;
 
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.model.client.ontology.Concept;
 import de.fzi.cep.sepa.model.client.ontology.Instance;
 import de.fzi.cep.sepa.model.client.ontology.Namespace;

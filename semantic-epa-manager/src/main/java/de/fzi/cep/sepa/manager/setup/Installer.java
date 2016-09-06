@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.WebappConfigurationSettings;
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
 
 public class Installer {
 

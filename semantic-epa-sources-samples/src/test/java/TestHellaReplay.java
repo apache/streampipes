@@ -1,5 +1,4 @@
 import de.fzi.cep.sepa.sources.samples.hella.MaterialMovementStream;
-import de.fzi.cep.sepa.sources.samples.hella.MouldingParameterStream;
 
 
 public class TestHellaReplay {

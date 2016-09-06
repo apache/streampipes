@@ -93,14 +93,9 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
 		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
-		
-		try {
-			invokeEPRuntime(params, And::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, And::new, invocationGraph);
+
 	}
 
 }

@@ -78,14 +78,9 @@ public class DistributionController extends FlatEpDeclarer<DistributionParameter
 				sepa, 
 				timeWindow,
 				mapping);
-	
-		try {
-			invokeEPRuntime(staticParam, Distribution::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Distribution::new, sepa);
+
 	}
 
 }

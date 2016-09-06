@@ -3,12 +3,10 @@ package de.fzi.cep.sepa.flink.samples.classification.number;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
-import de.fzi.cep.sepa.flink.converter.ObjectToMapConverter;
 
 public class NumberClassificationProgram extends FlinkSepaRuntime<NumberClassificationParameters>
 		implements Serializable {

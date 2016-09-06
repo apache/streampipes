@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.manager.matching.v2.TestUtils;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomNumberStreamJson;
 

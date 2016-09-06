@@ -6,9 +6,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
 public interface EventStreamDeclarer {
 
-	public EventStream declareModel(SepDescription sep);
+	EventStream declareModel(SepDescription sep);
 	
-	public void executeStream();
+	void executeStream();
 	
-	public boolean isExecutable();
+	boolean isExecutable();
 }

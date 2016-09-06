@@ -6,7 +6,7 @@ import java.util.List;
 import de.fzi.cep.sepa.manager.verification.messages.VerificationError;
 import de.fzi.cep.sepa.manager.verification.messages.VerificationResult;
 import de.fzi.cep.sepa.manager.verification.messages.VerificationWarning;
-import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
 
 public abstract class AbstractVerifier implements Verifier {
 

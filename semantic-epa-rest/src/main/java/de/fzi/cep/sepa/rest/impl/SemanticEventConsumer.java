@@ -18,9 +18,9 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
-import de.fzi.cep.sepa.messages.Notification;
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.rest.api.IPipelineElement;
 import de.fzi.cep.sepa.storage.filter.Filter;
@@ -124,7 +124,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			return ok(requestor.getSECById(elementUri));
+			return ok(new SecInvocation(new SecInvocation(requestor.getSECById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

@@ -11,13 +11,12 @@ import de.fzi.cep.sepa.manager.execution.http.PipelineStorageService;
 import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
-import de.fzi.cep.sepa.messages.AppInstallationMessage;
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.PipelineModificationMessage;
-import de.fzi.cep.sepa.messages.PipelineOperationStatus;
-import de.fzi.cep.sepa.messages.RecommendationMessage;
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.messages.AppInstallationMessage;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineOperationStatus;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendationMessage;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 
 
 /**
@@ -56,7 +55,7 @@ public class Operations {
 		return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate(username);
 	}
 	
-	public static RecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
+	public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
 	{
 		return new ElementRecommender(partialPipeline).findRecommendedElements();
 	}
@@ -66,23 +65,23 @@ public class Operations {
 	}
 
 	public static PipelineOperationStatus startPipeline( 
-			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+			Pipeline pipeline) {
 		return startPipeline(pipeline, true, true, false);
 	}
 	
-	public static PipelineOperationStatus startPipeline( 
-			de.fzi.cep.sepa.model.client.Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+	public static PipelineOperationStatus startPipeline(
+			Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
 		return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();		
 	}
 
 	public static PipelineOperationStatus stopPipeline( 
-			de.fzi.cep.sepa.model.client.Pipeline pipeline) {
+			Pipeline pipeline) {
 		return stopPipeline(pipeline, true, true, false);
 	}
 
 
-	public static PipelineOperationStatus stopPipeline( 
-			de.fzi.cep.sepa.model.client.Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
+	public static PipelineOperationStatus stopPipeline(
+			Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor) {
 		return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();
 	}
 	

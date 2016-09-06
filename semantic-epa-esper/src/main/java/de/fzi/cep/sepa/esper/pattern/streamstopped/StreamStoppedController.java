@@ -68,13 +68,8 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 	
 		String topic = SepaUtils.getFreeTextStaticPropertyValue(sepa, "topic");
 		StreamStoppedParameter staticParam = new StreamStoppedParameter(sepa, topic);
-		
-		try {
-			invokeEPRuntime(staticParam, StreamStopped::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, StreamStopped::new, sepa);
+
 	}
 }

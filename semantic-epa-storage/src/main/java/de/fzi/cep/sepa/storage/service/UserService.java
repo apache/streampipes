@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.lightcouch.CouchDbClient;
 
 import de.fzi.cep.sepa.commons.exceptions.ElementNotFoundException;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.user.User;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import de.fzi.cep.sepa.storage.impl.UserStorage;

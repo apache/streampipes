@@ -1,13 +1,8 @@
 package de.fzi.cep.sepa.actions.samples.proasense;
 
-import static org.rendersnake.HtmlAttributesFactory.id;
-import static org.rendersnake.HtmlAttributesFactory.onClick;
-import static org.rendersnake.HtmlAttributesFactory.type;
-
 import java.io.IOException;
 
 import org.rendersnake.HtmlCanvas;
-import org.rendersnake.StringResource;
 
 import de.fzi.cep.sepa.actions.samples.HtmlGenerator;
 

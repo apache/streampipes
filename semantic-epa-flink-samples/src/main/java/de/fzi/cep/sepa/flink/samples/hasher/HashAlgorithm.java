@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public interface HashAlgorithm extends Serializable {
 
-	public String toHashValue(Object value);
+	String toHashValue(Object value);
 }

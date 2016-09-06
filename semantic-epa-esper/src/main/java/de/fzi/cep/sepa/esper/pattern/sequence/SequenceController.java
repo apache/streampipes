@@ -95,14 +95,9 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
 		List<String> matchingProperties = new ArrayList<>();
 		SequenceParameters params = new SequenceParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
-		
-		try {
-			invokeEPRuntime(params, Sequence::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, Sequence::new, invocationGraph);
+
 	}
 
 }

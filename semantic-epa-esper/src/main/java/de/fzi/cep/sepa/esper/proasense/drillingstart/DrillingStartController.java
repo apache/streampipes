@@ -46,14 +46,9 @@ public class DrillingStartController extends FlatEpDeclarer<DrillingStartParamet
 				minTorque,
 				latPropertyName,
 				lngPropertyName);
-	
-		try {
-			invokeEPRuntime(staticParam, DrillingStart::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, DrillingStart::new, sepa);
+
 	}
 	
 	@Override

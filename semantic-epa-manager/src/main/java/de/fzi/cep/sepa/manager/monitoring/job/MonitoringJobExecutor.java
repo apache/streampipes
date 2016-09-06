@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.manager.monitoring.job;
 
 import java.util.Date;
 import java.util.List;
-import java.util.TimerTask;
 
 import com.google.gson.Gson;
 

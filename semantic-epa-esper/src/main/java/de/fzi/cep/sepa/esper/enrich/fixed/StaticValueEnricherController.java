@@ -34,14 +34,9 @@ public class StaticValueEnricherController extends FlatEpDeclarer<StaticValueEnr
 		StaticValueEnricherParameters staticParam = new StaticValueEnricherParameters(
 				sepa, 
 				"drillingStatus", value);
-	
-		try {
-			invokeEPRuntime(staticParam, StaticValueEnricher::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, StaticValueEnricher::new, sepa);
+
 	}
 	
 	@Override

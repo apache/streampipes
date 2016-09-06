@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.model.client.user.Role;
 import de.fzi.cep.sepa.model.client.user.User;
 import de.fzi.cep.sepa.storage.controller.StorageManager;

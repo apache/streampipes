@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.rest.api;
 
 
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 
 import javax.ws.rs.core.Response;
 

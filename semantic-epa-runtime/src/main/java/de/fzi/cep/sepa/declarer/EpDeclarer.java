@@ -62,4 +62,14 @@ public abstract class EpDeclarer<B extends BindingParameters, EPR extends EPRunt
 	public abstract EPR prepareRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, EngineParameters<B> engineParams);
 
 	public abstract void start() throws Exception;
+
+	protected Response submit(B staticParams, Supplier<EPEngine<B>> engine, SepaInvocation sepa) {
+		try {
+			invokeEPRuntime(staticParams, engine, sepa);
+			return new Response(sepa.getElementId(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response(sepa.getElementId(), false, e.getMessage());
+		}
+	}
 }

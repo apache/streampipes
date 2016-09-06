@@ -6,9 +6,9 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
 public interface OutputSchemaGenerator<T extends OutputStrategy> {
 
-	public EventSchema buildFromOneStream(EventStream stream);
+	EventSchema buildFromOneStream(EventStream stream);
 	
-	public EventSchema buildFromTwoStreams(EventStream stream1, EventStream stream2);
+	EventSchema buildFromTwoStreams(EventStream stream1, EventStream stream2);
 	
-	public OutputStrategy getModifiedOutputStrategy(T outputStrategy);
+	OutputStrategy getModifiedOutputStrategy(T outputStrategy);
 }

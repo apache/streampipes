@@ -61,13 +61,8 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 		ProjectParameter staticParam = new ProjectParameter(
 				sepa, 
 				projectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, Project::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Project::new, sepa);
+
 	}
 }

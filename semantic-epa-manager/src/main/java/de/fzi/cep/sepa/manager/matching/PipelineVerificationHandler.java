@@ -10,11 +10,11 @@ import de.fzi.cep.sepa.manager.matching.v2.ElementVerification;
 import de.fzi.cep.sepa.manager.matching.v2.mapping.MappingPropertyCalculator;
 import de.fzi.cep.sepa.manager.util.PipelineVerificationUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
-import de.fzi.cep.sepa.messages.PipelineModification;
-import de.fzi.cep.sepa.messages.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModification;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 
@@ -23,7 +23,6 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
@@ -236,8 +235,13 @@ public class PipelineVerificationHandler {
     public PipelineVerificationHandler storeConnection() {
         String fromId = rdfRootElement.getConnectedTo().get(rdfRootElement.getConnectedTo().size() - 1);
         NamedSEPAElement sepaElement = TreeUtils.findSEPAElement(fromId, pipeline.getSepas(), pipeline.getStreams());
-
-        Connection connection = new Connection(sepaElement.getElementId(), rdfRootElement.getBelongsTo());
+        String sourceId;
+        if (sepaElement instanceof EventStream) {
+            sourceId = sepaElement.getElementId();
+        } else {
+            sourceId = ((InvocableSEPAElement) sepaElement).getBelongsTo();
+        }
+        Connection connection = new Connection(sourceId, rdfRootElement.getBelongsTo());
         StorageManager.INSTANCE.getConnectionStorageApi().addConnection(connection);
         return this;
     }

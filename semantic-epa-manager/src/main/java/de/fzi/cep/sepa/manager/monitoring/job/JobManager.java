@@ -1,9 +1,7 @@
 package de.fzi.cep.sepa.manager.monitoring.job;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

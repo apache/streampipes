@@ -5,7 +5,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 public interface SemanticEventConsumerDeclarer extends InvocableDeclarer<SecDescription, SecInvocation> {
 
-	public boolean isVisualizable();
+	boolean isVisualizable();
 	
-	public String getHtml(SecInvocation graph);
+	String getHtml(SecInvocation graph);
 }

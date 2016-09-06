@@ -1,8 +1,8 @@
 package de.fzi.cep.sepa.manager.monitoring.runtime;
 
 import de.fzi.cep.sepa.manager.execution.status.PipelineStatusManager;
-import de.fzi.cep.sepa.messages.PipelineStatusMessage;
-import de.fzi.cep.sepa.messages.PipelineStatusMessageType;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineStatusMessage;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineStatusMessageType;
 
 public class PipelineObserver {
 

@@ -10,8 +10,8 @@ import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
 import org.lightcouch.Response;
 
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.storage.util.Utils;
 
 public class CouchDbInstallationStep implements InstallationStep {

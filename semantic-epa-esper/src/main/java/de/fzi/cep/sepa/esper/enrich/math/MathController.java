@@ -116,13 +116,7 @@ public class MathController extends FlatEpDeclarer<MathParameter>{
 				leftOperand, 
 				rightOperand,
 				appendPropertyName);	
-		
-		try {
-			invokeEPRuntime(staticParam, Math::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Math::new, sepa);
 	}
 }

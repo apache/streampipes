@@ -6,11 +6,12 @@ import java.util.stream.Collectors;
 import de.fzi.cep.sepa.model.client.monitoring.JobReport;
 import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
+import org.lightcouch.CouchDbClient;
 
 public class MonitoringDataStorageImpl extends Storage<JobReport> implements MonitoringDataStorage {
 
 	public MonitoringDataStorageImpl() {
-		super(Utils.getCouchDbMonitoringClient(), JobReport.class);
+		super(JobReport.class);
 	}
 
 	@Override
@@ -35,4 +36,8 @@ public class MonitoringDataStorageImpl extends Storage<JobReport> implements Mon
 		return add(jobReport);
 	}
 
+	@Override
+	protected CouchDbClient getCouchDbClient() {
+		return Utils.getCouchDbMonitoringClient();
+	}
 }

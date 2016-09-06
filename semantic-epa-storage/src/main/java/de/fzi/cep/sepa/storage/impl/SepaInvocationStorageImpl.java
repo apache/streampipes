@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.storage.impl;
 
+import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 import org.lightcouch.Response;
 import org.slf4j.Logger;
@@ -13,12 +14,14 @@ public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implement
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     public SepaInvocationStorageImpl() {
-        super(Utils.getCouchDbSepaInvocationClient(), SepaInvocation.class);
+        super(SepaInvocation.class);
     }
 
     @Override
     public Response storeSepaInvocation(SepaInvocation sepaInvocation) {
+        CouchDbClient dbClient = getCouchDbClient();
         Response response = dbClient.save(sepaInvocation);
+        dbClient.shutdown();
         return response;
     }
 
@@ -31,11 +34,17 @@ public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implement
     @Override
     public boolean removeSepaInvovation(String sepaInvocationId, String sepaInvocationRev) {
         try {
+            CouchDbClient dbClient = getCouchDbClient();
             dbClient.remove(sepaInvocationId, sepaInvocationRev);
+            dbClient.shutdown();
             return true;
         } catch (NoDocumentException e) {
             return false;
         }
     }
 
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbSepaInvocationClient();
+    }
 }

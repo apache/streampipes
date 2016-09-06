@@ -5,7 +5,6 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 

@@ -2,10 +2,9 @@ package de.fzi.cep.sepa.manager.matching;
 
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
-import de.fzi.cep.sepa.messages.RecommendationMessage;
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendationMessage;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sources.samples.random.RandomDataProducer;
 import de.fzi.cep.sepa.sources.samples.random.RandomNumberStreamJson;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class TestElementRecommendation {
         pipeline.setStreams(Arrays.asList(new EventStream(stream)));
         pipeline.setSepas(Arrays.asList());
 
-        RecommendationMessage message = null;
+        PipelineElementRecommendationMessage message = null;
         try {
             message = new ElementRecommender(pipeline).findRecommendedElements();
         } catch (NoSuitableSepasAvailableException e) {

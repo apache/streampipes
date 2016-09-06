@@ -79,14 +79,9 @@ public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 		int duration = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "duration"));
 		String mapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping");
 		IncreaseParameters params = new IncreaseParameters(invocationGraph, getOperation(operation), increase, duration, mapping);
-		
-		try {
-			invokeEPRuntime(params, Increase::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, Increase::new, invocationGraph);
+
 	}
 	
 	private Operation getOperation(String operation) {

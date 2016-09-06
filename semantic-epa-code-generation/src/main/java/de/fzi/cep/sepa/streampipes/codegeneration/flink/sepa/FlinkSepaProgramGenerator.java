@@ -9,7 +9,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
 

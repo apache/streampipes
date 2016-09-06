@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
+import de.fzi.cep.sepa.esper.proasense.drillingstop.DrillingStop;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -46,14 +47,8 @@ public class DrillingStopEnrichedController extends FlatEpDeclarer<DrillingStopE
 				latPropertyName,
 				lngPropertyName);
 	
-		
-		try {
-			invokeEPRuntime(staticParam, DrillingStopEnriched::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, DrillingStopEnriched::new, sepa);
+
 	}
 	
 	@Override

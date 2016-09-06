@@ -74,13 +74,8 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 	
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, Integer.parseInt(avgRate), Integer.parseInt(outputRate), topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
-		
-		try {
-			invokeEPRuntime(staticParam, EventRate::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, EventRate::new, sepa);
+
 	}
 }

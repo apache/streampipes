@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fzi.cep.sepa.messages.PipelineStatusMessage;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineStatusMessage;
 
 public class PipelineStatusManager {
 

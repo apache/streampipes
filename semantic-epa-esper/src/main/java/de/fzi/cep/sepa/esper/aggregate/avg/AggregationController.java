@@ -133,12 +133,7 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 		AggregationParameter staticParam = new AggregationParameter(sepa, aggregationType, outputEvery, groupBy,
 				aggregate, timeWindowSize, selectProperties);
 
-		try {
-			invokeEPRuntime(staticParam, Aggregation::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, Aggregation::new, sepa);
+
 	}
 }

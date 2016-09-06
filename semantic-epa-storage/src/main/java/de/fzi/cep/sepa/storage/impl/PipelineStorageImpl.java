@@ -3,15 +3,13 @@ package de.fzi.cep.sepa.storage.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.RunningVisualization;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
 import de.fzi.cep.sepa.storage.api.PipelineStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
 import org.apache.shiro.SecurityUtils;
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.NoDocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     public PipelineStorageImpl() {
-        super(Utils.getCouchDbPipelineClient(), Pipeline.class);
+        super(Pipeline.class);
     }
 
     @Override
@@ -47,7 +45,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
             String username = SecurityUtils.getSubject().getPrincipal().toString();
             JsonArray pipelineIds = dbClientUser.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
             for (JsonElement id : pipelineIds) {
-                pipelines.add(dbClient.find(Pipeline.class, id.getAsString()));
+                pipelines.add(getPipeline(id.getAsString()));
             }
         }
         return pipelines;
@@ -79,49 +77,24 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
     }
 
     @Override
-    public List<RunningVisualization> getRunningVisualizations() {
-        List<RunningVisualization> visualizations = dbClient.view("_all_docs")
-                .includeDocs(true)
-                .query(RunningVisualization.class);
-        List<RunningVisualization> result = new ArrayList<>();
-        for (RunningVisualization v : visualizations)
-            if (v.getConsumerUrl() != null) result.add(v);
-        return result;
-    }
-
-    @Override
-    public void storeVisualization(RunningVisualization visualization) {
-        dbClient.save(visualization);
-        dbClient.shutdown();
-
-    }
-
-    @Override
-    public void deleteVisualization(String pipelineId) {
-        try {
-            List<RunningVisualization> currentVisualizations = getRunningVisualizations();
-            for (RunningVisualization viz : currentVisualizations)
-                if (viz.getPipelineId() != null)
-                    if (viz.getPipelineId().equals(pipelineId))
-                        dbClient.remove(viz);
-        } catch (NoDocumentException e) {
-            e.printStackTrace();
-        }
-        return;
-
-    }
-
-    @Override
     public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
+        CouchDbClient dbClient = getCouchDbClient();
         dbClient.save(virtualSensor);
-        //dbClient.shutdown();
+        dbClient.shutdown();
     }
 
     @Override
     public List<VirtualSensor> getVirtualSensors(String username) {
+        CouchDbClient dbClient = getCouchDbClient();
         List<VirtualSensor> virtualSensors = dbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(VirtualSensor.class);
+        dbClient.shutdown();
         return virtualSensors;
+    }
+
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbPipelineClient();
     }
 }

@@ -11,7 +11,6 @@ import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;

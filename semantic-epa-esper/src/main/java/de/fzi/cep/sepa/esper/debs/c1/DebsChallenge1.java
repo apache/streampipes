@@ -9,13 +9,11 @@ import java.util.logging.Logger;
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
-import com.espertech.esper.client.soda.Filter;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.OrderByElement;
 import com.espertech.esper.client.soda.SelectClause;
-import com.espertech.esper.client.soda.Stream;
 import com.espertech.esper.client.soda.View;
 
 import de.fzi.cep.sepa.esper.EsperEventEngine;

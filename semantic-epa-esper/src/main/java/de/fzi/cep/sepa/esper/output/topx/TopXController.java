@@ -102,13 +102,8 @@ public class TopXController extends FlatEpDeclarer<TopXParameter>{
 		}
 		
 		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
-		
-		try {
-			invokeEPRuntime(staticParam, TopX::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, TopX::new, sepa);
+
 	}
 }

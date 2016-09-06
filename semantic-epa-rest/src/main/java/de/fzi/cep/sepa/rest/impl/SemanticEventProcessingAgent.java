@@ -14,13 +14,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
-import de.fzi.cep.sepa.messages.NotificationType;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.rest.api.IPipelineElement;
 import de.fzi.cep.sepa.storage.filter.Filter;
@@ -126,7 +125,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(requestor.getSEPAById(elementUri));
+			return ok(new SepaInvocation(new SepaInvocation(requestor.getSEPAById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

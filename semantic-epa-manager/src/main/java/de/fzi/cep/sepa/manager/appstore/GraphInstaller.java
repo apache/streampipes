@@ -9,8 +9,8 @@ import org.apache.http.client.fluent.Request;
 
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 
 public class GraphInstaller {
 

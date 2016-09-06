@@ -92,13 +92,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 				StringOperator.valueOf(operation), 
 				filterProperty);
 		
-		
-		try {
-			invokeEPRuntime(staticParam, TextFilter::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, TextFilter::new, sepa);
+
 	}
 }
