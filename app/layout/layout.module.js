@@ -1,3 +1,13 @@
 import angular from 'npm/angular';
+import ngCookies from 'npm/angular-cookies';
 
-export default angular.module('sp.layout', []);
+import spServices from '../services/services.module'
+import TopNavCtrl from './top-nav.controller'
+import AppCtrl from './app.controller'
+import LeftCtrl from './left.controller'
+
+export default angular.module('sp.layout', [spServices, ngCookies])
+	.controller('TopNavCtrl', TopNavCtrl)
+	.controller('AppCtrl', AppCtrl)
+	.controller('LeftCtrl', LeftCtrl)
+	.name;

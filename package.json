@@ -41,6 +41,7 @@
     "bower-webpack-plugin": "^0.1.9",
     "clean-webpack-plugin": "^0.1.10",
     "ng-annotate-webpack-plugin": "^0.1.3",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1"
   }
 }

@@ -9,9 +9,10 @@ const BowerWebpackPlugin = require("bower-webpack-plugin");
 // define Webpack configuration object to be exported
 let config = {
 	context: `${__dirname}/app`,
-	entry: './app.module.js',
+	entry: 
+		'./app.module.js',
 	output: {
-		path: `${__dirname}/dist`,
+		path: `${__dirname}/`,
 		filename: 'bundle.js'
 	},
 	resolve: {
@@ -33,6 +34,10 @@ let config = {
 				}
 			}
 		]
+	},
+	devServer: {
+		contentBase: `${__dirname}/`
+		//inline: true
 	},
 	plugins: [
 		new cleanPlugin(['dist']),
