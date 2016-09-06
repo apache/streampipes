@@ -22,7 +22,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 					controller: 'AppCtrl'
 				},
 				"streampipesView@streampipes" : {
-					templateUrl : "modules/editor/editor.html",
+					templateUrl : "app/editor/editor.html",
 					controller: 'EditorCtrl',
 					resolve:{
 						'AuthData':function(authService){
@@ -44,7 +44,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 					controller: 'AppCtrl'
 				},
 				"streampipesView@streampipes" : {
-					templateUrl : "modules/editor/editor.html",
+					templateUrl : "app/editor/editor.html",
 					controller: 'EditorCtrl'
 				}
 			}

@@ -10,7 +10,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 
 	var getServerUrl = function() {
 		//return apiConstants.contextPath + apiConstants.api;
-		return "http://localhost:8080";
+		return "http://localhost:8080"  + apiConstants.contextPath + apiConstants.api;
 	}
 
 	var urlBase = function() {
@@ -151,17 +151,17 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.configured = function() {
-		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/setup/configured");
+		return $http.get(getServerUrl() + "/setup/configured");
 		//return $http.get(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
 
 	}
 
 	restApi.getConfiguration = function() {
-		return $http.get(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configuration");
+		return $http.get(getServerUrl() +"/setup/configuration");
 	}
 
 	restApi.updateConfiguration = function(config) {
-		return $http.put(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configuration", config);
+		return $http.put(getServerUrl() +"/setup/configuration", config);
 	};
 
 	restApi.getOwnPipelines = function() {
@@ -332,71 +332,71 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getAvailableContexts = function() {
-		return $http.get("/semantic-epa-backend/api/v2/contexts");
+		return $http.get(urlBase() + "/contexts");
 	};
 
 	restApi.deleteContext = function(contextId) {
 		return $http({
 			method: 'DELETE',
-			url: "/semantic-epa-backend/api/v2/contexts/" +encodeURIComponent(contextId)
+			url: urlBase() + "/semantic-epa-backend/api/v2/contexts/" +encodeURIComponent(contextId)
 		});
 	}
 
 	restApi.getDomainKnowledgeItems = function(query) {
-		return $http.post("/semantic-epa-backend/api/autocomplete/domain", query);
+		return $http.post(urlBase() + "/autocomplete/domain", query);
 	};
 
 
 	restApi.getSepasFromOntology = function() {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/sepas")
+		return $http.get(urlBase() + "/ontology/sepas")
 	}
 
 	restApi.getSepaDetailsFromOntology = function(uri, keepIds) {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/sepas/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/sepas/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getSourcesFromOntology = function() {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/sources")
+		return $http.get(urlBase() + "/ontology/sources")
 	}
 
 	restApi.getSourceDetailsFromOntology = function(uri, keepIds) {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/sources/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/sources/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getActionsFromOntology = function() {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/actions")
+		return $http.get(urlBase() + "/ontology/actions")
 	}
 
 	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
-		return $http.get("/semantic-epa-backend/api/v2/ontology/actions/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/actions/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getRunningVisualizations = function() {
-		return $http.get("/semantic-epa-backend/api/visualizations");
+		return $http.get(urlBase() + "/visualizations");
 	}
 
 	restApi.getAllUnits = function() {
-		return $http.get("/semantic-epa-backend/api/v2/units/instances");
+		return $http.get(urlBase() + "/units/instances");
 	}
 
 	restApi.getAllUnitTypes = function() {
-		return $http.get("/semantic-epa-backend/api/v2/units/types");
+		return $http.get(urlBase() + "/units/types");
 	}
 
 	restApi.getUnit = function(resource) {
-		return $http.get("/semantic-epa-backend/api/v2/units/instances/" +encodeURIComponent(resource));
+		return $http.get(urlBase() + "/units/instances/" + encodeURIComponent(resource));
 	}
 
 	restApi.getEpaCategories = function() {
-		return $http.get("/semantic-epa-backend/api/v2/categories/epa");
+		return $http.get(urlBase() + "/categories/epa");
 	}
 
 	restApi.getEcCategories = function() {
-		return $http.get("/semantic-epa-backend/api/v2/categories/ec");
+		return $http.get(urlBase() + "/categories/ec");
 	}
 
 	restApi.getEpCategories = function() {
-		return $http.get("/semantic-epa-backend/api/v2/categories/ep");
+		return $http.get(urlBase() + "/categories/ep");
 	}
 
 	restApi.getAvailableApps = function(elementId) {
@@ -416,19 +416,19 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getAuthc = function() {
-		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/admin/authc");
+		return $http.get(getServerUrl() + "/admin/authc");
 	}
 
 	restApi.login = function(credentials) {
-		return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/admin/login", credentials);
+		return $http.post(getServerUrl() + "/admin/login", credentials);
 	}
 
 	restApi.setupInstall = function(setup) {
-			return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/setup/install", setup);
+			return $http.post(getServerUrl() + "/setup/install", setup);
 	}
 
 	restApi.register = function(payload) {
-			return $http.post(getServerUrl() +"/semantic-epa-backend/api/v2/admin/register", payload);
+			return $http.post(getServerUrl() +"/admin/register", payload);
 	}
 
 	return restApi;

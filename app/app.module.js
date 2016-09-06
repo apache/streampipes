@@ -25,6 +25,7 @@ import delme from './delme'
 import spCore from './core/core.module'
 import spLayout from './layout/layout.module'
 import spLogin from './login/login.module'
+import spEditor from './editor/editor.module'
 
 //import restApi from './services/rest-api.service'
 //import authService from './services/auth.service'
@@ -42,6 +43,7 @@ export default angular
 															 spCore,
 															 spLayout,
 															 spLogin,
+															 spEditor,
 															 //'spConstants',
 															 //'sp-services',
                                //'ngRoute', 

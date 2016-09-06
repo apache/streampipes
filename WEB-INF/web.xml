@@ -17,7 +17,7 @@
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedHeaders</param-name>
-			<param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+			<param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Access-Control-Allow-Origin</param-value>
 		</init-param>
 	</filter>
 
@@ -28,9 +28,16 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
+
 	<filter-mapping>
 		<filter-name>CORS</filter-name>
 		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter-mapping>
+		<filter-name>CORS</filter-name>
+		<url-pattern>/users/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
