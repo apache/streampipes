@@ -1,15 +1,20 @@
-restApi.$inject = ['$rootScope', '$http', 'apiConstants', 'authService'];
+restApi.$inject = ['$rootScope', '$http', 'apiConstants'];
 
 //export default angular.module('sp.services', [spConstants])
 
-	//.factory('restApi', function ($rootScope, $http, apiConstants, authService) {
+	//.factory('restApi', function ($rootScope, $http, apiConstants) {
 
-export default function restApi($rootScope, $http, apiConstants, authService) {
+export default function restApi($rootScope, $http, apiConstants) {
 
 	var restApi = {};
 
+	var getServerUrl = function() {
+		//return apiConstants.contextPath + apiConstants.api;
+		return "http://localhost:8080";
+	}
+
 	var urlBase = function() {
-		return apiConstants.contextPath +apiConstants.api +'/users/' +$rootScope.email;
+		return getServerUrl() +'/users/' +$rootScope.email;
 	};
 
 	restApi.getBlocks = function () {
@@ -146,15 +151,17 @@ export default function restApi($rootScope, $http, apiConstants, authService) {
 	}
 
 	restApi.configured = function() {
-		return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configured");
+		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/setup/configured");
+		//return $http.get(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
+
 	}
 
 	restApi.getConfiguration = function() {
-		return $http.get(apiConstants.contextPath +apiConstants.api +"/setup/configuration");
+		return $http.get(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configuration");
 	}
 
 	restApi.updateConfiguration = function(config) {
-		return $http.put(apiConstants.contextPath +apiConstants.api +"/setup/configuration", config);
+		return $http.put(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configuration", config);
 	};
 
 	restApi.getOwnPipelines = function() {
@@ -406,6 +413,14 @@ export default function restApi($rootScope, $http, apiConstants, authService) {
 
 	restApi.getTargetPods = function() {
 		return $http.get(urlBase() +"/marketplace/pods");
+	}
+
+	restApi.getAuthc = function() {
+		return $http.get(getServerUrl() + "/semantic-epa-backend/api/v2/admin/authc")
+	}
+
+	restApi.login = function(credentials) {
+		return $http.post(getServerUrl() + "/semantic-epa-backend/api/v2/admin/login", credentials)
 	}
 
 	return restApi;

@@ -1,15 +1,18 @@
-authService.$inject = ['$http', '$rootScope', '$location', '$state'];
+authService.$inject = ['$http', '$rootScope', '$location', '$state', 'restApi'];
 
-export default function authService ($http, $rootScope, $location, $state) {
+export default function authService ($http, $rootScope, $location, $state, restApi) {
 		console.log($location.path());
 
-		var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
+		//var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
+
+		var promise = restApi.getAuthc()
 			.then(
 				function(response) {
 					if (response.data.success == false)
 			{
 				$rootScope.authenticated = false;
-				$http.get("/semantic-epa-backend/api/v2/setup/configured")
+				//$http.get("/semantic-epa-backend/api/v2/setup/configured")
+				restApi.configured()
 					.then(function(response) {
 						if (response.data.configured) 
 					{
@@ -27,7 +30,8 @@ export default function authService ($http, $rootScope, $location, $state) {
 				$rootScope.username = response.data.info.authc.principal.username;
 				$rootScope.email = response.data.info.authc.principal.email;
 				$rootScope.authenticated = true;
-				$http.get("/semantic-epa-backend/api/v2/setup/configured")
+				//$http.get("/semantic-epa-backend/api/v2/setup/configured")
+				restApi.configured()
 					.then(function(response) {
 						if (response.data.configured) 
 					{
@@ -35,7 +39,8 @@ export default function authService ($http, $rootScope, $location, $state) {
 						$rootScope.appConfig = response.data.appConfig;
 					}
 					});
-				$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
+				//$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
+				restApi.getNotifications()
 					.success(function(notifications){
 						$rootScope.unreadNotifications = notifications
 						//console.log($rootScope.unreadNotifications);
@@ -49,7 +54,8 @@ export default function authService ($http, $rootScope, $location, $state) {
 				function(response) {
 					$rootScope.username = undefined;
 					$rootScope.authenticated = false;
-					$http.get("/semantic-epa-backend/api/v2/setup/configured")
+					//$http.get("/semantic-epa-backend/api/v2/setup/configured")
+				restApi.configured()
 						.then(function(conf) {
 							if (conf.data.configured) {
 								console.log("configured 805");
