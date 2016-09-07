@@ -182,8 +182,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/docs',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/docs/docs.html',
-					controller: 'DocsController'
+					templateUrl : 'app/docs/docs.html',
+					controller: 'DocsCtrl'
 				}
 			}
 		})

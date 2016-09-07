@@ -28,7 +28,6 @@ export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
     }
     
     $scope.loadCurrentElements = function(type) {
-        console.log(type);
 		if (type == 'source')  { $scope.loadOwnSources();  }
 		else if (type == 'sepa') { $scope.loadOwnSepas();  }
 		else if (type == 'action') { $scope.loadOwnActions(); }
@@ -58,7 +57,6 @@ export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
     $scope.loadOwnSources = function () {
         restApi.getOwnSources()
             .success(function (sources) {
-                console.log(sources);
             	$scope.currentElements = sources;
             })
             .error(function (error) {
@@ -94,7 +92,6 @@ export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
    } 
    
    $scope.remove = function(elementUri, type) {
-	   console.log(elementUri);
 		  restApi.del(elementUri).success(function (msg) {
 			  $scope.showToast(msg.notifications[0].title);
               $scope.loadCurrentElements(type);
