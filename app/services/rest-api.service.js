@@ -48,7 +48,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	restApi.removePreferredAction = function(elementUri) {
 		return $http({
 			method: 'DELETE',
-			url: urlBase() + "/actions/favorites/" +encodeURIComponent(elementUri)
+			url: urlBase() + "/actions/favorites/" + encodeURIComponent(elementUri)
 		})
 	}
 
@@ -76,7 +76,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	restApi.removePreferredSepa = function(elementUri) {
 		return $http({
 			method: 'DELETE',
-			url: urlBase() + "/sepas/favorites/" +encodeURIComponent(elementUri)
+			url: urlBase() + "/sepas/favorites/" + encodeURIComponent(elementUri)
 		})
 	}
 
@@ -104,7 +104,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	restApi.removePreferredSource = function(elementUri) {
 		return $http({
 			method: 'DELETE',
-			url: urlBase() + "/sources/favorites/" +encodeURIComponent(elementUri)
+			url: urlBase() + "/sources/favorites/" + encodeURIComponent(elementUri)
 		})
 	}
 
@@ -134,19 +134,19 @@ export default function restApi($rootScope, $http, apiConstants) {
 	restApi.update = function(elementUri) {
 		return $http({
 			method: 'PUT',
-			url: urlBase() + "/element/" +encodeURIComponent(elementUri)
+			url: urlBase() + "/element/" + encodeURIComponent(elementUri)
 		})
 	}
 
 	restApi.del = function(elementUri) {
 		return $http({
 			method: 'DELETE',
-			url: urlBase() + "/element/" +encodeURIComponent(elementUri)
+			url: urlBase() + "/element/" + encodeURIComponent(elementUri)
 		})
 	}
 
 	restApi.jsonld = function(elementUri) {
-		return $http.get(urlBase() +"/element/" +encodeURIComponent(elementUri) +"/jsonld");
+		return $http.get(urlBase() +"/element/" + encodeURIComponent(elementUri) +"/jsonld");
 	}
 
 	restApi.configured = function() {
@@ -243,101 +243,101 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getSepaById = function(elementId) {
-		return $http.get(urlBase() +"/sepas/" +encodeURIComponent(elementId));
+		return $http.get(urlBase() +"/sepas/" + encodeURIComponent(elementId));
 	}
 
 	restApi.getActionById = function(elementId) {
-		return $http.get(urlBase() +"/actions/" +encodeURIComponent(elementId));
+		return $http.get(urlBase() +"/actions/" + encodeURIComponent(elementId));
 	};
 
 	restApi.getOntologyProperties = function() {
-		return $http.get("/semantic-epa-backend/api/ontology/properties");
+		return $http.get( getServerUrl() + "/ontology/properties");
 	};
 
 	restApi.getOntologyPropertyDetails = function(propertyId) {
-		return $http.get("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId));
+		return $http.get(getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId));
 	}
 
 	restApi.addOntologyProperty = function(propertyData) {
-		return $http.post("/semantic-epa-backend/api/ontology/properties", propertyData);
+		return $http.post(getServerUrl() + "/ontology/properties", propertyData);
 	}
 
 	restApi.getOntologyConcepts = function() {
-		return $http.get("/semantic-epa-backend/api/ontology/types");
+		return $http.get(getServerUrl() + "/ontology/types");
 	};
 
 	restApi.getOntologyConceptDetails = function(conceptId) {
-		return $http.get("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId));
+		return $http.get(getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId));
 	}
 
 	restApi.getOntologyNamespaces = function() {
-		return $http.get("/semantic-epa-backend/api/ontology/namespaces");
+		return $http.get(getServerUrl() + "/ontology/namespaces");
 	}
 
 	restApi.addOntologyNamespace = function(namespace) {
-		return $http.post("/semantic-epa-backend/api/ontology/namespaces", namespace);
+		return $http.post(getServerUrl() + "/ontology/namespaces", namespace);
 	}
 
 	restApi.deleteOntologyNamespace = function(prefix) {
 		return $http({
 			method: 'DELETE',
-			url: "/semantic-epa-backend/api/ontology/namespaces/" +encodeURIComponent(prefix)
+			url: getServerUrl() + "/ontology/namespaces/" + encodeURIComponent(prefix)
 		});
 	}
 
 	restApi.addOntologyConcept = function(conceptData) {
-		return $http.post("/semantic-epa-backend/api/ontology/types", conceptData);
+		return $http.post(getServerUrl() + "/ontology/types", conceptData);
 	}
 
 	restApi.addOntologyInstance = function(instanceData) {
-		return $http.post("/semantic-epa-backend/api/ontology/instances", instanceData);
+		return $http.post(getServerUrl() + "/ontology/instances", instanceData);
 	}
 
 	restApi.getOntologyInstanceDetails = function(instanceId) {
-		return $http.get("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId));
+		return $http.get(getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId));
 	}
 
 	restApi.updateOntologyProperty = function(propertyId, propertyData) {
-		return $http.put("/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId), propertyData);
+		return $http.put(getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId), propertyData);
 	}
 
 	restApi.updateOntologyConcept = function(conceptId, conceptData) {
-		return $http.put("/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId), conceptData);
+		return $http.put(getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId), conceptData);
 	}
 
 	restApi.updateOntologyInstance = function(instanceId, instanceData) {
-		return $http.put("/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId), instanceData);
+		return $http.put(getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId), instanceData);
 	}
 
 	restApi.deleteOntologyInstance = function(instanceId) {
 		return $http({
 			method: 'DELETE',
-			url: "/semantic-epa-backend/api/ontology/instances/" +encodeURIComponent(instanceId)
+			url: getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId)
 		});
 	}
 
 	restApi.deleteOntologyProperty = function(propertyId) {
 		return $http({
 			method: 'DELETE',
-			url: "/semantic-epa-backend/api/ontology/properties/" +encodeURIComponent(propertyId)
+			url: getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId)
 		});
 	}
 
 	restApi.deleteOntologyConcept = function(conceptId) {
 		return $http({
 			method: 'DELETE',
-			url: "/semantic-epa-backend/api/ontology/types/" +encodeURIComponent(conceptId)
+			url: getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId)
 		});
 	}
 
 	restApi.getAvailableContexts = function() {
-		return $http.get(urlBase() + "/contexts");
+		return $http.get(getServerUrl()+ "/contexts");
 	};
 
 	restApi.deleteContext = function(contextId) {
 		return $http({
 			method: 'DELETE',
-			url: urlBase() + "/semantic-epa-backend/api/v2/contexts/" +encodeURIComponent(contextId)
+			url: getServerUrl() + "/contexts/" + encodeURIComponent(contextId)
 		});
 	}
 
@@ -351,7 +351,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getSepaDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/sepas/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/sepas/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getSourcesFromOntology = function() {
@@ -359,7 +359,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getSourceDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/sources/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/sources/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getActionsFromOntology = function() {
@@ -367,7 +367,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/actions/" +encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(urlBase() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getRunningVisualizations = function() {

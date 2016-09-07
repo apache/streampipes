@@ -34,6 +34,7 @@ import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spMyElements from './myelements/my-elements.module';
 import spNotifications from './notifications/notifications.module';
+import spOntology from './ontology/ontology.module';
 import spEditor from './editor/editor.module';
 
 //import restApi from './services/rest-api.service'
@@ -55,6 +56,7 @@ export default angular
 		spLogin,
 		spMyElements,
 		spNotifications,
+		spOntology,
 		spEditor,
 		//'spConstants',
 		//'sp-services',
