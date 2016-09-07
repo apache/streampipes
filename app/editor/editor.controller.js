@@ -1,6 +1,11 @@
-EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$document', '$compile', 'imageChecker'];
+import jQueryUi from 'npm/jquery-ui';
+
+
+EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker'];
+
 
 export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker) {
+
 	$scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
 	$scope.isStreamInAssembly = false;
 	$scope.isSepaInAssembly = false;
@@ -464,7 +469,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 	};
 
 	var makeDraggable = function () {
-		$('.draggable-icon').draggable({
+		jQueryUi('.draggable-icon').draggable({
 			revert: 'invalid',
 			helper: 'clone',
 			stack: '.draggable-icon',

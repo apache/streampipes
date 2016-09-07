@@ -1,20 +1,30 @@
 import angular from 'npm/angular';
 
-import EditorCtrl from './editor.controller'
-import myDataBind from './my-data-bind.directive'
-import imageBind  from './image-bind.directive'
-import objectProvider from './object-provider.service'
-import capitalize from './capitalize.filter'
 
-import any from './directives/any/any.directive'
-import customOutput from './directives/customoutput/customoutput.directive'
-import domainConceptInput from './directives/domainconcept/domainconcept.directive'
-import freetext from './directives/freetext/freetext.directive'
-import mappingPropertyUnary from './directives/mappingunary/mappingunary.directive'
-import mappingPropertyNary from './directives/mappingnary/mappingnary.directive'
-import matchingProperty from './directives/matchingproperty/matchingproperty.directive'
-import oneof from './directives/oneof/oneof.directive'
-import replaceOutput from './directives/replaceoutput/replaceoutput.directive'
+//import $ from 'npm/jquery'
+import flowtype from '../../lib/flowtype';
+import circleMenu from '../../lib/jQuery.circleMenu';
+import jqueryPanzoom from 'npm/jquery.panzoom';
+import jqueryUiTouchPunch from 'npm/jquery-ui-touch-punch';
+import bootstrap from 'npm/bootstrap';
+import angulerUiSortable from 'npm/angular-ui-sortable';
+import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
+
+import EditorCtrl from './editor.controller';
+import myDataBind from './my-data-bind.directive';
+import imageBind  from './image-bind.directive';
+import objectProvider from './object-provider.service';
+import capitalize from './capitalize.filter';
+
+import any from './directives/any/any.directive';
+import customOutput from './directives/customoutput/customoutput.directive';
+import domainConceptInput from './directives/domainconcept/domainconcept.directive';
+import freetext from './directives/freetext/freetext.directive';
+import mappingPropertyUnary from './directives/mappingunary/mappingunary.directive';
+import mappingPropertyNary from './directives/mappingnary/mappingnary.directive';
+import matchingProperty from './directives/matchingproperty/matchingproperty.directive';
+import oneof from './directives/oneof/oneof.directive';
+import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
 
 
 export default angular.module('sp.editor', [])

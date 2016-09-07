@@ -81,7 +81,6 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getOwnSources = function () {
-		console.log($rootScope.email);
 		return $http.get(urlBase() +"/sources/own");
 	};
 
@@ -388,15 +387,15 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getEpaCategories = function() {
-		return $http.get(urlBase() + "/categories/epa");
+		return $http.get(getServerUrl() + "/categories/epa");
 	}
 
 	restApi.getEcCategories = function() {
-		return $http.get(urlBase() + "/categories/ec");
+		return $http.get(getServerUrl() + "/categories/ec");
 	}
 
 	restApi.getEpCategories = function() {
-		return $http.get(urlBase() + "/categories/ep");
+		return $http.get(getServerUrl() + "/categories/ep");
 	}
 
 	restApi.getAvailableApps = function(elementId) {

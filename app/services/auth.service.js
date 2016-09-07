@@ -15,10 +15,8 @@ export default function authService ($http, $rootScope, $location, $state, restA
 					.then(function(response) {
 						if (response.data.configured) 
 					{
-						console.log(response.data.appConfig);
 						$rootScope.appConfig = response.data.appConfig;
 						if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
-							console.log("configured 769");
 							$state.go("streampipes.login")//$location.path("/login");
 						}
 					}
@@ -34,7 +32,6 @@ export default function authService ($http, $rootScope, $location, $state, restA
 					.then(function(response) {
 						if (response.data.configured) 
 					{
-						console.log(response.data.appConfig);
 						$rootScope.appConfig = response.data.appConfig;
 					}
 					});
@@ -42,7 +39,6 @@ export default function authService ($http, $rootScope, $location, $state, restA
 				restApi.getNotifications()
 					.success(function(notifications){
 						$rootScope.unreadNotifications = notifications
-						//console.log($rootScope.unreadNotifications);
 					})
 					.error(function(msg){
 						console.log(msg);
@@ -57,8 +53,6 @@ export default function authService ($http, $rootScope, $location, $state, restA
 				restApi.configured()
 						.then(function(conf) {
 							if (conf.data.configured) {
-								console.log("configured 805");
-								$state.go("streampipes.login")
 							}
 							else $state.go("streampipes.setup")
 						})

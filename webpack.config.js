@@ -35,9 +35,10 @@ let config = {
 			}
 		]
 	},
+	devtool: 'source-map',
 	devServer: {
 		contentBase: `${__dirname}/`,
-		port: 8081
+		port: 8081,
 		//inline: true
 	},
 	plugins: [
@@ -45,6 +46,11 @@ let config = {
 		new ngAnnotatePlugin({
 			add: true
 		}),
+		new webpack.ProvidePlugin({
+		  $: "jquery",
+		  jQuery: "jquery",
+		  "window.jQuery": "jquery"
+		})
 	]
 };
 
