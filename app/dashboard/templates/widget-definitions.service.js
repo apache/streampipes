@@ -1,4 +1,6 @@
-angular.module('streamPipesApp').factory('WidgetDefinitions', ['TableDataModel', 'NumberDataModel', function(TableDataModel, NumberDataModel) {
+WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel'];
+
+export default function WidgetDefinitions(TableDataModel, NumberDataModel) {
 	//Register the new widgets here
 	var widgetTypes = {
 			table: {
@@ -35,6 +37,6 @@ angular.module('streamPipesApp').factory('WidgetDefinitions', ['TableDataModel',
 		getDirectiveName: getDirectiveName,
 		getAllNames: getAllNames
 	}
-}]);
+};
 
 

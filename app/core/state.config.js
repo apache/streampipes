@@ -110,8 +110,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/dashboard',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/dashboard/dashboard.html',
-					controller: 'DashCtrl'
+					templateUrl : 'app/dashboard/dashboard.html',
+					controller: 'DashboardCtrl'
 				}
 			}
 		})

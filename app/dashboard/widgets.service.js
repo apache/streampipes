@@ -1,8 +1,7 @@
 'use strict';
+Widgets.$inject = ['$http', 'WidgetDefinitions'];
 
-angular.module('streamPipesApp').factory('Widgets', ['$http', 'WidgetDefinitions',
-	function ($http, WidgetDefinitions) {
-
+export default function Widgets($http, WidgetDefinitions) {
 	var widgets = new Array();
 	var client;
 
@@ -53,4 +52,4 @@ angular.module('streamPipesApp').factory('Widgets', ['$http', 'WidgetDefinitions
 		get: getWidgetById,	
 		getAllWidgetDefinitions: getAllWidgetDefinitions
 	};
-}]);
+};
