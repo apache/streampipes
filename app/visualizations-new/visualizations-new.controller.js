@@ -1,5 +1,7 @@
-angular.module('streamPipesApp')
-.controller('VizCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog, $interval, $sce, $timeout) {
+VizCtrl.$inject = ['$rootScope', '$scope', '$log', '$location', '$http', 'restApi', '$mdToast', '$animate', '$mdDialog', '$interval', '$sce', '$timeout'];
+
+export default function VizCtrl($rootScope, $scope, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog, $interval, $sce, $timeout) {
+
 
 	$scope.runningVisualizations;
 	$scope.dashboardReady = false;
@@ -81,4 +83,4 @@ angular.module('streamPipesApp')
 //        $interval(function () {
 //          $scope.percentage = ($scope.percentage + 10) % 100;
 //        }, 1000);
-});
+};

@@ -347,31 +347,31 @@ export default function restApi($rootScope, $http, apiConstants) {
 
 
 	restApi.getSepasFromOntology = function() {
-		return $http.get(urlBase() + "/ontology/sepas")
+		return $http.get(getServerUrl() + "/ontology/sepas")
 	}
 
 	restApi.getSepaDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/sepas/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(getServerUrl() + "/ontology/sepas/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getSourcesFromOntology = function() {
-		return $http.get(urlBase() + "/ontology/sources")
+		return $http.get(getServerUrl() + "/ontology/sources")
 	}
 
 	restApi.getSourceDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/sources/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(getServerUrl() + "/ontology/sources/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getActionsFromOntology = function() {
-		return $http.get(urlBase() + "/ontology/actions")
+		return $http.get(getServerUrl() + "/ontology/actions")
 	}
 
 	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(urlBase() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
+		return $http.get(getServerUrl() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
 	}
 
 	restApi.getRunningVisualizations = function() {
-		return $http.get(urlBase() + "/visualizations");
+		return $http.get(getServerUrl() + "/visualizations");
 	}
 
 	restApi.getAllUnits = function() {
