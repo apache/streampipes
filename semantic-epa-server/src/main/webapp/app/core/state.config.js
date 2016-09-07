@@ -83,7 +83,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : "modules/proasense-home/home.html",
+					templateUrl : "app/proasense-home/home.html",
 					controller: 'HomeCtrl'
 				}
 			}
