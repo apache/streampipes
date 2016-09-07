@@ -23,7 +23,7 @@ import de.fzi.cep.sepa.model.client.ontology.Resource;
 import de.fzi.cep.sepa.rest.api.IOntologyKnowledge;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
-@Path("/ontology")
+@Path("/v2/ontology")
 public class OntologyKnowledge extends AbstractRestInterface implements IOntologyKnowledge {
 
 	@Path("/types")

@@ -128,7 +128,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/ontology',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/ontology/ontology.html',
+					templateUrl : 'app/ontology/ontology.html',
 					controller: 'OntologyCtrl'
 				}
 			}

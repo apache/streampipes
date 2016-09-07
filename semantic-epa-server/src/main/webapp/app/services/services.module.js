@@ -19,4 +19,3 @@ export default angular.module('sp.services', [spConstants])
 	.factory('measurementUnits', measurementUnits)
 	.factory('deploymentService', deploymentService)
 	.name;
-
