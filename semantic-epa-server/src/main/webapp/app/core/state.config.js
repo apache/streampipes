@@ -92,7 +92,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/pipelines/:pipeline',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/pipelines/pipelines.html',
+					templateUrl : 'app/pipelines/pipelines.html',
 					controller: 'PipelineCtrl'
 				}
 			}
