@@ -1,5 +1,6 @@
-angular.module('streamPipesApp')
-.controller('MyElementsCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast, $animate, $mdDialog) {
+MyElementsCtrl.$inject = ['$scope', 'restApi', '$mdToast',  '$mdDialog'];
+
+export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
 	
 	$scope.currentElements = {};
     $scope.tabs = [
@@ -181,7 +182,7 @@ angular.module('streamPipesApp')
    $scope.showAlert = function(ev, title, content) {
 	   $mdDialog.show({
  	      controller: JsonLdDialogController,
- 	      templateUrl: 'modules/myelements/templates/jsonldDialog.tmpl.html',
+ 	      templateUrl: 'modules/myelements/jsonldDialog.tmpl.html',
  	      parent: angular.element(document.body),
  	      clickOutsideToClose:true,
  	      locals : {
@@ -204,4 +205,4 @@ angular.module('streamPipesApp')
  	  };
  	}
    
-});
+};

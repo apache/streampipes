@@ -146,7 +146,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/myelements',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/myelements/myelements.html',
+					templateUrl : 'app/myelements/myelements.html',
 					controller: 'MyElementsCtrl'
 				}
 			}

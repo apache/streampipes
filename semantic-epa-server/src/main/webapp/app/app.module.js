@@ -31,6 +31,7 @@ import spCore from './core/core.module';
 import spCreate from './create/create.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
+import spMyElements from './myelements/my-elements.module';
 import spEditor from './editor/editor.module';
 
 //import restApi from './services/rest-api.service'
@@ -49,6 +50,7 @@ export default angular
 															 spCore,
 															 spLayout,
 															 spLogin,
+															 spMyElements,
 															 spEditor,
 															 //'spConstants',
 															 //'sp-services',
