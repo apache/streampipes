@@ -1,6 +1,8 @@
-angular.module('streamPipesApp').factory('TableDataModel', ['SocketConnectionDataModel', 
-	'$http', function(SocketConnectionDataModel, $http) {
+import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
 
+TableDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+
+export default function TableDataModel(SocketConnectionDataModel, $http) {
 	TableDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
 
 	var dataArray = [];
@@ -21,4 +23,4 @@ angular.module('streamPipesApp').factory('TableDataModel', ['SocketConnectionDat
 	}
 
 	return TableDataModel;
-}]);
+};

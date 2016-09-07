@@ -1,5 +1,8 @@
-angular.module('streamPipesApp').factory('NumberDataModel', ['SocketConnectionDataModel', 
-	'$http', function(SocketConnectionDataModel, $http) {
+import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
+
+NumberDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+
+export default function NumberDataModel(SocketConnectionDataModel, $http) {
 
 	NumberDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
 	function NumberDataModel(id) {
@@ -11,4 +14,4 @@ angular.module('streamPipesApp').factory('NumberDataModel', ['SocketConnectionDa
 	}
 
 	return NumberDataModel;
-}]);
+};

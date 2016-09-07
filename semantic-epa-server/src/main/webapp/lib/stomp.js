@@ -365,7 +365,7 @@
     window.Stomp = Stomp;
   } else if (typeof exports !== "undefined" && exports !== null) {
     exports.Stomp = Stomp;
-    Stomp.WebSocketClass = require('./test/server.mock.js').StompServerMock;
+    //Stomp.WebSocketClass = require('./test/server.mock.js').StompServerMock;
   } else {
     self.Stomp = Stomp;
   }

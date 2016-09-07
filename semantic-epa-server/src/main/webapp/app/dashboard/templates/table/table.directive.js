@@ -1,11 +1,11 @@
 'use strict';
+tableWidget.$inject = ['Widgets', '$filter'];
 
-angular.module('streamPipesApp')
-	.directive('tableWidget',['Widgets', '$filter', function (Widgets, $filter) {
+export default function tableWidget(Widgets, $filter) {
 		return {
 			restrict: 'A',
 			replace: true,
-			templateUrl: 'modules/dashboard/templates/table/table.html',
+			templateUrl: 'app/dashboard/templates/table/table.html',
 			scope: {
 				data: '=',
 				widgetId: '@'
@@ -55,4 +55,4 @@ angular.module('streamPipesApp')
 				});
 			}
 		};
-	}]);
+	};

@@ -1,4 +1,6 @@
-angular.module('streamPipesApp').factory('SocketConnectionDataModel', ['WidgetDataModel', '$http', function(WidgetDataModel, $http) {
+SocketConnectionDataModel.$inject = ['WidgetDataModel', '$http'];
+
+export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 	function SocketConnectionDataModel(id) {
 		var id = id;
 		this.id = id;
@@ -61,4 +63,4 @@ angular.module('streamPipesApp').factory('SocketConnectionDataModel', ['WidgetDa
 	}
 
 	return SocketConnectionDataModel;
-}]);
+};

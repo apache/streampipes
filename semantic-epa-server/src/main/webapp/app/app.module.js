@@ -29,6 +29,7 @@ import delme from './delme';
 import spAdd from './add/add.module';
 import spCore from './core/core.module';
 import spCreate from './create/create.module';
+import spDashboard from './dashboard/dashboard.module';
 import spDocs from './docs/docs.module';
 import spEditor from './editor/editor.module';
 import spLayout from './layout/layout.module';
@@ -55,6 +56,8 @@ export default angular
 		spServices,
 		spAdd,
 		spCore,
+		spCreate,
+		spDashboard,
 		spDocs,
 		spEditor,
 		spLayout,
