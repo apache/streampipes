@@ -1,5 +1,9 @@
 'use strict';
+
 import angular from 'npm/angular';
+//import jQuery from 'npm/jquery';
+//
+
 //import ngMaterial from 'npm/angular-material';
 //import ngMdIcons from 'npm/angular-material-icons';
 //import ngRoute from 'npm/angular-route';
@@ -19,18 +23,17 @@ import uiRouter from 'npm/angular-ui-router';
 //import ngSanitize from 'npm/angular-sanitize';
 //import btfordMarkdown from 'npm/angular-markdown-directive';
 
-import spServices from './services/services.module'
-import delme from './delme'
+import spServices from './services/services.module';
+import delme from './delme';
 
-import spCore from './core/core.module'
-import spLayout from './layout/layout.module'
-import spLogin from './login/login.module'
-import spEditor from './editor/editor.module'
+import spCore from './core/core.module';
+import spLayout from './layout/layout.module';
+import spLogin from './login/login.module';
+import spEditor from './editor/editor.module';
 
 //import restApi from './services/rest-api.service'
 //import authService from './services/auth.service'
 //import spServices from './services/services.module'
-
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -64,7 +67,6 @@ export default angular
 			//'btfordMarkdown'
 		])
 	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
-
 		//$location.path("/setup");
 		var bypass;
 		
@@ -84,12 +86,10 @@ export default angular
 
 		$rootScope.$on('$stateChangeStart',
 			function(event, toState, toParams, fromState, fromParams){
-			console.log(toState.name);
 				var isLogin = toState.name === "streampipes.login";
 				var isSetup = toState.name === "streampipes.setup";
 				var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
 				var isRegister = toState.name === "streampipes.register";
-				console.log("Setup: " +isSetup +", Login: " +isLogin);
 				if(isLogin || isSetup || isRegister || isExternalLogin){
 					return;
 				}

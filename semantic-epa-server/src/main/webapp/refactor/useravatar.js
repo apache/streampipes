@@ -1,3 +1,5 @@
+import angular from 'npm/angular';
+
 var appModule = angular.module('useravatar', []);
 appModule.directive('useravatar', ["avatarService", function (avatarService) {
 	var controller = function ($scope) {
