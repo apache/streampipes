@@ -28,6 +28,7 @@ import delme from './delme';
 
 import spAdd from './add/add.module';
 import spCore from './core/core.module';
+import spCreate from './create/create.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spEditor from './editor/editor.module';

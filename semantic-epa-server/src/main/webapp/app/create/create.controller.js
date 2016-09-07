@@ -1,5 +1,6 @@
-angular.module('streamPipesApp')
-.controller('CreateCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
+CreateCtrl.$inject = ['$rootScope', '$scope', 'restApi', '$mdToast'];
+
+export default function CreateCtrl($rootScope, $scope, restApi, $mdToast) {
 	
 	$scope.typeSelected = "SEP";
 	$scope.selectedSepIndex = 0;
@@ -29,8 +30,8 @@ angular.module('streamPipesApp')
 	};
 	
 	$scope.submitStormDeployment = function() {
-		$http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: '/semantic-epa-backend/api/v2/users/riemer@fzi.de/deploy/storm'}).
-		  success(function(data, status, headers, config) {
+		restApi.deployStorm()
+				  success(function(data, status, headers, config) {
 			    $scope.openSaveAsDialog($scope.deployment.artifactId +".zip", data, "application/zip");
 		  }).
 		  error(function(data, status, headers, config) {
@@ -135,4 +136,4 @@ angular.module('streamPipesApp')
 	$scope.model = {};
 	$scope.loadSchema();
 	
-});
+};

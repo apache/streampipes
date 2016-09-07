@@ -429,6 +429,11 @@ export default function restApi($rootScope, $http, apiConstants) {
 	restApi.register = function(payload) {
 			return $http.post(getServerUrl() +"/admin/register", payload);
 	}
+	
+	restApi.deployStorm = function(payload) {
+		return $http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: urlBase() + '/deploy/storm'})
+
+	}
 
 	return restApi;
 };
