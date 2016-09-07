@@ -101,7 +101,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/visualizations',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/visualizations-new/visualizations-new.html',
+					templateUrl : 'app/visualizations-new/visualizations-new.html',
 					controller: 'VizCtrl'
 				}
 			}
@@ -137,8 +137,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/sensors',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/sensors/sensors.html',
-					controller: 'SensorCtrl'
+					templateUrl : 'app/sensors/sensors.html',
+					controller: 'SensorsCtrl'
 				}
 			}
 		})

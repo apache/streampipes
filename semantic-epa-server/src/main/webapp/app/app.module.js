@@ -30,13 +30,16 @@ import spAdd from './add/add.module';
 import spCore from './core/core.module';
 import spCreate from './create/create.module';
 import spDocs from './docs/docs.module';
+import spEditor from './editor/editor.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spMyElements from './myelements/my-elements.module';
 import spNotifications from './notifications/notifications.module';
 import spOntology from './ontology/ontology.module';
 import spPipelines from './pipelines/pipelines.module';
-import spEditor from './editor/editor.module';
+import spProasenseHome from './proasense-home/proasense-home.module';
+import spSensors from './sensors/sensors.module';
+import spVisualizationNew from './visualizations-new/visualizations-new.module';
 
 //import restApi from './services/rest-api.service'
 //import authService from './services/auth.service'
@@ -53,13 +56,16 @@ export default angular
 		spAdd,
 		spCore,
 		spDocs,
+		spEditor,
 		spLayout,
 		spLogin,
 		spMyElements,
 		spNotifications,
 		spOntology,
 		spPipelines,
-		spEditor,
+		spProasenseHome ,
+		spSensors,
+		spVisualizationNew,
 		//'spConstants',
 		//'sp-services',
 		//'ngRoute', 
