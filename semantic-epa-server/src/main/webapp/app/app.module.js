@@ -26,6 +26,7 @@ import uiRouter from 'npm/angular-ui-router';
 import spServices from './services/services.module';
 import delme from './delme';
 
+import spAdd from './add/add.module';
 import spCore from './core/core.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
@@ -43,6 +44,7 @@ export default angular
 															 //'ngMdIcons', 
 															 delme,
 															 spServices,
+															 spAdd,
 															 spCore,
 															 spLayout,
 															 spLogin,
