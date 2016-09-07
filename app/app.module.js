@@ -33,6 +33,7 @@ import spDocs from './docs/docs.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spMyElements from './myelements/my-elements.module';
+import spNotifications from './notifications/notifications.module';
 import spEditor from './editor/editor.module';
 
 //import restApi from './services/rest-api.service'
@@ -43,53 +44,54 @@ const MODULE_NAME = 'streamPipesApp';
 
 export default angular
 	.module(MODULE_NAME, [
-		 //'ngMaterial', 
-															 //'ngMdIcons', 
-															 delme,
-															 spServices,
-															 spAdd,
-															 spCore,
-															 spDocs,
-															 spLayout,
-															 spLogin,
-															 spMyElements,
-															 spEditor,
-															 //'spConstants',
-															 //'sp-services',
-                               //'ngRoute', 
-                               //'ngCookies', 
-                               //'angularLoadingBar', 
-                               //'useravatar', 
-                               //'schemaForm', 
-															 uiRouter, 
-                               //'ngPrettyJson', 
-                               //'uiTree', 
-                               //'ng-context-menu', 
-                               //'ngFileUpload', 
-                               //'duScroll', 
-                               //'angularjs-dropdown-multiselect', 
-                               //'rtPopup', 
-                               //'angularClipboard',
-                               //'ngSanitize',
-			//'btfordMarkdown'
-		])
+		//'ngMaterial', 
+		//'ngMdIcons', 
+		delme,
+		spServices,
+		spAdd,
+		spCore,
+		spDocs,
+		spLayout,
+		spLogin,
+		spMyElements,
+		spNotifications,
+		spEditor,
+		//'spConstants',
+		//'sp-services',
+		//'ngRoute', 
+		//'ngCookies', 
+		//'angularLoadingBar', 
+		//'useravatar', 
+		//'schemaForm', 
+		uiRouter, 
+		//'ngPrettyJson', 
+		//'uiTree', 
+		//'ng-context-menu', 
+		//'ngFileUpload', 
+		//'duScroll', 
+		//'angularjs-dropdown-multiselect', 
+		//'rtPopup', 
+		//'angularClipboard',
+		//'ngSanitize',
+		//'btfordMarkdown'
+	])
 	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
 		//$location.path("/setup");
 		var bypass;
-		
+
 		if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
 			restApi.configured().success(function(msg) {
 				if (msg.configured)
-				{
-					authService.authenticate;
-				}
-				else {
-					$rootScope.authenticated = false;
-					$state.go("streampipes.setup");
-				}
+			{
+				authService.authenticate;
+			}
+			else {
+				$rootScope.authenticated = false;
+				$state.go("streampipes.setup");
+			}
 			});
 		}
-		
+
 
 		$rootScope.$on('$stateChangeStart',
 			function(event, toState, toParams, fromState, fromParams){

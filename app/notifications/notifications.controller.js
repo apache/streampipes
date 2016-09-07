@@ -1,6 +1,6 @@
-angular.module('streamPipesApp')
-.controller('RecommendationCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi, $mdToast) {
-	
+NotificationsCtrl.$inject = ['$scope', 'restApi'];
+
+export default function NotificationsCtrl($scope, restApi) {
 	$scope.notifications = [{}];
 	$scope.unreadNotifications = [];
 		
@@ -9,7 +9,6 @@ angular.module('streamPipesApp')
             .success(function(notifications){
                 $scope.notifications = notifications;
                 $scope.getUnreadNotifications();
-                console.log($scope.notifications);
             })
             .error(function(msg){
                 console.log(msg);
@@ -18,7 +17,6 @@ angular.module('streamPipesApp')
     
     $scope.getUnreadNotifications = function() {
     	angular.forEach($scope.notifications, function(value, key) {
-    		console.log(value);
     		if (!value.read) $scope.unreadNotifications.push(value);
     	});
     }
@@ -27,7 +25,6 @@ angular.module('streamPipesApp')
         restApi.updateNotification(notificationId)
             .success(function(success){
             	$scope.getNotifications();
-                console.log(success);
             })
             .error(function(msg){
                 console.log(msg);
@@ -36,6 +33,4 @@ angular.module('streamPipesApp')
     
     
     $scope.getNotifications();
-    
-	
-});
+};

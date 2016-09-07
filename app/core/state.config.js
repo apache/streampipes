@@ -218,8 +218,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/notifications',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/notifications/notifications.html',
-					controller: 'RecommendationCtrl'
+					templateUrl : 'app/notifications/notifications.html',
+					controller: 'NotificationsCtrl'
 				}
 			}
 		})
