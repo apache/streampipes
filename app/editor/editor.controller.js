@@ -1,4 +1,4 @@
-import jQueryUi from 'npm/jquery-ui';
+//import jQueryUi from 'npm/jquery-ui';
 
 
 EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker'];
@@ -469,7 +469,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 	};
 
 	var makeDraggable = function () {
-		jQueryUi('.draggable-icon').draggable({
+		$('.draggable-icon').draggable({
 			revert: 'invalid',
 			helper: 'clone',
 			stack: '.draggable-icon',

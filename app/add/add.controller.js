@@ -1,5 +1,6 @@
-angular.module('streamPipesApp')
-.controller('AddCtrl', function($rootScope, $scope, $timeout, $log, $location, $http, restApi) {
+AddCtrl.$inject = ['$scope', 'restApi'];
+
+export default function AddCtrl($scope, restApi) {
 	
 	$scope.elements;
 	$scope.endpointUrl;
@@ -74,4 +75,4 @@ angular.module('streamPipesApp')
 	        });
 	    }
 	}		   
-});
+};

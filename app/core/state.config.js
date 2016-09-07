@@ -173,7 +173,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/add',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'modules/add/add.html',
+					templateUrl : 'app/add/add.html',
 					controller: 'AddCtrl'
 				}
 			}
