@@ -1,7 +1,7 @@
 export default function generatedElementDescription() {
 	return {
 		restrict : 'E',
-		templateUrl : './generated-element-description.tmpl.html',
+		templateUrl : 'app/sensors/directives/generated-element/generated-element-description.tmpl.html',
 		scope : {
 			jsonld : "=",
 			java : "=",

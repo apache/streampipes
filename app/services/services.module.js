@@ -16,6 +16,6 @@ export default angular.module('sp.services', [spConstants])
 	.factory('restApi', restApi)
 	.factory('domainPropertiesService', domainProperties)
 	.factory('httpInterceptor', httpInterceptor)
-	.factory('measurementUnits', measurementUnits)
+	.factory('measurementUnitsService', measurementUnits)
 	.factory('deploymentService', deploymentService)
 	.name;
