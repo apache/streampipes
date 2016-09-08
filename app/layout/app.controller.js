@@ -1,6 +1,6 @@
-AppCtrl.$inject = ['$rootScope', '$scope', '$q', '$timeout', '$mdSidenav', '$mdUtil', '$log', '$location', '$http', '$cookies', '$cookieStore', 'restApi', '$state'];
+AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state'];
 
-export default function AppCtrl($rootScope, $scope, $q, $timeout, $mdSidenav, $mdUtil, $log, $location, $http, $cookies, $cookieStore, restApi, $state) {
+export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state) {
 
 	$rootScope.unreadNotifications = [];
 	$rootScope.title = "StreamPipes";
@@ -12,13 +12,12 @@ export default function AppCtrl($rootScope, $scope, $q, $timeout, $mdSidenav, $m
 	};
 
 	$rootScope.go = function ( path ) {
-		//$location.path( path );
 		$state.go(path);
 		$mdSidenav('left').close();
 	};
 
 	$scope.logout = function() {
-		$http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
+		restApi.logout().then(function() {
 			$scope.user = undefined;
 			$rootScope.authenticated = false;
 			$state.go("streampipes.login");

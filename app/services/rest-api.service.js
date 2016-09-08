@@ -422,6 +422,10 @@ export default function restApi($rootScope, $http, apiConstants) {
 		return $http.post(getServerUrl() + "/admin/login", credentials);
 	}
 
+	restApi.logout = function() {
+		return $http.get(getServerUrl() + "/admin/logout");
+	}
+
 	restApi.setupInstall = function(setup) {
 			return $http.post(getServerUrl() + "/setup/install", setup);
 	}
