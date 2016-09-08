@@ -14,11 +14,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/streampipes',
 			views: {
 				"top" : {
-					templateUrl : "top.html",	
+					templateUrl : "templates/top.html",	
 					controller: "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : "streampipes.html",
+					templateUrl : "templates/streampipes.html",
 					controller: 'AppCtrl'
 				},
 				"streampipesView@streampipes" : {
@@ -36,11 +36,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/editor/:pipeline',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : "streampipes.html",
+					templateUrl : "templates/streampipes.html",
 					controller: 'AppCtrl'
 				},
 				"streampipesView@streampipes" : {
@@ -53,7 +53,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/sso/:target',
 			views: {
 				"container" : {
-					templateUrl : 'sso.html',
+					templateUrl : 'templates/sso.html',
 					controller: 'SsoCtrl'
 				}
 			}
@@ -62,7 +62,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/ssosuccess',
 			views: {
 				"container" : {
-					templateUrl : 'sso.html',
+					templateUrl : 'templates/sso.html',
 				}
 			}
 		})
@@ -70,7 +70,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/login/:target',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'login.html',
+					templateUrl : 'templates/login.html',
 					controller: 'LoginCtrl'
 				}
 			}
@@ -79,7 +79,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/home',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
@@ -155,7 +155,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/tutorial',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'tutorial.html',
+					templateUrl : 'templates/tutorial.html',
 					controller: 'AppCtrl'
 				}
 			}
@@ -164,7 +164,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/register',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'register.html',
+					templateUrl : 'templates/register.html',
 					controller: 'RegisterCtrl'
 				}
 			}
@@ -191,7 +191,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/setup',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'setup.html',
+					templateUrl : 'templates/setup.html',
 					controller: 'SetupCtrl'
 				}
 			}
@@ -200,7 +200,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/error',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'error.html',
+					templateUrl : 'templates/error.html',
 					controller: 'SetupCtrl'
 				}
 			}
@@ -209,7 +209,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/settings',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'settings.html',
+					templateUrl : 'templates/settings.html',
 					controller: 'SettingsCtrl'
 				}
 			}
@@ -227,11 +227,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/streamstory',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : 'streamstory.html',
+					templateUrl : 'templates/streamstory.html',
 					controller: "TopNavCtrl"
 				}
 			}
@@ -240,11 +240,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/pandda',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : 'pandda.html',
+					templateUrl : 'templates/pandda.html',
 					controller: "TopNavCtrl"
 				}
 			}
@@ -253,11 +253,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/hippo',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : 'hippo.html',
+					templateUrl : 'templates/hippo.html',
 					controller: "TopNavCtrl"
 				}
 			}
@@ -265,11 +265,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/inspection',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : 'humaninspectionreport.html',
+					templateUrl : 'templates/humaninspectionreport.html',
 					controller: "TopNavCtrl"
 				}
 			}
@@ -277,11 +277,11 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/maintenance',
 			views: {
 				"top" : {
-					templateUrl : "top.html",
+					templateUrl : "templates/top.html",
 					controller : "TopNavCtrl"
 				},
 				"container" : {
-					templateUrl : 'humanmaintenancereport.html',
+					templateUrl : 'templates/humanmaintenancereport.html',
 					controller: "TopNavCtrl"
 				}
 			}
