@@ -1,10 +1,10 @@
 //import jQueryUi from 'npm/jquery-ui';
 
 
-EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker'];
+EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips'];
 
 
-export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker) {
+export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -1540,28 +1540,8 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     }
 
-    // copied form script.js
-    var getElementIconText = function (string) {
-        var result = "";
-        if (string.length <= 4) {
-            result = string;
-        } else {
-            var words = string.split(" ");
-            words.forEach(function (word, i) {
-                if (i < 4) {
-                    result += word.charAt(0);
-                }
-            });
-        }
-        return result.toUpperCase();
-    }
-
-    //copied from script.js
-    var initTooltips = function() {
-        $('.tt').tooltip();
-    }
-
 };
+
 function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) {
 
     $scope.pipelineCategories = [];

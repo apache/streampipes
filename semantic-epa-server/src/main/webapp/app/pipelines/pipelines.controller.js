@@ -1,6 +1,6 @@
-PipelineCtrl.$inject = [ '$scope','restApi','$rootScope','$mdDialog','$state','$timeout', '$stateParams', 'imageChecker'];
+PipelineCtrl.$inject = [ '$scope','restApi','$rootScope','$mdDialog','$state','$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];
 
-export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker) {
+export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker, getElementIconText) {
 	$scope.pipeline = {};
 	$scope.pipelines = [];
 	$scope.pipelinShowing = false;

@@ -1,12 +1,11 @@
 import angular from 'npm/angular';
 
+import spServices from '../services/services.module';
 
-//import $ from 'npm/jquery'
+
 import flowtype from 'legacy/flowtype';
 import circleMenu from 'legacy/jQuery.circleMenu';
 import jqueryPanzoom from 'npm/jquery.panzoom';
-//import jqueryUi from 'npm/jquery-ui';
-//import jqueryUiTouchPunch from 'npm/jquery-ui-touch-punch';
 import bootstrap from 'npm/bootstrap';
 import angulerUiSortable from 'npm/angular-ui-sortable';
 import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
@@ -29,7 +28,7 @@ import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
 import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
 
 
-export default angular.module('sp.editor', [])
+export default angular.module('sp.editor', [spServices])
 	.controller('EditorCtrl', EditorCtrl)
   .directive('myDataBind', myDataBind)
   .directive('imageBind', imageBind)
