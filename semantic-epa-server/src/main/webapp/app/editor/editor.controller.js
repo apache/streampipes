@@ -157,7 +157,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $rootScope.state.currentElement = elementData;
         $mdDialog.show({
             controller: CustomizeController,
-            templateUrl: 'modules/editor/templates/customizeElementDialog.tmpl.html',
+            templateUrl: 'app/editor/directives/customizeElementDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,

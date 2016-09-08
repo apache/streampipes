@@ -4,7 +4,7 @@ export default function mappingPropertyUnary() {
 
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/mappingunary/mappingunary.tmpl.html',
+		templateUrl : 'app/editor/directives/mappingunary/mappingunary.tmpl.html',
 		scope : {
 			staticProperty : "="
 		},

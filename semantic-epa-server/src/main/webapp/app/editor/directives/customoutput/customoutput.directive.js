@@ -3,7 +3,7 @@ customOutput.$inject = [];
 export default function customOutput() {
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/customoutput/customoutput.tmpl.html',
+		templateUrl : 'app/editor/directives/customoutput/customoutput.tmpl.html',
 		scope : {
 			outputStrategy : "="
 		},

@@ -93,39 +93,39 @@
 
 	var _editor2 = _interopRequireDefault(_editor);
 
-	var _layout = __webpack_require__(/*! ./layout/layout.module */ 85);
+	var _layout = __webpack_require__(/*! ./layout/layout.module */ 86);
 
 	var _layout2 = _interopRequireDefault(_layout);
 
-	var _login = __webpack_require__(/*! ./login/login.module */ 92);
+	var _login = __webpack_require__(/*! ./login/login.module */ 96);
 
 	var _login2 = _interopRequireDefault(_login);
 
-	var _myElements = __webpack_require__(/*! ./myelements/my-elements.module */ 97);
+	var _myElements = __webpack_require__(/*! ./myelements/my-elements.module */ 101);
 
 	var _myElements2 = _interopRequireDefault(_myElements);
 
-	var _notifications = __webpack_require__(/*! ./notifications/notifications.module */ 99);
+	var _notifications = __webpack_require__(/*! ./notifications/notifications.module */ 103);
 
 	var _notifications2 = _interopRequireDefault(_notifications);
 
-	var _ontology = __webpack_require__(/*! ./ontology/ontology.module */ 101);
+	var _ontology = __webpack_require__(/*! ./ontology/ontology.module */ 105);
 
 	var _ontology2 = _interopRequireDefault(_ontology);
 
-	var _pipelines = __webpack_require__(/*! ./pipelines/pipelines.module */ 108);
+	var _pipelines = __webpack_require__(/*! ./pipelines/pipelines.module */ 112);
 
 	var _pipelines2 = _interopRequireDefault(_pipelines);
 
-	var _proasenseHome = __webpack_require__(/*! ./proasense-home/proasense-home.module */ 115);
+	var _proasenseHome = __webpack_require__(/*! ./proasense-home/proasense-home.module */ 119);
 
 	var _proasenseHome2 = _interopRequireDefault(_proasenseHome);
 
-	var _sensors = __webpack_require__(/*! ./sensors/sensors.module */ 117);
+	var _sensors = __webpack_require__(/*! ./sensors/sensors.module */ 121);
 
 	var _sensors2 = _interopRequireDefault(_sensors);
 
-	var _visualizationsNew = __webpack_require__(/*! ./visualizations-new/visualizations-new.module */ 124);
+	var _visualizationsNew = __webpack_require__(/*! ./visualizations-new/visualizations-new.module */ 150);
 
 	var _visualizationsNew2 = _interopRequireDefault(_visualizationsNew);
 
@@ -136,7 +136,7 @@
 
 
 	var $ = __webpack_require__(/*! jquery */ 3);
-	__webpack_require__(/*! jquery-ui */ 126);
+	__webpack_require__(/*! jquery-ui */ 152);
 
 	//import ngMaterial from 'npm/angular-material';
 	//import ngMdIcons from 'npm/angular-material-icons';
@@ -18944,7 +18944,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _angular2.default.module('sp.services', [_constants2.default]).factory('imageChecker', _imageChecker2.default).service('authService', _auth2.default).factory('restApi', _restApi2.default).factory('domainPropertiesService', _domainProperties2.default).factory('httpInterceptor', _httpInterceptor2.default).factory('measurementUnits', _measurementUnits2.default).factory('deploymentService', _deployment2.default).name;
+	exports.default = _angular2.default.module('sp.services', [_constants2.default]).factory('imageChecker', _imageChecker2.default).service('authService', _auth2.default).factory('restApi', _restApi2.default).factory('domainPropertiesService', _domainProperties2.default).factory('httpInterceptor', _httpInterceptor2.default).factory('measurementUnitsService', _measurementUnits2.default).factory('deploymentService', _deployment2.default).name;
 
 /***/ },
 /* 7 */
@@ -19450,15 +19450,15 @@
 		};
 
 		restApi.getAllUnits = function () {
-			return $http.get(urlBase() + "/units/instances");
+			return $http.get(getServerUrl() + "/units/instances");
 		};
 
 		restApi.getAllUnitTypes = function () {
-			return $http.get(urlBase() + "/units/types");
+			return $http.get(getServerUrl() + "/units/types");
 		};
 
 		restApi.getUnit = function (resource) {
-			return $http.get(urlBase() + "/units/instances/" + encodeURIComponent(resource));
+			return $http.get(getServerUrl() + "/units/instances/" + encodeURIComponent(resource));
 		};
 
 		restApi.getEpaCategories = function () {
@@ -33110,7 +33110,7 @@
 		$scope.addWidget = function () {
 			$mdDialog.show({
 				controller: AddWidget,
-				templateUrl: 'modules/dashboard/add-widget-template/add-widget-template.html',
+				templateUrl: 'app/dashboard/add-widget-template.html',
 				parent: angular.element(document.body),
 				clickOutsideToClose: true,
 				locals: {
@@ -33861,12 +33861,17 @@
 
 	var _replaceoutput2 = _interopRequireDefault(_replaceoutput);
 
+	var _multipleValueInput = __webpack_require__(/*! ./directives/multivalue/multiple-value-input.directive */ 85);
+
+	var _multipleValueInput2 = _interopRequireDefault(_multipleValueInput);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	//import $ from 'npm/jquery'
-	exports.default = _angular2.default.module('sp.editor', []).controller('EditorCtrl', _editor2.default).directive('myDataBind', _myDataBind2.default).directive('imageBind', _imageBind2.default).directive('objectProvider', _objectProvider2.default).filter('capitalize', _objectProvider2.default).directive('any', _any2.default).directive('customOutput', _customoutput2.default).directive('domainConceptInput', _domainconcept2.default).directive('freetext', _freetext2.default).directive('mappingPropertyNary', _mappingnary2.default).directive('mappingPropertyUnary', _mappingunary2.default).directive('matchingProperty', _matchingproperty2.default).directive('oneof', _oneof2.default).directive('replaceOutput', _replaceoutput2.default).name;
 	//import jqueryUi from 'npm/jquery-ui';
 	//import jqueryUiTouchPunch from 'npm/jquery-ui-touch-punch';
+	exports.default = _angular2.default.module('sp.editor', []).controller('EditorCtrl', _editor2.default).directive('myDataBind', _myDataBind2.default).directive('imageBind', _imageBind2.default).directive('objectProvider', _objectProvider2.default).filter('capitalize', _objectProvider2.default).directive('any', _any2.default).directive('customOutput', _customoutput2.default).directive('domainConceptInput', _domainconcept2.default).directive('freetext', _freetext2.default).directive('mappingPropertyNary', _mappingnary2.default).directive('mappingPropertyUnary', _mappingunary2.default).directive('matchingProperty', _matchingproperty2.default).directive('oneof', _oneof2.default).directive('replaceOutput', _replaceoutput2.default).name;
+
+	//import $ from 'npm/jquery'
 
 /***/ },
 /* 52 */
@@ -38888,7 +38893,7 @@
 	        $rootScope.state.currentElement = elementData;
 	        $mdDialog.show({
 	            controller: CustomizeController,
-	            templateUrl: 'modules/editor/templates/customizeElementDialog.tmpl.html',
+	            templateUrl: 'app/editor/directives/customizeElementDialog.tmpl.html',
 	            parent: angular.element(document.body),
 	            clickOutsideToClose: true,
 	            scope: $scope,
@@ -40716,7 +40721,7 @@
 	function any() {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/any/any.tmpl.html',
+			templateUrl: 'app/editor/directives/any/any.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -40760,7 +40765,7 @@
 	function customOutput() {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/customoutput/customoutput.tmpl.html',
+			templateUrl: 'app/editor/directives/customoutput/customoutput.tmpl.html',
 			scope: {
 				outputStrategy: "="
 			},
@@ -40821,7 +40826,7 @@
 
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/domainconcept/domainconcept.tmpl.html',
+			templateUrl: 'app/editor/directives/domainconcept/domainconcept.tmpl.html',
 			scope: {
 				staticProperty: "=",
 				autoCompleteStaticProperty: "="
@@ -40912,7 +40917,7 @@
 
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/freetext/freetext.tmpl.html',
+			templateUrl: 'app/editor/directives/freetext/freetext.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -40939,7 +40944,7 @@
 
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/mappingunary/mappingunary.tmpl.html',
+			templateUrl: 'app/editor/directives/mappingunary/mappingunary.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -40966,7 +40971,7 @@
 
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/mappingnary/mappingnary.tmpl.html',
+			templateUrl: 'app/editor/directives/mappingnary/mappingnary.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -41019,7 +41024,7 @@
 
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/matchingproperty/matchingproperty.tmpl.html',
+			templateUrl: 'app/editor/directives/matchingproperty/matchingproperty.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -41045,7 +41050,7 @@
 	function oneof() {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/oneof/oneof.tmpl.html',
+			templateUrl: 'app/editor/directives/oneof/oneof.tmpl.html',
 			scope: {
 				staticProperty: "="
 			},
@@ -41103,7 +41108,7 @@
 	function replaceOutput() {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/editor/templates/replaceoutput/replaceoutput.tmpl.html',
+			templateUrl: 'app/editor/directives/replaceoutput/replaceoutput.tmpl.html',
 			scope: {
 				outputStrategy: "="
 			},
@@ -41113,6 +41118,53 @@
 
 /***/ },
 /* 85 */
+/*!************************************************************************!*\
+  !*** ./editor/directives/multivalue/multiple-value-input.directive.js ***!
+  \************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = multipleValueInput;
+	multipleValueInput.$inject = [];
+
+	function multipleValueInput() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/editor/directives/multivalue/multiple-value-input.tmpl.html',
+			scope: {
+				staticProperty: "="
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.addTextInputRow = function (members) {
+					members.push({ "input": { "type": "TextInput", "properties": { "description": "", "value": "" } } });
+				};
+
+				$scope.removeTextInputRow = function (members, property) {
+					members.splice(property, 1);
+				};
+
+				$scope.addDomainConceptRow = function (firstMember, members) {
+					var supportedProperties = [];
+					angular.forEach(firstMember.input.properties.supportedProperties, function (property) {
+						supportedProperties.push({ "propertyId": property.propertyId, "value": "" });
+					});
+					members.push({ "input": { "type": "DomainConceptInput", "properties": { "elementType": "DOMAIN_CONCEPT", "description": "", "supportedProperties": supportedProperties, "requiredClass": firstMember.input.properties.requiredClass } } });
+				};
+
+				$scope.removeDomainConceptRow = function (members, property) {
+					members.splice(property, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 86 */
 /*!*********************************!*\
   !*** ./layout/layout.module.js ***!
   \*********************************/
@@ -41128,7 +41180,7 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _angularCookies = __webpack_require__(/*! npm/angular-cookies */ 86);
+	var _angularCookies = __webpack_require__(/*! npm/angular-cookies */ 87);
 
 	var _angularCookies2 = _interopRequireDefault(_angularCookies);
 
@@ -41136,28 +41188,40 @@
 
 	var _services2 = _interopRequireDefault(_services);
 
-	var _topNav = __webpack_require__(/*! ./top-nav.controller */ 88);
+	var _topNav = __webpack_require__(/*! ./top-nav.controller */ 89);
 
 	var _topNav2 = _interopRequireDefault(_topNav);
 
-	var _app = __webpack_require__(/*! ./app.controller */ 89);
+	var _app = __webpack_require__(/*! ./app.controller */ 90);
 
 	var _app2 = _interopRequireDefault(_app);
 
-	var _left = __webpack_require__(/*! ./left.controller */ 90);
+	var _left = __webpack_require__(/*! ./left.controller */ 91);
 
 	var _left2 = _interopRequireDefault(_left);
 
-	var _settings = __webpack_require__(/*! ./settings.controller */ 91);
+	var _settings = __webpack_require__(/*! ./settings.controller */ 92);
 
 	var _settings2 = _interopRequireDefault(_settings);
 
+	var _iframeAutoSize = __webpack_require__(/*! ./iframe-auto-size.directive */ 93);
+
+	var _iframeAutoSize2 = _interopRequireDefault(_iframeAutoSize);
+
+	var _ngRightClick = __webpack_require__(/*! ./ng-right-click.directive */ 94);
+
+	var _ngRightClick2 = _interopRequireDefault(_ngRightClick);
+
+	var _userAvatar = __webpack_require__(/*! ./user-avatar.directive */ 95);
+
+	var _userAvatar2 = _interopRequireDefault(_userAvatar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _angular2.default.module('sp.layout', [_services2.default, _angularCookies2.default]).controller('TopNavCtrl', _topNav2.default).controller('AppCtrl', _app2.default).controller('LeftCtrl', _left2.default).controller('SettingsCtrl', _settings2.default).name;
+	exports.default = _angular2.default.module('sp.layout', [_services2.default, _angularCookies2.default]).controller('TopNavCtrl', _topNav2.default).controller('AppCtrl', _app2.default).controller('LeftCtrl', _left2.default).controller('SettingsCtrl', _settings2.default).directive('iframeAutoSize', _settings2.default).directive('ngRightClick', _settings2.default).directive('userAvatar', _settings2.default).name;
 
 /***/ },
-/* 86 */
+/* 87 */
 /*!*************************************!*\
   !*** ../~/angular-cookies/index.js ***!
   \*************************************/
@@ -41165,11 +41229,11 @@
 
 	'use strict';
 
-	__webpack_require__(/*! ./angular-cookies */ 87);
+	__webpack_require__(/*! ./angular-cookies */ 88);
 	module.exports = 'ngCookies';
 
 /***/ },
-/* 87 */
+/* 88 */
 /*!***********************************************!*\
   !*** ../~/angular-cookies/angular-cookies.js ***!
   \***********************************************/
@@ -41495,7 +41559,7 @@
 	})(window, window.angular);
 
 /***/ },
-/* 88 */
+/* 89 */
 /*!**************************************!*\
   !*** ./layout/top-nav.controller.js ***!
   \**************************************/
@@ -41544,7 +41608,7 @@
 	};
 
 /***/ },
-/* 89 */
+/* 90 */
 /*!**********************************!*\
   !*** ./layout/app.controller.js ***!
   \**********************************/
@@ -41638,7 +41702,7 @@
 	};
 
 /***/ },
-/* 90 */
+/* 91 */
 /*!***********************************!*\
   !*** ./layout/left.controller.js ***!
   \***********************************/
@@ -41655,7 +41719,7 @@
 	};
 
 /***/ },
-/* 91 */
+/* 92 */
 /*!***************************************!*\
   !*** ./layout/settings.controller.js ***!
   \***************************************/
@@ -41710,7 +41774,83 @@
 	}
 
 /***/ },
-/* 92 */
+/* 93 */
+/*!**********************************************!*\
+  !*** ./layout/iframe-auto-size.directive.js ***!
+  \**********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = iframeAutoSize;
+	iframeAutoSize.$inject = [];
+
+	function iframeAutoSize() {
+
+		return {
+			restrict: 'A',
+			link: function link(scope, element, attrs) {
+				element.on('load', function () {
+					console.log(element[0]);
+					var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
+					element.css('height', iFrameHeight);
+				});
+			}
+		};
+	};
+
+/***/ },
+/* 94 */
+/*!********************************************!*\
+  !*** ./layout/ng-right-click.directive.js ***!
+  \********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = ngRightClick;
+	ngRightClick.$inject = ['$parse'];
+
+	function ngRightClick($parse) {
+		return function (scope, element, attrs) {
+			var fn = $parse(attrs.ngRightClick);
+			element.bind('contextmenu', function (scope, event) {
+				event.preventDefault();
+				fn();
+			});
+		};
+	};
+
+/***/ },
+/* 95 */
+/*!*****************************************!*\
+  !*** ./layout/user-avatar.directive.js ***!
+  \*****************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = userAvatar;
+	userAvatar.$inject = [];
+
+	function userAvatar() {
+		return {
+			replace: true,
+			template: '<svg class="user-avatar" viewBox="0 0 128 128" height="64" width="64" pointer-events="none" display="block" > <path fill="#FF8A80" d="M0 0h128v128H0z"/> <path fill="#FFE0B2" d="M36.3 94.8c6.4 7.3 16.2 12.1 27.3 12.4 10.7-.3 20.3-4.7 26.7-11.6l.2.1c-17-13.3-12.9-23.4-8.5-28.6 1.3-1.2 2.8-2.5 4.4-3.9l13.1-11c1.5-1.2 2.6-3 2.9-5.1.6-4.4-2.5-8.4-6.9-9.1-1.5-.2-3 0-4.3.6-.3-1.3-.4-2.7-1.6-3.5-1.4-.9-2.8-1.7-4.2-2.5-7.1-3.9-14.9-6.6-23-7.9-5.4-.9-11-1.2-16.1.7-3.3 1.2-6.1 3.2-8.7 5.6-1.3 1.2-2.5 2.4-3.7 3.7l-1.8 1.9c-.3.3-.5.6-.8.8-.1.1-.2 0-.4.2.1.2.1.5.1.6-1-.3-2.1-.4-3.2-.2-4.4.6-7.5 4.7-6.9 9.1.3 2.1 1.3 3.8 2.8 5.1l11 9.3c1.8 1.5 3.3 3.8 4.6 5.7 1.5 2.3 2.8 4.9 3.5 7.6 1.7 6.8-.8 13.4-5.4 18.4-.5.6-1.1 1-1.4 1.7-.2.6-.4 1.3-.6 2-.4 1.5-.5 3.1-.3 4.6.4 3.1 1.8 6.1 4.1 8.2 3.3 3 8 4 12.4 4.5 5.2.6 10.5.7 15.7.2 4.5-.4 9.1-1.2 13-3.4 5.6-3.1 9.6-8.9 10.5-15.2M76.4 46c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6zm-25.7 0c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6z"/> <path fill="#E0F7FA" d="M105.3 106.1c-.9-1.3-1.3-1.9-1.3-1.9l-.2-.3c-.6-.9-1.2-1.7-1.9-2.4-3.2-3.5-7.3-5.4-11.4-5.7 0 0 .1 0 .1.1l-.2-.1c-6.4 6.9-16 11.3-26.7 11.6-11.2-.3-21.1-5.1-27.5-12.6-.1.2-.2.4-.2.5-3.1.9-6 2.7-8.4 5.4l-.2.2s-.5.6-1.5 1.7c-.9 1.1-2.2 2.6-3.7 4.5-3.1 3.9-7.2 9.5-11.7 16.6-.9 1.4-1.7 2.8-2.6 4.3h109.6c-3.4-7.1-6.5-12.8-8.9-16.9-1.5-2.2-2.6-3.8-3.3-5z"/> <circle fill="#444" cx="76.3" cy="47.5" r="2"/> <circle fill="#444" cx="50.7" cy="47.6" r="2"/> <path fill="#444" d="M48.1 27.4c4.5 5.9 15.5 12.1 42.4 8.4-2.2-6.9-6.8-12.6-12.6-16.4C95.1 20.9 92 10 92 10c-1.4 5.5-11.1 4.4-11.1 4.4H62.1c-1.7-.1-3.4 0-5.2.3-12.8 1.8-22.6 11.1-25.7 22.9 10.6-1.9 15.3-7.6 16.9-10.2z"/> </svg>'
+		};
+	};
+
+/***/ },
+/* 96 */
 /*!*******************************!*\
   !*** ./login/login.module.js ***!
   \*******************************/
@@ -41730,19 +41870,19 @@
 
 	var _services2 = _interopRequireDefault(_services);
 
-	var _register = __webpack_require__(/*! ./register.controller */ 93);
+	var _register = __webpack_require__(/*! ./register.controller */ 97);
 
 	var _register2 = _interopRequireDefault(_register);
 
-	var _sso = __webpack_require__(/*! ./sso.controller */ 94);
+	var _sso = __webpack_require__(/*! ./sso.controller */ 98);
 
 	var _sso2 = _interopRequireDefault(_sso);
 
-	var _login = __webpack_require__(/*! ./login.controller */ 95);
+	var _login = __webpack_require__(/*! ./login.controller */ 99);
 
 	var _login2 = _interopRequireDefault(_login);
 
-	var _setup = __webpack_require__(/*! ./setup.controller */ 96);
+	var _setup = __webpack_require__(/*! ./setup.controller */ 100);
 
 	var _setup2 = _interopRequireDefault(_setup);
 
@@ -41751,7 +41891,7 @@
 	exports.default = _angular2.default.module('sp.login', [_services2.default]).controller('RegisterCtrl', _register2.default).controller('SsoCtrl', _sso2.default).controller('LoginCtrl', _login2.default).controller('SetupCtrl', _setup2.default).name;
 
 /***/ },
-/* 93 */
+/* 97 */
 /*!**************************************!*\
   !*** ./login/register.controller.js ***!
   \**************************************/
@@ -41805,7 +41945,7 @@
 	};
 
 /***/ },
-/* 94 */
+/* 98 */
 /*!*********************************!*\
   !*** ./login/sso.controller.js ***!
   \*********************************/
@@ -41829,7 +41969,7 @@
 	};
 
 /***/ },
-/* 95 */
+/* 99 */
 /*!***********************************!*\
   !*** ./login/login.controller.js ***!
   \***********************************/
@@ -41878,7 +42018,7 @@
 	};
 
 /***/ },
-/* 96 */
+/* 100 */
 /*!***********************************!*\
   !*** ./login/setup.controller.js ***!
   \***********************************/
@@ -41959,7 +42099,7 @@
 	};
 
 /***/ },
-/* 97 */
+/* 101 */
 /*!******************************************!*\
   !*** ./myelements/my-elements.module.js ***!
   \******************************************/
@@ -41975,7 +42115,7 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _myElements = __webpack_require__(/*! ./my-elements.controller */ 98);
+	var _myElements = __webpack_require__(/*! ./my-elements.controller */ 102);
 
 	var _myElements2 = _interopRequireDefault(_myElements);
 
@@ -41984,7 +42124,7 @@
 	exports.default = _angular2.default.module('sp.myElements', []).controller('MyElementsCtrl', _myElements2.default).name;
 
 /***/ },
-/* 98 */
+/* 102 */
 /*!**********************************************!*\
   !*** ./myelements/my-elements.controller.js ***!
   \**********************************************/
@@ -42186,7 +42326,7 @@
 	};
 
 /***/ },
-/* 99 */
+/* 103 */
 /*!***********************************************!*\
   !*** ./notifications/notifications.module.js ***!
   \***********************************************/
@@ -42202,7 +42342,7 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _notifications = __webpack_require__(/*! ./notifications.controller */ 100);
+	var _notifications = __webpack_require__(/*! ./notifications.controller */ 104);
 
 	var _notifications2 = _interopRequireDefault(_notifications);
 
@@ -42211,7 +42351,7 @@
 	exports.default = _angular2.default.module('sp.notifications', []).controller('NotificationsCtrl', _notifications2.default).name;
 
 /***/ },
-/* 100 */
+/* 104 */
 /*!***************************************************!*\
   !*** ./notifications/notifications.controller.js ***!
   \***************************************************/
@@ -42256,7 +42396,7 @@
 	};
 
 /***/ },
-/* 101 */
+/* 105 */
 /*!*************************************!*\
   !*** ./ontology/ontology.module.js ***!
   \*************************************/
@@ -42272,11 +42412,11 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _ngFileUpload = __webpack_require__(/*! npm/ng-file-upload */ 102);
+	var _ngFileUpload = __webpack_require__(/*! npm/ng-file-upload */ 106);
 
 	var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
 
-	var _ontology = __webpack_require__(/*! ./ontology.controller */ 104);
+	var _ontology = __webpack_require__(/*! ./ontology.controller */ 108);
 
 	var _ontology2 = _interopRequireDefault(_ontology);
 
@@ -42285,7 +42425,7 @@
 	exports.default = _angular2.default.module('sp.ontology', [_ngFileUpload2.default]).controller('OntologyCtrl', _ontology2.default).name;
 
 /***/ },
-/* 102 */
+/* 106 */
 /*!************************************!*\
   !*** ../~/ng-file-upload/index.js ***!
   \************************************/
@@ -42293,11 +42433,11 @@
 
 	'use strict';
 
-	__webpack_require__(/*! ./dist/ng-file-upload-all */ 103);
+	__webpack_require__(/*! ./dist/ng-file-upload-all */ 107);
 	module.exports = 'ngFileUpload';
 
 /***/ },
-/* 103 */
+/* 107 */
 /*!******************************************************!*\
   !*** ../~/ng-file-upload/dist/ng-file-upload-all.js ***!
   \******************************************************/
@@ -44484,7 +44624,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! jquery */ 3), __webpack_require__(/*! jquery */ 3)))
 
 /***/ },
-/* 104 */
+/* 108 */
 /*!*****************************************!*\
   !*** ./ontology/ontology.controller.js ***!
   \*****************************************/
@@ -44497,15 +44637,15 @@
 	});
 	exports.default = OntologyCtrl;
 
-	var _addDialog = __webpack_require__(/*! ./add-dialog.controller */ 105);
+	var _addDialog = __webpack_require__(/*! ./add-dialog.controller */ 109);
 
 	var _addDialog2 = _interopRequireDefault(_addDialog);
 
-	var _dialog = __webpack_require__(/*! ./dialog.controller */ 106);
+	var _dialog = __webpack_require__(/*! ./dialog.controller */ 110);
 
 	var _dialog2 = _interopRequireDefault(_dialog);
 
-	var _context = __webpack_require__(/*! ./context.controller */ 107);
+	var _context = __webpack_require__(/*! ./context.controller */ 111);
 
 	var _context2 = _interopRequireDefault(_context);
 
@@ -44742,7 +44882,7 @@
 	};
 
 /***/ },
-/* 105 */
+/* 109 */
 /*!*******************************************!*\
   !*** ./ontology/add-dialog.controller.js ***!
   \*******************************************/
@@ -44811,7 +44951,7 @@
 	}
 
 /***/ },
-/* 106 */
+/* 110 */
 /*!***************************************!*\
   !*** ./ontology/dialog.controller.js ***!
   \***************************************/
@@ -44873,7 +45013,7 @@
 	}
 
 /***/ },
-/* 107 */
+/* 111 */
 /*!****************************************!*\
   !*** ./ontology/context.controller.js ***!
   \****************************************/
@@ -44942,7 +45082,7 @@
 	}
 
 /***/ },
-/* 108 */
+/* 112 */
 /*!***************************************!*\
   !*** ./pipelines/pipelines.module.js ***!
   \***************************************/
@@ -44958,27 +45098,27 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _pipelines = __webpack_require__(/*! ./pipelines.controller */ 109);
+	var _pipelines = __webpack_require__(/*! ./pipelines.controller */ 113);
 
 	var _pipelines2 = _interopRequireDefault(_pipelines);
 
-	var _myStreamDataAndImageBind = __webpack_require__(/*! ./my-stream-data-and-image-bind.directive */ 110);
+	var _myStreamDataAndImageBind = __webpack_require__(/*! ./my-stream-data-and-image-bind.directive */ 114);
 
 	var _myStreamDataAndImageBind2 = _interopRequireDefault(_myStreamDataAndImageBind);
 
-	var _mySepaDataAndImageBind = __webpack_require__(/*! ./my-sepa-data-and-image-bind.directive */ 111);
+	var _mySepaDataAndImageBind = __webpack_require__(/*! ./my-sepa-data-and-image-bind.directive */ 115);
 
 	var _mySepaDataAndImageBind2 = _interopRequireDefault(_mySepaDataAndImageBind);
 
-	var _myActionsDataAndImageBind = __webpack_require__(/*! ./my-actions-data-and-image-bind.directive */ 112);
+	var _myActionsDataAndImageBind = __webpack_require__(/*! ./my-actions-data-and-image-bind.directive */ 116);
 
 	var _myActionsDataAndImageBind2 = _interopRequireDefault(_myActionsDataAndImageBind);
 
-	var _pipelineCategory = __webpack_require__(/*! ./pipeline-category.filter */ 113);
+	var _pipelineCategory = __webpack_require__(/*! ./pipeline-category.filter */ 117);
 
 	var _pipelineCategory2 = _interopRequireDefault(_pipelineCategory);
 
-	var _categoryAlreadyInPipeline = __webpack_require__(/*! ./category-already-in-pipeline.filter */ 114);
+	var _categoryAlreadyInPipeline = __webpack_require__(/*! ./category-already-in-pipeline.filter */ 118);
 
 	var _categoryAlreadyInPipeline2 = _interopRequireDefault(_categoryAlreadyInPipeline);
 
@@ -44987,7 +45127,7 @@
 	exports.default = _angular2.default.module('sp.pipeline', []).controller('PipelineCtrl', _pipelines2.default).directive('myStreamDataAndImageBind', _myStreamDataAndImageBind2.default).directive('mySepaDataAndImageBind', _mySepaDataAndImageBind2.default).directive('myActionDataAndImageBind', _myActionsDataAndImageBind2.default).filter('pipelineCategoryFilter', _pipelineCategory2.default).filter('categoryAlreadyInPipelineFilter', _categoryAlreadyInPipeline2.default).name;
 
 /***/ },
-/* 109 */
+/* 113 */
 /*!*******************************************!*\
   !*** ./pipelines/pipelines.controller.js ***!
   \*******************************************/
@@ -45448,7 +45588,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! jquery */ 3)))
 
 /***/ },
-/* 110 */
+/* 114 */
 /*!**************************************************************!*\
   !*** ./pipelines/my-stream-data-and-image-bind.directive.js ***!
   \**************************************************************/
@@ -45474,7 +45614,7 @@
 	};
 
 /***/ },
-/* 111 */
+/* 115 */
 /*!************************************************************!*\
   !*** ./pipelines/my-sepa-data-and-image-bind.directive.js ***!
   \************************************************************/
@@ -45500,7 +45640,7 @@
 	};
 
 /***/ },
-/* 112 */
+/* 116 */
 /*!***************************************************************!*\
   !*** ./pipelines/my-actions-data-and-image-bind.directive.js ***!
   \***************************************************************/
@@ -45526,7 +45666,7 @@
 	};
 
 /***/ },
-/* 113 */
+/* 117 */
 /*!***********************************************!*\
   !*** ./pipelines/pipeline-category.filter.js ***!
   \***********************************************/
@@ -45555,7 +45695,7 @@
 	};
 
 /***/ },
-/* 114 */
+/* 118 */
 /*!**********************************************************!*\
   !*** ./pipelines/category-already-in-pipeline.filter.js ***!
   \**********************************************************/
@@ -45582,7 +45722,7 @@
 	};
 
 /***/ },
-/* 115 */
+/* 119 */
 /*!*************************************************!*\
   !*** ./proasense-home/proasense-home.module.js ***!
   \*************************************************/
@@ -45598,7 +45738,7 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _proasenseHome = __webpack_require__(/*! ./proasense-home.controller */ 116);
+	var _proasenseHome = __webpack_require__(/*! ./proasense-home.controller */ 120);
 
 	var _proasenseHome2 = _interopRequireDefault(_proasenseHome);
 
@@ -45607,7 +45747,7 @@
 	exports.default = _angular2.default.module('sp.proasenseHome', []).controller('HomeCtrl', _proasenseHome2.default).name;
 
 /***/ },
-/* 116 */
+/* 120 */
 /*!*****************************************************!*\
   !*** ./proasense-home/proasense-home.controller.js ***!
   \*****************************************************/
@@ -45627,7 +45767,7 @@
 	};
 
 /***/ },
-/* 117 */
+/* 121 */
 /*!***********************************!*\
   !*** ./sensors/sensors.module.js ***!
   \***********************************/
@@ -45643,36 +45783,128 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _sensors = __webpack_require__(/*! ./sensors.controller */ 118);
+	var _services = __webpack_require__(/*! ../services/services.module */ 6);
+
+	var _services2 = _interopRequireDefault(_services);
+
+	var _sensors = __webpack_require__(/*! ./sensors.controller */ 122);
 
 	var _sensors2 = _interopRequireDefault(_sensors);
 
-	var _startsWithLetter = __webpack_require__(/*! ./starts-with-letter.filter */ 119);
+	var _startsWithLetter = __webpack_require__(/*! ./starts-with-letter.filter */ 123);
 
 	var _startsWithLetter2 = _interopRequireDefault(_startsWithLetter);
 
-	var _generatedElementDescription = __webpack_require__(/*! ./directives/deployment/generated-element-description.directive */ 120);
-
-	var _generatedElementDescription2 = _interopRequireDefault(_generatedElementDescription);
-
-	var _deploymentType = __webpack_require__(/*! ./directives/deployment/deployment-type.directive */ 121);
+	var _deploymentType = __webpack_require__(/*! ./directives/deployment/deployment-type.directive */ 124);
 
 	var _deploymentType2 = _interopRequireDefault(_deploymentType);
 
-	var _deployment = __webpack_require__(/*! ./directives/deployment/deployment.directive */ 122);
+	var _deployment = __webpack_require__(/*! ./directives/deployment/deployment.directive */ 125);
 
 	var _deployment2 = _interopRequireDefault(_deployment);
 
-	var _generatedElementImplementation = __webpack_require__(/*! ./directives/deployment/generated-element-implementation.directive */ 123);
+	var _advancedSettings = __webpack_require__(/*! ./directives/general/advanced-settings.directive */ 126);
+
+	var _advancedSettings2 = _interopRequireDefault(_advancedSettings);
+
+	var _collapsible = __webpack_require__(/*! ./directives/general/collapsible.directive */ 127);
+
+	var _collapsible2 = _interopRequireDefault(_collapsible);
+
+	var _nagPrism = __webpack_require__(/*! ./directives/general/nag-prism.directive */ 128);
+
+	var _nagPrism2 = _interopRequireDefault(_nagPrism);
+
+	var _options = __webpack_require__(/*! ./directives/general/options.directive */ 129);
+
+	var _options2 = _interopRequireDefault(_options);
+
+	var _valueSpecification = __webpack_require__(/*! ./directives/general/value-specification.directive */ 130);
+
+	var _valueSpecification2 = _interopRequireDefault(_valueSpecification);
+
+	var _generatedElementDescription = __webpack_require__(/*! ./directives/generated-element/generated-element-description.directive */ 131);
+
+	var _generatedElementDescription2 = _interopRequireDefault(_generatedElementDescription);
+
+	var _generatedElementImplementation = __webpack_require__(/*! ./directives/generated-element/generated-element-implementation.directive */ 132);
 
 	var _generatedElementImplementation2 = _interopRequireDefault(_generatedElementImplementation);
 
+	var _supportedGrounding = __webpack_require__(/*! ./directives/grounding/supported-grounding.directive */ 133);
+
+	var _supportedGrounding2 = _interopRequireDefault(_supportedGrounding);
+
+	var _transportFormat = __webpack_require__(/*! ./directives/grounding/transport-format.directive */ 134);
+
+	var _transportFormat2 = _interopRequireDefault(_transportFormat);
+
+	var _transportProtocol = __webpack_require__(/*! ./directives/grounding/transport-protocol.directive */ 135);
+
+	var _transportProtocol2 = _interopRequireDefault(_transportProtocol);
+
+	var _outputStrategy = __webpack_require__(/*! ./directives/output/output-strategy.directive */ 136);
+
+	var _outputStrategy2 = _interopRequireDefault(_outputStrategy);
+
+	var _datatypeProperty = __webpack_require__(/*! ./directives/property/datatype-property.directive */ 137);
+
+	var _datatypeProperty2 = _interopRequireDefault(_datatypeProperty);
+
+	var _domainConceptProperty = __webpack_require__(/*! ./directives/property/domain-concept-property.directive */ 138);
+
+	var _domainConceptProperty2 = _interopRequireDefault(_domainConceptProperty);
+
+	var _domainProperty = __webpack_require__(/*! ./directives/property/domain-property.directive */ 139);
+
+	var _domainProperty2 = _interopRequireDefault(_domainProperty);
+
+	var _eventProperties = __webpack_require__(/*! ./directives/property/event-properties.directive */ 140);
+
+	var _eventProperties2 = _interopRequireDefault(_eventProperties);
+
+	var _propertyRestriction = __webpack_require__(/*! ./directives/property/property-restriction.directive */ 141);
+
+	var _propertyRestriction2 = _interopRequireDefault(_propertyRestriction);
+
+	var _requiredPropertyValues = __webpack_require__(/*! ./directives/property/required-property-values.directive */ 142);
+
+	var _requiredPropertyValues2 = _interopRequireDefault(_requiredPropertyValues);
+
+	var _staticProperties = __webpack_require__(/*! ./directives/property/static-properties.directive */ 143);
+
+	var _staticProperties2 = _interopRequireDefault(_staticProperties);
+
+	var _propertyQualityDefinitions = __webpack_require__(/*! ./directives/quality/property-quality-definitions.directive */ 144);
+
+	var _propertyQualityDefinitions2 = _interopRequireDefault(_propertyQualityDefinitions);
+
+	var _streamQualityDefinitions = __webpack_require__(/*! ./directives/quality/stream-quality-definitions.directive */ 145);
+
+	var _streamQualityDefinitions2 = _interopRequireDefault(_streamQualityDefinitions);
+
+	var _streamRestriction = __webpack_require__(/*! ./directives/restriction/stream-restriction.directive */ 146);
+
+	var _streamRestriction2 = _interopRequireDefault(_streamRestriction);
+
+	var _sepaBasics = __webpack_require__(/*! ./directives/sepa/sepa-basics.directive */ 147);
+
+	var _sepaBasics2 = _interopRequireDefault(_sepaBasics);
+
+	var _sepaStreamDetail = __webpack_require__(/*! ./directives/sepa/sepa-stream-detail.directive */ 148);
+
+	var _sepaStreamDetail2 = _interopRequireDefault(_sepaStreamDetail);
+
+	var _measurementUnit = __webpack_require__(/*! ./directives/unit/measurement-unit.directive */ 149);
+
+	var _measurementUnit2 = _interopRequireDefault(_measurementUnit);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _angular2.default.module('sp.sensors', []).controller('SensorsCtrl', _sensors2.default).filter('startsWithLetter', _startsWithLetter2.default).directive('generatedElementDescription', _generatedElementDescription2.default).directive('deploymentType', _deploymentType2.default).directive('deployment', _deployment2.default).directive('generatedElementImplementation', _generatedElementDescription2.default).name;
+	exports.default = _angular2.default.module('sp.sensors', [_services2.default]).controller('SensorsCtrl', _sensors2.default).filter('startsWithLetter', _startsWithLetter2.default).directive('deploymentType', _deploymentType2.default).directive('deployment', _deployment2.default).directive('advancedSettings', _advancedSettings2.default).directive('collapsible', _collapsible2.default).directive('nagPrism', _nagPrism2.default).directive('options', _options2.default).directive('valueSpecification', _valueSpecification2.default).directive('generatedElementDescription', _generatedElementDescription2.default).directive('generatedElementImplementation', _generatedElementImplementation2.default).directive('supportedGrounding', _supportedGrounding2.default).directive('transportFormat', _transportFormat2.default).directive('transportProtocol', _transportProtocol2.default).directive('outputStrategy', _outputStrategy2.default).directive('outputStrategy', _outputStrategy2.default).directive('datatypeProperty', _datatypeProperty2.default).directive('domainConceptProperty', _domainConceptProperty2.default).directive('domainProperty', _domainProperty2.default).directive('eventProperties', _eventProperties2.default).directive('propertyRestriction', _propertyRestriction2.default).directive('requiredPropertyValues', _requiredPropertyValues2.default).directive('staticProperties', _staticProperties2.default).directive('propertyQualityDefinitions', _propertyQualityDefinitions2.default).directive('streamQualityDefinitions', _streamQualityDefinitions2.default).directive('streamRestriction', _streamRestriction2.default).directive('sepaBasics', _sepaBasics2.default).directive('sepaStreamDetail', _sepaStreamDetail2.default).directive('measurementUnit', _measurementUnit2.default).name;
 
 /***/ },
-/* 118 */
+/* 122 */
 /*!***************************************!*\
   !*** ./sensors/sensors.controller.js ***!
   \***************************************/
@@ -45900,7 +46132,7 @@
 	};
 
 /***/ },
-/* 119 */
+/* 123 */
 /*!**********************************************!*\
   !*** ./sensors/starts-with-letter.filter.js ***!
   \**********************************************/
@@ -45927,47 +46159,7 @@
 	};
 
 /***/ },
-/* 120 */
-/*!**********************************************************************************!*\
-  !*** ./sensors/directives/deployment/generated-element-description.directive.js ***!
-  \**********************************************************************************/
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = generatedElementDescription;
-	function generatedElementDescription() {
-		return {
-			restrict: 'E',
-			templateUrl: './generated-element-description.tmpl.html',
-			scope: {
-				jsonld: "=",
-				java: "=",
-				element: "="
-			},
-			controller: function controller($scope, $element) {
-
-				$scope.downloadJsonLd = function () {
-					$scope.openSaveAsDialog($scope.element.name + ".jsonld", $scope.jsonld, "application/json");
-				};
-
-				$scope.downloadJava = function () {
-					$scope.openSaveAsDialog($scope.element.name + ".java", $scope.jsonld, "application/java");
-				};
-
-				$scope.openSaveAsDialog = function (filename, content, mediaType) {
-					var blob = new Blob([content], { type: mediaType });
-					saveAs(blob, filename);
-				};
-			}
-		};
-	};
-
-/***/ },
-/* 121 */
+/* 124 */
 /*!********************************************************************!*\
   !*** ./sensors/directives/deployment/deployment-type.directive.js ***!
   \********************************************************************/
@@ -45982,7 +46174,7 @@
 	function deploymentType() {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/sensors/directives/deployment-type.tmpl.html',
+			templateUrl: 'app/sensors/directives/deployment/deployment-type.tmpl.html',
 			scope: {
 				disabled: "=",
 				deployment: "="
@@ -45992,7 +46184,7 @@
 	};
 
 /***/ },
-/* 122 */
+/* 125 */
 /*!***************************************************************!*\
   !*** ./sensors/directives/deployment/deployment.directive.js ***!
   \***************************************************************/
@@ -46009,7 +46201,7 @@
 	function deployment(deploymentService) {
 		return {
 			restrict: 'E',
-			templateUrl: 'modules/sensors/directives/deployment.tmpl.html',
+			templateUrl: 'app/sensors/directives/deployment/deployment.tmpl.html',
 			scope: {
 				disabled: "=",
 				element: "=",
@@ -46071,10 +46263,286 @@
 	};
 
 /***/ },
-/* 123 */
-/*!*************************************************************************************!*\
-  !*** ./sensors/directives/deployment/generated-element-implementation.directive.js ***!
-  \*************************************************************************************/
+/* 126 */
+/*!*******************************************************************!*\
+  !*** ./sensors/directives/general/advanced-settings.directive.js ***!
+  \*******************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = advancedSettings;
+	advancedSettings.$inject = [];
+
+	function advancedSettings() {
+
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/general/advanced-settings.tmpl.html',
+			transclude: true,
+			scope: {},
+
+			controller: function controller($scope, $element) {
+
+				$scope.visible = false;
+
+				$scope.showLabel = function () {
+					return $scope.visible == true ? "Hide" : "Show";
+				};
+
+				$scope.advancedSettingsVisible = function () {
+					return $scope.visible;
+				};
+
+				$scope.toggleAdvancedSettingsVisibility = function () {
+					$scope.visible = !$scope.visible;
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 127 */
+/*!*************************************************************!*\
+  !*** ./sensors/directives/general/collapsible.directive.js ***!
+  \*************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = collapsible;
+	collapsible.$inject = [];
+
+	function collapsible() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/general/collapsible.tmpl.html',
+			transclude: true,
+			scope: {
+				list: "=list",
+				index: "=index",
+				disabled: "=disabled",
+				removable: "=removable",
+				titleLabel: "=titleLabel",
+				collapsible: "=collapsible",
+				subtitle: "="
+			},
+
+			controller: function controller($scope, $element) {
+
+				$scope.hide = true;
+
+				$scope.toggleVisibility = function () {
+					$scope.hide = !$scope.hide;
+				};
+
+				$scope.removeProperty = function (list, index) {
+					list.splice(index, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 128 */
+/*!***********************************************************!*\
+  !*** ./sensors/directives/general/nag-prism.directive.js ***!
+  \***********************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = nagPrism;
+	nagPrism.$inject = ['$compile'];
+
+	function nagPrism($compile) {
+		return {
+			restrict: 'A',
+			transclude: true,
+			scope: {
+				source: '@'
+			},
+			link: function link(scope, element, attrs, controller, transclude) {
+				scope.$watch('source', function (v) {
+					v = scope.escape(v);
+					element.find("code").html(v);
+
+					Prism.highlightElement(element.find("code")[0]);
+				});
+
+				scope.entityMap = {
+					"&": "&amp;",
+					"<": "&lt;",
+					">": "&gt;",
+					'"': '&quot;',
+					"'": '&#39;',
+					"/": '&#x2F;'
+				};
+
+				scope.escape = function (str) {
+					return String(str).replace(/[&<>"'\/]/g, function (s) {
+						return scope.entityMap[s];
+					});
+				};
+
+				transclude(function (clone) {
+					if (clone.html() !== undefined) {
+						element.find("code").html(clone.html());
+						$compile(element.contents())(scope.$parent);
+					}
+				});
+			},
+			template: "<code></code>"
+		};
+	};
+
+/***/ },
+/* 129 */
+/*!*********************************************************!*\
+  !*** ./sensors/directives/general/options.directive.js ***!
+  \*********************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = options;
+	options.$inject = [];
+
+	function options() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/general/options.tmpl.html',
+			scope: {
+				options: "=element",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.addOption = function (options) {
+					if (options == undefined) options = [];
+					options.push({ "name": "" });
+				};
+
+				$scope.removeOption = function (options, index) {
+					options.splice(index, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 130 */
+/*!*********************************************************************!*\
+  !*** ./sensors/directives/general/value-specification.directive.js ***!
+  \*********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = valueSpecification;
+	valueSpecification.$inject = [];
+
+	function valueSpecification() {
+
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/general/value-specification.tmpl.html',
+			scope: {
+				disabled: "=",
+				property: "=",
+				runtimeType: "="
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.valueSpecifications = [{ label: "None", "type": undefined }, { label: "Quantitative Value", "type": "de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue" }, { label: "Enumeration", "type": "de.fzi.cep.sepa.model.impl.eventproperty.Enumeration" }];
+
+				$scope.isDisallowed = function (type) {
+					if (type == $scope.valueSpecifications[1].type && !isNumericalProperty()) return true;else if (type == $scope.valueSpecifications[2].type && isBoolean()) return true;else return false;
+				};
+
+				var isNumericalProperty = function isNumericalProperty() {
+					if ($scope.runtimeType != "http://www.w3.org/2001/XMLSchema#string" && $scope.runtimeType != "http://www.w3.org/2001/XMLSchema#boolean") return true;else return false;
+				};
+
+				var isBoolean = function isBoolean() {
+					if ($scope.runtimeType == "http://www.w3.org/2001/XMLSchema#boolean") return true;else return false;
+				};
+
+				$scope.add = function () {
+					if ($scope.property.properties == undefined) {
+						$scope.property.properties = {};
+						$scope.property.properties.runtimeValues = [];
+					}
+					$scope.property.properties.runtimeValues.push("");
+				};
+
+				$scope.remove = function (runtimeValues, propertyIndex) {
+					runtimeValues.splice(propertyIndex, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 131 */
+/*!*****************************************************************************************!*\
+  !*** ./sensors/directives/generated-element/generated-element-description.directive.js ***!
+  \*****************************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = generatedElementDescription;
+	function generatedElementDescription() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/generated-element/generated-element-description.tmpl.html',
+			scope: {
+				jsonld: "=",
+				java: "=",
+				element: "="
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.downloadJsonLd = function () {
+					$scope.openSaveAsDialog($scope.element.name + ".jsonld", $scope.jsonld, "application/json");
+				};
+
+				$scope.downloadJava = function () {
+					$scope.openSaveAsDialog($scope.element.name + ".java", $scope.jsonld, "application/java");
+				};
+
+				$scope.openSaveAsDialog = function (filename, content, mediaType) {
+					var blob = new Blob([content], { type: mediaType });
+					saveAs(blob, filename);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 132 */
+/*!********************************************************************************************!*\
+  !*** ./sensors/directives/generated-element/generated-element-implementation.directive.js ***!
+  \********************************************************************************************/
 /***/ function(module, exports) {
 
 	'use strict';
@@ -46086,7 +46554,7 @@
 	function generatedElementImplementation() {
 		return {
 			restrict: 'E',
-			templateUrl: './generated-element-implementation.tmpl.html',
+			templateUrl: 'app/sensors/directives/generated-element/generated-element-implementation.tmpl.html',
 			scope: {
 				zipFile: "=",
 				element: "="
@@ -46152,7 +46620,928 @@
 	};
 
 /***/ },
-/* 124 */
+/* 133 */
+/*!***********************************************************************!*\
+  !*** ./sensors/directives/grounding/supported-grounding.directive.js ***!
+  \***********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = supportedGrounding;
+	supportedGrounding.$inject = [];
+
+	function supportedGrounding() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/grounding/supported-grounding.tmpl.html',
+			scope: {
+				grounding: "=grounding",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				var transportFormatTypesThrift = ["http://sepa.event-processing.org/sepa#TransportFormat", "http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#thrift"];
+				var transportFormatTypesJson = ["http://sepa.event-processing.org/sepa#TransportFormat", "http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#json"];
+
+				var thriftFormat = "http://sepa.event-processing.org/sepa#thrift";
+				var jsonFormat = "http://sepa.event-processing.org/sepa#json";
+
+				$scope.kafkaClass = "de.fzi.cep.sepa.model.impl.KafkaTransportProtocol";
+				$scope.jmsClass = "de.fzi.cep.sepa.model.impl.JmsTransportProtocol";
+
+				$scope.kafkaSelected = function (transportProtocols) {
+					return brokerSelected(transportProtocols, $scope.kafkaClass);
+				};
+
+				$scope.jmsSelected = function (transportProtocols) {
+					return brokerSelected(transportProtocols, $scope.jmsClass);
+				};
+
+				$scope.jsonSelected = function (transportFormats) {
+					return formatSelected(transportFormats, jsonFormat);
+				};
+
+				$scope.thriftSelected = function (transportFormats) {
+					return formatSelected(transportFormats, thriftFormat);
+				};
+
+				var brokerSelected = function brokerSelected(transportProtocols, protocolClass) {
+					var selected = false;
+					angular.forEach(transportProtocols, function (protocol) {
+						if (protocol.type == protocolClass) selected = true;
+					});
+					return selected;
+				};
+
+				var formatSelected = function formatSelected(transportFormats, formatClass) {
+					var selected = false;
+					angular.forEach(transportFormats, function (format) {
+						angular.forEach(format.rdfType, function (type) {
+							if (type == formatClass) selected = true;
+						});
+					});
+					return selected;
+				};
+
+				$scope.toggleKafka = function (transportProtocols) {
+					if ($scope.kafkaSelected(transportProtocols)) {
+						removeBroker(transportProtocols, $scope.kafkaClass);
+					} else {
+						checkGrounding();
+						if (transportProtocols == undefined) $scope.grounding.transportProtocols = [];
+						$scope.grounding.transportProtocols.push({ "type": $scope.kafkaClass, "properties": { "kafkaPort": 0, "zookeeperPort": 0 } });
+					}
+				};
+
+				$scope.toggleJms = function (transportProtocols) {
+					if ($scope.jmsSelected(transportProtocols)) {
+						removeBroker(transportProtocols, $scope.jmsClass);
+					} else {
+						checkGrounding();
+						if (transportProtocols == undefined) $scope.grounding.transportProtocols = [];
+						$scope.grounding.transportProtocols.push({ "type": $scope.jmsClass, "properties": { "port": 0 } });
+					}
+				};
+
+				var removeBroker = function removeBroker(transportProtocols, protocolClass) {
+					angular.forEach(transportProtocols, function (protocol) {
+						if (protocol.type == protocolClass) transportProtocols.splice(transportProtocols.indexOf(protocol), 1);
+					});
+				};
+
+				$scope.toggleJson = function (transportFormats) {
+					if ($scope.jsonSelected(transportFormats)) {
+						removeFormat(transportFormats, jsonFormat);
+					} else {
+						checkGrounding();
+						if (transportFormats == undefined) $scope.grounding.transportFormats = [];
+						$scope.grounding.transportFormats.push({ "rdfType": transportFormatTypesJson });
+					}
+				};
+
+				$scope.toggleThrift = function (transportFormats) {
+					if ($scope.thriftSelected(transportFormats)) {
+						removeFormat(transportFormats, thriftFormat);
+					} else {
+						checkGrounding();
+						if (transportFormats == undefined) $scope.grounding.transportFormats = [];
+						$scope.grounding.transportFormats.push({ "rdfType": transportFormatTypesThrift });
+					}
+				};
+
+				var checkGrounding = function checkGrounding() {
+					if ($scope.grounding == undefined) $scope.grounding = {};
+				};
+
+				var removeFormat = function removeFormat(transportFormats, formatClass) {
+					angular.forEach(transportFormats, function (format) {
+						angular.forEach(format.rdfType, function (type) {
+							if (type == formatClass) transportFormats.splice(transportFormats.indexOf(format), 1);
+						});
+					});
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 134 */
+/*!********************************************************************!*\
+  !*** ./sensors/directives/grounding/transport-format.directive.js ***!
+  \********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = transportFormat;
+	transportFormat.$inject = [];
+
+	function transportFormat() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/grounding/transport-format.tmpl.html',
+			scope: {
+				grounding: "=grounding",
+				disabled: "=disabled"
+			},
+
+			controller: function controller($scope, $element) {
+
+				$scope.availableTransportFormats = [{ "id": "thrift", "name": "Thrift Simple Event Format", "rdf": ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#thrift"] }, { "id": "json", "name": "Flat JSON Format", "rdf": ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#json"] }, { "id": "xml", "name": "XML", "rdf": ["http://www.w3.org/2000/01/rdf-schema#Resource", "http://sepa.event-processing.org/sepa#TransportFormat", "http://sepa.event-processing.org/sepa#xml"] }];
+				$scope.selectedTransportFormat = "";
+
+				var getFormat = function getFormat() {
+					if ($scope.selectedTransportFormat == 'thrift') return $scope.availableTransportFormats[0].rdf;else return $scope.availableTransportFormats[1].rdf;
+				};
+
+				$scope.addTransportFormat = function (transportFormats) {
+					transportFormats.push({ "rdfType": getFormat() });
+				};
+
+				$scope.removeTransportFormat = function (transportFormats) {
+					transportFormats.splice(0, 1);
+				};
+
+				$scope.findFormat = function (transportFormat) {
+					if (transportFormat == undefined) return "";else {
+						if (transportFormat.rdfType.indexOf($scope.availableTransportFormats[0].rdf[2]) != -1) return $scope.availableTransportFormats[0].name;else return $scope.availableTransportFormats[1].name;
+					}
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 135 */
+/*!**********************************************************************!*\
+  !*** ./sensors/directives/grounding/transport-protocol.directive.js ***!
+  \**********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = transportProtocol;
+	transportProtocol.$inject = [];
+
+	function transportProtocol() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/grounding/transport-protocol.tmpl.html',
+			scope: {
+				grounding: "=grounding",
+				disabled: "=disabled"
+			},
+
+			controller: function controller($scope, $element) {
+
+				$scope.availableTransportProtocols = [{ "id": "kafka", "name": "Apache Kafka", "type": "de.fzi.cep.sepa.model.impl.KafkaTransportProtocol" }, { "id": "jms", "name": "JMS", "type": "de.fzi.cep.sepa.model.impl.JmsTransportProtocol" }, { "id": "mqtt", "name": "MQTT", "type": "de.fzi.cep.sepa.model.impl.MqttTransportProtocol" }];
+				$scope.selectedTransportProtocol = "";
+
+				$scope.addTransportProtocol = function (transportProtocols) {
+					if ($scope.selectedTransportProtocol == $scope.availableTransportProtocols[0].id) $scope.addKafkaProtocol(transportProtocols);else $scope.addJmsProtocol(transportProtocols);
+				};
+
+				$scope.addKafkaProtocol = function (transportProtocols) {
+					transportProtocols.push({ "type": $scope.availableTransportProtocols[0].type, "properties": { "zookeeperHost": "", "zookeeperPort": 2181, "brokerHostname": "", "kafkaPort": 9092, "topicName": "" } });
+				};
+
+				$scope.addJmsProtocol = function (transportProtocols) {
+					transportProtocols.push({ "type": $scope.availableTransportProtocols[1].type, "properties": { "brokerHostname": "", "port": 61616, "topicName": "" } });
+				};
+
+				$scope.removeTransportProtocol = function (transportProtocols) {
+					transportProtocols.splice(0, 1);
+				};
+
+				$scope.findProtocol = function (transportProtocol) {
+					if (transportProtocol == undefined) return "";else {
+						if (transportProtocol.type == $scope.availableTransportProtocols[0].type) return $scope.availableTransportProtocols[0].name;else return $scope.availableTransportProtocols[1].name;
+					}
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 136 */
+/*!****************************************************************!*\
+  !*** ./sensors/directives/output/output-strategy.directive.js ***!
+  \****************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = outputStrategy;
+	outputStrategy.$inject = [];
+
+	function outputStrategy() {
+
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/output/output-strategy.tmpl.html',
+			scope: {
+				strategies: "=strategies",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.outputStrategyTypes = [{ label: "Append", "type": "de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy" }, { label: "Custom", "type": "de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy" }, { label: "Fixed", "type": "de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy" }, { label: "List", "type": "de.fzi.cep.sepa.model.impl.output.ListOutputStrategy" }, { label: "Keep", "type": "de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy" }];
+
+				$scope.selectedOutputStrategy = $scope.outputStrategyTypes[0].type;
+
+				$scope.addOutputStrategy = function (strategies) {
+					if (strategies == undefined) $scope.strategies = [];
+					$scope.strategies.push(getNewOutputStrategy());
+				};
+
+				$scope.removeOutputStrategy = function (strategies, index) {
+					strategies.splice(index, 1);
+				};
+
+				var getNewOutputStrategy = function getNewOutputStrategy() {
+					if ($scope.selectedOutputStrategy === $scope.outputStrategyTypes[0].type) return { "type": $scope.outputStrategyTypes[0].type, "properties": { "eventProperties": [] } };else if ($scope.selectedOutputStrategy === $scope.outputStrategyTypes[1].type) return { "type": $scope.outputStrategyTypes[1].type, "properties": { "eventProperties": [] } };else if ($scope.selectedOutputStrategy === $scope.outputStrategyTypes[2].type) return { "type": $scope.outputStrategyTypes[2].type, "properties": { "eventProperties": [] } };else if ($scope.selectedOutputStrategy === $scope.outputStrategyTypes[3].type) return { "type": $scope.outputStrategyTypes[3].type, "properties": {} };else if ($scope.selectedOutputStrategy === $scope.outputStrategyTypes[4].type) return { "type": $scope.outputStrategyTypes[4].type, "properties": {} };
+				};
+
+				$scope.getType = function (strategy) {
+					var label;
+					angular.forEach($scope.outputStrategyTypes, function (value) {
+						if (value.type == strategy.type) label = value.label;
+					});
+					return label;
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 137 */
+/*!********************************************************************!*\
+  !*** ./sensors/directives/property/datatype-property.directive.js ***!
+  \********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = datatypeProperty;
+	function datatypeProperty() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/datatype-property.tmpl.html',
+			scope: {
+				runtimeType: "=",
+				disabled: "=disabled",
+				dpMode: "=dpMode"
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.primitiveClasses = [{ "title": "String", "description": "A textual datatype, e.g., 'machine1'", "id": "http://www.w3.org/2001/XMLSchema#string" }, { "title": "Boolean", "description": "A true/false value", "id": "http://www.w3.org/2001/XMLSchema#boolean" }, { "title": "Integer", "description": "A whole-numerical datatype, e.g., '1'", "id": "http://www.w3.org/2001/XMLSchema#integer" }, { "title": "Long", "description": "A whole numerical datatype, e.g., '2332313993'", "id": "http://www.w3.org/2001/XMLSchema#long" }, { "title": "Double", "description": "A floating-point number, e.g., '1.25'", "id": "http://www.w3.org/2001/XMLSchema#double" }, { "title": "Float", "description": "A floating-point number, e.g., '1.25'", "id": "http://www.w3.org/2001/XMLSchema#float" }];
+
+				if ($scope.dpMode == 'restriction') $scope.primitiveClasses.push({ "title": "Number", "description": "Any numerical value", "id": "http://schema.org/Number" });
+			}
+		};
+	};
+
+/***/ },
+/* 138 */
+/*!**************************************************************************!*\
+  !*** ./sensors/directives/property/domain-concept-property.directive.js ***!
+  \**************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = domainConceptProperty;
+	domainConceptProperty.$inject = ['restApi'];
+
+	function domainConceptProperty(restApi) {
+		return {
+			restrict: 'AE',
+			templateUrl: 'app/sensors/directives/property/domain-concept-property.tmpl.html',
+			scope: {
+				domainProperty: "=domainProperty",
+				disabled: "=disabled"
+			},
+			link: function link(scope, element, attrs) {
+
+				scope.concepts = [];
+				scope.properties = [];
+
+				scope.loadProperties = function () {
+					restApi.getOntologyProperties().success(function (propertiesData) {
+						scope.properties = propertiesData;
+					}).error(function (msg) {
+						console.log(msg);
+					});
+				};
+
+				scope.loadConcepts = function () {
+					restApi.getOntologyConcepts().success(function (conceptsData) {
+						scope.concepts = conceptsData;
+					}).error(function (msg) {
+						console.log(msg);
+					});
+				};
+
+				scope.loadProperties();
+				scope.loadConcepts();
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.addSupportedProperty = function (supportedProperties) {
+					if (supportedProperties == undefined) supportedProperties = [];
+					supportedProperties.push({ "propertyId": "" });
+				};
+
+				$scope.removeSupportedProperty = function (supportedProperties, index) {
+					supportedProperties.splice(index, 1);
+				};
+
+				$scope.conceptRestricted = function (domainProperty) {
+					if (domainProperty.requiredClass == undefined) return false;
+					return true;
+				};
+
+				$scope.toggleConceptRestriction = function (domainProperty) {
+					if ($scope.conceptRestricted(domainProperty)) domainProperty.requiredClass = undefined;else domainProperty.requiredClass = $scope.concepts[0].id;
+				};
+
+				$scope.conceptSelected = function (conceptId, currentConceptId) {
+					if (conceptId == currentConceptId) return true;
+					return false;
+				};
+
+				$scope.isSelectedProperty = function (availableProperty, selectedProperty) {
+					if (availableProperty == selectedProperty) return true;
+					return false;
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 139 */
+/*!******************************************************************!*\
+  !*** ./sensors/directives/property/domain-property.directive.js ***!
+  \******************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = domainProperty;
+	domainProperty.$inject = ['domainPropertiesService'];
+
+	function domainProperty(domainPropertiesService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/domain-property.tmpl.html',
+			scope: {
+				property: "=",
+				disabled: "=disabled"
+			},
+			controller: function controller($scope, $element) {
+				$scope.domainProperties = [];
+				$scope.domainProperties = domainPropertiesService.getDomainProperties();
+			}
+		};
+	};
+
+/***/ },
+/* 140 */
+/*!*******************************************************************!*\
+  !*** ./sensors/directives/property/event-properties.directive.js ***!
+  \*******************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = eventProperties;
+	eventProperties.$inject = ['restApi'];
+
+	function eventProperties(restApi) {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/event-properties.tmpl.html',
+			scope: {
+				properties: "=properties",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.primitiveClasses = [{ "title": "String", "description": "A textual datatype, e.g., 'machine1'", "id": "http://www.w3.org/2001/XMLSchema#string" }, { "title": "Boolean", "description": "A true/false value", "id": "http://www.w3.org/2001/XMLSchema#boolean" }, { "title": "Integer", "description": "A whole-numerical datatype, e.g., '1'", "id": "http://www.w3.org/2001/XMLSchema#integer" }, { "title": "Double", "description": "A floating-point number, e.g., '1.25'", "id": "http://www.w3.org/2001/XMLSchema#double" }];
+
+				$scope.existingProperties = [];
+
+				$scope.loadProperties = function () {
+					restApi.getOntologyProperties().success(function (propertiesData) {
+						$scope.existingProperties = propertiesData;
+					}).error(function (msg) {
+						console.log(msg);
+					});
+				};
+
+				$scope.addProperty = function (properties) {
+					if (properties == undefined) properties = [];
+					properties.push({ "type": "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties": { "runtimeType": "", "domainProperties": [""] } });
+				};
+				$scope.loadProperties();
+			}
+		};
+	};
+
+/***/ },
+/* 141 */
+/*!***********************************************************************!*\
+  !*** ./sensors/directives/property/property-restriction.directive.js ***!
+  \***********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = propertyRestriction;
+	propertyRestriction.$inject = [];
+
+	function propertyRestriction() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/property-restriction.tmpl.html',
+			scope: {
+				restriction: "=element",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.addPropertyRestriction = function (key, restriction) {
+					if (restriction.eventSchema.eventProperties == undefined) restriction.eventSchema.eventProperties = [];
+					restriction.eventSchema.eventProperties.push({ "type": "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties": { "elementName": makeElementName(), "runtimeType": "", "domainProperties": [] } });
+				};
+
+				$scope.datatypeRestricted = function (property) {
+					if (property.properties.runtimeType == undefined) return false;
+					return true;
+				};
+
+				$scope.toggleDatatypeRestriction = function (property) {
+					if ($scope.datatypeRestricted(property)) property.properties.runtimeType = undefined;else property.properties.runtimeType = "";
+				};
+
+				$scope.measurementUnitRestricted = function (property) {
+					if (property.properties.measurementUnit == undefined) return false;
+					return true;
+				};
+
+				$scope.toggleMeasurementUnitRestriction = function (property) {
+					if ($scope.measurementUnitRestricted(property)) property.properties.measurementUnit = undefined;else property.properties.measurementUnit = "";
+				};
+
+				$scope.domainPropertyRestricted = function (property) {
+					if (property.properties.domainProperties == undefined) return false;
+					if (property.properties.domainProperties[0] == undefined) return false;
+					return true;
+				};
+
+				$scope.toggleDomainPropertyRestriction = function (property) {
+					if ($scope.domainPropertyRestricted(property)) {
+						property.properties.domainProperties = [];
+					} else {
+						property.properties.domainProperties = [];
+						property.properties.domainProperties[0] = "";
+					}
+				};
+
+				var makeElementName = function makeElementName() {
+					return "urn:fzi.de:sepa:" + randomString();
+				};
+
+				var randomString = function randomString() {
+					var result = '';
+					var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					for (var i = 0; i < 12; i++) {
+						result += chars[Math.round(Math.random() * (chars.length - 1))];
+					}return result;
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 142 */
+/*!***************************************************************************!*\
+  !*** ./sensors/directives/property/required-property-values.directive.js ***!
+  \***************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = requiredPropertyValues;
+	requiredPropertyValues.$inject = [];
+
+	function requiredPropertyValues() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/required-property-values.tmpl.html',
+			scope: {
+				property: "=",
+				disabled: "=disabled"
+			}
+		};
+	};
+
+/***/ },
+/* 143 */
+/*!********************************************************************!*\
+  !*** ./sensors/directives/property/static-properties.directive.js ***!
+  \********************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = staticProperties;
+	staticProperties.$inject = ['restApi'];
+
+	function staticProperties(restApi) {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/property/static-properties.tmpl.html',
+			scope: {
+				staticProperties: "=element",
+				streams: '=',
+				disabled: "=disabled"
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.staticPropertyTypes = [{ label: "Text Input", "type": "de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty" }, { label: "Single-Value Selection", "type": "de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty" }, { label: "Multi-Value Selection", "type": "de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty" }, { label: "Domain Concept", "type": "de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty" }, { label: "Single-Value Mapping Property", "type": "de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary" }, { label: "Multi-Value Mapping Property", "type": "de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary" }, { label: "Collection", "type": "de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty" }];
+
+				$scope.newStaticPropertyType = $scope.staticPropertyTypes[0].type;
+				$scope.memberTypeSelected = false;
+
+				$scope.isSelectedProperty = function (mapsFrom, property) {
+					if (property.properties.elementName == mapsFrom) return true;
+					return false;
+				};
+
+				$scope.addStaticProperty = function (staticProperties, type) {
+					if (staticProperties == undefined) staticProperties = [];
+					staticProperties.push($scope.getNewStaticProperty(type));
+				};
+
+				$scope.getNewStaticProperty = function (type) {
+					if (type === $scope.staticPropertyTypes[0].type) return { "type": $scope.staticPropertyTypes[0].type, "properties": { "label": "", "description": "" } };else if (type === $scope.staticPropertyTypes[1].type) return { "type": $scope.staticPropertyTypes[1].type, "properties": { "label": "", "description": "", "options": [] } };else if (type === $scope.staticPropertyTypes[2].type) return { "type": $scope.staticPropertyTypes[2].type, "properties": { "label": "", "description": "", "options": [] } };else if (type === $scope.staticPropertyTypes[3].type) return { "type": $scope.staticPropertyTypes[3].type, "properties": { "label": "", "description": "", "supportedProperties": [] } };else if (type === $scope.staticPropertyTypes[4].type) return { "type": $scope.staticPropertyTypes[4].type, "properties": { "label": "", "description": "" } };else if (type === $scope.staticPropertyTypes[5].type) return { "type": $scope.staticPropertyTypes[5].type, "properties": { "label": "", "description": "" } };else if (type === $scope.staticPropertyTypes[6].type) return { "type": $scope.staticPropertyTypes[6].type, "properties": { "label": "", "description": "", "memberType": "", "members": [] } };
+				};
+
+				$scope.getType = function (property) {
+					var label;
+					angular.forEach($scope.staticPropertyTypes, function (value) {
+						if (value.type == property.type) label = value.label;
+					});
+					return label;
+				};
+
+				$scope.domainPropertyRestricted = function (property) {
+					if (property.type == undefined) return false;
+					return true;
+				};
+
+				$scope.toggleDomainPropertyRestriction = function (property) {
+					if (property.type != undefined) property.type = undefined;else property.type = $scope.properties[0].id;
+				};
+
+				$scope.addMember = function (property) {
+					property.members.push(angular.copy($scope.getNewStaticProperty(property.memberType)));
+					$scope.memberTypeSelected = true;
+				};
+
+				$scope.removeMember = function (property) {
+					property.members = [];
+					property.memberType = '';
+					$scope.memberTypeSelected = false;
+				};
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.properties = [];
+
+				$scope.loadProperties = function () {
+					restApi.getOntologyProperties().success(function (propertiesData) {
+						$scope.properties = propertiesData;
+					}).error(function (msg) {
+						console.log(msg);
+					});
+				};
+
+				$scope.loadProperties();
+			}
+		};
+	};
+
+/***/ },
+/* 144 */
+/*!******************************************************************************!*\
+  !*** ./sensors/directives/quality/property-quality-definitions.directive.js ***!
+  \******************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = propertyQualityDefinitions;
+	function propertyQualityDefinitions() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/quality/property-quality-definitions.tmpl.html',
+			scope: {
+				disabled: "=",
+				property: "=",
+				runtimeType: "="
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.qualities = [{ label: "Accuracy", "description": "", "type": "de.fzi.cep.sepa.model.impl.quality.Accuracy" }, { label: "Precision", "description": "", "type": "de.fzi.cep.sepa.model.impl.quality.Precision" }, { label: "Resolution", "description": "", "type": "de.fzi.cep.sepa.model.impl.quality.Resolution" }];
+
+				$scope.add = function () {
+					if ($scope.property.properties == undefined) {
+						$scope.property.properties = {};
+						$scope.property.properties.runtimeValues = [];
+					}
+					$scope.property.properties.runtimeValues.push("");
+				};
+
+				$scope.remove = function (runtimeValues, propertyIndex) {
+					runtimeValues.splice(propertyIndex, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 145 */
+/*!****************************************************************************!*\
+  !*** ./sensors/directives/quality/stream-quality-definitions.directive.js ***!
+  \****************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = streamQualityDefinitions;
+	function streamQualityDefinitions() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/quality/stream-quality-definitions.tmpl.html',
+			scope: {
+				disabled: "=",
+				property: "=",
+				runtimeType: "="
+			},
+			controller: function controller($scope, $element) {
+
+				$scope.qualities = [{ label: "Frequency", "description": "", "type": "de.fzi.cep.sepa.model.impl.quality.Frequency" }, { label: "Latency", "description": "", "type": "de.fzi.cep.sepa.model.impl.quality.Latency" }];
+
+				$scope.add = function () {
+					if ($scope.property.properties == undefined) {
+						$scope.property.properties = {};
+						$scope.property.properties.runtimeValues = [];
+					}
+					$scope.property.properties.runtimeValues.push("");
+				};
+
+				$scope.remove = function (runtimeValues, propertyIndex) {
+					runtimeValues.splice(propertyIndex, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 146 */
+/*!************************************************************************!*\
+  !*** ./sensors/directives/restriction/stream-restriction.directive.js ***!
+  \************************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = streamRestriction;
+	streamRestriction.$inject = [];
+
+	function streamRestriction() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/restriction/stream-restriction.tmpl.html',
+			scope: {
+				streams: "=element",
+				disabled: "=disabled"
+			},
+			link: function link($scope, element, attrs) {
+
+				$scope.addStreamRestriction = function (streams) {
+					if (streams == undefined) streams = [];
+					streams.push({ "eventSchema": { "eventProperties": [] } });
+				};
+
+				$scope.removeStreamRestriction = function (streamIndex, streams) {
+					streams.splice(streamIndex, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 147 */
+/*!**********************************************************!*\
+  !*** ./sensors/directives/sepa/sepa-basics.directive.js ***!
+  \**********************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = sepaBasics;
+	sepaBasics.$inject = [];
+
+	function sepaBasics() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/sepa/sepa-basics.tmpl.html',
+			scope: {
+				element: "=element",
+				disabled: "=disabled"
+			}
+		};
+	};
+
+/***/ },
+/* 148 */
+/*!*****************************************************************!*\
+  !*** ./sensors/directives/sepa/sepa-stream-detail.directive.js ***!
+  \*****************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = sepaStreamDetail;
+	sepaStreamDetail.$inject = [];
+
+	function sepaStreamDetail() {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/sepa/sepa-stream-detail.tmpl.html',
+			scope: {
+				stream: "=stream",
+				disabled: "=disabled"
+			},
+
+			controller: function controller($scope, $element) {
+
+				$scope.activeStreamTab = "basics";
+
+				$scope.selectStreamTab = function (name) {
+					$scope.activeStreamTab = name;
+				};
+
+				$scope.isStreamTabSelected = function (name) {
+					return $scope.activeStreamTab == name;
+				};
+
+				$scope.getStreamActiveTabCss = function (name) {
+					if (name == $scope.activeStreamTab) return "md-fab md-accent md-mini";else return "md-fab md-accent md-mini wizard-inactive";
+				};
+
+				$scope.addProperty = function (properties) {
+					properties.push({ "type": "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties": { "runtimeName": "", "runtimeType": "", "domainProperties": [] } });
+				};
+
+				$scope.removeProperty = function (index, properties) {
+					properties.splice(index, 1);
+				};
+			}
+		};
+	};
+
+/***/ },
+/* 149 */
+/*!***************************************************************!*\
+  !*** ./sensors/directives/unit/measurement-unit.directive.js ***!
+  \***************************************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = measurementUnit;
+	measurementUnit.$inject = ['measurementUnitsService'];
+
+	function measurementUnit(measurementUnitsService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'app/sensors/directives/unit/measurement-unit.tmpl.html',
+			scope: {
+				disabled: "=",
+				property: "="
+			},
+			controller: function controller($scope, $element) {
+
+				var query = {};
+				$scope.selectedItem = "";
+				$scope.items = measurementUnitsService.getUnits();
+
+				$scope.querySearch = querySearch;
+				$scope.selectedItemChange = selectedItemChange;
+				$scope.searchTextChange = searchTextChange;
+
+				if ($scope.property != undefined && $scope.property != "") {
+					angular.forEach($scope.items, function (item) {
+						if (item.resource == $scope.property) $scope.selectedItem = item;
+					});
+				}
+
+				function querySearch(query) {
+					var results = [];
+
+					angular.forEach($scope.items, function (item) {
+						if (query == undefined || item.label.substring(0, query.length) === query) results.push(item);
+					});
+
+					return results;
+				}
+
+				function searchTextChange(text) {}
+				function selectedItemChange(item) {
+					if (item != undefined) $scope.property = item.resource;
+				}
+			}
+		};
+	};
+
+/***/ },
+/* 150 */
 /*!*********************************************************!*\
   !*** ./visualizations-new/visualizations-new.module.js ***!
   \*********************************************************/
@@ -46168,7 +47557,7 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _visualizationsNew = __webpack_require__(/*! ./visualizations-new.controller */ 125);
+	var _visualizationsNew = __webpack_require__(/*! ./visualizations-new.controller */ 151);
 
 	var _visualizationsNew2 = _interopRequireDefault(_visualizationsNew);
 
@@ -46177,7 +47566,7 @@
 	exports.default = _angular2.default.module('sp.visualizationNew', []).controller('VizCtrl', _visualizationsNew2.default).name;
 
 /***/ },
-/* 125 */
+/* 151 */
 /*!*************************************************************!*\
   !*** ./visualizations-new/visualizations-new.controller.js ***!
   \*************************************************************/
@@ -46268,7 +47657,7 @@
 	};
 
 /***/ },
-/* 126 */
+/* 152 */
 /*!*******************************!*\
   !*** ../lib/jquery-ui.min.js ***!
   \*******************************/

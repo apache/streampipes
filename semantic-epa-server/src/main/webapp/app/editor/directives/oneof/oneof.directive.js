@@ -3,7 +3,7 @@ oneof.$inject = [];
 export default function oneof() {
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/oneof/oneof.tmpl.html',
+		templateUrl : 'app/editor/directives/oneof/oneof.tmpl.html',
 		scope : {
 			staticProperty : "="
 		},

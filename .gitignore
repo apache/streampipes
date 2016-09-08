@@ -52,4 +52,7 @@ fabric.properties
 */log/*
 */target/*
 
+# JS 
 dist/
+
+npm-debug.log
