@@ -17,7 +17,9 @@ let config = {
 	},
 	resolve: {
 		alias: {
-			'npm': `${__dirname}/node_modules`
+			'npm': `${__dirname}/node_modules`,
+			'legacy': `${__dirname}/lib`,
+			"jquery-ui": `${__dirname}/lib/jquery-ui.min.js`,
 		}
 	},
 	module: {
@@ -47,8 +49,8 @@ let config = {
 			add: true
 		}),
 		new webpack.ProvidePlugin({
-		  $: "jquery",
-		  jQuery: "jquery",
+		  "$": "jquery",
+		  "jQuery": "jquery",
 		  "window.jQuery": "jquery"
 		})
 	]

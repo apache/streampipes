@@ -2,8 +2,12 @@
 
 import angular from 'npm/angular';
 //import jQuery from 'npm/jquery';
-import 'npm/jquery-ui';
-//
+//import 'npm/jquery-ui';
+
+
+
+var $ = require("jquery");
+require("jquery-ui");
 
 //import ngMaterial from 'npm/angular-material';
 //import ngMdIcons from 'npm/angular-material-icons';
