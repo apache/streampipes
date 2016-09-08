@@ -1,7 +1,7 @@
 export default function generatedElementImplementation() {
 	return {
 		restrict : 'E',
-		templateUrl : './generated-element-implementation.tmpl.html',
+		templateUrl : 'app/sensors/directives/generated-element/generated-element-implementation.tmpl.html',
 		scope : {
 			zipFile : "=",
 			element : "=",
