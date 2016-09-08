@@ -1,7 +1,6 @@
-TopNavCtrl.$inject = ['$scope', '$rootScope', 'restApi', '$sce', '$http', '$state'];
+TopNavCtrl.$inject = ['$scope', '$rootScope', 'restApi', '$sce', '$state'];
 
-export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $http, $state) {
-	//.controller('TopNavCtrl', function($scope, $rootScope, restApi, $sce, $http, $state) {
+export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $state) {
 
 	$scope.panddaUrl = "";
 	$scope.streamStoryUrl = "";
@@ -24,7 +23,7 @@ export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $http, $st
 	}
 
 	$scope.logout = function() {
-		$http.get("/semantic-epa-backend/api/v2/admin/logout").then(function() {
+			restApi.logout().then(function() {
 			$scope.user = undefined;
 			$rootScope.authenticated = false;
 			$state.go("streampipes.login");
@@ -32,6 +31,4 @@ export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $http, $st
 	};	
 
 	$scope.loadConfig();
-
-
 };
