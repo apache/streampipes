@@ -1,9 +1,9 @@
 import angular from 'npm/angular';
 
-import stomp from '../../lib/stomp';
-import '../../lib/mlhr-table';
-//import '../../lib/malhar-angular-widgets';
-import '../../lib/malhar-angular-dashboard';
+import stomp from 'legacy/stomp';
+import 'legacy/mlhr-table';
+//import 'legacy/malhar-angular-widgets';
+import 'legacy/malhar-angular-dashboard';
 
 import DashboardCtrl from './dashboard.controller';
 import AddWidgetService from './add-widget.service';

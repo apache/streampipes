@@ -2,10 +2,11 @@ import angular from 'npm/angular';
 
 
 //import $ from 'npm/jquery'
-import flowtype from '../../lib/flowtype';
-import circleMenu from '../../lib/jQuery.circleMenu';
+import flowtype from 'legacy/flowtype';
+import circleMenu from 'legacy/jQuery.circleMenu';
 import jqueryPanzoom from 'npm/jquery.panzoom';
-import jqueryUiTouchPunch from 'npm/jquery-ui-touch-punch';
+//import jqueryUi from 'npm/jquery-ui';
+//import jqueryUiTouchPunch from 'npm/jquery-ui-touch-punch';
 import bootstrap from 'npm/bootstrap';
 import angulerUiSortable from 'npm/angular-ui-sortable';
 import angulerUiBootstrap from 'npm/angular-ui-bootstrap';

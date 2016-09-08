@@ -2,7 +2,7 @@ import angular from 'npm/angular';
 import spServices from './services/services.module'
 
 export default angular.module('sp.delme', [spServices])
-.service('objectProvider', ['$http', 'restApi', 'imageChecker', function ($http, restApi, imageChecker) {
+    .service('objectProvider', ['$http', 'restApi', 'imageChecker', function ($http, restApi, imageChecker) {
         var oP = this;
 
         this.Stream = function (element) {
@@ -220,7 +220,22 @@ export default angular.module('sp.delme', [spServices])
 
         }
 
+        var getElementIconText = function (string) {
+            var result = "";
+            if (string.length <= 4) {
+                result = string;
+            } else {
+                var words = string.split(" ");
+                words.forEach(function (word, i) {
+                    if (i < 4) {
+                        result += word.charAt(0);
+                    }
+                });
+            }
+            return result.toUpperCase();
+        }
+
         //return oP;
-}]).name;
+    }]).name;
 
 	
