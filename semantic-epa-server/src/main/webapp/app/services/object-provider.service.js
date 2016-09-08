@@ -1,8 +1,6 @@
-import angular from 'npm/angular';
-import spServices from './services/services.module'
+objectProvider.$inject = ['$http', 'restApi', 'imageChecker'];
 
-export default angular.module('sp.delme', [spServices])
-    .service('objectProvider', ['$http', 'restApi', 'imageChecker', function ($http, restApi, imageChecker) {
+export default function objectProvider($http, restApi, imageChecker) {
         var oP = this;
 
         this.Stream = function (element) {
@@ -236,6 +234,4 @@ export default angular.module('sp.delme', [spServices])
         }
 
         //return oP;
-    }]).name;
-
-	
+    };

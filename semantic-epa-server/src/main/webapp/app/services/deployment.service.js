@@ -1,5 +1,5 @@
 deploymentService.$inject = ['$http', '$rootScope', 'restApi'];
-//.factory('deploymentService', function($http, $rootScope, restApi) {
+
 export default function deploymentService($http, $rootScope, restApi) {
 
 	var deploymentService = {};

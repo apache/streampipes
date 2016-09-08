@@ -2,7 +2,6 @@ import angular from 'npm/angular';
 
 import spServices from '../services/services.module';
 
-
 import flowtype from 'legacy/flowtype';
 import circleMenu from 'legacy/jQuery.circleMenu';
 import jqueryPanzoom from 'npm/jquery.panzoom';
