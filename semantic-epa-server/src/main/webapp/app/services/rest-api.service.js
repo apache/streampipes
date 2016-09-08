@@ -375,15 +375,15 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getAllUnits = function() {
-		return $http.get(urlBase() + "/units/instances");
+		return $http.get(getServerUrl() + "/units/instances");
 	}
 
 	restApi.getAllUnitTypes = function() {
-		return $http.get(urlBase() + "/units/types");
+		return $http.get(getServerUrl() + "/units/types");
 	}
 
 	restApi.getUnit = function(resource) {
-		return $http.get(urlBase() + "/units/instances/" + encodeURIComponent(resource));
+		return $http.get(getServerUrl() + "/units/instances/" + encodeURIComponent(resource));
 	}
 
 	restApi.getEpaCategories = function() {
