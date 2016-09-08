@@ -1,9 +1,5 @@
 restApi.$inject = ['$rootScope', '$http', 'apiConstants'];
 
-//export default angular.module('sp.services', [spConstants])
-
-	//.factory('restApi', function ($rootScope, $http, apiConstants) {
-
 export default function restApi($rootScope, $http, apiConstants) {
 
 	var restApi = {};

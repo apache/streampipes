@@ -7,7 +7,6 @@ import "jquery-ui";
 import uiRouter from 'npm/angular-ui-router';
 
 import spServices from './services/services.module';
-import delme from './delme';
 
 import spAdd from './add/add.module';
 import spCore from './core/core.module';
@@ -29,7 +28,6 @@ const MODULE_NAME = 'streamPipesApp';
 
 export default angular
 	.module(MODULE_NAME, [
-		delme,
 		spServices,
 		spAdd,
 		spCore,
