@@ -25,6 +25,7 @@ import mappingPropertyNary from './directives/mappingnary/mappingnary.directive'
 import matchingProperty from './directives/matchingproperty/matchingproperty.directive';
 import oneof from './directives/oneof/oneof.directive';
 import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
+import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
 
 
 export default angular.module('sp.editor', [])

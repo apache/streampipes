@@ -35,7 +35,7 @@ let config = {
 			}
 		]
 	},
-	devtool: 'source-map',
+	//devtool: 'source-map',
 	devServer: {
 		contentBase: `${__dirname}/`,
 		port: 8081,
@@ -47,9 +47,9 @@ let config = {
 			add: true
 		}),
 		new webpack.ProvidePlugin({
-		  $: "jquery",
-		  jQuery: "jquery",
-		  "window.jQuery": "jquery"
+			$: "jquery",
+			jQuery: "jquery",
+			"window.jQuery": "jquery"
 		})
 	]
 };

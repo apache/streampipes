@@ -3,7 +3,7 @@ deployment.$inject = ['deploymentService'];
 export default function deployment(deploymentService) {
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/sensors/directives/deployment.tmpl.html',
+		templateUrl : 'app/sensors/directives/deployment/deployment.tmpl.html',
 		scope : {
 			disabled : "=",
 			element : "=",
