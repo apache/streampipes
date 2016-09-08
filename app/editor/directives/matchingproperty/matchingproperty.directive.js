@@ -4,7 +4,7 @@ export default function matchingProperty() {
 
 	return {
 		restrict: 'E',
-		templateUrl: 'modules/editor/templates/matchingproperty/matchingproperty.tmpl.html',
+		templateUrl: 'app/editor/directives/matchingproperty/matchingproperty.tmpl.html',
 		scope: {
 			staticProperty: "="
 		},

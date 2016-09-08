@@ -3,7 +3,7 @@ multipleValueInput.$inject = [];
 export default function multipleValueInput() {
 	return {
 		restrict : 'E',
-		templateUrl : './multiple-value-input.tmpl.html',
+		templateUrl : 'app/editor/directives/multivalue/multiple-value-input.tmpl.html',
 		scope : {
 			staticProperty : "=",
 		},

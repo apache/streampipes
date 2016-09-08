@@ -4,7 +4,7 @@ export default function mappingPropertyNary() {
 
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/mappingnary/mappingnary.tmpl.html',
+		templateUrl : 'app/editor/directives/mappingnary/mappingnary.tmpl.html',
 		scope : {
 			staticProperty : "="
 		},

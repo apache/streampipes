@@ -4,7 +4,7 @@ export default function freetext() {
 
 	return {
 		restrict: 'E',
-		templateUrl: 'modules/editor/templates/freetext/freetext.tmpl.html',
+		templateUrl: 'app/editor/directives/freetext/freetext.tmpl.html',
 		scope: {
 			staticProperty: "="
 		},

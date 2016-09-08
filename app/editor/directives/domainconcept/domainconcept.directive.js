@@ -4,7 +4,7 @@ export default function domainConceptInput(restApi) {
 
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/domainconcept/domainconcept.tmpl.html',
+		templateUrl : 'app/editor/directives/domainconcept/domainconcept.tmpl.html',
 		scope : {
 			staticProperty : "=",
 			autoCompleteStaticProperty : "="

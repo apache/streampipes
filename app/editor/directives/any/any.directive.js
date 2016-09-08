@@ -3,7 +3,7 @@ any.$inject = [];
 export default function any() {
 	return {
 		restrict : 'E',
-		templateUrl : 'modules/editor/templates/any/any.tmpl.html',
+		templateUrl : 'app/editor/directives/any/any.tmpl.html',
 		scope : {
 			staticProperty : "="
 		},
