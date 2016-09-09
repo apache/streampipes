@@ -1,8 +1,0 @@
-<div ng-repeat = "(key, restriction) in streams track by $index">
-<collapsible title-label="'Stream ' +(key+1)" list="streams" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
-	    <property-restriction element="restriction" disabled="disabled" ></property-restriction>
-</collapsible>
-<p/>
-</div>
-<md-button class="md-accent" ng-click="addStreamRestriction(streams)" ng-disabled="streams.length >= 2 || disabled">Add stream requirement</md-button>
-<p></p>
