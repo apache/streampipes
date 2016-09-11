@@ -27,67 +27,66 @@ import spVisualizationNew from './visualizations-new/visualizations-new.module';
 const MODULE_NAME = 'streamPipesApp';
 
 export default angular
-	.module(MODULE_NAME, [
-		spServices,
-		spAdd,
-		spCore,
-		spCreate,
-		spDashboard,
-		spDocs,
-		spEditor,
-		spLayout,
-		spLogin,
-		spMyElements,
-		spNotifications,
-		spOntology,
-		spPipelines,
-		spProasenseHome ,
-		spSensors,
-		spVisualizationNew,
-		uiRouter, 
-	])
-	.run(function($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
-		var bypass;
+    .module(MODULE_NAME, [
+        spServices,
+        spAdd,
+        spCore,
+        spCreate,
+        spDashboard,
+        spDocs,
+        spEditor,
+        spLayout,
+        spLogin,
+        spMyElements,
+        spNotifications,
+        spOntology,
+        spPipelines,
+        spProasenseHome,
+        spSensors,
+        spVisualizationNew,
+        uiRouter,
+    ])
+    .run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
+        var bypass;
+        window.loading_screen.finish();
+        if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
+            restApi.configured().success(function (msg) {
+                if (msg.configured) {
+                    authService.authenticate;
+                }
+                else {
+                    $rootScope.authenticated = false;
+                    $state.go("streampipes.setup");
+                }
+            });
+        }
 
-		if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-			restApi.configured().success(function(msg) {
-				if (msg.configured)
-			{
-				authService.authenticate;
-			}
-			else {
-				$rootScope.authenticated = false;
-				$state.go("streampipes.setup");
-			}
-			});
-		}
 
+        $rootScope.$on('$stateChangeStart',
+            function (event, toState, toParams, fromState, fromParams) {
+                var isLogin = toState.name === "streampipes.login";
+                var isSetup = toState.name === "streampipes.setup";
+                var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
+                var isRegister = toState.name === "streampipes.register";
+                if (isLogin || isSetup || isRegister || isExternalLogin) {
+                    return;
+                }
+                else if ($rootScope.authenticated === false) {
+                    event.preventDefault();
+                    console.log("logging in event prevent");
+                    $state.go('streampipes.login');
+                }
 
-		$rootScope.$on('$stateChangeStart',
-			function(event, toState, toParams, fromState, fromParams){
-				var isLogin = toState.name === "streampipes.login";
-				var isSetup = toState.name === "streampipes.setup";
-				var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
-				var isRegister = toState.name === "streampipes.register";
-				if(isLogin || isSetup || isRegister || isExternalLogin){
-					return;
-				}
-				else if($rootScope.authenticated === false) {
-					event.preventDefault();
-					console.log("logging in event prevent");
-					$state.go('streampipes.login');
-				}
+            })
 
-			})
+        $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
+            authService.authenticate;
+        });
+        $rootScope.state = new objectProvider.State();
+        $rootScope.state.sources = false;
+        $rootScope.state.sepas = false;
+        $rootScope.state.actions = false;
+        $rootScope.state.adjustingPipelineState = false;
+        $rootScope.state.adjustingPipeline = {};
 
-		$rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
-			authService.authenticate;
-		});
-		$rootScope.state = new objectProvider.State();
-		$rootScope.state.sources = false;
-		$rootScope.state.sepas = false;
-		$rootScope.state.actions = false;
-		$rootScope.state.adjustingPipelineState = false;
-		$rootScope.state.adjustingPipeline = {};
-
-	});
+    });

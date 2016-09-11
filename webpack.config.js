@@ -40,7 +40,7 @@ let config = {
 	//devtool: 'source-map',
 	devServer: {
 		contentBase: `${__dirname}/`,
-		port: 8081,
+		port: 8082,
 		//inline: true
 	},
 	plugins: [
@@ -52,7 +52,8 @@ let config = {
 			$: "jquery",
 			jQuery: "jquery",
 			"window.jQuery": "jquery"
-		})
+		}),
+		new webpack.HotModuleReplacementPlugin()
 		//new webpack.optimize.UglifyJsPlugin({
 				//compress: {
 								//warnings: false

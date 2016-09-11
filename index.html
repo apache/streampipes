@@ -8,10 +8,6 @@
 
 	<title>StreamPipes GUI</title>
 
-
-
-	<script type="text/javascript" src="lib/jsPlumb-2.1.0-min.js"></script>
-
 	<!--<script type="text/javascript" src="toDelete/fileSaver.js"></script>-->
 	<!--<script type="text/javascript" src="toDelete/iframeResizer.min.js"></script>-->
 	<!--<script type="text/javascript" src="toDelete/prism.js"></script>-->
@@ -28,11 +24,8 @@
 	<!--<script type="text/javascript" src="js/jszip.min.js"></script>-->
 
 	<!--<script type="text/javascript" src="refactor/ModalBuilder.js"></script>-->
-
-	<script type="text/javascript" src="bundle.js"></script>
-
-
-
+    <link rel="stylesheet" href="css/spinkit.css"/>
+    <link rel="stylesheet" href="css/please-wait.css"/>
 	<link rel="stylesheet" href="css/jsplumb.css"/>
 	<link rel="stylesheet" href="css/toastr.css"/>
 	<link rel="stylesheet" href="css/prism.css"/>
@@ -62,6 +55,15 @@
 </head>
 
 <body layout="row">
+<script type="text/javascript" src="lib/please-wait.min.js"></script>
+<script type="text/javascript">
+    window.loading_screen = window.pleaseWait({
+        logo: "img/icons/Logo_StreamPipes_BW.png",
+        backgroundColor: '#3F51B5',
+        loadingHtml: "<div class='sk-spinner sk-spinner-pulse'><div class='sk-rect1'></div></div>"
+
+    });
+</script>
 <div flex layout="column" tabIndex="-1" role="main" id="topDiv">
 
     <div ui-view="top"></div>
@@ -114,6 +116,7 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="lib/jsPlumb-2.1.0-min.js"></script>
+<script type="text/javascript" src="bundle.js"></script>
 </body>
 </html>

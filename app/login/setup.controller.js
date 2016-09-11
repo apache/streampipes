@@ -43,7 +43,7 @@ export default function SetupCtr($scope, $location, restApi, $mdToast) {
 
 		$scope.configure = function() {
 			$scope.loading = true;
-			restApi.setupInstall.success(function(data) {
+			restApi.setupInstall($scope.setup).success(function(data) {
 				$scope.installationFinished = true;
 				$scope.installationResults = data;
 				$scope.loading = false;
