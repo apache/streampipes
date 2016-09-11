@@ -24,6 +24,8 @@ import de.fzi.cep.sepa.model.client.messages.Message;
 import de.fzi.cep.sepa.model.client.messages.Notification;
 import de.fzi.cep.sepa.model.client.messages.NotificationType;
 import de.fzi.cep.sepa.model.client.messages.Notifications;
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +101,9 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
-		
+
+		UserService userService = getUserService();
+		StorageRequests requestor = getPipelineElementRdfStorage();
 		try {
 			if (requestor.getSEPAById(elementId) != null) 
 				{
@@ -128,6 +132,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getActionAsJsonLd(@PathParam("id") String elementId)
 	{
+		StorageRequests requestor = getPipelineElementRdfStorage();
 		elementId = decode(elementId);
 		try {
 			if (requestor.getSEPAById(elementId) != null) return ok(toJsonLd(requestor.getSEPAById(elementId)));
@@ -138,8 +143,4 @@ public class PipelineElementImport extends AbstractRestInterface {
 			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 	}
-
-    public static void main(String[] args) {
-        new PipelineElementImport().addBatch("riemer@fzi.de", "http://localhost:8090", true);
-    }
 }

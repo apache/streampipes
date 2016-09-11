@@ -34,7 +34,8 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(requestor.getAllSEPAs(), userService.getAvailableSepaUris(username));
+		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+				getUserService().getAvailableSepaUris(username));
 		return ok(sepas);
 	}
 	
@@ -45,7 +46,8 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(requestor.getAllSEPAs(), userService.getFavoriteSepaUris(username));
+		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+				getUserService().getFavoriteSepaUris(username));
 		return ok(sepas);
 	}
 
@@ -56,7 +58,8 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(requestor.getAllSEPAs(), userService.getOwnSepaUris(username));
+		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+				getUserService().getOwnSepaUris(username));
 		List<SepaInvocation> si = sepas.stream().map(s -> new SepaInvocation(new SepaInvocation(s))).collect(Collectors.toList());
 
 		return ok(si);
@@ -69,7 +72,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-		userService.addSepaAsFavorite(username, decode(elementUri));
+		getUserService().addSepaAsFavorite(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -80,7 +83,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		userService.removeSepaFromFavorites(username, decode(elementUri));
+		getUserService().removeSepaFromFavorites(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
@@ -92,8 +95,8 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			userService.deleteOwnSepa(username, elementUri);
-			requestor.deleteSEPA(requestor.getSEPAById(elementUri));
+			getUserService().deleteOwnSepa(username, elementUri);
+			getPipelineElementRdfStorage().deleteSEPA(getPipelineElementRdfStorage().getSEPAById(elementUri));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(Notifications.create(NotificationType.STORAGE_ERROR, e.getMessage()));
 		}
@@ -106,15 +109,10 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return toJsonLd(requestor.getSEPAById(elementUri));
+			return toJsonLd(getPipelineElementRdfStorage().getSEPAById(elementUri));
 		} catch (URISyntaxException e) {
 			return toJson(constructErrorMessage(Notifications.create(NotificationType.UNKNOWN_ERROR, e.getMessage())));
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		System.out.println(new SemanticEventProcessingAgent().getOwn("riemer@fzi.de"));
 	}
 
 	@Path("/{elementUri}")
@@ -125,7 +123,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(new SepaInvocation(new SepaInvocation(requestor.getSEPAById(elementUri))));
+			return ok(new SepaInvocation(new SepaInvocation(getPipelineElementRdfStorage().getSEPAById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

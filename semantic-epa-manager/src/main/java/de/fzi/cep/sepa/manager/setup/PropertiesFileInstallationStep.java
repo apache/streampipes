@@ -27,7 +27,7 @@ public class PropertiesFileInstallationStep implements InstallationStep {
 	public List<Message> install() {
 		try {
 			ConfigurationManager.storeWebappConfigurationToProperties(file, pathToFile, settings);
-			
+
 			return Arrays.asList(Notifications.success("Writing configuration to file..."));
 		} catch (IOException e) {
 			e.printStackTrace();

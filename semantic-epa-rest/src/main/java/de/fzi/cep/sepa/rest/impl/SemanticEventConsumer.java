@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.rest.annotation.GsonWithIds;
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import de.fzi.cep.sepa.model.client.messages.Notification;
@@ -35,7 +37,8 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(requestor.getAllSECs(), userService.getAvailableActionUris(username));
+		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+				getUserService().getAvailableActionUris(username));
 		return ok(secs);
 	}
 	
@@ -46,7 +49,8 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(requestor.getAllSECs(), userService.getFavoriteActionUris(username));
+		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+				getUserService().getFavoriteActionUris(username));
 		return ok(secs);
 	}
 
@@ -57,7 +61,8 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(requestor.getAllSECs(), userService.getOwnActionUris(username));
+		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+				getUserService().getOwnActionUris(username));
 		List<SecInvocation> si = secs.stream().map(s -> new SecInvocation(new SecInvocation(s))).collect(Collectors.toList());
 		return ok(si);
 	}
@@ -69,7 +74,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-		userService.addActionAsFavorite(username, decode(elementUri));
+		getUserService().addActionAsFavorite(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -80,7 +85,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		userService.removeActionFromFavorites(username, decode(elementUri));
+		getUserService().removeActionFromFavorites(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
@@ -92,7 +97,8 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			userService.deleteOwnAction(username, elementUri);
+			StorageRequests requestor = getPipelineElementRdfStorage();
+			getUserService().deleteOwnAction(username, elementUri);
 			requestor.deleteSEC(requestor.getSECById(elementUri));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
@@ -106,7 +112,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return toJsonLd(requestor.getSECById(elementUri));
+			return toJsonLd(getPipelineElementRdfStorage().getSECById(elementUri));
 		} catch (URISyntaxException e) {
 			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
 		}
@@ -124,7 +130,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			return ok(new SecInvocation(new SecInvocation(requestor.getSECById(elementUri))));
+			return ok(new SecInvocation(new SecInvocation(getPipelineElementRdfStorage().getSECById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

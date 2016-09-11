@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
-import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.storage.api.*;
 import de.fzi.cep.sepa.storage.impl.*;
 import org.openrdf.repository.Repository;
@@ -43,7 +42,6 @@ public enum StorageManager {
 
     StorageManager() {
         initSesameDatabases();
-
     }
 
     public void initSesameDatabases() {
@@ -116,6 +114,9 @@ public enum StorageManager {
     }
 
     public StorageRequests getStorageAPI() {
+        if (backgroundKnowledgeStorage == null) {
+            initSesameDatabases();
+        }
         if (!inMemoryInitialized) {
             this.inMemoryStorage = new InMemoryStorage(getSesameStorage());
             inMemoryInitialized = true;
@@ -138,6 +139,9 @@ public enum StorageManager {
     }
 
     public BackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
+        if (backgroundKnowledgeStorage == null) {
+            initSesameDatabases();
+        }
         return this.backgroundKnowledgeStorage;
     }
 

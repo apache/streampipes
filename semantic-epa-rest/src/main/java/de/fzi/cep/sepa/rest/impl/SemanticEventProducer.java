@@ -34,12 +34,14 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	public Response getStreamsBySource(@PathParam("username") String username, @PathParam("sourceId") String sourceId)
 	{
 		try {
-			return ok(new SepDescription(requestor.getSEPById(sourceId)));
+			return ok(new SepDescription(getPipelineElementRdfStorage().getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
-			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(), NotificationType.URIOFFLINE.description(), e.getMessage()));
+			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(),
+					NotificationType.URIOFFLINE.description(), e.getMessage()));
 		} catch (Exception e)
 		{
-			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
+			return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(),
+					NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
 		}
 		
 	}
@@ -51,7 +53,8 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(requestor.getAllSEPs(), userService.getAvailableSourceUris(username));
+		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+				getUserService().getAvailableSourceUris(username));
 		return ok(seps);
 	}
 	
@@ -62,7 +65,8 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(requestor.getAllSEPs(), userService.getFavoriteSourceUris(username));
+		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+				getUserService().getFavoriteSourceUris(username));
 		return ok(seps);
 	}
 
@@ -73,7 +77,8 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(requestor.getAllSEPs(), userService.getOwnSourceUris(username));
+		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+				getUserService().getOwnSourceUris(username));
 		List<SepDescription> si = seps.stream().map(s -> new SepDescription(s)).collect(Collectors.toList());
 
 		return ok(si);
@@ -86,7 +91,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-		userService.addSourceAsFavorite(username, decode(elementUri));
+		getUserService().addSourceAsFavorite(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -97,7 +102,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		userService.removeSourceFromFavorites(username, decode(elementUri));
+		getUserService().removeSourceFromFavorites(username, decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
@@ -109,8 +114,8 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			userService.deleteOwnSource(username, elementUri);
-			requestor.deleteSEC(requestor.getSECById(elementUri));
+			getUserService().deleteOwnSource(username, elementUri);
+			getPipelineElementRdfStorage().deleteSEC(getPipelineElementRdfStorage().getSECById(elementUri));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description(), e.getMessage()));
 		}
@@ -123,7 +128,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@Override
 	public String getAsJsonLd(@PathParam("elementUri") String elementUri) {
 		try {
-			return toJsonLd(requestor.getSECById(elementUri));
+			return toJsonLd(getPipelineElementRdfStorage().getSECById(elementUri));
 		} catch (URISyntaxException e) {
 			return toJson(statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR)));
 		}
@@ -138,7 +143,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(requestor.getSEPById(elementUri));
+			return ok(getPipelineElementRdfStorage().getSEPById(elementUri));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

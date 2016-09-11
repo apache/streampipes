@@ -36,19 +36,6 @@ import javax.ws.rs.core.Response;
 
 public abstract class AbstractRestInterface {
 
-	protected static StorageRequests requestor = StorageManager.INSTANCE.getStorageAPI();
-	protected static PipelineStorage pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
-	protected static UserStorage userStorage = StorageManager.INSTANCE.getUserStorageAPI();	
-	protected static UserService userService = StorageManager.INSTANCE.getUserService();
-	
-	public static void reloadApis()
-	{
-		requestor = StorageManager.INSTANCE.getStorageAPI();
-		pipelineStorage = StorageManager.INSTANCE.getPipelineStorageAPI();
-		userStorage = StorageManager.INSTANCE.getUserStorageAPI();
-		userService = StorageManager.INSTANCE.getUserService();
-	}
-
 	protected <T> String toJsonLd(T object)
 	{
 		try {
@@ -57,6 +44,22 @@ public abstract class AbstractRestInterface {
 				| IllegalAccessException | SecurityException | InvocationTargetException | ClassNotFoundException | InvalidRdfException e) {
 			return toJson(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage())));
 		}
+	}
+
+	protected StorageRequests getPipelineElementRdfStorage() {
+		return StorageManager.INSTANCE.getStorageAPI();
+	}
+
+	protected PipelineStorage getPipelineStorage() {
+		return StorageManager.INSTANCE.getPipelineStorageAPI();
+	}
+
+	protected UserStorage getUserStorage() {
+		return StorageManager.INSTANCE.getUserStorageAPI();
+	}
+
+	protected UserService getUserService() {
+		return StorageManager.INSTANCE.getUserService();
 	}
 	
 	protected String parseURIContent(String payload) throws URISyntaxException, ClientProtocolException, IOException

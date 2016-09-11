@@ -53,7 +53,8 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		return ok(userService.getOwnPipelines(username));
+		return ok(getUserService()
+				.getOwnPipelines(username));
 	}
 
 	@Override
@@ -107,7 +108,8 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
-		de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = userService.getPipeline(username, pipelineId);
+		de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = getUserService()
+				.getPipeline(username, pipelineId);
 		PipelineOperationStatus status = Operations.startPipeline(pipeline);
 		return ok(status);
 		} catch (Exception e)
@@ -124,7 +126,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
 	public Response stop(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId)
 	{
 		try {
-			de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = userService.getPipeline(username, pipelineId);
+			de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline = getUserService().getPipeline(username, pipelineId);
 			PipelineOperationStatus status = Operations.stopPipeline(pipeline);
 			return ok(status);
 			} catch (Exception e)

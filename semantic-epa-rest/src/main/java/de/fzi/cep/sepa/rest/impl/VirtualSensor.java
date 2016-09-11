@@ -21,7 +21,7 @@ public class VirtualSensor extends AbstractRestInterface implements IVirtualSens
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Response getVirtualSensors(@PathParam("username") String username) {
-		return ok(pipelineStorage.getVirtualSensors(username));
+		return ok(getPipelineStorage().getVirtualSensors(username));
 	}
 
 	@POST
@@ -31,7 +31,7 @@ public class VirtualSensor extends AbstractRestInterface implements IVirtualSens
 		de.fzi.cep.sepa.model.client.VirtualSensor vs = Utils.getGson().fromJson(virtualSensorDescription, de.fzi.cep.sepa.model.client.VirtualSensor.class);
 		vs.setPipelineId(UUID.randomUUID().toString());
 		vs.setCreatedBy(username);
-		pipelineStorage.storeVirtualSensor(username, vs);
+		getPipelineStorage().storeVirtualSensor(username, vs);
 		return constructSuccessMessage(NotificationType.VIRTUAL_SENSOR_STORAGE_SUCCESS.uiNotification());
 	}
 
