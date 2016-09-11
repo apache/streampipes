@@ -22,7 +22,7 @@ import de.fzi.cep.sepa.rest.api.ISetup;
 import de.fzi.cep.sepa.rest.notifications.NotificationListener;
 
 @Path("/v2/setup")
-public class Setup extends AbstractRestInterface implements ISetup {
+public class Setup implements ISetup {
 
 	@GET
     @Path("/configured")
@@ -84,6 +84,12 @@ public class Setup extends AbstractRestInterface implements ISetup {
     public Response getConfiguration()
     {
     	return ok(ConfigurationManager.getWebappConfigurationFromProperties());
+    }
+
+    private <T> Response ok(T entity) {
+        return Response
+                .ok(entity)
+                .build();
     }
 
 }
