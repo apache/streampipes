@@ -8,6 +8,7 @@ import javax.persistence.spi.PersistenceProvider;
 
 import de.fzi.cep.sepa.storage.api.*;
 import de.fzi.cep.sepa.storage.impl.*;
+import de.fzi.cep.sepa.storage.util.StorageUtils;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -51,7 +52,7 @@ public enum StorageManager {
     }
 
     private void initBackgroundKnowledgeStorage() {
-        bkrepo = new HTTPRepository(Configuration.getInstance().SERVER_URL,
+        bkrepo = new HTTPRepository(Configuration.getInstance().SESAME_URI,
                 Configuration.getInstance().SESAME_REPOSITORY_ID);
         try {
             bkrepo.initialize();
@@ -64,7 +65,7 @@ public enum StorageManager {
 
     private boolean initStorage() {
         try {
-            repository = new HTTPRepository(Configuration.getInstance().SERVER_URL,
+            repository = new HTTPRepository(Configuration.getInstance().SESAME_URI,
                     Configuration.getInstance().SESAME_REPOSITORY_ID);
             conn = repository.getConnection();
 
@@ -91,7 +92,7 @@ public enum StorageManager {
             map.put(RepositoryFactoryKeys.REPO_HANDLE, repository);
             map.put(ConfigKeys.FACTORY, "sesame");
             map.put(ConfigKeys.NAME, "sepa-server");
-            map.put("url", Configuration.getInstance().SERVER_URL);
+            map.put("url", Configuration.getInstance().SESAME_URI);
             map.put("repo", Configuration.getInstance().SESAME_REPOSITORY_ID);
 
             PersistenceProvider provider = Empire.get().persistenceProvider();
@@ -134,7 +135,7 @@ public enum StorageManager {
     }
 
     public StorageRequests getSesameStorage() {
-        //StorageUtils.fixEmpire();
+        StorageUtils.fixEmpire();
         return new SesameStorageRequests();
     }
 
