@@ -128,7 +128,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $rootScope.state.currentElement = elementData;
         $mdDialog.show({
             controller: SavePipelineController,
-            templateUrl: 'modules/editor/templates/submitPipelineModal.tmpl.html',
+            templateUrl: 'app/editor/directives/submitPipelineModal.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,
@@ -141,7 +141,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.showMatchingErrorDialog = function (elementData) {
         $mdDialog.show({
             controller: MatchingErrorController,
-            templateUrl: 'modules/editor/templates/matchingErrorDialog.tmpl.html',
+            templateUrl: 'app/editor/directives/matchingErrorDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,
