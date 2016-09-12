@@ -5,8 +5,8 @@ export default function restApi($rootScope, $http, apiConstants) {
 	var restApi = {};
 
 	var getServerUrl = function() {
-		return apiConstants.contextPath + apiConstants.api;
-		//return "http://localhost:8080"  + apiConstants.contextPath + apiConstants.api;
+		//return apiConstants.contextPath + apiConstants.api;
+		return "http://localhost:8080"  + apiConstants.contextPath + apiConstants.api;
 	}
 
 	var urlBase = function() {

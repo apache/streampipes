@@ -1546,6 +1546,18 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
 
     $scope.pipelineCategories = [];
 
+    $scope.displayErrors = function (data) {
+        for (var i = 0, notification; notification = data.notifications[i]; i++) {
+            toastRightTop("error", notification.description, notification.title);
+        }
+    }
+
+    $scope.displaySuccess = function(data) {
+        for (var i = 0, notification; notification = data.notifications[i]; i++) {
+            toastRightTop("success", notification.description, notification.title);
+        }
+    }
+
     $scope.getPipelineCategories = function () {
         restApi.getPipelineCategories()
             .success(function (pipelineCategories) {
@@ -1575,7 +1587,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
         $rootScope.state.currentPipeline.send()
             .success(function (data) {
                 if (data.success) {
-                    displaySuccess(data);
+                    $scope.displaySuccess(data);
                     $scope.hide();
                     if (switchTab) $state.go("streampipes.pipelines");
                     if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
@@ -1601,7 +1613,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
                     $scope.clearAssembly();
 
                 } else {
-                    displayErrors(data);
+                    $scope.displayErrors(data);
                 }
             })
             .error(function (data) {
