@@ -1,0 +1,5 @@
+nginx:
+  image: laus.fzi.de:5000/fzi/nginx
+  net: "host"
+  ports:
+    - "80:80"

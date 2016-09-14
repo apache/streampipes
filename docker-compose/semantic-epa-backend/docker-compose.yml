@@ -1,0 +1,8 @@
+backend:
+  image: laus.fzi.de:5000/fzi/semantic-epa-backend
+  net: "host"
+  ports:
+    - "8080:8080"
+  volumes:
+    - "./config:/root/.streampipes"
+    - "./config/aduna:/root/.aduna"

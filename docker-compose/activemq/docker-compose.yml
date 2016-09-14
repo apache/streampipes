@@ -1,0 +1,6 @@
+activemq:
+  image: laus.fzi.de:5000/fzi/activemq
+  net: "host"
+  ports:
+    - "61616:61616"
+    - "8161:8161"

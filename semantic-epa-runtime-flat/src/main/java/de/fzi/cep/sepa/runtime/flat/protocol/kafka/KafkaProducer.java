@@ -21,7 +21,7 @@ public class KafkaProducer extends Producer {
 	
 	@Override
 	public void publish(Object message) {
-		producer.send(dataType.marshal(message));		
+		producer.send(dataType.marshal(message));
 	}
 
 	@Override

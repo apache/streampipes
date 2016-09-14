@@ -37,8 +37,7 @@ public class KafkaConsumer extends Consumer<byte[]> {
 
 	@Override
 	public void onEvent(byte[] payload) {
-		//System.out.println(new String(payload));
-		notify(dataType.unmarshal(payload));	
+		notify(dataType.unmarshal(payload));
 		counter++;
 		if (counter % 100000 == 0) System.out.println(counter + " Events sent.");
 	}

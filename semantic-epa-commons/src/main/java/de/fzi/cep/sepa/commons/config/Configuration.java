@@ -68,7 +68,7 @@ public class Configuration {
 	public String JMS_PROTOCOL;
 	public int JMS_PORT;
 	
-	public  String TCP_SERVER_URL;
+	public String TCP_SERVER_URL;
 	public int TCP_SERVER_PORT;
 	
 	public int WEBAPP_PORT;

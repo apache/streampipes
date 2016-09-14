@@ -1,0 +1,44 @@
+sources:
+  image: laus.fzi.de:5000/fzi/semantic-epa-sources-samples
+  net: "host"
+  ports:
+    - "8089:8089"
+  volumes:
+    - "./config:/root/.streampipes"
+actions:
+  image: laus.fzi.de:5000/fzi/semantic-epa-actions-samples
+  net: "host"
+  ports:
+    - "8091:8091"
+  volumes:
+    - "./config:/root/.streampipes"
+activemq:
+  image: laus.fzi.de:5000/fzi/activemq
+  net: "host"
+  ports:
+    - "61616:61616"
+    - "8161:8161"
+#zookeeper:
+#  image: laus.fzi.de:5000/fzi/zookeeper
+#  net: "host"
+#  ports:
+#    - "2181:2181"
+zookeeper:
+   image: mesoscloud/zookeeper:3.4.6
+   net: "host"
+   ports:
+     - "2181:2181"
+kafka:
+  image: laus.fzi.de:5000/fzi/kafka
+  net: "host"
+  ports:
+    - "9092:9092"
+kafka-manager:
+  image: sheepkiller/kafka-manager
+  ports:
+    - "9000:9000"
+  environment:
+    ZK_HOSTS: "ipe-koi04.fzi.de:2181"
+    APPLICATION_SECRET: "letmein"
+
+

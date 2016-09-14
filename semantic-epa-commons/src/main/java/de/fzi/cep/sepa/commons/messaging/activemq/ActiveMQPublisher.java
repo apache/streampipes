@@ -32,6 +32,7 @@ public class ActiveMQPublisher implements IMessagePublisher<String> {
 				this.connection = connectionFactory.createConnection();
 				co = true;
 			} catch (JMSException e) {
+				e.printStackTrace();
 				System.out.println("Trying to connect");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -78,4 +79,5 @@ public class ActiveMQPublisher implements IMessagePublisher<String> {
 			e.printStackTrace();
 		}
 	}
+
 }
