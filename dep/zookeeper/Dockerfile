@@ -1,21 +1,48 @@
-FROM alpine
+FROM openjdk:8-jre-alpine
+MAINTAINER Elisey Zanko <elisey.zanko@gmail.com>
 
-RUN apk add --update openjdk7-jre wget ca-certificates && \
-	cd /tmp && \
-	wget 	"https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.21-r2/glibc-2.21-r2.apk" \
-				"https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.21-r2/glibc-bin-2.21-r2.apk" && \
-	apk add --allow-untrusted glibc-2.21-r2.apk glibc-bin-2.21-r2.apk && \
-	/usr/glibc/usr/bin/ldconfig /lib /usr/glibc/usr/lib && \
-	echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+# Install required packages
+RUN apk add --no-cache \
+    bash \
+    su-exec
 
-RUN wget http://ftp.fau.de/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
-RUN rm /tmp/* /var/cache/apk/*
-RUN apk del wget ca-certificates
+ENV ZOO_USER zookeeper
+ENV ZOO_CONF_DIR /conf
+ENV ZOO_DATA_DIR /data
+ENV ZOO_DATA_LOG_DIR /datalog
 
-RUN tar -zxvf zookeeper-3.4.6.tar.gz
+# Add a user and make dirs
+RUN set -x \
+    && adduser -D "$ZOO_USER" \
+    && mkdir -p "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR" \
+    && chown "$ZOO_USER:$ZOO_USER" "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR"
 
-EXPOSE 2181
+ARG GPG_KEY=C823E3E5B12AF29C67F81976F5CECB3CB5E9BD2D
+ARG DISTRO_NAME=zookeeper-3.4.9
 
-ADD /zoo.cfg ./zookeeper-3.4.6/conf/zoo.cfg
+# Download Apache Zookeeper, verify its PGP signature, untar and clean up
+RUN set -x \
+    && apk add --no-cache --virtual .build-deps \
+        gnupg \
+    && wget -q "http://www.apache.org/dist/zookeeper/$DISTRO_NAME/$DISTRO_NAME.tar.gz" \
+    && wget -q "http://www.apache.org/dist/zookeeper/$DISTRO_NAME/$DISTRO_NAME.tar.gz.asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-key "$GPG_KEY" \
+    && gpg --batch --verify "$DISTRO_NAME.tar.gz.asc" "$DISTRO_NAME.tar.gz" \
+    && tar -xzf "$DISTRO_NAME.tar.gz" \
+    && mv "$DISTRO_NAME/conf/"* "$ZOO_CONF_DIR" \
+    && rm -r "$GNUPGHOME" "$DISTRO_NAME.tar.gz" "$DISTRO_NAME.tar.gz.asc" \
+    && apk del .build-deps
 
-ENTRYPOINT ["./zookeeper-3.4.6/bin/zkServer.sh", "start-foreground"]
+WORKDIR $DISTRO_NAME
+VOLUME ["$ZOO_DATA_DIR", "$ZOO_DATA_LOG_DIR"]
+
+ENV ZOO_PORT 2181
+EXPOSE $ZOO_PORT
+
+ENV PATH $PATH:/$DISTRO_NAME/bin
+ENV ZOOCFGDIR $ZOO_CONF_DIR
+
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["zkServer.sh", "start-foreground"]
