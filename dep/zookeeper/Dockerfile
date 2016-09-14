@@ -1,48 +1,34 @@
-FROM openjdk:8-jre-alpine
-MAINTAINER Elisey Zanko <elisey.zanko@gmail.com>
+FROM wurstmeister/base
 
-# Install required packages
-RUN apk add --no-cache \
-    bash \
-    su-exec
+MAINTAINER Wurstmeister
 
-ENV ZOO_USER zookeeper
-ENV ZOO_CONF_DIR /conf
-ENV ZOO_DATA_DIR /data
-ENV ZOO_DATA_LOG_DIR /datalog
+ENV ZOOKEEPER_VERSION 3.4.6
 
-# Add a user and make dirs
-RUN set -x \
-    && adduser -D "$ZOO_USER" \
-    && mkdir -p "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR" \
-    && chown "$ZOO_USER:$ZOO_USER" "$ZOO_DATA_LOG_DIR" "$ZOO_DATA_DIR" "$ZOO_CONF_DIR"
+#Download Zookeeper
+RUN wget -q http://mirror.vorboss.net/apache/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+wget -q https://www.apache.org/dist/zookeeper/KEYS && \
+wget -q https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc && \
+wget -q https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.md5
 
-ARG GPG_KEY=C823E3E5B12AF29C67F81976F5CECB3CB5E9BD2D
-ARG DISTRO_NAME=zookeeper-3.4.9
+#Verify download
+RUN md5sum -c zookeeper-${ZOOKEEPER_VERSION}.tar.gz.md5 && \
+gpg --import KEYS && \
+gpg --verify zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc
 
-# Download Apache Zookeeper, verify its PGP signature, untar and clean up
-RUN set -x \
-    && apk add --no-cache --virtual .build-deps \
-        gnupg \
-    && wget -q "http://www.apache.org/dist/zookeeper/$DISTRO_NAME/$DISTRO_NAME.tar.gz" \
-    && wget -q "http://www.apache.org/dist/zookeeper/$DISTRO_NAME/$DISTRO_NAME.tar.gz.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-key "$GPG_KEY" \
-    && gpg --batch --verify "$DISTRO_NAME.tar.gz.asc" "$DISTRO_NAME.tar.gz" \
-    && tar -xzf "$DISTRO_NAME.tar.gz" \
-    && mv "$DISTRO_NAME/conf/"* "$ZOO_CONF_DIR" \
-    && rm -r "$GNUPGHOME" "$DISTRO_NAME.tar.gz" "$DISTRO_NAME.tar.gz.asc" \
-    && apk del .build-deps
+#Install
+RUN tar -xzf zookeeper-${ZOOKEEPER_VERSION}.tar.gz -C /opt
 
-WORKDIR $DISTRO_NAME
-VOLUME ["$ZOO_DATA_DIR", "$ZOO_DATA_LOG_DIR"]
+#Configure
+RUN mv /opt/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo_sample.cfg /opt/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo.cfg
 
-ENV ZOO_PORT 2181
-EXPOSE $ZOO_PORT
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+ENV ZK_HOME /opt/zookeeper-${ZOOKEEPER_VERSION}
+RUN sed  -i "s|/tmp/zookeeper|$ZK_HOME/data|g" $ZK_HOME/conf/zoo.cfg; mkdir $ZK_HOME/data
 
-ENV PATH $PATH:/$DISTRO_NAME/bin
-ENV ZOOCFGDIR $ZOO_CONF_DIR
+ADD start-zk.sh /usr/bin/start-zk.sh
+EXPOSE 2181 2888 3888
 
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["zkServer.sh", "start-foreground"]
+WORKDIR /opt/zookeeper-${ZOOKEEPER_VERSION}
+VOLUME ["/opt/zookeeper-${ZOOKEEPER_VERSION}/conf", "/opt/zookeeper-${ZOOKEEPER_VERSION}/data"]
+
+CMD /usr/sbin/sshd && bash /usr/bin/start-zk.sh
