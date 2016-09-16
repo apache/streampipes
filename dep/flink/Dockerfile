@@ -1,46 +1,30 @@
-################################################################################
-#  Licensed to the Apache Software Foundation (ASF) under one
-#  or more contributor license agreements.  See the NOTICE file
-#  distributed with this work for additional information
-#  regarding copyright ownership.  The ASF licenses this file
-#  to you under the Apache License, Version 2.0 (the
-#  "License"); you may not use this file except in compliance
-#  with the License.  You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-# limitations under the License.
-################################################################################
+FROM shouldbee/scala:2.11.7-openjdk8
 
-FROM java:8-jre-alpine
+ENV HADOOP_VERSION 2.7.0
+ENV FLINK_VERSION 1.0.3
+ENV SCALA_VERSION 2.11
+ENV FLINK_ROOT_DIR /opt/flink
 
-# Install requirements
-RUN apk add --no-cache bash snappy
+# Get Hadoop from US Apache mirror and extract just the native
+# libs. (Until we care about running HDFS with these containers, this
+# is all we need.)
+RUN mkdir -p /opt && \
+    cd /opt && \
+    curl http://www.us.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz | \
+        tar -zx hadoop-${HADOOP_VERSION}/lib/native && \
+    ln -s hadoop-${HADOOP_VERSION} hadoop && \
+    echo Hadoop ${HADOOP_VERSION} native libraries installed in /opt/hadoop/lib/native
 
-# Configure Flink version
-ARG FLINK_VERSION=1.0.3
-ARG HADOOP_VERSION=27
-ARG SCALA_VERSION=2.11
+# Get Flink from US Apache mirror.
+RUN mkdir -p /opt && \
+    cd /opt && \
+    curl http://www.us.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-hadoop27-scala_${SCALA_VERSION}.tgz | \
+        tar -zx && \
+    ln -s flink-${FLINK_VERSION} flink && \
+    echo Flink ${FLINK_VERSION} installed in /opt
 
-# Install build dependencies and flink
-RUN set -x && \
-  apk --update add --virtual build-dependencies curl && \
-  curl -s $(curl -s https://www.apache.org/dyn/closer.cgi\?as_json\=1 | \
-  awk '/preferred/ {gsub(/"/,""); print $2}')flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-hadoop${HADOOP_VERSION}-scala_${SCALA_VERSION}.tgz | \
-  tar xvz -C /usr/local/ && \
-  ln -s /usr/local/flink-$FLINK_VERSION /usr/local/flink && \
-  sed -i -e "s/echo \$mypid >> \$pid/echo \$mypid >> \$pid \&\& wait/g" /usr/local/flink/bin/flink-daemon.sh && \
-  apk del build-dependencies && \
-  rm -rf /var/cache/apk/*
 
-ENV FLINK_HOME /usr/local/flink
-ENV PATH $PATH:$FLINK_HOME/bin
-
-# Configure container
-ADD docker-entrypoint.sh $FLINK_HOME/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["sh", "-c"]
+ADD log4j.properties logback.xml ${FLINK_ROOT_DIR}/conf/
+ADD start-common.sh start-worker.sh start-master.sh ${FLINK_ROOT_DIR}/bin/
+ADD flink-conf.yaml ${FLINK_ROOT_DIR}/conf/flink-conf.yaml
+ENV PATH $PATH:${FLINK_ROOT_DIR}/bin
