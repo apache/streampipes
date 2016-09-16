@@ -42,8 +42,8 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 	{
 		DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
 		
-		SerializationSchema<Map<String, Object>, byte[]> kafkaSerializer = new SimpleKafkaSerializer();
-		SerializationSchema<Map<String, Object>, String> jmsSerializer = new SimpleJmsSerializer();
+		SerializationSchema<Map<String, Object>> kafkaSerializer = new SimpleKafkaSerializer();
+		SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic
 			.addSink(new FlinkKafkaProducer<Map<String, Object>>(getOutputTopic(), kafkaSerializer, getProducerProperties()));

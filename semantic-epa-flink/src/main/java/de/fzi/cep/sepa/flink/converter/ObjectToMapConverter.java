@@ -11,7 +11,7 @@ public class ObjectToMapConverter<T extends Object> implements FlatMapFunction<T
 	@Override
 	public void flatMap(T in, Collector<Map<String, Object>> out)
 			throws Exception {
-		out.collect(BeanUtils.describe(in));	
+		out.collect(BeanUtils.describe(in));
 	}
 
 }

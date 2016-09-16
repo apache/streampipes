@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
-public class SimpleKafkaSerializer implements SerializationSchema<Map<String, Object>, byte[]>{
+public class SimpleKafkaSerializer implements SerializationSchema<Map<String, Object>>{
 
 	SimpleJmsSerializer serializer;
 	
@@ -14,7 +14,7 @@ public class SimpleKafkaSerializer implements SerializationSchema<Map<String, Ob
 	
 	@Override
 	public byte[] serialize(Map<String, Object> element) {
-		return serializer.serialize(element).getBytes();
+		return serializer.serialize(element);
 	}
 
 }
