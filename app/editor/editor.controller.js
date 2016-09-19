@@ -900,15 +900,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         }
     }
 
-    function showToast(type, title, description) {
-        $mdToast.show(
-            $mdToast.simple()
-                .textContent(title)
-                .position("top right")
-                .hideDelay(3000)
-        );
-    }
-
     function openPipelineNameModal() {
         if ($rootScope.state.adjustingPipelineState) {
             $scope.modifyPipelineMode = true;
@@ -1779,6 +1770,15 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         if (datatype == $scope.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
         if (datatype == $scope.primitiveClasses[4].id) return !isNaN(property);
         return false;
+    }
+
+    function showToast(type, title, description) {
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent(title)
+                .position("top right")
+                .hideDelay(3000)
+        );
     }
 
 }
