@@ -1,14 +1,5 @@
 package de.fzi.cep.sepa.commons.config;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.TreeSet;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openrdf.rio.RDFFormat;
@@ -17,6 +8,15 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.TreeSet;
 
 public enum ClientConfiguration {
 
@@ -42,7 +42,10 @@ public enum ClientConfiguration {
 	private String zookeeperUrl;
 	
 	private RDFFormat rdfFormat;
-	
+
+	private String couchDbHost;
+	private int couchDbPort;
+
 	private String esperUrl;
 	private String algorithmUrl;
 	private String actionUrl;
@@ -53,7 +56,7 @@ public enum ClientConfiguration {
 	private int webappPort;
 	private String webappUrl;
 
-	
+
 	private String iconUrl;
 	private String iconHost;
 	private int iconPort;
@@ -132,7 +135,10 @@ public enum ClientConfiguration {
 			properties.put("zookeeperPort", "2181");
 			
 			properties.put("zookeeperPort", "2181");
-			
+
+			properties.put("couchDbHost", "localhost");
+			properties.put("couchDbPort", "5984");
+
 			properties.put("webappHost", "localhost");
 			properties.put("webappPort", "8080");
 			
@@ -222,7 +228,10 @@ public enum ClientConfiguration {
 			this.hellaReplayActive = config.getBoolean("hellaReplayActive");
 			this.mhwirthReplayActive = config.getBoolean("mhwirthReplayActive");
 			this.proveItActive = config.getBoolean("proveItActive");
-			
+
+			this.couchDbHost = config.getString("couchDbHost");
+			this.couchDbPort = config.getInt("couchDbPort");
+
 			this.nissatechRunning = config.getBoolean("nissatechRunning");
 			
 			this.simulationMaxEvents = config.getLong("simulationMaxEvents");
@@ -455,10 +464,19 @@ public enum ClientConfiguration {
 	public String getSlackToken() {
 		return slackToken;
 	}
+
+	public String getCouchDbHost() {
+		return couchDbHost;
+	}
+
+	public int getCouchDbPort() {
+		return couchDbPort;
+	}
 	
 	public String getPodHostname() {
 		return podHostname;
 	}
+
 
 	public int getPodPort() {
 		return podPort;
