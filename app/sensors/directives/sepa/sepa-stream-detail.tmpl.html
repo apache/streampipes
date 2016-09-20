@@ -1,40 +1,55 @@
 <div layout="row" flex="100" layout-align="center center" class="wizard-row-stream" style="margin-bottom:5%;">
-	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getStreamActiveTabCss('basics')" aria-label="Basics" ng-click="selectStreamTab('basics')">1</md-button>
-		Basics
-	</div>
-	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getStreamActiveTabCss('schema')" aria-label="Schema" ng-click="selectStreamTab('schema')">2</md-button>
-		Event Schema
-	</div>
-	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getStreamActiveTabCss('quality')" aria-label="Deployment" ng-click="selectStreamTab('quality')">3</md-button>
-		Stream Quality
-	</div>
-	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getStreamActiveTabCss('format')" aria-label="Deployment" ng-click="selectStreamTab('format')">4</md-button>
-		Transport Format
-	</div>
-	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getStreamActiveTabCss('protocol')" aria-label="Deployment" ng-click="selectStreamTab('protocol')">5</md-button>
-		Transport Protocol
-	</div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="getStreamActiveTabCss('basics')" aria-label="Basics" ng-click="selectStreamTab('basics')">
+            1
+        </md-button>
+        Basics
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="getStreamActiveTabCss('schema')" aria-label="Schema" ng-click="selectStreamTab('schema')">
+            2
+        </md-button>
+        Event Schema
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="getStreamActiveTabCss('quality')" aria-label="Deployment"
+                   ng-click="selectStreamTab('quality')">3
+        </md-button>
+        Stream Quality
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="getStreamActiveTabCss('format')" aria-label="Deployment"
+                   ng-click="selectStreamTab('format')">4
+        </md-button>
+        Transport Format
+    </div>
+    <div layout="column" flex="33" layout-align="center center">
+        <md-button ng-class="getStreamActiveTabCss('protocol')" aria-label="Deployment"
+                   ng-click="selectStreamTab('protocol')">5
+        </md-button>
+        Transport Protocol
+    </div>
 </div>
-<div flex="100" layout="column" layout-wrap layout-align="center center">
-
-	<collapsible layout-wrap title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('basics')" style="width:100%">	
-		<sepa-basics element="stream" disabled="disabled"></sepa-basics>
-	</collapsible>
-	<div layout="column" layout-align="center center" flex="100" ng-if="isStreamTabSelected('schema')">
-		<event-properties properties="stream.eventSchema.eventProperties" disabled="disabled" style="width:100%"/>
-	</div>
-	<collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('quality')">	
-		<stream-quality-definitions property="stream.hasEventStreamQualities" disabled="disabled" style="width:100%"/>
-	</collapsible>
-	<collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('format')">
-		<transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
-	</collapsible>
-	<collapsible title-label="'Transport Protocol'" disabled="disabled" removable="false" collapsible="false" ng-if="isStreamTabSelected('protocol')">
-		<transport-protocol grounding="stream.eventGrounding.transportProtocols" disabled="disabled"></transport-protocol>
-	</collapsible>
+<div flex="100" layout="column" layout-align="center center">
+    <collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false"
+                 ng-if="isStreamTabSelected('basics')" style="width:100%">
+        <sepa-basics element="stream" disabled="disabled"></sepa-basics>
+    </collapsible>
+    <collapsible title-label="'Event Schema'" disabled="disabled" removable="false" collapsible="false"
+                 ng-if="isStreamTabSelected('schema')" style="width:100%">
+        <event-properties properties="stream.eventSchema.eventProperties" disabled="disabled"></event-properties>
+    </collapsible>
+    <collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false"
+                 ng-if="isStreamTabSelected('quality')" style="width:100%">
+        <stream-quality-definitions property="stream.hasEventStreamQualities" disabled="disabled" style="width:100%"/>
+    </collapsible>
+    <collapsible title-label="'Transport Format'" disabled="disabled" removable="false" collapsible="false"
+                 ng-if="isStreamTabSelected('format')" style="width:100%">
+        <transport-format grounding="stream.eventGrounding.transportFormats" disabled="disabled"></transport-format>
+    </collapsible>
+    <collapsible title-label="'Transport Protocol'" disabled="disabled" removable="false" collapsible="false"
+                 ng-if="isStreamTabSelected('protocol')" style="width:100%">
+        <transport-protocol grounding="stream.eventGrounding.transportProtocols"
+                            disabled="disabled"></transport-protocol>
+    </collapsible>
 </div>

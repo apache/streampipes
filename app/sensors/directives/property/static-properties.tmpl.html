@@ -1,5 +1,6 @@
 <div ng-repeat = "(key, sp) in staticProperties">
-	<collapsible title-label="'Static Property ' +(key2+1) +' (' +getType(sp) +')'" list="staticProperties" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true" layout-fill>
+	<collapsible title-label="'Static Property ' +(key2+1) +' (' +getType(sp) +')'" list="staticProperties" index="key" disabled="disabled" removable="!disabled" collapsible="true" subtitle="true"
+				 layout-fill>
 		<required-property-values property="sp.properties" disabled="disabled"></required-property-values>
 	    <div ng-if="sp.type == staticPropertyTypes[0].type">
 	    	<md-checkbox ng-checked="domainPropertyRestricted(sp.properties)" ng-click="toggleDomainPropertyRestriction(sp.properties)" aria-label="Domain property requirement" ng-disabled="disabled" >

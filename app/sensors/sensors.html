@@ -1,275 +1,66 @@
 <div flex layout-fill>
-<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-<h5>PIPELINE ELEMENT GENERATION </h5>
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+        <div flex="none" layout-wrap layout="row" layout-align="start center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <h5>PIPELINE ELEMENT GENERATION </h5>
+        </div>
+        <div layout-fill>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Data Sources" md-on-select="setSelectedTab('SOURCES')"></md-tab>
+                <md-tab label="Processing Elements" md-on-select="setSelectedTab('EPAS')"></md-tab>
+                <md-tab label="Data Sinks" md-on-select="setSelectedTab('SINKS')"></md-tab>
+            </md-tabs>
+        </div>
+    </div>
+
+    <div layout="column" flex="100" ng-if="selectedTab === 'SOURCES'">
+        <ng-include src="'app/sensors/templates/sep-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="sourceSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{selectedSource.name == '' ? 'Unnamed Element' :
+                        selectedSource.name}}</h4>
+                </div>
+                <md-content class="md-padding">
+                    <ng-include src="'app/sensors/templates/sep.html'"></ng-include>
+                    <md-divider></md-divider>
+                </md-content>
+            </div>
+        </div>
+    </div>
+
+
+    <div layout="column" flex="100" ng-if="selectedTab === 'EPAS'">
+        <ng-include src="'app/sensors/templates/sepa-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="sepaSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{selectedSepa.name == '' ? 'Unnamed Element' :
+                        selectedSepa.name}}</h4>
+                </div>
+                <md-content class="md-padding">
+                    <ng-include src="'app/sensors/templates/sepa.html'"></ng-include>
+                    <md-divider></md-divider>
+                </md-content>
+            </div>
+        </div>
+    </div>
+
+
+    <div layout="column" flex="100" ng-if="selectedTab === 'SINKS'">
+        <ng-include src="'app/sensors/templates/sec-menu-bar.html'"></ng-include>
+        <div flex="100" layout="row" layout-align="center center" class="md-padding">
+            <div flex="100" layout="column" ng-if="actionSelected">
+                <div flex="none" layout-wrap layout="row">
+                    <h4 class="md-display-1">{{selectedAction.name == '' ? 'Unnamed Element' :
+                        selectedAction.name}}</h4>
+                </div>
+                <md-content class="md-padding">
+                    <ng-include src="'app/sensors/templates/sec.html'"></ng-include>
+                    <md-divider></md-divider>
+                </md-content>
+            </div>
+        </div>
+    </div>
 </div>
-<div layout-fill>
-	<md-tabs md-dynamic-height md-border-bottom>
-	
-			<md-tab label="Data Sources" md-on-select="setSelectedTab('SOURCES')"></md-tab> 
-			<md-tab label="Processing Elements" md-on-select="setSelectedTab('EPAS')"> </md-tab>
-			<md-tab label="Data Sinks" md-on-select="setSelectedTab('SINKS')"> </md-tab>
-	</md-tabs>
-</div>
-</div>
-<div flex="100" layout="row" layout-align="center center">
-	<div layout="column" flex="100" ng-if="selectedTab === 'SOURCES'">
-				<div flex="100" layout="column">
-					<div flex="100" layout="row" style="border-bottom:1px solid #ccc">
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="content:ic_add_circle_outline_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		Create new source
-				            	</button>
-				            	<md-menu-content>
-				            		<md-menu-item class="md-indent">
-											<md-button ng-click="addNewSource()">&nbsp;New model</md-button>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">Create from existing model</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="(pointer, source) in sources track by $index | orderBy: 'name'"> 
-	                  							 	<md-menu-item class="md-indent">
-				              			
-														<md-button ng-click="getSourceDetailsFromOntology(source.uri)">&nbsp;{{source.name}}</md-button>
-													</md-menu-item>
-	                  							 	</div>
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="file:ic_folder_open_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		View existing sources
-				            	</button>
-				            	<md-menu-content>
-				              		<div ng-repeat="(pointer, source) in sources track by $index | orderBy: 'name'"> 
-				              			<md-menu-item class="md-indent">
-											<md-button ng-click="loadSourceDetails(pointer)">&nbsp;{{source.name}}</md-button>
-										</md-menu-item>
-				 					</div>	
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>
-						<span flex></span>
-						<div layout="row" layout-align="center center">
-							<md-switch ng-model="showHints" style="margin:0px;margin-right:20%">{{showHints ? "Showing hints" : "Hiding hints"}}</md-switch>
-						</div>
-					</div>
-				</div>
-				<div flex="100" layout="row" layout-align="center center" class="md-padding">	
-					<div flex="100" layout="column" ng-if="sourceSelected">				
-						<div flex="none" layout-wrap layout="row">
-							<h4 class="md-display-1">{{selectedSource.name == '' ? 'Unnamed Element' : selectedSource.name}}</h4>
-						</div>		
-						<md-content class="md-padding" >
-							<form name="sourceForm" ng-submit="updateConcept()" role="form">
-								  <ng-include src="'app/sensors/templates/sep.html'"/>
-							      <md-divider></md-divider>
-							</form>
-						</md-content>
-					</div>
-				</div>
-			</div>
-			
-			
-			
-			<div layout="column" flex="100" ng-if="selectedTab === 'EPAS'">
-			<div flex="100" layout="column">
-					<div flex="100" layout="row" style="border-bottom:1px solid #ccc">
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="content:ic_add_circle_outline_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		Create new processing element
-				            	</button>
-				            	<md-menu-content>
-				            		<md-menu-item class="md-indent">
-											<md-button ng-click="addNewSepa()">&nbsp;New</md-button>
-									</md-menu-item>
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="file:ic_folder_open_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		View existing processing elements
-				            	</button>
-				            	<md-menu-content>
-				            		<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">A-F</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="sepa in sepas | startsWithLetter:'a':'f' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadSepaDetails(sepa.uri, true, true)">&nbsp;{{sepa.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">G-M</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="sepa in sepas | startsWithLetter:'g':'m' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadSepaDetails(sepa.uri, true, true)">&nbsp;{{sepa.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">N-S</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="sepa in sepas | startsWithLetter:'n':'s' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadSepaDetails(sepa.uri, true, true)">&nbsp;{{sepa.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">T-Z</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="sepa in sepas | startsWithLetter:'t':'z' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadSepaDetails(sepa.uri, true, true)">&nbsp;{{sepa.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>			
-					</div>
-				</div>
-				<div flex="100" layout="row" layout-align="center center" class="md-padding">	
-					<div flex="100" layout="column" ng-if="sepaSelected">				
-						<div flex="none" layout-wrap layout="row">
-							<h4 class="md-display-1">{{selectedSepa.name == '' ? 'Unnamed Element' : selectedSepa.name}}</h4>
-						</div>		
-						<md-content class="md-padding" >
-							  <ng-include src="'app/sensors/templates/sepa.html'"/>
-						      <md-divider></md-divider>
-						</md-content>
-					</div>
-				</div>
-			</div>
-			
-			
-			
-			<div layout="column" flex="100" ng-if="selectedTab === 'SINKS'">
-			<div flex="100" layout="column">
-					<div flex="100" layout="row" style="border-bottom:1px solid #ccc">
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="content:ic_add_circle_outline_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		Create new data sink
-				            	</button>
-				            	<md-menu-content>
-				            		<md-menu-item class="md-indent">
-											<md-button ng-click="addNewAction()">&nbsp;New</md-button>
-									</md-menu-item>
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>
-						<div layout="row">	
-							<md-menu-bar>
-				          		<md-menu>
-				            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-				            		<md-icon md-svg-icon="file:ic_folder_open_24px" style="color: rgb(63,81,181);"> </md-icon>
-				              		View existing data sinks
-				            	</button>
-				            	<md-menu-content>
-				            		<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">A-F</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="action in actions | startsWithLetter:'a':'f' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">G-M</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="action in actions | startsWithLetter:'g':'m' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">N-S</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="action in actions | startsWithLetter:'n':'s' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-									<md-menu-item class="md-indent">
-											 <md-menu>
-	                  							<md-button ng-click="$mdOpenMenu()">T-Z</md-button>
-	                  							 <md-menu-content>
-	                  							 	<div ng-repeat="action in actions | startsWithLetter:'t':'z' | orderBy: 'name'"> 
-								              			<md-menu-item class="md-indent">
-															<md-button ng-click="loadActionDetails(action.uri, true, true)">&nbsp;{{action.name}}</md-button>
-														</md-menu-item>
-								 					</div>	
-	                  							 </md-menu-content>
-	                  						</md-menu>
-									</md-menu-item>
-				              	</md-menu-content>
-				              	</md-menu>
-				        	</md-menu-bar>	
-						</div>			
-					</div>
-				</div>
-				<div flex="100" layout="row" layout-align="center center" class="md-padding">	
-					<div flex="100" layout="column" ng-if="actionSelected">				
-						<div flex="none" layout-wrap layout="row">
-							<h4 class="md-display-1">{{selectedAction.name == '' ? 'Unnamed Element' : selectedAction.name}}</h4>
-						</div>		
-						<md-content class="md-padding" >
-							  <ng-include src="'app/sensors/templates/sec.html'"/>
-						      <md-divider></md-divider>
-						</md-content>
-					</div>
-				</div>
-	</div>
-</div>
-</div>
+
