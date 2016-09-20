@@ -5,21 +5,22 @@ const cleanPlugin = require('clean-webpack-plugin');
 const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 const webpack = require('webpack');
 const BowerWebpackPlugin = require("bower-webpack-plugin");
+var path = require('path');
 
 // define Webpack configuration object to be exported
 let config = {
-	context: `${__dirname}/app`,
+	context: path.join(__dirname, 'app'),
 	entry: 
 		'./app.module.js',
 	output: {
-		path: `${__dirname}/`,
+		path: path.resolve(__dirname),
 		filename: 'bundle.js'
 	},
 	resolve: {
 		alias: {
-			'npm': `${__dirname}/node_modules`,
-			'legacy': `${__dirname}/lib`,
-			"jquery-ui": `${__dirname}/lib/jquery-ui.min.js`,
+			'npm': path.join(__dirname, 'node_modules'),
+			'legacy': path.join(__dirname, 'lib'),
+			"jquery-ui": path.join(__dirname, 'lib', 'jquery-ui.min.js'),
 		}
 	},
 	module: {
@@ -39,7 +40,7 @@ let config = {
 	},
 	//devtool: 'source-map',
 	devServer: {
-		contentBase: `${__dirname}/`,
+		contentBase: path.resolve(__dirname),
 		port: 80,
 		proxy: {
 			'/semantic-epa-backend': {
