@@ -3,8 +3,11 @@ import angular from 'npm/angular';
 import 'npm/lodash';
 import stomp from 'legacy/stomp';
 import 'legacy/mlhr-table';
-//import 'legacy/malhar-angular-widgets';
+//import 'malhar-angular-widgets';
 import 'legacy/malhar-angular-dashboard';
+import 'npm/d3';
+import 'npm/epoch-charting';
+
 
 import DashboardCtrl from './dashboard.controller';
 import AddWidgetService from './add-widget.service';
@@ -22,6 +25,10 @@ import spTableWidget from './templates/table/table.directive';
 import spTableWidgetConfig from './templates/table/table-config.directive';
 import TableDataModel from './templates/table/table-data-model.service';
 
+import spLineWidget from './templates/line/line.directive';
+import spLineWidgetConfig from './templates/line/line-config.directive';
+import LineDataModel from './templates/line/line-data-model.service';
+
 
 
 export default angular.module('sp.dashboard', ['ui.dashboard'])
@@ -38,5 +45,9 @@ export default angular.module('sp.dashboard', ['ui.dashboard'])
 	.directive('spTableWidget', spTableWidget)
 	.directive('spTableWidgetConfig', spTableWidgetConfig)
 	.factory('TableDataModel', TableDataModel)
+	.directive('spLineWidget', spLineWidget)
+	.directive('spLineWidgetConfig', spLineWidgetConfig)
+	.factory('LineDataModel', LineDataModel)
+
 
 	.name;

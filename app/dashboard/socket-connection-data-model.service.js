@@ -4,6 +4,7 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 	function SocketConnectionDataModel(id) {
 		var id = id;
 		this.id = id;
+		this.client = {};
 	}
 
 	SocketConnectionDataModel.prototype = Object.create(WidgetDataModel.prototype);
@@ -24,7 +25,7 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 				var brokerUrl = 'ws://' + data['broker'];
 				var inputTopic = '/topic/' + data['pipelineId'];
 
-				client = Stomp.client(brokerUrl + inputTopic);
+				self.client = Stomp.client(brokerUrl + inputTopic);
 
 				// Uncomment these lines to get all the wesocket messages to the console
 				//  client.debug = function (str) {
@@ -34,19 +35,19 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 				// the client is notified when it is connected to the server.
 				var onConnect = function (frame) {
 
-					client.subscribe(inputTopic, function (message) {
+					self.client.subscribe(inputTopic, function (message) {
 						self.newData(JSON.parse(message.body));
 					});
 				};
 
-				client.connect(login, passcode, onConnect);
+				self.client.connect(login, passcode, onConnect);
 			});
 	};
 
 	SocketConnectionDataModel.prototype.destroy = function () {
 		WidgetDataModel.prototype.destroy.call(this);
 
-		client.disconnect(function() {
+		self.client.disconnect(function() {
 			console.log("Disconnected websocket connection");
 		})
 	};
