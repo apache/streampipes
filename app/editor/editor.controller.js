@@ -1348,6 +1348,8 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     }
 
+
+
     function createBlock() {
         var blockData = $('#blockNameForm').serializeArray(); //TODO SAVE
         var blockPipeline = new objectProvider.Pipeline();
@@ -1410,6 +1412,15 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         ContextMenuClickHandler("static");
         return false;
 
+    }
+
+    function showToast(type, title, description) {
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent(title)
+                .position("top right")
+                .hideDelay(3000)
+        );
     }
 
 
@@ -1534,7 +1545,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
 };
 
-function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) {
+function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi, $mdToast) {
 
     $scope.pipelineCategories = [];
 
@@ -1618,6 +1629,15 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
     $scope.hide = function () {
         $mdDialog.hide();
     };
+
+    function showToast(type, title, description) {
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent(title)
+                .position("top right")
+                .hideDelay(3000)
+        );
+    }
 }
 
 function MatchingErrorController($scope, $rootScope, $mdDialog, elementData) {
@@ -1772,13 +1792,6 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         return false;
     }
 
-    function showToast(type, title, description) {
-        $mdToast.show(
-            $mdToast.simple()
-                .textContent(title)
-                .position("top right")
-                .hideDelay(3000)
-        );
-    }
-
 }
+
+
