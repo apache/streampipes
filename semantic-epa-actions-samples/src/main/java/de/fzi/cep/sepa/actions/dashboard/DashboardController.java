@@ -21,9 +21,8 @@ import java.util.List;
 
 public class DashboardController extends ActionController {
     private static String DB_NAME = "visualization";
-    private static int DB_PORT = 5984;
-//    private static String DB_HOST = "ipe-koi06.fzi.de";
-    private static String DB_HOST = "localhost";
+    private static int DB_PORT = ClientConfiguration.INSTANCE.getCouchDbPort();
+   private static String DB_HOST = ClientConfiguration.INSTANCE.getCouchDbHost();
     private static String DB_PROTOCOL = "http";
 
     private KafkaConsumerGroup kafkaConsumerGroup;
