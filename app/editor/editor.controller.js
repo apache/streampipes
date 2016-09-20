@@ -1,10 +1,10 @@
 //import jQueryUi from 'npm/jquery-ui';
 
 
-EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips'];
+EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
 
 
-export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips) {
+export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -128,7 +128,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $rootScope.state.currentElement = elementData;
         $mdDialog.show({
             controller: SavePipelineController,
-            templateUrl: 'modules/editor/templates/submitPipelineModal.tmpl.html',
+            templateUrl: 'app/editor/directives/submitPipelineModal.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,
@@ -141,7 +141,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.showMatchingErrorDialog = function (elementData) {
         $mdDialog.show({
             controller: MatchingErrorController,
-            templateUrl: 'modules/editor/templates/matchingErrorDialog.tmpl.html',
+            templateUrl: 'app/editor/directives/matchingErrorDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,
@@ -834,7 +834,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             if (!isConnected(element)) {
                 error = true;
 
-                toastRightTop("error", "All elements must be connected", "Submit Error");
+                showToast("error", "All elements must be connected", "Submit Error");
             }
 
             if ($element.hasClass('sepa')) {
@@ -843,7 +843,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                     pipelineNew.addElement(element);
 
                 } else if ($element.data("JSON").staticProperties != null) {
-                    toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+                    showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                     ;
                     error = true;
 
@@ -856,13 +856,13 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             } else if ($element.hasClass('action')) {
                 if (actionPresent) {
                     error = true;
-                    toastRightTop("error", "More than one action element present in pipeline", "Submit Error");
+                    showToast("error", "More than one action element present in pipeline", "Submit Error");
                 } else {
                     actionPresent = true;
                     if ($element.data("JSON").staticProperties == null || $element.data("options")) {
                         pipelineNew.addElement(element);
                     } else {
-                        toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+                        showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                         ;
                         error = true;
 
@@ -875,15 +875,15 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             }
         });
         if (!streamPresent) {
-            toastRightTop("error", "No stream element present in pipeline", "Submit Error");
+            showToast("error", "No stream element present in pipeline", "Submit Error");
             error = true;
         }
         if (!sepaPresent) {
-            toastRightTop("error", "No sepa element present in pipeline", "Submit Error");
+            showToast("error", "No sepa element present in pipeline", "Submit Error");
             error = true;
         }
         if (!actionPresent) {
-            toastRightTop("error", "No action element present in pipeline", "Submit Error");
+            showToast("error", "No action element present in pipeline", "Submit Error");
             error = true;
         }
         if (!error) {
@@ -948,8 +948,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                     $scope.activePossibleElementFilter = {};
                     $("md-icon", event.currentTarget).remove();
                     $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
-                    //$scope.$apply();
-                    //altes SVG adden
 
                 } else { //Auf anderen Filter geklickt
                     $("md-icon", event.currentTarget).remove();
@@ -965,7 +963,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                         } else if (el.hasClass("sepa")) {
                             $scope.selectedTab = 2;
                         }
-                        //$scope.$apply();
                     }
                 }
             } else { //KEIN FILTER AKTIV
@@ -979,7 +976,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                     } else if (el.hasClass("sepa")) {
                         $scope.selectedTab = 2;
                     }
-                    //$scope.$apply();
                 }
             }
         } else {
@@ -991,8 +987,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             $scope.activePossibleElementFilter = {};
 
         }
-
-        $scope.$apply();
     }
 
 
@@ -1299,7 +1293,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         var blockData = createBlock();
         var block = blockData[0];
         if (block == false) {
-            toastRightTop("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Block Creation Error");
+            showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Block Creation Error");
             return;
         }
 
@@ -1536,8 +1530,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         });
 
 
-
-
     }
 
 };
@@ -1545,6 +1537,18 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) {
 
     $scope.pipelineCategories = [];
+
+    $scope.displayErrors = function (data) {
+        for (var i = 0, notification; notification = data.notifications[i]; i++) {
+            showToast("error", notification.description, notification.title);
+        }
+    }
+
+    $scope.displaySuccess = function (data) {
+        for (var i = 0, notification; notification = data.notifications[i]; i++) {
+            showToast("success", notification.description, notification.title);
+        }
+    }
 
     $scope.getPipelineCategories = function () {
         restApi.getPipelineCategories()
@@ -1561,7 +1565,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
     $scope.savePipelineName = function (switchTab) {
 
         if ($rootScope.state.currentPipeline.name == "") {
-            toastRightTop("error", "Please enter a name for your pipeline");
+            showToast("error", "Please enter a name for your pipeline");
             return false;
         }
 
@@ -1575,7 +1579,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
         $rootScope.state.currentPipeline.send()
             .success(function (data) {
                 if (data.success) {
-                    displaySuccess(data);
+                    $scope.displaySuccess(data);
                     $scope.hide();
                     if (switchTab) $state.go("streampipes.pipelines");
                     if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
@@ -1593,7 +1597,7 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
                                 }
                             })
                             .error(function (data) {
-                                toastRightTop("error", "Could not delete Pipeline");
+                                showToast("error", "Could not delete Pipeline");
                                 console.log(data);
                             })
 
@@ -1601,11 +1605,11 @@ function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi) 
                     $scope.clearAssembly();
 
                 } else {
-                    displayErrors(data);
+                    $scope.displayErrors(data);
                 }
             })
             .error(function (data) {
-                toastRightTop("error", "Could not fulfill request", "Connection Error");
+                showToast("error", "Could not fulfill request", "Connection Error");
                 console.log(data);
             });
 
@@ -1766,6 +1770,15 @@ function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaNam
         if (datatype == $scope.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
         if (datatype == $scope.primitiveClasses[4].id) return !isNaN(property);
         return false;
+    }
+
+    function showToast(type, title, description) {
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent(title)
+                .position("top right")
+                .hideDelay(3000)
+        );
     }
 
 }
