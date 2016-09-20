@@ -40,7 +40,13 @@ let config = {
 	//devtool: 'source-map',
 	devServer: {
 		contentBase: `${__dirname}/`,
-		port: 8082,
+		port: 80,
+		proxy: {
+			'/semantic-epa-backend': {
+				target: 'http://localhost:8080',
+				secure: false
+			}
+		}
 		//inline: true
 	},
 	plugins: [
@@ -52,8 +58,8 @@ let config = {
 			$: "jquery",
 			jQuery: "jquery",
 			"window.jQuery": "jquery"
-		}),
-		new webpack.HotModuleReplacementPlugin()
+		})
+		,new webpack.HotModuleReplacementPlugin()
 		//new webpack.optimize.UglifyJsPlugin({
 				//compress: {
 								//warnings: false
