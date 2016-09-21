@@ -3,7 +3,7 @@ import angular from 'npm/angular';
 import 'npm/lodash';
 import stomp from 'legacy/stomp';
 import 'legacy/mlhr-table';
-//import 'malhar-angular-widgets';
+//import 'legacy/malhar-angular-widgets';
 import 'legacy/malhar-angular-dashboard';
 import 'npm/d3';
 import 'npm/epoch-charting';

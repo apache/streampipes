@@ -12,24 +12,42 @@ export default function lineWidget(Widgets) {
 			widgetId: '@'
 		},
 		controller: function ($scope) {
+			$scope.widgetConfig = Widgets.get($scope.widgetId).vis.schema.config;
+			//selectedTimestampMapping
+			//selectedNumberMapping
+
+			//$scope.selectedNumberProperty = widgetConfig.vis.schema.selectedNumberProperty.properties.runtimeName;
+
 			//var widgetConfig = Widgets.get($scope.widgetId);
 			//$scope.selectedNumberProperty = widgetConfig.vis.schema.selectedNumberProperty.properties.runtimeName;
+			//
+			$scope.lineData = [];
 		},
 		link: function postLink(scope, element) {
-			element.epoch({
+
+			var range = [0, 100];
+			var dd = [{ label: "Series 1", values: [], range: range}];
+
+			 //var elementResult = element[0].querySelector('#lineChart');
+
+			var myChart = element.epoch({
 				type: 'time.line',
-				data: [
-					{
-						label: "Series 1",
-						values: [ {x: 0, y: 0}, {x: 10, y: 10} , {x: 20, y: 20}, {x: 30, y: 30}, {x: 40, y: 40}, {x: 50, y: 50}, {x: 60, y: 60}, {x: 70, y: 70}]
-					}
-				]
+				data: dd
 			});
-			//scope.$watch('data', function (data) {
-			//if (data) {
-			//scope.item = data;
-			//}
-			//});
+
+			scope.$watch('data', function (data) {
+				if (data) {
+					
+					var el = {time: data[scope.widgetConfig.selectedTimestampMapping.properties.runtimeName], y: data[scope.widgetConfig.selectedNumberMapping.properties.runtimeName]}
+					//el.time = parseInt(el.time.toString().slice(0, -3));
+					//el.time = Math.floor(el.time/1000);
+					el.time = 1370044800;
+					myChart.push([{ label: "Series 1", values: [el], range: range}]);
+				}
+
+
+				//}
+			});
 		}
 	};
 };
