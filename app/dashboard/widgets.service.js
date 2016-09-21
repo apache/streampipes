@@ -32,7 +32,7 @@ export default function Widgets($http, WidgetDefinitions) {
 			          'widget-id': id
 			        },
 			style: {
-				width: '60%'
+				width: '30%'
 			}
 		}
 	}
