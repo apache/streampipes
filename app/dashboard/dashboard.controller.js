@@ -1,9 +1,11 @@
 DashCtrl.$inject = ['$scope', '$http', '$mdDialog', 'Widgets', 'AddWidget'];
 
 export default function DashCtrl($scope, $http, $mdDialog, Widgets, AddWidget) {
+	// TODO create a proxy in nginx and webpack-dev-server
 	var couchDbServer = 'http://127.0.0.1:5984';
 
 	$scope.rerender = true;
+	//TODO rename to visualisablePipelines
 	var possibleVisualizations = [];
 
 	$http.get(couchDbServer + '/visualization/_all_docs?include_docs=true')
@@ -47,22 +49,6 @@ export default function DashCtrl($scope, $http, $mdDialog, Widgets, AddWidget) {
 			});
 		}, 100);
 	}
-
-
-	//var widgetDefinitions = [
-	//{
-	//name: 'wt-time',
-	//style: {
-	//width: '33%'
-	//}
-	//}, {
-	//name: 'wt-random',
-	//style: {
-	//width: '33%'
-	//}
-	//}
-	//];
-
 
 	var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
 		return {
