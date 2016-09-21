@@ -1,8 +1,8 @@
 <md-input-container style="width:100%">
-    <label>Domain Property</label>
-    <md-select ng-model="property" ng-disabled="disabled">
-        <md-option ng-repeat="p in domainProperties" value="{{p.id}}" ng-selected="property == p.id">
+    <h5>Domain Property</h5>
+    <select ng-model="property" ng-disabled="disabled">
+        <option ng-repeat="p in domainProperties" value="{{p.id}}" ng-selected="property == p.id">
             {{p.title}}
-        </md-option>
-    </md-select>
+        </option>
+    </select>
 </md-input-container>

@@ -5,7 +5,7 @@
             <h5>PIPELINE ELEMENT GENERATION </h5>
         </div>
         <div layout-fill>
-            <md-tabs md-dynamic-height md-border-bottom>
+            <md-tabs md-border-bottom>
                 <md-tab label="Data Sources" md-on-select="setSelectedTab('SOURCES')"></md-tab>
                 <md-tab label="Processing Elements" md-on-select="setSelectedTab('EPAS')"></md-tab>
                 <md-tab label="Data Sinks" md-on-select="setSelectedTab('SINKS')"></md-tab>
@@ -21,10 +21,10 @@
                     <h4 class="md-display-1">{{selectedSource.name == '' ? 'Unnamed Element' :
                         selectedSource.name}}</h4>
                 </div>
-                <md-content class="md-padding">
-                    <ng-include src="'app/sensors/templates/sep.html'"></ng-include>
-                    <md-divider></md-divider>
-                </md-content>
+
+                <ng-include src="'app/sensors/templates/sep.html'"></ng-include>
+                <md-divider></md-divider>
+
             </div>
         </div>
     </div>
@@ -38,10 +38,10 @@
                     <h4 class="md-display-1">{{selectedSepa.name == '' ? 'Unnamed Element' :
                         selectedSepa.name}}</h4>
                 </div>
-                <md-content class="md-padding">
-                    <ng-include src="'app/sensors/templates/sepa.html'"></ng-include>
-                    <md-divider></md-divider>
-                </md-content>
+
+                <ng-include src="'app/sensors/templates/sepa.html'"></ng-include>
+                <md-divider></md-divider>
+
             </div>
         </div>
     </div>

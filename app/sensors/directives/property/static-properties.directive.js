@@ -10,7 +10,9 @@ export default function staticProperties(restApi) {
 			disabled : "=disabled"
 		},
 		controller: function($scope, $element) {
-
+			$scope.range = function(count){
+				return new Array(+count);
+			};
 			$scope.staticPropertyTypes = [{label : "Text Input", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty"},
 				{label : "Single-Value Selection", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty"},
 				{label : "Multi-Value Selection", "type" : "de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty"},
