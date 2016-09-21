@@ -36,11 +36,6 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
 			icon: 'av:ic_play_arrow_24px'
 		},
 		{
-			link : 'streampipes.visualizations',
-			title: 'Visualizations',
-			icon: 'editor:ic_insert_chart_24px'
-		},
-		{
 			link : 'streampipes.dashboard',
 			title: 'Dashboard',
 			icon: 'editor:ic_insert_chart_24px'

@@ -97,15 +97,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 				}
 			}
 		})
-		.state('streampipes.visualizations', {
-			url: '/visualizations',
-			views: {
-				"streampipesView@streampipes" : {
-					templateUrl : 'app/visualizations-new/visualizations-new.html',
-					controller: 'VizCtrl'
-				}
-			}
-		})
 		.state('streampipes.dashboard', {
 			url: '/dashboard',
 			views: {
