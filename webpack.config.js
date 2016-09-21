@@ -41,7 +41,7 @@ let config = {
 	//devtool: 'source-map',
 	devServer: {
 		contentBase: `${__dirname}/`,
-		port: 8081,
+		port: 80,
 		proxy: {
 			'/semantic-epa-backend': {
 				target: 'http://localhost:8080',
