@@ -1,18 +1,24 @@
-WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel'];
+WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel'];
 
-export default function WidgetDefinitions(TableDataModel, NumberDataModel) {
+export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineDataModel) {
 	//Register the new widgets here
 	var widgetTypes = {
 			table: {
 				name: 'table',
-				directive: 'table-widget',
+				directive: 'sp-table-widget',
 				dataModel: TableDataModel,
 			},
 			number: {
 				name: 'number',
-				directive: 'number-widget',
+				directive: 'sp-number-widget',
 				dataModel: NumberDataModel,
+			},
+			line: {
+				name: 'line',
+				directive: 'sp-line-widget',
+				dataModel: LineDataModel,
 			}
+
 		}	
 
 	var getDataModel = function(name) {

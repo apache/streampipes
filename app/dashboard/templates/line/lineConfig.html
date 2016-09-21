@@ -1,0 +1,13 @@
+<h3>Select time mapping</h3>
+<md-input-container class="md-block" flex-gt-sm>
+	<md-select ng-model="wid.schema.config.selectedTimestampMapping">
+		<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties ">{{ time.properties.runtimeName }}</md-option>
+	</md-select>
+</md-input-container>
+
+<h3>Select number mapping</h3>
+<md-input-container class="md-block" flex-gt-sm>
+	<md-select ng-model="wid.schema.config.selectedNumberMapping">
+		<md-option ng-value="lineValue" ng-repeat="lineValue in wid.schema.eventProperties ">{{ lineValue.properties.runtimeName }}</md-option>
+	</md-select>
+</md-input-container>

@@ -40,7 +40,7 @@ let config = {
 	},
 	//devtool: 'source-map',
 	devServer: {
-		contentBase: path.resolve(__dirname),
+		contentBase: `${__dirname}/`,
 		port: 80,
 		proxy: {
 			'/semantic-epa-backend': {
