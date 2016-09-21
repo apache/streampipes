@@ -33,6 +33,10 @@ import spLineWidget from './templates/line/line.directive';
 import spLineWidgetConfig from './templates/line/line-config.directive';
 import LineDataModel from './templates/line/line-data-model.service';
 
+import spGaugeWidget from './templates/gauge/gauge.directive';
+import spGaugeWidgetConfig from './templates/gauge/gauge-config.directive';
+import GaugeDataModel from './templates/gauge/gauge-data-model.service';
+
 
 
 export default angular.module('sp.dashboard', ['ui.dashboard'])
@@ -58,6 +62,10 @@ export default angular.module('sp.dashboard', ['ui.dashboard'])
 	.directive('spLineWidget', spLineWidget)
 	.directive('spLineWidgetConfig', spLineWidgetConfig)
 	.factory('LineDataModel', LineDataModel)
+
+	.directive('spGaugeWidget', spGaugeWidget)
+	.directive('spGaugeWidgetConfig', spGaugeWidgetConfig)
+	.factory('GaugeDataModel', GaugeDataModel)
 
 
 	.name;

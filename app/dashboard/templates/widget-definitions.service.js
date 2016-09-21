@@ -1,6 +1,6 @@
-WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel'];
+WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel'];
 
-export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineDataModel, VerticalbarDataModel) {
+export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineDataModel, VerticalbarDataModel, GaugeDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {
@@ -22,6 +22,11 @@ export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineD
             name: 'verticalbar',
             directive: 'sp-verticalbar-widget',
             dataModel: VerticalbarDataModel,
+        },
+        gauge: {
+            name: 'gauge',
+            directive: 'sp-gauge-widget',
+            dataModel: GaugeDataModel,
         }
 
     }

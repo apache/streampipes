@@ -1,0 +1,6 @@
+<h3>Select number mapping</h3>
+<md-input-container class="md-block" flex-gt-sm>
+	<md-select ng-model="wid.schema.config.selectedNumberMapping">
+		<md-option ng-value="lineValue" ng-repeat="lineValue in wid.schema.eventProperties | sonumber">{{ lineValue.properties.runtimeName }}</md-option>
+	</md-select>
+</md-input-container>
