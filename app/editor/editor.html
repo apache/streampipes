@@ -1,255 +1,271 @@
 <div flex layout-fill>
-<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-	<div flex="none" layout-wrap layout="row" layout-align="start center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-	<h5>PIPELINE EDITOR </h5>
-	</div>
-	<div layout-fill>
-		<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
-		
-				<md-tab ng-repeat="tab in tabs"
-						ng-disabled="tab.disabled"
-						label="{{tab.title}}"
-						md-on-select="loadCurrentElements(tab.type)">
-					<md-tab-label>
-						{{tab.title}}
-						<md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
-					</md-tab-label>
-		
-				</md-tab>
-		
-		</md-tabs>
-	</div>
-	<div flex="30" layout="row" layout-align="end center" style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-			<md-button class="md-icon-button" ng-show="!minimizedEditorStand" ng-click="toggleEditorStand()">
-				<i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_up</i>
-				<md-tooltip md-direction="top">
-						Hide
-				</md-tooltip>
-			</md-button>
-			<md-button class="md-icon-button" ng-show="minimizedEditorStand" ng-click="toggleEditorStand()">
-				<i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_down</i>
-				<md-tooltip md-direction="top">
-						Show
-				</md-tooltip>
-			</md-button>
-	</div>
-</div>
-<div ng-show="!minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
-	<div class="editorIconStandOptions" style="padding:0px;">
-		<div flex="100" layout="row" layout-align="start start" style="padding-top:2px;padding-left:10px;">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+        <div flex="none" layout-wrap layout="row" layout-align="start center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <h5>PIPELINE EDITOR </h5>
+        </div>
+        <div layout-fill>
+            <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
 
-				<div layout-align="start center" layout="row" >
-					<div layout="row" style="margin-right: 5px">
-						<md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"> </md-icon>
-						<input type="text" ng-model="elName" placeholder="Find Element" style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
-					</div>
-					<div layout="row">	
-						<md-menu-bar>
-			          		<md-menu>
-			            	<button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
-			            		<md-icon md-svg-icon="action:ic_view_list_24px" style="color: rgb(63,81,181);"> </md-icon>
-			              		Select categories
-			            	</button>
-			            	<md-menu-content>
-			            		<md-menu-item class="md-indent">
-			            			<md-icon md-svg-icon="action:ic_done_24px" style="color: rgb(63,81,181);"> </md-icon>
-									<md-button ng-click="selectAllOptions()">&nbsp;Select all</md-button>	   		
-			            		</md-menu-item>
-			            		<md-menu-item class="md-indent">
-			            			<md-icon md-svg-icon="content:ic_clear_24px" style="color: rgb(63,81,181);"> </md-icon>
-									<md-button ng-click="deselectAllOptions()">&nbsp;Deselect all</md-button>	   		
-			            		</md-menu-item>
-			            		<md-menu-divider></md-menu-divider>
-			              		<div ng-repeat="option in options | orderBy: 'label'"> 
-			              			<md-menu-item class="md-indent">
-			              				<md-icon md-svg-icon="action:ic_visibility_24px" style="color: rgb(63,81,181);" ng-if="optionSelected(option)"> </md-icon>
-										<md-icon md-svg-icon="action:ic_visibility_off_24px" style="color: rgb(63,81,181);" ng-if="!optionSelected(option)"> </md-icon>
-										<md-button ng-click="toggleFilter(option)">&nbsp;{{option.label}}</md-button>
-									</md-menu-item>
-			 					</div>	
-			              	</md-menu-content>
-			              	</md-menu>
-			        	</md-menu-bar>	
-					</div>
-				</div>
-		</div>
-	</div>
-	<div flex id="editor-icon-stand" class="icon-stand">
+                <md-tab ng-repeat="tab in tabs"
+                        ng-disabled="tab.disabled"
+                        label="{{tab.title}}"
+                        md-on-select="loadCurrentElements(tab.type)">
+                    <md-tab-label>
+                        {{tab.title}}
+                        <md-icon md-svg-icon="navigation:ic_arrow_forward_24px"></md-icon>
+                    </md-tab-label>
 
-		<span ng-repeat="element in currentElements | filter: elName| filter: possibleFilter | filter: selectFilter | orderBy: 'name' " my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type" data-target="testMenu" ng-if="element.type !== 'block'">
+                </md-tab>
+
+            </md-tabs>
+        </div>
+        <div flex="30" layout="row" layout-align="end center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <md-button class="md-icon-button" ng-show="!minimizedEditorStand" ng-click="toggleEditorStand()">
+                <i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_up</i>
+                <md-tooltip md-direction="top">
+                    Hide
+                </md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-show="minimizedEditorStand" ng-click="toggleEditorStand()">
+                <i class="material-icons" style="color: rgb(63,81,181);">arrow_drop_down</i>
+                <md-tooltip md-direction="top">
+                    Show
+                </md-tooltip>
+            </md-button>
+        </div>
+    </div>
+    <div ng-show="!minimizedEditorStand" style="background-color:#f6f6f6;padding:0px;border-bottom:1px solid #ccc">
+        <div class="editorIconStandOptions" style="padding:0px;">
+            <div flex="100" layout="row" layout-align="start start" style="padding-top:2px;padding-left:10px;">
+
+                <div layout-align="start center" layout="row">
+                    <div layout="row" style="margin-right: 5px">
+                        <md-icon md-svg-icon="action:ic_search_24px" style="color: rgb(63,81,181);"></md-icon>
+                        <input type="text" ng-model="elName" placeholder="Find Element"
+                               style="background-color:#f6f6f6;border: none;border-bottom: solid 2px rgb(63,81,181);">&nbsp;
+                    </div>
+                    <div layout="row">
+                        <md-menu-bar>
+                            <md-menu>
+                                <button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+                                    <md-icon md-svg-icon="action:ic_view_list_24px"
+                                             style="color: rgb(63,81,181);"></md-icon>
+                                    Select categories
+                                </button>
+                                <md-menu-content>
+                                    <md-menu-item class="md-indent">
+                                        <md-icon md-svg-icon="action:ic_done_24px"
+                                                 style="color: rgb(63,81,181);"></md-icon>
+                                        <md-button ng-click="selectAllOptions()">&nbsp;Select all</md-button>
+                                    </md-menu-item>
+                                    <md-menu-item class="md-indent">
+                                        <md-icon md-svg-icon="content:ic_clear_24px"
+                                                 style="color: rgb(63,81,181);"></md-icon>
+                                        <md-button ng-click="deselectAllOptions()">&nbsp;Deselect all</md-button>
+                                    </md-menu-item>
+                                    <md-menu-divider></md-menu-divider>
+                                    <div ng-repeat="option in options | orderBy: 'label'">
+                                        <md-menu-item class="md-indent">
+                                            <md-icon md-svg-icon="action:ic_visibility_24px"
+                                                     style="color: rgb(63,81,181);"
+                                                     ng-if="optionSelected(option)"></md-icon>
+                                            <md-icon md-svg-icon="action:ic_visibility_off_24px"
+                                                     style="color: rgb(63,81,181);"
+                                                     ng-if="!optionSelected(option)"></md-icon>
+                                            <md-button ng-click="toggleFilter(option)">&nbsp;{{option.label}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-bar>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div flex id="editor-icon-stand" class="icon-stand">
+
+		<span ng-repeat="element in currentElements | filter: elName| filter: possibleFilter | filter: selectFilter | orderBy: 'name' "
+              my-data-bind image-bind="draggable" class="draggable-icon tt" ng-class="element.type"
+              data-target="testMenu" ng-if="element.type !== 'block'">
 		</span>
-		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " class="block tt"  data-target="testMenu" ng-if="element.type == 'block'" my-data-bind>
+		<span ng-repeat="element in currentElements |filter: elName | orderBy: 'name' " class="block tt"
+              data-target="testMenu" ng-if="element.type == 'block'" my-data-bind>
 			<div class="block-name tt">{{element.name}}</div>
 			<div class="block-img-container" image-bind="block"></div>
 		</span>
-	</div>
-</div>
-<div style="margin-left:1%;margin-right:1%;">
-<div class="assemblyOptions">
-	<div layout="row" layout-align="start center">	
-			<md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)" class="md-icon-button" ng-click="submit()" type="submit">
-					<i class="material-icons">save</i>
-					<md-tooltip md-direction="top">
-						Submit Pipeline
-					</md-tooltip>
-			</md-button>
-			<md-button class="md-icon-button" ng-disabled="!selectMode" ng-click="toggleSelectMode()">
-				<i class="material-icons">open_with</i>
-				<md-tooltip md-direction="top">
-						Pan
-				</md-tooltip>
-			</md-button>
-			<md-button class="md-icon-button" ng-disabled="selectMode" ng-click="toggleSelectMode()">
-				<i class="material-icons">mode_edit</i>
-				<md-tooltip md-direction="top">
-						Select
-				</md-tooltip>
-			</md-button>
-			<md-button class="md-icon-button" ng-disabled="currentZoomLevel == 1" ng-click="zoomIn()">
-				<i class="material-icons">zoom_in</i>
-				<md-tooltip md-direction="top">
-						Zoom In
-				</md-tooltip>
-			</md-button>
-			<md-button class="md-icon-button" ng-disabled="currentZoomLevel == 0.5" ng-click="zoomOut()">
-				<i class="material-icons">zoom_out</i>
-				<md-tooltip md-direction="top">
-						Zoom Out
-				</md-tooltip>
-			</md-button>
-			<span flex></span>
-			<md-button class="md-icon-button" ng-click="showClearAssemblyConfirmDialog($event)">
-					<i class="material-icons">clear</i>
-					<md-tooltip md-direction="top">
-						Clear Assembly Area
-				</md-tooltip>
-				</md-button>		
-	</div>	
-</div>
-<div id="outerAssemblyArea" class="outerAssembly">
-	
-	<div id="assembly" class="canvas">
-			
-	</div>
-	
-</div>
-</div>
+        </div>
+    </div>
+    <div style="margin-left:1%;margin-right:1%;">
+        <div class="assemblyOptions">
+            <div layout="row" layout-align="start center">
+                <md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)"
+                           class="md-icon-button" ng-click="submit()" type="submit">
+                    <i class="material-icons">save</i>
+                    <md-tooltip md-direction="top">
+                        Submit Pipeline
+                    </md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-disabled="!selectMode" ng-click="toggleSelectMode()">
+                    <i class="material-icons">open_with</i>
+                    <md-tooltip md-direction="top">
+                        Pan
+                    </md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-disabled="selectMode" ng-click="toggleSelectMode()">
+                    <i class="material-icons">mode_edit</i>
+                    <md-tooltip md-direction="top">
+                        Select
+                    </md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-disabled="currentZoomLevel == 1" ng-click="zoomIn()">
+                    <i class="material-icons">zoom_in</i>
+                    <md-tooltip md-direction="top">
+                        Zoom In
+                    </md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button" ng-disabled="currentZoomLevel == 0.5" ng-click="zoomOut()">
+                    <i class="material-icons">zoom_out</i>
+                    <md-tooltip md-direction="top">
+                        Zoom Out
+                    </md-tooltip>
+                </md-button>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="showClearAssemblyConfirmDialog($event)">
+                    <i class="material-icons">clear</i>
+                    <md-tooltip md-direction="top">
+                        Clear Assembly Area
+                    </md-tooltip>
+                </md-button>
+            </div>
+        </div>
+        <div id="outerAssemblyArea" class="outerAssembly">
 
-<ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
-	<li>
-		<a id="blockButton" tabindex="-1" href="">Create Block from Selected</a>
-	</li>
-	<li id='division1' class="divider"></li>
-	<li>
-		<a id="customize" tabindex="-1" href="">Customize</a>
-	</li>
-	<li>
-		<a id="adescription" tabindex="-1" href="">Description</a>
-	</li>
-	<li id='division' class="divider"></li>
-	<li>
-		<a id="delete" tabindex="-1" href="">Delete</a>
-	</li>
-</ul>
-<ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
-	<li>
-		<a id="sdescription" tabindex="-1" href="">Description</a>
-	</li>
-</ul>
+            <div id="assembly" class="canvas">
 
-<div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-	<div class="modal-dialog">
-		<div id="modal-content" class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" ng-click=clearCurrentElement() aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="customizeTitle">Customize</h4>
-			</div>
-			<div class="modal-body">
+            </div>
 
-				<form id="modalForm" class="form-horizontal">
-					<fieldset id ="customize-content">
+        </div>
+    </div>
 
-					</fieldset>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click=clearCurrentElement()>
-					Close
-				</button>
-				<button type="button" class="btn btn-primary"  ng-click=save()>
-					Save
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
+    <ul id="assemblyContextMenu" class="dropdown-menu" role="menu" style="display:none">
+        <li>
+            <a id="blockButton" tabindex="-1" href="">Create Block from Selected</a>
+        </li>
+        <li id='division1' class="divider"></li>
+        <li>
+            <a id="customize" tabindex="-1" href="">Customize</a>
+        </li>
+        <li>
+            <a id="adescription" tabindex="-1" href="">Description</a>
+        </li>
+        <li id='division' class="divider"></li>
+        <li>
+            <a id="delete" tabindex="-1" href="">Delete</a>
+        </li>
+    </ul>
+    <ul id="staticContextMenu" class="dropdown-menu" role="menu" style="display:none">
+        <li>
+            <a id="sdescription" tabindex="-1" href="">Description</a>
+        </li>
+    </ul>
 
-<div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="description-title"></h4>
-			</div>
-			<div class="modal-body">
-				<p id ="modal-description"></p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					Close
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
+    <div class="modal fade" id="customizeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div id="modal-content" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click=clearCurrentElement()
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="customizeTitle">Customize</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="modalForm" class="form-horizontal">
+                        <fieldset id="customize-content">
+
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click=clearCurrentElement()>
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" ng-click=save()>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="description-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-description"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<div id ="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title">Block Name</h4>
-			</div>
-			<div class="modal-body">
+    <div id="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">Block Name</h4>
+                </div>
+                <div class="modal-body">
 
-				<form id="blockNameForm" class="form-horizontal" role="form">
-					<div class="form-group">
-						<label for="nameInput" class="col-sm-2 control-label">Name</label>
-						<div class="col-sm-6">
-							<input name="name" type="text" class="form-control"  placeholder="Please name the Block">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="descriptionInput" class="col-sm-2 control-label">Description</label>
-						<div class="col-sm-6">
-							<input name="description" type="text" class="form-control"  placeholder="Description">
+                    <form id="blockNameForm" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="nameInput" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-6">
+                                <input name="name" type="text" class="form-control" placeholder="Please name the Block">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="descriptionInput" class="col-sm-2 control-label">Description</label>
+                            <div class="col-sm-6">
+                                <input name="description" type="text" class="form-control" placeholder="Description">
 
-						</div>
-					</div>
-					<div id="saveBlockCheckbox" class="checkbox">
-						<label>
-							<input name="save" type="checkbox"> Save to Blocks
-						</label>
-					</div>
-				</form>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" >
-						Close
-					</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="blockElements()">
-						Create
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+                            </div>
+                        </div>
+                        <div id="saveBlockCheckbox" class="checkbox">
+                            <label>
+                                <input name="save" type="checkbox"> Save to Blocks
+                            </label>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="blockElements()">
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

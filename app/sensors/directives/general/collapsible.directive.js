@@ -7,7 +7,7 @@ export default function collapsible() {
 			transclude: true,
 			scope : {
 				list : "=list",
-				index: "=index",
+				ctr: "=ctr",
 				disabled: "=disabled",
 				removable: "=removable",
 				titleLabel: "=titleLabel",
@@ -23,8 +23,8 @@ export default function collapsible() {
 					$scope.hide = !$scope.hide;
 				}
 
-				$scope.removeProperty = function(list, index) {
-					list.splice(index, 1);
+				$scope.removeProperty = function(list, ctr) {
+					list.splice(ctr, 1);
 				}
 			}
 		}

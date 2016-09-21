@@ -1,0 +1,89 @@
+<div flex="100" layout="column">
+    <div flex="100" layout="row" style="border-bottom:1px solid #ccc">
+        <div layout="row">
+            <md-menu-bar>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+                        <md-icon md-svg-icon="content:ic_add_circle_outline_24px"
+                                 style="color: rgb(63,81,181);"></md-icon>
+                        Create new processing element
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item class="md-indent">
+                            <md-button ng-click="addNewSepa()">&nbsp;New</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-bar>
+        </div>
+        <div layout="row">
+            <md-menu-bar>
+                <md-menu>
+                    <button ng-click="$mdOpenMenu()" style="color: rgb(63, 81, 181);">
+                        <md-icon md-svg-icon="file:ic_folder_open_24px"
+                                 style="color: rgb(63,81,181);"></md-icon>
+                        View existing processing elements
+                    </button>
+                    <md-menu-content>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">A-F</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="sepa in sepas | startsWithLetter:'a':'f' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="loadSepaDetails(sepa.uri, true, true)">
+                                                &nbsp;{{sepa.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">G-M</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="sepa in sepas | startsWithLetter:'g':'m' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="loadSepaDetails(sepa.uri, true, true)">
+                                                &nbsp;{{sepa.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">N-S</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="sepa in sepas | startsWithLetter:'n':'s' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="loadSepaDetails(sepa.uri, true, true)">
+                                                &nbsp;{{sepa.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                        <md-menu-item class="md-indent">
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">T-Z</md-button>
+                                <md-menu-content>
+                                    <div ng-repeat="sepa in sepas | startsWithLetter:'t':'z' | orderBy: 'name'">
+                                        <md-menu-item class="md-indent">
+                                            <md-button ng-click="loadSepaDetails(sepa.uri, true, true)">
+                                                &nbsp;{{sepa.name}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </div>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-menu-bar>
+        </div>
+    </div>
+</div>

@@ -63,8 +63,6 @@ export default angular.module('sp.sensors', [spServices])
 
 	.directive('outputStrategy', outputStrategy)
 
-	.directive('outputStrategy', outputStrategy)
-
 	.directive('datatypeProperty', datatypeProperty )
 	.directive('domainConceptProperty', domainConceptProperty)
 	.directive('domainProperty', domainProperty)

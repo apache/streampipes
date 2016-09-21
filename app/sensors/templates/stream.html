@@ -1,39 +1,41 @@
-<md-tabs md-dynamic-height md-border-bottom md-selected="selectedSepaIndex"> 
-	<md-tab label="Basics">
-		<md-content class="md-padding">
-			<sepa-basics element="selectedStream"></sepa-basics>
-		   
-		     <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
-			      <md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Next</md-button>
-			 </section>
-		</md-content> 
-	</md-tab> 
-	<md-tab label="Schema">
-		<md-content class="md-padding">
-			<h3 class="md-display-2">Schema</h3>
-			<div ng-repeat="property in selectedStream.eventSchema.eventProperties">
-			<h4>Property {{$index+1}}</h4>
-				<md-input-container>
-			        <label>Datatype</label>
-			        <input ng-model="property.properties.runtimeType" required ng-disabled="{{editingDisabled}}">
-		      	</md-input-container>
-			    <md-input-container>
-			    	<label>Runtime Name</label>
-			        <input ng-model="property.properties.runtimeName" required ng-disabled="{{editingDisabled}}">
-			    </md-input-container>
-			    <md-input-container>
-			    	<label>Domain Properties</label>
-			    	<div ng-repeat = "dp in property.properties.domainProperties">
-			        	<input ng-model="dp">
-			        </div>
-			    </md-input-container>
-			    <md-divider></md-divider>
-			</div>
-		</md-content>
-	</md-tab>
-	<md-tab label="Grounding">
-		<md-content class="md-padding">
-			<h3 class="md-display-2">Grounding</h3>
-		</md-content>
-	</md-tab>
+<md-tabs md-dynamic-height md-border-bottom md-selected="selectedSepaIndex">
+    <md-tab label="Basics">
+        <md-content class="md-padding">
+            <sepa-basics element="selectedStream"></sepa-basics>
+
+            <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+                <md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Next</md-button>
+            </section>
+        </md-content>
+    </md-tab>
+    <md-tab label="Schema">
+        <md-content class="md-padding">
+            <div layout="row" flex="100" class="md-padding">
+                <h3 class="md-display-2">Schema</h3>
+                <div ng-repeat="property in selectedStream.eventSchema.eventProperties">
+                    <h4>Property {{$index+1}}</h4>
+                    <md-input-container>
+                        <label>Datatype</label>
+                        <input ng-model="property.properties.runtimeType" required ng-disabled="{{editingDisabled}}">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Runtime Name</label>
+                        <input ng-model="property.properties.runtimeName" required ng-disabled="{{editingDisabled}}">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Domain Properties</label>
+                        <div ng-repeat="dp in property.properties.domainProperties">
+                            <input ng-model="dp">
+                        </div>
+                    </md-input-container>
+                    <md-divider></md-divider>
+                </div>
+            </div>
+        </md-content>
+    </md-tab>
+    <md-tab label="Grounding">
+        <md-content class="md-padding">
+            <h3 class="md-display-2">Grounding</h3>
+        </md-content>
+    </md-tab>
 </md-tabs>
