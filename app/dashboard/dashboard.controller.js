@@ -1,18 +1,17 @@
 DashCtrl.$inject = ['$scope', '$http', '$mdDialog', 'Widgets', 'AddWidget'];
 
 export default function DashCtrl($scope, $http, $mdDialog, Widgets, AddWidget) {
-	var couchDbServer = 'http://127.0.0.1:5984';
-
+	
 	$scope.rerender = true;
 	var possibleVisualizations = [];
 
-	$http.get(couchDbServer + '/visualization/_all_docs?include_docs=true')
+	$http.get('/visualization/_all_docs?include_docs=true')
 		.success(function(data) {
 			possibleVisualizations = data.rows;
 
 			// get the names for each pipeline
 			angular.forEach(possibleVisualizations, function(vis) {
-				$http.get(couchDbServer + '/pipeline/' + vis.doc.pipelineId)
+				$http.get('/pipeline/' + vis.doc.pipelineId)
 					.success(function(pipeline) {
 						vis.doc.name = pipeline.name;
 					});

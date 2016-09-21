@@ -46,6 +46,14 @@ let config = {
 			'/semantic-epa-backend': {
 				target: 'http://localhost:8080',
 				secure: false
+			},
+			'/visualization': {
+				target: 'http://localhost:5984',
+				secure: false
+			},
+			'/pipeline': {
+				target: 'http://localhost:5984',
+				secure: false
 			}
 		}
 		//inline: true
