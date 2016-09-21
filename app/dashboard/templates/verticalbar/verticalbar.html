@@ -1,0 +1,18 @@
+<div id='measuringCylinder' style="width:150px;min-height:200px;height:200px;">
+    <div id='verticalBar' style="float:left;">
+        <div id='barTop' style="border-top:2px darkgreen solid;border-right:15px darkgreen solid"></div>
+        <div id='currentFill' style="width:200px;height:200px;border-width: 2px;border-style: solid;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;background-color: darkgreen;border-color: darkgreen;margin:-2px">
+            <div id='currentFillPercent' style="background-color:white;max-height:100%;height:{{printValue(item[selectedNumberProperty])}}%"></div>
+            <div id='marker'></div>
+        </div>
+        <div id='barBottom' style="border-top:2px darkgreen solid;border-right:15px darkgreen solid"></div>
+    </div>
+    <div id='legend'>
+        <div id='valueTop'>maxValue</div>
+        <div id='space'>
+            <div id='legendSpace' style="min-height:10px;max-height:169px;height:{{printValue(item[selectedNumberProperty])}}%"></div>
+            <div id='valueCurrent'>{{item[selectedNumberProperty]}}</div>
+        </div>
+        <div id='valueBottom'>minValue</div>
+    </div>
+</div>
