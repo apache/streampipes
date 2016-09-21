@@ -15,8 +15,8 @@ import AddWidgetService from './add-widget.service';
 import SocketConnectionDataModel from './socket-connection-data-model.service';
 import Widgets from './widgets.service';
 import WidgetDefinitions from './templates/widget-definitions.service';
-import sonumber from './templates/so-number.filter';
 
+import soFilter from './templates/so.filter';
 
 import spNumberWidget from './templates/number/number.directive';
 import spNumberWidgetConfig from './templates/number/number-config.directive';
@@ -38,7 +38,9 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
 	.factory('Widgets', Widgets)
 	.factory('WidgetDefinitions', WidgetDefinitions)
-	.filter('sonumber', sonumber)
+
+	.filter('soNumber', soFilter.soNumber)
+	.filter('soDateTime', soFilter.soDateTime)
 
 	.directive('spNumberWidget', spNumberWidget)
 	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
