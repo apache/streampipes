@@ -2,6 +2,7 @@ import angular from 'npm/angular';
 
 import 'npm/lodash';
 import stomp from 'legacy/stomp';
+import 'npm/angular-sanitize';
 import 'legacy/mlhr-table';
 //import 'legacy/malhar-angular-widgets';
 import 'legacy/malhar-angular-dashboard';
@@ -31,7 +32,7 @@ import LineDataModel from './templates/line/line-data-model.service';
 
 
 
-export default angular.module('sp.dashboard', ['ui.dashboard'])
+export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable'])
 	.controller('DashboardCtrl', DashboardCtrl)
 	.factory('AddWidget', AddWidgetService)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
