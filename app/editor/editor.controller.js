@@ -1,5 +1,8 @@
 //import jQueryUi from 'npm/jquery-ui';
 
+import CustomizeController from './customize.controller';
+import MatchingErrorController from './matching-error.controller';
+import SavePipelineController from './save-pipeline.controller';
 
 EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
 
@@ -802,13 +805,25 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     function createPartialPipeline(info) {
         var pipelinePart = new objectProvider.Pipeline();
         var element = info.target;
-
+        console.log(info);
         addElementToPartialPipeline(element, pipelinePart);
         $rootScope.state.currentPipeline = pipelinePart;
     }
 
     function addElementToPartialPipeline(element, pipelinePart) {
         pipelinePart.addElement(element);
+        // add all children of pipeline element that are not already present in the pipeline
+        var outgoingConnections = jsPlumb.getConnections({source: element});
+        if (outgoingConnections.length > 0) {
+            for(var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
+                console.log(ocon);
+                if (!pipelinePart.hasElement(ocon.target.id)) {
+                    addElementToPartialPipeline(ocon.target, pipelinePart);
+                }
+            }
+        }
+
+        // add all parents of pipeline element
         var connections = jsPlumb.getConnections({target: element});
         if (connections.length > 0) {
             for (var i = 0, con; con = connections[i]; i++) {
@@ -854,19 +869,14 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
 
             } else if ($element.hasClass('action')) {
-                if (actionPresent) {
-                    error = true;
-                    showToast("error", "More than one action element present in pipeline", "Submit Error");
+                actionPresent = true;
+                if ($element.data("JSON").staticProperties == null || $element.data("options")) {
+                    pipelineNew.addElement(element);
                 } else {
-                    actionPresent = true;
-                    if ($element.data("JSON").staticProperties == null || $element.data("options")) {
-                        pipelineNew.addElement(element);
-                    } else {
-                        showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-                        ;
-                        error = true;
+                    showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+                    ;
+                    error = true;
 
-                    }
                 }
             } else if ($element.hasClass('connectable-block')) {
                 streamPresent = true;
@@ -1118,7 +1128,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     function handleDeleteOption($element) {
         jsPlumb.removeAllEndpoints($element);
-
         $element.remove();
     }
 
@@ -1349,7 +1358,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     }
 
 
-
     function createBlock() {
         var blockData = $('#blockNameForm').serializeArray(); //TODO SAVE
         var blockPipeline = new objectProvider.Pipeline();
@@ -1539,259 +1547,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                 $element.append($span);
             }
         });
-
-
     }
-
 };
 
-function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi, $mdToast) {
 
-    $scope.pipelineCategories = [];
 
-    $scope.displayErrors = function (data) {
-        for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            showToast("error", notification.description, notification.title);
-        }
-    }
-
-    $scope.displaySuccess = function (data) {
-        for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            showToast("success", notification.description, notification.title);
-        }
-    }
-
-    $scope.getPipelineCategories = function () {
-        restApi.getPipelineCategories()
-            .success(function (pipelineCategories) {
-                $scope.pipelineCategories = pipelineCategories;
-            })
-            .error(function (msg) {
-                console.log(msg);
-            });
-
-    };
-    $scope.getPipelineCategories();
-
-    $scope.savePipelineName = function (switchTab) {
-
-        if ($rootScope.state.currentPipeline.name == "") {
-            showToast("error", "Please enter a name for your pipeline");
-            return false;
-        }
-
-        var overWrite;
-
-        if (!($("#overwriteCheckbox").css('display') == 'none')) {
-            overWrite = $("#overwriteCheckbox").prop("checked");
-        } else {
-            overWrite = false;
-        }
-        $rootScope.state.currentPipeline.send()
-            .success(function (data) {
-                if (data.success) {
-                    $scope.displaySuccess(data);
-                    $scope.hide();
-                    if (switchTab) $state.go("streampipes.pipelines");
-                    if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
-                    if ($rootScope.state.adjustingPipelineState && overWrite) {
-                        var pipelineId = $rootScope.state.adjustingPipeline._id;
-
-                        restApi.deleteOwnPipeline(pipelineId)
-                            .success(function (data) {
-                                if (data.success) {
-                                    $rootScope.state.adjustingPipelineState = false;
-                                    $("#overwriteCheckbox").css("display", "none");
-                                    refresh("Proa");
-                                } else {
-                                    displayErrors(data);
-                                }
-                            })
-                            .error(function (data) {
-                                showToast("error", "Could not delete Pipeline");
-                                console.log(data);
-                            })
-
-                    }
-                    $scope.clearAssembly();
-
-                } else {
-                    $scope.displayErrors(data);
-                }
-            })
-            .error(function (data) {
-                showToast("error", "Could not fulfill request", "Connection Error");
-                console.log(data);
-            });
-
-    };
-
-    $scope.hide = function () {
-        $mdDialog.hide();
-    };
-
-    function showToast(type, title, description) {
-        $mdToast.show(
-            $mdToast.simple()
-                .textContent(title)
-                .position("top right")
-                .hideDelay(3000)
-        );
-    }
-}
-
-function MatchingErrorController($scope, $rootScope, $mdDialog, elementData) {
-    $scope.msg = elementData;
-    console.log(elementData);
-    $scope.hide = function () {
-        $mdDialog.hide();
-    };
-
-    $scope.cancel = function () {
-        $mdDialog.cancel();
-    };
-}
-
-function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint, restApi) {
-
-    $scope.selectedElement = elementData.data("JSON");
-    $scope.selection = [];
-    $scope.matchingSelectionLeft = [];
-    $scope.matchingSelectionRight = [];
-    $scope.sepaName = sepaName;
-    $scope.invalid = false;
-    $scope.helpDialogVisible = false;
-    $scope.currentStaticProperty;
-    $scope.validationErrors = [];
-
-    $scope.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
-        {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
-        {"id": "http://www.w3.org/2001/XMLSchema#integer"},
-        {"id": "http://www.w3.org/2001/XMLSchema#long"},
-        {"id": "http://www.w3.org/2001/XMLSchema#double"}];
-
-    $scope.toggleHelpDialog = function () {
-        $scope.helpDialogVisible = !$scope.helpDialogVisible;
-    }
-
-    $scope.setCurrentStaticProperty = function (staticProperty) {
-        $scope.currentStaticProperty = staticProperty;
-    }
-
-    $scope.getStaticPropertyInfo = function () {
-        var info = "";
-        if (currentStaticProperty.type == 'MAPPING_PROPERTY')
-            info += "This field is a mapping property. It requires you to select one or more specific data elements from a stream.<b>"
-        info += "This field requires the following specifc input: <b>";
-        return info;
-    }
-
-    $scope.hide = function () {
-        $mdDialog.hide();
-    };
-
-    $scope.cancel = function () {
-        $mdDialog.cancel();
-    };
-
-    $scope.setSelectValue = function (c, q) {
-        console.log(q);
-        angular.forEach(q, function (item) {
-            item.selected = false;
-        });
-
-        c.selected = true;
-    };
-
-    /**
-     * saves the parameters in the current element's data with key "options"
-     */
-    $scope.saveProperties = function () {
-
-        angular.forEach($scope.selectedElement.staticProperties, function (item) {
-                if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
-                    console.log(item);
-                    angular.forEach(item.properties.options, function (option) {
-                            if (item.properties.currentSelection) {
-                                if (option.elementId == item.properties.currentSelection.elementId) {
-                                    option.selected = true;
-                                }
-                            }
-                        }
-                    );
-                }
-            }
-        )
-        ;
-
-        if ($scope.validate()) {
-            $rootScope.state.currentElement.data("options", true);
-            $rootScope.state.currentElement.data("JSON").staticProperties = $scope.selectedElement.staticProperties;
-            $rootScope.state.currentElement.removeClass("disabled");
-            $rootScope.$broadcast("SepaElementConfigured", elementData);
-            $scope.hide();
-            if (sourceEndpoint) sourceEndpoint.setType("token");
-        }
-        else $scope.invalid = true;
-    }
-
-    $scope.validate = function () {
-        $scope.validationErrors = [];
-        var valid = true;
-
-        angular.forEach($scope.selectedElement.staticProperties, function (staticProperty) {
-            if (staticProperty.properties.staticPropertyType === 'OneOfStaticProperty' ||
-                staticProperty.properties.staticPropertyType === 'AnyStaticProperty') {
-                var anyOccurrence = false;
-                angular.forEach(staticProperty.properties.options, function (option) {
-                    if (option.selected) anyOccurrence = true;
-                });
-                if (!anyOccurrence) valid = false;
-            } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
-                if (!staticProperty.properties.value) {
-                    valid = false;
-                }
-                if (staticProperty.properties.requiredDatatype) {
-                    if (!$scope.typeCheck(staticProperty.properties.value, staticProperty.properties.requiredDatatype)) {
-                        valid = false;
-                        $scope.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
-                    }
-                }
-            } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
-                if (!staticProperty.properties.mapsTo) {
-                    valid = false;
-                }
-
-            } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyNary') {
-                if (!staticProperty.properties.mapsTo ||
-                    !staticProperty.properties.mapsTo.length > 0) {
-                    valid = false;
-                }
-            }
-        });
-
-        angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
-            if (strategy.type == 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy') {
-                if (!strategy.properties.eventProperties && !strategy.properties.eventProperties.length > 0) {
-                    valid = false;
-                }
-            }
-            // TODO add replace output strategy
-            // TODO add support for replace output strategy
-        });
-
-        return valid;
-    }
-
-    $scope.typeCheck = function (property, datatype) {
-        if (datatype == $scope.primitiveClasses[0].id) return true;
-        if (datatype == $scope.primitiveClasses[1].id) return (property == 'true' || property == 'false');
-        if (datatype == $scope.primitiveClasses[2].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
-        if (datatype == $scope.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
-        if (datatype == $scope.primitiveClasses[4].id) return !isNaN(property);
-        return false;
-    }
-
-}
 
 

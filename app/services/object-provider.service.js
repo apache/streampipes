@@ -31,7 +31,17 @@ export default function objectProvider($http, restApi, imageChecker) {
             this.description = "";
             this.streams = [];
             this.sepas = [];
-            this.action = {};
+            this.actions = [];
+
+            this.hasElement = function(domId) {
+                var exists = false;
+                var allElements = this.streams.concat(this.sepas).concat(this.actions);
+                angular.forEach(allElements, function(el) {
+                    if (el.DOM == domId) exists = true;
+                });
+                return exists;
+            };
+
             this.addElement = function (element) {
 
                 var $element = $(element);
@@ -45,7 +55,9 @@ export default function objectProvider($http, restApi, imageChecker) {
 
                 if ($element.hasClass('action')) {
 
-                    this.action = new oP.Action(element);
+                    var action = new oP.Action(element);
+                    action.staticProperties = $element.data("JSON").staticProperties;
+                    action.connectedTo = [];
 
                     for (var i = 0; i < connections.length; i++) {
                         var conObjId = "#" + connections[i].sourceId;
@@ -53,12 +65,13 @@ export default function objectProvider($http, restApi, imageChecker) {
 
                         if ($conObj.hasClass('connectable-block')) {
                             var block = $conObj.data("block");
-                            this.action.connectedTo.push(block.sepas[block.outputIndex].DOM)
+                            action.connectedTo.push(block.sepas[block.outputIndex].DOM)
                             //this.addBlock($conObj.data("block"), this.action);
                         } else {
-                            this.action.connectedTo.push(connections[i].sourceId);
+                            action.connectedTo.push(connections[i].sourceId);
                         }
                     }
+                    this.actions.push(action);
                 } else if ($element.hasClass('sepa')) {
                     var el = new oP.Sepa(element);
 

@@ -12,8 +12,8 @@ import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
 import EditorCtrl from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
-import objectProvider from './object-provider.service';
 import capitalize from './capitalize.filter';
+import objectProvider from '../services/object-provider.service';
 
 import any from './directives/any/any.directive';
 import customOutput from './directives/customoutput/customoutput.directive';
@@ -28,18 +28,18 @@ import multipleValueInput from './directives/multivalue/multiple-value-input.dir
 
 
 export default angular.module('sp.editor', [spServices])
-	.controller('EditorCtrl', EditorCtrl)
-  .directive('myDataBind', myDataBind)
-  .directive('imageBind', imageBind)
-  .directive('objectProvider', objectProvider)
-  .filter('capitalize', objectProvider)
-  .directive('any', any)
-  .directive('customOutput', customOutput)
-  .directive('domainConceptInput', domainConceptInput)
-  .directive('freetext', freetext)
-  .directive('mappingPropertyNary', mappingPropertyNary)
-  .directive('mappingPropertyUnary', mappingPropertyUnary)
-  .directive('matchingProperty', matchingProperty)
-  .directive('oneof', oneof)
-  .directive('replaceOutput', replaceOutput)
-	.name;
+    .controller('EditorCtrl', EditorCtrl)
+    .directive('myDataBind', myDataBind)
+    .directive('imageBind', imageBind)
+    .directive('objectProvider', objectProvider)
+    .filter('capitalize', objectProvider)
+    .directive('any', any)
+    .directive('customOutput', customOutput)
+    .directive('domainConceptInput', domainConceptInput)
+    .directive('freetext', freetext)
+    .directive('mappingPropertyNary', mappingPropertyNary)
+    .directive('mappingPropertyUnary', mappingPropertyUnary)
+    .directive('matchingProperty', matchingProperty)
+    .directive('oneof', oneof)
+    .directive('replaceOutput', replaceOutput)
+    .name;
