@@ -19,7 +19,7 @@ export default function DashCtrl($scope, $http, $mdDialog, Widgets, AddWidget) {
 		});
 
 
-	$scope.addWidget = function() {
+	$scope.addSpWidget = function() {
 		$mdDialog.show({
 			controller: AddWidget,
 			templateUrl: 'app/dashboard/add-widget-template.html',
@@ -47,16 +47,16 @@ export default function DashCtrl($scope, $http, $mdDialog, Widgets, AddWidget) {
 		}, 100);
 	}
 
-	var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
-		return {
-			name: widgetDef.name
-		};
-	});
+	//var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
+		//return {
+			//name: widgetDef.name
+		//};
+	//});
 
 	$scope.dashboardOptions = {
 		widgetButtons: true,
-		widgetDefinitions: widgetDefinitions,
-		defaultWidgets: defaultWidgets
+		widgetDefinitions: widgetDefinitions
+		//defaultWidgets: defaultWidgets
 	};
 
 };
