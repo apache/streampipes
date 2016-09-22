@@ -1,9 +1,9 @@
 <md-input-container style="width:100%">
-    <label>Datatype</label>
-    <md-select ng-model="runtimeType" ng-disabled="disabled">
-        <md-option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}"
+    <h5>Datatype</h5>
+    <select ng-model="runtimeType" ng-disabled="disabled">
+        <option ng-repeat="primitive in primitiveClasses" value="{{primitive.id}}"
                    ng-selected="runtimeType == primitive.id" ng-disabled="disabled">
             {{primitive.title}} - {{primitive.description}}
-        </md-option>
-    </md-select>
+        </option>
+    </select>
 </md-input-container>

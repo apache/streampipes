@@ -19,18 +19,18 @@
             </div>
             <md-divider style="border-top-color:rgba(63, 81, 181, 0.5)"></md-divider>
             <h5 class="md-subhead">Runtime Settings</h5>
-            <div flex="100" layout-fill layout="row" class="md-padding">
-                <div flex="33">
+            <div flex="100" layout-fill layout="column" class="md-padding">
+                <div flex="100">
                     <md-input-container style="width:100%">
-                        <label>Runtime Name</label>
+                        <h5>Runtime Name</h5>
                         <input ng-model="property.properties.runtimeName" required ng-disabled="disabled">
                     </md-input-container>
                 </div>
-                <div flex="33">
+                <div flex="100">
                     <datatype-property runtime-type="property.properties.runtimeType" dp-mode="capability"
                                        disabled="disabled"></datatype-property>
                 </div>
-                <div flex="33">
+                <div flex="100">
                     <domain-property property="property.properties.domainProperties[0]" disabled="disabled"></domain-property>
                 </div>
             </div>

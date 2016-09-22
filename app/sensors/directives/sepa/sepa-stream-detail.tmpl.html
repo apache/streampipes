@@ -1,4 +1,4 @@
-<div layout="row" flex="100" layout-align="center center" class="wizard-row-stream" style="margin-bottom:5%;">
+<div layout="row" flex="100" layout-align="center center" style="margin-bottom:5%;">
     <div layout="column" flex="33" layout-align="center center">
         <md-button ng-class="getStreamActiveTabCss('basics')" aria-label="Basics" ng-click="selectStreamTab('basics')">
             1
@@ -31,13 +31,14 @@
     </div>
 </div>
 <div flex="100" layout="column" layout-align="center center">
+
     <collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false"
                  ng-if="isStreamTabSelected('basics')" style="width:100%">
         <sepa-basics element="stream" disabled="disabled"></sepa-basics>
     </collapsible>
     <collapsible title-label="'Event Schema'" disabled="disabled" removable="false" collapsible="false"
                  ng-if="isStreamTabSelected('schema')" style="width:100%">
-        <event-properties properties="stream.eventSchema.eventProperties" disabled="disabled"></event-properties>
+        <event-properties properties="stream.eventSchema.eventProperties" disabled="disabled">
     </collapsible>
     <collapsible title-label="'Stream Qualities'" disabled="disabled" removable="false" collapsible="false"
                  ng-if="isStreamTabSelected('quality')" style="width:100%">

@@ -22,6 +22,10 @@ import spNumberWidget from './templates/number/number.directive';
 import spNumberWidgetConfig from './templates/number/number-config.directive';
 import NumberDataModel from './templates/number/number-data-model.service';
 
+import spVerticalbarWidget from './templates/verticalbar/verticalbar.directive';
+import spVerticalbarWidgetConfig from './templates/verticalbar/verticalbar-config.directive';
+import VerticalbarDataModel from './templates/verticalbar/verticalbar-data-model.service';
+
 import spTableWidget from './templates/table/table.directive';
 import spTableWidgetConfig from './templates/table/table-config.directive';
 import TableDataModel from './templates/table/table-data-model.service';
@@ -29,6 +33,10 @@ import TableDataModel from './templates/table/table-data-model.service';
 import spLineWidget from './templates/line/line.directive';
 import spLineWidgetConfig from './templates/line/line-config.directive';
 import LineDataModel from './templates/line/line-data-model.service';
+
+import spGaugeWidget from './templates/gauge/gauge.directive';
+import spGaugeWidgetConfig from './templates/gauge/gauge-config.directive';
+import GaugeDataModel from './templates/gauge/gauge-data-model.service';
 
 
 
@@ -45,12 +53,22 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.directive('spNumberWidget', spNumberWidget)
 	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
 	.factory('NumberDataModel', NumberDataModel)
+
+	.directive('spVerticalbarWidget', spVerticalbarWidget)
+	.directive('spVerticalbarWidgetConfig', spVerticalbarWidgetConfig)
+	.factory('VerticalbarDataModel', VerticalbarDataModel)
+
 	.directive('spTableWidget', spTableWidget)
 	.directive('spTableWidgetConfig', spTableWidgetConfig)
 	.factory('TableDataModel', TableDataModel)
+	
 	.directive('spLineWidget', spLineWidget)
 	.directive('spLineWidgetConfig', spLineWidgetConfig)
 	.factory('LineDataModel', LineDataModel)
+
+	.directive('spGaugeWidget', spGaugeWidget)
+	.directive('spGaugeWidgetConfig', spGaugeWidgetConfig)
+	.factory('GaugeDataModel', GaugeDataModel)
 
 
 	.name;
