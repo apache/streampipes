@@ -2,9 +2,9 @@
 	<div class="btn-toolbar" ng-if="!options.hideToolbar">
 		<div class="btn-group" ng-if="!options.widgetButtons">
 			<span class="dropdown" on-toggle="toggled(open)">
-				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-					Button dropdown <span class="caret"></span>
-				</button>
+				<!--<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">-->
+					<!--Button dropdown <span class="caret"></span>-->
+				<!--</button>-->
 				<ul class="dropdown-menu" role="menu">
 					<li ng-repeat="widget in widgetDefs">
 						<a href="#" ng-click="addWidgetInternal($event, widget);" class="dropdown-toggle"><span class="label label-primary">{{widget.name}}</span></a>
@@ -25,7 +25,7 @@
 
 		<!--<md-button ng-click="clear();" type="button" class="md-raised md-accent">Clear</md-button>-->
 
-     <md-button ng-click="addSpWidget();" type="button" class="md-raised md-accent">Add</md-button>
+     <md-button ng-click="addSpWidget(layout.id);" type="button" class="md-raised md-accent">Add</md-button>
 	</div>
 
 	<div ui-sortable="sortableOptions" ng-model="widgets" class="dashboard-widget-area">
@@ -47,7 +47,7 @@
 						<!--                  			<md-button class="md-icon-button" ng-click="openWidgetSettings(widget);" ng-if="!options.hideWidgetSettings"><i class="material-icons">settings</i></md-button> -->
 						<md-button class="md-icon-button" ng-click="openVizInNewWindow(widget);"><i class="material-icons">open_in_new</i></md-button> 
 
-						<md-button class="md-icon-button" ng-click="removeWidget(widget);" ng-if="!options.hideWidgetClose"><i class="material-icons">clear</i></md-button>
+						<md-button class="md-icon-button" ng-click="removeSpWidget(widget);" ng-if="!options.hideWidgetClose"><i class="material-icons">clear</i></md-button>
 					</div>
 				</div>
 				<div layout="row" layout-align="center center"><div class="panel-body widget-content" layout="row" layout-align="center center" ng-style="widget.contentStyle"></div></div>

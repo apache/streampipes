@@ -1,8 +1,8 @@
-import Widgets from '../../widgets.service.js'
+import WidgetInstances from '../../widget-instances.service.js'
 'use strict';
-numberWidget.$inject = ['Widgets'];
+numberWidget.$inject = ['WidgetInstances'];
 
-export default function numberWidget(Widgets) {
+export default function numberWidget(WidgetInstances) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -12,9 +12,10 @@ export default function numberWidget(Widgets) {
 			widgetId: '@'
 		},
 		controller: function ($scope) {
-			var widgetConfig = Widgets.get($scope.widgetId);
-			$scope.selectedNumberProperty = widgetConfig.vis.schema.selectedNumberProperty.properties.runtimeName;
-		},
+			WidgetInstances.get($scope.widgetId).then(function(data) {
+				$scope.selectedNumberProperty = data.visualisation.schema.selectedNumberProperty.properties.runtimeName;
+			});
+			},
 		link: function postLink(scope) {
 			scope.$watch('data', function (data) {
 				if (data) {

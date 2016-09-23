@@ -11,10 +11,10 @@ import 'npm/epoch-charting';
 
 
 import DashboardCtrl from './dashboard.controller';
-import AddWidgetService from './add-widget.service';
+import AddWidgetController from './add-widget.controller';
 import SocketConnectionDataModel from './socket-connection-data-model.service';
-import Widgets from './widgets.service';
-import WidgetDefinitions from './templates/widget-definitions.service';
+import WidgetInstances from './widget-instances.service';
+import WidgetTemplates from './templates/widget-templates.service';
 
 import soFilter from './templates/so.filter';
 
@@ -42,10 +42,10 @@ import GaugeDataModel from './templates/gauge/gauge-data-model.service';
 
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable'])
 	.controller('DashboardCtrl', DashboardCtrl)
-	.factory('AddWidget', AddWidgetService)
+	.factory('AddWidgetController', AddWidgetController)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
-	.factory('Widgets', Widgets)
-	.factory('WidgetDefinitions', WidgetDefinitions)
+	.factory('WidgetInstances', WidgetInstances)
+	.factory('WidgetTemplates', WidgetTemplates)
 
 	.filter('soNumber', soFilter.soNumber)
 	.filter('soDateTime', soFilter.soDateTime)

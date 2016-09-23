@@ -17,7 +17,7 @@
 					<md-select-header>
 						<span> Select Datastream</span>
 					</md-select-header>
-					<md-select ng-model="selectedVis">
+					<md-select ng-model="selectedVisualisation">
 						<md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.name }}</md-option>
 					</md-select>
 				</md-input-container>
@@ -30,7 +30,7 @@
 						<span> Select Visualisation Type</span>
 					</md-select-header>
 					<md-select ng-model="selectedType">
-						<md-option ng-value="opt" ng-repeat="opt in possibleVisTypes">{{ opt }}</md-option>
+						<md-option ng-value="opt" ng-repeat="opt in possibleVisualisationTypes">{{ opt }}</md-option>
 					</md-select>
 				</md-input-container>
 			</md-dialog-content>

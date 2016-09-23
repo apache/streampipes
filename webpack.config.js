@@ -51,6 +51,11 @@ let config = {
 				target: 'http://localhost:5984',
 				secure: false
 			},
+			'/dashboard': {
+				target: 'http://localhost:5984',
+				secure: false
+			},
+
 			'/pipeline': {
 				target: 'http://localhost:5984',
 				secure: false

@@ -1,8 +1,8 @@
-import Widgets from '../../widgets.service.js'
+import WidgetInstances from '../../widget-instances.service.js'
 'use strict';
-verticalbarWidget.$inject = ['Widgets'];
+verticalbarWidget.$inject = ['WidgetInstances'];
 
-export default function verticalbarWidget(Widgets) {
+export default function verticalbarWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
@@ -12,7 +12,7 @@ export default function verticalbarWidget(Widgets) {
             widgetId: '@'
         },
         controller: function ($scope) {
-            var widgetConfig = Widgets.get($scope.widgetId);
+            var widgetConfig = WidgetInstances.get($scope.widgetId);
             $scope.selectedNumberProperty = widgetConfig.vis.schema.selectedNumberProperty.properties.runtimeName;
 
             // TODO replace with min/max values

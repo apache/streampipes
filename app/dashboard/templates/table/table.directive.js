@@ -1,7 +1,9 @@
-'use strict';
-tableWidget.$inject = ['Widgets', '$filter'];
+import WidgetInstances from '../../widget-instances.service.js'
 
-export default function tableWidget(Widgets, $filter) {
+'use strict';
+tableWidget.$inject = ['WidgetInstances', '$filter'];
+
+export default function tableWidget(WidgetInstances, $filter) {
 		return {
 			restrict: 'A',
 			replace: true,
@@ -29,7 +31,7 @@ export default function tableWidget(Widgets, $filter) {
 				}
 
 				//Add the colums that where selected by the user
-				var widgetConfig = Widgets.get($scope.widgetId);
+				var widgetConfig = WidgetInstances.get($scope.widgetId);
 				$scope.columns = [];
 				angular.forEach(widgetConfig.vis.schema.eventProperties, function(prop) {
 

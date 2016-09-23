@@ -1,6 +1,6 @@
-WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel'];
+WidgetTemplates.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel'];
 
-export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineDataModel, VerticalbarDataModel, GaugeDataModel) {
+export default function WidgetTemplates(TableDataModel, NumberDataModel, LineDataModel, VerticalbarDataModel, GaugeDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {

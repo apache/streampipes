@@ -1,8 +1,8 @@
-import Widgets from '../../widgets.service.js'
+import WidgetInstances from '../../widget-instances.service.js'
 'use strict';
-lineWidget.$inject = ['Widgets'];
+lineWidget.$inject = ['WidgetInstances'];
 
-export default function lineWidget(Widgets) {
+export default function lineWidget(WidgetInstances) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -12,7 +12,10 @@ export default function lineWidget(Widgets) {
 			widgetId: '@'
 		},
 		controller: function ($scope) {
-			$scope.widgetConfig = Widgets.get($scope.widgetId).vis.schema.config;
+			//$scope.widgetConfig = WidgetInstances.get($scope.widgetId).vis.schema.config;
+			WidgetInstances.get($scope.widgetId).then(function(data) {
+			$scope.widgetConfig = data.vis.schema.config;
+			});
 			$scope.myChart = null;
 		},
 		link: function postLink(scope, element) {
