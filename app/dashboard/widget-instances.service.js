@@ -6,23 +6,26 @@ function getId() {
 }
 
 export default function WidgetInstances($http, WidgetTemplates, $q) {
-	var storedData = {};
+	//var storedData = {};
 
 
 
 	var getWidgets = function() {
-		//return $http.get('/dashboard/_all_docs?include_docs=true')
-		//.success(function(data) {
-		//// TODO when collection is empty
-		//storedData = data.rows[0].doc;
-		//});
+		return $http.get('/dashboard/_all_docs?include_docs=true').then(function(data) {
+				var result = [];
+				angular.forEach(data.data.rows, function(d) {
+					result.push(d.doc);
+				});
+
+				return result;
+			});
 
 		//return {};
 		//return storedData;
 
-		return $q(function(resolve, reject){
-			resolve(storedData);	
-		});
+		//return $q(function(resolve, reject){
+		//resolve(storedData);	
+		//});
 	}
 
 	//var persistWidgets = function() {
@@ -40,25 +43,29 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 	var createNewWidget = function(widget) {
 		var id = getId();
 		widget.id = id;
-		//TODO
-		storedData[id] = widget;
-		//persistWidgets();
+		$http.post('/dashboard', widget).then(function() {
+			//console.log('Yeah')	;
+		}, function(err) {
+			console.log(err);	
+		});
 	}
 
-	//TODO
-	var removeWidget = function(widgetId) {
-		delete storedData[widgetId];
+	var removeWidget = function(widget) {
+		//$http.post('/dashboard', widget)
+		return $http.delete('/dashboard/'+ widget._id + '?rev=' + widget._rev);
 	}
 
 	var getWidgetById = function(id) {
 		return getWidgets().then(function(data) {
-			return data[id];	
+			var result = _.filter(data, function(d) {
+				return d.id == id;	
+			});
+
+			return result[0];
 		});	
 	}
 
-	var getWidgetDashboardDefinition = function(id) {
-		var widget = storedData[id];
-
+	var getWidgetDashboardDefinition = function(widget) {
 		var name = widget.visualisation.name + '[' + widget.visualisationType + ']';
 		var directive = WidgetTemplates.getDirectiveName(widget.visualisationType);
 		var dataModel = WidgetTemplates.getDataModel(widget.visualisationType);
@@ -85,7 +92,7 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 
 		return getWidgets().then(function(data) {
 			angular.forEach(data, function(w, key) {
-				result.push(getWidgetDashboardDefinition(key));	
+				result.push(getWidgetDashboardDefinition(w));	
 			});
 
 			return result;

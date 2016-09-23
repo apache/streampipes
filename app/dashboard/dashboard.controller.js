@@ -34,8 +34,11 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 	};
 
 	$scope.removeSpWidget = function(widget) {
-		WidgetInstances.remove(widget.attrs['widget-id']);
-		rerenderDashboard();
+		WidgetInstances.get(widget.attrs['widget-id']).then(function(w) {
+			WidgetInstances.remove(w).then(function(res) {
+				rerenderDashboard();
+			});
+		});
 	};
 
 

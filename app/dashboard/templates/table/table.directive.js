@@ -30,9 +30,11 @@ export default function tableWidget(WidgetInstances, $filter) {
 				return false;
 			}
 
+			$scope.columns = []
+			$scope.ready = false;
+
 			//Add the colums that where selected by the user
 			WidgetInstances.get($scope.widgetId).then(function(widgetConfig) {
-				$scope.columns = [];
 				angular.forEach(widgetConfig.visualisation.schema.eventProperties, function(prop) {
 
 					if (prop.isSelected) {
@@ -44,13 +46,11 @@ export default function tableWidget(WidgetInstances, $filter) {
 						}
 
 						$scope.columns.push(column);
+						$scope.ready = true;
 					}
 				});
 
 			});
-
-
-
 
 		},
 		link: function postLink(scope) {
