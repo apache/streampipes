@@ -21,6 +21,7 @@ export default {
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
 			connector: "Straight",
 			isSource: true,
+			maxConnections: -1,
 			anchor: "Right",
 			type : "empty",
 			connectorOverlays: [
