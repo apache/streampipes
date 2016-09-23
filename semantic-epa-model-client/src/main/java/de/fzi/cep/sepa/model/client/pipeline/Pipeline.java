@@ -13,7 +13,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 public class Pipeline extends ElementComposition {
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	private SecInvocation action;
+	private List<SecInvocation> actions;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	private boolean running;
@@ -28,12 +28,12 @@ public class Pipeline extends ElementComposition {
 	private @SerializedName("_id") String pipelineId;
     private @SerializedName("_rev") String rev;
 	
-	public SecInvocation getAction() {
-		return action;
+	public List<SecInvocation> getActions() {
+		return actions;
 	}
 
-	public void setAction(SecInvocation action) {
-		this.action = action;
+	public void setActions(List<SecInvocation> actions) {
+		this.actions = actions;
 	}
 
 	public boolean isRunning() {
@@ -102,7 +102,7 @@ public class Pipeline extends ElementComposition {
 		pipeline.setDescription(description);
 		pipeline.setSepas(sepas);
 		pipeline.setStreams(streams);
-		pipeline.setAction(action);
+		pipeline.setActions(actions);
 		pipeline.setCreatedByUser(createdByUser);
 		pipeline.setPipelineCategories(pipelineCategories);
 		

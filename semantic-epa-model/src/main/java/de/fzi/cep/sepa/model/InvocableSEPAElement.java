@@ -36,6 +36,8 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	protected String correspondingPipeline;
 
 	protected List<EventStream> streamRequirements;
+
+	protected boolean configured;
 	
 	public InvocableSEPAElement() {
 		super();
@@ -47,6 +49,7 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 		this.belongsTo = other.getBelongsTo();
 		this.correspondingPipeline = other.getCorrespondingPipeline();
 		this.inputStreams = new Cloner().streams(other.getInputStreams());
+		this.configured = other.isConfigured();
         if (other.getStreamRequirements() != null) this.streamRequirements = new Cloner().streams(other.getStreamRequirements());
 		if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
 		this.DOM = other.getDOM();
@@ -55,6 +58,7 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	
 	public InvocableSEPAElement(String uri, String name, String description, String iconUrl) {
 		super(uri, name, description, iconUrl);
+		this.configured = false;
 	}
 
 	public boolean addStaticProperty(StaticProperty staticProperty)
@@ -108,5 +112,13 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
 	public void setStreamRequirements(List<EventStream> streamRequirements) {
 		this.streamRequirements = streamRequirements;
+	}
+
+	public boolean isConfigured() {
+		return configured;
+	}
+
+	public void setConfigured(boolean configured) {
+		this.configured = configured;
 	}
 }

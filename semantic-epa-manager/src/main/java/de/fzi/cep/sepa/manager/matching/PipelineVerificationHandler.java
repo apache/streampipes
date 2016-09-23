@@ -52,7 +52,7 @@ public class PipelineVerificationHandler {
         List<NamedSEPAElement> sepaElements = new ArrayList<NamedSEPAElement>();
         sepaElements.addAll(pipeline.getSepas());
         sepaElements.addAll(pipeline.getStreams());
-        sepaElements.add(pipeline.getAction());
+        sepaElements.addAll(pipeline.getActions());
         sepaElements.remove(rdfRootElement);
 
         // we need a tree of invocation graphs if there is more than one SEPA

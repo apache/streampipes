@@ -31,14 +31,12 @@ public class PipelineStorageService {
 
         SecInvocation sec = getSECInvocationGraph(graphs);
 
-        List<SepaInvocation> sepas = graphs
-                .stream()
-                .filter(graph -> graph instanceof SepaInvocation)
-                .map(graph -> (SepaInvocation) graph)
-                .collect(Collectors.toList());
+        List<SecInvocation> secs = filter(graphs, SecInvocation.class);
+
+        List<SepaInvocation> sepas = filter(graphs, SepaInvocation.class);
 
         pipeline.setSepas(sepas);
-        pipeline.setAction(sec);
+        pipeline.setActions(secs);
 
         StorageManager.INSTANCE.getPipelineStorageAPI().store(pipeline);
     }
@@ -48,5 +46,13 @@ public class PipelineStorageService {
         for (InvocableSEPAElement graph : graphs)
             if (graph instanceof SecInvocation) return (SecInvocation) graph;
         throw new IllegalArgumentException("No action element available");
+    }
+
+    private <T> List<T> filter(List<InvocableSEPAElement> graphs, Class<T> clazz) {
+        return graphs
+                .stream()
+                .filter(graph -> clazz.isInstance(graph))
+                .map(graph -> clazz.cast(graph))
+                .collect(Collectors.toList());
     }
 }

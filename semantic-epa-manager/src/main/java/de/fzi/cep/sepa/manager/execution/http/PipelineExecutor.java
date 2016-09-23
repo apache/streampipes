@@ -39,20 +39,20 @@ public class PipelineExecutor {
 	{
 
 		List<SepaInvocation> sepas = pipeline.getSepas();
-		SecInvocation sec = pipeline.getAction();
+		List<SecInvocation> secs = pipeline.getActions();
 
 		List<InvocableSEPAElement> graphs = new ArrayList<>();
 		graphs.addAll(sepas);
-		graphs.add(sec);
+		graphs.addAll(secs);
 
 		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).invokeGraphs();
 		
 		if (status.isSuccess()) 
 		{
-			String uri = sec.getUri();
-			if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "http://proasense.nissatech.com/actions");
-			RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
-			if (visualize) StorageManager.INSTANCE.getVisualizationStorageApi().storeVisualization(viz);
+			//String uri = sec.getUri();
+			//if (ClientConfiguration.INSTANCE.isNissatechRunning()) uri = uri.replaceFirst("[a-zA-Z]{4}://[a-zA-Z0-9\\-\\.]+:\\d+", "http://proasense.nissatech.com/actions");
+			//RunningVisualization viz = new RunningVisualization(pipeline.getPipelineId(), pipeline.getName(), uri, sec.getDescription(), sec.getName());
+			//if (visualize) StorageManager.INSTANCE.getVisualizationStorageApi().storeVisualization(viz);
 			storeInvocationGraphs(pipeline.getPipelineId(), graphs);
 			
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
