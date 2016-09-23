@@ -1,5 +1,7 @@
 import angular from 'npm/angular';
 
+import _ from 'npm/lodash';
+
 import 'npm/lodash';
 import stomp from 'legacy/stomp';
 import 'npm/angular-sanitize';

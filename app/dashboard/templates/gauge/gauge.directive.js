@@ -12,7 +12,9 @@ export default function gaugeWidget(WidgetInstances) {
             widgetId: '@'
         },
         controller: function ($scope) {
-            $scope.widgetConfig = WidgetInstances.get($scope.widgetId).vis.schema.config;
+					WidgetInstances.get($scope.widgetId).then(function(data) {
+						$scope.widgetConfig = data.visualisation.schema.config;
+					})
             $scope.lineData = [];
         },
         link: function postLink(scope, element) {

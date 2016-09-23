@@ -38,7 +38,6 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 		rerenderDashboard();
 	};
 
-	//var widgetDefinitions = WidgetInstances.getAllWidgetDefinitions();
 
 	// TODO Helper to add new Widgets to the dashboard
 	// Find a better solution
@@ -46,10 +45,6 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 		$scope.rerender = false;
 		setTimeout(function() {
 			$scope.$apply(function () {
-				//$scope.layoutOptions.widgetDefinitions = WidgetInstances.getAllWidgetDefinitions();
-				//$scope.layoutOptions.defaultLayouts = [{ title: 'Layout 1', active: true , defaultWidgets: WidgetInstances.getAllWidgetDefinitions()}];
-				//$scope.widgetDefinitions = WidgetInstances.getAllWidgetDefinitions();
-				//$scope.layoutOptions = getOptions();
 				getOptions().then(function(options) {
 					$scope.layoutOptions = options;
 					$scope.rerender = true;
@@ -58,32 +53,24 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 		}, 100);
 	}
 
-	//var defaultWidgets = _.map(widgetDefinitions, function (widgetDef) {
-	//return {
-	//name: widgetDef.name
-	//};
-	//});
-
-	//$scope.dashboardOptions = {
-	//widgetButtons: true,
-	//widgetDefinitions: widgetDefinitions
-	////defaultWidgets: defaultWidgets
-	//};
-
+	var getLayoutWidgets = function(layoutId, widgets) {
+		return _.filter(widgets, function(w) {
+			return w.layoutId == layoutId;h
+		});
+	}
+	
 
 	var getOptions = function() {
-		return WidgetInstances.getAllWidgetDefinitions().then(function(definitions) {
+		return WidgetInstances.getAllWidgetDefinitions().then(function(widgets) {
 			return 	{
-				widgetDefinitions: definitions,
+				widgetDefinitions: widgets,
 				widgetButtons: false,
 				defaultLayouts: [
-					{ title: 'Layout 1', id: 'layout_1', active: true , defaultWidgets: definitions},
-					{ title: 'Layout 2', id: 'layout_2', active: false, defaultWidgets: definitions},
+					{ title: 'Layout 1', id: 'layout_1', active: true , defaultWidgets: getLayoutWidgets('layout_1', widgets)},
+					{ title: 'Layout 2', id: 'layout_2', active: false, defaultWidgets: getLayoutWidgets('layout_2', widgets)},
 				]
 			}
-
 		});
-
 	};
 
 

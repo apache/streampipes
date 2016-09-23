@@ -47,7 +47,7 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 
 	//TODO
 	var removeWidget = function(widgetId) {
-		delete getWidgets()[widgetId];
+		delete storedData[widgetId];
 	}
 
 	var getWidgetById = function(id) {
@@ -70,27 +70,14 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 			dataAttrName: 'data',
 			dataModelType: dataModel,
 			dataModelArgs: widget.visualisationId,
-			//attrs: {
-			//'widget': widgetString 
-			//},
 			attrs: {
 				'widget-id': widget.id
 			},
 			style: {
 				width: '30%'
-			}
+			},
+			layoutId: widget.layoutId
 		}
-	}
-
-	var getAllLayoutWidgetDefinitions = function(layoutId) {
-		var result = [];
-		//angular.forEach(storedData, function(w, key) {
-		//if (w.layoutId == layoutId) {
-		//result.push(getWidgetDashboardDefinition(key));	
-		//}
-		//});
-
-		return result;
 	}
 
 	var getAllWidgetDefinitions = function() {
@@ -110,7 +97,6 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 		add: createNewWidget,
 		remove: removeWidget,
 		get: getWidgetById,	
-		getAllLayoutWidgetDefinitions: getAllLayoutWidgetDefinitions,
 		getAllWidgetDefinitions: getAllWidgetDefinitions
 	};
 };

@@ -1,8 +1,8 @@
 import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
 
-VerticalbarDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+VerticalbarDataModel.$inject = ['SocketConnectionDataModel'];
 
-export default function VerticalbarDataModel(SocketConnectionDataModel, $http) {
+export default function VerticalbarDataModel(SocketConnectionDataModel) {
 
     VerticalbarDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
     function VerticalbarDataModel(id) {

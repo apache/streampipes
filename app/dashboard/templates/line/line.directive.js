@@ -12,9 +12,8 @@ export default function lineWidget(WidgetInstances) {
 			widgetId: '@'
 		},
 		controller: function ($scope) {
-			//$scope.widgetConfig = WidgetInstances.get($scope.widgetId).vis.schema.config;
 			WidgetInstances.get($scope.widgetId).then(function(data) {
-			$scope.widgetConfig = data.vis.schema.config;
+				$scope.widgetConfig = data.visualisation.schema.config;
 			});
 			$scope.myChart = null;
 		},
