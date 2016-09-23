@@ -111,6 +111,7 @@ public class InvocationGraphBuilder {
 					thisGraph.setCorrespondingPipeline(pipelineId);
 					thisGraph = (SecInvocation) buildSEPAElement(
 							thisGraph, node, outputTopic);
+					thisGraph.setStreamRequirements(Arrays.asList());
 					graphs.add(thisGraph);
 				}
 			}
