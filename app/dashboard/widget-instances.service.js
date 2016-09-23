@@ -19,26 +19,7 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 
 				return result;
 			});
-
-		//return {};
-		//return storedData;
-
-		//return $q(function(resolve, reject){
-		//resolve(storedData);	
-		//});
 	}
-
-	//var persistWidgets = function() {
-	//var toSave = {
-	//_id: "1",	
-	//data: getWidgets()};
-	//$http.post('/dashboard', toSave).then(function() {
-	//console.log('Yeah')	;
-	//}, function(err) {
-	//console.log(err);	
-	//});
-
-	//}
 
 	var createNewWidget = function(widget) {
 		var id = getId();
@@ -51,7 +32,6 @@ export default function WidgetInstances($http, WidgetTemplates, $q) {
 	}
 
 	var removeWidget = function(widget) {
-		//$http.post('/dashboard', widget)
 		return $http.delete('/dashboard/'+ widget._id + '?rev=' + widget._rev);
 	}
 
