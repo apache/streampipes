@@ -61,26 +61,42 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 			return w.layoutId == layoutId;h
 		});
 	}
-	
+
+	//TODO 
+	//Add support here to add more Layouts
+	var getLayouts = function(widgets) {
+		//var layoutNames = _.chain(widgets)
+			//.map(function(w) { return w.layoutId})	
+			//.uniq()
+			//.remove(function(w) {return w != 'Layout 1'})
+			//.value();
+
+		var result = [
+					{ title: 'Layout 1', id: 'Layout 1', active: true , defaultWidgets: getLayoutWidgets('Layout 1', widgets)},
+					{ title: 'Layout 2', id: 'Layout 2', active: false, defaultWidgets: getLayoutWidgets('Layout 2', widgets)},
+				];
+
+		return result;
+
+	}
 
 	var getOptions = function() {
 		return WidgetInstances.getAllWidgetDefinitions().then(function(widgets) {
+
+			getLayouts(widgets);
 			return 	{
 				widgetDefinitions: widgets,
 				widgetButtons: false,
-				defaultLayouts: [
-					{ title: 'Layout 1', id: 'layout_1', active: true , defaultWidgets: getLayoutWidgets('layout_1', widgets)},
-					{ title: 'Layout 2', id: 'layout_2', active: false, defaultWidgets: getLayoutWidgets('layout_2', widgets)},
-				]
+				defaultLayouts: getLayouts(widgets)
 			}
 		});
 	};
 
 
 	$scope.layoutOptions = {
-				widgetDefinitions: [],
-				widgetButtons: false,
-			};
+		widgetDefinitions: [],
+		widgetButtons: false,
+	};
 
 	rerenderDashboard();
 
