@@ -81,12 +81,12 @@ public class SepStoppedMonitoringPipelineBuilder {
 		pipeline.setSepas(Arrays.asList(updatedSepa));
 
 		kafkaActionClient.setConnectedTo(Arrays.asList("rate"));
-		pipeline.setAction(kafkaActionClient);
+		pipeline.setActions(Arrays.asList(kafkaActionClient));
 
 		message = new PipelineVerificationHandler(pipeline, false).validateConnection().computeMappingProperties()
 				.getPipelineModificationMessage();
 
-		pipeline.setAction(updateKafkaSec(kafkaActionClient, message));
+		pipeline.setActions(Arrays.asList(updateKafkaSec(kafkaActionClient, message)));
 
 		pipeline.setPipelineId(UUID.randomUUID().toString());
 		pipeline.setName("Monitoring - " + stream.getName());

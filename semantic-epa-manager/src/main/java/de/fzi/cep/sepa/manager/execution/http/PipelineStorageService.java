@@ -1,10 +1,9 @@
 package de.fzi.cep.sepa.manager.execution.http;
 
-import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.manager.data.PipelineGraph;
+import de.fzi.cep.sepa.manager.data.PipelineGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.InvocationGraphBuilder;
-import de.fzi.cep.sepa.manager.matching.TreeBuilder;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -25,9 +24,9 @@ public class PipelineStorageService {
     }
 
     public void addPipeline() {
-        GenericTree<NamedSEPAElement> tree = new TreeBuilder(pipeline).generateTree(false);
-        InvocationGraphBuilder builder = new InvocationGraphBuilder(tree, false, pipeline.getPipelineId());
-        List<InvocableSEPAElement> graphs = builder.buildGraph();
+        PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+        InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, false, null);
+        List<InvocableSEPAElement> graphs = builder.buildGraphs();
 
         SecInvocation sec = getSECInvocationGraph(graphs);
 

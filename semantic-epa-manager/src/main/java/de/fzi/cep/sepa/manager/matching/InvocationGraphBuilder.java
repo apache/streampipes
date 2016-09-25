@@ -1,196 +1,141 @@
 package de.fzi.cep.sepa.manager.matching;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import de.fzi.cep.sepa.commons.GenericTree;
-import de.fzi.cep.sepa.commons.GenericTreeNode;
-import de.fzi.cep.sepa.commons.GenericTreeTraversalOrderEnum;
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.commons.config.BrokerConfig;
-import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.manager.data.PipelineGraph;
+import de.fzi.cep.sepa.manager.data.PipelineGraphHelpers;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
-import de.fzi.cep.sepa.manager.util.TopicGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.TransportProtocol;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class InvocationGraphBuilder {
 
-	private GenericTree<NamedSEPAElement> tree;
-	private List<GenericTreeNode<NamedSEPAElement>> postOrder;
-	private String pipelineId;
-	
-	List<InvocableSEPAElement> graphs;
+    private PipelineGraph pipelineGraph;
+    private String pipelineId;
 
-	public InvocationGraphBuilder(GenericTree<NamedSEPAElement> tree,
-			boolean isInvocationGraph, String pipelineId) {
-		this.graphs = new ArrayList<>();
-		this.tree = tree;
-		this.pipelineId = pipelineId;
-		this.postOrder = this.tree
-				.build(GenericTreeTraversalOrderEnum.POST_ORDER);
-		if (!isInvocationGraph)
-			prepare();
-	}
+    List<InvocableSEPAElement> graphs;
 
-	private void prepare() {
-		for (GenericTreeNode<NamedSEPAElement> node : postOrder) {
-			if (node.getData() instanceof SepaDescription) {
-				node.setData(new SepaInvocation(new SepaInvocation((SepaDescription) node.getData())));
-			}
-			if (node.getData() instanceof SecDescription) {
-				node.setData(new SecInvocation((SecDescription) node.getData()));
-			}
-		}
-	}
+    public InvocationGraphBuilder(PipelineGraph pipelineGraph,
+                                  boolean isInvocationGraph, String pipelineId) {
+        this.graphs = new ArrayList<>();
+        this.pipelineGraph = pipelineGraph;
+        this.pipelineId = pipelineId;
+        if (!isInvocationGraph)
+            System.out.println("not invocation graph");
+        //prepare();
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<InvocableSEPAElement> buildGraph() {
-		Iterator<GenericTreeNode<NamedSEPAElement>> it = postOrder.iterator();
-		while (it.hasNext()) {
-			GenericTreeNode<NamedSEPAElement> node = it.next();
-			NamedSEPAElement element = node.getData();
-			if (element instanceof SepDescription) {
-				
-			} else if (element instanceof InvocableSEPAElement) {
-				String outputTopic = TopicGenerator.generateRandomTopic();
-				if (element instanceof SepaInvocation) {
-					SepaInvocation thisGraph = (SepaInvocation) element;
-					thisGraph.setCorrespondingPipeline(pipelineId);
-					
-					thisGraph = (SepaInvocation) buildSEPAElement(
-							thisGraph, node, outputTopic);
+    public List<InvocableSEPAElement> buildGraphs() {
 
-					thisGraph.setStreamRequirements(Arrays.asList());
-					
-					EventSchema outputSchema;
-					EventStream outputStream = new EventStream();
-					
-					List<OutputStrategy> supportedStrategies = thisGraph.getOutputStrategies();
+        List<EventStream> streams = PipelineGraphHelpers.findStreams(pipelineGraph);
 
-					EventGrounding grounding = new EventGrounding();
-					OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(supportedStrategies).getOuputSchemaGenerator();
-					
-					if (thisGraph.getInputStreams().size() == 1) 
-						outputSchema = schemaGenerator.buildFromOneStream(thisGraph.getInputStreams().get(0));
-					else
-						outputSchema = schemaGenerator.buildFromTwoStreams(thisGraph.getInputStreams().get(0), thisGraph.getInputStreams().get(1));
-					
-					thisGraph.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(supportedStrategies.get(0))));
+        for (EventStream stream : streams) {
+            Set<InvocableSEPAElement> connectedElements = getConnections(stream);
+            configure(stream, connectedElements);
+        }
 
-					if (node.getParent() != null)
-					grounding.setTransportProtocol(getPreferredTransportProtocol(thisGraph, node, outputTopic));
-					
-					grounding
-							.setTransportFormats(Utils
-									.createList(getPreferredTransportFormat(thisGraph)));
-					outputStream.setEventGrounding(grounding);
-					outputStream.setEventSchema(outputSchema);
+        return graphs;
+    }
 
-					thisGraph.setOutputStream(outputStream);
-					graphs.add(thisGraph);
-				} else {
-					SecInvocation thisGraph = (SecInvocation) element;
-					thisGraph.setCorrespondingPipeline(pipelineId);
-					thisGraph = (SecInvocation) buildSEPAElement(
-							thisGraph, node, outputTopic);
-					thisGraph.setStreamRequirements(Arrays.asList());
-					graphs.add(thisGraph);
-				}
-			}
-		}
-		return graphs;
-	}
+    public void configure(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
 
-	private TransportFormat getPreferredTransportFormat(
-			SepaInvocation thisGraph) {
-		try {
-			if (thisGraph.getInputStreams().get(0).getEventGrounding()
-					.getTransportFormats() == null)
-				return new TransportFormat(MessageFormat.Json);
-			if (thisGraph.getInputStreams().get(0).getEventGrounding().getTransportFormats().contains(MessageFormat.Json)) return new TransportFormat(MessageFormat.Json);
-			for (TransportFormat format : thisGraph.getInputStreams().get(0)
-					.getEventGrounding().getTransportFormats()) {
-				if (thisGraph.getSupportedGrounding().getTransportFormats()
-						.get(0).getRdfType().containsAll(format.getRdfType()))
-					return format;
-			}
-		} catch (Exception e) {
-			return new TransportFormat(MessageFormat.Json);
-		}
-		// TODO
-		return new TransportFormat(MessageFormat.Json);
-	}
-	
-	private TransportProtocol getPreferredTransportProtocol(SepaInvocation thisGraph, GenericTreeNode<NamedSEPAElement> node, String outputTopic)
-	{
-		BrokerConfig config = Configuration.getInstance().getBrokerConfig();
-		if (Configuration.getInstance().isDemoMode()) return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic);
-		try {
-		if (node.getParent().getData() instanceof InvocableSEPAElement)
-		{
-			InvocableSEPAElement invocable = (InvocableSEPAElement) node.getParent().getData();
-			if (invocable.getSupportedGrounding().getTransportProtocols().stream().anyMatch(g -> g instanceof KafkaTransportProtocol))
-			{
-				return new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), outputTopic, config.getZookeeperHost(), config.getZookeeperPort());
-			}
-			else
-			{
-				return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic);
-			}
-		}
-		} catch (Exception e) { return new JmsTransportProtocol(config.getJmsHost(), config.getJmsPort(), outputTopic); }
-		return new KafkaTransportProtocol(config.getKafkaHost(), config.getKafkaPort(), outputTopic, config.getZookeeperHost(), config.getZookeeperPort());
-	}
+        EventGrounding inputGrounding = new GroundingBuilder(source, targets)
+                .getEventGrounding();
 
-	private InvocableSEPAElement buildSEPAElement(
-			InvocableSEPAElement thisGraph,
-			GenericTreeNode<NamedSEPAElement> node, String outputTopic) {
+        if (source instanceof InvocableSEPAElement) {
+            if (source instanceof SepaInvocation) {
 
-				thisGraph.setUri(thisGraph.getBelongsTo() +"/" +pipelineId +"-" +outputTopic);
-			
+                SepaInvocation sepaInvocation = (SepaInvocation) source;
+                EventSchema outputSchema = new EventSchema();
+                OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(sepaInvocation
+                        .getOutputStrategies()).getOuputSchemaGenerator();
 
-		for (int i = 0; i < node.getNumberOfChildren(); i++) {
-			NamedSEPAElement child = node.getChildAt(i).getData();
-			if (child instanceof EventStream) {
-				EventStream thisStream = (EventStream) child;
+                if (((SepaInvocation) source).getInputStreams().size() == 1)
+                    outputSchema = schemaGenerator.buildFromOneStream(sepaInvocation.getInputStreams().get(0));
+                else if (isCompleted(sepaInvocation.getDOM())) {
+                    SepaInvocation existingInvocation = (SepaInvocation) find(sepaInvocation.getDOM());
 
-				thisGraph.getInputStreams().get(i)
-						.setEventSchema(thisStream.getEventSchema());
-				thisGraph.getInputStreams().get(i)
-						.setEventGrounding(thisStream.getEventGrounding());
+                    outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation.getInputStreams().get(0), sepaInvocation.getInputStreams().get(1));
+                    graphs.remove(existingInvocation);
+                }
 
-			} else {
-				SepaInvocation childSEPA = (SepaInvocation) child;
-				thisGraph
-						.getInputStreams()
-						.get(i)
-						.setEventSchema(
-								childSEPA.getOutputStream().getEventSchema());
-				thisGraph
-						.getInputStreams()
-						.get(i)
-						.setEventGrounding(
-								childSEPA.getOutputStream().getEventGrounding());
-			}
-		}
-		return thisGraph;
-	}
+                sepaInvocation.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(sepaInvocation.getOutputStrategies().get(0))));
+
+                EventStream outputStream = new EventStream();
+                outputStream.setEventSchema(outputSchema);
+                outputStream.setEventGrounding(inputGrounding);
+
+                ((SepaInvocation) source).setOutputStream(outputStream);
+
+            }
+
+            graphs.add((InvocableSEPAElement) source);
+        }
+
+        targets.forEach(t -> {
+            t.getInputStreams()
+                    .get(getIndex(t.getDOM()))
+                    .setEventGrounding(inputGrounding);
+
+            t.getInputStreams()
+                    .get(getIndex(t.getDOM()))
+                    .setEventSchema(getInputSchema(source, getIndex(t.getDOM())));
+
+            t.setUri(t.getBelongsTo() + "/" + pipelineId + "-" + inputGrounding.getTransportProtocol().getTopicName());
+            t.setCorrespondingPipeline(pipelineId);
+            t.setStreamRequirements(Arrays.asList());
+
+            configure(t, getConnections(t));
+        });
+
+    }
+
+    private EventSchema getInputSchema(NamedSEPAElement source, Integer index) {
+        if (source instanceof EventStream) {
+            return ((EventStream) source).getEventSchema();
+        } else if (source instanceof SepaInvocation) {
+            return ((SepaInvocation) source)
+                    .getInputStreams()
+                    .get(index)
+                    .getEventSchema();
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private Set<InvocableSEPAElement> getConnections(NamedSEPAElement source) {
+        Set<String> outgoingEdges = pipelineGraph.outgoingEdgesOf(source);
+        return outgoingEdges
+                .stream()
+                .map(o -> pipelineGraph.getEdgeTarget(o))
+                .map(g -> (InvocableSEPAElement) g)
+                .collect(Collectors.toSet());
+
+    }
+
+    private Integer getIndex(String domId) {
+        return isCompleted(domId) ? 1 : 0;
+    }
+
+    private boolean isCompleted(String domId) {
+        return graphs
+                .stream()
+                .anyMatch(g -> g.getDOM().equals(domId));
+    }
+
+    private InvocableSEPAElement find(String domId) {
+        return graphs
+                .stream()
+                .filter(g -> g.getDOM().equals(domId))
+                .findFirst()
+                .get();
+    }
+
 }

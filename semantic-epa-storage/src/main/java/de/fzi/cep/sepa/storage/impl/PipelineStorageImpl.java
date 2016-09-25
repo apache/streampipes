@@ -34,7 +34,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
 
         List<Pipeline> result = new ArrayList<>();
         for (Pipeline p : pipelines)
-            if (p.getAction() != null) result.add(p);
+            if (p.getActions() != null) result.add(p);
         return result;
     }
 

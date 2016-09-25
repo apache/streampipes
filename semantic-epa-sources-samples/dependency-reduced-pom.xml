@@ -20,6 +20,9 @@
             </goals>
             <configuration>
               <transformers>
+                <transformer>
+                  <mainClass>de.fzi.cep.sepa.sources.samples.main.SourcesSamplesInit</mainClass>
+                </transformer>
                 <transformer />
               </transformers>
               <filters>
@@ -40,11 +43,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -67,45 +65,5 @@
       <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
     </pluginRepository>
   </pluginRepositories>
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>1.4.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.containers</groupId>
-      <artifactId>jersey-container-servlet</artifactId>
-      <version>2.22.1</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>jersey-container-servlet-core</artifactId>
-          <groupId>org.glassfish.jersey.containers</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jersey-common</artifactId>
-          <groupId>org.glassfish.jersey.core</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jersey-server</artifactId>
-          <groupId>org.glassfish.jersey.core</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 </project>
 

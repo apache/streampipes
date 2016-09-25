@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import de.fzi.cep.sepa.commons.GenericTree;
+import de.fzi.cep.sepa.manager.data.PipelineGraph;
+import de.fzi.cep.sepa.manager.data.PipelineGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.v2.ElementVerification;
 import de.fzi.cep.sepa.manager.matching.v2.mapping.MappingPropertyCalculator;
 import de.fzi.cep.sepa.manager.util.PipelineVerificationUtils;
@@ -30,7 +31,6 @@ import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
 import de.fzi.cep.sepa.model.impl.staticproperty.*;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
-
 public class PipelineVerificationHandler {
 
     Pipeline pipeline;
@@ -39,7 +39,6 @@ public class PipelineVerificationHandler {
     List<InvocableSEPAElement> invocationGraphs;
 
     InvocableSEPAElement rdfRootElement;
-    GenericTree<NamedSEPAElement> rdfTree;
 
     public PipelineVerificationHandler(Pipeline pipeline, boolean isPartial)
             throws Exception {
@@ -54,9 +53,6 @@ public class PipelineVerificationHandler {
         sepaElements.addAll(pipeline.getStreams());
         sepaElements.addAll(pipeline.getActions());
         sepaElements.remove(rdfRootElement);
-
-        // we need a tree of invocation graphs if there is more than one SEPA
-        rdfTree = new TreeBuilder(pipeline, rdfRootElement).generateTree(true);
 
         pipelineModificationMessage = new PipelineModificationMessage();
     }
@@ -252,9 +248,8 @@ public class PipelineVerificationHandler {
 
 
     private List<InvocableSEPAElement> makeInvocationGraphs(NamedSEPAElement rootElement) {
-        GenericTree<NamedSEPAElement> tree = new TreeBuilder(
-                pipeline, rootElement).generateTree(true);
-        return new InvocationGraphBuilder(tree, true, null).buildGraph();
+        PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
+        return new InvocationGraphBuilder(pipelineGraph, true, null).buildGraphs();
     }
 
     private SepaInvocation findInvocationGraph(List<InvocableSEPAElement> graphs, String domId) {
