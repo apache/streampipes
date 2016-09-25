@@ -76,12 +76,14 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         if ($scope.validate()) {
             $rootScope.state.currentElement.data("options", true);
             $rootScope.state.currentElement.data("JSON").staticProperties = $scope.selectedElement.staticProperties;
+            $rootScope.state.currentElement.data("JSON").configured = true;
             $rootScope.state.currentElement.removeClass("disabled");
             $rootScope.$broadcast("SepaElementConfigured", elementData);
             $scope.hide();
             if (sourceEndpoint) sourceEndpoint.setType("token");
         }
         else $scope.invalid = true;
+
     }
 
     $scope.validate = function () {
