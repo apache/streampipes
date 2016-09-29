@@ -90,7 +90,7 @@ public class InvocationGraphBuilder {
 
             t.setUri(t.getBelongsTo() + "/" + pipelineId + "-" + inputGrounding.getTransportProtocol().getTopicName());
             t.setCorrespondingPipeline(pipelineId);
-            t.setStreamRequirements(Arrays.asList());
+            //t.setStreamRequirements(Arrays.asList());
 
             configure(t, getConnections(t));
         });
