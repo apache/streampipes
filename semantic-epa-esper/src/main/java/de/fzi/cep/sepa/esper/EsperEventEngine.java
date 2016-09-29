@@ -47,7 +47,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 			
 		epService = EsperEngineSettings.epService;
 
-		logger.info("Configuring event types for graph " +graph.getName());
+		System.out.println("Configuring event types for graph " +graph.getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
 			checkAndRegisterEventType(e.getKey(), inTypeMap);
@@ -87,13 +87,13 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap)
 	{ 	
 		try {
-			logger.info("Registering event type, " +eventTypeName);
+			System.out.println("Registering event type, " +eventTypeName);
 			epService.getEPAdministrator().getConfiguration().addEventType(eventTypeName, typeMap);
 			eventTypeNames.add(eventTypeName);
 		} catch (ConfigurationException e)
 		{
 			e.printStackTrace();
-			logger.info("Event type does already exist, " +eventTypeName);
+			System.out.println("Event type does already exist, " +eventTypeName);
 		}
 	}
 	

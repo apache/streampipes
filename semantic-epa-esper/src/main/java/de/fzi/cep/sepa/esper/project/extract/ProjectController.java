@@ -50,7 +50,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
-					
+					System.out.println("invoke");
 		List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 		
 		for(EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties())
