@@ -12,7 +12,7 @@ public class DashboardParameters {
     public DashboardParameters(SecInvocation invocationGraph) {
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
-        this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsUrl());
+        this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
     }
 
     private String removeProtocol(String url) {
