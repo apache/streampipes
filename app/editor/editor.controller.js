@@ -14,6 +14,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.isSepaInAssembly = false;
     $scope.isActionInAssembly = false;
     $scope.currentElements = [];
+    $scope.allElements = {};
     $scope.currentModifiedPipeline = $stateParams.pipeline;
     $scope.possibleElements = [];
     $scope.activePossibleElementFilter = {};
@@ -240,19 +241,18 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.loadCurrentElements = function (type) {
 
         $scope.currentElements = [];
-        //$('#editor-icon-stand').children().remove();        //DOM ACCESS
         if (type == 'block') {
             $scope.loadOptions("block");
-            $scope.loadBlocks();
+            $scope.currentElements = $scope.allElements["block"];
         } else if (type == 'stream') {
             $scope.loadOptions("stream");
-            $scope.loadSources();
+            $scope.currentElements = $scope.allElements["stream"];
         } else if (type == 'sepa') {
             $scope.loadOptions("sepa");
-            $scope.loadSepas();
+            $scope.currentElements = $scope.allElements["sepa"];
         } else if (type == 'action') {
             $scope.loadOptions("action");
-            $scope.loadActions();
+            $scope.currentElements = $scope.allElements["action"];
         }
     };
 
@@ -416,22 +416,21 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             data.data.forEach(function (block, i, blocks) {
                 block.type = "block";
             });
-            $scope.currentElements = data.data;
+            $scope.allElements["block"] = data.data;
         });
     };
 
     $scope.loadSources = function () {
         var tempStreams = [];
-        var promises = [];
         restApi.getOwnSources()
             .then(function (sources) {
                 sources.data.forEach(function (source, i, sources) {
-                    //promises.push(restApi.getOwnStreams(source));
                     source.eventStreams.forEach(function (stream) {
                         stream.type = 'stream';
                         tempStreams = tempStreams.concat(stream);
                     });
-                    $scope.currentElements = tempStreams;
+                    $scope.allElements["stream"] = tempStreams;
+                    $scope.currentElements = $scope.allElements["stream"];
                 });
             }, function (msg) {
                 console.log(msg);
@@ -445,10 +444,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                 $.each(sepas, function (i, sepa) {
                     sepa.type = 'sepa';
                 });
-                $scope.currentElements = sepas;
+                $scope.allElements["sepa"] = sepas;
                 $timeout(function () {
                     //makeDraggable();
-                    $rootScope.state.sepas = $.extend(true, [], $scope.currentElements);
+                    $rootScope.state.sepas = $.extend(true, [], $scope.allElements["sepa"]);
                 })
 
             })
@@ -462,14 +461,19 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                 $.each(actions, function (i, action) {
                     action.type = 'action';
                 });
-                $scope.currentElements = actions;
+                $scope.allElements["action"] = actions;
                 $timeout(function () {
                     //makeDraggable();
-                    $rootScope.state.actions = $.extend(true, [], $scope.currentElements);
+                    $rootScope.state.actions = $.extend(true, [], $scope.allElements["action"]);
                 })
 
             });
     };
+
+    $scope.loadBlocks();
+    $scope.loadSources();
+    $scope.loadSepas();
+    $scope.loadActions();
 
     var makeDraggable = function () {
         $('.draggable-icon').draggable({
@@ -640,6 +644,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.unbind("connection");
 
         jsPlumb.bind("connectionDetached", function (info, originalEvent) {
+            var el = ($("#" + info.targetEndpoint.elementId));
+            el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
+            el.removeClass('a');
+            el.addClass('disabled');
             info.targetEndpoint.setType("empty");
         });
 
@@ -660,7 +668,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         })
 
         jsPlumb.bind("connection", function (info, originalEvent) {
-
             var $target = $(info.target);
 
             if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
@@ -673,7 +680,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                             for (var i = 0, sepa; sepa = $rootScope.state.currentPipeline.sepas[i]; i++) {
                                 var id = "#" + sepa.DOM;
                                 if ($(id).length > 0) {
-                                    if ($(id).data("options") != true) {
+                                    if ($(id).data("JSON").configured != true) {
                                         if (!isFullyConnected(id)) {
                                             return;
                                         }
@@ -682,12 +689,17 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                                     }
                                 }
                             }
-                            if (!$.isEmptyObject($rootScope.state.currentPipeline.action)) {
-                                var id = "#" + $rootScope.state.currentPipeline.action.DOM;
-                                if (!isFullyConnected(id)) {
-                                    return;
+                            for (var i = 0, action; action = $rootScope.state.currentPipeline.actions[i]; i++) {
+                                var id = "#" + action.DOM;
+                                if ($(id).length > 0) {
+                                    if ($(id).data("JSON").configured != true) {
+                                        if (!isFullyConnected(id)) {
+                                            return;
+                                        }
+                                        var actionEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
+                                        $scope.showCustomizeDialog($(id), action.name, actionEndpoint);
+                                    }
                                 }
-                                $scope.showCustomizeDialog($(id), $rootScope.state.currentPipeline.action.name);
                             }
                         } else {
                             jsPlumb.detach(info.connection);
@@ -704,6 +716,18 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         window.onresize = function (event) {
             jsPlumb.repaintEverything(true);
         };
+    }
+
+    var getPipelineElementContents = function (belongsTo) {
+        var pipelineElement = undefined;
+        angular.forEach($scope.allElements, function (category) {
+            angular.forEach(category, function (sepa) {
+                if (sepa.belongsTo == belongsTo) {
+                    pipelineElement = sepa;
+                }
+            });
+        });
+        return pipelineElement;
     }
 
     function initAssembly() {
@@ -805,7 +829,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     function createPartialPipeline(info) {
         var pipelinePart = new objectProvider.Pipeline();
         var element = info.target;
-        console.log(info);
         addElementToPartialPipeline(element, pipelinePart);
         $rootScope.state.currentPipeline = pipelinePart;
     }
@@ -815,8 +838,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         // add all children of pipeline element that are not already present in the pipeline
         var outgoingConnections = jsPlumb.getConnections({source: element});
         if (outgoingConnections.length > 0) {
-            for(var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
-                console.log(ocon);
+            for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
                 if (!pipelinePart.hasElement(ocon.target.id)) {
                     addElementToPartialPipeline(ocon.target, pipelinePart);
                 }
@@ -888,10 +910,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             showToast("error", "No stream element present in pipeline", "Submit Error");
             error = true;
         }
-        if (!sepaPresent) {
-            showToast("error", "No sepa element present in pipeline", "Submit Error");
-            error = true;
-        }
+        
         if (!actionPresent) {
             showToast("error", "No action element present in pipeline", "Submit Error");
             error = true;

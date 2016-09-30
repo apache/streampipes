@@ -1,6 +1,11 @@
 WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel'];
 
-export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineDataModel, VerticalbarDataModel, GaugeDataModel) {
+export default function WidgetDefinitions(TableDataModel,
+                                          NumberDataModel,
+                                          LineDataModel,
+                                          VerticalbarDataModel,
+                                          GaugeDataModel,
+                                          TrafficlightDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {
@@ -27,6 +32,11 @@ export default function WidgetDefinitions(TableDataModel, NumberDataModel, LineD
             name: 'gauge',
             directive: 'sp-gauge-widget',
             dataModel: GaugeDataModel,
+        },
+        trafficlight: {
+            name: 'trafficlight',
+            directive: 'sp-trafficlight-widget',
+            dataModel: TrafficlightDataModel,
         }
 
     }

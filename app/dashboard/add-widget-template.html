@@ -1,54 +1,68 @@
-<md-dialog aria-label="Pipeline Status" >
-	<form>
-		<md-toolbar>
-			<div class="md-toolbar-tools">
-				<h2>Add a new Widget</h2>
-				<span flex></span>
-				<md-button class="md-icon-button" ng-click="cancel()">
-					<md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
-				</md-button>
-			</div>
-		</md-toolbar>
+<md-dialog aria-label="Pipeline Status">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Add a new Widget</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
 
-		<div style="width:800px;height:810px;">
-			<!-- Select element to visualize -->
-			<md-dialog-content ng-show="page == 'select-viz'">
-				<md-input-container>
-					<md-select-header>
-						<span> Select Datastream</span>
-					</md-select-header>
-					<md-select ng-model="selectedVis">
-						<md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.name }}</md-option>
-					</md-select>
-				</md-input-container>
-			</md-dialog-content>
+        <div style="width:800px;height:810px;padding-top:20px;">
+            <div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
+                <div layout="column" flex="33" layout-align="center center"
+                     ng-repeat="(index, p) in pages track by $index">
+                    <md-button ng-class="getTabCss(p.type)" aria-label="p.title">{{index+1}}
+                    </md-button>
+                    {{p.title}}
+                </div>
+            </div>
+            <div style="margin:20px;">
+                <!-- Select element to visualize -->
+                <md-dialog-content ng-show="page == 'select-viz'">
+                    <md-input-container>
+                        <md-select-header>
+                            <h4>{{pages[0].description}}</h4>
+                        </md-select-header>
+                        <md-select ng-model="selectedVis">
+                            <md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.name }}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </md-dialog-content>
 
-			<!-- Select Type -->
-			<md-dialog-content ng-show="page == 'select-type'">
-				<md-input-container>
-					<md-select-header>
-						<span> Select Visualisation Type</span>
-					</md-select-header>
-					<md-select ng-model="selectedType">
-						<md-option ng-value="opt" ng-repeat="opt in possibleVisTypes">{{ opt }}</md-option>
-					</md-select>
-				</md-input-container>
-			</md-dialog-content>
+                <!-- Select Type -->
+                <md-dialog-content ng-show="page == 'select-type'">
+                    <md-input-container>
+                        <md-select-header>
+                            <h4>{{pages[1].description}}</h4>
+                        </md-select-header>
+                        <md-select ng-model="selectedType">
+                            <md-option ng-value="opt" ng-repeat="opt in possibleVisTypes">{{ opt }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </md-dialog-content>
 
-			<!-- Select Scheme -->
-			<md-dialog-content ng-show="page == 'select-scheme'">
-				<md-input-container id="scheme-selection">
-				</md-input-container>
-			</md-dialog-content>
-		</div>
+                <!-- Select Scheme -->
+                <md-dialog-content ng-show="page == 'select-scheme'">
+                    <md-select-header>
+                        <h4>{{pages[2].description}}</h4>
+                    </md-select-header>
+                    <md-input-container id="scheme-selection">
+                    </md-input-container>
+                </md-dialog-content>
+            </div>
+        </div>
 
-		<div class="md-actions" layout="row">
-			<md-button ng-click="cancel()" style="margin-right:20px;" >
-				Close
-			</md-button>
-			<md-button ng-click="next()" class="md-raised md-accent" style="margin-right:20px;" >
-				Next	
-			</md-button>
-		</div>
-	</form>
+        <div class="md-actions" layout="row">
+            <md-button ng-click="cancel()" style="margin-right:20px;">
+                Cancel
+            </md-button>
+            <md-button ng-click="next()" class="md-raised md-accent" style="margin-right:20px;">
+                Next
+            </md-button>
+        </div>
+    </form>
 </md-dialog>

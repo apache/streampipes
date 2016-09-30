@@ -6,7 +6,7 @@ export default {
 		streamEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "Straight",
+			connector: "Bezier",
 			isSource: true,
 			maxConnections: -1,
 			anchor:"Right",
@@ -19,7 +19,7 @@ export default {
 		sepaEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "Straight",
+			connector: "Bezier",
 			isSource: true,
 			maxConnections: -1,
 			anchor: "Right",

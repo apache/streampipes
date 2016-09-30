@@ -37,7 +37,9 @@ import spGaugeWidget from './templates/gauge/gauge.directive';
 import spGaugeWidgetConfig from './templates/gauge/gauge-config.directive';
 import GaugeDataModel from './templates/gauge/gauge-data-model.service';
 
-
+import spTrafficlightWidget from './templates/trafficlight/trafficlight.directive';
+import spTrafficlightWidgetConfig from './templates/trafficlight/trafficlight-config.directive';
+import TrafficlightDataModel from './templates/trafficlight/trafficlight-data-model.service';
 
 export default angular.module('sp.dashboard', ['ui.dashboard'])
 	.controller('DashboardCtrl', DashboardCtrl)
@@ -67,5 +69,8 @@ export default angular.module('sp.dashboard', ['ui.dashboard'])
 	.directive('spGaugeWidgetConfig', spGaugeWidgetConfig)
 	.factory('GaugeDataModel', GaugeDataModel)
 
-
+	.directive('spTrafficlightWidget', spTrafficlightWidget)
+	.directive('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
+	.factory('TrafficlightDataModel', TrafficlightDataModel)
+	
 	.name;

@@ -5,6 +5,25 @@ export default function AddWidget(Widgets, $compile, WidgetDefinitions) {
 	function AddWidget($scope, $mdDialog, possibleVisualizations, rerenderDashboard) {
 		$scope.page = 'select-viz';
 
+		$scope.pages = [{
+			type : "select-viz",
+			title : "Data Stream",
+			description : "Select a data stream you'd like to visualize"
+		},{
+			type : "select-type",
+			title : "Visualization Type",
+			description : "Select a visualization type"
+		},{
+			type : "select-scheme",
+			title : "Visualization Settings",
+			description : "Customize your visualization"
+		}];
+
+		$scope.getTabCss = function(page) {
+			if (page == $scope.page) return "md-fab md-accent";
+			else return "md-fab md-accent wizard-inactive";
+		}
+
 		$scope.possibleVisualizations = angular.copy(possibleVisualizations);
 
 		// This is the object that the user manipulates
