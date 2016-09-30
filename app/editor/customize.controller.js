@@ -114,9 +114,11 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
                 }
 
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyNary') {
-                if (!staticProperty.properties.mapsTo ||
-                    !staticProperty.properties.mapsTo.length > 0) {
-                    valid = false;
+                if (staticProperty.properties.valueRequired) {
+                    if (!staticProperty.properties.mapsTo ||
+                        !staticProperty.properties.mapsTo.length > 0) {
+                        valid = false;
+                    }
                 }
             }
         });

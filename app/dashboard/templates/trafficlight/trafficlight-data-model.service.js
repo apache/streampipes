@@ -1,17 +1,17 @@
 import SocketConnectionDataModel from '../../socket-connection-data-model.service.js'
 
-TrafficLightDataModel.$inject = ['SocketConnectionDataModel', '$http'];
+TrafficlightDataModel.$inject = ['SocketConnectionDataModel', '$http'];
 
-export default function TrafficLightDataModel(SocketConnectionDataModel, $http) {
+export default function TrafficlightDataModel(SocketConnectionDataModel, $http) {
 
-    TrafficLightDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
-    function TrafficLightDataModel(id) {
+    TrafficlightDataModel.prototype = Object.create(SocketConnectionDataModel.prototype);
+    function TrafficlightDataModel(id) {
         SocketConnectionDataModel.call(this, id);
     }
 
-    TrafficLightDataModel.prototype.newData = function(message) {
+    TrafficlightDataModel.prototype.newData = function(message) {
         this.updateScope(message);
     }
 
-    return TrafficLightDataModel;
+    return TrafficlightDataModel;
 };

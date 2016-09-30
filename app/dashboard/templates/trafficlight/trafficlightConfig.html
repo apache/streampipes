@@ -1,9 +1,41 @@
-<h3>Select Value</h3>
-<md-select ng-model="wid.schema.selectedNumberProperty">
-    <md-option ng-value="prop" ng-repeat="prop in wid.schema.eventProperties | sonumber">{{ prop.properties.runtimeName }}</md-option>
-</md-select>
+<div flex="80"><h3>Select Value</h3>
+    <md-select ng-model="wid.schema.selectedNumberProperty">
+        <md-option ng-value="prop" ng-repeat="prop in wid.schema.eventProperties | soNumber">{{
+            prop.properties.runtimeName
+            }}
+        </md-option>
+    </md-select>
 
-<h3>Select Value</h3>
-<md-select ng-model="wid.schema.selectedNumberProperty">
-    <md-option ng-value="prop" ng-repeat="prop in wid.schema.eventProperties | sonumber">{{ prop.properties.runtimeName }}</md-option>
-</md-select>
+    <h3>Configure Thresholds</h3>
+    <div layout="row" flex="100" layout-align="center center">
+        <div flex="33">
+            Critical Threshold
+        </div>
+        <div flex="33">
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Operator</label>
+                <md-select ng-model="wid.config.critical.operator">
+                    <md-option ng-value="'ge'">upper limit</md-option>
+                    <md-option ng-value="'le'">under limit</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <div flex="33">
+            <md-input-container>
+                <label>Value</label>
+                <input ng-model="wid.config.critical.value">
+            </md-input-container>
+        </div>
+    </div>
+    <div layout="row" flex="100" layout-align="center center">
+        <div flex="50">
+            Warning Range (percent)
+        </div>
+        <div flex="50">
+            <md-input-container>
+                <label>Value</label>
+                <input ng-model="wid.config.critical.range">
+            </md-input-container>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,10 @@
 import angular from 'npm/angular';
 
+import _ from 'npm/lodash';
+
 import 'npm/lodash';
 import stomp from 'legacy/stomp';
+import 'npm/angular-sanitize';
 import 'legacy/mlhr-table';
 //import 'legacy/malhar-angular-widgets';
 import 'legacy/malhar-angular-dashboard';
@@ -10,12 +13,12 @@ import 'npm/epoch-charting';
 
 
 import DashboardCtrl from './dashboard.controller';
-import AddWidgetService from './add-widget.service';
+import AddWidgetController from './add-widget.controller';
 import SocketConnectionDataModel from './socket-connection-data-model.service';
-import Widgets from './widgets.service';
-import WidgetDefinitions from './templates/widget-definitions.service';
-import sonumber from './templates/so-number.filter';
+import WidgetInstances from './widget-instances.service';
+import WidgetTemplates from './templates/widget-templates.service';
 
+import soFilter from './templates/so.filter';
 
 import spNumberWidget from './templates/number/number.directive';
 import spNumberWidgetConfig from './templates/number/number-config.directive';
@@ -41,13 +44,15 @@ import spTrafficlightWidget from './templates/trafficlight/trafficlight.directiv
 import spTrafficlightWidgetConfig from './templates/trafficlight/trafficlight-config.directive';
 import TrafficlightDataModel from './templates/trafficlight/trafficlight-data-model.service';
 
-export default angular.module('sp.dashboard', ['ui.dashboard'])
+export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable'])
 	.controller('DashboardCtrl', DashboardCtrl)
-	.factory('AddWidget', AddWidgetService)
+	.factory('AddWidgetController', AddWidgetController)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
-	.factory('Widgets', Widgets)
-	.factory('WidgetDefinitions', WidgetDefinitions)
-	.filter('sonumber', sonumber)
+	.factory('WidgetInstances', WidgetInstances)
+	.factory('WidgetTemplates', WidgetTemplates)
+
+	.filter('soNumber', soFilter.soNumber)
+	.filter('soDateTime', soFilter.soDateTime)
 
 	.directive('spNumberWidget', spNumberWidget)
 	.directive('spNumberWidgetConfig', spNumberWidgetConfig)

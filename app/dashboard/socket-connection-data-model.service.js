@@ -1,9 +1,9 @@
 SocketConnectionDataModel.$inject = ['WidgetDataModel', '$http'];
 
 export default function SocketConnectionDataModel(WidgetDataModel, $http) {
-	function SocketConnectionDataModel(id) {
-		var id = id;
-		this.id = id;
+	function SocketConnectionDataModel(visualisationId) {
+		var visualisationId = visualisationId;
+		this.visualisationId = visualisationId;
 		this.client = {};
 	}
 
@@ -16,7 +16,7 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 		var self = this;
 
 
-		$http.get('/visualization/' + this.id)
+		$http.get('/visualization/' + this.visualisationId)
 			.success(function(data) {
 
 				var brokerUrl = 'ws://' + data['broker'];

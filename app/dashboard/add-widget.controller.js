@@ -1,8 +1,6 @@
-AddWidget.$inject = ['Widgets', '$compile', 'WidgetDefinitions'];
+export default function AddWidget(WidgetInstances, $compile, WidgetTemplates) {
 
-export default function AddWidget(Widgets, $compile, WidgetDefinitions) {
-
-	function AddWidget($scope, $mdDialog, possibleVisualizations, rerenderDashboard) {
+	function AddWidget($scope, $mdDialog, possibleVisualizations, rerenderDashboard, layoutId) {
 		$scope.page = 'select-viz';
 
 		$scope.pages = [{
@@ -23,14 +21,14 @@ export default function AddWidget(Widgets, $compile, WidgetDefinitions) {
 			if (page == $scope.page) return "md-fab md-accent";
 			else return "md-fab md-accent wizard-inactive";
 		}
-
+		
 		$scope.possibleVisualizations = angular.copy(possibleVisualizations);
 
 		// This is the object that the user manipulates
-		$scope.selectedVis = {};
+		$scope.selectedVisualisation = {};
 
-		$scope.possibleVisTypes = WidgetDefinitions.getAllNames();
-		$scope.selectedVisType = '';
+		$scope.possibleVisualisationTypes = WidgetTemplates.getAllNames();
+		$scope.selectedVisualisationType = '';
 
 		$scope.next = function() {
 			if ($scope.page == 'select-viz') {
@@ -39,7 +37,7 @@ export default function AddWidget(Widgets, $compile, WidgetDefinitions) {
 				$scope.page = 'select-scheme';
 
 				var directiveName = 'sp-' + $scope.selectedType + '-widget-config'
-				var widgetConfig = $compile( '<'+ directiveName + ' wid=selectedVis></' + directiveName + '>')( $scope );
+				var widgetConfig = $compile( '<'+ directiveName + ' wid=selectedVisualisation></' + directiveName + '>')( $scope );
 
 				var schemaSelection = angular.element( document.querySelector( '#scheme-selection' ) );
 				schemaSelection.append( widgetConfig );
@@ -47,14 +45,16 @@ export default function AddWidget(Widgets, $compile, WidgetDefinitions) {
 			} else {
 
 				var widget = {};
-				widget.visType = $scope.selectedType;
-				widget.vis = $scope.selectedVis;
-				widget.id = $scope.selectedVis._id;
+				widget.visualisationType = $scope.selectedType;
+				widget.visualisationId = $scope.selectedVisualisation._id;
+				widget.visualisation = $scope.selectedVisualisation;
+				//widget.id = $scope.selectedVisualisation._id;
+				widget.layoutId = layoutId;
 
-				Widgets.add(widget);
+				WidgetInstances.add(widget);
 
 				//widgetDefinitions.push(
-				//Widgets.getWidgetDefinition(widget.id)
+				//WidgetInstances.getWidgetDefinition(widget.id)
 				//);
 
 				rerenderDashboard();

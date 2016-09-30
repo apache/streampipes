@@ -1,8 +1,8 @@
-import Widgets from '../../widgets.service.js'
+import WidgetInstances from '../../widget-instances.service.js'
 'use strict';
-gaugeWidget.$inject = ['Widgets'];
+gaugeWidget.$inject = ['WidgetInstances'];
 
-export default function gaugeWidget(Widgets) {
+export default function gaugeWidget(WidgetInstances) {
     return {
         restrict: 'A',
         replace: true,
@@ -12,7 +12,9 @@ export default function gaugeWidget(Widgets) {
             widgetId: '@'
         },
         controller: function ($scope) {
-            $scope.widgetConfig = Widgets.get($scope.widgetId).vis.schema.config;
+					WidgetInstances.get($scope.widgetId).then(function(data) {
+						$scope.widgetConfig = data.visualisation.schema.config;
+					})
             $scope.lineData = [];
         },
         link: function postLink(scope, element) {

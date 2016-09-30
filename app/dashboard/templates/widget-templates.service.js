@@ -1,6 +1,6 @@
-WidgetDefinitions.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel'];
+WidgetTemplates.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel', 'TrafficlightDataModel'];
 
-export default function WidgetDefinitions(TableDataModel,
+export default function WidgetTemplates(TableDataModel,
                                           NumberDataModel,
                                           LineDataModel,
                                           VerticalbarDataModel,
