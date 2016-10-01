@@ -40,7 +40,7 @@
                             <h4>{{pages[1].description}}</h4>
                         </md-select-header>
                         <md-select ng-model="selectedType">
-                            <md-option ng-value="opt" ng-repeat="opt in possibleVisualisationTypes">{{ opt }}
+                            <md-option ng-value="opt.name" ng-repeat="opt in possibleVisualisationTypes">{{ opt.label }}
                             </md-option>
                         </md-select>
                     </md-input-container>

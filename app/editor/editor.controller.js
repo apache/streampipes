@@ -285,15 +285,14 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             }
         }
         currentx += 200;
-        if (!$.isEmptyObject(pipeline.action)) {
-            $scope.actionDropped(createNewAssemblyElement(pipeline.action, {'x': currentx, 'y': currenty})
+        for (var i = 0, action; action = pipeline.actions[i]; i++) {
+            var $action = $scope.actionDropped(createNewAssemblyElement(action, {'x': currentx, 'y': currenty})
                 .data("options", true));
-
+            currenty += 200;
+            jsPlumb.addEndpoint($action, apiConstants.leftTargetPointOptions);
         }
 
-
         connectPipelineElements(pipeline, true);
-        //console.log(json);
         jsPlumb.repaintEverything();
 
         $scope.currentPipelineName = pipeline.name;
@@ -310,18 +309,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         var targetEndpoint
 
         jsPlumb.setSuspendDrawing(true);
-        if (!$.isEmptyObject(json.action)) {
-            //Action --> Sepas----------------------//
-            target = json.action.DOM;
 
-            for (var i = 0, connection; connection = json.action.connectedTo[i]; i++) {
-                source = connection;
-
-                sourceEndpoint = jsPlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
-                targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
-            }
-        }
         //Sepas --> Streams / Sepas --> Sepas---------------------//
         for (var i = 0, sepa; sepa = json.sepas[i]; i++) {
             for (var j = 0, connection; connection = sepa.connectedTo[j]; j++) {
@@ -339,6 +327,18 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                 }
 
                 sourceEndpoint = jsPlumb.addEndpoint(source, options);
+                targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
+                jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
+            }
+        }
+        for (var i = 0, action; action = json.actions[i]; i++) {
+            //Action --> Sepas----------------------//
+            target = action.DOM;
+
+            for (var j = 0, connection; connection = action.connectedTo[j]; j++) {
+                source = connection;
+
+                sourceEndpoint = jsPlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
                 targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
                 jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
             }

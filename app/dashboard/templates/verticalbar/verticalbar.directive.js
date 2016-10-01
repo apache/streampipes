@@ -14,6 +14,8 @@ export default function verticalbarWidget(WidgetInstances) {
 		controller: function ($scope) {
 			WidgetInstances.get($scope.widgetId).then(function(widgetConfig) {
 				$scope.selectedNumberProperty = widgetConfig.visualisation.schema.selectedNumberProperty.properties.runtimeName;
+				$scope.min = widgetConfig.visualisation.config.min;
+				$scope.max = widgetConfig.visualisation.config.max;
 			});
 
 			// TODO replace with min/max values
@@ -22,7 +24,7 @@ export default function verticalbarWidget(WidgetInstances) {
 			}
 
 			var percent = function(min, max, current) {
-				return 100 * (current - min) / (max - min);
+				return 100 * (current - $scope.min) / ($scope.max - $scope.min);
 			}
 
 

@@ -1,0 +1,15 @@
+<form name="addFromEndpointForm" ng-submit="addFromEndpoint()" role="form">
+    <div flex layout="column">
+        <md-input-container> <label>Endpoint URL</label> <input
+                type="text" ng-model="$parent.endpointUrl" required></input> </md-input-container>
+        <md-input-container flex> <md-checkbox
+                ng-model="$parent.marketplace"> Add elements to the marketplace (element will be available to other users) </md-checkbox>
+        </md-input-container>
+    </div>
+    <div class="form-actions">
+        <md-button class="md-accent md-raised" type="submit"
+                   ng-disabled="addFromEndpointForm.$pristine || addFromEndpointForm.$invalid || loading">Add Elements</md-button>
+        <md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
+        <div ng-show="loading"><h5>This may take up to two minutes.</h5></div>
+    </div>
+</form>

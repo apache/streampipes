@@ -14,11 +14,12 @@ export default function gaugeWidget(WidgetInstances) {
         controller: function ($scope) {
 					WidgetInstances.get($scope.widgetId).then(function(data) {
 						$scope.widgetConfig = data.visualisation.schema.config;
+                        $scope.min = data.visualisation.config.min;
+                        $scope.max = data.visualisation.config.max;
 					})
             $scope.lineData = [];
         },
         link: function postLink(scope, element) {
-
             var myChart = element.epoch({
                 type: 'time.gauge',
                 value: 0.0,
@@ -26,7 +27,7 @@ export default function gaugeWidget(WidgetInstances) {
                 format: function (v) {
                     return v.toFixed(2);
                 },
-                domain: [0, 100]
+                domain: [scope.min, scope.max]
             });
 
             scope.$watch('data', function (data) {

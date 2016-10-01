@@ -5,6 +5,7 @@ export default function NotificationsCtrl($scope, restApi) {
 	$scope.unreadNotifications = [];
 		
 	$scope.getNotifications = function(){
+        $scope.unreadNotifications = [];
         restApi.getNotifications()
             .success(function(notifications){
                 $scope.notifications = notifications;

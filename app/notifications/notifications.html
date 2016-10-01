@@ -1,42 +1,50 @@
 <div flex layout-fill>
-<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-<div flex="none" layout-fill layout="row" layout-align="start center" style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-<h5>Notifications</h5>
-</div>
-</div>
-<div flex layout="column" layout-fill>
-		<md-content>
-			 <section>
-			      <md-subheader class="md-primary">Unread Messages</md-subheader>
-			      <md-list layout-padding>
-			        <md-list-item class="md-3-line" ng-repeat="notification in unreadNotifications">
-			         	<md-icon md-svg-icon="content:ic_markunread_24px" aria-label="Mark as read" class="md-accent" ng-click="changeNotificationStatus(notification._id)"></md-icon>
-			            <div class="md-list-item-text">
-			              <h3>{{notification.title}}</h3>
-			              <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for {{notification.targetedUser}}</h4>
-			              <p>
-			                {{notification.description}}
-			              </p>
-			            </div> 
-			        </md-list-item>
-			      </md-list>
-			 </section>
-			 <section>
-			      <md-subheader class="md-primary">All Messages</md-subheader>
-			      <md-list layout-padding>
-			        <md-list-item class="md-3-line" ng-repeat="notification in notifications">
-			         
-			            <div class="md-list-item-text">
-			              <h3>{{notification.title}}</h3>
-			              <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for {{notification.targetedUser}}</h4>
-			              <p>
-			                {{notification.description}}
-			              </p>
-			            </div> 
-			        </md-list-item>
-			      </md-list>
-			 </section>
-		</md-content>
-		</md-whiteframe>
-</div>
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+        <div flex="none" layout-fill layout="row" layout-align="start center"
+             style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <h5>Notifications</h5>
+        </div>
+    </div>
+    <div flex layout="column" layout-fill>
+        <md-content>
+            <section>
+                <md-subheader class="md-primary">Unread Messages</md-subheader>
+                <md-list layout-padding>
+                    <md-list-item class="md-3-line" ng-repeat="notification in unreadNotifications">
+                        <md-button class="md-icon-button" ng-click="changeNotificationStatus(notification._id)">
+                            <i class="material-icons" style="color: rgb(63,81,181);">markunread</i>
+                            <md-tooltip md-direction="top">
+                                Mark as unread
+                            </md-tooltip>
+                        </md-button>
+                        <div class="md-list-item-text">
+                            <h3>{{notification.title}}</h3>
+                            <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for
+                                {{notification.targetedUser}}</h4>
+                            <p>
+                                {{notification.description}}
+                            </p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </section>
+            <section>
+                <md-subheader class="md-primary">All Messages</md-subheader>
+                <md-list layout-padding>
+                    <md-list-item class="md-3-line" ng-repeat="notification in notifications">
+
+                        <div class="md-list-item-text">
+                            <h3>{{notification.title}}</h3>
+                            <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for
+                                {{notification.targetedUser}}</h4>
+                            <p>
+                                {{notification.description}}
+                            </p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </section>
+        </md-content>
+        </md-whiteframe>
+    </div>
 </div>
