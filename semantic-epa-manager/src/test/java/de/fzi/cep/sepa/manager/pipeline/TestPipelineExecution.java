@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.storage.controller.StorageManager;
 public class TestPipelineExecution {
 
     public static void main(String[] args) {
-        Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("2720e901-73d8-4d9e-8508-6a89551fe6fe");
+        Pipeline pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline("850c2850-a27c-4026-939c-171db57c50f0");
 
         Operations.startPipeline(pipeline);
     }

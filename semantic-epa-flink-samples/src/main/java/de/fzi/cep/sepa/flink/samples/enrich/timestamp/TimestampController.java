@@ -60,7 +60,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 	@Override
 	protected FlinkSepaRuntime<TimestampParameters> getRuntime(
 			SepaInvocation graph) {
-		
+		System.out.println(Config.JAR_FILE);
 		AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
 
 		String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");

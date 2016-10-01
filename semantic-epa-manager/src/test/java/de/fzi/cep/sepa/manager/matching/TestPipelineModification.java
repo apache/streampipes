@@ -33,7 +33,7 @@ public class TestPipelineModification {
 
         PipelineModificationMessage message = null;
         try {
-            message = new PipelineVerificationHandler(pipeline, true)
+            message = new PipelineVerificationHandler(pipeline)
                     .validateConnection()
                     .computeMappingProperties()
                     .getPipelineModificationMessage();
@@ -54,7 +54,7 @@ public class TestPipelineModification {
 
         PipelineModificationMessage message = null;
         try {
-            message = new PipelineVerificationHandler(pipeline, true)
+            message = new PipelineVerificationHandler(pipeline)
                     .validateConnection()
                     .computeMappingProperties()
                     .getPipelineModificationMessage();

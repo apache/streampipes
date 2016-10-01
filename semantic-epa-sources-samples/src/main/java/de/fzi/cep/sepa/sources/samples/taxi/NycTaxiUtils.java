@@ -6,7 +6,8 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -43,10 +44,10 @@ public class NycTaxiUtils {
 		return new EventSchema(eventProperties);
 	}
 	
-	public static IMessagePublisher streamPublisher(String topicName)
+	public static EventProducer streamPublisher(String topicName)
 	{
 		
-			return new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
+			return new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
 	}
 	
 }

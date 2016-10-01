@@ -4,7 +4,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
+
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.*;
@@ -22,21 +22,20 @@ import java.util.List;
 public class DashboardController extends ActionController {
     private static String DB_NAME = "visualization";
     private static int DB_PORT = ClientConfiguration.INSTANCE.getCouchDbPort();
-   private static String DB_HOST = ClientConfiguration.INSTANCE.getCouchDbHost();
+    private static String DB_HOST = ClientConfiguration.INSTANCE.getCouchDbHost();
     private static String DB_PROTOCOL = "http";
 
-    private KafkaConsumerGroup kafkaConsumerGroup;
 
     private String visualizationId;
     private String visualizationRev;
 
     @Override
     public SecDescription declareModel() {
-        EventStream stream = StreamBuilder.createStream("", "","").schema(SchemaBuilder.create().build()).build();
+        EventStream stream = StreamBuilder.createStream("", "", "").schema(SchemaBuilder.create().build()).build();
         SecDescription desc = new SecDescription("dashboard_sink", "Dashboard Sink", "This sink will be used to define that the data can be vizualized");
 //        desc.setIconUrl(ActionConfig.iconBaseUrl + "/Table_Icon_HQ.png");
         desc.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
-        stream.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
+        stream.setUri(ActionConfig.serverUrl + "/" + Utils.getRandomString());
         desc.addEventStream(stream);
 
         List<StaticProperty> staticProperties = new ArrayList<>();
@@ -66,10 +65,7 @@ public class DashboardController extends ActionController {
         } else {
             String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 
-            kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-                    new String[]{consumerTopic}, new Dashboard(invocationGraph.getCorrespondingPipeline()));
-            kafkaConsumerGroup.run(1);
-
+            startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic, new Dashboard(invocationGraph.getCorrespondingPipeline()));
         }
 
         return new Response(invocationGraph.getElementId(), true);
@@ -101,7 +97,7 @@ public class DashboardController extends ActionController {
         if (!removeFromCouchDB()) {
             return new Response(pipelineId, false, "There was an error while deleting pipeline: '" + pipelineId + "'");
         } else {
-            kafkaConsumerGroup.shutdown();
+            stopKafkaConsumer();
             return new Response(pipelineId, true);
         }
     }

@@ -1,11 +1,19 @@
 package de.fzi.cep.sepa.actions.samples.proasense.kpi;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
+import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyPublisher;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import de.fzi.cep.sepa.model.util.SepaUtils;
+import eu.proasense.internal.ComplexValue;
+import eu.proasense.internal.DerivedEvent;
+import eu.proasense.internal.VariableType;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
@@ -13,25 +21,15 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyPublisher;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.util.SepaUtils;
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.DerivedEvent;
-import eu.proasense.internal.VariableType;
+public class ProaSenseKpiPublisher implements EventListener<byte[]> {
 
-public class ProaSenseKpiPublisher implements IMessageListener<byte[]> {
-
-	private ProaSenseInternalProducer producer;
+	private StreamPipesKafkaProducer producer;
 	private static final String DEFAULT_PROASENSE_TOPIC = "eu.proasense.internal.sp.internal.kpi";
 	private TSerializer serializer;
 	private ProaSenseEventNotifier notifier;
@@ -43,7 +41,7 @@ public class ProaSenseKpiPublisher implements IMessageListener<byte[]> {
 	
 	public ProaSenseKpiPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
 		this.notifier = notifier;
-		this.producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+		this.producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.kpiName = SepaUtils.getFreeTextStaticPropertyValue(graph, "kpi");
 	}
@@ -54,7 +52,7 @@ public class ProaSenseKpiPublisher implements IMessageListener<byte[]> {
 		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
 		Optional<byte[]> bytesMessage = buildDerivedEvent(new String(json));
-		if (bytesMessage.isPresent()) producer.send(bytesMessage.get());
+		if (bytesMessage.isPresent()) producer.publish(bytesMessage.get());
 		else System.out.println("empty event");
 	}
 

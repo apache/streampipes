@@ -17,6 +17,10 @@
 			<artifactId>semantic-epa-client-container</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-messaging-kafka</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>eu.proasense.internal</groupId>
 			<artifactId>thrift-messages</artifactId>
 			<exclusions>

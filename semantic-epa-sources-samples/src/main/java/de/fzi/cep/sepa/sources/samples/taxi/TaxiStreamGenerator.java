@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import com.google.gson.JsonObject;
 
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
@@ -39,18 +39,18 @@ public class TaxiStreamGenerator implements Runnable {
 	
 	private final File file;
 	private final SimulationSettings settings;
-	private IMessagePublisher publisher;
-	private IMessagePublisher timePublisher;
+	private EventProducer publisher;
+	private EventProducer timePublisher;
 	private boolean publishCurrentTime;
 		
-	public TaxiStreamGenerator(final File file, final SimulationSettings settings, IMessagePublisher publisher)
+	public TaxiStreamGenerator(final File file, final SimulationSettings settings, EventProducer publisher)
 	{
 		this.file = file;
 		this.settings = settings;
 		this.publisher = publisher;		
 	}
 	
-	public TaxiStreamGenerator(final File file, final SimulationSettings settings, IMessagePublisher publisher, IMessagePublisher timePublisher)
+	public TaxiStreamGenerator(final File file, final SimulationSettings settings, EventProducer publisher, EventProducer timePublisher)
 	{
 		this(file, settings, publisher);
 		this.publishCurrentTime = true;

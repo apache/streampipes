@@ -1,25 +1,11 @@
 package de.fzi.cep.sepa.sources.samples.twitter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.jms.JMSException;
-
-import org.codehaus.jettison.json.JSONObject;
-
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusListener;
-import twitter4j.TwitterStreamFactory;
-import twitter4j.conf.ConfigurationBuilder;
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -39,15 +25,24 @@ import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
 import eu.proasense.internal.VariableType;
+import org.codehaus.jettison.json.JSONObject;
+import twitter4j.*;
+import twitter4j.conf.ConfigurationBuilder;
+
+import javax.jms.JMSException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TwitterSampleStream implements EventStreamDeclarer {
 
 	private ActiveMQPublisher geoPublisher;
-	private ProaSenseInternalProducer kafkaProducer;
+	private EventProducer kafkaProducer;
 
 	public TwitterSampleStream() throws JMSException {
 		geoPublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Twitter.Geo");
-		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
+		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
 
 	@Override
@@ -110,7 +105,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 			
 			public void onStatus(Status status) {
 					counter++;
-					kafkaProducer.send(buildJson(status).toString().getBytes());	
+					kafkaProducer.publish(buildJson(status).toString().getBytes());
 					if (counter % 100 == 0) System.out.println(counter +" Events (Twitter Sample Stream) sent.");
 				if (status.getGeoLocation() != null) {
 					try {

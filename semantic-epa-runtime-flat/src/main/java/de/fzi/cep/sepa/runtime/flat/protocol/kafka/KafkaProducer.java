@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.runtime.flat.protocol.kafka;
 
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Producer;
 
@@ -10,7 +11,7 @@ public class KafkaProducer extends Producer {
 	private int kafkaPort;
 	private String topic;
 	
-	private ProaSenseInternalProducer producer;
+	private EventProducer producer;
 	
 	public KafkaProducer(String kafkaHostname, int kafkaPort, String topic, DatatypeDefinition dataType) {
 		super(dataType);
@@ -21,17 +22,17 @@ public class KafkaProducer extends Producer {
 	
 	@Override
 	public void publish(Object message) {
-		producer.send(dataType.marshal(message));
+		producer.publish(dataType.marshal(message));
 	}
 
 	@Override
 	public void openProducer() {
-		producer = new ProaSenseInternalProducer(kafkaHostname +":" +kafkaPort, topic);
+		producer = new StreamPipesKafkaProducer(kafkaHostname +":" +kafkaPort, topic);
 	}
 
 	@Override
 	public void closeProducer() {
-		producer.shutdown();
+		producer.closeProducer();
 	}
 
 }

@@ -1,10 +1,10 @@
 package de.fzi.cep.sepa.flink.sink;
 
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
 
 public class FlinkJmsProducer<IN> extends RichSinkFunction<IN>  { 
 
@@ -38,7 +38,7 @@ public class FlinkJmsProducer<IN> extends RichSinkFunction<IN>  {
 	@Override
 	public void invoke(IN value) throws Exception {
 		byte[] msg = serializationSchema.serialize(value);
-		publisher.sendBinary(msg);
+		publisher.publish(msg);
 	}
 }
 

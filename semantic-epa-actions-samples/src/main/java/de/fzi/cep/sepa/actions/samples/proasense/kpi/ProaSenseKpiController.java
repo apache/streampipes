@@ -1,23 +1,12 @@
 package de.fzi.cep.sepa.actions.samples.proasense.kpi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyViewer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.EcType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -25,7 +14,11 @@ import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class ProaSenseKpiController extends ActionController {
 
 	private ProaSenseEventNotifier notifier;
 	
@@ -61,11 +54,9 @@ public class ProaSenseKpiController implements SemanticEventConsumerDeclarer {
 	public Response invokeRuntime(SecInvocation sec) {
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		this.notifier = new ProaSenseEventNotifier(consumerTopic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-				new String[] {consumerTopic}, new ProaSenseKpiPublisher(sec, notifier));
-		kafkaConsumerGroup.run(1);
-		
-		return null;
+		startKafkaConsumer(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
+				new ProaSenseKpiPublisher(sec, notifier));
+		return new Response(sec.getCorrespondingPipeline(), true);
 	}
 
 	@Override

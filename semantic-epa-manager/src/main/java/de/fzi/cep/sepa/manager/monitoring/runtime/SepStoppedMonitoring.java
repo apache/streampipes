@@ -1,5 +1,18 @@
 package de.fzi.cep.sepa.manager.monitoring.runtime;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
+import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
+import de.fzi.cep.sepa.manager.operations.Operations;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,20 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fzi.cep.sepa.model.impl.EventStream;
-import org.json.JSONObject;
-
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
-import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
-
 /**
  * 
  *  
@@ -32,7 +31,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 	private Map<String, List<PipelineObserver>> streamToObserver;
 	private Map<String, Pipeline> streamToStoppedMonitoringPipeline;
-	private KafkaConsumerGroup kafkaConsumerGroup;
+	private StreamPipesKafkaConsumer kafkaConsumerGroup;
 
 	@Override
 	public boolean register(PipelineObserver observer) {
@@ -100,7 +99,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		return false;
 	}
 
-	private class KafkaCallback implements IMessageListener<byte[]> {
+	private class KafkaCallback implements EventListener<byte[]> {
 
 		@Override
 		public void onEvent(byte[] payload) {
@@ -124,9 +123,10 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 		String topic = "internal.streamepipes.sec.stopped";
 
-		kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), topic,
-				new String[] { topic }, new KafkaCallback());
-		kafkaConsumerGroup.run(1);
+		kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getZookeeperUrl(), topic,
+				new KafkaCallback());
+		Thread thread = new Thread(kafkaConsumerGroup);
+		thread.start();
 
 	}
 

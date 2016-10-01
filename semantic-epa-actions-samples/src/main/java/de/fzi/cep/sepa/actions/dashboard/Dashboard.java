@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.actions.dashboard;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
 
 import javax.jms.JMSException;
 
-public class Dashboard  implements IMessageListener<byte[]> {
+public class Dashboard  implements EventListener<byte[]> {
     ActiveMQPublisher publisher;
 
     public Dashboard(String topic) {
@@ -19,11 +19,7 @@ public class Dashboard  implements IMessageListener<byte[]> {
 
     @Override
     public void onEvent(byte[] payload) {
-        try {
-            publisher.sendBinary(payload);
-        } catch (JMSException e) {
-            e.printStackTrace();
-        }
+        publisher.publish(payload);
 
     }
 }

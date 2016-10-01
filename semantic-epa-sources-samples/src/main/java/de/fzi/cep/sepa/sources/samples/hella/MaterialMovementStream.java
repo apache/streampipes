@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -57,7 +57,7 @@ public class MaterialMovementStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Montrac");
-		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
+		EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

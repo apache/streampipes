@@ -1,21 +1,12 @@
 package de.fzi.proasense.monitoring.streams;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.thrift.TDeserializer;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-
 import com.google.gson.JsonObject;
-
+import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -27,15 +18,22 @@ import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.proasense.config.ProaSenseSettings;
 import eu.proasense.internal.PredictedEvent;
+import org.apache.thrift.TDeserializer;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
 
-public class PredictionStream implements EventStreamDeclarer, Runnable, IMessageListener<byte[]> {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class PredictionStream implements EventStreamDeclarer, Runnable, EventListener<byte[]> {
 
 	private static final String IN_TOPIC = "eu.proasense.internal.oa.mhwirth.predicted";
 	private static final String OUT_TOPIC = "eu.proasense.internal.sp.monitoring.prediction";
 	
 	
 	private TDeserializer deserializer;
-	private ProaSenseInternalProducer producer;
+	private StreamPipesKafkaProducer producer;
 	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
@@ -76,7 +74,7 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 		System.out.println(payload);
 		Optional<PredictedEvent> recEvent = deserialize(payload);
 		if (recEvent.isPresent())
-			producer.send(toJson(recEvent.get()).getBytes());
+			producer.publish(toJson(recEvent.get()).getBytes());
 	}
 
 	private String toJson(PredictedEvent re) {
@@ -102,11 +100,12 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, IMessage
 
 	@Override
 	public void run() {
-		producer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), OUT_TOPIC);
+		producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), OUT_TOPIC);
 		deserializer = new TDeserializer(new TBinaryProtocol.Factory());
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), "pred_mon",
-				new String[] {IN_TOPIC}, this);
-		kafkaConsumerGroup.run(1);
+		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
+				IN_TOPIC, this);
+		Thread thread = new Thread(kafkaConsumerGroup);
+		thread.start();
 	}
 
 	@Override

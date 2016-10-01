@@ -1,20 +1,12 @@
-package de.fzi.cep.sepa.commons.messaging.activemq;
+package de.fzi.cep.sepa.messaging.jms;
 
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
+import de.fzi.cep.sepa.messaging.EventProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import javax.jms.*;
 
 
-public class ActiveMQPublisher implements IMessagePublisher<String> {
+public class ActiveMQPublisher implements EventProducer {
 	private Connection connection;
 	private Session session;
 	private MessageProducer producer;
@@ -51,23 +43,23 @@ public class ActiveMQPublisher implements IMessagePublisher<String> {
 		TextMessage message = session.createTextMessage(text);
 		producer.send(message);
 	}
-	
-	public void sendBinary(byte[] payload) throws JMSException {
-		BytesMessage message = session.createBytesMessage();
-		message.writeBytes(payload);
-		producer.send(message);
+
+
+	@Override
+	public void openProducer() {
+
 	}
 
-	public void close() throws JMSException {
+	@Override
+	public void publish(byte[] event)  {
+		BytesMessage message = null;
 		try {
-			producer.close();
-			session.close();
-			connection.close();
-			//logger.info("ActiveMQ connection closed successfully.");
+			message = session.createBytesMessage();
+			message.writeBytes(event);
+			producer.send(message);
 		} catch (JMSException e) {
-			//logger.warn("Could not close ActiveMQ connection.");
+			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -77,6 +69,18 @@ public class ActiveMQPublisher implements IMessagePublisher<String> {
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void closeProducer() {
+		try {
+			producer.close();
+			session.close();
+			connection.close();
+			//logger.info("ActiveMQ connection closed successfully.");
+		} catch (JMSException e) {
+			//logger.warn("Could not close ActiveMQ connection.");
 		}
 	}
 

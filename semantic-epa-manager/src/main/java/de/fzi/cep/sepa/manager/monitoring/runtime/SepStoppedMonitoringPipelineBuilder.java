@@ -74,7 +74,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 
 		pipeline.setSepas(Arrays.asList(rateSepaClient));
 
-		PipelineModificationMessage message = new PipelineVerificationHandler(pipeline, true).validateConnection()
+		PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection()
 				.computeMappingProperties().getPipelineModificationMessage();
 
 		SepaInvocation updatedSepa = updateStreamStoppedSepa(rateSepaClient, message);
@@ -83,7 +83,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 		kafkaActionClient.setConnectedTo(Arrays.asList("rate"));
 		pipeline.setActions(Arrays.asList(kafkaActionClient));
 
-		message = new PipelineVerificationHandler(pipeline, false).validateConnection().computeMappingProperties()
+		message = new PipelineVerificationHandler(pipeline).validateConnection().computeMappingProperties()
 				.getPipelineModificationMessage();
 
 		pipeline.setActions(Arrays.asList(updateKafkaSec(kafkaActionClient, message)));

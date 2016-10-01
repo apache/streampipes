@@ -7,17 +7,18 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class CsvPublisher implements Runnable {
 	
 	private static final Logger LOG = Logger.getAnonymousLogger();
 	
-	private IMessagePublisher<byte[]> publisher;
+	private EventProducer publisher;
 	private CsvReadingTask csvSettings;
 	private SimulationSettings simulationSettings;
 	
-	public CsvPublisher(IMessagePublisher<byte[]> publisher, CsvReadingTask csvSettings, SimulationSettings simulationSettings)
+	public CsvPublisher(EventProducer publisher, CsvReadingTask csvSettings, SimulationSettings simulationSettings)
 	{
 		this.publisher = publisher;
 		this.csvSettings = csvSettings;

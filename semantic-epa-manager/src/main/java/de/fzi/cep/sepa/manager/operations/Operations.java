@@ -32,7 +32,7 @@ public class Operations {
 	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial)
 			throws Exception {
 		PipelineVerificationHandler validator = new PipelineVerificationHandler(
-				pipeline, isPartial);
+				pipeline);
 		return validator
 		.validateConnection()
 		.computeMappingProperties()

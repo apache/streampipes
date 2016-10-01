@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.actions.slack.config.SlackConfig;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
 import de.fzi.cep.sepa.model.builder.SchemaBuilder;
 import de.fzi.cep.sepa.model.builder.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EcType;
@@ -37,7 +37,7 @@ import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
 public class SlackNotificationController implements SemanticEventConsumerDeclarer {
 
-    KafkaConsumerGroup kafkaConsumerGroup;
+    StreamPipesKafkaConsumer kafkaConsumerGroup;
     SlackNotification slackNotification;
 
     @Override
@@ -82,9 +82,10 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
             String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 
-            kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-                    new String[]{consumerTopic}, slackNotification);
-            kafkaConsumerGroup.run(1);
+            kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+                    slackNotification);
+            Thread thread = new Thread(kafkaConsumerGroup);
+            thread.start();
 
 
             return new Response(invocationGraph.getElementId(), true);
@@ -96,7 +97,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
     @Override
     public Response detachRuntime(String pipelineId) {
 
-        kafkaConsumerGroup.shutdown();
+        kafkaConsumerGroup.close();
 
         try {
             slackNotification.getParams().getSession().disconnect();

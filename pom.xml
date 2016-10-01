@@ -265,6 +265,21 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>de.fzi.cep.sepa</groupId>
+                <artifactId>semantic-epa-messaging</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>de.fzi.cep.sepa</groupId>
+                <artifactId>semantic-epa-messaging-kafka</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>de.fzi.cep.sepa</groupId>
+                <artifactId>semantic-epa-messaging-jms</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka_2.10</artifactId>
                 <version>0.10.0.1</version>
@@ -273,6 +288,11 @@
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
                 <version>0.10.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Ullink</groupId>
+                <artifactId>simple-slack-api</artifactId>
+                <version>0.5.1</version>
             </dependency>
 
 
@@ -316,6 +336,9 @@
         <module>semantic-epa-appstore</module>
         <module>semantic-epa-appstore-deployer</module>
         <module>semantic-epa-appstore-shared</module>
+        <module>semantic-epa-messaging-kafka</module>
+        <module>semantic-epa-messaging</module>
+        <module>semantic-epa-messaging-jms</module>
     </modules>
 
     <!-- Build Settings -->

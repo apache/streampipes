@@ -1,5 +1,13 @@
 package de.fzi.cep.sepa.actions.samples.evaluation;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,23 +17,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.config.ConfigurationManager;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-
-public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> {
+public class EvaluationFileWriter implements Runnable, EventListener<byte[]> {
 
 	EvaluationParameters params;
 	PrintWriter stream;
 	private int counter = 0;
 	private JsonParser jsonParser;
-	private KafkaConsumerGroup kafkaConsumerGroup;
 	private List<ReceivedEvent> input;
+
+	private StreamPipesKafkaConsumer kafkaConsumer;
 
 	
 	private boolean running;
@@ -73,10 +73,8 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 	public void run() {
 		System.out.println("Starting Kafka Consumer");
 		System.out.println(params.getTopic());
-		kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), "EvaluationConsumer",
-				new String[] {params.getTopic()}, this);
-		kafkaConsumerGroup.run(1);
-		
+		kafkaConsumer = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
+				params.getTopic(), this);
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class EvaluationFileWriter implements Runnable, IMessageListener<byte[]> 
 		if (!running)
 		{
 			System.out.println("Stopping");
-			kafkaConsumerGroup.shutdown();
+			kafkaConsumer.close();
 			process();
 		} else
 			input.add(new ReceivedEvent(json, System.currentTimeMillis()));

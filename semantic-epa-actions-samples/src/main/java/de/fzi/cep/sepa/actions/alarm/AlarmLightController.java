@@ -1,21 +1,10 @@
 package de.fzi.cep.sepa.actions.alarm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.EcType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -25,10 +14,12 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class AlarmLightController implements SemanticEventConsumerDeclarer {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-	KafkaConsumerGroup kafkaConsumerGroup;
-	
+public class AlarmLightController extends ActionController {
+
 	@Override
 	public SecDescription declareModel() {
 		EventStream stream1 = new EventStream();
@@ -70,16 +61,15 @@ public class AlarmLightController implements SemanticEventConsumerDeclarer {
 		String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 		
 		AlarmLightParameters params = new AlarmLightParameters(selectedOption);
-		
-		kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-				new String[] {consumerTopic}, new AlarmLight(params));
-		kafkaConsumerGroup.run(1);
+
+		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic, new AlarmLight(params));
+
 		return new Response(invocationGraph.getElementId(), true);
 	}
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		kafkaConsumerGroup.shutdown();
+		stopKafkaConsumer();
 		return new Response(pipelineId, true);
 	}
 

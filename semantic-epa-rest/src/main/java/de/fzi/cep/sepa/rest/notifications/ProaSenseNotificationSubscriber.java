@@ -1,19 +1,18 @@
 package de.fzi.cep.sepa.rest.notifications;
 
-import java.text.SimpleDateFormat;
-
+import de.fzi.cep.sepa.commons.config.Configuration;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
+import de.fzi.cep.sepa.model.client.messages.ProaSenseNotificationMessage;
+import de.fzi.cep.sepa.storage.controller.StorageManager;
+import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import de.fzi.cep.sepa.commons.config.Configuration;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.model.client.messages.ProaSenseNotificationMessage;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
-import eu.proasense.internal.RecommendationEvent;
+import java.text.SimpleDateFormat;
 
-public class ProaSenseNotificationSubscriber implements IMessageListener<byte[]>, Runnable {
+public class ProaSenseNotificationSubscriber implements EventListener<byte[]>, Runnable {
 
 	
 	private TDeserializer deserializer;
@@ -26,9 +25,10 @@ public class ProaSenseNotificationSubscriber implements IMessageListener<byte[]>
 	
 	public void subscribe()
 	{
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(Configuration.getInstance().getBrokerConfig().getZookeeperUrl(), topic,
-				new String[] {topic}, this);
-		kafkaConsumerGroup.run(1);
+		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topic,
+				this);
+		Thread thread = new Thread(kafkaConsumerGroup);
+		thread.start();
 	}
 
 	@Override

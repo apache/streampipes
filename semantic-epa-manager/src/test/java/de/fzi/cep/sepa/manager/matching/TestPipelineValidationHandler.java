@@ -22,7 +22,7 @@ public class TestPipelineValidationHandler extends TestCase {
 		
 		PipelineVerificationHandler handler;
 		try {
-			handler = new PipelineVerificationHandler(pipeline, true);
+			handler = new PipelineVerificationHandler(pipeline);
 			handler.validateConnection();
 		} catch (Exception e2) {
 			fail(e2.getMessage());
@@ -40,7 +40,7 @@ public class TestPipelineValidationHandler extends TestCase {
 
 		PipelineVerificationHandler handler;
 		try {
-			handler = new PipelineVerificationHandler(pipeline, true);
+			handler = new PipelineVerificationHandler(pipeline);
 			handler.validateConnection();
             assertFalse(true);
 		} catch (Exception e2) {

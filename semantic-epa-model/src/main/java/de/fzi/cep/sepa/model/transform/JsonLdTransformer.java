@@ -106,9 +106,9 @@ public class JsonLdTransformer implements RdfTransformer {
                 return false;
             }
         } catch (NoSuchFieldException e) {
-            System.out.println(ms.getCanonicalName());
-            System.out.println(m.getName());
-            System.out.println(e.getClass().getCanonicalName());
+            //System.out.println(ms.getCanonicalName());
+            //System.out.println(m.getName());
+            //System.out.println(e.getClass().getCanonicalName());
             return true;
         }
     }

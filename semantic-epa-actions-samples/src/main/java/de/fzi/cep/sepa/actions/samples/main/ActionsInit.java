@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.actions.samples.main;
 import de.fzi.cep.sepa.actions.alarm.AlarmLightController;
 import de.fzi.cep.sepa.actions.dashboard.DashboardController;
 import de.fzi.cep.sepa.actions.samples.barchart.BarChartController;
-import de.fzi.cep.sepa.actions.samples.charts.LineChartController;
 import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.evaluation.EvaluationController;
@@ -20,7 +19,6 @@ import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.route.RouteController;
 import de.fzi.cep.sepa.actions.samples.table.MultiRowTableController;
-import de.fzi.cep.sepa.actions.samples.table.TableViewController;
 import de.fzi.cep.sepa.actions.samples.verticalbar.VerticalBarController;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
@@ -31,11 +29,8 @@ public class ActionsInit extends StandaloneModelSubmitter {
 	{
         DeclarersSingleton.getInstance()
 
-
 		.add(new JMSConsumer())
-		.add(new LineChartController())
 		.add(new MapsController())
-		.add(new TableViewController())
 				
 		.add(new FileController())
 		.add(new MultiRowTableController())

@@ -1,21 +1,14 @@
-package de.fzi.cep.sepa.commons.messaging.activemq;
+package de.fzi.cep.sepa.messaging.jms;
 
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
+import de.fzi.cep.sepa.messaging.EventListener;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.util.ByteSequence;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
+import javax.jms.*;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.lang.IllegalStateException;
 
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements AutoCloseable {
 
@@ -31,7 +24,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements Auto
 	        }
 	    }
 
-	    public void setListener(final IMessageListener listener) {
+	    public void setListener(final EventListener<String> listener) {
 	        try {
 	            consumer.setMessageListener(new MessageListener() {
 	                @Override

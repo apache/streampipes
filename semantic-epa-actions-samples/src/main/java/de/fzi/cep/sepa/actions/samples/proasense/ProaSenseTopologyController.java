@@ -1,33 +1,22 @@
 package de.fzi.cep.sepa.actions.samples.proasense;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.jms.JMSException;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
-import de.fzi.cep.sepa.actions.messaging.jms.ActiveMQConsumer;
+import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.EcType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class ProaSenseTopologyController implements SemanticEventConsumerDeclarer {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-	ActiveMQConsumer consumer;
+public class ProaSenseTopologyController extends ActionController {
+
 	private ProaSenseEventNotifier eventNotifier;
 	
 	@Override
@@ -64,9 +53,8 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 		this.eventNotifier = new ProaSenseEventNotifier(consumerTopic);
 		System.out.println(consumerTopic);
 		//consumer = new ActiveMQConsumer(consumerUrl, consumerTopic);
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-				new String[] {consumerTopic}, new ProaSenseTopologyPublisher(sec, eventNotifier));
-		kafkaConsumerGroup.run(1);
+		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+				new ProaSenseTopologyPublisher(sec, eventNotifier));
 		
 		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		
@@ -76,12 +64,7 @@ public class ProaSenseTopologyController implements SemanticEventConsumerDeclare
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		try {
-			consumer.close();
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		stopKafkaConsumer();
         return new Response(pipelineId, true);
 	}
 

@@ -50,7 +50,7 @@ public class ElementRecommender {
                 Pipeline tempPipeline = cloner.deepClone(pipeline);
                 SepaInvocation newSepa = generateSepaClient(sepa, connectedTo);
                 tempPipeline.getSepas().add(newSepa);
-                new PipelineVerificationHandler(tempPipeline, true)
+                new PipelineVerificationHandler(tempPipeline)
                         .validateConnection()
                         .getPipelineModificationMessage();
                 addPossibleElements(sepa);

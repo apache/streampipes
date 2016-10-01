@@ -1,19 +1,18 @@
 package de.fzi.cep.sepa.flink;
 
+import de.fzi.cep.sepa.flink.converter.JsonToMapFormat;
+import de.fzi.cep.sepa.flink.source.NonParallelKafkaSource;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
+import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
-
-import de.fzi.cep.sepa.flink.converter.JsonToMapFormat;
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportProtocol;
 
 public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Runnable, Serializable {
 
@@ -27,7 +26,9 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	protected Thread thread;
 	
 	protected StreamExecutionEnvironment env;
-	protected FlinkDeploymentConfig config;	
+	protected FlinkDeploymentConfig config;
+
+	private JobExecutionResult result;
 	
 	protected I graph;
 	
@@ -44,17 +45,23 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	}
 	
 	public boolean startExecution() {
-		
-		if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
-		else this.env = StreamExecutionEnvironment
-				.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
-			
-		DataStream<String> messageStream = env
-				  .addSource(new FlinkKafkaConsumer082<>(getInputTopic(), new SimpleStringSchema(), getProperties()));
-		
-		DataStream<Map<String, Object>> convertedStream = messageStream.flatMap(new JsonToMapFormat());
-	
-		return execute(convertedStream);
+		try {
+//			if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
+//			else this.env = StreamExecutionEnvironment
+//					.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
+
+			this.env = StreamExecutionEnvironment.getExecutionEnvironment();
+			DataStream<String> messageStream = env
+					//.addSource(new FlinkKafkaConsumer09<>(getInputTopic(), new SimpleStringSchema(), getProperties()));
+			.addSource(new NonParallelKafkaSource(getKafkaHost() + ":" +getKafkaPort(), getInputTopic()));
+
+			DataStream<Map<String, Object>> convertedStream = messageStream.flatMap(new JsonToMapFormat());
+
+			return execute(convertedStream);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public abstract boolean execute(DataStream<Map<String, Object>> convertedStream);
@@ -63,7 +70,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	public void run()
 	{
 		try {
-			env.execute(graph.getElementId());
+			result = env.execute(graph.getElementId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,7 +81,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	{
 		FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
 		try {
-			return ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId()));	
+			return ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId()));
 	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,11 +97,11 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	
 	protected Properties getProperties() {
 		
-		String zookeeperHost = ((KafkaTransportProtocol) protocol()).getZookeeperHost();
-		int zookeeperPort = ((KafkaTransportProtocol) protocol()).getZookeeperPort();
+		String zookeeperHost = getZookeeperHost();
+		int zookeeperPort = getZookeeperPort();
 
-		String kafkaHost = ((KafkaTransportProtocol) protocol()).getBrokerHostname();
-		int kafkaPort = ((KafkaTransportProtocol) protocol()).getKafkaPort();
+		String kafkaHost = getKafkaHost();
+		int kafkaPort = getKafkaPort();
 
 		Properties props = new Properties();
 		props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
@@ -104,6 +111,22 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 		props.put("zookeeper.sync.time.ms", "20000");
 		props.put("auto.commit.interval.ms", "10000");
 		return props;
+	}
+
+	private String getKafkaHost() {
+		return ((KafkaTransportProtocol) protocol()).getBrokerHostname();
+	}
+
+	private Integer getKafkaPort() {
+		return ((KafkaTransportProtocol) protocol()).getKafkaPort();
+	}
+
+	private String getZookeeperHost() {
+		return ((KafkaTransportProtocol) protocol()).getZookeeperHost();
+	}
+
+	private Integer getZookeeperPort() {
+		return ((KafkaTransportProtocol) protocol()).getZookeeperPort();
 	}
 	
 	private TransportProtocol protocol() {

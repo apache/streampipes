@@ -1,20 +1,19 @@
 package de.fzi.cep.sepa.flink;
 
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-import org.apache.flink.streaming.util.serialization.SerializationSchema;
-
 import de.fzi.cep.sepa.flink.serializer.SimpleJmsSerializer;
 import de.fzi.cep.sepa.flink.serializer.SimpleKafkaSerializer;
 import de.fzi.cep.sepa.flink.sink.FlinkJmsProducer;
+import de.fzi.cep.sepa.flink.sink.NonParallelKafkaProducer;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.util.serialization.SerializationSchema;
+
+import java.util.Map;
+import java.util.Properties;
 
 public abstract class FlinkSepaRuntime<B extends BindingParameters> extends FlinkRuntime<SepaInvocation> {
 
@@ -46,7 +45,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic
-			.addSink(new FlinkKafkaProducer<Map<String, Object>>(getOutputTopic(), kafkaSerializer, getProducerProperties()));
+			.addSink(new NonParallelKafkaProducer<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
 		else applicationLogic
 			.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
 		
@@ -93,6 +92,10 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		properties.put("metadata.broker.list", getProperties().get("bootstrap.servers"));
 		properties.put("bootstrap.servers", getProperties().get("bootstrap.servers"));
 		return properties;
+	}
+
+	private String getKafkaUrl() {
+		return String.valueOf(getProperties().get("bootstrap.servers"));
 	}
 	
 }

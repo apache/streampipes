@@ -1,20 +1,20 @@
 package de.fzi.cep.sepa.actions.samples.kafka;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.EventProducer;
 
-public class KafkaPublisher implements IMessageListener<byte[]> {
+public class KafkaPublisher implements EventListener<byte[]> {
 
-	private ProaSenseInternalProducer producer;
+	private EventProducer producer;
 	
-	public KafkaPublisher(ProaSenseInternalProducer producer)
+	public KafkaPublisher(EventProducer producer)
 	{
 		this.producer = producer;
 	}
 	
 	@Override
 	public void onEvent(byte[] message) {
-		producer.send(message);
+		producer.publish(message);
 	}
 
 }

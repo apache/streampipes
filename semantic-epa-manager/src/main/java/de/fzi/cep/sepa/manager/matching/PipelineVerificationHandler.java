@@ -1,24 +1,18 @@
 package de.fzi.cep.sepa.manager.matching;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import de.fzi.cep.sepa.manager.data.PipelineGraph;
 import de.fzi.cep.sepa.manager.data.PipelineGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.v2.ElementVerification;
 import de.fzi.cep.sepa.manager.matching.v2.mapping.MappingPropertyCalculator;
 import de.fzi.cep.sepa.manager.util.PipelineVerificationUtils;
 import de.fzi.cep.sepa.manager.util.TreeUtils;
-import de.fzi.cep.sepa.model.client.pipeline.PipelineModification;
-import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
-import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
-
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModification;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
@@ -28,8 +22,13 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
-import de.fzi.cep.sepa.model.impl.staticproperty.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class PipelineVerificationHandler {
 
@@ -40,7 +39,7 @@ public class PipelineVerificationHandler {
 
     InvocableSEPAElement rdfRootElement;
 
-    public PipelineVerificationHandler(Pipeline pipeline, boolean isPartial)
+    public PipelineVerificationHandler(Pipeline pipeline)
             throws Exception {
 
         this.pipeline = pipeline;
@@ -48,7 +47,7 @@ public class PipelineVerificationHandler {
         this.invocationGraphs = new ArrayList<>();
 
         // prepare a list of all pipeline elements without the root element
-        List<NamedSEPAElement> sepaElements = new ArrayList<NamedSEPAElement>();
+        List<NamedSEPAElement> sepaElements = new ArrayList<>();
         sepaElements.addAll(pipeline.getSepas());
         sepaElements.addAll(pipeline.getStreams());
         sepaElements.addAll(pipeline.getActions());
@@ -249,7 +248,7 @@ public class PipelineVerificationHandler {
 
     private List<InvocableSEPAElement> makeInvocationGraphs(NamedSEPAElement rootElement) {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-        return new InvocationGraphBuilder(pipelineGraph, true, null).buildGraphs();
+        return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
     }
 
     private SepaInvocation findInvocationGraph(List<InvocableSEPAElement> graphs, String domId) {

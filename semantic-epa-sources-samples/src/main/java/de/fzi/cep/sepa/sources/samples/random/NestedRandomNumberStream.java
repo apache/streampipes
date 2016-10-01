@@ -1,17 +1,8 @@
 package de.fzi.cep.sepa.sources.samples.random;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import javax.jms.JMSException;
-
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -21,6 +12,13 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import javax.jms.JMSException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class NestedRandomNumberStream implements EventStreamDeclarer {
 	

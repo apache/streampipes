@@ -1,22 +1,11 @@
 package de.fzi.cep.sepa.actions.samples.kafka;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
+import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.EcType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -27,10 +16,12 @@ import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class KafkaController implements SemanticEventConsumerDeclarer {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-	KafkaConsumerGroup kafkaConsumerGroup;
-	
+public class KafkaController extends ActionController {
+
 	@Override
 	public SecDescription declareModel() {
 		
@@ -81,9 +72,9 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaHost");
 			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 			
-			kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-					new String[] {consumerTopic}, new KafkaPublisher(new ProaSenseInternalProducer(kafkaHost + ":" +kafkaPort, topic)));
-			kafkaConsumerGroup.run(1);
+			startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+					new KafkaPublisher(new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
+
 			
 			//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		    String pipelineId = sec.getCorrespondingPipeline();
@@ -93,7 +84,7 @@ public class KafkaController implements SemanticEventConsumerDeclarer {
 
     @Override
     public Response detachRuntime(String pipelineId) {
-        kafkaConsumerGroup.shutdown();
+        stopKafkaConsumer();
         return new Response(pipelineId, true);
     }
 

@@ -6,13 +6,14 @@ import java.io.IOException;
 import java.util.Optional;
 
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
+import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class EnrichedReplay implements Runnable {
 
-	private IMessagePublisher<byte[]> publisher;
+	private EventProducer publisher;
 	
-	public EnrichedReplay(IMessagePublisher<byte[]> publisher)
+	public EnrichedReplay(EventProducer publisher)
 	{
 		this.publisher = publisher;
 	}

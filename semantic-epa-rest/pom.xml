@@ -45,6 +45,10 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-messaging-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-units</artifactId>
 		</dependency>
 		<dependency>

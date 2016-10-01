@@ -7,7 +7,7 @@ import java.util.Random;
 
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -24,13 +24,13 @@ import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 
 public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
-	ProaSenseInternalProducer kafkaProducer;
+	StreamPipesKafkaProducer kafkaProducer;
 	
 	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
 	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
 	
 	public RandomNumberStream(String topic) {
-		kafkaProducer = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 	}
 	
 	protected EventStream prepareStream(String topic, String messageFormat) {
@@ -82,7 +82,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
 						Optional<byte[]> nextMsg = getMessage(System.currentTimeMillis(), random.nextInt(100), j);
-						if (nextMsg.isPresent()) kafkaProducer.send(nextMsg.get());
+						if (nextMsg.isPresent()) kafkaProducer.publish(nextMsg.get());
 						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
 						if (j % ClientConfiguration.INSTANCE.getWaitEvery() == 0) {
 							Thread.sleep(ClientConfiguration.INSTANCE.getWaitForMs());

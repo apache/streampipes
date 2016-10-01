@@ -1,16 +1,13 @@
 package de.fzi.cep.sepa.esper.main;
 
-import org.apache.commons.lang.RandomStringUtils;
-
 import com.espertech.esper.client.EPRuntime;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-
-public class PerformanceTestFeeder implements IMessageListener<byte[]>, Runnable {
+public class PerformanceTestFeeder implements EventListener<byte[]>, Runnable {
 
 	private String zookeeperHost;
 	private int zookeeperPort;
@@ -18,7 +15,7 @@ public class PerformanceTestFeeder implements IMessageListener<byte[]>, Runnable
 	private EPRuntime runtime;
 	private JsonParser parser;
 	
-	private KafkaConsumerGroup kafkaConsumerGroup;
+	private StreamPipesKafkaConsumer kafkaConsumerGroup;
 	
 	public PerformanceTestFeeder(String zookeeperHost, int zookeeperPort, String topic, EPRuntime runtime) {
 		this.zookeeperHost = zookeeperHost;
@@ -48,9 +45,10 @@ public class PerformanceTestFeeder implements IMessageListener<byte[]>, Runnable
 
 	@Override
 	public void run() {
-		kafkaConsumerGroup = new KafkaConsumerGroup(zookeeperHost +":" +zookeeperPort, RandomStringUtils.randomAlphabetic(10),
-				new String[] {topic}, this);
-		kafkaConsumerGroup.run(1);
+		kafkaConsumerGroup = new StreamPipesKafkaConsumer(zookeeperHost +":" +zookeeperPort,
+				topic, this);
+		Thread thread = new Thread(kafkaConsumerGroup);
+		thread.start();
 	}
 
 }

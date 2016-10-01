@@ -22,7 +22,7 @@ public class TestSplitMatching {
 
         PipelineVerificationHandler handler;
         try {
-            handler = new PipelineVerificationHandler(pipeline, true);
+            handler = new PipelineVerificationHandler(pipeline);
             handler.validateConnection();
         } catch (Exception e2) {
             fail(e2.getMessage());

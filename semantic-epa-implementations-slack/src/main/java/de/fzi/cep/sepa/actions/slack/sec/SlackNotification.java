@@ -4,12 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ullink.slack.simpleslackapi.SlackChannel;
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
+import de.fzi.cep.sepa.messaging.EventListener;
 
 import java.io.UnsupportedEncodingException;
 
 
-public class SlackNotification implements IMessageListener<byte[]> {
+public class SlackNotification implements EventListener<byte[]> {
     private SlackNotificationParameters params;
     public SlackNotification(SlackNotificationParameters params) {
         this.params = params;

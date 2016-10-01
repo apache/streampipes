@@ -49,7 +49,7 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		desc.addEventStream(stream2);	
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new CustomOutputStrategy(true));
+		strategies.add(new CustomOutputStrategy(false));
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();

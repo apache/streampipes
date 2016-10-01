@@ -16,10 +16,6 @@
         <!-- </dependency> -->
 
         <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.10</artifactId>
-        </dependency>
-        <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-model</artifactId>
         </dependency>
@@ -65,6 +61,14 @@
         <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-client-standalone</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-messaging-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-messaging-jms</artifactId>
         </dependency>
     </dependencies>
     <build>

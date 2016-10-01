@@ -20,6 +20,7 @@ public class TimestampProgram extends FlinkSepaRuntime<TimestampParameters>{
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>> messageStream) {
+		System.out.println("executing");
 		return (DataStream<Map<String, Object>>) messageStream
 				.flatMap(new TimestampEnricher(params.getAppendTimePropertyName()));
 	}

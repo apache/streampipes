@@ -1,12 +1,11 @@
-import java.util.Date;
-import java.util.HashMap;
-
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import eu.proasense.internal.RecommendationEvent;
+import java.util.Date;
+import java.util.HashMap;
 
 
 public class TestRecommendation {
@@ -23,9 +22,9 @@ public class TestRecommendation {
 		event.setEventProperties(new HashMap<>());
 		event.setTimestamp(new Date().getTime());
 
-		ProaSenseInternalProducer producer = new ProaSenseInternalProducer("ipe-koi04.fzi.de:9092", "de.fzi.cep.sepa.notifications");
+		StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer("ipe-koi04.fzi.de:9092", "de.fzi.cep.sepa.notifications");
 		try {
-			producer.send(serializer.serialize(event));
+			producer.publish(serializer.serialize(event));
 		} catch (TException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

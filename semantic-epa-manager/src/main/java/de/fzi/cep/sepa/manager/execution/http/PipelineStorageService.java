@@ -25,26 +25,16 @@ public class PipelineStorageService {
 
     public void addPipeline() {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-        InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, false, null);
+        InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
         List<InvocableSEPAElement> graphs = builder.buildGraphs();
 
-        SecInvocation sec = getSECInvocationGraph(graphs);
-
         List<SecInvocation> secs = filter(graphs, SecInvocation.class);
-
         List<SepaInvocation> sepas = filter(graphs, SepaInvocation.class);
 
         pipeline.setSepas(sepas);
         pipeline.setActions(secs);
 
         StorageManager.INSTANCE.getPipelineStorageAPI().store(pipeline);
-    }
-
-    private SecInvocation getSECInvocationGraph(List<InvocableSEPAElement> graphs)
-    {
-        for (InvocableSEPAElement graph : graphs)
-            if (graph instanceof SecInvocation) return (SecInvocation) graph;
-        throw new IllegalArgumentException("No action element available");
     }
 
     private <T> List<T> filter(List<InvocableSEPAElement> graphs, Class<T> clazz) {

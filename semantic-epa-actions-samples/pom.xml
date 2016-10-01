@@ -39,9 +39,12 @@
             <artifactId>semantic-epa-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-messaging-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-messaging-jms</artifactId>
         </dependency>
         <dependency>
             <groupId>org.rendersnake</groupId>

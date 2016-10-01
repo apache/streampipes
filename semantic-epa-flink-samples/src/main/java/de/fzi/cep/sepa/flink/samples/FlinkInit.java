@@ -14,7 +14,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
 
 	public static void main(String[] args) {
 		DeclarersSingleton.getInstance()
-				.add(new WordCountController())
+				//.add(new WordCountController())
 				.add(new ElasticSearchController())
 				.add(new NumberClassificationController())
 				.add(new TimestampController())
