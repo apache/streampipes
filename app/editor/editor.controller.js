@@ -910,7 +910,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             showToast("error", "No stream element present in pipeline", "Submit Error");
             error = true;
         }
-        
+
         if (!actionPresent) {
             showToast("error", "No action element present in pipeline", "Submit Error");
             error = true;
@@ -1021,28 +1021,28 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     function populateRecommendedList($element, recs) {
 
+        recs.sort(function(a,b) {return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);} );
+        var maxRecs = recs.length > 7 ? 7 : recs.length;
         var el;
-        for (var i = 0; i < recs.length; i++) {
+        for (var i = 0; i < maxRecs; i++) {
 
             el = recs[i];
-            getElementByElementId(el.elementId)
-                .success(function (element) {
-                    if (typeof element != "undefined") {
-
-                        var recEl = new objectProvider.recElement(element);
-                        $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
-                            "data-toggle": "tooltip",
-                            "data-placement": "top",
-                            "data-delay": '{"show": 100, "hide": 100}',
-                            title: recEl.name
-                        }).appendTo($('ul', $element));
-                        $('ul', $element).circleMenu('init');
-                    } else {
-                        console.log(i);
-                    }
-                });
+            var element = getPipelineElementContents(el.elementId);
+            if (typeof element != "undefined") {
+                var recEl = new objectProvider.recElement(element);
+                $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
+                    "data-toggle": "tooltip",
+                    "data-placement": "top",
+                    "data-delay": '{"show": 100, "hide": 100}',
+                    "weight": el.weight,
+                    "type" : element.type,
+                    title: recEl.name
+                }).appendTo($('ul', $element));
+            } else {
+                console.log(i);
+            }
         }
-
+        $('ul', $element).circleMenu('init');
         initTooltips();
     }
 

@@ -1,10 +1,8 @@
 AddCtrl.$inject = ['$scope', 'restApi'];
 
 export default function AddCtrl($scope, restApi) {
-	
-	$scope.elements;
-	$scope.endpointUrl;
-	$scope.endpointData;
+
+	$scope.elements = "";
 	$scope.results = [];
 	$scope.loading = false;
 	$scope.marketplace = false;
@@ -15,9 +13,10 @@ export default function AddCtrl($scope, restApi) {
 		$scope.selectedTab = type;
 	}
 	
-	$scope.addFromEndpoint = function () {
+	$scope.addFromEndpoint = function (endpointUrl) {
+		console.log(endpointUrl);
 		$scope.loading = true;		
-		restApi.addBatch($scope.endpointUrl, true)
+		restApi.addBatch(endpointUrl, true)
         .success(function (data) {
         	$scope.loading = false;
         	angular.forEach(data, function(element, index) {
