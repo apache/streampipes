@@ -5,7 +5,13 @@ public class PipelineElementRecommendation {
 	private String elementId;
 	private String name;
 	private String description;
-	
+	private Float weight;
+	private Integer count;
+
+	public PipelineElementRecommendation() {
+
+	}
+
 	public PipelineElementRecommendation(String elementId, String name, String description)
 	{
 		this.elementId = elementId;
@@ -36,6 +42,20 @@ public class PipelineElementRecommendation {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
+	public Float getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Float weight) {
+		this.weight = weight;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 }

@@ -1,20 +1,18 @@
 package de.fzi.cep.sepa.model.impl.graph;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -44,7 +42,7 @@ public class SecInvocation extends InvocableSEPAElement{
 		this.setInputStreams(sec.getEventStreams());
 		this.setSupportedGrounding(sec.getSupportedGrounding());
 		this.setStaticProperties(sec.getStaticProperties());
-		this.setBelongsTo(sec.getRdfId().toString());
+		this.setBelongsTo(sec.getElementId().toString());
 		this.category = sec.getCategory();
 		this.setStreamRequirements(sec.getEventStreams());
 		//this.setUri(belongsTo +"/" +getElementId());

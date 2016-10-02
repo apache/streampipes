@@ -27,6 +27,7 @@ public class TestElementRecommendation {
         stream.setDOM("A");
         pipeline.setStreams(Arrays.asList(new EventStream(stream)));
         pipeline.setSepas(Arrays.asList());
+        pipeline.setActions(Arrays.asList());
 
         PipelineElementRecommendationMessage message = null;
         try {

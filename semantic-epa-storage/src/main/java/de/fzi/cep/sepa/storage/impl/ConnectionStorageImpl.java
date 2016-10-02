@@ -1,23 +1,22 @@
 package de.fzi.cep.sepa.storage.impl;
 
+import com.google.common.net.UrlEscapers;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import de.fzi.cep.sepa.model.client.connection.Connection;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendation;
+import de.fzi.cep.sepa.storage.api.ConnectionStorage;
+import de.fzi.cep.sepa.storage.util.Utils;
+import org.apache.http.client.fluent.Request;
+import org.lightcouch.CouchDbClient;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.http.client.fluent.Request;
-import org.lightcouch.CouchDbClient;
-
-import com.google.common.net.UrlEscapers;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendation;
-import de.fzi.cep.sepa.model.client.connection.Connection;
-import de.fzi.cep.sepa.storage.api.ConnectionStorage;
-import de.fzi.cep.sepa.storage.util.Utils;
 
 public class ConnectionStorageImpl extends Storage<PipelineElementRecommendation> implements ConnectionStorage {
 
@@ -38,6 +37,7 @@ public class ConnectionStorageImpl extends Storage<PipelineElementRecommendation
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
 		query = buildQuery(from);
+		System.out.println(query);
 		Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
 		if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
 		else return Collections.emptyList();
@@ -46,15 +46,32 @@ public class ConnectionStorageImpl extends Storage<PipelineElementRecommendation
 	
 	private String buildQuery(String from)  {
 			CouchDbClient dbClient = getCouchDbClient();
-			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
+			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&group=true");
 		return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
 
 	private List<PipelineElementRecommendation> handleResponse(JsonObject jsonObject) {
 		List<PipelineElementRecommendation> recommendations = new ArrayList<>();
 		JsonArray jsonArray = jsonObject.get("rows").getAsJsonArray();
-		jsonArray.forEach(resultObj -> recommendations.add(new PipelineElementRecommendation(resultObj.getAsJsonObject().get("key").getAsJsonArray().get(1).getAsString(), "", "")));
+		jsonArray.forEach(resultObj ->
+				recommendations.add(makeRecommendation(resultObj)));
 		return recommendations;
+	}
+
+	private PipelineElementRecommendation makeRecommendation(JsonElement resultObj) {
+		PipelineElementRecommendation recommendation = new PipelineElementRecommendation();
+		recommendation.setElementId(resultObj
+				.getAsJsonObject()
+				.get("key")
+				.getAsJsonArray()
+				.get(1).getAsString());
+
+		recommendation.setCount(resultObj
+				.getAsJsonObject()
+				.get("value")
+				.getAsInt());
+
+		return recommendation;
 	}
 
 	private Optional<JsonObject> getFrequentConnections(String query) {
