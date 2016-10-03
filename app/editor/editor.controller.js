@@ -507,7 +507,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $scope.currentPipelineElement = $newElement.data("JSON");
         $scope.currentPipelineElementDom = $newElement[0].id;
         var elementId = $scope.currentPipelineElement.type =='stream' ? $scope.currentPipelineElement.elementId : $scope.currentPipelineElement.belongsTo;
-        $newElement.append($compile('<pipeline-element-options create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' +elementId +' internal-id=' +$scope.currentPipelineElementDom +'></pipeline-element-options>')($scope));
+        $newElement.append($compile('<pipeline-element-options show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' +elementId +' internal-id=' +$scope.currentPipelineElementDom +'></pipeline-element-options>')($scope));
     }
 
     $scope.streamDropped = function ($newElement, endpoints) {
@@ -766,7 +766,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
 
         $(document).click(function () {
-            $('#assemblyContextMenu').hide();
             $('#staticContextMenu').hide();
             $('.circleMenu-open').circleMenu('close');
         });
@@ -953,35 +952,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     function ContextMenuClickHandler(type) {
 
-        if (type === "assembly") {
-            $('#assemblyContextMenu').off('click').on('click', function (e) {
-                $(this).hide();
-
-                var $invokedOn = $(this).data("invokedOn");
-                var $selected = $(e.target);
-                while ($invokedOn.parent().get(0) != $('#assembly').get(0)) {
-                    $invokedOn = $invokedOn.parent();
-
-                }
-                if ($selected.get(0) === $('#blockButton').get(0)) {
-                    if ($invokedOn.hasClass("connectable-block")) {
-
-                        $scope.displayPipeline($.extend({}, $invokedOn.data("block")));
-                        handleDeleteOption($invokedOn);
-                        //$invokedOn.remove();
-                    } else {
-                        $('#blockNameModal').modal('show');
-                    }
-                }
-                else if ($selected.get(0) === $('#delete').get(0)) {
-
-                    handleDeleteOption($invokedOn);
-
-                } else if ($selected.get(0) === $('#customize').get(0)) {//Customize clicked
-                    $scope.showCustomizeDialog($invokedOn);
-                } 
-            });
-        } else if (type === "static") {
+        if (type === "static") {
             $('#staticContextMenu').off('click').on('click', function (e) {
                 $(this).hide();
                 var $invokedOn = $(this).data("invokedOn");
@@ -996,7 +967,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         }
     }
 
-    function handleDeleteOption($element) {
+    $scope.handleDeleteOption = function($element) {
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
     }
@@ -1024,37 +995,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.draggable($newState, {containment: 'parent'});
 
         $newState
-            .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x})
-            .on("contextmenu", function (e) {
-                if ($(this).hasClass('stream')) {
-                    $('#customize, #division ').hide();
-
-                } else {
-                    $('#customize, #division ').show();
-                }
-
-                if ($(this).hasClass('ui-selected') && isConnected(this)) {
-                    $('#blockButton').text("Create Block from Selected");
-                    $('#blockButton, #division1 ').show();
-                } else {
-                    $('#blockButton, #division1 ').hide();
-                }
-                if ($(this).hasClass("connectable-block")) {
-                    $('#customize, #division ').hide();
-                    $('#blockButton, #division1 ').show();
-                    $('#blockButton').text("Revert to Pipeline");
-                }
-                $('#assemblyContextMenu')
-                    .data("invokedOn", $(e.target))
-                    .show()
-                    .css({
-                        position: "fixed",
-                        left: getLeftLocation(e, "assembly"),
-                        top: getTopLocation(e, "assembly")
-                    });
-                ContextMenuClickHandler("assembly");
-                return false;
-            });
+            .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x});
 
         if (!block) {
             $scope.addImageOrTextIcon($newState, json, false, 'connectable');
@@ -1096,28 +1037,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     function isFullyConnected(element) {
         return $(element).data("JSON").inputStreams == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
-    }
-
-    function addAutoComplete(input, datatype) {
-        $("#" + input).autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: standardUrl + 'autocomplete?propertyName=' + encodeURIComponent(datatype),
-                    dataType: "json",
-                    data: "term=" + request.term,
-                    success: function (data) {
-                        var suggestion = new Array();
-                        $(data.result).each(function (index, value) {
-                            var item = {};
-                            item.label = value.label;
-                            item.value = value.value;
-                            suggestion.push(item);
-                        });
-                        response(suggestion);
-                    }
-                });
-            }
-        });
     }
 
     //----------------------------------------------------

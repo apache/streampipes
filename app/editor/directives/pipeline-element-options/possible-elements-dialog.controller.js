@@ -4,7 +4,7 @@ export default function PossibleElementsController($scope, $mdDialog, getElement
 
 
     $scope.create = function(possibleElement) {
-        $scope.createFunction($scope.getPipelineElementContents(possibleElement.elementId), $scope.domElement);
+        $scope.createFunction($scope.getPipelineElementContents(possibleElement.elementId), $scope.getDomElement($scope.internalId));
     }
 
     $scope.type = function(possibleElement) {

@@ -15,10 +15,11 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
             internalId: "@",
             allElements: "=",
             createFunction: "=",
-            createPartialPipelineFunction: "="
+            createPartialPipelineFunction: "=",
+            showCustomizeDialogFunction: "=",
+            deleteFunction: "="
         },
         controller: function ($scope) {
-
             $scope.recommendationsAvailable = false;
             $scope.possibleElements = [];
             
@@ -46,6 +47,14 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                     preserveScope: true
                 })
             };
+
+            $scope.removeElement = function() {
+                $scope.deleteFunction($scope.getDomElement($scope.internalId));
+            }
+
+            $scope.openCustomizeDialog = function() {
+                $scope.showCustomizeDialogFunction($scope.getDomElement($scope.internalId));
+            }
 
             $scope.$on("SepaElementConfigured", function (event, item) {
                 initRecs($rootScope.state.currentPipeline, item);
@@ -108,9 +117,7 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
             }
 
             $scope.showRecommendations = function (e) {
-                console.log("recs");
-                var $recList = $("ul", getDomElement($scope.internalId));
-                console.log($recList);
+                var $recList = $("ul", $scope.getDomElement($scope.internalId));
                 e.stopPropagation();
                 $recList.circleMenu('open');
             }
@@ -127,20 +134,31 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                 var pipelineElement = undefined;
                 angular.forEach($scope.allElements, function (category) {
                     angular.forEach(category, function (sepa) {
-                        if (sepa.belongsTo == belongsTo) {
-                            pipelineElement = sepa;
+                        if (sepa.type != 'stream') {
+                            if (sepa.belongsTo == belongsTo) {
+                                pipelineElement = sepa;
+                            }
+                        } else {
+                            if (sepa.elementId == belongsTo) {
+                                pipelineElement = sepa;
+                            }
                         }
                     });
                 });
                 return pipelineElement;
             }
 
-            var getDomElement = function(internalId) {
+            $scope.getDomElement = function(internalId) {
                 return $("span[id=" +internalId +"]");
             }
 
-            initRecs($rootScope.state.currentPipeline, getDomElement($scope.internalId));
+            initRecs($rootScope.state.currentPipeline, $scope.getDomElement($scope.internalId));
+            $scope.pipelineElement = $scope.getPipelineElementContents($scope.pipelineElementId);
+            console.log($scope.pipelineElement);
 
+            $scope.isRootElement = function() {
+                return jsPlumb.getConnections({source: $scope.getDomElement($scope.internalId)}).length == 0;
+            }
 
         },
         link: function postLink(scope, element) {
