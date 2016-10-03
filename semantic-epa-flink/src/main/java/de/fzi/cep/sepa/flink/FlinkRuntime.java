@@ -46,11 +46,11 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	
 	public boolean startExecution() {
 		try {
-//			if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
-//			else this.env = StreamExecutionEnvironment
-//					.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
+			if (debug) this.env = StreamExecutionEnvironment.createLocalEnvironment();
+			else this.env = StreamExecutionEnvironment
+					.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
 
-			this.env = StreamExecutionEnvironment.getExecutionEnvironment();
+			//this.env = StreamExecutionEnvironment.getExecutionEnvironment();
 			DataStream<String> messageStream = env
 					//.addSource(new FlinkKafkaConsumer09<>(getInputTopic(), new SimpleStringSchema(), getProperties()));
 			.addSource(new NonParallelKafkaSource(getKafkaHost() + ":" +getKafkaPort(), getInputTopic()));

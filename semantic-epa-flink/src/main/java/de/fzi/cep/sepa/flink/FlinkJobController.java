@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.flink;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import akka.actor.ActorSystem;
 import org.apache.flink.api.common.JobID;
 import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.configuration.Configuration;
@@ -16,12 +13,14 @@ import org.apache.flink.runtime.messages.JobManagerMessages;
 import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob;
 import org.apache.flink.runtime.messages.JobManagerMessages.RunningJobsStatus;
 import org.apache.flink.runtime.util.LeaderRetrievalUtils;
-
 import scala.Some;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.FiniteDuration;
-import akka.actor.ActorSystem;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FlinkJobController {
 
@@ -87,7 +86,6 @@ public class FlinkJobController {
 		try {
 			ActorGateway jobManager = getJobManagerGateway();
 			Future<Object> response = jobManager.ask(new CancelJob(jobId), askTimeout);
-			
 			Await.result(response, askTimeout);
 			return true;
 		}
