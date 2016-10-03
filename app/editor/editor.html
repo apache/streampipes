@@ -8,7 +8,6 @@
             <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
 
                 <md-tab ng-repeat="tab in tabs"
-                        ng-disabled="tab.disabled"
                         label="{{tab.title}}"
                         md-on-select="loadCurrentElements(tab.type)">
                     <md-tab-label>
@@ -201,29 +200,6 @@
             </div>
         </div>
     </div>
-
-    <div id="descrModal" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="description-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <p id="modal-description"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="openJsonLDModal()" class="btn btn-default">JSON-LD</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <div id="blockNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">

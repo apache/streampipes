@@ -1,0 +1,11 @@
+<span class="help-button"><md-icon md-svg-icon='action:ic_help_24px' class="green"
+                                   ng-click="openHelpDialog()"></md-icon>
+</span>
+<span class="possible-button" ng-show="pipelineElement.type!='action'"><md-icon md-svg-icon='action:ic_visibility_24px' class="green" ng-click="openPossibleElementsDialog()">
+</md-icon>
+    </span>
+<span class="recommended-button" ng-show="pipelineElement.type!='action'"><md-icon md-svg-icon='content:ic_add_circle_24px'
+                                       class="{{recommendationsAvailable ? 'green' : 'red'}}"
+                                       ng-click="showRecommendations($event)">
+</md-icon>
+    </span>

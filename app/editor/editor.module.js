@@ -25,6 +25,7 @@ import matchingProperty from './directives/matchingproperty/matchingproperty.dir
 import oneof from './directives/oneof/oneof.directive';
 import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
 import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
+import pipelineElementOptions from './directives/pipeline-element-options/pipeline-element-options.directive'
 
 
 export default angular.module('sp.editor', [spServices])
@@ -42,4 +43,6 @@ export default angular.module('sp.editor', [spServices])
     .directive('matchingProperty', matchingProperty)
     .directive('oneof', oneof)
     .directive('replaceOutput', replaceOutput)
+    .directive('multipleValueInput', multipleValueInput)
+    .directive('pipelineElementOptions', pipelineElementOptions)
     .name;

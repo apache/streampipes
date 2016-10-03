@@ -30,11 +30,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     $scope.selectMode = true;
 
-    //var editorPlumb;
-    var textInputFields = [];
-    var connCount = 1;
-
     $scope.currentZoomLevel = 1;
+
+    $scope.currentPipelineElement;
+    $scope.currentPipelineElementDom;
 
     $scope.toggleEditorStand = function () {
         $scope.minimizedEditorStand = !$scope.minimizedEditorStand;
@@ -193,11 +192,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.repaintEverything(true);
     });
 
-    $scope.$on("SepaElementConfigured", function (event, item) {
-        initRecs($rootScope.state.currentPipeline, item);
-    });
-
-
+    
     $scope.$on('$destroy', function () {
         jsPlumb.deleteEveryEndpoint();
     });
@@ -222,21 +217,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         return restApi.getBlocks();           //TODO anpassen
     };
 
-    $scope.ownBlocksAvailable = function () {
-        return true; //TODO
-    };
-
-    $scope.ownSourcesAvailable = function () {
-        return true; //TODO
-    };
-
-    $scope.ownSepasAvailable = function () {
-        return true; //TODO
-    };
-
-    $scope.ownActionsAvailable = function () {
-        return true; //TODO
-    };
 
     $scope.loadCurrentElements = function (type) {
 
@@ -351,22 +331,18 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         {
             title: 'Blocks',
             type: 'block',
-            disabled: !($scope.ownBlocksAvailable())
         },
         {
             title: 'Data Streams',
             type: 'stream',
-            disabled: !($scope.ownSourcesAvailable())
         },
         {
             title: 'Processing Elements',
             type: 'sepa',
-            disabled: !($scope.ownSepasAvailable())
         },
         {
             title: 'Data Sinks',
             type: 'action',
-            disabled: !($scope.ownActionsAvailable())
         }
     ];
 
@@ -527,35 +503,31 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     };
 
+    var loadOptionsButtons = function ($newElement) {
+        $scope.currentPipelineElement = $newElement.data("JSON");
+        $scope.currentPipelineElementDom = $newElement[0].id;
+        var elementId = $scope.currentPipelineElement.type =='stream' ? $scope.currentPipelineElement.elementId : $scope.currentPipelineElement.belongsTo;
+        $newElement.append($compile('<pipeline-element-options create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' +elementId +' internal-id=' +$scope.currentPipelineElementDom +'></pipeline-element-options>')($scope));
+    }
+
     $scope.streamDropped = function ($newElement, endpoints) {
-
-        $newElement.append($('<span>').addClass("help-button").append($compile("<md-icon md-svg-icon='action:ic_help_24px'>")($scope).addClass("green")).click(function (e) {
-
-            //toggleStyle(e);
-            //togglePossibleElements(e, $newElement);
-        }));
-        $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green")).click(function (e) {
-
-            //toggleStyle(e);
-            togglePossibleElements(e, $newElement);
-        }));
         $scope.isStreamInAssembly = true;
         $newElement.addClass("connectable stream");
-
+        $newElement.id="sp_stream_" +($rootScope.state.currentPipeline.streams.length +1);
+        var pipelinePart = new objectProvider.Pipeline();
+        pipelinePart.addElement($newElement);
+        $rootScope.state.currentPipeline = pipelinePart;
         if (endpoints) {
             jsPlumb.addEndpoint($newElement, apiConstants.streamEndpointOptions);
         }
+        loadOptionsButtons($newElement);
         return $newElement;
     };
 
     $scope.sepaDropped = function ($newElement, endpoints) {
-        $newElement.append($('<span>').addClass("possible-button").append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green")).click(function (e) {
-            //toggleStyle(e);
-            togglePossibleElements(e, $newElement);
-        }));
         $scope.isSepaInAssembly = true;
         $newElement.addClass("connectable sepa");
-
+        loadOptionsButtons($newElement);
         if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState && !$newElement.data("options")) {
             $newElement
                 .addClass('disabled');
@@ -579,7 +551,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $scope.isActionInAssembly = true;
         $newElement
             .addClass("connectable action");
-
+        loadOptionsButtons($newElement);
         if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState) {
             $newElement
                 .addClass('disabled');
@@ -589,6 +561,12 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         }
         return $newElement;
     };
+
+    var makeInternalId = function() {
+        return "a" +$rootScope.state.currentPipeline.streams.length
+        +$rootScope.state.currentPipeline.sepas.length
+        $rootScope.state.currentPipeline.actions.length;
+    }
 
     $scope.elementTextIcon = function (string) {
         var result = "";
@@ -671,7 +649,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             var $target = $(info.target);
 
             if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
-                createPartialPipeline(info);
+                $rootScope.state.currentPipeline = $scope.createPartialPipeline(info.target, false);
                 $rootScope.state.currentPipeline.update()
                     .success(function (data) {
                         if (data.success) {
@@ -736,15 +714,12 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             drop: function (element, ui) {
 
                 if (ui.draggable.hasClass('draggable-icon') || ui.draggable.hasClass('block')) {
-                    //TODO get data
-                    //console.log(ui);
-
                     if (ui.draggable.data("JSON") == null) {
                         alert("No JSON - Data for Dropped element");
                         return false;
                     }
                     var $newState;
-                    //Neues Container Element f�r Icon / identicon erstellen
+                    //Neues Container Element für Icon / identicon erstellen
                     if (ui.draggable.hasClass("block")) {
                         $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), true);
                     } else {
@@ -756,10 +731,8 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
                         $scope.streamDropped($newState, true);
 
-                        var tempPipeline = new objectProvider.Pipeline();
-                        tempPipeline.addElement($newState[0]);
-                        initRecs(tempPipeline, $newState);
-
+                        //initRecs(tempPipeline, $newState);
+                        //$rootScope.$broadcast("StreamDropped", $newState);
                         //$newState.hover(showRecButton, hideRecButton);
 
                         //Droppable Sepas
@@ -788,7 +761,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             })
             .on('click', ".recommended-item", function (e) {
                 e.stopPropagation();
-                createAndConnect(this);
+                $scope.createAndConnect(this);
             });
 
 
@@ -805,12 +778,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     };
 
-
     /**
      * clears the Assembly of all elements
      */
     $scope.clearAssembly = function () {
-        togglePossibleElements(null, null);
         $('#assembly').children().not('#clear, #submit').remove();
         jsPlumb.deleteEveryEndpoint();
         $rootScope.state.adjustingPipelineState = false;
@@ -826,21 +797,22 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.repaintEverything();
     };
 
-    function createPartialPipeline(info) {
+    $scope.createPartialPipeline = function(currentElement, recommendationConfig) {
         var pipelinePart = new objectProvider.Pipeline();
-        var element = info.target;
-        addElementToPartialPipeline(element, pipelinePart);
-        $rootScope.state.currentPipeline = pipelinePart;
+        addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
+        return pipelinePart;
     }
 
-    function addElementToPartialPipeline(element, pipelinePart) {
+    function addElementToPartialPipeline(element, pipelinePart, recommendationConfig) {
         pipelinePart.addElement(element);
         // add all children of pipeline element that are not already present in the pipeline
-        var outgoingConnections = jsPlumb.getConnections({source: element});
-        if (outgoingConnections.length > 0) {
-            for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
-                if (!pipelinePart.hasElement(ocon.target.id)) {
-                    addElementToPartialPipeline(ocon.target, pipelinePart);
+        if (!recommendationConfig) {
+            var outgoingConnections = jsPlumb.getConnections({source: element});
+            if (outgoingConnections.length > 0) {
+                for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
+                    if (!pipelinePart.hasElement(ocon.target.id)) {
+                        addElementToPartialPipeline(ocon.target, pipelinePart, recommendationConfig);
+                    }
                 }
             }
         }
@@ -924,8 +896,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
             }
 
             openPipelineNameModal();
-
-
         }
     }
 
@@ -936,128 +906,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $scope.showSavePipelineDialog();
     }
 
-    function initRecs(pipeline, $element) {
-        restApi.recommendPipelineElement(pipeline)
-            .success(function (data) {
-                if (data.success) {
-                    $(".recommended-list", $element).remove();
-                    $element.append($("<span><ul>").addClass("recommended-list"));
-                    $("ul", $element)
-                        .circleMenu({
-                            direction: "right-half",
-                            item_diameter: 50,
-                            circle_radius: 150,
-                            trigger: 'none'
-                        });
-                    $element.hover(showRecButton, hideRecButton); //TODO alle Buttons anzeigen/verstecken
-                    populateRecommendedList($element, data.recommendedElements);
-                    var hasElements = false;
-                    if (data.recommendedElements.length > 0) {
-                        hasElements = true;
-                    }
-                    addRecommendedButton($element, hasElements);
-
-                } else {
-                    console.log(data);
-
-                }
-                $element.data("possibleElements", data.possibleElements);
-            })
-            .error(function (data) {
-                console.log(data);
-            });
-    }
-
-    function togglePossibleElements(event, el) {
-
-        if (event != null && el != null) {
-            if (!$.isEmptyObject($scope.activePossibleElementFilter)) { //Filter Aktiv
-                if ($scope.activePossibleElementFilter == event.currentTarget) { //Auf aktiven Filter geklickt
-                    $scope.possibleElements = [];
-                    $scope.activePossibleElementFilter = {};
-                    $("md-icon", event.currentTarget).remove();
-                    $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
-
-                } else { //Auf anderen Filter geklickt
-                    $("md-icon", event.currentTarget).remove();
-                    $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
-
-                    $("md-icon", $scope.activePossibleElementFilter).remove();
-                    $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
-                    if (el.data("possibleElements") !== 'undefined') {
-                        $scope.possibleElements = el.data("possibleElements");
-                        $scope.activePossibleElementFilter = event.currentTarget;
-                        if (el.hasClass("stream")) {
-                            $scope.selectedTab = 2;
-                        } else if (el.hasClass("sepa")) {
-                            $scope.selectedTab = 2;
-                        }
-                    }
-                }
-            } else { //KEIN FILTER AKTIV
-                $scope.activePossibleElementFilter = event.currentTarget;
-                if (el.data("possibleElements") !== 'undefined') {
-                    $("md-icon", event.currentTarget).remove();
-                    $(event.currentTarget).append($compile("<md-icon md-svg-icon='action:ic_visibility_off_24px'>")($scope));
-                    $scope.possibleElements = el.data("possibleElements");
-                    if (el.hasClass("stream")) {
-                        $scope.selectedTab = 2;
-                    } else if (el.hasClass("sepa")) {
-                        $scope.selectedTab = 2;
-                    }
-                }
-            }
-        } else {
-            if (!$.isEmptyObject($scope.activePossibleElementFilter) && $scope.activePossibleElementFilter != null && $scope.activePossibleElementFilter !== 'undefined') {
-                $("md-icon", $scope.activePossibleElementFilter).remove();
-                $($scope.activePossibleElementFilter).append($compile("<md-icon md-svg-icon='action:ic_visibility_24px'>")($scope).addClass("green"));
-            }
-            $scope.possibleElements = [];
-            $scope.activePossibleElementFilter = {};
-
-        }
-    }
-
-
-    function populateRecommendedList($element, recs) {
-
-        recs.sort(function(a,b) {return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);} );
-        var maxRecs = recs.length > 7 ? 7 : recs.length;
-        var el;
-        for (var i = 0; i < maxRecs; i++) {
-
-            el = recs[i];
-            var element = getPipelineElementContents(el.elementId);
-            if (typeof element != "undefined") {
-                var recEl = new objectProvider.recElement(element);
-                $("<li>").addClass("recommended-item tt").append(recEl.getjQueryElement()).attr({
-                    "data-toggle": "tooltip",
-                    "data-placement": "top",
-                    "data-delay": '{"show": 100, "hide": 100}',
-                    "weight": el.weight,
-                    "type" : element.type,
-                    title: recEl.name
-                }).appendTo($('ul', $element));
-            } else {
-                console.log(i);
-            }
-        }
-        $('ul', $element).circleMenu('init');
-        initTooltips();
-    }
-
-    function getElementByElementId(elId) {
-        if (elId.indexOf("sepa") >= 0) { //Sepa
-            return restApi.getSepaById(elId)
-
-        } else {		//Action
-            return restApi.getActionById(elId);
-        }
-    }
-
-    function createAndConnect(target) {
-        var json = $("a", $(target)).data("recObject").json;
-        var $parentElement = $(target).parents(".connectable");
+    $scope.createAssemblyElement = function(json, $parentElement) {
         var x = $parentElement.position().left;
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
@@ -1087,10 +936,15 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         }
 
         var targetEndPoint = jsPlumb.selectEndpoints({target: $target}).get(0);
-        //console.log(targetEndPoint);
 
         jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
         jsPlumb.repaintEverything();
+    }
+    
+    $scope.createAndConnect = function(target) {
+        var json = $("a", $(target)).data("recObject").json;
+        var $parentElement = $(target).parents(".connectable");
+        $scope.createAssemblyElement(json, $parentElement);
     }
 
     $scope.clearCurrentElement = function () {
@@ -1125,10 +979,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
                 } else if ($selected.get(0) === $('#customize').get(0)) {//Customize clicked
                     $scope.showCustomizeDialog($invokedOn);
-
-                } else {
-                    handleJsonLDOption($invokedOn)
-                }
+                } 
             });
         } else if (type === "static") {
             $('#staticContextMenu').off('click').on('click', function (e) {
@@ -1149,49 +1000,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
     }
-
-    function handleJsonLDOption($element) {
-        var json = $element.data("JSON");
-        $('#description-title').text(json.name);
-        if (json.description) {
-            $('#modal-description').text(json.description);
-        }
-        else {
-            $('#modal-description').text("No description available");
-        }
-        $('#descrModal').modal('show');
-        $rootScope.state.currentElement = $element;
-        prepareJsonLDModal(json);
-    }
-
-    function addRecommendedButton($element, hasElements) {
-        var classString = "";
-        if (hasElements) {
-            classString = "green";
-        } else {
-            classString = "red";
-        }
-        $("<span>")
-            .addClass("recommended-button")
-            .click(function (e) {
-                e.stopPropagation();
-                var $recList = $("ul", $element);
-                $recList.circleMenu('open');
-            })
-            .append($compile("<md-icon md-svg-icon='content:ic_add_circle_24px'>")($scope).addClass("hover-icon").addClass(classString)
-                .attr("aria-label", "Recommended Elements"))
-            .appendTo($element);
-    }
-
-    function showRecButton(e) {
-        $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).show();
-    }
-
-    function hideRecButton(e) {
-        $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).hide();
-    }
-
-
+    
     function getCoordinates(ui) {
 
         var newLeft = getDropPositionX(ui.helper);
@@ -1203,8 +1012,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     }
 
     function createNewAssemblyElement(json, coordinates, block) {
-
-        togglePossibleElements(null, null);
 
         var $newState = $('<span>')
             .data("JSON", $.extend(true, {}, json))
@@ -1390,7 +1197,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
                 return false;
             }
         });
-        //console.log(blockPipeline);
         var block = new objectProvider.Block(blockData[0].value, blockData[1].value, blockPipeline);
         var data;
         if (blockData.length = 3) {
@@ -1512,13 +1318,6 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
     }
 
-    $scope.openDescriptionModal = function (element) {
-
-        $('#description-title').text(element.name);
-        $('#modal-description').text(element.description);
-        $('#descrModal').modal('show');
-    };
-
     $scope.addImageOrTextIcon = function ($element, json, small, type) {
         var iconUrl = "";
         if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
@@ -1568,8 +1367,3 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         });
     }
 };
-
-
-
-
-

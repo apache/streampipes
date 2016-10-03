@@ -297,6 +297,17 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 	margin-bottom: 0;
 }
 
+.draggable-icon-preview {
+	margin-right:20px;
+	vertical-align: top;
+	background-color: white;
+	display: inline-block;
+	height: 50px;
+	width: 50px;
+	line-height: 50px;
+	box-shadow: 1px 1px 2px #555;
+	text-align: center;
+}
 
 .draggable-icon{
 	cursor: pointer;

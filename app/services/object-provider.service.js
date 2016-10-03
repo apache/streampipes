@@ -43,7 +43,6 @@ export default function objectProvider($http, restApi, imageChecker) {
             };
 
             this.addElement = function (element) {
-
                 var $element = $(element);
                 var connections = jsPlumb.getConnections({
                     target: element
