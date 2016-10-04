@@ -1,13 +1,12 @@
 package de.fzi.cep.sepa.model.client.pipeline;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
+import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-
-import com.google.gson.annotations.SerializedName;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+import java.util.List;
 
 @Entity
 public class Pipeline extends ElementComposition {
@@ -18,6 +17,7 @@ public class Pipeline extends ElementComposition {
 	@OneToOne(cascade=CascadeType.ALL)
 	private boolean running;
 	private long startedAt;
+	private long createdAt;
 	
 	private boolean publicElement;
 	
@@ -27,7 +27,7 @@ public class Pipeline extends ElementComposition {
 	
 	private @SerializedName("_id") String pipelineId;
     private @SerializedName("_rev") String rev;
-	
+
 	public List<SecInvocation> getActions() {
 		return actions;
 	}
@@ -95,6 +95,14 @@ public class Pipeline extends ElementComposition {
 		this.pipelineCategories = pipelineCategories;
 	}
 
+	public long getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(long createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public Pipeline clone()
 	{
 		Pipeline pipeline = new Pipeline();
@@ -105,7 +113,9 @@ public class Pipeline extends ElementComposition {
 		pipeline.setActions(actions);
 		pipeline.setCreatedByUser(createdByUser);
 		pipeline.setPipelineCategories(pipelineCategories);
-		
+		pipeline.setCreatedAt(createdAt);
+		pipeline.setPipelineId(pipelineId);
+		pipeline.setRev(rev);
 		return pipeline;
 	}
 	

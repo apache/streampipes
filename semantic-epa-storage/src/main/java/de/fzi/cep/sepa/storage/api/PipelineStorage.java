@@ -1,13 +1,15 @@
 package de.fzi.cep.sepa.storage.api;
 
-import java.util.List;
-
-import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+
+import java.util.List;
 
 public interface PipelineStorage {
 
 	List<Pipeline> getAllPipelines();
+
+	List<Pipeline> getSystemPipelines();
 
 	List<Pipeline> getAllUserPipelines();
 

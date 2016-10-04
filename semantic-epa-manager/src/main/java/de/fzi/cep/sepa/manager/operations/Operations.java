@@ -1,22 +1,25 @@
 package de.fzi.cep.sepa.manager.operations;
 
-import java.util.List;
-
 import de.fzi.cep.sepa.appstore.shared.BundleInfo;
 import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
+import de.fzi.cep.sepa.kpi.KpiRequest;
 import de.fzi.cep.sepa.manager.appstore.AppStoreInfoProvider;
 import de.fzi.cep.sepa.manager.execution.http.PipelineExecutor;
 import de.fzi.cep.sepa.manager.execution.http.PipelineStorageService;
+import de.fzi.cep.sepa.manager.kpi.KpiOperations;
 import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
 import de.fzi.cep.sepa.model.client.messages.AppInstallationMessage;
 import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendationMessage;
 import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
 import de.fzi.cep.sepa.model.client.pipeline.PipelineOperationStatus;
-import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendationMessage;
-import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -95,5 +98,14 @@ public class Operations {
 	
 	public static Message uninstallApp(String username, BundleInfo bundleInfo) {
 		return new AppStoreInfoProvider().uninstallApplication(username, bundleInfo);
+	}
+
+	public static PipelineOperationStatus createAndStartKpiFromPipeline(KpiRequest kpiRequest) throws IOException {
+		return KpiOperations.makeAndStartPipeline(kpiRequest);
+
+	}
+
+	public static PipelineOperationStatus stopAndDeletePipeline(String kpiId) {
+		return KpiOperations.stopAndRemovePipeline(kpiId);
 	}
 }

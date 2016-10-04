@@ -23,6 +23,10 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-kpi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-storage</artifactId>
 		</dependency>
 		<dependency>

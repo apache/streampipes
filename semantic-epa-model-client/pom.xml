@@ -17,6 +17,10 @@
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-model</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-kpi</artifactId>
+		</dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>

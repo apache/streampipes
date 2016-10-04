@@ -18,10 +18,7 @@ public abstract class ElementComposition {
 	
 	protected String name;
 	protected String description;
-	
-	protected String pipelineId;
-	//protected String rev;
-	
+
 	public List<SepaInvocation> getSepas() {
 		return sepas;
 	}
@@ -54,19 +51,4 @@ public abstract class ElementComposition {
 		this.description = description;
 	}
 
-	public String getPipelineId() {
-		return pipelineId;
-	}
-
-	public void setPipelineId(String pipelineId) {
-		this.pipelineId = pipelineId;
-	}
-
-//	public String getRev() {
-//		return rev;
-//	}
-//
-//	public void setRev(String rev) {
-//		this.rev = rev;
-//	}
 }

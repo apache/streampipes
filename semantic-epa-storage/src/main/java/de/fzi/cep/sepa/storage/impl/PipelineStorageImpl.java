@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -23,6 +24,8 @@ import java.util.List;
 public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineStorage {
 
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
+
+    private static final String SYSTEM_USER = "system";
 
     public PipelineStorageImpl() {
         super(Pipeline.class);
@@ -36,6 +39,15 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
         for (Pipeline p : pipelines)
             if (p.getActions() != null) result.add(p);
         return result;
+    }
+
+    @Override
+    public List<Pipeline> getSystemPipelines() {
+        List<Pipeline> pipelines = getAllPipelines();
+        return pipelines
+                .stream()
+                .filter(p -> p.getCreatedByUser().equals(SYSTEM_USER))
+                .collect(Collectors.toList());
     }
 
     public List<Pipeline> getAllUserPipelines() {
