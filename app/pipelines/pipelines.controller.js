@@ -1,8 +1,13 @@
+import StartAllPipelinesController from './start-all-pipelines.controller';
+import StopAllPipelinesController from './stop-all-pipelines.controller';
+import PipelineCategoriesDialogController from './pipeline-categories-dialog.controller';
+
 PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];
 
 export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker, getElementIconText) {
     $scope.pipeline = {};
     $scope.pipelines = [];
+    $scope.systemPipelines = [];
     $scope.pipelinShowing = false;
     var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
     $scope.starting = false;
@@ -32,7 +37,18 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
             });
 
     };
+    
+    $scope.getSystemPipelines = function() {
+        restApi.getSystemPipelines()
+            .success(function (pipelines) {
+                $scope.systemPipelines = pipelines;
+            })
+            .error(function (msg) {
+                console.log(msg);
+            });
+    }
     $scope.getPipelines();
+    $scope.getSystemPipelines();
 
     $scope.getPipelineCategories = function () {
         restApi.getPipelineCategories()
@@ -53,6 +69,34 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
 
     $scope.activeClass = function (pipeline) {
         return 'active-pipeline';
+    }
+
+    $scope.startAllPipelines = function() {
+        $mdDialog.show({
+            controller: StartAllPipelinesController,
+            templateUrl: 'app/pipelines/start-all-pipelines.tmpl.html',
+            parent: angular.element(document.body),
+            scope: $scope,
+            preserveScope: true,
+            clickOutsideToClose: false,
+            locals: {
+                pipelines: $scope.pipelines
+            }
+        })
+    }
+
+    $scope.stopAllPipelines = function() {
+        $mdDialog.show({
+            controller: StopAllPipelinesController,
+            templateUrl: 'app/pipelines/stop-all-pipelines.tmpl.html',
+            parent: angular.element(document.body),
+            scope: $scope,
+            preserveScope: true,
+            clickOutsideToClose: false,
+            locals: {
+               pipelines: $scope.pipelines
+            }
+        })
     }
 
     $scope.showPipelineCategoriesDialog = function () {
@@ -84,6 +128,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
             .success(function (data) {
                 $scope.showDialog(data);
                 $scope.getPipelines();
+                $scope.getSystemPipelines();
 
                 $scope.starting = false;
 
@@ -110,6 +155,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
                 $scope.stopping = false;
                 $scope.showDialog(data);
                 $scope.getPipelines();
+                $scope.getSystemPipelines();
             })
             .error(function (data) {
                 console.log(data);
@@ -205,98 +251,6 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         $state.go("streampipes.edit", {pipeline: id});
     }
 
-    function PipelineCategoriesDialogController($scope, $mdDialog) {
-
-        $scope.newCategory = {};
-        $scope.newCategory.categoryName = "";
-        $scope.newCategory.categoryDescription = "";
-        $scope.addSelected = false;
-        $scope.addPipelineToCategorySelected = [];
-        $scope.categoryDetailsVisible = [];
-        $scope.selectedPipelineId = "";
-
-        $scope.toggleCategoryDetailsVisibility = function (categoryId) {
-            $scope.categoryDetailsVisible[categoryId] = !$scope.categoryDetailsVisible[categoryId];
-        }
-
-
-        $scope.addPipelineToCategory = function (pipelineCategory) {
-
-            var pipeline = findPipeline(pipelineCategory.selectedPipelineId);
-            if (pipeline.pipelineCategories == undefined) pipeline.pipelineCategories = [];
-            pipeline.pipelineCategories.push(pipelineCategory._id);
-            $scope.storeUpdatedPipeline(pipeline);
-        }
-
-        $scope.removePipelineFromCategory = function (pipeline, categoryId) {
-            var index = pipeline.pipelineCategories.indexOf(categoryId);
-            pipeline.pipelineCategories.splice(index, 1);
-            $scope.storeUpdatedPipeline(pipeline);
-        }
-
-        $scope.storeUpdatedPipeline = function (pipeline) {
-            restApi.updatePipeline(pipeline)
-                .success(function (msg) {
-                    console.log(msg);
-                    $scope.getPipelines();
-                })
-                .error(function (msg) {
-                    console.log(msg);
-                });
-        }
-
-        var findPipeline = function (pipelineId) {
-            var matchedPipeline = {};
-            angular.forEach($scope.pipelines, function (pipeline) {
-                console.log(pipeline._id);
-                if (pipeline._id == pipelineId) matchedPipeline = pipeline;
-            });
-            return matchedPipeline;
-        }
-
-        $scope.addPipelineCategory = function () {
-            restApi.storePipelineCategory($scope.newCategory)
-                .success(function (data) {
-                    console.log(data);
-                    $scope.getPipelineCategories();
-                    $scope.addSelected = false;
-                })
-                .error(function (msg) {
-                    console.log(msg);
-                });
-        }
-
-        $scope.showAddToCategoryInput = function (categoryId, show) {
-            $scope.addPipelineToCategorySelected[categoryId] = show;
-            $scope.categoryDetailsVisible[categoryId] = true;
-        }
-
-        $scope.deletePipelineCategory = function (pipelineId) {
-            restApi.deletePipelineCategory(pipelineId)
-                .success(function (data) {
-                    console.log(data);
-                    $scope.getPipelineCategories();
-                })
-                .error(function (msg) {
-                    console.log(msg);
-                });
-        }
-
-        $scope.showAddInput = function () {
-            $scope.addSelected = true;
-            $scope.newCategory.categoryName = "";
-            $scope.newCategory.categoryDescription = "";
-        }
-
-        $scope.hide = function () {
-            $mdDialog.hide();
-        };
-
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-    }
-
     function PipelineStatusDialogController($scope, $mdDialog, data) {
 
         $scope.data = data;
@@ -309,30 +263,4 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         };
     }
 
-    function getLeftLocation(e) {
-
-        var menuWidth = $('#contextMenu').width();
-        var mouseWidth = e.pageX;
-        var pageWidth = $(window).width();
-
-        // opening menu would pass the side of the page
-        if (mouseWidth + menuWidth > pageWidth && menuWidth < mouseWidth) {
-            return mouseWidth - menuWidth;
-        }
-        return mouseWidth;
-    }
-
-    function getTopLocation(e) {
-
-        var menuHeight = $('#contextMenu').height();
-
-        var mouseHeight = e.pageY - $(window).scrollTop();
-        var pageHeight = $(window).height();
-
-        if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
-            return mouseHeight - menuHeight;
-        }
-        return mouseHeight;
-
-    }
 };

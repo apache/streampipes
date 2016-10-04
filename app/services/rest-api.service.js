@@ -164,6 +164,10 @@ export default function restApi($rootScope, $http, apiConstants) {
 		//return $http.get("/semantic-epa-backend/api/pipelines");
 	};
 
+	restApi.getSystemPipelines = function() {
+		return $http.get(urlBase() +"/pipelines/system");
+	};
+
 	restApi.storePipeline = function(pipeline) {
 		return $http.post(urlBase() +"/pipelines", pipeline);
 	}

@@ -592,6 +592,24 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 	box-shadow: 0 0 2px #555;
 	line-height: 1.6;
 }
+
+.element-container {
+	position: relative;
+}
+
+.element-preview{
+	cursor: pointer;
+	position: absolute;
+	left: 0px;
+	top: -50px;
+	height: 40%;
+	width: 40%;
+	background-color: #ffffff;
+	box-shadow: 0 0 2px #555;
+	line-height: 1.6;
+	border-radius: 50%;
+}
+
 .recommended-list {
 	position: absolute;
 	top: 25%;

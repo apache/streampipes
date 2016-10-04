@@ -160,6 +160,11 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                 return jsPlumb.getConnections({source: $scope.getDomElement($scope.internalId)}).length == 0;
             }
 
+            $scope.isConfigured = function() {
+                if ($scope.pipelineElement.type == 'stream') return true;
+                else return $($scope.getDomElement($scope.internalId)).data("JSON").configured;
+            }
+
         },
         link: function postLink(scope, element) {
 

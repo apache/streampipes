@@ -26,6 +26,9 @@
 					          <md-option ng-repeat="pipeline in pipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id | orderBy:'+name'" value="{{pipeline._id}}">
 					            <b>{{pipeline.name}}</b><br/>
 					          </md-option>
+								<md-option ng-repeat="pipeline in systemPipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id | orderBy:'+name'" value="{{pipeline._id}}">
+									<b>{{pipeline.name}}</b><br/>
+								</md-option>
 					        </md-select>
 			    		</div>	
 			    		<div class="md-list-item-text" flex="20" layout="row" layout-align="end center">

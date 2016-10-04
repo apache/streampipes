@@ -3,6 +3,7 @@
 import CustomizeController from './customize.controller';
 import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
+import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
 
 EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
 
@@ -38,6 +39,30 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.toggleEditorStand = function () {
         $scope.minimizedEditorStand = !$scope.minimizedEditorStand;
     }
+
+    $scope.currentFocus = function(element, active) {
+        if (active) $scope.currentlyFocusedElement = element;
+        else $scope.currentlyFocusedElement = undefined;
+    }
+
+    $scope.currentFocusActive = function(element) {
+        return $scope.currentlyFocusedElement == element;
+    }
+
+    $scope.showElementInfo = function (element) {
+        console.log("show");
+        $mdDialog.show({
+            controller: HelpDialogController,
+            templateUrl: 'app/editor/directives/pipeline-element-options/help-dialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            scope: $scope,
+            preserveScope: true,
+            locals: {
+                pipelineElement: element,
+            }
+        })
+    };
 
     $("#assembly").panzoom({
         disablePan: true,
