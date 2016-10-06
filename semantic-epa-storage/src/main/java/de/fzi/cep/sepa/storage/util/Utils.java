@@ -30,6 +30,11 @@ public class Utils {
 		return dbClient;
 	}
 
+	public static CouchDbClient getCouchDbRdfEndpointClient() {
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "rdfendpoint"));
+		return dbClient;
+	}
+
 	public static CouchDbClient getCouchDbUserClient() {
 		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_USER_DB));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());

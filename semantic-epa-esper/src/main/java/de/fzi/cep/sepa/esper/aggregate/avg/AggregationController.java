@@ -1,10 +1,5 @@
 package de.fzi.cep.sepa.esper.aggregate.avg;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
@@ -24,16 +19,15 @@ import de.fzi.cep.sepa.model.impl.quality.Accuracy;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.*;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AggregationController extends FlatEpDeclarer<AggregationParameter> {
 
@@ -70,7 +64,7 @@ public class AggregationController extends FlatEpDeclarer<AggregationParameter> 
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 
-		EventProperty outputProperty = new EventPropertyPrimitive(XSD._double.toString(), "averageValue", "",
+		EventProperty outputProperty = new EventPropertyPrimitive(XSD._double.toString(), "aggregatedValue", "",
 				de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"));
 		AppendOutputStrategy outputStrategy = new AppendOutputStrategy(Utils.createList(outputProperty));
 		strategies.add(outputStrategy);

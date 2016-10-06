@@ -1,17 +1,11 @@
 package de.fzi.cep.sepa.esper.enrich.math;
 
+import com.espertech.esper.client.soda.*;
+import de.fzi.cep.sepa.esper.EsperEventEngine;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.espertech.esper.client.soda.EPStatementObjectModel;
-import com.espertech.esper.client.soda.Expression;
-import com.espertech.esper.client.soda.Expressions;
-import com.espertech.esper.client.soda.FilterStream;
-import com.espertech.esper.client.soda.FromClause;
-import com.espertech.esper.client.soda.SelectClause;
-
-import de.fzi.cep.sepa.esper.EsperEventEngine;
 
 public class Math extends EsperEventEngine<MathParameter>{
 
@@ -44,12 +38,15 @@ public class Math extends EsperEventEngine<MathParameter>{
 		Expression left = Expressions.property(bindingParameters.getLeftOperand());
 		Expression right = Expressions.property(bindingParameters.getRightOperand());
 		
+		mathExpression(selectedOperation, clause, left, right, asName);
+		return clause;
+	}
+
+	public static void mathExpression(Operation selectedOperation, SelectClause clause, Expression left, Expression right, String asName) {
 		if (selectedOperation == Operation.ADD) clause.add(Expressions.plus(left, right), asName);
 		else if (selectedOperation == Operation.SUBTRACT) clause.add(Expressions.minus(left, right), asName);
 		else if (selectedOperation == Operation.MULTIPLY) clause.add(Expressions.multiply(left, right), asName);
 		else clause.add(Expressions.divide(left, right), asName);
-		
-		return clause;
 	}
 	
 }

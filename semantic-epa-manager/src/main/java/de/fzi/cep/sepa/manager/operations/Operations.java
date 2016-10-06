@@ -5,12 +5,15 @@ import de.fzi.cep.sepa.commons.exceptions.NoSuitableSepasAvailableException;
 import de.fzi.cep.sepa.commons.exceptions.SepaParseException;
 import de.fzi.cep.sepa.kpi.KpiRequest;
 import de.fzi.cep.sepa.manager.appstore.AppStoreInfoProvider;
+import de.fzi.cep.sepa.manager.endpoint.EndpointItemFetcher;
 import de.fzi.cep.sepa.manager.execution.http.PipelineExecutor;
 import de.fzi.cep.sepa.manager.execution.http.PipelineStorageService;
 import de.fzi.cep.sepa.manager.kpi.KpiOperations;
 import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.recommender.ElementRecommender;
 import de.fzi.cep.sepa.manager.verification.extractor.TypeExtractor;
+import de.fzi.cep.sepa.model.client.endpoint.RdfEndpoint;
+import de.fzi.cep.sepa.model.client.endpoint.RdfEndpointItem;
 import de.fzi.cep.sepa.model.client.messages.AppInstallationMessage;
 import de.fzi.cep.sepa.model.client.messages.Message;
 import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
@@ -107,5 +110,9 @@ public class Operations {
 
 	public static PipelineOperationStatus stopAndDeletePipeline(String kpiId) {
 		return KpiOperations.stopAndRemovePipeline(kpiId);
+	}
+
+	public static List<RdfEndpointItem> getEndpointUriContents(List<RdfEndpoint> endpoints) {
+		return new EndpointItemFetcher(endpoints).getItems();
 	}
 }

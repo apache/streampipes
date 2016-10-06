@@ -7,7 +7,8 @@ public class Description {
 	String name;
 	String description;
 	URI uri;
-	
+	String type;
+
 	public Description(String name, String description, URI uri)
 	{
 		this.name = name;
@@ -42,7 +43,15 @@ public class Description {
 		this.description = description;
 	}
 
-    @Override
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

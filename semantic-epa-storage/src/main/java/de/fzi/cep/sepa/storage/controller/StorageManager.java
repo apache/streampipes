@@ -1,29 +1,26 @@
 package de.fzi.cep.sepa.storage.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.spi.PersistenceProvider;
-
-import de.fzi.cep.sepa.storage.api.*;
-import de.fzi.cep.sepa.storage.impl.*;
-import de.fzi.cep.sepa.storage.util.StorageUtils;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.http.HTTPRepository;
-
 import com.clarkparsia.empire.Empire;
 import com.clarkparsia.empire.EmpireOptions;
 import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
-
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
+import de.fzi.cep.sepa.storage.api.*;
+import de.fzi.cep.sepa.storage.impl.*;
 import de.fzi.cep.sepa.storage.service.UserService;
+import de.fzi.cep.sepa.storage.util.StorageUtils;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.http.HTTPRepository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.spi.PersistenceProvider;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum StorageManager {
 
@@ -180,6 +177,10 @@ public enum StorageManager {
 
     public ContextStorage getContextStorage() {
         return new ContextStorageImpl(bkrepo);
+    }
+
+    public RdfEndpointStorage getRdfEndpointStorage() {
+        return new RdfEndpointStorageImpl();
     }
 
 }

@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.manager.kpi;
 
-import de.fzi.cep.sepa.kpi.BinaryOperation;
-import de.fzi.cep.sepa.kpi.KpiRequest;
-import de.fzi.cep.sepa.kpi.Operation;
-import de.fzi.cep.sepa.kpi.UnaryOperation;
+import de.fzi.cep.sepa.kpi.*;
 import de.fzi.cep.sepa.manager.kpi.context.ContextModel;
 import de.fzi.cep.sepa.manager.kpi.context.ContextModelEndpointBuilder;
 import de.fzi.cep.sepa.manager.kpi.context.ContextModelFetcher;
@@ -74,16 +71,46 @@ public class KpiPipelineBuilder {
         Pipeline pipeline = preparePipeline();
 
         Operation operation = kpiRequest.getOperation();
-        if (operation instanceof UnaryOperation) {
-            UnaryOperation unaryPipelineOperation = (UnaryOperation) operation;
+        try {
+            if (operation instanceof UnaryOperation) {
+                UnaryOperation unaryPipelineOperation = (UnaryOperation) operation;
 
-            try {
                 configureStream(pipeline, unaryPipelineOperation);
-                configureAggregationSepa(pipeline, pipeline.getStreams().get(0), unaryPipelineOperation, 0);
-                configureAction(pipeline, pipeline.getSepas().get(0));
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (unaryPipelineOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
+                    configureAction(pipeline, pipeline.getStreams().get(0));
+                } else {
+                    configureAggregationSepa(pipeline, pipeline.getStreams().get(0), unaryPipelineOperation, 0);
+                    configureAction(pipeline, pipeline.getSepas().get(0));
+                }
+            } else if (operation instanceof BinaryOperation) {
+                BinaryOperation binaryPipelineOperation = (BinaryOperation) operation;
+                UnaryOperation leftOperation = (UnaryOperation) binaryPipelineOperation.getLeft();
+                UnaryOperation rightOperation = (UnaryOperation) binaryPipelineOperation.getRight();
+
+                configureStream(pipeline, leftOperation);
+                configureStream(pipeline, rightOperation);
+
+                NamedSEPAElement leftElement = pipeline.getStreams().get(0);
+                NamedSEPAElement rightElement = pipeline.getStreams().get(1);
+
+                int index = 0;
+                if (leftOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
+                    configureAggregationSepa(pipeline, pipeline.getStreams().get(0), leftOperation, index);
+                    leftElement = pipeline.getSepas().get(0);
+                    index++;
+                }
+                if (rightOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
+                    configureAggregationSepa(pipeline, pipeline.getStreams().get(1), rightOperation, index);
+                    rightElement = pipeline.getSepas().get(0);
+                    index++;
+                }
+
+                configureMathEpa(pipeline, leftElement, rightElement, binaryPipelineOperation);
+                configureAction(pipeline, pipeline.getSepas().get(index));
+
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return pipeline;
@@ -107,6 +134,10 @@ public class KpiPipelineBuilder {
         List<EventStream> streams = pipeline.getStreams();
         streams.add(stream);
         pipeline.setStreams(streams);
+    }
+
+    private void configureMathEpa(Pipeline pipeline, NamedSEPAElement leftElement, NamedSEPAElement rightElement, BinaryOperation binaryPipelineOperation) {
+
     }
 
     private void configureAggregationSepa(Pipeline pipeline, EventStream connectedTo, UnaryOperation unaryPipelineOperation, int index) throws Exception {

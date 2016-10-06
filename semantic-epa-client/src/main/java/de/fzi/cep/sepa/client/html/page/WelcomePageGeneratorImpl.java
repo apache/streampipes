@@ -1,17 +1,13 @@
 package de.fzi.cep.sepa.client.html.page;
 
+import de.fzi.cep.sepa.client.declarer.*;
+import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
+import de.fzi.cep.sepa.model.impl.graph.SecDescription;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.fzi.cep.sepa.client.declarer.Declarer;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.client.html.model.Description;
-import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
 
 public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
 
@@ -38,6 +34,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         Description desc = new Description();
         desc.setName(declarer.declareModel().getName());
         desc.setDescription(declarer.declareModel().getDescription());
+        desc.setType(getType(declarer));
         String uri = baseUri;
         if (declarer instanceof SemanticEventConsumerDeclarer) {
             uri += "sec/";
@@ -48,17 +45,24 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         return desc;
     }
 
+    private String getType(Declarer declarer) {
+        if (declarer.declareModel() instanceof SecDescription) return "action";
+        else return "sepa";
+    }
+
     private Description getDescription(SemanticEventProducerDeclarer declarer) {
         List<Description> streams = new ArrayList<>();
         SemanticEventProducerDescription desc = new SemanticEventProducerDescription();
         desc.setName(declarer.declareModel().getName());
         desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
+        desc.setType("source");
         for (EventStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
             Description ad = new Description();
             ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
             ad.setUri(URI.create(baseUri +"stream/" + streamDeclarer.declareModel(declarer.declareModel()).getUri()));
             ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
+            ad.setType("stream");
             streams.add(ad);
         }
         desc.setStreams(streams);

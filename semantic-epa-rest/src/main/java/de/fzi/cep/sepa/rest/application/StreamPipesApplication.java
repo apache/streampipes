@@ -40,6 +40,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(Setup.class);
         apiClasses.add(VirtualSensor.class);
         apiClasses.add(Visualization.class);
+        apiClasses.add(RdfEndpoint.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);
