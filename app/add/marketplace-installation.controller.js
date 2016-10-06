@@ -1,4 +1,6 @@
-export default function InstallationController($scope, restApi, $mdDialog, app) {
+MarketplaceInstallationController.$inject = ['$scope', 'restApi', '$mdDialog', 'app'];
+
+export default function MarketplaceInstallationController($scope, restApi, $mdDialog, app) {
 	$scope.app = app;
 	$scope.installing = false;
 	$scope.installed = false;

@@ -414,6 +414,22 @@ export default function restApi($rootScope, $http, apiConstants) {
 		return $http.get(urlBase() +"/marketplace/pods");
 	}
 
+	restApi.getRdfEndpoints = function() {
+		return $http.get(urlBase() +"/rdfendpoints");
+	}
+
+	restApi.getRdfEndpointItems = function() {
+		return $http.get(urlBase() +"/rdfendpoints/items");
+	}
+
+	restApi.addRdfEndpoint = function(rdfEndpoint) {
+		return $http.post(urlBase() +"/rdfendpoints", rdfEndpoint);
+	}
+
+	restApi.removeRdfEndpoint = function(rdfEndpointId) {
+		return $http.delete(urlBase() +"/rdfendpoints/" +rdfEndpointId);
+	}
+
 	restApi.getAuthc = function() {
 		return $http.get(getServerUrl() + "/admin/authc");
 	}

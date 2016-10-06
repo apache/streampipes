@@ -1,4 +1,4 @@
-marketplace.$inject = ['restApi', '$mdDialog'];
+import MarketplaceInstallationController from './marketplace-installation.controller';
 
 export default function marketplace(restApi, $mdDialog) {
 	return {
@@ -39,8 +39,8 @@ export default function marketplace(restApi, $mdDialog) {
 
 			$scope.showInstallationDialog = function(app) {
 				$mdDialog.show({
-					controller: InstallationController,
-					templateUrl: 'app/add/installationDialog.tmpl.html',
+					controller: MarketplaceInstallationController,
+					templateUrl: 'app/add/marketplace-installation-dialog.tmpl.html',
 					parent: angular.element(document.body),
 					clickOutsideToClose:true,
 					scope:$scope,
