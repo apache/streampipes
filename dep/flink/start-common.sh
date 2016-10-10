@@ -3,7 +3,7 @@
 DAEMON=$1
 ARGS=("${@:2}") # get remaining arguments as array
 JMX_PORT="9010"
-
+JMX_PORT2="9011"
 FLINK_HOME="/opt/flink"
 FLINK_BIN_DIR="${FLINK_HOME}/bin"
 FLINK_CONF_DIR="${FLINK_HOME}/conf"
@@ -18,7 +18,7 @@ case $DAEMON in
 
     (taskmanager)
         CLASS_TO_RUN=org.apache.flink.runtime.taskmanager.TaskManager
-        JMX_ARGS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=${JMX_PORT} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+        JMX_ARGS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=${JMX_PORT2} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
     ;;
 
     (zookeeper)

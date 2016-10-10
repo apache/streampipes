@@ -25,7 +25,7 @@
 # The JobManager process will use this hostname to bind the listening servers to.
 # The TaskManagers will try to connect to the JobManager on that host.
 
-jobmanager.rpc.address: flink-master
+jobmanager.rpc.address: ipe-koi05.fzi.de
 
 
 # The port where the JobManager's main actor system listens for messages.
@@ -45,7 +45,7 @@ taskmanager.heap.mb: 1024
 
 # The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.
 
-taskmanager.numberOfTaskSlots: 50
+taskmanager.numberOfTaskSlots: 1
 
 # Specify whether TaskManager memory should be allocated when starting up (true) or when
 # memory is required in the memory manager (false)

@@ -2,7 +2,7 @@ FROM shouldbee/scala:2.11.7-openjdk8
 
 ENV HADOOP_VERSION 2.7.0
 ENV FLINK_VERSION 1.1.2
-ENV SCALA_VERSION 2.11
+ENV SCALA_VERSION 2.10
 ENV FLINK_ROOT_DIR /opt/flink
 
 # Get Hadoop from US Apache mirror and extract just the native

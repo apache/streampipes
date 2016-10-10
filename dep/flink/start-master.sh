@@ -32,4 +32,6 @@ if [ ! -z $WEBUIPORT ]; then
     args+=("${WEBUIPORT}")
 fi
 
-"${FLINK_BIN_DIR}"/start-common.sh jobmanager "${args[@]}"
+"${FLINK_BIN_DIR}"/start-common.sh jobmanager "${args[@]}" &
+"${FLINK_BIN_DIR}"/start-worker.sh
+#"${FLINK_BIN_DIR}"/start-local.sh
