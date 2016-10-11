@@ -1,16 +1,16 @@
 elasticsearch:
-  image: elasticsearch:1.7.3
-  command: elasticsearch -Des.network.host=0.0.0.0
-  volumes:
-    - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-  ports:
-    - "9200:9200"
-    - "9300:9300"
+   image: elasticsearch:2.4.1
+   net: "host"
+   ports:
+       - "9200:9200"
+       - "9300:9300"
+   volumes:
+       - ./config/elasticsearch/data:/usr/share/elasticsearch/data
+       - ./config/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 kibana:
-  image: laus.fzi.de:5000/fzi/kibana
-  volumes:
-    - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
-  ports:
-    - "5601:5601"
-  links:
-    - elasticsearch
+   image: kibana:4.6.1
+   net: "host"
+   ports:
+       - "5601:5601"
+   volumes:
+       - ./config/kibana/kibana.yml:/opt/kibana/config/kibana.yml

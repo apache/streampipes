@@ -76,7 +76,7 @@ public class KpiPipelineBuilder {
 
                 configureStream(pipeline, unaryPipelineOperation);
                 if (unaryPipelineOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
-                    configureAction(pipeline, pipeline.getStreams().get(0));
+                    configureKpiPublisherAction(pipeline, pipeline.getStreams().get(0));
                 } else {
                     configureAggregationSepa(pipeline, pipeline.getStreams().get(0), unaryPipelineOperation, 0);
                     configureKpiPublisherAction(pipeline, pipeline.getSepas().get(0));

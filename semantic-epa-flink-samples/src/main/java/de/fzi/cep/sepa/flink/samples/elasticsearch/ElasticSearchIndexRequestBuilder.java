@@ -1,13 +1,14 @@
 package de.fzi.cep.sepa.flink.samples.elasticsearch;
 
-import java.util.Map;
-
 import org.apache.flink.api.common.functions.RuntimeContext;
-import org.apache.flink.streaming.connectors.elasticsearch.IndexRequestBuilder;
+import org.apache.flink.streaming.connectors.elasticsearch2.ElasticsearchSinkFunction;
+import org.apache.flink.streaming.connectors.elasticsearch2.RequestIndexer;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Requests;
 
-public class ElasticSearchIndexRequestBuilder implements IndexRequestBuilder<Map<String, Object>>{
+import java.util.Map;
+
+public class ElasticSearchIndexRequestBuilder implements ElasticsearchSinkFunction<Map<String, Object>> {
 
 	private String indexName;
 	private String typeName;
@@ -19,13 +20,16 @@ public class ElasticSearchIndexRequestBuilder implements IndexRequestBuilder<Map
 	
 	private static final long serialVersionUID = 1L;
 
-	@Override
-    public IndexRequest createIndexRequest(Map<String, Object> element, RuntimeContext ctx) {
-      
+    public IndexRequest createIndexRequest(Map<String, Object> element) {
+
         return Requests.indexRequest()
                 .index(indexName)
                 .type(typeName)
                 .source(element);
     }
 
+	@Override
+	public void process(Map<String, Object> stringObjectMap, RuntimeContext runtimeContext, RequestIndexer requestIndexer) {
+		requestIndexer.add(createIndexRequest(stringObjectMap));
+	}
 }
