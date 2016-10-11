@@ -36,9 +36,12 @@ ADD flink-conf.yaml ${FLINK_ROOT_DIR}/conf/flink-conf.yaml
 RUN addgroup -S flink
 RUN adduser -D -S -H -G flink -h $FLINK_ROOT_DIR flink
 
+RUN chown -R flink:flink /opt/flink
 
-RUN chown -R flink:flink /opt/flink/bin/start-master.sh
 RUN chmod +x /opt/flink/bin/start-master.sh
+RUN chmod +x /opt/flink/bin/start-common.sh
+RUN chmod +x /opt/flink/bin/start-worker.sh
+
 ENV PATH $PATH:${FLINK_ROOT_DIR}/bin
 
 #ENTRYPOINT ["/opt/flink/bin/start-master.sh"]
