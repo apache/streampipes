@@ -28,8 +28,4 @@ ADD log4j.properties logback.xml ${FLINK_ROOT_DIR}/conf/
 ADD ./start-common.sh ./start-worker.sh ./start-master.sh ${FLINK_ROOT_DIR}/bin/
 ADD ./flink-conf.yaml ${FLINK_ROOT_DIR}/conf/flink-conf.yaml
 
-#ENV PATH $PATH:${FLINK_ROOT_DIR}/bin
-
-WORKDIR /opt/flink/bin
-
-ENTRYPOINT ["./start-master.sh"]
+ENV PATH $PATH:${FLINK_ROOT_DIR}/bin
