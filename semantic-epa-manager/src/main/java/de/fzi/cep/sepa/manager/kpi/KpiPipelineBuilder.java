@@ -28,6 +28,7 @@ public class KpiPipelineBuilder {
     private KpiRequest kpiRequest;
 
     private static final String AGGREGATE_EPA_SUFFIX = "/sepa/aggregation";
+    private static final String KPI_PUBLISHER_SUFFIX = "/sec/proasensekpi";
     private static final String MATH_EPA_SUFFIX = "/sepa/math-binary";
     private static final String COUNT_EPA_SUFFIX = "/sepa/count";
     private static final String KAFKA_PUBLISHER_SUFFIX = "/sec/kafka";
@@ -78,7 +79,7 @@ public class KpiPipelineBuilder {
                     configureAction(pipeline, pipeline.getStreams().get(0));
                 } else {
                     configureAggregationSepa(pipeline, pipeline.getStreams().get(0), unaryPipelineOperation, 0);
-                    configureAction(pipeline, pipeline.getSepas().get(0));
+                    configureKpiPublisherAction(pipeline, pipeline.getSepas().get(0));
                 }
             } else if (operation instanceof BinaryOperation) {
                 BinaryOperation binaryPipelineOperation = (BinaryOperation) operation;
@@ -104,7 +105,7 @@ public class KpiPipelineBuilder {
                 }
 
                 configureMathEpa(pipeline, leftElement, rightElement, binaryPipelineOperation, index);
-                configureAction(pipeline, pipeline.getSepas().get(pipeline.getSepas().size()-1));
+                configureKpiPublisherAction(pipeline, pipeline.getSepas().get(pipeline.getSepas().size()-1));
 
             }
         } catch (Exception e) {
@@ -183,6 +184,18 @@ public class KpiPipelineBuilder {
         pipeline.setActions(Arrays.asList(action));
     }
 
+    private void configureKpiPublisherAction(Pipeline pipeline, NamedSEPAElement connectedTo) throws Exception {
+        SecInvocation action = new SecInvocation(KpiPipelineBuilderUtils.getSec(KPI_PUBLISHER_SUFFIX).get());
+        action.setConnectedTo(Arrays.asList(connectedTo.getDOM()));
+        action.setDOM(getUUID());
+        pipeline.setActions(Arrays.asList(action));
+
+        PipelineModificationMessage message = Operations.validatePipeline(pipeline, true);
+
+        action = new KpiPublisherGenerator(modifyPipeline(pipeline.getActions().get(0), message), getKpiPublisherSettings()).makeInvocationGraph();
+        pipeline.setActions(Arrays.asList(action));
+    }
+
     private SepaInvocation modifyPipeline(SepaInvocation sepaInvocation, PipelineModificationMessage message) {
         sepaInvocation.setConfigured(true);
         sepaInvocation.setStaticProperties(message.getPipelineModifications().get(0).getStaticProperties());
@@ -207,6 +220,10 @@ public class KpiPipelineBuilder {
 
     private KafkaSettings getKafkaSettings() {
         return KafkaSettings.makeSettings(kpiRequest.getKpiId());
+    }
+
+    private KpiPublisherSettings getKpiPublisherSettings() {
+        return KpiPublisherSettings.makeSettings(kpiRequest.getKpiId());
     }
 
     private static final String getUUID() {

@@ -4,13 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseEventNotifier;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyPublisher;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.messaging.EventListener;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
-import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.model.util.SepaUtils;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
 import eu.proasense.internal.VariableType;
@@ -30,26 +26,22 @@ import java.util.Set;
 public class ProaSenseKpiPublisher implements EventListener<byte[]> {
 
 	private StreamPipesKafkaProducer producer;
-	private static final String DEFAULT_PROASENSE_TOPIC = "eu.proasense.internal.sp.internal.kpi";
 	private TSerializer serializer;
-	private ProaSenseEventNotifier notifier;
-	private String kpiName;
+	private String kpiId;
 		   
 	private static final Logger logger = LoggerFactory.getLogger(ProaSenseTopologyPublisher.class);
 
 	private int i = 0;
 	
-	public ProaSenseKpiPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
-		this.notifier = notifier;
-		this.producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+	public ProaSenseKpiPublisher(String kafkaHost, int kafkaPort, String topic, String kpiId) {
+		this.producer = new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
-		this.kpiName = SepaUtils.getFreeTextStaticPropertyValue(graph, "kpi");
+		this.kpiId = kpiId;
 	}
 	
 	@Override
 	public void onEvent(byte[] json) {
 		i++;
-		notifier.increaseCounter();
 		if (i % 500 == 0) System.out.println("Sending, " +i);
 		Optional<byte[]> bytesMessage = buildDerivedEvent(new String(json));
 		if (bytesMessage.isPresent()) producer.publish(bytesMessage.get());
@@ -61,7 +53,7 @@ public class ProaSenseKpiPublisher implements EventListener<byte[]> {
 		DerivedEvent event = new DerivedEvent();
 		
 		event.setComponentId("KPI");
-		event.setEventName(kpiName);
+		event.setEventName(kpiId);
 		
 		Map<String, ComplexValue> values = new HashMap<String, ComplexValue>();
 		JsonElement element = new JsonParser().parse(json);
