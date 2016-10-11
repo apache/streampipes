@@ -29,3 +29,6 @@ ADD ./start-common.sh ./start-worker.sh ./start-master.sh ${FLINK_ROOT_DIR}/bin/
 ADD ./flink-conf.yaml ${FLINK_ROOT_DIR}/conf/flink-conf.yaml
 
 ENV PATH $PATH:${FLINK_ROOT_DIR}/bin
+
+CMD ["sh", "-c", "/opt/flink/bin/start-master.sh"]
+
