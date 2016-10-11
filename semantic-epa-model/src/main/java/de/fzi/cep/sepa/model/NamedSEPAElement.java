@@ -3,7 +3,13 @@ package de.fzi.cep.sepa.model;
 
 import com.clarkparsia.empire.annotation.RdfId;
 import com.clarkparsia.empire.annotation.RdfProperty;
+import de.fzi.cep.sepa.model.impl.ApplicationLink;
+import de.fzi.cep.sepa.model.util.Cloner;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +33,11 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 	@RdfId
 	protected String uri;
 
+	@OneToMany(fetch = FetchType.EAGER,
+			cascade = {CascadeType.ALL})
+	@RdfProperty("sepa:applicationLink")
+	protected List<ApplicationLink> applicationLinks;
+
     protected String elementId;
 
 	protected String DOM;
@@ -36,18 +47,21 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
     public NamedSEPAElement()
 	{
 		super();
+		this.applicationLinks = new ArrayList<>();
 	}
 	
 	public NamedSEPAElement(String uri)
 	{
 		super();
 		this.uri = uri;
+		this.applicationLinks = new ArrayList<>();
 	}
 	
 	public NamedSEPAElement(String uri, String name, String description, String iconUrl)
 	{
 		this(uri, name, description);
 		this.iconUrl = iconUrl;
+		this.applicationLinks = new ArrayList<>();
 	}
 	
 	public NamedSEPAElement(String uri, String name, String description)
@@ -57,6 +71,7 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.name = name;
 		this.description = description;
 		this.elementId = uri;
+		this.applicationLinks = new ArrayList<>();
 	}
 
 	public NamedSEPAElement(NamedSEPAElement other) {
@@ -68,6 +83,9 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
 		this.DOM = other.getDOM();
         this.connectedTo = other.getConnectedTo();
 		this.elementId = other.getElementId();
+		if (other.getApplicationLinks() != null) {
+			this.applicationLinks = new Cloner().al(other.getApplicationLinks());
+		}
 	}
 
 	public String getName() {
@@ -127,4 +145,11 @@ public abstract class NamedSEPAElement extends AbstractSEPAElement{
         this.connectedTo = connectedTo;
     }
 
+	public List<ApplicationLink> getApplicationLinks() {
+		return applicationLinks;
+	}
+
+	public void setApplicationLinks(List<ApplicationLink> applicationLinks) {
+		this.applicationLinks = applicationLinks;
+	}
 }

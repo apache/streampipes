@@ -42,6 +42,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(Visualization.class);
         apiClasses.add(RdfEndpoint.class);
         apiClasses.add(KpiPipeline.class);
+        apiClasses.add(ApplicationLink.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);

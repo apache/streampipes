@@ -1,15 +1,13 @@
 package de.fzi.cep.sepa.flink.samples.elasticsearch;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.impl.ApplicationLink;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -18,6 +16,11 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 
@@ -34,6 +37,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		stream1.setEventSchema(schema1);
 		
 		SecDescription desc = new SecDescription("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster");
+		desc.setIconUrl(Config.iconBaseUrl + "/elasticsearch_icon.png");
 		
 		desc.addEventStream(stream1);
 	
@@ -45,6 +49,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		
 		desc.setStaticProperties(staticProperties);
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
+		desc.setApplicationLinks(Arrays.asList(getKibanaLink(), getFlinkLink()));
 		
 		return desc;
 	}
@@ -68,4 +73,25 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 //		return new ElasticSearchProgram(graph);
 	}
 
+	public ApplicationLink getKibanaLink() {
+		ApplicationLink kibanaLink = new ApplicationLink();
+		kibanaLink.setApplicationName("Kibana");
+		kibanaLink.setApplicationDescription("Kibana lets you visualize and analyze historical data collected by StreamPipes.");
+		kibanaLink.setApplicationIconUrl(Config.iconBaseUrl + "/elasticsearch_icon.png");
+		kibanaLink.setApplicationLinkType("application");
+		kibanaLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getElasticsearchHost() +":5601");
+
+		return kibanaLink;
+	}
+
+	public ApplicationLink getFlinkLink() {
+		ApplicationLink flinkLink = new ApplicationLink();
+		flinkLink.setApplicationName("Flink Dashboard");
+		flinkLink.setApplicationDescription("The Apache Flink Dashboard lets you see and analyze currently running StreamPipes jobs.");
+		flinkLink.setApplicationIconUrl(Config.iconBaseUrl + "/flink_icon.png");
+		flinkLink.setApplicationLinkType("system");
+		flinkLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getFlinkHost() +":48081");
+
+		return flinkLink;
+	}
 }

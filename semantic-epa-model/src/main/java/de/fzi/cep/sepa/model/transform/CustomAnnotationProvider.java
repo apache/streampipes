@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.model.transform;
 
+import com.clarkparsia.empire.util.EmpireAnnotationProvider;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import com.clarkparsia.empire.util.EmpireAnnotationProvider;
 
 public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 
@@ -72,7 +72,8 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider{
 				de.fzi.cep.sepa.model.impl.quality.MeasurementObject.class,
 				de.fzi.cep.sepa.model.impl.eventproperty.ValueSpecification.class,
 				de.fzi.cep.sepa.model.impl.eventproperty.Enumeration.class,
-				de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue.class
+				de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue.class,
+				de.fzi.cep.sepa.model.impl.ApplicationLink.class
 		);
 	}
 
