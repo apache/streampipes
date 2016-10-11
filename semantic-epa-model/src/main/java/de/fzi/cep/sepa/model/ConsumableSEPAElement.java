@@ -22,7 +22,7 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:requires")
 	protected List<EventStream> eventStreams;
-	
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasStaticProperty")

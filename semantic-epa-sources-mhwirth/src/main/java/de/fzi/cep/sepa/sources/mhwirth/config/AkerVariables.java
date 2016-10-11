@@ -17,7 +17,8 @@ public enum AkerVariables {
 	MRUPosition(1002127, "Motion Reference Unit Position", "denotes the relative, vertical position of the rig due to wave motions", "SEPA.SEP.MRU.Position"),
 	MRUVelocity(1002128, "MRU velocity", "denotes the rig's vertical velocity with mm/s as Unit of Measurement", "SEPA.SEP.MRU.Velocity"),
 	Ibop(10001, "Ibop status", "", "SEPA.SEP.DDM.Ibop"),
-    Enriched(10000, "Enriched stream", "", "SEPA.SEP.Enriched");
+    Enriched(10000, "Enriched stream", "", "SEPA.SEP.Enriched"),
+	Friction(10002, "Friction Coefficient", "A data stream that provides current friction coefficient values of swivel and gearbox.", "eu.proasense.streamstory.output.coefficient");
 	
     
     

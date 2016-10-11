@@ -1,11 +1,12 @@
 package de.fzi.cep.sepa.sources.mhwirth.enriched;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.sources.mhwirth.friction.FrictionCoefficientStream;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnrichedEventProducer implements SemanticEventProducerDeclarer{
 
@@ -20,6 +21,7 @@ public class EnrichedEventProducer implements SemanticEventProducerDeclarer{
 		List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
 		
 		eventStreams.add(new EnrichedStream());
+		eventStreams.add(new FrictionCoefficientStream());
 		
 		return eventStreams;
 	}
