@@ -22,6 +22,7 @@ import spOntology from './ontology/ontology.module';
 import spPipelines from './pipelines/pipelines.module';
 import spProasenseHome from './proasense-home/proasense-home.module';
 import spSensors from './sensors/sensors.module';
+import spAppLinks from './applinks/applinks.module';
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -42,6 +43,7 @@ export default angular
         spPipelines,
         spProasenseHome,
         spSensors,
+        spAppLinks,
         uiRouter,
     ])
     .run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {

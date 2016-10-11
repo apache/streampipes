@@ -455,5 +455,9 @@ export default function restApi($rootScope, $http, apiConstants) {
 
 	}
 
+	restApi.getApplicationLinks = function() {
+		return $http.get(getServerUrl() + "/applink");
+	};
+
 	return restApi;
 };

@@ -69,6 +69,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
 			icon: 'social:ic_share_24px'
 		},
 		{
+			link : 'streampipes.applinks',
+			title: 'Application Links',
+			icon: 'action:ic_open_in_new_24px'
+		},
+		{
 			link : 'streampipes.settings',
 			title: 'Settings',
 			icon: 'action:ic_settings_24px'

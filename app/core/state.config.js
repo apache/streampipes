@@ -142,6 +142,15 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 				}
 			}
 		})
+		.state('streampipes.applinks', {
+			url: '/applinks',
+			views: {
+				"streampipesView@streampipes" : {
+					templateUrl : 'app/applinks/applinks.tmpl.html',
+					controller: 'AppLinksCtrl'
+				}
+			}
+		})
 		.state('streampipes.tutorial', {
 			url: '/tutorial',
 			views: {
