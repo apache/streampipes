@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.esper.pattern.and;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.EpaType;
@@ -22,7 +19,10 @@ import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AndController extends FlatEpDeclarer<AndParameters> {
 
@@ -47,7 +47,7 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		desc.addEventStream(stream2);	
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new CustomOutputStrategy(true));
+		strategies.add(new CustomOutputStrategy(false));
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();

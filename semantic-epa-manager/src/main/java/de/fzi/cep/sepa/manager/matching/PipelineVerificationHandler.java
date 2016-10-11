@@ -145,15 +145,19 @@ public class PipelineVerificationHandler {
                 .filter(property -> property instanceof MappingProperty)
                 .forEach(property -> {
                     try {
+
                         MappingProperty mappingProperty = (MappingProperty) property;
-                        mappingProperty.setMapsFromOptions(new ArrayList<>());
 
                         if (mappingProperty.getMapsFrom() != null) {
-                            ((MappingProperty) property)
-                                    .setMapsFromOptions(findSupportedEventProperties(stream,
-                                            rdfRootElement.getStreamRequirements(),
-                                            mappingProperty.getMapsFrom()));
+                            if (inStream(rdfRootElement.getStreamRequirements().get(count), mappingProperty.getMapsFrom())) {
+                                mappingProperty.setMapsFromOptions(new ArrayList<>());
+                                ((MappingProperty) property)
+                                        .setMapsFromOptions(findSupportedEventProperties(stream,
+                                                rdfRootElement.getStreamRequirements(),
+                                                mappingProperty.getMapsFrom()));
+                            }
                         } else {
+                            mappingProperty.setMapsFromOptions(new ArrayList<>());
                             for (EventProperty streamProperty : stream
                                     .getEventSchema().getEventProperties()) {
 
@@ -169,6 +173,13 @@ public class PipelineVerificationHandler {
                         e.printStackTrace();
                     }
                 });
+    }
+
+    private boolean inStream(EventStream stream, URI mapsFrom) {
+        return stream
+                .getEventSchema()
+                .getEventProperties()
+                .stream().anyMatch(ep -> ep.getElementId().equals(mapsFrom.toString()));
     }
 
     private List<EventProperty> findSupportedEventProperties(EventStream streamOffer, List<EventStream> streamRequirements, URI mapsFrom) {

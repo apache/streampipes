@@ -1,0 +1,45 @@
+{
+  "kpiId":9,
+  "kpiName":"Test",
+  "kpiOperation":"ADD",
+  "kpiDescription":"Test description",
+  "operation":{
+    "type":"de.fzi.cep.sepa.kpi.BinaryOperation",
+    "properties":{
+      "left":{
+        "type":"de.fzi.cep.sepa.kpi.UnaryOperation",
+        "properties":{
+          "unaryOperationType":"NONE",
+          "partition":"true",
+          "eventPropertyName":"bin10",
+          "propertyRestriction":"partition",
+          "propertyType":"long",
+          "window":{
+            "value":12,
+            "windowType":"TIME",
+            "timeUnit":"hour"
+          },
+          "sensorId":"dustParticle"
+        }
+      },
+      "operationType":"NUMERIC",
+      "right":{
+        "type":"de.fzi.cep.sepa.kpi.UnaryOperation",
+        "properties":{
+          "unaryOperationType":"NONE",
+          "partition":"false",
+          "eventPropertyName":"shuttle",
+          "propertyRestriction":"none",
+          "propertyType":"string",
+          "window":{
+            "value":12,
+            "windowType":"TIME",
+            "timeUnit":"hour"
+          },
+          "sensorId":"montrac"
+        }
+      },
+      "arithmeticOperationType":"MULTIPLY"
+    }
+  }
+}

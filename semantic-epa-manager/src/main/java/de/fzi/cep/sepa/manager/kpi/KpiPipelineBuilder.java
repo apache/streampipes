@@ -5,10 +5,7 @@ import de.fzi.cep.sepa.manager.kpi.context.ContextModel;
 import de.fzi.cep.sepa.manager.kpi.context.ContextModelEndpointBuilder;
 import de.fzi.cep.sepa.manager.kpi.context.ContextModelFetcher;
 import de.fzi.cep.sepa.manager.kpi.mapping.IdMapper;
-import de.fzi.cep.sepa.manager.kpi.pipelineelements.AggregationGenerator;
-import de.fzi.cep.sepa.manager.kpi.pipelineelements.AggregationSettings;
-import de.fzi.cep.sepa.manager.kpi.pipelineelements.KafkaPublisherGenerator;
-import de.fzi.cep.sepa.manager.kpi.pipelineelements.KafkaSettings;
+import de.fzi.cep.sepa.manager.kpi.pipelineelements.*;
 import de.fzi.cep.sepa.manager.operations.Operations;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
@@ -31,6 +28,7 @@ public class KpiPipelineBuilder {
     private KpiRequest kpiRequest;
 
     private static final String AGGREGATE_EPA_SUFFIX = "/sepa/aggregation";
+    private static final String MATH_EPA_SUFFIX = "/sepa/math-binary";
     private static final String COUNT_EPA_SUFFIX = "/sepa/count";
     private static final String KAFKA_PUBLISHER_SUFFIX = "/sec/kafka";
 
@@ -94,19 +92,19 @@ public class KpiPipelineBuilder {
                 NamedSEPAElement rightElement = pipeline.getStreams().get(1);
 
                 int index = 0;
-                if (leftOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
+                if (leftOperation.getUnaryOperationType() != UnaryOperationType.NONE) {
                     configureAggregationSepa(pipeline, pipeline.getStreams().get(0), leftOperation, index);
                     leftElement = pipeline.getSepas().get(0);
                     index++;
                 }
-                if (rightOperation.getUnaryOperationType() == UnaryOperationType.NONE) {
+                if (rightOperation.getUnaryOperationType() != UnaryOperationType.NONE) {
                     configureAggregationSepa(pipeline, pipeline.getStreams().get(1), rightOperation, index);
-                    rightElement = pipeline.getSepas().get(0);
+                    rightElement = pipeline.getSepas().get(index);
                     index++;
                 }
 
-                configureMathEpa(pipeline, leftElement, rightElement, binaryPipelineOperation);
-                configureAction(pipeline, pipeline.getSepas().get(index));
+                configureMathEpa(pipeline, leftElement, rightElement, binaryPipelineOperation, index);
+                configureAction(pipeline, pipeline.getSepas().get(pipeline.getSepas().size()-1));
 
             }
         } catch (Exception e) {
@@ -136,8 +134,23 @@ public class KpiPipelineBuilder {
         pipeline.setStreams(streams);
     }
 
-    private void configureMathEpa(Pipeline pipeline, NamedSEPAElement leftElement, NamedSEPAElement rightElement, BinaryOperation binaryPipelineOperation) {
+    private void configureMathEpa(Pipeline pipeline, NamedSEPAElement leftElement, NamedSEPAElement rightElement, BinaryOperation binaryPipelineOperation, int index) throws Exception {
+        SepaInvocation math = new SepaInvocation(KpiPipelineBuilderUtils.getSepa(MATH_EPA_SUFFIX).get());
+        math.setConnectedTo(Arrays.asList(leftElement.getDOM(), rightElement.getDOM()));
+        math.setDOM(getUUID());
 
+        List<SepaInvocation> sepas = pipeline.getSepas();
+        sepas.add(math);
+        pipeline.setSepas(sepas);
+
+        PipelineModificationMessage message = Operations.validatePipeline(pipeline, true);
+        math = new BinaryMathGenerator(modifyPipeline(pipeline
+                .getSepas()
+                .get(sepas.size()-1), message),
+                getBinaryMathSettings(leftElement, rightElement, binaryPipelineOperation)).makeInvocationGraph();
+        sepas.remove(sepas.size()-1);
+        sepas.add(math);
+        pipeline.setSepas(sepas);
     }
 
     private void configureAggregationSepa(Pipeline pipeline, EventStream connectedTo, UnaryOperation unaryPipelineOperation, int index) throws Exception {
@@ -151,9 +164,9 @@ public class KpiPipelineBuilder {
         PipelineModificationMessage message = Operations.validatePipeline(pipeline, true);
         aggregation = new AggregationGenerator(modifyPipeline(pipeline
                 .getSepas()
-                .get(0), message),
+                .get(sepas.size()-1), message),
                 getAggregationSettings(connectedTo, unaryPipelineOperation)).makeInvocationGraph();
-        sepas.remove(index);
+        sepas.remove(sepas.size()-1);
         sepas.add(aggregation);
         pipeline.setSepas(sepas);
     }
@@ -186,6 +199,11 @@ public class KpiPipelineBuilder {
     private AggregationSettings getAggregationSettings(EventStream stream, UnaryOperation unaryPipelineOperation) {
         return AggregationSettings.makeSettings(stream, unaryPipelineOperation, idMapper);
     }
+
+    private BinaryMathSettings getBinaryMathSettings(NamedSEPAElement leftElement, NamedSEPAElement rightElement, BinaryOperation binaryPipelineOperation) {
+        return BinaryMathSettings.makeSettings(leftElement, rightElement, binaryPipelineOperation, idMapper);
+    }
+
 
     private KafkaSettings getKafkaSettings() {
         return KafkaSettings.makeSettings(kpiRequest.getKpiId());

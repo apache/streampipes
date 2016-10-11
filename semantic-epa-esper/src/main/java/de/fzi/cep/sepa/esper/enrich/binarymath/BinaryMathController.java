@@ -101,7 +101,7 @@ public class BinaryMathController extends FlatEpDeclarer<BinaryMathParameter>{
 		
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 		
-		String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "delay");
+		String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "result");
 	
 		Operation arithmeticOperation;
 		if (operation.equals("+")) arithmeticOperation = Operation.ADD;

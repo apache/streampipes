@@ -1,17 +1,12 @@
-flink-master:
-    image: melentye/flink:latest
+flink:
+    image: laus.fzi.de:5000/fzi/flink
+    net: "host"
     ports:
         - "8081:8081"
         - "9010:9010"
+        - "6123:6123"
     expose:
         - "8081"
         - "6123"
-    command: start-master.sh
-flink-worker:
-    image: melentye/flink:latest
-    ports:
-        - "6121"
-        - "6122"
-    links:
-        - flink-master
-    command: start-worker.sh
+    volumes:
+        - ./config/flink:/opt/flink/conf

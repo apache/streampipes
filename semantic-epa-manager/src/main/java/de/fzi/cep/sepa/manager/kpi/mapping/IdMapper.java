@@ -58,10 +58,10 @@ public class IdMapper {
         List<Mapping> mappings = new ArrayList<>();
 
         // sensor mappings hella
-        mappings.add(new Mapping("dustParticle", ""));
+        mappings.add(new Mapping("dustParticle", "source-environmental/dust"));
         mappings.add(new Mapping("machinePlan", ""));
-        mappings.add(new Mapping("materialChange", "source-human%2FrawMaterialChange"));
-        mappings.add(new Mapping("materialCertificate", "source-human%2FrawMaterialCertificate"));
+        mappings.add(new Mapping("materialChange", "source-human/rawMaterialChange"));
+        mappings.add(new Mapping("materialCertificate", "source-human/rawMaterialCertificate"));
         mappings.add(new Mapping("montrac", "source-montrac/montrac"));
         mappings.add(new Mapping("materialMovement", ""));
         mappings.add(new Mapping("moulding", "source-moulding/moulding"));
