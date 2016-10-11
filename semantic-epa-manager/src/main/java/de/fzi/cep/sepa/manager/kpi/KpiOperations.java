@@ -14,7 +14,12 @@ import java.io.IOException;
 public class KpiOperations {
 
     public static Pipeline makeKpiPipeline(KpiRequest kpiRequest, boolean storePipeline) throws IOException {
-        Pipeline pipeline = new KpiPipelineBuilder(kpiRequest).makePipeline();
+        Pipeline pipeline;
+        if (kpiRequest.getContext() != null) {
+            pipeline = new KpiPipelineBuilder(kpiRequest,kpiRequest.getContext()).makePipeline();
+        } else {
+            pipeline = new KpiPipelineBuilder(kpiRequest).makePipeline();
+        }
         if (storePipeline) {
             Operations.storePipeline(pipeline);
             pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());

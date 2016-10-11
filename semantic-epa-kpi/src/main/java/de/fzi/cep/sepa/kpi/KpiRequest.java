@@ -5,6 +5,7 @@ public class KpiRequest {
 	private String kpiId;
 	private String kpiName;
 	private String kpiDescription;
+	private String context;
 	
 	private KpiOperationType kpiOperation;
 	private Operation operation;
@@ -41,6 +42,12 @@ public class KpiRequest {
 	public void setOperation(Operation operation) {
 		this.operation = operation;
 	}
-	
-	
+
+	public String getContext() {
+		return context;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
+	}
 }
