@@ -7,6 +7,8 @@ export default function EndpointInstallationController($scope, $mdDialog, restAp
     $scope.installationFinished = false;
     $scope.page = "preview";
     $scope.install = install;
+    $scope.nextButton = "Next";
+    $scope.installationRunning = false;
 
     $scope.hide = function () {
         $mdDialog.hide();
@@ -17,12 +19,17 @@ export default function EndpointInstallationController($scope, $mdDialog, restAp
     };
 
     $scope.next = function () {
-        $scope.page = "installation";
-        initiateInstallation($scope.endpointItemsToInstall[0], 0);
+        if ($scope.page == "installation") {
+            $scope.cancel();
+        } else {
+            $scope.page = "installation";
+            initiateInstallation($scope.endpointItemsToInstall[0], 0);
+        }
     }
 
     var initiateInstallation = function (endpointUri, index) {
         console.log(endpointUri);
+        $scope.installationRunning = true;
         $scope.installationStatus.push({"name": endpointUri.name, "id": index, "status": "waiting"});
         if (install) {
             installElement(endpointUri, index);
@@ -51,6 +58,8 @@ export default function EndpointInstallationController($scope, $mdDialog, restAp
                     initiateInstallation($scope.endpointItemsToInstall[index], index);
                 } else {
                     $scope.getEndpointItems();
+                    $scope.nextButton = "Close";
+                    $scope.installationRunning = false;
                 }
             });
 
@@ -73,6 +82,8 @@ export default function EndpointInstallationController($scope, $mdDialog, restAp
                     index++;
                     initiateInstallation($scope.endpointItemsToInstall[index], index);
                 } else {
+                    $scope.nextButton = "Close";
+                    $scope.installationRunning = false;
                     $scope.getEndpointItems();
                 }
             });
