@@ -21,6 +21,9 @@
                 <div ng-repeat="status in installationStatus">
                     <h4>{{!action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id+1}} of {{pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
                 </div>
+                <div ng-if="pipelinesToModify.length == 0">
+                    <h4>Sorry, there are no pipelines that are currently {{action ? "idle." : "running."}}</h4>
+                </div>
             </div>
 
         </div>

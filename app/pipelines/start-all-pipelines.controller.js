@@ -107,4 +107,8 @@ export default function StartAllPipelinesController($scope, $mdDialog, restApi, 
 
     getPipelinesToModify();
 
+    if ($scope.pipelinesToModify.length == 0) {
+        $scope.nextButton = "Close";
+        $scope.page = "installation";
+    }
 }
