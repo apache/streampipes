@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.api.common.JobID;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
@@ -57,7 +58,32 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 			DataStream<Map<String, Object>> convertedStream = messageStream.flatMap(new JsonToMapFormat());
 
-			return execute(convertedStream);
+			execute(convertedStream);
+
+			// TODO find a better solution
+			// The loop waits until the job is deployed
+			// When the deployment takes longer then 60 seconds it returns false
+			FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
+			boolean isDeployed = false;
+			int count = 0;
+			do {
+				try {
+					count++;
+					Thread.sleep(1000);
+					JobID l = ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId());
+					isDeployed = true;
+
+				} catch (Exception e) {
+
+				}
+			} while (!isDeployed && count < 60);
+
+			if (count == 60) {
+				return false;
+			} else {
+				return true;
+			}
+
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
@@ -71,7 +97,6 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	{
 		try {
 			result = env.execute(graph.getElementId());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
