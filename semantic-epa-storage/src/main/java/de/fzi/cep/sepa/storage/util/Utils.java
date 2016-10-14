@@ -35,6 +35,16 @@ public class Utils {
 		return dbClient;
 	}
 
+	public static CouchDbClient getCouchDbVisualizablePipelineClient() {
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "visualizablepipeline"));
+		return dbClient;
+	}
+
+	public static CouchDbClient getCouchDbDashboardClient() {
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "dashboard"));
+		return dbClient;
+	}
+
 	public static CouchDbClient getCouchDbUserClient() {
 		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_USER_DB));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
