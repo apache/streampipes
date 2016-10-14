@@ -15,12 +15,15 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 		var passcode = 'admin';
 		var self = this;
 
-
-		$http.get('/visualization/' + this.visualisationId)
+		$http.get('/dashboard/_all_docs?include_docs=true')
 			.success(function(data) {
 
-				var brokerUrl = 'ws://' + data['broker'];
-				var inputTopic = '/topic/' + data['pipelineId'];
+				var element = _.find(data.rows, function(elem) {
+					return elem.doc.visualisation._id == self.visualisationId;
+				});
+
+				var brokerUrl = 'ws://' + element.doc.visualisation['broker'];
+				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
 
 				self.client = Stomp.client(brokerUrl + inputTopic);
 

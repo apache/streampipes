@@ -1,6 +1,8 @@
-export default function AddWidget(WidgetInstances, $compile, WidgetTemplates) {
+AddWidget.$inject = ['WidgetInstances', '$compile', 'WidgetTemplates', '$http'];
 
-	function AddWidget($scope, $mdDialog, possibleVisualizations, rerenderDashboard, layoutId) {
+export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $http) {
+
+	function AddWidget($scope, $mdDialog, visualizablePipelines, rerenderDashboard, layoutId) {
 		$scope.page = 'select-viz';
 
 		$scope.pages = [{
@@ -21,8 +23,8 @@ export default function AddWidget(WidgetInstances, $compile, WidgetTemplates) {
 			if (page == $scope.page) return "md-fab md-accent";
 			else return "md-fab md-accent wizard-inactive";
 		}
-		
-		$scope.possibleVisualizations = angular.copy(possibleVisualizations);
+
+		$scope.visualizablePipelines = angular.copy(visualizablePipelines);
 
 		// This is the object that the user manipulates
 		$scope.selectedVisualisation = {};
@@ -46,20 +48,15 @@ export default function AddWidget(WidgetInstances, $compile, WidgetTemplates) {
 
 				var widget = {};
 				widget.visualisationType = $scope.selectedType;
-				widget.visualisationId = $scope.selectedVisualisation._id;
 				widget.visualisation = $scope.selectedVisualisation;
-				//widget.id = $scope.selectedVisualisation._id;
 				widget.layoutId = layoutId;
 
+
+				widget.visualisationId = $scope.selectedVisualisation._id;
 				WidgetInstances.add(widget);
-
-				//widgetDefinitions.push(
-				//WidgetInstances.getWidgetDefinition(widget.id)
-				//);
-
 				rerenderDashboard();
-
 				$mdDialog.cancel();
+
 			}
 		}
 

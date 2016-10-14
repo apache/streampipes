@@ -47,7 +47,7 @@ let config = {
 				target: 'http://localhost:8080',
 				secure: false
 			},
-			'/visualization': {
+			'/visualizablepipeline': {
 				target: 'http://localhost:5984',
 				secure: false
 			},

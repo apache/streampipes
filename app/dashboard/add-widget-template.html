@@ -27,7 +27,7 @@
                             <h4>{{pages[0].description}}</h4>
                         </md-select-header>
                         <md-select ng-model="selectedVisualisation">
-                            <md-option ng-value="opt.doc" ng-repeat="opt in possibleVisualizations">{{ opt.doc.name }}
+                            <md-option ng-value="opt.doc" ng-repeat="opt in visualizablePipelines">{{ opt.doc.name }}
                             </md-option>
                         </md-select>
                     </md-input-container>
