@@ -18,10 +18,11 @@ public enum AkerVariables {
 	MRUVelocity(1002128, "MRU velocity", "denotes the rig's vertical velocity with mm/s as Unit of Measurement", "SEPA.SEP.MRU.Velocity"),
 	Ibop(10001, "Ibop status", "", "SEPA.SEP.DDM.Ibop"),
     Enriched(10000, "Enriched stream", "", "SEPA.SEP.Enriched"),
-	Friction(10002, "Friction Coefficient", "A data stream that provides current friction coefficient values of swivel and gearbox.", "eu.proasense.streamstory.output.coefficient");
-	
-    
-    
+	Friction_Swivel(10002, "Friction Coefficient (Swivel)", "A data stream that provides current friction coefficient values of the swivel.", "eu.proasense.streamstory.output.coefficient.swivel"),
+	Friction_Gearbox(10003, "Friction Coefficient (Gearbox)", "A data stream that provides current friction coefficient values of the gearbox.", "eu.proasense.streamstory.output.coefficient.gearbox");
+
+
+
 	long tagNumber;
 	String eventName;
 	String description;
@@ -48,6 +49,10 @@ public enum AkerVariables {
 	public String description()
 	{
 		return description;
+	}
+
+	public String originalTopic() {
+		return topic;
 	}
 	
 	public String topic()

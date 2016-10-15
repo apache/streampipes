@@ -17,34 +17,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by riemer on 11.10.2016.
+ * Created by riemer on 12.10.2016.
  */
-public class FrictionCoefficientStream extends AbstractAlreadyExistingStream {
+public abstract class FrictionCoefficientStream extends AbstractAlreadyExistingStream {
 
-    @Override
-    public EventStream declareModel(SepDescription sep) {
-
+    protected EventStream getPreparedEventStream(SepDescription sep, AkerVariables variable, String pathName, String topic) {
         EventStream stream = new EventStream();
 
         EventSchema schema = new EventSchema();
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-        eventProperties.add(EpProperties.stringEp("time", SO.DateCreated));
+        eventProperties.add(EpProperties.stringEp("timestamp", "http://schema.org/DateTime"));
         eventProperties.add(EpProperties.stringEp("eventId", SO.Text));
         eventProperties.add(EpProperties.doubleEp("zScore", "http://mhwirth.com/zScore"));
         eventProperties.add(EpProperties.doubleEp("value", "http://mhwirth.com/frictionValue"));
+        eventProperties.add(EpProperties.doubleEp("std", "http://mhwirth.com/stddev"));
 
         EventGrounding grounding = new EventGrounding();
-        grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Friction.topic()));
+        grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(topic));
         grounding.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 
         stream.setEventGrounding(grounding);
         schema.setEventProperties(eventProperties);
         stream.setEventSchema(schema);
-        stream.setName(AkerVariables.Friction.eventName());
-        stream.setDescription(AkerVariables.Friction.description());
-        stream.setUri(sep.getUri() + "/friction");
+        stream.setName(variable.eventName());
+        stream.setDescription(variable.description());
+        stream.setUri(sep.getUri() + pathName);
 
         return stream;
     }
-
 }
