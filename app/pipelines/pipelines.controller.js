@@ -1,5 +1,4 @@
 import StartAllPipelinesController from './start-all-pipelines.controller';
-import StopAllPipelinesController from './stop-all-pipelines.controller';
 import PipelineCategoriesDialogController from './pipeline-categories-dialog.controller';
 
 PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];
@@ -71,7 +70,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         return 'active-pipeline';
     }
 
-    $scope.startAllPipelines = function() {
+    $scope.startAllPipelines = function(action) {
         $mdDialog.show({
             controller: StartAllPipelinesController,
             templateUrl: 'app/pipelines/start-all-pipelines.tmpl.html',
@@ -80,21 +79,9 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
             preserveScope: true,
             clickOutsideToClose: false,
             locals: {
-                pipelines: $scope.pipelines
-            }
-        })
-    }
-
-    $scope.stopAllPipelines = function() {
-        $mdDialog.show({
-            controller: StopAllPipelinesController,
-            templateUrl: 'app/pipelines/stop-all-pipelines.tmpl.html',
-            parent: angular.element(document.body),
-            scope: $scope,
-            preserveScope: true,
-            clickOutsideToClose: false,
-            locals: {
-               pipelines: $scope.pipelines
+                pipelines: $scope.pipelines,
+                action: action,
+                activeCategory: $scope.activeCategory
             }
         })
     }
