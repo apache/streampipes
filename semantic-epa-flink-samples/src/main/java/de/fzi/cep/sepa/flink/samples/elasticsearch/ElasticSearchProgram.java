@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.flink.samples.elasticsearch;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
@@ -11,7 +12,9 @@ import org.apache.flink.streaming.connectors.elasticsearch2.ElasticsearchSink;
 import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class ElasticSearchProgram extends FlinkSecRuntime implements Serializable {
@@ -49,7 +52,13 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
 
         List<InetSocketAddress> transports = new ArrayList<>();
 
-        transports.add(new InetSocketAddress("ipe-koi05.fzi.de", 9300));
+        try {
+            transports.add(new InetSocketAddress(InetAddress.getByName(ClientConfiguration.INSTANCE.getElasticsearchHost()), ClientConfiguration.INSTANCE.getElasticsearchPort()));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+//        transports.add(new InetSocketAddress("ipe-koi05.fzi.de", 9300));
 
         return convertedStream.flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
 
