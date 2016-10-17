@@ -44,7 +44,7 @@ public class KpiPublisherGenerator extends PipelineElementGenerator<SecInvocatio
                 .forEach(sp -> {
                     if (sp.getInternalName().equals("topic")) {
                         sp.setValue(settings.getTopic());
-                    } else if (sp.getInternalName().equals("kpiId")) {
+                    } else if (sp.getInternalName().equals("kpi")) {
                         sp.setValue(settings.getKpiId());
                     }
                 });

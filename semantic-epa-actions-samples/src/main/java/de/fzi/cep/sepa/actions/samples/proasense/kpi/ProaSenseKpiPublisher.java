@@ -38,6 +38,10 @@ public class ProaSenseKpiPublisher implements EventListener<byte[]> {
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.kpiId = kpiId;
 	}
+
+	public void closePublisher() {
+		producer.closeProducer();
+	}
 	
 	@Override
 	public void onEvent(byte[] json) {

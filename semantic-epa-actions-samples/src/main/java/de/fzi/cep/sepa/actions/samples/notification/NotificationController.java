@@ -45,7 +45,11 @@ public class NotificationController extends ActionController {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new FreeTextStaticProperty("title", "Title", ""));
-		staticProperties.add(new FreeTextStaticProperty("content", "Content", ""));
+
+		FreeTextStaticProperty contentProp = new FreeTextStaticProperty("content", "Content", "Enter the notification text. You can use place holders like #fieldName# to add the value of a stream variable.");
+		contentProp.setMultiLine(true);
+		contentProp.setHtmlAllowed(true);
+		staticProperties.add(contentProp);
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);

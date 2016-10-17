@@ -1,15 +1,14 @@
 package de.fzi.cep.sepa.model.impl.staticproperty;
 
-import java.net.URI;
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
-
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
+import java.net.URI;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -30,6 +29,12 @@ public class FreeTextStaticProperty extends StaticProperty {
 	
 	@RdfProperty("sepa:mapsTo")
 	protected URI mapsTo;
+
+	@RdfProperty("sepa:multiLine")
+	protected boolean multiLine;
+
+	@RdfProperty("sepa:htmlAllowed")
+	protected boolean htmlAllowed;
 	
 	@OneToOne(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -46,6 +51,8 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.requiredDatatype = other.getRequiredDatatype();
 		if (other.getValueSpecification() != null) this.valueSpecification = new PropertyValueSpecification(other.getValueSpecification());
 		this.value = other.getValue();
+		this.htmlAllowed = other.isHtmlAllowed();
+		this.multiLine = other.isMultiLine();
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description)
@@ -103,5 +110,20 @@ public class FreeTextStaticProperty extends StaticProperty {
 	public void setRequiredDatatype(URI requiredDatatype) {
 		this.requiredDatatype = requiredDatatype;
 	}
-	
+
+	public boolean isMultiLine() {
+		return multiLine;
+	}
+
+	public void setMultiLine(boolean multiLine) {
+		this.multiLine = multiLine;
+	}
+
+	public boolean isHtmlAllowed() {
+		return htmlAllowed;
+	}
+
+	public void setHtmlAllowed(boolean htmlAllowed) {
+		this.htmlAllowed = htmlAllowed;
+	}
 }
