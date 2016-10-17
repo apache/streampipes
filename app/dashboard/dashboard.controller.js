@@ -2,15 +2,14 @@ DashCtrl.$inject = ['$scope', '$http', '$mdDialog', 'WidgetInstances', 'AddWidge
 
 export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddWidgetController) {
 	$scope.rerender = true;
-	//TODO rename to visualisablePipelines
-	var possibleVisualizations = [];
+	var visualizablePipelines = [];
 
-	$http.get('/visualization/_all_docs?include_docs=true')
+	$http.get('/visualizablepipeline/_all_docs?include_docs=true')
 		.success(function(data) {
-			possibleVisualizations = data.rows;
+			visualizablePipelines = data.rows;
 
 			// get the names for each pipeline
-			angular.forEach(possibleVisualizations, function(vis) {
+			angular.forEach(visualizablePipelines, function(vis) {
 				$http.get('/pipeline/' + vis.doc.pipelineId)
 					.success(function(pipeline) {
 						vis.doc.name = pipeline.name;
@@ -26,7 +25,7 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 			parent: angular.element(document.body),
 			clickOutsideToClose:true,
 			locals : {
-				possibleVisualizations: possibleVisualizations,
+				visualizablePipelines: visualizablePipelines,
 				rerenderDashboard: rerenderDashboard,
 				layoutId: layoutId
 			}

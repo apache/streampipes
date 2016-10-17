@@ -1,3 +1,5 @@
+import _ from 'npm/lodash';
+
 restApi.$inject = ['$rootScope', '$http', 'apiConstants'];
 
 export default function restApi($rootScope, $http, apiConstants) {
@@ -173,10 +175,24 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.deleteOwnPipeline = function(pipelineId) {
+
+		// delete all the widgets that use the pipeline results
+		$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
+			var toDelete = _.chain(data.data.rows)
+				.filter(function(o) {
+					return o.doc.visualisation.pipelineId == pipelineId;
+				}).value();
+
+			_.map(toDelete, function(o) {
+				$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
+			});	
+
+		});
+		
 		return $http({
 			method: 'DELETE',
 			url: urlBase() + "/pipelines/" +pipelineId
-		})
+		});
 	}
 
 	restApi.getPipelineCategories = function() {
