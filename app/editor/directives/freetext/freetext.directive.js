@@ -6,10 +6,11 @@ export default function freetext() {
 		restrict: 'E',
 		templateUrl: 'app/editor/directives/freetext/freetext.tmpl.html',
 		scope: {
-			staticProperty: "="
+			staticProperty: "=",
+			inputStreams : "="
 		},
 		link: function (scope) {
-
+console.log(scope.inputStreams);
 		}
 	}
 

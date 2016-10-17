@@ -1,7 +1,16 @@
 <div ng-if="!staticProperty.properties.valueSpecification">
-    <md-input-container flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
+    <md-input-container ng-if="!staticProperty.properties.multiLine" flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
         <input name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"/>
     </md-input-container>
+    <div ng-if="staticProperty.properties.multiLine">
+        <h5>{{staticProperty.properties.description}}</h5>
+        <h5>Possible placeholders: </h5>
+        <span ng-repeat = "property in inputStreams[0].eventSchema.eventProperties">#{{property.properties.runtimeName}}#&nbsp;</span>
+        <md-input-container flex="100" layout="column">
+            <textarea name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"
+                      md-maxlength="1500" rows="10"></textarea>
+        </md-input-container>
+    </div>
 </div>
 <div ng-if="staticProperty.properties.valueSpecification">
     <md-input-container flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>

@@ -17,13 +17,17 @@
                                 Mark as unread
                             </md-tooltip>
                         </md-button>
-                        <div class="md-list-item-text">
-                            <h3>{{notification.title}}</h3>
-                            <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for
-                                {{notification.targetedUser}}</h4>
-                            <p>
-                                {{notification.description}}
+                        <div class="md-list-item-text" style="margin-bottom:10px;margin-top:10px;">
+                            <h3><b>{{notification.title}}</b></h3>
+                            <div layout="row" layout-align="start center" style="margin-bottom:5px;">
+                                <div layout="row" layout-align="start center"><i class="material-icons" style="color: rgb(63,81,181);">access_time</i>
+                                    &nbsp;{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}}&nbsp;
+                                    <i class="material-icons" style="color: rgb(63,81,181);">person</i>&nbsp;{{notification.targetedUser}}
+                                </div>
+                            </div>
+                            <p>{{notification.description}}
                             </p>
+                            <md-divider></md-divider>
                         </div>
                     </md-list-item>
                 </md-list>
@@ -33,13 +37,17 @@
                 <md-list layout-padding>
                     <md-list-item class="md-3-line" ng-repeat="notification in notifications">
 
-                        <div class="md-list-item-text">
-                            <h3>{{notification.title}}</h3>
-                            <h4>{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}} for
-                                {{notification.targetedUser}}</h4>
-                            <p>
-                                {{notification.description}}
+                        <div class="md-list-item-text" style="margin-bottom:10px;margin-top:10px;">
+                            <h3><b>{{notification.title}}</b></h3>
+                            <div layout="row" layout-align="start center" style="margin-bottom:5px;">
+                                <div layout="row" layout-align="start center"><i class="material-icons" style="color: rgb(63,81,181);">access_time</i>
+                                    &nbsp;{{notification.timestamp | date:'dd.MM.yyyy HH:mm'}}&nbsp;
+                                    <i class="material-icons" style="color: rgb(63,81,181);">person</i>&nbsp;{{notification.targetedUser}}
+                                </div>
+                            </div>
+                            <p>{{notification.description}}
                             </p>
+                            <md-divider></md-divider>
                         </div>
                     </md-list-item>
                 </md-list>

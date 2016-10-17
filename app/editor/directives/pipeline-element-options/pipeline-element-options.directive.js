@@ -162,7 +162,9 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
 
             $scope.isConfigured = function() {
                 if ($scope.pipelineElement.type == 'stream') return true;
-                else return $($scope.getDomElement($scope.internalId)).data("JSON").configured;
+                else {
+                    return $($scope.getDomElement($scope.internalId)).data("JSON").configured;
+                }
             }
 
         },

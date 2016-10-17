@@ -1048,6 +1048,8 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
 
                 $(id).data("JSON").outputStrategies = modification.outputStrategies;
 
+                $(id).data("JSON").inputStreams = modification.inputStreams;
+
             }
         }
     }

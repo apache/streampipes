@@ -48,7 +48,7 @@
                         <oneof static-property="staticProperty"></oneof>
                     </div>
                     <div ng-if="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
-                        <freetext static-property="staticProperty"></freetext>
+                        <freetext input-streams="selectedElement.inputStreams" static-property="staticProperty"></freetext>
                     </div>
                     <div ng-if="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
                         <any static-property="staticProperty"></any>
