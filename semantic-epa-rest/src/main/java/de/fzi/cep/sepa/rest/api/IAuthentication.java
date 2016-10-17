@@ -9,6 +9,8 @@ import javax.ws.rs.core.Response;
 public interface IAuthentication {
 
 	Response doLogin(ShiroAuthenticationRequest token);
+
+	Response doLoginFromSso(ShiroAuthenticationRequest token, String componentId, String sessionId);
 	
 	Response doLogout();
 	
