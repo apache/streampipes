@@ -70,7 +70,12 @@ public class IdMapper {
 
 
         // sensor mapping mhwirth
-
+        mappings.add(new Mapping("1000693", "source-ddm/drilling-rpm"));
+        mappings.add(new Mapping("1000700", "source-ddm/torque"));
+        mappings.add(new Mapping("1002311", "source-ddm/hookLoad"));
+        mappings.add(new Mapping("1000695", "source-ddm/gearLubeTemp"));
+        mappings.add(new Mapping("1000692", "source-ddm/gearboxPressure"));
+        mappings.add(new Mapping("1000696", "source-ddm/swivelTemperature"));
         return mappings;
     }
 }
