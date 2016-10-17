@@ -69,6 +69,10 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
             return ok(authResponse);
         } catch (AuthenticationException e) {
             return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            doLogout();
+            return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
         }
     }
 
@@ -78,14 +82,23 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
             jsonObject.add("session", new JsonPrimitive(sessionId));
             jsonObject.add("token", new JsonPrimitive(secretToken));
             try {
-                Request
-                        .Post(Configuration.getInstance().STREAMSTORY_URL +StreamStoryCallbackUrl)
+                org.apache.http.client.fluent.Response response = Request
+                        .Post(fixStreamStoryUrl(Configuration.getInstance().STREAMSTORY_URL) +StreamStoryCallbackUrl)
                         .body(new StringEntity(new Gson().toJson(jsonObject), Charsets.UTF_8))
                         .execute();
+
+                int statusCode = response.returnResponse().getStatusLine().getStatusCode();
+                if (statusCode < 200 || statusCode >= 300) {
+                    throw new IllegalArgumentException("Wrong status code");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String fixStreamStoryUrl(String url) {
+        return url.replaceAll("/dashboard.html", "");
     }
 
     @Path("/logout")
@@ -101,6 +114,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         return ok(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
     }
+
+
 
     @Path("/register")
     @POST
