@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,6 +118,9 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 		// TODO make modelId dynamic
 //		int modelId = 1;
 		String errorMessage = "";
+
+		int i = pipelineId.lastIndexOf("-");
+		pipelineId = pipelineId.substring(0, i);
 
 		JsonObject params = Utils.getModelDetachMessage(pipelineId);
 
