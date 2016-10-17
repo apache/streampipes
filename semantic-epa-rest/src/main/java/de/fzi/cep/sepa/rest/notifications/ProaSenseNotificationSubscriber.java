@@ -20,10 +20,8 @@ public class ProaSenseNotificationSubscriber extends AbstractNotificationSubscri
             if (event.getEventProperties().containsKey("action_timestamp")) {
                 recommendedDate += " at time "
                         + parseDate(Long.parseLong(event.getEventProperties().get("action_timestamp").getValue()))
-                        +"<br/>"
-                        + "(Recommendation ID: " + event.getRecommendationId()
+                        + " (Recommendation ID: " + event.getRecommendationId()
                         + ", Time: " + parseDate(event.getTimestamp())
-                        + ", "
                         + ")";
             }
 
