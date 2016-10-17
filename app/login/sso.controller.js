@@ -2,10 +2,14 @@ SsoCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$st
 
 export default function SsoCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, restApi) {
 	//console.log($stateParams.target);
+	console.log($stateParams.target);
+	console.log($stateParams);
 	//$http.get("/semantic-epa-backend/api/v2/admin/authc").success(function(data){
 	restApi.getAuthc().success(function(data){
 		console.log(data);
-		if (!data.success) window.top.location.href = "http://localhost:8080/semantic-epa-backend/#/streampipes/login/" +$stateParams.target;
+		console.log(window.location.host);
+		console.log(window.location.host +"/#/streampipes/login/" +$stateParams.target);
+		if (!data.success) window.top.location.href = "http://" +window.location.host +"/#/streampipes/login/" +$stateParams.target +"?session=" +$stateParams.session;
 		else $state.go("ssosuccess");
 	})
 

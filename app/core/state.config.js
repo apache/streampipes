@@ -50,7 +50,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			}
 		})
 		.state('sso', {
-			url: '/sso/:target',
+			url: '/sso/:target?session',
 			views: {
 				"container" : {
 					templateUrl : 'templates/sso.html',
@@ -67,7 +67,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			}
 		})
 		.state('streampipes.login', {
-			url: '/login/:target',
+			url: '/login/:target?session',
 			views: {
 				"streampipesView@streampipes" : {
 					templateUrl : 'templates/login.html',

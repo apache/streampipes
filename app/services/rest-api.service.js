@@ -454,6 +454,10 @@ export default function restApi($rootScope, $http, apiConstants) {
 		return $http.post(getServerUrl() + "/admin/login", credentials);
 	}
 
+	restApi.loginSso = function(credentials, componentId, sessionId) {
+		return $http.post(getServerUrl() + "/admin/login/" +componentId +"?session=" +sessionId, credentials);
+	}
+
 	restApi.logout = function() {
 		return $http.get(getServerUrl() + "/admin/logout");
 	}

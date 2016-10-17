@@ -64,6 +64,7 @@ export default angular
 
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
+                console.log(toState.name);
                 var isLogin = toState.name === "streampipes.login";
                 var isSetup = toState.name === "streampipes.setup";
                 var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
