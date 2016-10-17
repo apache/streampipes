@@ -29,12 +29,12 @@ public class Utils {
         List<EventProperty> outputProperties = new ArrayList<>();
         outputProperties.add(EpProperties.longEp("timestamp", "http://schema.org/Date"));
 		outputProperties.add(EpProperties.stringEp("eventName", "http://schema.org/Text"));
+		outputProperties.add(EpProperties.stringEp("pdfType", "http://schema.org/Text"));
 
         //TODO
-        outputProperties.add(EpProperties.doubleEp("params", "TODO"));
-        outputProperties.add(EpProperties.stringEp("eventProperties", "TODO"));
-        outputProperties.add(EpProperties.stringEp("pdfType", "TODO"));
-        outputProperties.add(EpProperties.stringEp("timestamps", "TODO"));
+//        outputProperties.add(EpProperties.doubleEp("params", "TODO"));
+//        outputProperties.add(EpProperties.stringEp("eventProperties", "TODO"));
+//        outputProperties.add(EpProperties.stringEp("timestamps", "TODO"));
         return new FixedOutputStrategy(outputProperties);
     }
 	
@@ -46,9 +46,11 @@ public class Utils {
 				outputTopic);
 	}
 	
-	public static JsonObject getModelInvocationMessage(ModelInvocationRequestParameters params) {
+	public static JsonObject getModelInvocationMessage(ModelInvocationRequestParameters params, String analyticsOperation) {
+		// ActivityDetection
+		// Prediction
 		
-		return Json.createObjectBuilder().add("pipelineId", params.getPipelineId()).add("analyticsOperation", "ActivityDetection")
+		return Json.createObjectBuilder().add("pipelineId", params.getPipelineId()).add("analyticsOperation", analyticsOperation)
 				.add("modelId", params.getModelId())
 				.add("input",
 						Json.createObjectBuilder().add("zookeeperHost", params.getZookeeperHost())
@@ -58,9 +60,10 @@ public class Utils {
 				.build();
 	}
 	
-	public static JsonObject getModelDetachMessage(String pipelineId, int modelId) {
+	public static JsonObject getModelDetachMessage(String pipelineId) {
 		return Json.createObjectBuilder().add("pipelineId", pipelineId)
-		.add("modelId", modelId).build();
+//		.add("modelId", modelId).build();
+		.build();
 	}
 
 }

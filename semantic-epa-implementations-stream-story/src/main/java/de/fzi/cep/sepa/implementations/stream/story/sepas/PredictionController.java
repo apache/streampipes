@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
+
+import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +19,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
@@ -35,13 +36,13 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 
-public class ActivityDetectionController implements SemanticEventProcessingAgentDeclarer {
+public class PredictionController implements SemanticEventProcessingAgentDeclarer {
 
 
 	@Override
 	public SepaDescription declareModel() {
-		SepaDescription desc = new SepaDescription("activity", "ActivityDetection",
-				"ActivityDetection description");
+		SepaDescription desc = new SepaDescription("prediction", "Prediction",
+				"Prediction description");
 
 		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		EventGrounding grounding = new EventGrounding();
@@ -56,7 +57,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		desc.addEventStream(stream);
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(Utils.getActivityDetectionScheme());
+		strategies.add(Utils.getPredictedScheme());
 		desc.setOutputStrategies(strategies);
 
 
@@ -91,7 +92,7 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 				inputTopic, outputTopic);
 
 		// TODO ask Luka
-		JsonObject payload = Utils.getModelInvocationMessage(params, "ActivityDetection");
+		JsonObject payload = Utils.getModelInvocationMessage(params, "Prediction");
 
 		try {
 			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "streampipes/invoke").useExpectContinue()

@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import javax.json.Json;
 
 import de.fzi.cep.sepa.implementations.stream.story.sepas.ActivityDetectionController;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +28,9 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
 import de.fzi.cep.sepa.implementations.stream.story.utils.UtilsTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ActivityDetectionControllerTest {
 	private static final int WIREMOCK_PORT = 18089;
@@ -120,6 +124,12 @@ public class ActivityDetectionControllerTest {
 		outputStream.setEventGrounding(outputGrounding);
 		invocation.setOutputStream(outputStream);
 		invocation.setCorrespondingPipeline(pipelineId);
+
+		List<StaticProperty> properties = new ArrayList<>();
+		FreeTextStaticProperty fsp = new FreeTextStaticProperty("modelId", "", "");
+		fsp.setValue("1");
+		properties.add(fsp);
+		invocation.setStaticProperties(properties);
 
         EventStream inputStream = new EventStream();
         invocation.setInputStreams(Arrays.asList(inputStream));

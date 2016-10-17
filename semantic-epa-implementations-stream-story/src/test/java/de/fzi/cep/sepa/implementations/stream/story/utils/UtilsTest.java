@@ -68,7 +68,7 @@ public class UtilsTest {
 
 		ModelInvocationRequestParameters params = new ModelInvocationRequestParameters("abc", 1, "http://localhost",
 				2181, "inputTopic", "http://localhost", 9092, "outputTopic");
-		JsonObject actual = Utils.getModelInvocationMessage(params);
+		JsonObject actual = Utils.getModelInvocationMessage(params, "Prediction");
 		JsonObject expected = getModelInvocationJsonTemplate(new ModelInvocationRequestParameters("abc", 1,
 				"http://localhost", 2181, "inputTopic", "http://localhost", 9092, "outputTopic"));
 
@@ -77,9 +77,9 @@ public class UtilsTest {
 
 	@Test
 	public void testGetModelDetachMessage() {
-		JsonObject actual = Utils.getModelDetachMessage("pipId", 1);
+		JsonObject actual = Utils.getModelDetachMessage("pipId");
 		JsonObject expected = Json.createObjectBuilder().add("pipelineId", "pipId")
-				.add("modelId", 1).build();
+				.build();
 		
 		assertEquals(expected.toString(), actual.toString());
 				
