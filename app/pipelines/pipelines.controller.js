@@ -194,6 +194,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
             restApi.deleteOwnPipeline(pipelineId)
                 .success(function (data) {
                     $scope.getPipelines();
+                    $scope.getSystemPipelines();
                     console.log(data);
                 })
                 .error(function (data) {
