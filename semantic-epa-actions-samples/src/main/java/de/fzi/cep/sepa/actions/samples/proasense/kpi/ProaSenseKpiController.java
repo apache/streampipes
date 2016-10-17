@@ -24,6 +24,7 @@ import java.util.List;
 public class ProaSenseKpiController extends ActionController {
 
 	private ProaSenseEventNotifier notifier;
+	private ProaSenseKpiPublisher kpiPublisher;
 	
 	@Override
 	public SecDescription declareModel() {
@@ -78,8 +79,9 @@ public class ProaSenseKpiController extends ActionController {
 		String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaHost");
 		int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 		String kpiId = SepaUtils.getFreeTextStaticPropertyValue(sec, "kpi");
+		kpiPublisher = new ProaSenseKpiPublisher(kafkaHost, kafkaPort, topic, kpiId);
 		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
-				new ProaSenseKpiPublisher(kafkaHost, kafkaPort, topic, kpiId));
+				kpiPublisher);
 
 		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		String pipelineId = sec.getCorrespondingPipeline();
@@ -89,8 +91,9 @@ public class ProaSenseKpiController extends ActionController {
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
-		// TODO Auto-generated method stub
-		return null;
+		stopKafkaConsumer();
+		kpiPublisher.closePublisher();
+		return new Response(pipelineId, true);
 	}
 
 	@Override

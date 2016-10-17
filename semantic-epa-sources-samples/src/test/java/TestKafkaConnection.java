@@ -1,19 +1,14 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import de.fzi.cep.sepa.messaging.EventListener;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import eu.proasense.internal.*;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.PDFType;
-import eu.proasense.internal.PredictedEvent;
-import eu.proasense.internal.RecommendationEvent;
-import eu.proasense.internal.VariableType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TestKafkaConnection implements EventListener<byte[]> {
@@ -29,7 +24,7 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 		producer = new StreamPipesKafkaProducer(url+kafkaTopic, topic);
 
 
-		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(url+zookeeperTopic,
+		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(url+kafkaTopic,
 				topic, this);
 
 		Thread thread = new Thread(kafkaConsumerGroup);
@@ -39,7 +34,7 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "SEPA.SEP.Random.Number.Json");
+		TestKafkaConnection connection = new TestKafkaConnection("192.168.84.45:", 9092, 2181, "FZI.SEPA.imeRrHZwjiluAscWiOCC");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {
