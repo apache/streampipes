@@ -24,8 +24,7 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
                                 }
                             }
                         }
-                    }
-                    ,
+                    },
                     function (response) { // error
                         console.log(response);
                         $scope.loading = false;
