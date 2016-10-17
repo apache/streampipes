@@ -20,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DashboardController extends ActionController {
-    private static String DB_NAME = "visualization";
+
+    private static String DB_NAME = "visualizablepipeline";
     private static int DB_PORT = ClientConfiguration.INSTANCE.getCouchDbPort();
     private static String DB_HOST = ClientConfiguration.INSTANCE.getCouchDbHost();
     private static String DB_PROTOCOL = "http";

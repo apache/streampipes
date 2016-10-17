@@ -44,7 +44,8 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		
 		staticProperties.add(new FreeTextStaticProperty("index-name", "Index Name", "Elasticsearch index name property"));
-		staticProperties.add(new FreeTextStaticProperty("type-name", "Type Name", "Elasticsearch type name property"));
+		//TODO We removed type for the demo
+		// staticProperties.add(new FreeTextStaticProperty("type-name", "Type Name", "Elasticsearch type name property"));
 		staticProperties.add(new MappingPropertyUnary(URI.create(e1.getElementId()), "timestamp", "Timestamp Property", "Timestamp Mapping"));
 		
 		desc.setStaticProperties(staticProperties);

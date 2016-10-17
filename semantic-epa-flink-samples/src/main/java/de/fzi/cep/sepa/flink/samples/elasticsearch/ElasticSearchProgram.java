@@ -31,7 +31,6 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
 
     public ElasticSearchProgram(SecInvocation graph, FlinkDeploymentConfig config) {
         super(graph, config);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -43,19 +42,23 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
         config.put("cluster.name", "streampipes-cluster");
 
         String indexName = SepaUtils.getFreeTextStaticPropertyValue(graph, "index-name");
-        String typeName = SepaUtils.getFreeTextStaticPropertyValue(graph, "type-name");
         String timeName = SepaUtils.getMappingPropertyName(graph, "timestamp");
+
+        // TODO We removed the typename for the demo
+        // String typeName = SepaUtils.getFreeTextStaticPropertyValue(graph, "type-name");
+        String typeName = indexName;
+
 
 
         List<InetSocketAddress> transports = new ArrayList<>();
+
         try {
             transports.add(new InetSocketAddress(InetAddress.getByName(ClientConfiguration.INSTANCE.getElasticsearchHost()), ClientConfiguration.INSTANCE.getElasticsearchPort()));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-//		data.map(new MapFunction<String, Integer>() {
-//			  public Integer map(String value) { return Integer.parseInt(value); }
-//			});
+
+//        transports.add(new InetSocketAddress("ipe-koi05.fzi.de", 9300));
 
         return convertedStream.flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
 
@@ -65,16 +68,6 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
                 arg1.collect(arg0);
             }
 
-
         }).addSink(new ElasticsearchSink<>(config, transports, new ElasticSearchIndexRequestBuilder(indexName, typeName)));
-
-//		return convertedStream.map(new MapFunction<Map<String, Object>, Map<String, Object>>() {
-//		    @Override
-//		    public Map<String, Object> map(Map<String, Object> element) throws Exception {
-////		    	Date d = new Date((long) element.get("appendedTime"));
-//		    	Date d = new Date();
-//		        return element.put(timestamp", d);
-//		    }
-//		})		
     }
 }
