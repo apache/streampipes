@@ -82,9 +82,14 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
             jsonObject.add("session", new JsonPrimitive(sessionId));
             jsonObject.add("token", new JsonPrimitive(secretToken));
             try {
+                String streamStoryUrl = fixStreamStoryUrl(Configuration.getInstance().STREAMSTORY_URL) +StreamStoryCallbackUrl;
+                String message = new Gson().toJson(jsonObject);
+                System.out.println(streamStoryUrl);
+                System.out.println(message);
                 org.apache.http.client.fluent.Response response = Request
-                        .Post(fixStreamStoryUrl(Configuration.getInstance().STREAMSTORY_URL) +StreamStoryCallbackUrl)
-                        .body(new StringEntity(new Gson().toJson(jsonObject), Charsets.UTF_8))
+                        .Post(streamStoryUrl)
+                        .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                        .body(new StringEntity(message, Charsets.UTF_8))
                         .execute();
 
                 int statusCode = response.returnResponse().getStatusLine().getStatusCode();
