@@ -1,9 +1,9 @@
 package de.fzi.cep.sepa.rest.notifications;
 
+import de.fzi.cep.sepa.commons.config.ConfigurationManager;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 
 public class NotificationListener implements ServletContextListener {
 
@@ -23,7 +23,7 @@ public class NotificationListener implements ServletContextListener {
 		if (ConfigurationManager.isConfigured())
 		{
 			try {
-			new Thread(new ProaSenseNotificationSubscriber(internalNotificationTopic)).start();
+			new Thread(new StreamPipesNotificationSubscriber(internalNotificationTopic)).start();
 			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaTopic)).start();
 			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaHellaTopic)).start();
 			} catch (Exception e)

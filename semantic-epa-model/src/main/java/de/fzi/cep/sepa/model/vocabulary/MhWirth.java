@@ -19,6 +19,11 @@ public class MhWirth {
 	public static final String Ibop = "http://mhwirth.com/ibop";
 	public static final String HoistPressureA = "http://mhwirth.com/hoistPressureA";
 	public static final String HoistPressureB = "http://mhwirth.com/hoistPressureB";
+
+	public static final String Stddev = "http://mhwirth.com/stddev";
+	public static final String FrictionValue = "http://mhwirth.com/frictionValue";
+	public static final String zScore = "http://mhwirth.com/zScore";
+	public static final String HealthIndex = "http://mhwirth.com/healthIndex";
 	
 	;
 }

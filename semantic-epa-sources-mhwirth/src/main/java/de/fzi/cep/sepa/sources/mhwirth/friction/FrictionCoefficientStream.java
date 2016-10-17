@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 import de.fzi.cep.sepa.sources.mhwirth.config.AkerVariables;
@@ -28,9 +29,9 @@ public abstract class FrictionCoefficientStream extends AbstractAlreadyExistingS
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
         eventProperties.add(EpProperties.stringEp("timestamp", "http://schema.org/DateTime"));
         eventProperties.add(EpProperties.stringEp("eventId", SO.Text));
-        eventProperties.add(EpProperties.doubleEp("zScore", "http://mhwirth.com/zScore"));
-        eventProperties.add(EpProperties.doubleEp("value", "http://mhwirth.com/frictionValue"));
-        eventProperties.add(EpProperties.doubleEp("std", "http://mhwirth.com/stddev"));
+        eventProperties.add(EpProperties.doubleEp("zScore", MhWirth.zScore));
+        eventProperties.add(EpProperties.doubleEp("value", MhWirth.FrictionValue));
+        eventProperties.add(EpProperties.doubleEp("std", MhWirth.Stddev));
 
         EventGrounding grounding = new EventGrounding();
         grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(topic));

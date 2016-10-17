@@ -102,6 +102,8 @@ public class PipelineVerificationHandler {
                         .getConnectedTo().get(i), pipeline.getSepas(), pipeline
                         .getStreams());
 
+                EventStream incomingStream;
+
                 if (element instanceof SepaInvocation || element instanceof EventStream) {
 
                     if (element instanceof SepaInvocation) {
@@ -109,13 +111,14 @@ public class PipelineVerificationHandler {
                         SepaInvocation ancestor = (SepaInvocation) TreeUtils.findByDomId(
                                 connectedTo.get(i), invocationGraphs);
 
+                        incomingStream = ancestor.getOutputStream();
                         updateStaticProperties(ancestor.getOutputStream(), i);
                         updateOutputStrategy(ancestor.getOutputStream(), i);
 
-                    } else if (element instanceof EventStream) {
+                    } else {
 
                         EventStream stream = (EventStream) element;
-
+                        incomingStream = stream;
                         updateStaticProperties(stream, i);
                         updateOutputStrategy(stream, i);
 
@@ -123,7 +126,10 @@ public class PipelineVerificationHandler {
 
                     if (rdfRootElement.getStreamRequirements().size() - 1 == i) {
                         PipelineModification modification = new PipelineModification(
-                                domId, rdfRootElement.getElementId(), rdfRootElement.getStaticProperties());
+                                domId,
+                                rdfRootElement.getElementId(),
+                                rdfRootElement.getStaticProperties());
+                        modification.addInputStream(incomingStream);
                         if (rdfRootElement instanceof SepaInvocation)
                             modification.setOutputStrategies(((SepaInvocation) rdfRootElement).getOutputStrategies());
                         pipelineModificationMessage
