@@ -11,6 +11,7 @@ export default function RegisterCtrl($scope, restApi) {
 		$scope.roles = [{"name" : "System Administrator", "internalName" : "SYSTEM_ADMINISTRATOR"},
 			{"name" : "Manager", "internalName" : "MANAGER"},
 			{"name" : "Operator", "internalName" : "OPERATOR"},
+			{"name" : "Business Analyst", "internalName" : "BUSINESS_ANALYST"},
 			{"name" : "Demo User", "internalName" : "USER_DEMO"}];
 
 		$scope.selectedRole = $scope.roles[0].internalName;
@@ -26,7 +27,7 @@ export default function RegisterCtrl($scope, restApi) {
 			$scope.registrationSuccess = false;
 			$scope.errorMessage = "";
 
-			restApi.register()
+			restApi.register(payload)
 				.then(
 					function(response) {
 						$scope.loading = false;
