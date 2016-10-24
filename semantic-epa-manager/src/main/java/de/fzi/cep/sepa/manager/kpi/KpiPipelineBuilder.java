@@ -45,8 +45,10 @@ public class KpiPipelineBuilder {
     }
 
     public KpiPipelineBuilder(KpiRequest kpiRequest, String useCase) throws IOException {
-        this(kpiRequest);
+        this.kpiRequest = kpiRequest;
+        this.idMapper = new IdMapper(this.contextModel);
         this.useCase = useCase;
+        this.contextModel = makeContextModel();
     }
 
     private ContextModel makeContextModel() throws IOException {

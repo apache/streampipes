@@ -15,7 +15,7 @@ import java.net.URL;
 public class TestKpiGeneration {
 
     public static void main(String[] args) throws IOException {
-        URL url = Resources.getResource("aggregation-kpi.json");
+        URL url = Resources.getResource("kpi-mhwirth.json");
         String kpiString = Resources.toString(url, Charsets.UTF_8);
         System.out.println(kpiString);
 

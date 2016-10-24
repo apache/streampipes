@@ -49,14 +49,19 @@ public class UserStorage extends Storage<User> {
     public boolean emailExists(String email)
     {
     	List<User> users = getAll();
-        System.out.println(users.size());
-    	return users.stream().anyMatch(u -> u.getEmail().equals(email));
+    	return users
+                .stream()
+                .filter(u -> u.getEmail() != null)
+                .anyMatch(u -> u.getEmail().equals(email));
     }
     
     public boolean usernameExists(String username)
     {
     	List<User> users = getAll();
-    	return users.stream().anyMatch(u -> u.getUsername().equals(username));
+    	return users
+                .stream()
+                .filter(u -> u.getUsername() != null)
+                .anyMatch(u -> u.getUsername().equals(username));
     }
     
     /**
