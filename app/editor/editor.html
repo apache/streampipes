@@ -99,7 +99,7 @@
     <div style="margin-left:1%;margin-right:1%;">
         <div class="assemblyOptions">
             <div layout="row" layout-align="start center">
-                <md-button ng-disabled="!(isStreamInAssembly && isSepaInAssembly && isActionInAssembly)"
+                <md-button ng-disabled="!isValidPipeline()"
                            class="md-icon-button" ng-click="submit()" type="submit">
                     <i class="material-icons">save</i>
                     <md-tooltip md-direction="top">

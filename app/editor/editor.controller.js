@@ -36,6 +36,10 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.currentPipelineElement;
     $scope.currentPipelineElementDom;
 
+    $scope.isValidPipeline = function() {
+        return $scope.isStreamInAssembly && $scope.isActionInAssembly;
+    }
+
     $scope.toggleEditorStand = function () {
         $scope.minimizedEditorStand = !$scope.minimizedEditorStand;
     }
