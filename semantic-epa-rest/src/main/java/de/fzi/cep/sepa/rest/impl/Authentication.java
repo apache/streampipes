@@ -101,7 +101,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
             int statusCode = response.returnResponse().getStatusLine().getStatusCode();
             if (statusCode < 200 || statusCode >= 300) {
-                throw new IllegalArgumentException("Wrong status code");
+                System.out.println("Wrong status code");
             }
         } catch (IOException e) {
             e.printStackTrace();
