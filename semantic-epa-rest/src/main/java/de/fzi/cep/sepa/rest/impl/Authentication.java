@@ -35,7 +35,11 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
     static Map<String, Session> tokenMap = new HashMap<>();
 
+    private static final String StreamStoryComponentId = "streamstory";
+    private static final String PanddaComponentId = "pandda";
+
     private static final String StreamStoryCallbackUrl = "/login/token";
+    private static final String PanddaCallbackUrl = "/default/user/login";
 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -45,7 +49,10 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Path("/login")
     public Response doLogin(ShiroAuthenticationRequest token) {
         try {
-            ShiroAuthenticationResponse authResponse = login(token, UUID.randomUUID().toString());
+            String secretToken = UUID.randomUUID().toString();
+            ShiroAuthenticationResponse authResponse = login(token, secretToken);
+            sendToken(secretToken, StreamStoryComponentId, null);
+            sendToken(secretToken, PanddaComponentId, null);
             return ok(authResponse);
         } catch (AuthenticationException e) {
             return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
@@ -59,7 +66,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Override
     @Path("/login/{componentId}")
     public Response doLoginFromSso(ShiroAuthenticationRequest token, @PathParam("componentId") String componentId, @QueryParam("session") String sessionId) {
-       System.out.println("Login SSO");
+        System.out.println("Login SSO");
         try {
             String secretToken = UUID.randomUUID().toString();
             ShiroAuthenticationResponse authResponse = login(token, secretToken);
@@ -77,30 +84,40 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     }
 
     private void sendToken(String secretToken, String componentId, String sessionId) {
-        if (componentId.equals("streamstory")) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.add("session", new JsonPrimitive(sessionId));
-            jsonObject.add("token", new JsonPrimitive(secretToken));
-            try {
-                String streamStoryUrl = fixStreamStoryUrl(Configuration.getInstance().STREAMSTORY_URL) +StreamStoryCallbackUrl;
-                String message = new Gson().toJson(jsonObject);
-                System.out.println(streamStoryUrl);
-                System.out.println(message);
-                org.apache.http.client.fluent.Response response = Request
-                        .Post(streamStoryUrl)
-                        .addHeader("Content-type", MediaType.APPLICATION_JSON)
-                        .body(new StringEntity(message, Charsets.UTF_8))
-                        .execute();
 
-                int statusCode = response.returnResponse().getStatusLine().getStatusCode();
-                if (statusCode < 200 || statusCode >= 300) {
-                    throw new IllegalArgumentException("Wrong status code");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        JsonObject jsonObject = new JsonObject();
+        if (sessionId != null) {
+            jsonObject.add("session", new JsonPrimitive(sessionId));
+        }
+        jsonObject.add("token", new JsonPrimitive(secretToken));
+        try {
+            String endpointUrl = makeEndpointUrl(componentId);
+            String message = new Gson().toJson(jsonObject);
+            org.apache.http.client.fluent.Response response = Request
+                    .Post(endpointUrl)
+                    .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                    .body(new StringEntity(message, Charsets.UTF_8))
+                    .execute();
+
+            int statusCode = response.returnResponse().getStatusLine().getStatusCode();
+            if (statusCode < 200 || statusCode >= 300) {
+                System.out.println("Wrong status code");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+    private String makeEndpointUrl(String componentId) {
+        if (componentId.equals(StreamStoryComponentId)) {
+            return fixStreamStoryUrl(Configuration.getInstance().STREAMSTORY_URL) + StreamStoryCallbackUrl;
+        } else if (componentId.equals(PanddaComponentId)) {
+            return Configuration.getInstance().PANDDA_URL + PanddaCallbackUrl;
+        } else {
+            return null;
+        }
+    }
+
 
     private String fixStreamStoryUrl(String url) {
         return url.replaceAll("/dashboard.html", "");
@@ -119,7 +136,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         return ok(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
     }
-
 
 
     @Path("/register")
@@ -150,7 +166,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     public Response userAuthenticated(@Context HttpServletRequest req) {
 
         if (ConfigurationManager.isConfigured()) {
-            System.out.println(req.getSession().getId());
             if (SecurityUtils.getSubject().isAuthenticated()) {
                 return ok(ShiroAuthenticationResponseFactory.create((User) StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal())));
             }
