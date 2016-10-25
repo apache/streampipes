@@ -39,7 +39,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     private static final String PanddaComponentId = "pandda";
 
     private static final String StreamStoryCallbackUrl = "/login/token";
-    private static final String PanddaCallbackUrl = "/login/token";
+    private static final String PanddaCallbackUrl = "/default/user/login";
 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
