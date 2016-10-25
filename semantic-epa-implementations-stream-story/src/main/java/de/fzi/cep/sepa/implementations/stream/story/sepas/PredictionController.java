@@ -72,22 +72,25 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 
     @Override
     public Response invokeRuntime(SepaInvocation invocationGraph) {
-        int modelId = Integer.parseInt(
-                ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
-
-        System.out.println("Invoking runtime");
-        String pipelineId = invocationGraph.getCorrespondingPipeline();
         String errorMessage = "";
-        String inputTopic = getInputTopic(invocationGraph);
-        String outputTopic = getOutputTopic(invocationGraph);
-
-        ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId,
-                inputTopic, outputTopic);
-
-        // TODO ask Luka
-        JsonObject payload = Utils.getModelInvocationMessage(params, "Prediction");
 
         try {
+            int modelId = Integer.parseInt(
+                    ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
+
+            System.out.println("Invoking runtime");
+            String pipelineId = invocationGraph.getCorrespondingPipeline();
+
+            String inputTopic = getInputTopic(invocationGraph);
+            String outputTopic = getOutputTopic(invocationGraph);
+
+            ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId,
+                    inputTopic, outputTopic);
+
+            // TODO ask Luka
+            JsonObject payload = Utils.getModelInvocationMessage(params, "Prediction");
+
+
             System.out.println("(client) Sending request");
             org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "streampipes/invoke").useExpectContinue()
                     .version(HttpVersion.HTTP_1_1).bodyString(payload.toString(), ContentType.APPLICATION_JSON)
@@ -96,6 +99,7 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
             System.out.println("(client) Response ok");
             return ress;
 //			return handleResponse(res, pipelineId);
+
         } catch (ClientProtocolException e) {
             errorMessage = e.toString();
             System.out.println("ClientProtocolException in StreamStory Client");
@@ -108,8 +112,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
             System.out.println("Exception in StreamStory Client");
             e.printStackTrace();
         }
-
-        return new Response(pipelineId, false, errorMessage);
+        //return new Response(pipelineId, false, errorMessage);
+        return new Response("1", false, errorMessage);
     }
 
     @Override
