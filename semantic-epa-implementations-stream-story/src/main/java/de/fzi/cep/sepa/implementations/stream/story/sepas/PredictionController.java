@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
 import java.io.IOException;
 import java.util.ArrayList;
