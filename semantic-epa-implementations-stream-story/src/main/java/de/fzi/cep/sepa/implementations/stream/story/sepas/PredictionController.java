@@ -2,23 +2,6 @@ package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
 
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.json.JsonObject;
-
-import de.fzi.cep.sepa.model.builder.StaticProperties;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.util.SepaUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-
 import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
@@ -26,15 +9,26 @@ import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
 import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
 import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.EpaType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+
+import javax.json.JsonObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PredictionController implements SemanticEventProcessingAgentDeclarer {
 
@@ -107,6 +101,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 		} catch (IOException e) {
 			errorMessage = e.toString();
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return new Response(pipelineId, false, errorMessage);
@@ -155,6 +151,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 			e.printStackTrace();
 		} catch (IOException e) {
 			errorMessage = e.toString();
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
