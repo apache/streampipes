@@ -7,10 +7,7 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
-import de.fzi.cep.sepa.model.builder.StaticProperties;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -34,13 +31,13 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
-public class FrictionCoefficientController implements SemanticEventProcessingAgentDeclarer {
+public class FrictionGearboxController implements SemanticEventProcessingAgentDeclarer {
 
 
 	@Override
 	public SepaDescription declareModel() {
-		SepaDescription desc = new SepaDescription("prediction", "Prediction",
-				"Prediction description");
+		SepaDescription desc = new SepaDescription("frictiongearbox", "Friction Gearbox",
+				"Friction Gearbox description");
 
 		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		EventGrounding grounding = new EventGrounding();
@@ -55,13 +52,12 @@ public class FrictionCoefficientController implements SemanticEventProcessingAge
 		desc.addEventStream(stream);
 
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(Utils.getPredictedScheme());
+		strategies.add(Utils.getFrictionScheme());
 		desc.setOutputStrategies(strategies);
 
 
 
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		staticProperties.add(StaticProperties.integerFreeTextProperty("modelId", "Model ID", "The id of the model"));
 		desc.setStaticProperties(staticProperties);
 
 		return desc;
@@ -77,20 +73,16 @@ public class FrictionCoefficientController implements SemanticEventProcessingAge
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		int modelId = Integer.parseInt(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
-
 
 		String pipelineId = invocationGraph.getCorrespondingPipeline();
 		String errorMessage = "";
 		String inputTopic = getInputTopic(invocationGraph);
 		String outputTopic = getOutputTopic(invocationGraph);
 
-		ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId,
+		ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, 1,
 				inputTopic, outputTopic);
 
-		// TODO ask Luka
-		JsonObject payload = Utils.getModelInvocationMessage(params, "Prediction");
+		JsonObject payload = Utils.getModelInvocationMessage(params, "FrictionGearbox");
 
 		try {
 			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "streampipes/invoke").useExpectContinue()
