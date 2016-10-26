@@ -48,11 +48,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
 		//           }
 	];
 	$scope.admin = [
-		// {
-		// 	link : 'streampipes.myelements',
-		// 	title: 'My Elements',
-		// 	icon: 'image:ic_portrait_24px'
-		// },
+		{
+			link : 'streampipes.myelements',
+			title: 'My Elements',
+			icon: 'image:ic_portrait_24px'
+		},
 		{
 			link : 'streampipes.add',
 			title: 'Install Pipeline Elements',
