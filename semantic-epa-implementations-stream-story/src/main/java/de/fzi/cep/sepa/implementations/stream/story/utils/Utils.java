@@ -12,6 +12,8 @@ import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 
 public class Utils {
 	
@@ -37,6 +39,17 @@ public class Utils {
 //        outputProperties.add(EpProperties.stringEp("timestamps", "TODO"));
         return new FixedOutputStrategy(outputProperties);
     }
+
+	public static OutputStrategy getFrictionScheme() {
+		List<EventProperty> outputProperties = new ArrayList<>();
+		outputProperties.add(EpProperties.longEp("timestamp", "http://schema.org/Date"));
+		outputProperties.add(EpProperties.stringEp("eventId", SO.Text));
+		outputProperties.add(EpProperties.doubleEp("zScore", MhWirth.zScore));
+		outputProperties.add(EpProperties.doubleEp("value", MhWirth.FrictionValue));
+		outputProperties.add(EpProperties.doubleEp("std", MhWirth.Stddev));
+
+		return new FixedOutputStrategy(outputProperties);
+	}
 	
 	public static ModelInvocationRequestParameters getModelInvocationRequestParameters(String pipelineId, int modelId, String inputTopic,
                                                                                        String outputTopic) {

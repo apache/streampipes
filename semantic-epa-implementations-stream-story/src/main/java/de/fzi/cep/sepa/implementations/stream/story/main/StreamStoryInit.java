@@ -4,6 +4,8 @@ import de.fzi.cep.sepa.client.container.init.ContainerModelSubmitter;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.implementations.stream.story.sepas.ActivityDetectionController;
+import de.fzi.cep.sepa.implementations.stream.story.sepas.FrictionGearboxController;
+import de.fzi.cep.sepa.implementations.stream.story.sepas.FrictionSwivelController;
 import de.fzi.cep.sepa.implementations.stream.story.sepas.PredictionController;
 
 
@@ -18,6 +20,8 @@ public class StreamStoryInit extends ContainerModelSubmitter {
         DeclarersSingleton.getInstance().setRoute("stream-story");
         DeclarersSingleton.getInstance()
                 .add(new PredictionController())
+                .add(new FrictionGearboxController())
+                .add(new FrictionSwivelController())
                 .add(new ActivityDetectionController());
 
     }
