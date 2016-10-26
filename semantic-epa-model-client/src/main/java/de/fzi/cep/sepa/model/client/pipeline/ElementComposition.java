@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +19,11 @@ public abstract class ElementComposition {
 	
 	protected String name;
 	protected String description;
+
+	public ElementComposition() {
+		this.sepas = new ArrayList<>();
+		this.streams = new ArrayList<>();
+	}
 
 	public List<SepaInvocation> getSepas() {
 		return sepas;

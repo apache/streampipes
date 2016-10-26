@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.manager.matching;
 
+import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.manager.data.PipelineGraph;
 import de.fzi.cep.sepa.manager.data.PipelineGraphBuilder;
 import de.fzi.cep.sepa.manager.matching.v2.ElementVerification;
@@ -39,8 +40,7 @@ public class PipelineVerificationHandler {
 
     InvocableSEPAElement rdfRootElement;
 
-    public PipelineVerificationHandler(Pipeline pipeline)
-            throws Exception {
+    public PipelineVerificationHandler(Pipeline pipeline) throws NoSepaInPipelineException {
 
         this.pipeline = pipeline;
         this.rdfRootElement = PipelineVerificationUtils.getRootNode(pipeline);
@@ -179,6 +179,8 @@ public class PipelineVerificationHandler {
                         e.printStackTrace();
                     }
                 });
+
+
     }
 
     private boolean inStream(EventStream stream, URI mapsFrom) {

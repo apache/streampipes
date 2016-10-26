@@ -31,6 +31,7 @@ public class Cloner {
 	public StaticProperty staticProperty(StaticProperty o) {
 		if (o instanceof FreeTextStaticProperty) return new FreeTextStaticProperty((FreeTextStaticProperty) o);
 		else if (o instanceof OneOfStaticProperty) return new OneOfStaticProperty((OneOfStaticProperty) o);
+		else if (o instanceof RemoteOneOfStaticProperty) return new RemoteOneOfStaticProperty((RemoteOneOfStaticProperty) o);
 		else if (o instanceof MappingPropertyNary) return new MappingPropertyNary((MappingPropertyNary) o);
 		else if (o instanceof DomainStaticProperty) return new DomainStaticProperty((DomainStaticProperty) o);
 		else if (o instanceof AnyStaticProperty) return new AnyStaticProperty((AnyStaticProperty) o);

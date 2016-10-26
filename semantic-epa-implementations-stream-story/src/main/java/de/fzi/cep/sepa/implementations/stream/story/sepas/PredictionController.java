@@ -15,6 +15,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.RemoteOneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
@@ -57,6 +58,11 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 
         List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
         staticProperties.add(StaticProperties.integerFreeTextProperty("modelId", "Model ID", "The id of the model"));
+
+        //TODO Put URL to client config
+        staticProperties.add(new RemoteOneOfStaticProperty("modelId", "Model Id", "the id of the model", "http://localhost/todo", "id", "name", "description", true));
+
+        staticProperties.add(StaticProperties.integerFreeTextProperty("old_modelId", "old_Model ID", "old_The id of the model"));
         desc.setStaticProperties(staticProperties);
 
         return desc;

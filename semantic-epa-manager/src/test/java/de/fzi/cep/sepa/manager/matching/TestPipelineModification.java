@@ -38,7 +38,7 @@ public class TestPipelineModification {
                     .computeMappingProperties()
                     .getPipelineModificationMessage();
         } catch (Exception e) {
-            fail("Exception");
+            fail(e.toString());
         }
 
         assertNotNull(message);
