@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public class HealthIndexProgram extends FlinkSepaRuntime<HealthIndexParameters> {
 
-
     public HealthIndexProgram(HealthIndexParameters params) {
         super(params);
     }
@@ -23,6 +22,8 @@ public class HealthIndexProgram extends FlinkSepaRuntime<HealthIndexParameters> 
 
     @Override
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-        return null;
+        return messageStream
+                .countWindowAll(2, 1)
+                .apply(new HealthIndexCalculator(params.getFrictionMapping(), params.getTimestampMapping(), params.getMachineTypeMapping(), params.getHealthIndexVariables()));
     }
 }

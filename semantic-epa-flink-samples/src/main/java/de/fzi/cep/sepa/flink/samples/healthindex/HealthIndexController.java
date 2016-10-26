@@ -5,19 +5,23 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
+import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
+import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +30,33 @@ import java.util.List;
  */
 public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthIndexParameters> {
 
+    private final String frictionCoefficientNominal = "frictionCoefficientNominal";
+    private final String frictionCoefficientStdDev = "frictionCoefficientStdDev";
+    private final String frictionCoefficientStdDevMultiplier = "frictionCoefficientStdDevMultiplier";
+    private final String mtbf = "mtbf";
+
+    private final String degradationRateBase = "degradationRateBase";
+    private final String degradationRateDivider = "degradationRateDivider";
+    private final String degradationValueMultiplier = "degradationvalueMultiplier";
+    private final String degradationValueOffset = "degradationValueOffset";
+
+    private final String frictionMappingName = "frictionMapping";
+    private final String timestampMappingName = "timestampMapping";
+    private final String machineTypeMappingName = "machineTypeMapping";
+
+
     @Override
     public SepaDescription declareModel() {
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
+
+        EventProperty frictionPropertyRequirement = EpRequirements.domainPropertyReq(MhWirth.FrictionValue);
+        EventProperty timestampRequirement = EpRequirements.domainPropertyReq("http://schema.org/DateTime");
+        EventProperty machineTypeRequirement = EpRequirements.stringReq();
+
         eventProperties.add(EpRequirements.domainPropertyReq(MhWirth.Stddev));
-        eventProperties.add(EpRequirements.domainPropertyReq(MhWirth.FrictionValue));
-        eventProperties.add(EpRequirements.domainPropertyReq(MhWirth.zScore));
+        eventProperties.add(frictionPropertyRequirement);
+        eventProperties.add(timestampRequirement);
+        eventProperties.add(machineTypeRequirement);
 
         EventSchema schema1 = new EventSchema();
         schema1.setEventProperties(eventProperties);
@@ -43,14 +68,36 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
         desc.addEventStream(stream1);
 
+        List<StaticProperty> staticProperties = new ArrayList<>();
+
+        MappingProperty frictionValueMapping = new MappingPropertyUnary(URI.create(frictionPropertyRequirement.getElementId()), frictionMappingName, "Friction Coefficient Mapping", "The field containing friction coefficient values.");
+        MappingProperty timestampMapping = new MappingPropertyUnary(URI.create(timestampRequirement.getElementId()), timestampMappingName, "Timestamp Mapping", "The field containing the current timestamp.");
+        MappingProperty machineTypeMapping = new MappingPropertyUnary(URI.create(machineTypeRequirement.getElementId()), machineTypeMappingName, "Machine Type Mapping", "The field containing an identifier of a machine or a part(e.g., swivel");
+
+        staticProperties.add(frictionValueMapping);
+        staticProperties.add(timestampMapping);
+        staticProperties.add(machineTypeMapping);
+
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientStdDev, "Friction Coefficient standard deviation", ""));
+        staticProperties.add(StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier", ""));
+        staticProperties.add(StaticProperties.integerFreeTextProperty(mtbf, "MTBF", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationRateBase, "Degradation Rate Base", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationValueMultiplier, "Degradation Value Multiplier", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationValueOffset, "Degradation Value Offset", ""));
+
+        desc.setStaticProperties(staticProperties);
+
         List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-        AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+        FixedOutputStrategy outputStrategy = new FixedOutputStrategy();
 
-        List<EventProperty> appendProperties = new ArrayList<EventProperty>();
-        appendProperties.add(new EventPropertyPrimitive(XSD._double.toString(),
-                "healthIndex", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+        List<EventProperty> outputProperties = new ArrayList<EventProperty>();
+        outputProperties.add(EpProperties.doubleEp("healthIndex", MhWirth.HealthIndex));
+        outputProperties.add(EpProperties.longEp("timestamp", "http://schema.org/DateTime"));
+        outputProperties.add(EpProperties.stringEp("machineId", MhWirth.MachineId));
 
-        outputStrategy.setEventProperties(appendProperties);
+        outputStrategy.setEventProperties(outputProperties);
         strategies.add(outputStrategy);
         desc.setOutputStrategies(strategies);
         desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
@@ -60,23 +107,30 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
     @Override
     protected FlinkSepaRuntime<HealthIndexParameters> getRuntime(SepaInvocation graph) {
-        AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
 
-        String zScoreMapping = SepaUtils.getMappingPropertyName(graph, "zScore");
-        String stddevMapping = SepaUtils.getMappingPropertyName(graph, "stddev");
-        String frictionMapping = SepaUtils.getMappingPropertyName(graph, "friction");
+        String frictionMapping = SepaUtils.getMappingPropertyName(graph, frictionMappingName);
+        String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);
+        String machineTypeMapping = SepaUtils.getMappingPropertyName(graph, machineTypeMappingName);
 
-        List<String> selectProperties = new ArrayList<>();
-        for(EventProperty p : graph.getInputStreams().get(0).getEventSchema().getEventProperties())
-        {
-            selectProperties.add(p.getRuntimeName());
-        }
+        HealthIndexVariables variables = new HealthIndexVariables();
+
+        variables.setFrictionCoefficientNominal(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientNominal)));
+        variables.setFrictionCoefficientStdDev(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDev)));
+
+        variables.setFrictionCoefficientStdDevMultiplier(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDevMultiplier)));
+        variables.setMtbf(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf)));
+
+        variables.setDegradationRateBase(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateBase)));
+        variables.setDegradationRateDivider(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateDivider)));
+        variables.setDegradationValueMultiplier(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationValueMultiplier)));
+        variables.setDegradationValueOffset(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationValueOffset)));
 
         HealthIndexParameters staticParam = new HealthIndexParameters (
                 graph,
-                zScoreMapping,
                 frictionMapping,
-                stddevMapping);
+                timestampMapping,
+                machineTypeMapping,
+                variables);
 
         return new HealthIndexProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 
