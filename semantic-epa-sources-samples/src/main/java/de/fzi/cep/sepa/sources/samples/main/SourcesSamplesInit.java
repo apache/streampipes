@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.sources.samples.ddm.DDMProducer;
 import de.fzi.cep.sepa.sources.samples.drillbit.DrillBitProducer;
 import de.fzi.cep.sepa.sources.samples.enriched.EnrichedEventProducer;
+import de.fzi.cep.sepa.sources.samples.friction.FrictionCoefficientProducer;
 import de.fzi.cep.sepa.sources.samples.hella.EnvironmentalDataProducer;
 import de.fzi.cep.sepa.sources.samples.hella.MontracProducer;
 import de.fzi.cep.sepa.sources.samples.hella.MouldingMachineProducer;
@@ -29,7 +30,8 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
             DeclarersSingleton.getInstance().add(new DDMProducer())
                     .add(new DrillBitProducer())
                     .add(new EnrichedEventProducer())
-                    .add(new RamProducer());
+                    .add(new RamProducer())
+                    .add(new FrictionCoefficientProducer());
         }
         if (config.isRandomNumberActive()) DeclarersSingleton.getInstance().add(new RandomDataProducer());
         if (config.isTaxiActive()) DeclarersSingleton.getInstance().add(new NYCTaxiProducer());

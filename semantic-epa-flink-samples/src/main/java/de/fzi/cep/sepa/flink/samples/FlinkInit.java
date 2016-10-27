@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.flink.samples.enrich.timestamp.TimestampController;
 import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.healthindex.HealthIndexController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
+import de.fzi.cep.sepa.flink.samples.timetofailure.TimeToFailureController;
 
 public class FlinkInit extends StandaloneModelSubmitter {
 
@@ -20,7 +21,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
                 .add(new TimestampController())
                 .add(new FieldHasherController())
                 .add(new FieldRenamerController())
-                .add(new HealthIndexController());
+                .add(new HealthIndexController())
+                .add(new TimeToFailureController());
 
         DeclarersSingleton.getInstance().setPort(8094);
         new FlinkInit().init();

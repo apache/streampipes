@@ -8,24 +8,20 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
  */
 public class HealthIndexParameters extends BindingParameters {
 
-    private String zScoreMapping;
     private String frictionMapping;
-    private String stddevMapping;
+    private String machineTypeMapping;
+    private String timestampMapping;
 
-    public HealthIndexParameters(SepaInvocation graph, String zScoreMapping, String frictionMapping, String stddevMapping) {
+    private HealthIndexVariables healthIndexVariables;
+
+    public HealthIndexParameters(SepaInvocation graph, String frictionMapping, String timestampMapping, String machineTypeMapping, HealthIndexVariables healthIndexVariables) {
         super(graph);
-        this.zScoreMapping = zScoreMapping;
         this.frictionMapping = frictionMapping;
-        this.stddevMapping = stddevMapping;
+        this.healthIndexVariables = healthIndexVariables;
+        this.machineTypeMapping = machineTypeMapping;
+        this.timestampMapping = timestampMapping;
     }
 
-    public String getzScoreMapping() {
-        return zScoreMapping;
-    }
-
-    public void setzScoreMapping(String zScoreMapping) {
-        this.zScoreMapping = zScoreMapping;
-    }
 
     public String getFrictionMapping() {
         return frictionMapping;
@@ -35,11 +31,27 @@ public class HealthIndexParameters extends BindingParameters {
         this.frictionMapping = frictionMapping;
     }
 
-    public String getStddevMapping() {
-        return stddevMapping;
+    public HealthIndexVariables getHealthIndexVariables() {
+        return healthIndexVariables;
     }
 
-    public void setStddevMapping(String stddevMapping) {
-        this.stddevMapping = stddevMapping;
+    public void setHealthIndexVariables(HealthIndexVariables healthIndexVariables) {
+        this.healthIndexVariables = healthIndexVariables;
+    }
+
+    public String getMachineTypeMapping() {
+        return machineTypeMapping;
+    }
+
+    public void setMachineTypeMapping(String machineTypeMapping) {
+        this.machineTypeMapping = machineTypeMapping;
+    }
+
+    public String getTimestampMapping() {
+        return timestampMapping;
+    }
+
+    public void setTimestampMapping(String timestampMapping) {
+        this.timestampMapping = timestampMapping;
     }
 }
