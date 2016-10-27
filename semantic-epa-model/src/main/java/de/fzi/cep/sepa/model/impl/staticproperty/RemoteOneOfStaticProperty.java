@@ -44,6 +44,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 	}
 
 	public RemoteOneOfStaticProperty(String internalName, String label, String description, String remoteUrl, String valueFieldName, String labelFieldName, String descriptionFieldName, boolean valueRequired) {
+		super(StaticPropertyType.OneOfStaticProperty, internalName, label, description);
 		this.remoteUrl = remoteUrl;
 		this.valueFieldName = valueFieldName;
 		this.labelFieldName = labelFieldName;
@@ -54,6 +55,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 
 
 	public RemoteOneOfStaticProperty(String internalName, String label, String description, String remoteUrl, String valueFieldName, String labelFieldName, String descriptionFieldName) {
+		super(StaticPropertyType.OneOfStaticProperty, internalName, label, description);
 		this.remoteUrl = remoteUrl;
 		this.valueFieldName = valueFieldName;
 		this.labelFieldName = labelFieldName;

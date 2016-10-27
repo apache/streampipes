@@ -13,7 +13,9 @@ public enum NotificationType {
 	NO_SEPA_FOUND("No element found", "Could not find any element that matches the output of this element."), 
 	NO_MATCHING_FORMAT_CONNECTION("Not a valid connection", "No supported input format matches produced output format"),
 	NO_MATCHING_PROTOCOL_CONNECTION("Not a valid connection", "No supported input protocol matches provided output protocol"),
-	
+	REMOTE_SERVER_NOT_ACCESSIBLE("Can't connect to remote server", "Please contact the admin of the system"),
+	NO_MATCHING_SCHEME("The JSON from the server is not valid", "The keys in the element description don't map the keys in the JSON response"),
+
 	LOGIN_FAILED("Login failed", "Please re-enter your password"),
 	LOGIN_SUCCESS("Login success", ""),
 	REGISTRATION_FAILED("Registration failed", "Please re-enter your password"),

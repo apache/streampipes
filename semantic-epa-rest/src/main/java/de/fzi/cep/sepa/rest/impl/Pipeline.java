@@ -180,7 +180,12 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
             return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION.title(), NotificationType.NO_MATCHING_FORMAT_CONNECTION.description(), e.getMessage()));
         } catch (NoMatchingProtocolException e) {
             return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
-        } catch (InvalidConnectionException e) {
+        } catch (RemoteServerNotAccessibleException e) {
+            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
+        } catch (NoMatchingJsonSchemaException e) {
+            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
+        }
+        catch (InvalidConnectionException e) {
             return ok(e.getErrorLog());
         } catch (Exception e) {
             e.printStackTrace();

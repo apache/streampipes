@@ -25,12 +25,13 @@ import de.fzi.cep.sepa.sources.samples.config.SampleSettings;
 public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
 	StreamPipesKafkaProducer kafkaProducer;
+	private String topic;
 	
 	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
 	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
 	
 	public RandomNumberStream(String topic) {
-		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+		this.topic = topic;
 	}
 	
 	protected EventStream prepareStream(String topic, String messageFormat) {
@@ -69,6 +70,8 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
 	@Override
 	public void executeStream() {
+
+		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 
 		Runnable r = new Runnable() {
 

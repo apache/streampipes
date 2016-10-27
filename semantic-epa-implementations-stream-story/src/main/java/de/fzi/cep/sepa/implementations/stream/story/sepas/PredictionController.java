@@ -57,12 +57,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 
 
         List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-        staticProperties.add(StaticProperties.integerFreeTextProperty("modelId", "Model ID", "The id of the model"));
-
         //TODO Put URL to client config
-        staticProperties.add(new RemoteOneOfStaticProperty("modelId", "Model Id", "the id of the model", "http://localhost/todo", "id", "name", "description", true));
-
-        staticProperties.add(StaticProperties.integerFreeTextProperty("old_modelId", "old_Model ID", "old_The id of the model"));
+        staticProperties.add(new RemoteOneOfStaticProperty("modelId", "Model Id", "the id of the model", "http://localhost:3000/test", "id", "name", "description", true));
         desc.setStaticProperties(staticProperties);
 
         return desc;
