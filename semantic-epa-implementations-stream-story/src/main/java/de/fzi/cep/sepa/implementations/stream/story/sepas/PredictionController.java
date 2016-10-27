@@ -17,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.RemoteOneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
@@ -94,8 +95,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
         String errorMessage = "";
 
         try {
-            int modelId = Integer.parseInt(
-                    ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
+            String selectedProperty = SepaUtils.getRemoteOneOfProperty(invocationGraph, "modelId");
+            int modelId = Integer.parseInt(selectedProperty);
 
             System.out.println("Invoking runtime");
             String pipelineId = invocationGraph.getCorrespondingPipeline();

@@ -262,6 +262,26 @@ public class SepaUtils {
 		return null;
 		//TODO exceptions
 	}
+
+	public static String getRemoteOneOfProperty(InvocableSEPAElement sepa,
+			String staticPropertyName) {
+		for(StaticProperty p : sepa.getStaticProperties())
+		{
+			if (p.getInternalName().equals(staticPropertyName))
+			{
+				if (p instanceof RemoteOneOfStaticProperty)
+				{
+					RemoteOneOfStaticProperty thisProperty = (RemoteOneOfStaticProperty) p;
+					for(Option option : thisProperty.getOptions())
+					{
+						if (option.isSelected()) return option.getName();
+					}
+				}
+			}
+		}
+		return null;
+		//TODO exceptions
+	}
 	
 	public static List<StaticProperty> cloneStaticProperties(List<StaticProperty> staticProperties)
 	{

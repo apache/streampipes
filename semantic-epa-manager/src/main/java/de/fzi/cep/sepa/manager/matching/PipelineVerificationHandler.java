@@ -226,8 +226,15 @@ public class PipelineVerificationHandler {
 
         try {
             //TODO make this part generic currently it just works with the streamstory component
-            String url = property.getRemoteUrl() + "streampipes/models?username=" + username + "&analyticsOperation=Prediction";
-            Response res = Request.Get(property.getRemoteUrl()).useExpectContinue()
+            String operation = "";
+            if (rdfRootElement.getBelongsTo().contains("activity")) {
+                operation = "Activity";
+            } else {
+               operation = "Prediction";
+            }
+
+            String url = property.getRemoteUrl() + "streampipes/models?username=" + username + "&analyticsOperation=" + operation;
+            Response res = Request.Get(url).useExpectContinue().setHeader("Content-Type", "application/json")
                     .version(HttpVersion.HTTP_1_1)
                     .execute();
 

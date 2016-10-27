@@ -91,8 +91,8 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		int modelId = Integer.parseInt(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
+		String selectedProperty = SepaUtils.getRemoteOneOfProperty(invocationGraph, "modelId");
+		int modelId = Integer.parseInt(selectedProperty);
 
 
 		String pipelineId = invocationGraph.getCorrespondingPipeline();
