@@ -98,15 +98,25 @@ public class PipelineVerificationHandler {
         if (!verified) throw new InvalidConnectionException(verifier.getErrorLog());
         return this;
     }
-
     /**
      * dummy method to compute mapping properties (based on EXACT input/output
      * matching)
      *
      * @return PipelineValidationHandler
      */
+   public PipelineVerificationHandler computeMappingProperties() throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+       return computeMappingProperties("");
+   }
 
-    public PipelineVerificationHandler computeMappingProperties() throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+    /**
+     * The username in the signature is used for the streamsets integration. Remove when it is no longer required
+     * dummy method to compute mapping properties (based on EXACT input/output
+     * matching)
+     *
+     * @return PipelineValidationHandler
+     */
+
+    public PipelineVerificationHandler computeMappingProperties(String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
         List<String> connectedTo = rdfRootElement.getConnectedTo();
         String domId = rdfRootElement.getDOM();
 
@@ -126,14 +136,14 @@ public class PipelineVerificationHandler {
                             connectedTo.get(i), invocationGraphs);
 
                     incomingStream = ancestor.getOutputStream();
-                    updateStaticProperties(ancestor.getOutputStream(), i);
+                    updateStaticProperties(ancestor.getOutputStream(), i, username);
                     updateOutputStrategy(ancestor.getOutputStream(), i);
 
                 } else {
 
                     EventStream stream = (EventStream) element;
                     incomingStream = stream;
-                    updateStaticProperties(stream, i);
+                    updateStaticProperties(stream, i, username);
                     updateOutputStrategy(stream, i);
 
                 }
@@ -154,7 +164,7 @@ public class PipelineVerificationHandler {
         return this;
     }
 
-    public void updateStaticProperties(EventStream stream, Integer count) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+    public void updateStaticProperties(EventStream stream, Integer count, String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
 
         rdfRootElement
                 .getStaticProperties()
@@ -199,7 +209,7 @@ public class PipelineVerificationHandler {
                 .collect(Collectors.toList());;
 
         for (StaticProperty property : allProperties) {
-            updateRemoteOneOfStaticProperty((RemoteOneOfStaticProperty) property);
+            updateRemoteOneOfStaticProperty((RemoteOneOfStaticProperty) property, username);
         }
 
     }
@@ -208,13 +218,15 @@ public class PipelineVerificationHandler {
      * Calls the remote URL and uses the result to set the options of the OneOfStaticProperty
      * @param property
      */
-    private void updateRemoteOneOfStaticProperty(RemoteOneOfStaticProperty property) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
+    private void updateRemoteOneOfStaticProperty(RemoteOneOfStaticProperty property, String username) throws RemoteServerNotAccessibleException, NoMatchingJsonSchemaException {
 
         String label = property.getLabelFieldName();
         String description = property.getDescriptionFieldName();
         String value = property.getValueFieldName();
 
         try {
+            //TODO make this part generic currently it just works with the streamstory component
+            String url = property.getRemoteUrl() + "streampipes/models?username=" + username + "&analyticsOperation=Prediction";
             Response res = Request.Get(property.getRemoteUrl()).useExpectContinue()
                     .version(HttpVersion.HTTP_1_1)
                     .execute();
