@@ -17,6 +17,7 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
                             {
                                 $rootScope.username = response.data.info.authc.principal.username;
                                 $rootScope.email = response.data.info.authc.principal.email;
+                                $rootScope.token = response.data.token;
                                 $rootScope.authenticated = true;
                                 if ($stateParams.target != "") {
                                     console.log("going to " + $stateParams.target);
@@ -41,6 +42,8 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
                     if (response.data.success) {
                         $rootScope.username = response.data.info.authc.principal.username;
                         $rootScope.email = response.data.info.authc.principal.email;
+                        console.log(response.data.token);
+                        $rootScope.token = response.data.token;
                         $rootScope.authenticated = true;
                         //if ($stateParams.target != "") {
                         //    console.log("going to " + $stateParams.target);
