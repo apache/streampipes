@@ -1,9 +1,12 @@
 package de.fzi.cep.sepa.manager.matching;
 
 import de.fzi.cep.sepa.esper.geo.geofencing.GeofencingController;
+import de.fzi.cep.sepa.model.client.exception.InvalidConnectionException;
 import junit.framework.TestCase;
+import static de.fzi.cep.sepa.manager.ThrowableCaptor.captureThrowable;
 
 import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.manager.matching.v2.TestUtils;
@@ -15,11 +18,11 @@ public class TestPipelineValidationHandler extends TestCase {
 
 	@Test
 	public void testPositivePipelineValidation() {
-		
-		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(), 
-				new RandomNumberStreamJson(), 
+
+		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
+				new RandomNumberStreamJson(),
 				new AggregationController());
-		
+
 		PipelineVerificationHandler handler;
 		try {
 			handler = new PipelineVerificationHandler(pipeline);
@@ -27,7 +30,7 @@ public class TestPipelineValidationHandler extends TestCase {
 		} catch (Exception e2) {
 			fail(e2.getMessage());
 		}
-		
+
 		assertTrue(true);
 	}
 
@@ -38,14 +41,18 @@ public class TestPipelineValidationHandler extends TestCase {
 				new RandomNumberStreamJson(),
 				new GeofencingController());
 
-		PipelineVerificationHandler handler;
+		PipelineVerificationHandler handler = null;
+
+
 		try {
 			handler = new PipelineVerificationHandler(pipeline);
-			handler.validateConnection();
-            assertFalse(true);
-		} catch (Exception e2) {
-			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
 		}
+
+		Throwable actual = captureThrowable(handler::validateConnection);
+
+		assertThat(actual).isInstanceOf(InvalidConnectionException.class);
 
 	}
 }

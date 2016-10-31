@@ -169,9 +169,9 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response update(de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline) {
+    public Response update(de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline, @PathParam("username") String username) {
         try {
-            return ok(Operations.validatePipeline(pipeline, true));
+            return ok(Operations.validatePipeline(pipeline, true, username));
         } catch (JsonSyntaxException e) {
             return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
         } catch (NoMatchingSchemaException e) {
@@ -180,7 +180,12 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
             return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_FORMAT_CONNECTION.title(), NotificationType.NO_MATCHING_FORMAT_CONNECTION.description(), e.getMessage()));
         } catch (NoMatchingProtocolException e) {
             return constructErrorMessage(new Notification(NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.title(), NotificationType.NO_MATCHING_PROTOCOL_CONNECTION.description(), e.getMessage()));
-        } catch (InvalidConnectionException e) {
+        } catch (RemoteServerNotAccessibleException e) {
+            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
+        } catch (NoMatchingJsonSchemaException e) {
+            return constructErrorMessage(new Notification(NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.title(), NotificationType.REMOTE_SERVER_NOT_ACCESSIBLE.description(), e.getMessage()));
+        }
+        catch (InvalidConnectionException e) {
             return ok(e.getErrorLog());
         } catch (Exception e) {
             e.printStackTrace();

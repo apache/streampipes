@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,11 @@ public class Pipeline extends ElementComposition {
 	
 	private @SerializedName("_id") String pipelineId;
     private @SerializedName("_rev") String rev;
+
+	public Pipeline() {
+		super();
+		this.actions = new ArrayList<>();
+	}
 
 	public List<SecInvocation> getActions() {
 		return actions;

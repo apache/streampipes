@@ -17,7 +17,7 @@ public interface IPipeline extends IPipelineElement {
 
 	Response recommend(Pipeline pipeline);
 
-	Response update(Pipeline pipeline);
+	Response update(Pipeline pipeline, String username);
 
 	Response overwritePipeline(String username, Pipeline pipeline);
 

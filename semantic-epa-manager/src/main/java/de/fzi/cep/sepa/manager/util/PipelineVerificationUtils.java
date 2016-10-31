@@ -16,7 +16,7 @@ public class PipelineVerificationUtils {
 	 * returns the root node of a partial pipeline (a pipeline without an action)
 	 * @param pipeline
 	 * @return @SEPAClient
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 
 	public static InvocableSEPAElement getRootNode(Pipeline pipeline) throws NoSepaInPipelineException
@@ -29,10 +29,10 @@ public class PipelineVerificationUtils {
 				.stream()
 				.filter(e -> !e.isConfigured())
 				.collect(Collectors.toList());
-		
+
 
 		if (unconfiguredElements.size() != 1) throw new NoSepaInPipelineException();
 		else return unconfiguredElements.get(0);
-			
+
 	}
 }

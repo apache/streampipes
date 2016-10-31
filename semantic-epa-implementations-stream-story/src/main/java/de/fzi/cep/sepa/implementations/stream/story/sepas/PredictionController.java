@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.implementations.stream.story.sepas;
 
 
 import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
 import de.fzi.cep.sepa.implementations.stream.story.main.StreamStoryInit;
 import de.fzi.cep.sepa.implementations.stream.story.utils.AkerVariables;
@@ -11,13 +12,17 @@ import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.RemoteOneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
@@ -46,6 +51,18 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 
         EventStream stream = EnrichedUtils.getEnrichedStream();
 
+        //Add some stream restrictions to ensure it just works with Enriched Stream
+        EventPropertyPrimitive p1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.Torque));
+        EventPropertyPrimitive p2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.SwivelOilTemperature));
+        EventPropertyPrimitive p3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.RamVelMeasured));
+
+        EventSchema schema = new EventSchema();
+        schema.addEventProperty(p1);
+        schema.addEventProperty(p2);
+        schema.addEventProperty(p3);
+
+        stream.setEventSchema(schema);
+
 //		stream.setEventGrounding(grounding);
         desc.setSupportedGrounding(grounding);
         desc.addEventStream(stream);
@@ -56,7 +73,10 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 
 
         List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-        staticProperties.add(StaticProperties.integerFreeTextProperty("modelId", "Model ID", "The id of the model"));
+
+        String streamStoryUrl = ClientConfiguration.INSTANCE.getStreamStoryUrl();
+
+        staticProperties.add(new RemoteOneOfStaticProperty("modelId", "Model Id", "the id of the model", streamStoryUrl, "id", "name", "description", true));
         desc.setStaticProperties(staticProperties);
 
         return desc;
@@ -75,8 +95,8 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
         String errorMessage = "";
 
         try {
-            int modelId = Integer.parseInt(
-                    ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "modelId"))).getValue());
+            String selectedProperty = SepaUtils.getRemoteOneOfProperty(invocationGraph, "modelId");
+            int modelId = Integer.parseInt(selectedProperty);
 
             System.out.println("Invoking runtime");
             String pipelineId = invocationGraph.getCorrespondingPipeline();

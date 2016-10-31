@@ -34,14 +34,27 @@ import java.util.List;
 
 public class Operations {
 
-	
-	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial)
+
+
+	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial) throws Exception {
+		return validatePipeline(pipeline, isPartial, "");
+	}
+
+	/**
+	 * This method is a fix for the streamsets integration. Remove the username from the signature when you don't need it anymore
+	 * @param pipeline
+	 * @param isPartial
+	 * @param username
+	 * @return
+     * @throws Exception
+     */
+	public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial, String username)
 			throws Exception {
 		PipelineVerificationHandler validator = new PipelineVerificationHandler(
 				pipeline);
 		return validator
 		.validateConnection()
-		.computeMappingProperties()
+		.computeMappingProperties(username)
 		.storeConnection()
 		.getPipelineModificationMessage();
 	}

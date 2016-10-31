@@ -7,8 +7,11 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
@@ -22,11 +25,6 @@ import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
 import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
 import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.EpaType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
@@ -47,7 +45,18 @@ public class FrictionGearboxController implements SemanticEventProcessingAgentDe
 
 		EventStream stream = EnrichedUtils.getEnrichedStream();
 
-//		stream.setEventGrounding(grounding);
+		//Add some stream restrictions to ensure it just works with Enriched Stream
+		EventPropertyPrimitive p1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.Torque));
+		EventPropertyPrimitive p2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.SwivelOilTemperature));
+		EventPropertyPrimitive p3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.RamVelMeasured));
+
+		EventSchema schema = new EventSchema();
+		schema.addEventProperty(p1);
+		schema.addEventProperty(p2);
+		schema.addEventProperty(p3);
+		stream.setEventSchema(schema);
+
+		//		stream.setEventGrounding(grounding);
 		desc.setSupportedGrounding(grounding);
 		desc.addEventStream(stream);
 
