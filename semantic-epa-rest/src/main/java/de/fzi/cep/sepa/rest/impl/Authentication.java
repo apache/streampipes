@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Path("/v2/admin")
 public class Authentication extends AbstractRestInterface implements IAuthentication {
@@ -49,10 +50,9 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Path("/login")
     public Response doLogin(ShiroAuthenticationRequest token) {
         try {
-            String secretToken = UUID.randomUUID().toString();
-            ShiroAuthenticationResponse authResponse = login(token, secretToken);
-            sendToken(secretToken, StreamStoryComponentId, null);
-            sendToken(secretToken, PanddaComponentId, null);
+            ShiroAuthenticationResponse authResponse = login(token);
+            //sendToken(secretToken, StreamStoryComponentId, null);
+            //sendToken(secretToken, PanddaComponentId, null);
             return ok(authResponse);
         } catch (AuthenticationException e) {
             return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
@@ -68,10 +68,9 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     public Response doLoginFromSso(ShiroAuthenticationRequest token, @PathParam("componentId") String componentId, @QueryParam("session") String sessionId) {
         System.out.println("Login SSO");
         try {
-            String secretToken = UUID.randomUUID().toString();
-            ShiroAuthenticationResponse authResponse = login(token, secretToken);
+            ShiroAuthenticationResponse authResponse = login(token);
             authResponse.setCallbackUrl(Configuration.getInstance().STREAMSTORY_URL);
-            sendToken(secretToken, componentId, sessionId);
+            //sendToken(secretToken, componentId, sessionId);
 
             return ok(authResponse);
         } catch (AuthenticationException e) {
@@ -129,8 +128,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Override
     public Response doLogout() {
         Subject subject = SecurityUtils.getSubject();
-        for (String key : tokenMap.keySet()) {
-            if (tokenMap.get(key).equals(subject.getSession())) tokenMap.remove(key);
+        if (tokenMap.containsKey(subject.getSession().getId().toString())) {
+            tokenMap.remove(subject.getSession().getId().toString());
         }
         subject.logout();
 
@@ -167,7 +166,15 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         if (ConfigurationManager.isConfigured()) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
-                return ok(ShiroAuthenticationResponseFactory.create((User) StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal())));
+                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create((User) StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
+                System.out.println(SecurityUtils.getSubject().getSession().getId().toString());
+                if (tokenMap.containsKey(SecurityUtils.getSubject().getSession().getId().toString())) {
+                    Optional<String> token = tokenMap.keySet().stream().filter(k -> k.equals(SecurityUtils.getSubject().getSession().getId().toString())).findFirst();
+                    if (token.isPresent()) {
+                        response.setToken(token.get());
+                    }
+                }
+                return ok(response);
             }
         }
         return ok(new ErrorMessage(NotificationType.NOT_LOGGED_IN.uiNotification()));
@@ -200,7 +207,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
     }
 
-    private ShiroAuthenticationResponse login(ShiroAuthenticationRequest token, String secretToken) {
+    private ShiroAuthenticationResponse login(ShiroAuthenticationRequest token) {
         Subject subject = SecurityUtils.getSubject();
         //if (SecurityUtils.getSubject().isAuthenticated()) {
         //	return ok("Already logged in. Please log out to change user");
@@ -209,9 +216,20 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
         shiroToken.setRememberMe(true);
 
         subject.login(shiroToken);
-        tokenMap.put(secretToken, subject.getSession());
-        return ShiroAuthenticationResponseFactory.create((User) StorageManager
+        tokenMap.put(subject.getSession().getId().toString(), subject.getSession());
+        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create((User) StorageManager
                 .INSTANCE.getUserStorageAPI().getUser((String) subject.getPrincipal()));
+        response.setToken(subject.getSession().getId().toString());
 
+        return response;
+
+    }
+
+    public static Set<String> getKeysByValue(Session value) {
+        return tokenMap.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), value))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
     }
 }
