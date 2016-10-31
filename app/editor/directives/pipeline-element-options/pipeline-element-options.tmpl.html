@@ -13,7 +13,7 @@
 </md-icon>
         </md-button>
     </span>
-<span class="possible-button" ng-show="pipelineElement.type!='action'"><md-button ng-disabled="possibleElements.length == 0 || !isConfigured(internalId)" ng-click="openPossibleElementsDialog()" class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon md-svg-icon='action:ic_visibility_24px'>
+<span class="possible-button" ng-show="pipelineElement.type!='action'"><md-button ng-disabled="!possibleElements || possibleElements.length == 0 || !isConfigured(internalId)" ng-click="openPossibleElementsDialog()" class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon md-svg-icon='action:ic_visibility_24px'>
     <md-tooltip md-direction="bottom">
                     Compatible Elements
                 </md-tooltip>
