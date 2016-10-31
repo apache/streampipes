@@ -74,9 +74,9 @@ public class Operations {
 		return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate(username);
 	}
 	
-	public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException
+	public static PipelineElementRecommendationMessage findRecommendedElements(String email, Pipeline partialPipeline) throws NoSuitableSepasAvailableException
 	{
-		return new ElementRecommender(partialPipeline).findRecommendedElements();
+		return new ElementRecommender(email, partialPipeline).findRecommendedElements();
 	}
 
 	public static void storePipeline(Pipeline pipeline) {

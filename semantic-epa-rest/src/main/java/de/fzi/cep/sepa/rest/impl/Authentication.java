@@ -182,11 +182,11 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
     @GET
     @Path("/sso")
-    public Response userCredentials(@QueryParam("session") String session) {
+    public Response userCredentials(@QueryParam("token") String token) {
 
-        if (tokenMap.containsKey(session)) {
+        if (tokenMap.containsKey(token)) {
             try {
-                Subject requestSubject = new Subject.Builder().session(tokenMap.get(session)).buildSubject();
+                Subject requestSubject = new Subject.Builder().session(tokenMap.get(token)).buildSubject();
                 ShiroAuthenticationResponse shiroResp = ShiroAuthenticationResponseFactory.create((User)
                         StorageManager.INSTANCE.getUserStorageAPI().getUser((String) requestSubject.getPrincipal()));
                 return corsResponse(shiroResp);

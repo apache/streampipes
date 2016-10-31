@@ -152,9 +152,9 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response recommend(de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline) {
+    public Response recommend(@PathParam("username") String email, de.fzi.cep.sepa.model.client.pipeline.Pipeline pipeline) {
         try {
-            return ok(Operations.findRecommendedElements(pipeline));
+            return ok(Operations.findRecommendedElements(email, pipeline));
         } catch (JsonSyntaxException e) {
             return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR.title(), NotificationType.UNKNOWN_ERROR.description(), e.getMessage()));
         } catch (NoSuitableSepasAvailableException e) {
