@@ -155,8 +155,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
 			url: '/tutorial',
 			views: {
 				"streampipesView@streampipes" : {
-					templateUrl : 'templates/tutorial.html',
-					controller: 'AppCtrl'
+					templateUrl : 'app/tutorial/tutorial.html',
+					controller: 'TutorialCtrl'
 				}
 			}
 		})

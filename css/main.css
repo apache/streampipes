@@ -17,6 +17,34 @@ body {
 	background-attachment: fixed;	
 }
 
+
+.tutorial-image {
+	float:left;
+	position: relative;
+
+}
+
+.tutorial-content {
+	position:absolute; /* absolute position (so we can position it where we want)*/
+	bottom:0px; /* position will be on bottom */
+	left:0px;
+	width:100%;
+	/* styling bellow */
+	background-color:rgb(63,81,181);
+	font-size:15px;
+	color:white;
+	opacity:0.9; /* transparency */
+	filter:alpha(opacity=90); /* IE transparency */
+	align-items: center;
+	justify-content: center;
+}
+
+.centered {
+	align-items: center;
+	justify-content: center;
+	padding:5px;
+}
+
 .md-padding-left {
 	padding-left:16px;
 }

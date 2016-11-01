@@ -23,6 +23,7 @@ import spPipelines from './pipelines/pipelines.module';
 import spProasenseHome from './proasense-home/proasense-home.module';
 import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
+import spTutorial from './tutorial/tutorial.module';
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -43,6 +44,7 @@ export default angular
         spPipelines,
         spProasenseHome,
         spSensors,
+        spTutorial,
         spAppLinks,
         uiRouter,
     ])
