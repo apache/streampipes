@@ -15,6 +15,14 @@ export default function restApi($rootScope, $http, apiConstants) {
 		return getServerUrl() +'/users/' +$rootScope.email;
 	};
 
+	restApi.getUserDetails = function() {
+		return $http.get(urlBase());
+	}
+
+	restApi.updateUserDetails = function(user) {
+		return $http.put(urlBase(), user);
+	}
+
 	restApi.getBlocks = function () {
 		return $http.get(urlBase() + "/block");
 	};

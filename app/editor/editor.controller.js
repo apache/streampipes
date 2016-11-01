@@ -5,10 +5,10 @@ import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
 import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
 
-EditorCtrl.$inject = ['$scope', '$rootScope', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
+EditorCtrl.$inject = ['$scope', '$rootScope', '$state', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
 
 
-export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -36,7 +36,33 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     $scope.currentPipelineElement;
     $scope.currentPipelineElementDom;
 
-    $scope.isValidPipeline = function() {
+    if ($rootScope.email != undefined) {
+        restApi
+            .getUserDetails()
+            .success(function (user) {
+                if (!user.hideTutorial || user.hideTutorial == undefined) {
+                    var confirm = $mdDialog.confirm()
+                        .title('Welcome to StreamPipes!')
+                        .textContent('We have a short tutorial that guides you through your first steps with StreamPipes.')
+                        .ok('Show tutorial')
+                        .cancel('Cancel');
+
+                    $mdDialog.show(confirm).then(function () {
+                        user.hideTutorial = true;
+                        restApi.updateUserDetails(user).success(function (data) {
+                            $state.go("streampipes.tutorial");
+                        });
+                    }, function () {
+
+                    });
+                }
+            })
+            .error(function (msg) {
+                console.log(msg);
+            });
+    }
+
+    $scope.isValidPipeline = function () {
         return $scope.isStreamInAssembly && $scope.isActionInAssembly;
     }
 
@@ -44,12 +70,12 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $scope.minimizedEditorStand = !$scope.minimizedEditorStand;
     }
 
-    $scope.currentFocus = function(element, active) {
+    $scope.currentFocus = function (element, active) {
         if (active) $scope.currentlyFocusedElement = element;
         else $scope.currentlyFocusedElement = undefined;
     }
 
-    $scope.currentFocusActive = function(element) {
+    $scope.currentFocusActive = function (element) {
         return $scope.currentlyFocusedElement == element;
     }
 
@@ -221,7 +247,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.repaintEverything(true);
     });
 
-    
+
     $scope.$on('$destroy', function () {
         jsPlumb.deleteEveryEndpoint();
     });
@@ -535,14 +561,14 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
     var loadOptionsButtons = function ($newElement) {
         $scope.currentPipelineElement = $newElement.data("JSON");
         $scope.currentPipelineElementDom = $newElement[0].id;
-        var elementId = $scope.currentPipelineElement.type =='stream' ? $scope.currentPipelineElement.elementId : $scope.currentPipelineElement.belongsTo;
-        $newElement.append($compile('<pipeline-element-options show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' +elementId +' internal-id=' +$scope.currentPipelineElementDom +'></pipeline-element-options>')($scope));
+        var elementId = $scope.currentPipelineElement.type == 'stream' ? $scope.currentPipelineElement.elementId : $scope.currentPipelineElement.belongsTo;
+        $newElement.append($compile('<pipeline-element-options show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' + elementId + ' internal-id=' + $scope.currentPipelineElementDom + '></pipeline-element-options>')($scope));
     }
 
     $scope.streamDropped = function ($newElement, endpoints) {
         $scope.isStreamInAssembly = true;
         $newElement.addClass("connectable stream");
-        $newElement.id="sp_stream_" +($rootScope.state.currentPipeline.streams.length +1);
+        $newElement.id = "sp_stream_" + ($rootScope.state.currentPipeline.streams.length + 1);
         var pipelinePart = new objectProvider.Pipeline();
         pipelinePart.addElement($newElement);
         $rootScope.state.currentPipeline = pipelinePart;
@@ -591,9 +617,9 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         return $newElement;
     };
 
-    var makeInternalId = function() {
-        return "a" +$rootScope.state.currentPipeline.streams.length
-        +$rootScope.state.currentPipeline.sepas.length
+    var makeInternalId = function () {
+        return "a" + $rootScope.state.currentPipeline.streams.length
+            + $rootScope.state.currentPipeline.sepas.length
         $rootScope.state.currentPipeline.actions.length;
     }
 
@@ -825,7 +851,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.repaintEverything();
     };
 
-    $scope.createPartialPipeline = function(currentElement, recommendationConfig) {
+    $scope.createPartialPipeline = function (currentElement, recommendationConfig) {
         var pipelinePart = new objectProvider.Pipeline();
         addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
         return pipelinePart;
@@ -934,7 +960,7 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         $scope.showSavePipelineDialog();
     }
 
-    $scope.createAssemblyElement = function(json, $parentElement) {
+    $scope.createAssemblyElement = function (json, $parentElement) {
         var x = $parentElement.position().left;
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
@@ -968,8 +994,8 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         jsPlumb.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
         jsPlumb.repaintEverything();
     }
-    
-    $scope.createAndConnect = function(target) {
+
+    $scope.createAndConnect = function (target) {
         var json = $("a", $(target)).data("recObject").json;
         var $parentElement = $(target).parents(".connectable");
         $scope.createAssemblyElement(json, $parentElement);
@@ -996,11 +1022,11 @@ export default function EditorCtrl($scope, $rootScope, $timeout, $http, restApi,
         }
     }
 
-    $scope.handleDeleteOption = function($element) {
+    $scope.handleDeleteOption = function ($element) {
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
     }
-    
+
     function getCoordinates(ui) {
 
         var newLeft = getDropPositionX(ui.helper);
