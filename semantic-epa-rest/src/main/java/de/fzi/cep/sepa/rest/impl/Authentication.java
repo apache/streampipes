@@ -166,7 +166,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         if (ConfigurationManager.isConfigured()) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
-                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create((User) StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
+                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
                 System.out.println(SecurityUtils.getSubject().getSession().getId().toString());
                 if (tokenMap.containsKey(SecurityUtils.getSubject().getSession().getId().toString())) {
                     Optional<String> token = tokenMap.keySet().stream().filter(k -> k.equals(SecurityUtils.getSubject().getSession().getId().toString())).findFirst();
@@ -187,8 +187,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
         if (tokenMap.containsKey(token)) {
             try {
                 Subject requestSubject = new Subject.Builder().session(tokenMap.get(token)).buildSubject();
-                ShiroAuthenticationResponse shiroResp = ShiroAuthenticationResponseFactory.create((User)
-                        StorageManager.INSTANCE.getUserStorageAPI().getUser((String) requestSubject.getPrincipal()));
+                ShiroAuthenticationResponse shiroResp = ShiroAuthenticationResponseFactory.create(StorageManager.INSTANCE.getUserStorageAPI().getUser((String) requestSubject.getPrincipal()));
                 return corsResponse(shiroResp);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -217,7 +216,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         subject.login(shiroToken);
         tokenMap.put(subject.getSession().getId().toString(), subject.getSession());
-        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create((User) StorageManager
+        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager
                 .INSTANCE.getUserStorageAPI().getUser((String) subject.getPrincipal()));
         response.setToken(subject.getSession().getId().toString());
 

@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.rest.application;
 
-
 import de.fzi.cep.sepa.rest.impl.*;
 import de.fzi.cep.sepa.rest.serializer.GsonClientModelProvider;
 import de.fzi.cep.sepa.rest.serializer.GsonWithIdProvider;
@@ -43,6 +42,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(RdfEndpoint.class);
         apiClasses.add(KpiPipeline.class);
         apiClasses.add(ApplicationLink.class);
+        apiClasses.add(User.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);
