@@ -63,6 +63,6 @@ export default function TutorialCtrl($scope, $timeout) {
 
     $timeout(function () {
         $scope.slickConfigLoaded = true;
-    }, 1000);
+    }, 1500);
 
 }
