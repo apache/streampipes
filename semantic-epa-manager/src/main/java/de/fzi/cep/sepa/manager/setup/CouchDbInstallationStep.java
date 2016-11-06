@@ -13,7 +13,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts = Arrays.asList("8089", "8090", "8091", "8094", "8080/sources-mhwirth", "8080/sources-hella");
+    private static List<String> initRdfEndpointPorts = Arrays.asList("8089", "8090", "8091", "8094", "8030/sources-mhwirth", "8030/sources-hella");
     private static final String initRdfEndpointHost = "http://localhost:";
 
     public CouchDbInstallationStep() {
