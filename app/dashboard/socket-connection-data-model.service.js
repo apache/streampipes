@@ -22,7 +22,8 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 					return elem.doc.visualisation._id == self.visualisationId;
 				});
 
-				var brokerUrl = 'ws://' + element.doc.visualisation['broker'];
+				//var brokerUrl = 'ws://' + element.doc.visualisation['broker'];
+				var brokerUrl = element.doc.visualisation['broker'];
 				var inputTopic = '/topic/' + element.doc.visualisation['pipelineId'];
 
 				self.client = Stomp.client(brokerUrl + inputTopic);
