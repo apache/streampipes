@@ -9,7 +9,7 @@ export default function SetupCtr($scope, $location, restApi, $mdToast) {
 
 
 		$scope.setup = {
-			couchDbHost: 'localhost',
+			couchDbHost: $location.host(),
 			couchDbProtocol : 'http',
 			couchDbPort : 5984,
 			couchDbUserDbName : 'users',
@@ -17,7 +17,7 @@ export default function SetupCtr($scope, $location, restApi, $mdToast) {
 			couchDbConnectionDbName : 'connection',
 			couchDbMonitoringDbName : 'monitoring',
 			couchDbNotificationDbName : 'notification',
-			sesameUrl: 'http://localhost:8080/openrdf-sesame',
+			sesameUrl: 'http://localhost:8030/openrdf-sesame',
 			sesameDbName : 'test-6',
 			kafkaProtocol : 'http',
 			kafkaHost : $location.host(),
