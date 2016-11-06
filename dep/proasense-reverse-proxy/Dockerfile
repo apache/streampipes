@@ -14,7 +14,6 @@ RUN cd /etc/apache2 && a2enmod proxy_wstunnel
 
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN chmod +x /usr/local/bin/httpd-foreground
 EXPOSE 80
 
 CMD ["/usr/bin/supervisord"]
