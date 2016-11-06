@@ -13,7 +13,7 @@ public class DashboardParameters {
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
         //this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
-        this.broker = "http://" +ClientConfiguration.INSTANCE.getWebappHost() +"/streampipes/ws";
+        this.broker = "ws://" +ClientConfiguration.INSTANCE.getWebappHost() +"/streampipes/ws";
     }
 
     private String removeProtocol(String url) {
