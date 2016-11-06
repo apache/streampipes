@@ -12,8 +12,7 @@ COPY ./apache2.conf /etc/apache2/apache2.conf
 RUN cd /etc/apache2 && a2enmod proxy_http
 RUN cd /etc/apache2 && a2enmod proxy_wstunnel
 
-COPY httpd-foreground /usr/local/bin/httpd-foreground
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN chmod +x /usr/local/bin/httpd-foreground
 EXPOSE 80
