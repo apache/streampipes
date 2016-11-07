@@ -32,7 +32,7 @@ export default function SetupCtr($scope, $location, restApi, $mdToast) {
 			adminEmail: '' ,
 			adminPassword: '',
 			streamStoryUrl : 'http://' +$location.host() +'/streamstory',
-			panddaUrl : 'http://' +$location.host() +'/pandda',
+			panddaUrl : 'http://' +$location.host() +':90/pandda_v2_2',
 			hippoUrl : 'http://' +$location.host() +'/kpimodeller',
 			humanInspectionReportUrl : '',
 			humanMaintenanceReportUrl : '',
