@@ -16,7 +16,7 @@ public abstract class ContainerModelSubmitter extends ModelSubmitter implements 
 //    public abstract void init();
 
     public void contextInitialized(ServletContextEvent arg) {
-        DeclarersSingleton.getInstance().setPort(8080);
+        DeclarersSingleton.getInstance().setPort(8030);
         init();
     }
 
