@@ -12,9 +12,9 @@ public class HealthIndexParameters extends BindingParameters {
     private String machineTypeMapping;
     private String timestampMapping;
 
-    private HealthIndexVariables healthIndexVariables;
+    private HealthIndexVariables2 healthIndexVariables;
 
-    public HealthIndexParameters(SepaInvocation graph, String frictionMapping, String timestampMapping, String machineTypeMapping, HealthIndexVariables healthIndexVariables) {
+    public HealthIndexParameters(SepaInvocation graph, String frictionMapping, String timestampMapping, String machineTypeMapping, HealthIndexVariables2 healthIndexVariables) {
         super(graph);
         this.frictionMapping = frictionMapping;
         this.healthIndexVariables = healthIndexVariables;
@@ -31,11 +31,11 @@ public class HealthIndexParameters extends BindingParameters {
         this.frictionMapping = frictionMapping;
     }
 
-    public HealthIndexVariables getHealthIndexVariables() {
+    public HealthIndexVariables2 getHealthIndexVariables() {
         return healthIndexVariables;
     }
 
-    public void setHealthIndexVariables(HealthIndexVariables healthIndexVariables) {
+    public void setHealthIndexVariables(HealthIndexVariables2 healthIndexVariables) {
         this.healthIndexVariables = healthIndexVariables;
     }
 

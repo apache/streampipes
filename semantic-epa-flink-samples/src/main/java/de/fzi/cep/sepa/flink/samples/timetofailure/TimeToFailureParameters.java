@@ -9,10 +9,12 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 public class TimeToFailureParameters extends BindingParameters {
 
     private String healthIndexMapping;
+    private Integer mtbfValue;
 
-    public TimeToFailureParameters(SepaInvocation graph, String healthIndexMapping) {
+    public TimeToFailureParameters(SepaInvocation graph, String healthIndexMapping, Integer mtbfValue) {
         super(graph);
         this.healthIndexMapping = healthIndexMapping;
+        this.mtbfValue = mtbfValue;
     }
 
     public String getHealthIndexMapping() {
@@ -21,5 +23,13 @@ public class TimeToFailureParameters extends BindingParameters {
 
     public void setHealthIndexMapping(String healthIndexMapping) {
         this.healthIndexMapping = healthIndexMapping;
+    }
+
+    public Integer getMtbfValue() {
+        return mtbfValue;
+    }
+
+    public void setMtbfValue(Integer mtbfValue) {
+        this.mtbfValue = mtbfValue;
     }
 }

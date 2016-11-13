@@ -11,9 +11,11 @@ import java.util.Map;
 public class TimeToFailureCalculator implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
     private String healthIndexMapping;
+    private Integer mtbfValue;
 
-    public TimeToFailureCalculator(String healthIndexMapping) {
+    public TimeToFailureCalculator(String healthIndexMapping, Integer mtbfValue) {
         this.healthIndexMapping = healthIndexMapping;
+        this.mtbfValue = mtbfValue;
     }
 
     @Override
@@ -23,6 +25,7 @@ public class TimeToFailureCalculator implements FlatMapFunction<Map<String, Obje
     }
 
     private Double calculateTtf(Double healthIndex) {
-        return 1 / healthIndex;
+        System.out.println("TTF: " +mtbfValue * healthIndex);
+        return mtbfValue * healthIndex;
     }
 }

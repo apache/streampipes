@@ -7,6 +7,7 @@ import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.builder.EpProperties;
 import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.model.builder.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -30,6 +31,8 @@ import java.util.List;
 public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFailureParameters> {
 
     private final String healthIndexMappingName = "healthIndexMappingName";
+    private final String mtbf = "mtbf";
+
 
     @Override
     public SepaDescription declareModel() {
@@ -53,6 +56,9 @@ public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFa
         MappingProperty frictionValueMapping = new MappingPropertyUnary(URI.create(healthIndexRequirement.getElementId()), healthIndexMappingName, "Health Index Mapping", "The field containing health index values.");
 
         staticProperties.add(frictionValueMapping);
+        staticProperties.add(StaticProperties.integerFreeTextProperty(mtbf, "MTBF (years)", ""));
+
+        desc.setStaticProperties(staticProperties);
 
         List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
         AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
@@ -71,9 +77,13 @@ public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFa
     @Override
     protected FlinkSepaRuntime<TimeToFailureParameters> getRuntime(SepaInvocation graph) {
         String healthIndexMapping = SepaUtils.getMappingPropertyName(graph, healthIndexMappingName);
+        Integer mtbfValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf));
 
-        TimeToFailureParameters params = new TimeToFailureParameters(graph, healthIndexMapping);
+        TimeToFailureParameters params = new TimeToFailureParameters(graph, healthIndexMapping, mtbfValue);
 
         return new TimeToFailureProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        //return new TimeToFailureProgram(params);
+
     }
+
 }

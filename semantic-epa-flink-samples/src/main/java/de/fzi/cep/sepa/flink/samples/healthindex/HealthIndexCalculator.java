@@ -1,39 +1,23 @@
 package de.fzi.cep.sepa.flink.samples.healthindex;
 
-import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Created by riemer on 25.10.2016.
  */
-public class HealthIndexCalculator implements AllWindowFunction<Map<String, Object>, Map<String, Object>, GlobalWindow> {
+public class HealthIndexCalculator extends AbstractHealthIndexCalculator {
 
     private HealthIndexVariables variables;
-    private String machineTypeKey;
-    private String timestampKey;
-    private String frictionValueKey;
     private Double nominalHealthIndex;
 
-    public HealthIndexCalculator(String frictionValueKey, String timestampkey, String machineTypeKey, HealthIndexVariables variables) {
-        this.frictionValueKey = frictionValueKey;
-        this.timestampKey = timestampkey;
-        this.machineTypeKey = machineTypeKey;
+    public HealthIndexCalculator(String frictionValueKey, String timestampKey, String machineTypeKey, HealthIndexVariables variables) {
+        super(frictionValueKey, timestampKey, machineTypeKey);
         this.variables = variables;
         this.nominalHealthIndex = 1 / (double) variables.getMtbf();
-    }
-
-    private Map<String, Object> makeOutputEvent(long timestamp, double healthIndexValue, String machineType) {
-        Map<String, Object> outputEvent = new HashMap<>();
-        outputEvent.put("timestamp", timestamp);
-        outputEvent.put("healthIndex", healthIndexValue);
-        outputEvent.put("machineId", machineType);
-
-        return outputEvent;
     }
 
     @Override
@@ -65,7 +49,7 @@ public class HealthIndexCalculator implements AllWindowFunction<Map<String, Obje
             Double degradationRate = HealthIndexCalculationFormulas
                     .calculateDegradationRate(currentFrictionCoefficientValue,
                             lastFrictionCoefficientValue,
-                            timeDifference,
+                            variables.getFrictionCoefficientDegradationRate(),
                             variables.getFrictionCoefficientStdDev());
 
             System.out.println("Degradation rate: " + degradationRate);
