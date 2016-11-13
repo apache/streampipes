@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.flink.samples.classification.number.NumberClassificationController;
 import de.fzi.cep.sepa.flink.samples.elasticsearch.ElasticSearchController;
 import de.fzi.cep.sepa.flink.samples.enrich.timestamp.TimestampController;
+import de.fzi.cep.sepa.flink.samples.file.FileSinkController;
 import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.healthindex.HealthIndexController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
@@ -22,7 +23,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
                 .add(new FieldHasherController())
                 .add(new FieldRenamerController())
                 .add(new HealthIndexController())
-                .add(new TimeToFailureController());
+                .add(new TimeToFailureController())
+                .add(new FileSinkController());
 
         DeclarersSingleton.getInstance().setPort(8094);
         new FlinkInit().init();
