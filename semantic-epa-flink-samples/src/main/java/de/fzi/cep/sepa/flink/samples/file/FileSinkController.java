@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.flink.samples.file;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.EventSchema;
