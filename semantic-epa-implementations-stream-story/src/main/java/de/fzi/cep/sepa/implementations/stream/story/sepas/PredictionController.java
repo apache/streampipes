@@ -52,14 +52,14 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
         EventStream stream = EnrichedUtils.getEnrichedStream();
 
         //Add some stream restrictions to ensure it just works with Enriched Stream
-        EventPropertyPrimitive p1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.Torque));
-        EventPropertyPrimitive p2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.SwivelOilTemperature));
-        EventPropertyPrimitive p3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.RamVelMeasured));
+//        EventPropertyPrimitive p1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.Torque));
+//        EventPropertyPrimitive p2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.SwivelOilTemperature));
+//        EventPropertyPrimitive p3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.RamVelMeasured));
 
         EventSchema schema = new EventSchema();
-        schema.addEventProperty(p1);
-        schema.addEventProperty(p2);
-        schema.addEventProperty(p3);
+//        schema.addEventProperty(p1);
+//        schema.addEventProperty(p2);
+//        schema.addEventProperty(p3);
 
         stream.setEventSchema(schema);
 
