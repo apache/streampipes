@@ -1,15 +1,11 @@
 package de.fzi.cep.sepa.commons.config;
 
+import de.fzi.cep.sepa.commons.Utils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-import java.util.TreeSet;
-
-import de.fzi.cep.sepa.commons.Utils;
+import java.util.*;
 
 public class ConfigurationManager {
 
@@ -128,7 +124,7 @@ public class ConfigurationManager {
 		properties.put("esper_port", "8090");
 		properties.put("algorithm_port", "8092");
 		properties.put("sources_port", "8089");
-		properties.put("webapp_port", "8080");
+		properties.put("webapp_port", "8030");
 		properties.put("context_path", "/semantic-epa-backend");
 		
 		properties.put("appConfig", settings.getAppConfig());

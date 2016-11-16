@@ -19,7 +19,7 @@ public class FrictionReplay implements Runnable {
     EventProducer gearboxPublisher;
     EventProducer swivelPublisher;
 
-    private static final String FrictionReplayFilename = "friction-coeff.txt";
+    private static final String FrictionReplayFilename = "friction-json.txt";
     private static final String FrictionDirectory = "data/";
 
     public FrictionReplay(EventProducer gearboxProducer, EventProducer swivelProducer) {

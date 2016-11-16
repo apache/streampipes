@@ -10,6 +10,7 @@ public class HealthIndexVariables implements Serializable {
     private Double frictionCoefficientNominal;
     private Double frictionCoefficientStdDev;
     private Integer frictionCoefficientStdDevMultiplier;
+    private Integer frictionCoefficientDegradationRate;
     private Integer mtbf;
 
     private Double degradationRateBase;
@@ -88,5 +89,13 @@ public class HealthIndexVariables implements Serializable {
 
     public void setDegradationValueOffset(Double degradationValueOffset) {
         this.degradationValueOffset = degradationValueOffset;
+    }
+
+    public Integer getFrictionCoefficientDegradationRate() {
+        return frictionCoefficientDegradationRate;
+    }
+
+    public void setFrictionCoefficientDegradationRate(Integer frictionCoefficientDegradationRate) {
+        this.frictionCoefficientDegradationRate = frictionCoefficientDegradationRate;
     }
 }

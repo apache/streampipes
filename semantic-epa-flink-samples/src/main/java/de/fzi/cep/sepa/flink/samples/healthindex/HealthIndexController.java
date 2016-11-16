@@ -33,7 +33,6 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
     private final String frictionCoefficientNominal = "frictionCoefficientNominal";
     private final String frictionCoefficientStdDev = "frictionCoefficientStdDev";
     private final String frictionCoefficientStdDevMultiplier = "frictionCoefficientStdDevMultiplier";
-    private final String mtbf = "mtbf";
 
     private final String degradationRateBase = "degradationRateBase";
     private final String degradationRateDivider = "degradationRateDivider";
@@ -43,6 +42,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
     private final String frictionMappingName = "frictionMapping";
     private final String timestampMappingName = "timestampMapping";
     private final String machineTypeMappingName = "machineTypeMapping";
+    private final String frictionCoefficientDegradationRate = "frictioNCoefficientDegradationRate";
 
 
     @Override
@@ -78,14 +78,12 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
         staticProperties.add(timestampMapping);
         staticProperties.add(machineTypeMapping);
 
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient", ""));
+        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient (sigma_f)", ""));
         staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientStdDev, "Friction Coefficient standard deviation", ""));
-        staticProperties.add(StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier", ""));
-        staticProperties.add(StaticProperties.integerFreeTextProperty(mtbf, "MTBF", ""));
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationRateBase, "Degradation Rate Base", ""));
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", ""));
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationValueMultiplier, "Degradation Value Multiplier", ""));
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(degradationValueOffset, "Degradation Value Offset", ""));
+        staticProperties.add(StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier delta_cx: gamma = delta_cx * sigma_f", ""));
+
+        staticProperties.add(StaticProperties.integerFreeTextProperty(degradationRateBase, "Degradation Rate Base (Power)", ""));
+        staticProperties.add(StaticProperties.integerFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", ""));
 
         desc.setStaticProperties(staticProperties);
 
@@ -112,18 +110,15 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
         String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);
         String machineTypeMapping = SepaUtils.getMappingPropertyName(graph, machineTypeMappingName);
 
-        HealthIndexVariables variables = new HealthIndexVariables();
+        HealthIndexVariables2 variables = new HealthIndexVariables2();
 
-        variables.setFrictionCoefficientNominal(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientNominal)));
-        variables.setFrictionCoefficientStdDev(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDev)));
+        variables.setAverage(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientNominal)));
+        variables.setStddev(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDev)));
 
-        variables.setFrictionCoefficientStdDevMultiplier(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDevMultiplier)));
-        variables.setMtbf(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf)));
+        variables.setDeltacx(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, frictionCoefficientStdDevMultiplier)));
 
-        variables.setDegradationRateBase(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateBase)));
-        variables.setDegradationRateDivider(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateDivider)));
-        variables.setDegradationValueMultiplier(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationValueMultiplier)));
-        variables.setDegradationValueOffset(Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationValueOffset)));
+        variables.setPower(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateBase)));
+        variables.setDivider(Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, degradationRateDivider)));
 
         HealthIndexParameters staticParam = new HealthIndexParameters (
                 graph,
@@ -134,5 +129,6 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
         return new HealthIndexProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 
+        //return new HealthIndexProgram(staticParam);
     }
 }

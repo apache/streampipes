@@ -22,6 +22,6 @@ public class TimeToFailureProgram extends FlinkSepaRuntime<TimeToFailureParamete
 
     @Override
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-        return messageStream.flatMap(new TimeToFailureCalculator(params.getHealthIndexMapping()));
+        return messageStream.flatMap(new TimeToFailureCalculator(params.getHealthIndexMapping(), params.getMtbfValue()));
     }
 }

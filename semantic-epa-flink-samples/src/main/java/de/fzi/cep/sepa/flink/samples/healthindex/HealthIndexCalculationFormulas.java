@@ -13,7 +13,7 @@ public class HealthIndexCalculationFormulas {
         return (frictionCoefficientCurrent - frictionCoefficientNominal) / gamma;
     }
 
-    public static Double calculateDegradationRate(Double frictionCoefficientCurrent, Double frictionCoefficientLast, Long timeDifference, Double frictionCoefficientStdDev) {
+    public static Double calculateDegradationRate(Double frictionCoefficientCurrent, Double frictionCoefficientLast, Integer timeDifference, Double frictionCoefficientStdDev) {
         return (frictionCoefficientCurrent - frictionCoefficientLast) / (timeDifference * frictionCoefficientStdDev);
     }
 

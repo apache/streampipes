@@ -1,8 +1,8 @@
 package de.fzi.cep.sepa.actions.dashboard;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 
 public class DashboardParameters {
     private String pipelineId;
@@ -12,7 +12,8 @@ public class DashboardParameters {
     public DashboardParameters(SecInvocation invocationGraph) {
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
-        this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
+        //this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
+        this.broker = "ws://" +ClientConfiguration.INSTANCE.getWebappHost() +"/streampipes/ws";
     }
 
     private String removeProtocol(String url) {

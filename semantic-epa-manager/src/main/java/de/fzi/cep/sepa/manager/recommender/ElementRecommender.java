@@ -25,10 +25,12 @@ import java.util.stream.Collectors;
 public class ElementRecommender {
 
     private Pipeline pipeline;
+    private String email;
     private PipelineElementRecommendationMessage recommendationMessage;
     private Cloner cloner;
 
-    public ElementRecommender(Pipeline partialPipeline) {
+    public ElementRecommender(String email, Pipeline partialPipeline) {
+        this.email = email;
         this.pipeline = partialPipeline;
         this.recommendationMessage = new PipelineElementRecommendationMessage();
         this.cloner = new Cloner();
@@ -162,11 +164,25 @@ public class ElementRecommender {
     }
 
     private List<SepaDescription> getAllSepas() {
-        return StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
+        List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnSepaUris(email);
+        return StorageManager
+                .INSTANCE
+                .getStorageAPI()
+                .getAllSEPAs()
+                .stream()
+                .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
+                .collect(Collectors.toList());
     }
 
     private List<SecDescription> getAllSecs() {
-        return StorageManager.INSTANCE.getStorageAPI().getAllSECs();
+        List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnActionUris(email);
+        return StorageManager
+                .INSTANCE
+                .getStorageAPI()
+                .getAllSECs()
+                .stream()
+                .filter(e -> userObjects.stream().anyMatch(u -> u.equals(e.getElementId())))
+            .collect(Collectors.toList());
     }
 
     private List<NamedSEPAElement> getAll() {

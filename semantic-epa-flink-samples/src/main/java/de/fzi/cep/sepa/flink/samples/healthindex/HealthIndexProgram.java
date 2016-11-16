@@ -24,6 +24,6 @@ public class HealthIndexProgram extends FlinkSepaRuntime<HealthIndexParameters> 
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
         return messageStream
                 .countWindowAll(2, 1)
-                .apply(new HealthIndexCalculator(params.getFrictionMapping(), params.getTimestampMapping(), params.getMachineTypeMapping(), params.getHealthIndexVariables()));
+                .apply(new HealthIndexCalculator2(params.getFrictionMapping(), params.getTimestampMapping(), params.getMachineTypeMapping(), params.getHealthIndexVariables()));
     }
 }
