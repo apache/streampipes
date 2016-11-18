@@ -23,6 +23,11 @@ public class StreamPipesKafkaProducer implements EventProducer, Serializable {
         openProducer();
     }
 
+    public StreamPipesKafkaProducer(String brokerUrl) {
+        this.brokerUrl = brokerUrl;
+        openProducer();
+    }
+
     @Override
     public void openProducer() {
         producer = new KafkaProducer<>(getProperties());
@@ -30,6 +35,14 @@ public class StreamPipesKafkaProducer implements EventProducer, Serializable {
 
     public void publish(byte[] message) {
         producer.send(new ProducerRecord<>(topic, message));
+    }
+
+    public void publish(byte[] message, String kafkaTopic) {
+        producer.send(new ProducerRecord<String, byte[]>(kafkaTopic, message));
+    }
+
+    public void publish(String event, String kafkaTopic) {
+        publish(event.getBytes(), kafkaTopic);
     }
 
     @Override
