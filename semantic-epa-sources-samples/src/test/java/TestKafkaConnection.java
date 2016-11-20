@@ -34,7 +34,7 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("192.168.84.45:", 9092, 2181, "FZI.SEPA.imeRrHZwjiluAscWiOCC");
+		TestKafkaConnection connection = new TestKafkaConnection("192.168.84.45:", 9092, 2181, "eu.proasense.internal.sp.internal.outgoing.1000693");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {

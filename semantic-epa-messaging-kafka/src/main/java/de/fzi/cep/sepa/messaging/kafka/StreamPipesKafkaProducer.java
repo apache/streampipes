@@ -55,7 +55,6 @@ public class StreamPipesKafkaProducer implements EventProducer, Serializable {
         producer.close();
     }
 
-
     private Properties getProperties() {
         Properties props = new Properties();
         props.put("bootstrap.servers", brokerUrl);

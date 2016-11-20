@@ -13,7 +13,12 @@ public class DashboardParameters {
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
         //this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
-        this.broker = "ws://" +ClientConfiguration.INSTANCE.getWebappHost() +"/streampipes/ws";
+        ClientConfiguration config = ClientConfiguration.INSTANCE;
+        if (!config.isNissatechRunning()) {
+            this.broker = "ws://" +config.getWebappHost() +":" +config.getWebappPort() +"/streampipes/ws";
+        } else {
+            this.broker = "ws://proasense-ui.nissatech.com/streampipes/ws";
+        }
     }
 
     private String removeProtocol(String url) {

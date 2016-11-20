@@ -339,6 +339,7 @@
         <module>semantic-epa-messaging-kafka</module>
         <module>semantic-epa-messaging</module>
         <module>semantic-epa-messaging-jms</module>
+        <module>semantic-epa-sources-kd2</module>
     </modules>
 
     <!-- Build Settings -->
