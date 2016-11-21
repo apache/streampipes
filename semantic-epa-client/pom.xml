@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model</artifactId>
+			<artifactId>semantic-epa-sdk</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

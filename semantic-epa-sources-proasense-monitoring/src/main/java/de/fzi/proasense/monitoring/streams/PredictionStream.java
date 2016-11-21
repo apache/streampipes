@@ -7,7 +7,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.messaging.EventListener;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.sdk.stream.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

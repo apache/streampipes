@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.epa.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

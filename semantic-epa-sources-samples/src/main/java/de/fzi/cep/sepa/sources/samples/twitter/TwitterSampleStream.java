@@ -6,7 +6,7 @@ import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
-import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.sdk.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

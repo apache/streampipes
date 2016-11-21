@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.implementations.stream.story.utils;
 
 import java.net.URI;
 
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;

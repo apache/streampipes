@@ -5,8 +5,8 @@ import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 
-import de.fzi.cep.sepa.model.builder.SchemaBuilder;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
+import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;

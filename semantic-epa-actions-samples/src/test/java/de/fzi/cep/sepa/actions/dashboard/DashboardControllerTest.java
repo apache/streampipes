@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.actions.dashboard;
 
-import de.fzi.cep.sepa.model.builder.SchemaBuilder;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
+import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;

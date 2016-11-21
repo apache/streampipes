@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.sources.kd2.streams;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.sdk.stream.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;

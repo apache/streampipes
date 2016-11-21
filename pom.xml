@@ -271,6 +271,11 @@
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
+                <artifactId>semantic-epa-sdk</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging-kafka</artifactId>
                 <version>0.0.2-SNAPSHOT</version>
             </dependency>
@@ -340,6 +345,7 @@
         <module>semantic-epa-messaging</module>
         <module>semantic-epa-messaging-jms</module>
         <module>semantic-epa-sources-kd2</module>
+        <module>semantic-epa-sdk</module>
     </modules>
 
     <!-- Build Settings -->

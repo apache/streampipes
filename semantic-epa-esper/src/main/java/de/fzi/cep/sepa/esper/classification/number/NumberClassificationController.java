@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.epa.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;

@@ -7,8 +7,8 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.epa.EpRequirements;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;

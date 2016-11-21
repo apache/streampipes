@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.kd2.utils;
 
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.sdk.stream.EpProperties;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.sources.kd2.vocabulary.Kd2;
 

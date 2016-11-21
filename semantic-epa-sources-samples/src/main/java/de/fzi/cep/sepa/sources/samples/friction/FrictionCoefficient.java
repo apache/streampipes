@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.sources.samples.friction;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.sdk.stream.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
