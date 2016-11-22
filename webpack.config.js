@@ -44,7 +44,7 @@ let config = {
 		port: 8082,
 		proxy: {
 			'/semantic-epa-backend': {
-				target: 'http://localhost:8080',
+				target: 'http://localhost:8030',
 				secure: false
 			},
 			'/visualizablepipeline': {
