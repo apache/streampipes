@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.manager.kpi.context;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
+
 /**
  * Created by riemer on 03.10.2016.
  */
@@ -8,7 +10,7 @@ public class ContextModelEndpointBuilder {
     public static final String CONTEXT_MODEL_HELLA = "hella";
     public static final String CONTEXT_MODEL_MHWIRTH = "mhwirth";
 
-    public static final String CONTEXT_MODEL_URL = "http://192.168.84.41:8082/storage-registry/query/sensor/";
+    public static final String CONTEXT_MODEL_URL = "http://" + Configuration.getInstance().getHostname() +":8082/storage-registry/query/sensor/";
 
     public static final String LIST_PATH = "list";
     public static final String DETAILS_PATH = "properties";
