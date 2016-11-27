@@ -77,6 +77,10 @@
 			<artifactId>semantic-epa-model-client</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-sdk</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
