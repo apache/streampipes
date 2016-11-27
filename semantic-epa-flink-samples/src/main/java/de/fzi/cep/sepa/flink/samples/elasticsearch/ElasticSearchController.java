@@ -80,8 +80,11 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		kibanaLink.setApplicationDescription("Kibana lets you visualize and analyze historical data collected by StreamPipes.");
 		kibanaLink.setApplicationIconUrl(Config.iconBaseUrl + "/elasticsearch_icon.png");
 		kibanaLink.setApplicationLinkType("application");
-		kibanaLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getElasticsearchHost() +":5601");
-
+		if (!ClientConfiguration.INSTANCE.isNissatechRunning()) {
+			kibanaLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getElasticsearchHost() +":5601");
+		} else {
+			kibanaLink.setApplicationUrl("http://proasense-ui.nissatech.com/kibana");
+		}
 		return kibanaLink;
 	}
 
