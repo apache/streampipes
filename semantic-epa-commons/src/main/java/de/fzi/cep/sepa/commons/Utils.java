@@ -25,7 +25,7 @@ public class Utils {
 
 	static {
 		SERVER_URL = "http://anemone06.fzi.de";
-		CONTEXT_PATH = "/semantic-epa-backend";
+		CONTEXT_PATH = "/semantic-builder-backend";
 		PORT = 8080;
 		IMG_DIR = "img";
 

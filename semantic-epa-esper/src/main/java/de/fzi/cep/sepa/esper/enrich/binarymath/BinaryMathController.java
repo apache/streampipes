@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.esper.enrich.binarymath;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.esper.enrich.math.Operation;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;

@@ -8,16 +8,15 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
-import de.fzi.cep.sepa.model.builder.SchemaBuilder;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.sdk.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
+import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.ParametersGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.TV;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.Utils;
 

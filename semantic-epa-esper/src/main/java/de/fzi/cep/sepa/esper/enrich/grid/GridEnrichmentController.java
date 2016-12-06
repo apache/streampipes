@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.PrimitivePropertyBuilder;
-import de.fzi.cep.sepa.model.builder.SchemaBuilder;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
-import de.fzi.cep.sepa.model.builder.StreamBuilder;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.PrimitivePropertyBuilder;
+import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
+import de.fzi.cep.sepa.sdk.StaticProperties;
+import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;

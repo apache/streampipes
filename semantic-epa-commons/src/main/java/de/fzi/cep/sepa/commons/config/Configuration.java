@@ -58,7 +58,7 @@ public class Configuration {
 	public String ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
 	public  String SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 	
-	public String CONTEXT_PATH = "/semantic-epa-backend";
+	public String CONTEXT_PATH = "/semantic-builder-backend";
 	
 	public String KAFKA_HOST;
 	public String KAFKA_PROTOCOL;
@@ -197,7 +197,7 @@ public class Configuration {
 					ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
 					SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 					
-					CONTEXT_PATH = "/semantic-epa-backend";
+					CONTEXT_PATH = "/semantic-builder-backend";
 					
 					KAFKA_HOST = Utils.getHostname();
 					KAFKA_PROTOCOL = "http";

@@ -1,6 +1,6 @@
 package de.fzi.cep.sepa.sources.mhwirth.friction;
 
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
