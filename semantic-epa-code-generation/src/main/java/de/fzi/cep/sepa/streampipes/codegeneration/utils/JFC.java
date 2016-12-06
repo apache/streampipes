@@ -15,7 +15,7 @@ import de.fzi.cep.sepa.flink.AbstractFlinkConsumerDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
 import de.fzi.cep.sepa.sdk.stream.StreamBuilder;

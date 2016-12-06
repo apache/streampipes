@@ -9,7 +9,7 @@ public class Config {
 	
 	static {
 		serverUrl = Configuration.getInstance().ALGORITHM_BASE_URL;
-		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-epa-backend/img";
+		iconBaseUrl = Configuration.getInstance().WEBAPP_BASE_URL +"/semantic-builder-backend/img";
 	}
 	
 }

@@ -36,7 +36,7 @@
 		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>de.fzi.cep.sepa</groupId>-->
-			<!--<artifactId>semantic-epa-sources-mhwirth</artifactId>-->
+			<!--<artifactId>semantic-builder-sources-mhwirth</artifactId>-->
 			<!--<version>0.0.2-SNAPSHOT</version>-->
 			<!--<type>war</type>-->
 		<!--</dependency>-->

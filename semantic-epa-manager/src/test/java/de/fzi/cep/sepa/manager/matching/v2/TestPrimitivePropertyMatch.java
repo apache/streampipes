@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
-import de.fzi.cep.sepa.sdk.epa.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 

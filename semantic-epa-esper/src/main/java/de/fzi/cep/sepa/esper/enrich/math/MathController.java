@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.sdk.epa.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;

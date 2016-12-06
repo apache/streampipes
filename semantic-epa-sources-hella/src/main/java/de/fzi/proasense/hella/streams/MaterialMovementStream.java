@@ -1,18 +1,18 @@
 package de.fzi.proasense.hella.streams;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.proasense.hella.config.HellaVariables;
 import de.fzi.proasense.hella.main.AbstractHellaStream;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MaterialMovementStream extends AbstractHellaStream {
 

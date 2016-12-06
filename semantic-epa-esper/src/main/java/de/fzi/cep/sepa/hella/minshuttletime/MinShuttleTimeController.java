@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.PrimitivePropertyBuilder;
 import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
 import de.fzi.cep.sepa.sdk.stream.StreamBuilder;

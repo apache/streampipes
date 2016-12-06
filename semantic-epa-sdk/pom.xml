@@ -15,6 +15,10 @@
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

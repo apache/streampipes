@@ -47,7 +47,7 @@ public class MapAreaController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maparea", "Map area view", "", "");
-		sec.setIconUrl("http://localhost:8080/semantic-epa-backend/img" + "/Map_Icon_HQ.png");
+		sec.setIconUrl("http://localhost:8080/semantic-builder-backend/img" + "/Map_Icon_HQ.png");
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));

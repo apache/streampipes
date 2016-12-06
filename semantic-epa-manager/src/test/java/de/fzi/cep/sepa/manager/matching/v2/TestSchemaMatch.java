@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import de.fzi.cep.sepa.esper.aggregate.avg.AggregationController;
 import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
-import de.fzi.cep.sepa.sdk.epa.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;

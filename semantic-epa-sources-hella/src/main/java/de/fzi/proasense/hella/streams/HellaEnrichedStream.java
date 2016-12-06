@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;

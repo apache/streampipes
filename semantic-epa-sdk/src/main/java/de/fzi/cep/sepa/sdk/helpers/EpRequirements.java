@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.sdk.epa;
+package de.fzi.cep.sepa.sdk.helpers;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
@@ -37,11 +37,40 @@ public class EpRequirements {
 	public static EventPropertyPrimitive numberReq() {
 		return datatypeReq(SO.Number);
 	}
+
+	public static EventPropertyPrimitive booleanReq(String domainProperty)
+	{
+		return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);
+	}
+
+	public static EventPropertyPrimitive integerReq(String domainProperty)
+	{
+		return appendDomainProperty(datatypeReq(XSD._integer.toString()), domainProperty);
+	}
+
+	public static EventPropertyPrimitive doubleReq(String domainProperty)
+	{
+		return appendDomainProperty(datatypeReq(XSD._double.toString()), domainProperty);
+	}
+
+	public static EventPropertyPrimitive stringReq(String domainProperty)
+	{
+		return appendDomainProperty(datatypeReq(XSD._string.toString()), domainProperty);
+	}
+
+	public static EventPropertyPrimitive numberReq(String domainProperty) {
+		return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
+	}
 	
 	public static EventPropertyPrimitive domainPropertyReq(String domainProperty)
 	{
 		EventPropertyPrimitive ep = new EventPropertyPrimitive();
 		ep.setDomainProperties(Utils.createURI(domainProperty));
 		return ep;
+	}
+
+	private static EventPropertyPrimitive appendDomainProperty(EventPropertyPrimitive property, String domainProperty) {
+		property.setDomainProperties(Utils.createURI(domainProperty));
+		return property;
 	}
 }

@@ -21,7 +21,7 @@ public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 	
 	public LanguageDetection() {
 		 try {
-			DetectorFactory.loadProfile("C:\\workspace\\semantic-epa-parent\\semantic-epa-algorithms-samples\\src\\main\\resources\\profiles");
+			DetectorFactory.loadProfile("C:\\workspace\\semantic-builder-parent\\semantic-builder-algorithms-samples\\src\\main\\resources\\profiles");
 			
 			mappingPropertyNames = new HashMap<>();
 		} catch (LangDetectException e) {

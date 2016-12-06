@@ -8,7 +8,7 @@ import javax.json.JsonObject;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.implementations.stream.story.main.ModelInvocationRequestParameters;
-import de.fzi.cep.sepa.sdk.stream.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
