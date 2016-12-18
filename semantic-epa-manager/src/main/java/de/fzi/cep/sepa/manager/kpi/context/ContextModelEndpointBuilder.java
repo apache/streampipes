@@ -10,8 +10,8 @@ public class ContextModelEndpointBuilder {
     public static final String CONTEXT_MODEL_HELLA = "hella";
     public static final String CONTEXT_MODEL_MHWIRTH = "mhwirth";
 
-
-    public static final String CONTEXT_MODEL_URL = "http://" + Configuration.getInstance().getHostname() +":8082/storage-registry/query/sensor/";
+    //TODO add own config property
+    public static final String CONTEXT_MODEL_URL = "http://" + Configuration.getInstance().COUCHDB_HOSTNAME +":8082/storage-registry/query/sensor/";
     //public static final String CONTEXT_MODEL_URL = "http://ipe-koi15.fzi.de" +":8082/storage-registry/query/sensor/";
 
     public static final String LIST_PATH = "list";
