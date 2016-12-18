@@ -32,6 +32,7 @@ public class KpiPipelineBuilder {
     private static final String MATH_EPA_SUFFIX = "/sepa/math-binary";
     private static final String COUNT_EPA_SUFFIX = "/sepa/count";
     private static final String KAFKA_PUBLISHER_SUFFIX = "/sec/kafka";
+    private static final String DASHBOARD_SINK_SUFFIX = "/sec/dashboard_sink";
 
     private ContextModel contextModel;
     private IdMapper idMapper;
@@ -195,7 +196,17 @@ public class KpiPipelineBuilder {
         PipelineModificationMessage message = Operations.validatePipeline(pipeline, true);
 
         action = new KpiPublisherGenerator(modifyPipeline(pipeline.getActions().get(0), message), getKpiPublisherSettings()).makeInvocationGraph();
-        pipeline.setActions(Arrays.asList(action));
+
+        SecInvocation dashboardSink = new SecInvocation(KpiPipelineBuilderUtils.getSec(DASHBOARD_SINK_SUFFIX).get());
+        dashboardSink.setConnectedTo(Arrays.asList(connectedTo.getDOM()));
+        dashboardSink.setDOM(getUUID());
+        pipeline.setActions(Arrays.asList(action, dashboardSink));
+
+        message = Operations.validatePipeline(pipeline, true);
+
+        dashboardSink = modifyPipeline(dashboardSink, message);
+
+        pipeline.setActions(Arrays.asList(action, dashboardSink));
     }
 
     private SepaInvocation modifyPipeline(SepaInvocation sepaInvocation, PipelineModificationMessage message) {
