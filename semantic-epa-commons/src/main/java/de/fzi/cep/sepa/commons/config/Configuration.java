@@ -1,13 +1,6 @@
 package de.fzi.cep.sepa.commons.config;
 
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
+import de.fzi.cep.sepa.commons.Utils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.openrdf.rio.RDFFormat;
@@ -17,7 +10,13 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
 
-import de.fzi.cep.sepa.commons.Utils;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Configuration objects containing loads all properties from a file
@@ -58,7 +57,7 @@ public class Configuration {
 	public String ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
 	public  String SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 	
-	public String CONTEXT_PATH = "/semantic-builder-backend";
+	public String CONTEXT_PATH = "/semantic-epa-backend";
 	
 	public String KAFKA_HOST;
 	public String KAFKA_PROTOCOL;
@@ -197,7 +196,7 @@ public class Configuration {
 					ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
 					SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 					
-					CONTEXT_PATH = "/semantic-builder-backend";
+					CONTEXT_PATH = "/semantic-epa-backend";
 					
 					KAFKA_HOST = Utils.getHostname();
 					KAFKA_PROTOCOL = "http";

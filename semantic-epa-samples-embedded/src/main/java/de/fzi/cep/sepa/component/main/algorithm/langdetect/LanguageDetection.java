@@ -1,16 +1,15 @@
 package de.fzi.cep.sepa.component.main.algorithm.langdetect;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
-
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 
@@ -21,7 +20,7 @@ public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 	
 	public LanguageDetection() {
 		 try {
-			DetectorFactory.loadProfile("C:\\workspace\\semantic-builder-parent\\semantic-builder-algorithms-samples\\src\\main\\resources\\profiles");
+			DetectorFactory.loadProfile("C:\\workspace\\semantic-epa-parent\\semantic-epa-algorithms-samples\\src\\main\\resources\\profiles");
 			
 			mappingPropertyNames = new HashMap<>();
 		} catch (LangDetectException e) {

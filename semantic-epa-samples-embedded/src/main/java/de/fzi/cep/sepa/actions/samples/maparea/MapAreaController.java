@@ -1,14 +1,9 @@
 package de.fzi.cep.sepa.actions.samples.maparea;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.component.config.Config;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -19,6 +14,10 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapAreaController extends ActionController {
 
@@ -47,7 +46,7 @@ public class MapAreaController extends ActionController {
 	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maparea", "Map area view", "", "");
-		sec.setIconUrl("http://localhost:8080/semantic-builder-backend/img" + "/Map_Icon_HQ.png");
+		sec.setIconUrl("http://localhost:8080/semantic-epa-backend/img" + "/Map_Icon_HQ.png");
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = new EventPropertyPrimitive(Utils.createURI("http://test.de/latitude"));

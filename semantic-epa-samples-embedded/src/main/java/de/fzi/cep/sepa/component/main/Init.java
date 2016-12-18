@@ -25,7 +25,7 @@ package de.fzi.cep.sepa.component.main;
 //
 //	@Override
 //	protected String contextPath() {
-//		return "/semantic-builder-samples-embedded";
+//		return "/semantic-epa-samples-embedded";
 //	}
 
 	

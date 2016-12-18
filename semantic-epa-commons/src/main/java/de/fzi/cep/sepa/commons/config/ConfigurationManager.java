@@ -125,7 +125,7 @@ public class ConfigurationManager {
 		properties.put("algorithm_port", "8092");
 		properties.put("sources_port", "8089");
 		properties.put("webapp_port", "8030");
-		properties.put("context_path", "/semantic-builder-backend");
+		properties.put("context_path", "/semantic-epa-backend");
 		
 		properties.put("appConfig", settings.getAppConfig());
 		

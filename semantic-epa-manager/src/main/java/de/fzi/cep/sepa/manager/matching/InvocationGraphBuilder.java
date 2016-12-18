@@ -87,7 +87,7 @@ public class InvocationGraphBuilder {
                     .get(getIndex(t))
                     .setEventSchema(getInputSchema(source, getIndex(t)));
 
-            t.setUri(t.getBelongsTo() + "/" + pipelineId + "-" + inputGrounding.getTransportProtocol().getTopicName());
+            t.setUri(t.getBelongsTo() + "/" + pipelineId + "-" + inputGrounding.getTransportProtocol().getTopicName() +"-" +t.getName().replaceAll(" ", "").toLowerCase());
             t.setCorrespondingPipeline(pipelineId);
 
             configure(t, getConnections(t));

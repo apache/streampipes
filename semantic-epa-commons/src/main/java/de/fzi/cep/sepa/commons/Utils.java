@@ -1,5 +1,12 @@
 package de.fzi.cep.sepa.commons;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
+import org.apache.commons.lang.RandomStringUtils;
+import org.openrdf.model.Graph;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
+
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -7,14 +14,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang.RandomStringUtils;
-import org.openrdf.model.Graph;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-
-import de.fzi.cep.sepa.commons.config.Configuration;
 
 public class Utils {
 
@@ -25,7 +24,7 @@ public class Utils {
 
 	static {
 		SERVER_URL = "http://anemone06.fzi.de";
-		CONTEXT_PATH = "/semantic-builder-backend";
+		CONTEXT_PATH = "/semantic-epa-backend";
 		PORT = 8080;
 		IMG_DIR = "img";
 
