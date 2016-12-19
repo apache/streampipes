@@ -4,7 +4,11 @@ public class BinaryOperation extends Operation {
 
 	protected Operation left;
 	protected Operation right;
-	
+
+	public BinaryOperation() {
+
+	}
+
 	protected ArithmeticOperationType arithmeticOperationType;
 	
 	
