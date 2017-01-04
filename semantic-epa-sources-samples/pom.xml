@@ -73,7 +73,7 @@
         <dependency>
             <groupId>de.fzi.cep.sepa.adapter</groupId>
             <artifactId>streampipes-adapter-kd2</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.sdk.StaticProperties;
@@ -78,12 +79,27 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
         staticProperties.add(timestampMapping);
         staticProperties.add(machineTypeMapping);
 
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient (sigma_f)", ""));
-        staticProperties.add(StaticProperties.doubleFreeTextProperty(frictionCoefficientStdDev, "Friction Coefficient standard deviation", ""));
-        staticProperties.add(StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier delta_cx: gamma = delta_cx * sigma_f", ""));
+        //TODO remove TODOs for
+        FreeTextStaticProperty nominal = StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient (sigma_f)", "");
+        nominal.setValue("TODO");
+        staticProperties.add(nominal);
 
-        staticProperties.add(StaticProperties.integerFreeTextProperty(degradationRateBase, "Degradation Rate Base (Power)", ""));
-        staticProperties.add(StaticProperties.integerFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", ""));
+        FreeTextStaticProperty coefficientStdDev = StaticProperties.doubleFreeTextProperty(frictionCoefficientStdDev, "Friction Coefficient standard deviation", "");
+        coefficientStdDev.setValue("TODO");
+        staticProperties.add(coefficientStdDev);
+
+        FreeTextStaticProperty coefficientStdDevMultiplier = StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier delta_cx: gamma = delta_cx * sigma_f", "");
+        coefficientStdDevMultiplier.setValue("TODO");
+        staticProperties.add(coefficientStdDevMultiplier);
+
+        FreeTextStaticProperty rateBase = StaticProperties.integerFreeTextProperty(degradationRateBase, "Degradation Rate Base (Power)", "");
+        rateBase.setValue("TODO");
+        staticProperties.add(rateBase);
+
+        FreeTextStaticProperty rateDivider = StaticProperties.integerFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", "");
+        rateDivider.setValue("TODO");
+        staticProperties.add(rateDivider);
+
 
         desc.setStaticProperties(staticProperties);
 
