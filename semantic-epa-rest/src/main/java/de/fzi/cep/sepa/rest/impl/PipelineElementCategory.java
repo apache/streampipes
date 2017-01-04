@@ -26,7 +26,7 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	}
 
 	@GET
-	@Path("/builder")
+	@Path("/epa")
 	@Produces("application/json")
 	@Override
 	public Response getEpaCategories() {
