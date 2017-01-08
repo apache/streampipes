@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
+import de.fzi.cep.sepa.model.impl.staticproperty.*;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.sdk.StaticProperties;
@@ -15,9 +16,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 
@@ -56,7 +54,10 @@ public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFa
         MappingProperty frictionValueMapping = new MappingPropertyUnary(URI.create(healthIndexRequirement.getElementId()), healthIndexMappingName, "Health Index Mapping", "The field containing health index values.");
 
         staticProperties.add(frictionValueMapping);
-        staticProperties.add(StaticProperties.integerFreeTextProperty(mtbf, "MTBF (years)", ""));
+        FreeTextStaticProperty mtbfSp = StaticProperties.integerFreeTextProperty(mtbf, "MTBF (years)", "");
+        mtbfSp.setValue("20");
+        mtbfSp.setValueSpecification(new PropertyValueSpecification(1, 50, 1));
+        staticProperties.add(mtbfSp);
 
         desc.setStaticProperties(staticProperties);
 
