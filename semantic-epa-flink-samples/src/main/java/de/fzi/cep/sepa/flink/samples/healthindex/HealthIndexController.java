@@ -5,10 +5,6 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.sdk.helpers.EpProperties;
-import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
-import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -16,11 +12,13 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.*;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.MhWirth;
+import de.fzi.cep.sepa.model.vocabulary.SO;
+import de.fzi.cep.sepa.sdk.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
         EventProperty frictionPropertyRequirement = EpRequirements.domainPropertyReq(MhWirth.FrictionValue);
         EventProperty timestampRequirement = EpRequirements.domainPropertyReq("http://schema.org/DateTime");
-        EventProperty machineTypeRequirement = EpRequirements.stringReq();
+        EventProperty machineTypeRequirement = EpRequirements.domainPropertyReq(SO.Text);
 
         eventProperties.add(EpRequirements.domainPropertyReq(MhWirth.Stddev));
         eventProperties.add(frictionPropertyRequirement);
@@ -81,23 +79,26 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
         //TODO remove TODOs for
         FreeTextStaticProperty nominal = StaticProperties.doubleFreeTextProperty(frictionCoefficientNominal, "Nominal Friction Coefficient (sigma_f)", "");
-        nominal.setValue("TODO");
+        nominal.setValue("0.018200901668492");
         staticProperties.add(nominal);
 
         FreeTextStaticProperty coefficientStdDev = StaticProperties.doubleFreeTextProperty(frictionCoefficientStdDev, "Friction Coefficient standard deviation", "");
-        coefficientStdDev.setValue("TODO");
+        coefficientStdDev.setValue("0.006994978");
         staticProperties.add(coefficientStdDev);
 
         FreeTextStaticProperty coefficientStdDevMultiplier = StaticProperties.integerFreeTextProperty(frictionCoefficientStdDevMultiplier, "Multiplier delta_cx: gamma = delta_cx * sigma_f", "");
-        coefficientStdDevMultiplier.setValue("TODO");
+        coefficientStdDevMultiplier.setValue("10");
+        coefficientStdDevMultiplier.setValueSpecification(new PropertyValueSpecification(1, 100, 1));
         staticProperties.add(coefficientStdDevMultiplier);
 
         FreeTextStaticProperty rateBase = StaticProperties.integerFreeTextProperty(degradationRateBase, "Degradation Rate Base (Power)", "");
-        rateBase.setValue("TODO");
+        rateBase.setValue("10");
+        rateBase.setValueSpecification(new PropertyValueSpecification(1, 100, 1));
         staticProperties.add(rateBase);
 
         FreeTextStaticProperty rateDivider = StaticProperties.integerFreeTextProperty(degradationRateDivider, "Degradation Rate Divider", "");
-        rateDivider.setValue("TODO");
+        rateDivider.setValue("100");
+        rateDivider.setValueSpecification(new PropertyValueSpecification(5, 100, 5));
         staticProperties.add(rateDivider);
 
 
