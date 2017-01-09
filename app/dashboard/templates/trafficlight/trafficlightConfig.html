@@ -1,6 +1,6 @@
 <div flex="80"><h3>Select Value</h3>
     <md-select ng-model="wid.schema.selectedNumberProperty">
-        <md-option ng-value="prop" ng-repeat="prop in wid.schema.eventProperties | soNumber">{{
+        <md-option ng-value="prop" ng-repeat="prop in wid.schema.eventProperties | numberFilter">{{
             prop.properties.runtimeName
             }}
         </md-option>
