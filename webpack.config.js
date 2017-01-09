@@ -11,7 +11,7 @@ var path = require('path');
 let config = {
 	context: path.join(__dirname, 'app'),
 	entry: 
-		'./app.module.js',
+	'./app.module.js',
 	output: {
 		path: path.resolve(__dirname),
 		filename: 'bundle.js'
@@ -55,11 +55,15 @@ let config = {
 				target: 'http://localhost:5984',
 				secure: false
 			},
-
 			'/pipeline': {
 				target: 'http://localhost:5984',
 				secure: false
-			}
+			},
+			'/streampipes/ws' : {
+					target: 'ws://ipe-koi15.fzi.de:61614',
+					ws: true,
+					secure: false
+				}
 		}
 		//inline: true
 	},
@@ -74,11 +78,11 @@ let config = {
 			"window.jQuery": "jquery"
 		})
 		,new webpack.HotModuleReplacementPlugin()
-		//new webpack.optimize.UglifyJsPlugin({
-				//compress: {
-								//warnings: false
-						//}
-		//})
+	//new webpack.optimize.UglifyJsPlugin({
+	//compress: {
+	//warnings: false
+	//}
+	//})
 	]
 };
 
