@@ -53,6 +53,7 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 
 	.filter('soNumber', soFilter.soNumber)
 	.filter('soDateTime', soFilter.soDateTime)
+	.filter('numberFilter', soFilter.nu)
 
 	.directive('spNumberWidget', spNumberWidget)
 	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
