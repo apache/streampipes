@@ -48,9 +48,9 @@ export default function SocketConnectionDataModel(WidgetDataModel, $http) {
 	SocketConnectionDataModel.prototype.destroy = function () {
 		WidgetDataModel.prototype.destroy.call(this);
 
-		self.client.disconnect(function() {
+		this.client.disconnect(function() {
 			console.log("Disconnected websocket connection");
-		})
+		});
 	};
 
 
