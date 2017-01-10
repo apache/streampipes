@@ -59,6 +59,12 @@ let config = {
 			'/pipeline': {
 				target: 'http://localhost:5984',
 				secure: false
+			},
+
+			'/streampipes/ws' : {
+				target: 'ws://ipe-koi15.fzi.de:61614',
+				ws: true,
+				secure: false
 			}
 		}
 		//inline: true
