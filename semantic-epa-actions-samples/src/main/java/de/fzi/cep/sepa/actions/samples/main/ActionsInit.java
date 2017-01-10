@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.actions.samples.main;
 
+import de.fzi.cep.sepa.actions.alarm.AlarmLightController;
 import de.fzi.cep.sepa.actions.dashboard.DashboardController;
 import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
@@ -38,8 +39,8 @@ public class ActionsInit extends StandaloneModelSubmitter {
 		.add(new CouchDbController())
         //.add(new NumberController())
         //.add(new VerticalBarController())
-		.add(new DashboardController());
-        //.add(new AlarmLightController());
+		.add(new DashboardController())
+        .add(new AlarmLightController());
 		//.add(new HistogramController())
 
         DeclarersSingleton.getInstance().setPort(8091);
