@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 public class CsvPublisher implements Runnable {
 	
@@ -91,7 +93,7 @@ public class CsvPublisher implements Runnable {
 	{
 		StringBuilder json = new StringBuilder();
 		json.append("{");
-		
+
 		for(String key : rowContent.keySet())
 		{
 			json.append(parse(key, rowContent.get(key)));	

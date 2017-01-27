@@ -346,6 +346,7 @@
         <module>semantic-epa-messaging-jms</module>
         <module>semantic-epa-sources-kd2</module>
         <module>semantic-epa-sdk</module>
+        <module>semantic-epa-sources-mnist</module>
     </modules>
 
     <!-- Build Settings -->
