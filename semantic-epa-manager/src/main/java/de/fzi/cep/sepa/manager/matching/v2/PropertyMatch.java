@@ -1,13 +1,13 @@
 package de.fzi.cep.sepa.manager.matching.v2;
 
-import java.util.List;
-
 import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 import de.fzi.cep.sepa.model.client.matching.MatchingResultType;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+
+import java.util.List;
 
 public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty> {
 
@@ -40,7 +40,7 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
 	}
 
 	private boolean isList(EventProperty requirement) {
-		return requirement instanceof EventPropertyPrimitive;
+		return requirement instanceof EventPropertyList;
 	}
 	
 	private boolean isNested(EventProperty requirement) {

@@ -1,11 +1,11 @@
 package de.fzi.cep.sepa.manager.matching.v2;
 
-import java.util.List;
-
 import de.fzi.cep.sepa.manager.matching.v2.utils.MatchingUtils;
 import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 import de.fzi.cep.sepa.model.client.matching.MatchingResultType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
+
+import java.util.List;
 
 public class SchemaMatch extends AbstractMatcher<EventSchema, EventSchema>{
 
@@ -22,7 +22,7 @@ public class SchemaMatch extends AbstractMatcher<EventSchema, EventSchema>{
 						.getEventProperties()
 						.stream()
 						.anyMatch(of -> new PropertyMatch().match(of, req, errorLog)));
-		if (!matches) buildErrorMessage(errorLog, builtText(requirement));
+		//if (!matches) buildErrorMessage(errorLog, builtText(requirement));
 		return matches;
 		
 	}

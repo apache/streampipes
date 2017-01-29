@@ -1,14 +1,61 @@
 package de.fzi.cep.sepa.sdk.helpers;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.eventproperty.QuantitativeValue;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sdk.utils.Datatypes;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EpProperties {
+
+	public static EventPropertyNested nestedEp(String runtimeName, EventPropertyPrimitive...
+					eventProperties) {
+		EventPropertyNested nestedProperty = new EventPropertyNested(runtimeName);
+		nestedProperty.setEventProperties(new ArrayList<>(Arrays.asList(eventProperties)));
+		return nestedProperty;
+	}
+
+	public EventPropertyList listNestedEp(String runtimeName, EventPropertyPrimitive...
+					nestedProperties) {
+		EventPropertyList list = new EventPropertyList();
+		list.setRuntimeName(runtimeName);
+
+		EventPropertyNested nested = new EventPropertyNested();
+		nested.setEventProperties(Arrays.asList(nestedProperties));
+		list.setEventProperties(Arrays.asList(nested));
+
+		return list;
+	}
+
+	public static EventPropertyList listIntegerEp(String runtimeName, String domainProperty) {
+		return listEp(runtimeName, Datatypes.Integer, domainProperty);
+	}
+
+	public static EventPropertyList listDoubleEp(String runtimeName, String domainProperty) {
+		return listEp(runtimeName, Datatypes.Double, domainProperty);
+	}
+
+	public static EventPropertyList listStringEp(String runtimeName, String domainProperty) {
+		return listEp(runtimeName, Datatypes.String, domainProperty);
+	}
+
+	public static EventPropertyList listBooleanEp(String runtimeName, String domainProperty) {
+		return listEp(runtimeName, Datatypes.Boolean, domainProperty);
+	}
+
+	public static EventPropertyList listEp(String runtimeName, Datatypes runtimeType, String
+					domainProperty) {
+		return new EventPropertyList(runtimeName, ep(runtimeType.toString(),
+						runtimeName,
+						domainProperty));
+	}
 
 	public static EventPropertyPrimitive booleanEp(String runtimeName, String domainProperty)
 	{

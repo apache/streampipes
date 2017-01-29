@@ -1,10 +1,10 @@
 package de.fzi.cep.sepa.model.impl.output;
 
-import javax.persistence.Entity;
-
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
+
+import javax.persistence.Entity;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -24,6 +24,11 @@ public class ListOutputStrategy extends OutputStrategy {
 	public ListOutputStrategy(ListOutputStrategy other) {
 		super(other);
 		this.propertyName = other.getPropertyName();
+	}
+
+	public  ListOutputStrategy(String propertyName) {
+		super();
+		this.propertyName = propertyName;
 	}
 
 	public String getPropertyName() {

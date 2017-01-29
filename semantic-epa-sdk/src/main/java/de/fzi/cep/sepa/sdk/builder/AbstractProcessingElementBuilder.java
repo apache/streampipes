@@ -1,13 +1,22 @@
 package de.fzi.cep.sepa.sdk.builder;
 
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,12 +30,15 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     protected List<EventProperty> stream1Properties;
     protected List<EventProperty> stream2Properties;
 
+    protected EventGrounding supportedGrounding;
+
     protected AbstractProcessingElementBuilder(String id, String label, String description, T element) {
         super(id, label, description, element);
         this.streamRequirements = new ArrayList<>();
         this.staticProperties = new ArrayList<>();
         this.stream1Properties = new ArrayList<>();
         this.stream2Properties = new ArrayList<>();
+        this.supportedGrounding = new EventGrounding();
     }
 
     public BU requiredStream(EventStream stream) {
@@ -126,6 +138,16 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU supportedFormats(TransportFormat... format) {
+        this.supportedGrounding.setTransportFormats(Arrays.asList(format));
+        return me();
+    }
+
+    public BU supportedProtocols(TransportProtocol... protocol) {
+        this.supportedGrounding.setTransportProtocols(Arrays.asList(protocol));
+        return me();
+    }
+
     private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {
         return new FreeTextStaticProperty(internalId,
                 label,
@@ -137,6 +159,23 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     @Override
     public void prepareBuild() {
         this.elementDescription.setStaticProperties(staticProperties);
+
+        if (stream1Properties.size() > 0) {
+            this.streamRequirements.add(buildStream(stream1Properties));
+        }
+
+        if (stream2Properties.size() > 0) {
+            this.streamRequirements.add(buildStream(stream2Properties));
+        }
+
+        this.elementDescription.setSupportedGrounding(supportedGrounding);
         this.elementDescription.setEventStreams(streamRequirements);
+
+    }
+
+    private EventStream buildStream(List<EventProperty> streamProperties) {
+        EventStream stream = new EventStream();
+        stream.setEventSchema(new EventSchema(streamProperties));
+        return stream;
     }
 }
