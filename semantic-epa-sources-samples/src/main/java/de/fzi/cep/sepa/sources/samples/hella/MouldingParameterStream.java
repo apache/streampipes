@@ -16,11 +16,11 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
-import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.LineParser;
-import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
+import de.fzi.cep.sepa.sources.samples.adapter.CsvPublisher;
+import de.fzi.cep.sepa.sources.samples.adapter.CsvReadingTask;
+import de.fzi.cep.sepa.sources.samples.adapter.FolderReadingTask;
+import de.fzi.cep.sepa.sources.samples.adapter.LineParser;
+import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.hella.parser.MouldingParametersParser;
 
 public class MouldingParameterStream extends AbstractHellaStream {

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fzi.cep.sepa.sources.samples.csv.LineParser;
+import de.fzi.cep.sepa.sources.samples.adapter.LineParser;
 import de.fzi.cep.sepa.sources.samples.hella.HellaVariables;
 
 public class DustLineParser implements LineParser {

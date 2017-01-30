@@ -4,10 +4,13 @@ import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MLDataProducer implements SemanticEventProducerDeclarer {
+
+    private static String dataFolder = System.getProperty("user.home") + File.separator +"Coding" +File.separator +"data" +File.separator +"semmnist" + File.separator;
 
     @Override
     public SepDescription declareModel() {
@@ -20,6 +23,9 @@ public class MLDataProducer implements SemanticEventProducerDeclarer {
 
         List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
         streams.add(new MnistStream());
+
+        // TODO add here a stream per file folder
+
         return streams;
     }
 }

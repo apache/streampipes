@@ -13,7 +13,7 @@ import java.util.Optional;
 import com.google.gson.JsonObject;
 
 import de.fzi.cep.sepa.messaging.EventProducer;
-import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
+import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.util.Utils;
 
 public class TaxiStreamGenerator implements Runnable {
