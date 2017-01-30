@@ -10,24 +10,26 @@ import de.fzi.cep.sepa.flink.samples.file.FileSinkController;
 import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.healthindex.HealthIndexController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
+import de.fzi.cep.sepa.flink.samples.statistics.StatisticsSummaryController;
 import de.fzi.cep.sepa.flink.samples.timetofailure.TimeToFailureController;
 
 public class FlinkInit extends StandaloneModelSubmitter {
 
-    public static void main(String[] args) {
-        DeclarersSingleton.getInstance()
-                //.add(new WordCountController())
-                .add(new ElasticSearchController())
-                .add(new NumberClassificationController())
-                .add(new TimestampController())
-                .add(new FieldHasherController())
-                .add(new FieldRenamerController())
-                .add(new HealthIndexController())
-                .add(new TimeToFailureController())
-                .add(new FileSinkController());
+  public static void main(String[] args) {
+    DeclarersSingleton.getInstance()
+            //.add(new WordCountController())
+            .add(new ElasticSearchController())
+            .add(new NumberClassificationController())
+            .add(new TimestampController())
+            .add(new FieldHasherController())
+            .add(new FieldRenamerController())
+            .add(new HealthIndexController())
+            .add(new TimeToFailureController())
+            .add(new FileSinkController())
+            .add(new StatisticsSummaryController());
 
-        DeclarersSingleton.getInstance().setPort(8094);
-        new FlinkInit().init();
-    }
+    DeclarersSingleton.getInstance().setPort(8094);
+    new FlinkInit().init();
+  }
 
 }

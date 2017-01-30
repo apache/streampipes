@@ -1,17 +1,27 @@
 package de.fzi.cep.sepa.sdk.helpers;
 
 import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sdk.utils.Datatypes;
 
 public class EpRequirements {
+
+	public static EventPropertyList listRequirement(Datatypes datatype) {
+		return new EventPropertyList("", datatypeReq(datatype));
+	}
 
 	public static EventPropertyPrimitive datatypeReq(String datatype)
 	{
 		EventPropertyPrimitive ep = new EventPropertyPrimitive();
 		ep.setRuntimeType(datatype);
 		return ep;
+	}
+
+	public static EventPropertyPrimitive datatypeReq(Datatypes datatype) {
+		return datatypeReq(datatype.toString());
 	}
 	
 	public static EventPropertyPrimitive booleanReq()

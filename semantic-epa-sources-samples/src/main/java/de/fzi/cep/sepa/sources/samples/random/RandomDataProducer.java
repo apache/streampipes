@@ -1,11 +1,11 @@
 package de.fzi.cep.sepa.sources.samples.random;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RandomDataProducer implements SemanticEventProducerDeclarer {
 	
@@ -23,6 +23,7 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 		
 		//streams.add(new RandomTextStream());
 		streams.add(new RandomNumberStreamJson());
+		streams.add(new RandomNumberStreamList());
 		//streams.add(new RandomNumberStreamThrift());
 		//streams.add(new NestedListRandomNumberStream());
 		//streams.add(new NestedRandomNumberStream());
