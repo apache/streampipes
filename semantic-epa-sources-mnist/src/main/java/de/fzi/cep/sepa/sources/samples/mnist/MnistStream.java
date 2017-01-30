@@ -95,7 +95,6 @@ public class MnistStream implements EventStreamDeclarer {
 //        EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 //
 //        // TODO implement Line Parser
-//        LineParser mnistLineParser = new MnistParser();
 //       	CsvReadingTask csvReadingTask = new CsvReadingTask(getReadingTasks(), ",", "variable_timestamp", mnistLineParser, true);
 //
 //		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));

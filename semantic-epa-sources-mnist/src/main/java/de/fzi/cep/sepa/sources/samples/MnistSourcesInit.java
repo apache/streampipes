@@ -10,7 +10,7 @@ public class MnistSourcesInit extends StandaloneModelSubmitter {
 
         DeclarersSingleton.getInstance()
                 .add(new MLDataProducer());
-        DeclarersSingleton.getInstance().setPort(8089);
+        DeclarersSingleton.getInstance().setPort(8078);
 
         new MnistSourcesInit().init();
     }
