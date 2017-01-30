@@ -1,7 +1,8 @@
-package de.fzi.cep.sepa.sources.samples.mnist;
+package de.fzi.cep.sepa.sources.samples;
 
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
+import de.fzi.cep.sepa.sources.samples.mnist.MLDataProducer;
 
 public class MnistSourcesInit extends StandaloneModelSubmitter {
 

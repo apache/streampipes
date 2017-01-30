@@ -11,30 +11,40 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sdk.builder.DataStreamBuilder;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.Groundings;
+import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReader;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReaderSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReplayTask;
 import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MnistStream implements EventStreamDeclarer {
+    static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
+
 
     private static String topic = "de.fzi.cep.sep.mnist";
     private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
     private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
-    private static String dataFolder = System.getProperty("user.home") + File.separator +"Coding" +File.separator +
-            "data" +File.separator +"semmnist" +File.separator + "mnist_10"+File.separator + "mnist_10.csv";
+
+    private String dataFolder;
 
     private boolean isExecutable = false;
+    private String name = "mnist";
+
 
     public MnistStream() {
         topic += ".stream";
     }
 
-    public MnistStream(String folderName) {
-        topic += folderName;
+    public MnistStream(String rootFolder, String folderName) {
+        topic += "." + folderName;
+        name = folderName;
+        dataFolder = rootFolder + folderName + File.separator;
         isExecutable = true;
     }
 
@@ -46,7 +56,7 @@ public class MnistStream implements EventStreamDeclarer {
         EventProperty image = new EventPropertyList("image", ep1);
 
         EventStream stream = DataStreamBuilder
-                .create("mnist", "mnist", "Produces a replay of the mnist dataset")
+                .create(name, name, "Produces a replay of the mnist dataset")
                 .format(Groundings.jsonFormat())
                 .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
                 .property(EpProperties.integerEp("label", "http://de.fzi.cep.label"))
@@ -60,17 +70,25 @@ public class MnistStream implements EventStreamDeclarer {
     @Override
     public void executeStream() {
 
-        // TODO
-        List<File> allFiles = new ArrayList<>();
-        allFiles.add(new File(dataFolder));
+        if (isExecutable) {
 
-        CsvReaderSettings csvReaderSettings = new CsvReaderSettings(allFiles, ",", 0, false);
+            File[] allFiles = new File(dataFolder).listFiles();
+            if (allFiles.length > 0) {
 
-        EventProducer producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 
-        CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new MnistLineTransformer());
+                CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-        csvReplayTask.run();
+                EventProducer producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+
+                CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new MnistLineTransformer());
+
+                csvReplayTask.run();
+            } else {
+                LOG.error("The Folder: " + dataFolder + " is empty");
+            }
+        } else {
+            LOG.error("The SEP MnistStream is not executable");
+        }
 
 
 //        System.out.println("Execute Mnist");

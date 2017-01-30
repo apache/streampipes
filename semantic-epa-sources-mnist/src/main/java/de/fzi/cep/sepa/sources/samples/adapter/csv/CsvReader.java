@@ -64,6 +64,7 @@ public class CsvReader {
 
                     producer.publish(jsonTransformer.transform(data));
 
+                    counter ++;
                     if (counter % 1000 == 0) LOG.info(counter + " Events sent.");
                 }
             } catch (IOException e) {
