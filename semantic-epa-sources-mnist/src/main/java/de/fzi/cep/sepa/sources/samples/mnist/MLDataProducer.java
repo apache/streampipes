@@ -16,8 +16,11 @@ public class MLDataProducer implements SemanticEventProducerDeclarer {
 
     static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
 
-    public static String dataFolder =System.getProperty("user.home") + File.separator +".streampipes" +
-            File.separator +"sources" + File.separator +"data" + File.separator +"mnist" + File.separator;
+//    public static String dataFolder =System.getProperty("user.home") + File.separator +".streampipes" +
+//            File.separator +"sources" + File.separator +"data" + File.separator +"mnist" + File.separator;
+
+    public static String dataFolder = ClientConfiguration.INSTANCE.getMnistDatalocation();
+
 
 //    private static String dataFolder = System.getProperty("user.home") + File.separator +"Coding" +File.separator +
 //            "data" +File.separator +"semmnist" + File.separator;
@@ -43,7 +46,7 @@ public class MLDataProducer implements SemanticEventProducerDeclarer {
                 }
             }
         } else {
-            LOG.info("There is no replay data for a MNIST stream");
+            LOG.info("There is no replay data for a MNIST stream. Route of the data folder: " + dataFolder);
         }
 
 

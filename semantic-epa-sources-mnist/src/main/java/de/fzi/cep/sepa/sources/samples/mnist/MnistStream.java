@@ -27,10 +27,10 @@ public class MnistStream implements EventStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
 
 
-    private static String topic = "de.fzi.cep.sep.mnist";
     private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
     private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
 
+    private String topic = "de.fzi.cep.sep.mnist";
     private String dataFolder;
 
     private boolean isExecutable = false;
@@ -82,7 +82,9 @@ public class MnistStream implements EventStreamDeclarer {
 
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new MnistLineTransformer());
 
-                csvReplayTask.run();
+                Thread thread = new Thread(csvReplayTask);
+                thread.start();
+
             } else {
                 LOG.error("The Folder: " + dataFolder + " is empty");
             }
