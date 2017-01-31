@@ -21,7 +21,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected B params;
+	private B params;
 	
 	
 	public FlinkSepaRuntime(B params)
@@ -97,5 +97,12 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 	private String getKafkaUrl() {
 		return String.valueOf(getProperties().get("bootstrap.servers"));
 	}
-	
+
+	public B getParams() {
+		return params;
+	}
+
+	public void setParams(B params) {
+		this.params = params;
+	}
 }
