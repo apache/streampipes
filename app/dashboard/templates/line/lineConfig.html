@@ -1,7 +1,8 @@
 <h3>Select time mapping</h3>
 <md-input-container class="md-block" flex-gt-sm>
 	<md-select ng-model="wid.schema.config.selectedTimestampMapping">
-		<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties | soDateTime">{{ time.properties.runtimeName }}</md-option>
+		<!--<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties | soDateTime">{{ time.properties.runtimeName }}</md-option>-->
+		<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties ">{{ time.properties.runtimeName }}</md-option>
 	</md-select>
 </md-input-container>
 

@@ -2,7 +2,7 @@ function filter(soType) {
 	return function(eventProperties) {
 		var result = [];
 		angular.forEach(eventProperties, function(eventProperty) {
-			if (eventProperty.properties.domainProperties.indexOf(soType) > -1) {
+			if (eventProperty.properties.domainProperties && eventProperty.properties.domainProperties.indexOf(soType) > -1) {
 				result.push(eventProperty)
 			}
 		});
@@ -16,15 +16,15 @@ function nu() {
 return function(eventProperties) {
 		var result = [];
 		angular.forEach(eventProperties, function(eventProperty) {
-			if (eventProperty.properties.runtimeType.indexOf('http://www.w3.org/2001/XMLSchema#float') > -1) {
+			if (eventProperty.properties == 'http://www.w3.org/2001/XMLSchema#float') {
 				result.push(eventProperty)
 			}
-			else if (eventProperty.properties.runtimeType.indexOf('http://www.w3.org/2001/XMLSchema#integer') > -1) {
+			else if (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#integer') {
 				result.push(eventProperty)
 			}
-			else if (eventProperty.properties.runtimeType.indexOf('http://www.w3.org/2001/XMLSchema#double') > -1) {
+			else if (eventProperty.properties.runtimeType == 'http://www.w3.org/2001/XMLSchema#double') {
 				result.push(eventProperty)
-			} else if (eventProperty.properties.domainProperties.indexOf('http://schema.org/Number') > -1) {
+			} else if (eventProperty.properties.domainProperties && eventProperty.properties.domainProperties.indexOf('http://schema.org/Number') > -1) {
 				result.push(eventProperty)
 			}
 		});
