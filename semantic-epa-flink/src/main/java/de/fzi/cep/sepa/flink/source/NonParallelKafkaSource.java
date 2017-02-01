@@ -6,6 +6,7 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by riemer on 01.10.2016.
@@ -23,7 +24,8 @@ public class NonParallelKafkaSource implements SourceFunction<String>, EventList
         this.kafkaUrl = kafkaUrl;
         this.topic = topic;
         this.kafkaConsumer = openConsumer();
-        this.queue = new ArrayBlockingQueue<>(1000);
+//        this.queue = new ArrayBlockingQueue<>(1000);
+        this.queue = new LinkedBlockingQueue<>();
     }
 
     private StreamPipesKafkaConsumer openConsumer() {
@@ -39,7 +41,6 @@ public class NonParallelKafkaSource implements SourceFunction<String>, EventList
 
         while (isRunning) {
             if (!queue.isEmpty()) {
-                System.out.println("collect");
                 sourceContext.collect(queue.poll());
             }
         }
