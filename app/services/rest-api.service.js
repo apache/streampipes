@@ -366,7 +366,7 @@ export default function restApi($rootScope, $http, apiConstants) {
 	}
 
 	restApi.getDomainKnowledgeItems = function(query) {
-		return $http.post(urlBase() + "/autocomplete/domain", query);
+		return $http.post(getServerUrl() + "/autocomplete/domain", query);
 	};
 
 
