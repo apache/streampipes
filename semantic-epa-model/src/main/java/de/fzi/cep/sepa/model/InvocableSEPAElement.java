@@ -1,17 +1,18 @@
 package de.fzi.cep.sepa.model;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import de.fzi.cep.sepa.model.impl.ElementStatusInfoSettings;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-
-import com.clarkparsia.empire.annotation.RdfProperty;
-
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.util.Cloner;
+import javax.persistence.OneToOne;
 
 public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
@@ -29,6 +30,11 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 	
 	@RdfProperty("sepa:belongsTo")
 	protected String belongsTo;
+
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@RdfProperty("sepa:statusInfoSettings")
+	protected ElementStatusInfoSettings statusInfoSettings;
 
 	protected EventGrounding supportedGrounding;
 	
@@ -120,5 +126,13 @@ public abstract class InvocableSEPAElement extends NamedSEPAElement {
 
 	public void setConfigured(boolean configured) {
 		this.configured = configured;
+	}
+
+	public ElementStatusInfoSettings getStatusInfoSettings() {
+		return statusInfoSettings;
+	}
+
+	public void setStatusInfoSettings(ElementStatusInfoSettings statusInfoSettings) {
+		this.statusInfoSettings = statusInfoSettings;
 	}
 }
