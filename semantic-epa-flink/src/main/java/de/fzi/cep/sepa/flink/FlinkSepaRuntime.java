@@ -21,7 +21,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private B params;
+	protected B params;
 	
 	
 	public FlinkSepaRuntime(B params)
