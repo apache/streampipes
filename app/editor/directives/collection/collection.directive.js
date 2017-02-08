@@ -9,7 +9,7 @@ export default function collectionStaticProperty() {
             staticProperty: "="
         },
         link: function (scope) {
-
+            
             scope.addMember = function(sp) {
                 sp.properties.members.push(angular.copy(sp.properties.members[0]));
             }

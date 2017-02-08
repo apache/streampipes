@@ -76,7 +76,8 @@ let config = {
             jQuery: "jquery",
             "window.jQuery": "jquery"
         })
-        , new webpack.HotModuleReplacementPlugin()
+        , new webpack.HotModuleReplacementPlugin(),
+        new webpack.OldWatchingPlugin()
         //new webpack.optimize.UglifyJsPlugin({
         //compress: {
         //warnings: false

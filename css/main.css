@@ -17,6 +17,15 @@ body {
 	background-attachment: fixed;	
 }
 
+.letter-circle {
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	color: #ffffff;
+	text-align: center;
+
+	font: 16px Arial, sans-serif;
+}
 
 .tutorial-image {
 	float:left;
