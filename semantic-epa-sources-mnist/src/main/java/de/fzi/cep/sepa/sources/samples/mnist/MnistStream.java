@@ -73,7 +73,7 @@ public class MnistStream implements EventStreamDeclarer {
         if (isExecutable) {
 
             File[] allFiles = new File(dataFolder).listFiles();
-            if (allFiles.length > 0) {
+            if (allFiles != null && allFiles.length > 0) {
 
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);

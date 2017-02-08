@@ -70,26 +70,32 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 			// TODO find a better solution
 			// The loop waits until the job is deployed
 			// When the deployment takes longer then 60 seconds it returns false
-			FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
-			boolean isDeployed = false;
-			int count = 0;
-			do {
-				try {
-					count++;
-					Thread.sleep(1000);
-					JobID l = ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId());
-					isDeployed = true;
+			// This check is not needed when the execution environment is st to local
+			if (!debug) {
+				FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());
+				boolean isDeployed = false;
+				int count = 0;
+				do {
+					try {
+						count++;
+						Thread.sleep(1000);
+						JobID l = ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId());
+						isDeployed = true;
 
-				} catch (Exception e) {
+					} catch (Exception e) {
 
+					}
+				} while (!isDeployed && count < 60);
+
+				if (count == 60) {
+					return false;
+				} else {
+					return true;
 				}
-			} while (!isDeployed && count < 60);
-
-			if (count == 60) {
-				return false;
 			} else {
 				return true;
 			}
+
 
 		} catch(Exception e) {
 			e.printStackTrace();

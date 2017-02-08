@@ -77,6 +77,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 				selectProperties);
 		
 		return new TimestampProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+//		return new TimestampProgram(staticParam);
 	}
 
 }
