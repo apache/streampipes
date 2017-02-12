@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MnistStream implements EventStreamDeclarer {
-    static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
+    static final Logger LOG = LoggerFactory.getLogger(MnistStream.class);
 
 
     private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();

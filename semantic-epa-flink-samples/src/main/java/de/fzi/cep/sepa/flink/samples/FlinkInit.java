@@ -28,6 +28,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new FileSinkController())
             .add(new StatisticsSummaryController());
 
+
     DeclarersSingleton.getInstance().setPort(8094);
     new FlinkInit().init();
   }
