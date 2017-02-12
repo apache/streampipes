@@ -23,7 +23,7 @@ export default function DashCtrl($scope, $http, $mdDialog, WidgetInstances, AddW
 			controller: AddWidgetController,
 			templateUrl: 'app/dashboard/add-widget-template.html',
 			parent: angular.element(document.body),
-			clickOutsideToClose:true,
+			clickOutsideToClose:false,
 			locals : {
 				visualizablePipelines: visualizablePipelines,
 				rerenderDashboard: rerenderDashboard,
