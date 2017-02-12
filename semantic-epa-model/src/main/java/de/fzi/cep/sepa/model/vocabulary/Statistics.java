@@ -12,4 +12,5 @@ public class Statistics {
   public static final String SUM = "http://statistics.event-processing.org/sum";
   public static final String VARIANCE = "http://statistics.event-processing.org/variance";
   public static final String STDDEV = "http://statistics.event-processing.org/stddev";
+
 }

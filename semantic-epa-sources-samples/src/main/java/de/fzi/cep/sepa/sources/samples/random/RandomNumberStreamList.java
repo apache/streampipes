@@ -34,7 +34,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
             .protocol(SampleSettings.kafkaProtocol(topic))
             .property(EpProperties.integerEp("timestamp", "http://schema.org/DateTime"))
             .property(EpProperties.integerEp("counter", "http://schema.org/counter"))
-            .property(EpProperties.listIntegerEp("values", "http://schema.org/random"))
+            .property(EpProperties.listIntegerEp("listValues", "http://schema.org/random"))
             .build();
   }
 
@@ -73,7 +73,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
       JSONObject json = new JSONObject();
       json.put("timestamp", timestamp);
       json.put("counter", counter);
-      json.put("values", buildRandomList());
+      json.put("listValues", buildRandomList());
 
       return Optional.of(json.toString().getBytes());
     } catch (Exception e) {

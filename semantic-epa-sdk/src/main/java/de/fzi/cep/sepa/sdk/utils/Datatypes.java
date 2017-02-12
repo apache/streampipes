@@ -11,6 +11,7 @@ import java.net.URI;
 public enum Datatypes {
 
     Integer(XSD._integer),
+    Long(XSD._long),
     Float(XSD._float),
     Boolean(XSD._boolean),
     String(XSD._string),
