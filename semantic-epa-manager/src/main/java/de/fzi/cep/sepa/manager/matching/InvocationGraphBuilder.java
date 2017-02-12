@@ -1,15 +1,18 @@
 package de.fzi.cep.sepa.manager.matching;
 
+import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.manager.data.PipelineGraph;
 import de.fzi.cep.sepa.manager.data.PipelineGraphHelpers;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaFactory;
 import de.fzi.cep.sepa.manager.matching.output.OutputSchemaGenerator;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.ElementStatusInfoSettings;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,12 +90,34 @@ public class InvocationGraphBuilder {
                     .get(getIndex(t))
                     .setEventSchema(getInputSchema(source, getIndex(t)));
 
-            t.setUri(t.getBelongsTo() + "/" + pipelineId + "-" + inputGrounding.getTransportProtocol().getTopicName() +"-" +t.getName().replaceAll(" ", "").toLowerCase());
+            String elementIdentifier = makeElementIdentifier(pipelineId, inputGrounding
+                    .getTransportProtocol().getTopicName(), t.getName());
+
+            t.setUri(t.getBelongsTo() + "/" + elementIdentifier);
             t.setCorrespondingPipeline(pipelineId);
+            t.setStatusInfoSettings(makeStatusInfoSettings(elementIdentifier));
 
             configure(t, getConnections(t));
         });
 
+    }
+
+    private ElementStatusInfoSettings makeStatusInfoSettings(String elementIdentifier) {
+        ElementStatusInfoSettings statusSettings = new ElementStatusInfoSettings();
+        statusSettings.setKafkaHost(Configuration.getInstance().getBrokerConfig().getKafkaHost());
+        statusSettings.setKafkaPort(Configuration.getInstance().getBrokerConfig().getKafkaPort());
+        statusSettings.setErrorTopic(elementIdentifier +".error");
+        statusSettings.setStatsTopic(elementIdentifier +".stats");
+        statusSettings.setElementIdentifier(elementIdentifier);
+
+        return statusSettings;
+    }
+
+    private String makeElementIdentifier(String pipelineId, String topic, String elementName) {
+        return pipelineId
+                + "-"
+                + topic +"-" +elementName.replaceAll(" ", "").toLowerCase() +"-" +
+                RandomStringUtils.randomAlphabetic(5);
     }
 
     private EventSchema getInputSchema(NamedSEPAElement source, Integer index) {
