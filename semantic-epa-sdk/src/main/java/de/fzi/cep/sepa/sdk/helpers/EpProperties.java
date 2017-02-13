@@ -38,6 +38,10 @@ public class EpProperties {
 		return listEp(runtimeName, Datatypes.Integer, domainProperty);
 	}
 
+	public static EventPropertyList listLongEp(String runtimeName, String domainProperty) {
+		return listEp(runtimeName, Datatypes.Long, domainProperty);
+	}
+
 	public static EventPropertyList listDoubleEp(String runtimeName, String domainProperty) {
 		return listEp(runtimeName, Datatypes.Double, domainProperty);
 	}

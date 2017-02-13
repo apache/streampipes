@@ -2,7 +2,7 @@
 FROM anapsix/alpine-java
 
 ENV HADOOP_VERSION 2.7.0
-ENV FLINK_VERSION 1.1.4
+ENV FLINK_VERSION 1.1.2
 ENV SCALA_VERSION 2.10
 ENV FLINK_ROOT_DIR /opt/flink
 
@@ -23,7 +23,7 @@ RUN apk add tar
 # Get Flink from US Apache mirror.
 RUN mkdir -p /opt && \
     cd /opt && \
-    curl http://www.us.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-hadoop27-scala_${SCALA_VERSION}.tgz | \
+    curl http://archive.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-hadoop27-scala_${SCALA_VERSION}.tgz | \
         tar -zx && \
     ln -s flink-${FLINK_VERSION} flink && \
     echo Flink ${FLINK_VERSION} installed in /opt

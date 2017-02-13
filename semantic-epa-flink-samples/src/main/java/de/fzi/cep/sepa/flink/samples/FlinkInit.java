@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.flink.samples;
 
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
+import de.fzi.cep.sepa.flink.samples.breakdown.Prediction2BreakdownController;
 import de.fzi.cep.sepa.flink.samples.classification.number.NumberClassificationController;
 import de.fzi.cep.sepa.flink.samples.elasticsearch.ElasticSearchController;
 import de.fzi.cep.sepa.flink.samples.enrich.timestamp.TimestampController;
@@ -26,7 +27,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new HealthIndexController())
             .add(new TimeToFailureController())
             .add(new FileSinkController())
-            .add(new StatisticsSummaryController());
+            .add(new StatisticsSummaryController())
+            .add(new Prediction2BreakdownController());
 
     DeclarersSingleton.getInstance().setPort(8094);
     new FlinkInit().init();

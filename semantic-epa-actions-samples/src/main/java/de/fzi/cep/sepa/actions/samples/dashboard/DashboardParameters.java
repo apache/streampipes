@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.actions.dashboard;
+package de.fzi.cep.sepa.actions.samples.dashboard;
 
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventSchema;

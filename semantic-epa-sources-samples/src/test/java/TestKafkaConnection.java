@@ -34,7 +34,8 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi15.fzi.de:", 9092, 2181, "de.fzi.test");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181,
+						"de.fzi.random.number.list");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {

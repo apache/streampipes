@@ -55,7 +55,10 @@
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-client-standalone</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-sdk</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>

@@ -21,7 +21,6 @@ public class StatisticsSummaryProgram extends FlinkSepaRuntime<StatisticsSummary
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-    return messageStream.flatMap(new StatisticsSummaryCalculator(params.getListPropertyName(),
-            getStatusSender()));
+    return messageStream.flatMap(new StatisticsSummaryCalculator(params.getListPropertyName()));
   }
 }

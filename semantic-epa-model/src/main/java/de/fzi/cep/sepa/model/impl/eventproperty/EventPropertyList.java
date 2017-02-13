@@ -1,5 +1,11 @@
 package de.fzi.cep.sepa.model.impl.eventproperty;
 
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import de.fzi.cep.sepa.model.util.Cloner;
+import de.fzi.cep.sepa.model.util.ModelUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import de.fzi.cep.sepa.model.util.Cloner;
-import de.fzi.cep.sepa.model.util.ModelUtils;
-
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"})
 @RdfsClass("sepa:EventPropertyList")
@@ -24,7 +23,9 @@ import de.fzi.cep.sepa.model.util.ModelUtils;
 public class EventPropertyList extends EventProperty {
 	
 	private static final long serialVersionUID = -2636018143426727534L;
-	
+
+	// TODO : change list<eventproperty> to eventproperty?
+
 	@RdfProperty("sepa:hasEventProperty")
 	@OneToOne (fetch = FetchType.EAGER,
 	   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
