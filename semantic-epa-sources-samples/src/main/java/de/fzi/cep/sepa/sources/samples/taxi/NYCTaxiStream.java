@@ -1,7 +1,5 @@
 package de.fzi.cep.sepa.sources.samples.taxi;
 
-import java.io.File;
-
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -12,6 +10,8 @@ import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class NYCTaxiStream extends AbstractNycStream {
 	
@@ -36,7 +36,7 @@ public class NYCTaxiStream extends AbstractNycStream {
 		stream.setEventSchema(schema);
 		stream.setName("NYC Taxi Sample Stream");
 		stream.setDescription("NYC Taxi Sample Stream Description");
-		stream.setUri(sep.getUri() + "/sample");
+		stream.setUri("taxi-sample");
 
 		return stream;
 	}
