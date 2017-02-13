@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.flink.samples.statistics;
 
-import de.fzi.cep.sepa.flink.status.PipelineElementStatusSender;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
@@ -15,12 +14,9 @@ import java.util.stream.Collectors;
 public class StatisticsSummaryCalculator implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
   private String listPropertyName;
-  private PipelineElementStatusSender statusSender;
 
-  public StatisticsSummaryCalculator(String listPropertyName, PipelineElementStatusSender
-          statusSender) {
+  public StatisticsSummaryCalculator(String listPropertyName) {
     this.listPropertyName = listPropertyName;
-    this.statusSender = statusSender;
   }
 
   @Override

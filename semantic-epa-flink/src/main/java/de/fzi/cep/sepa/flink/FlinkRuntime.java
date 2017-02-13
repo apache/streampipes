@@ -2,8 +2,6 @@ package de.fzi.cep.sepa.flink;
 
 import de.fzi.cep.sepa.flink.converter.JsonToMapFormat;
 import de.fzi.cep.sepa.flink.source.NonParallelKafkaSource;
-import de.fzi.cep.sepa.flink.status.PipelineElementStatusSender;
-import de.fzi.cep.sepa.flink.status.PipelineElementStatusSenderFactory;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
@@ -33,8 +31,6 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 	private JobExecutionResult result;
 
-	private PipelineElementStatusSender statusSender;
-	
 	protected I graph;
 	
 	public FlinkRuntime(I graph) {
@@ -49,7 +45,6 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 		this.graph = graph;
 		this.config = config;
 		this.debug = debug;
-		this.statusSender = PipelineElementStatusSenderFactory.getStatusSender(graph);
 	}
 	
 	public boolean startExecution() {
@@ -171,7 +166,4 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 		return graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol();
 	}
 
-	protected PipelineElementStatusSender getStatusSender() {
-		return this.statusSender;
-	}
 }

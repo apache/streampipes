@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.actions.dashboard;
+package de.fzi.cep.sepa.actions.samples.dashboard;
 
 import de.fzi.cep.sepa.sdk.stream.SchemaBuilder;
 import de.fzi.cep.sepa.sdk.stream.StreamBuilder;
