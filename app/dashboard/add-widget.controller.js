@@ -1,6 +1,7 @@
-AddWidget.$inject = ['WidgetInstances', '$compile', 'WidgetTemplates', '$http'];
+AddWidget.$inject = ['WidgetInstances', '$compile', 'WidgetTemplates', '$http', 'getElementIconText'];
 
-export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $http) {
+export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $http, getElementIconText) {
+
 
 	function AddWidget($scope, $mdDialog, visualizablePipelines, rerenderDashboard, layoutId) {
 		$scope.page = 'select-viz';
@@ -18,6 +19,34 @@ export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $h
 			title : "Visualization Settings",
 			description : "Customize your visualization"
 		}];
+
+		$scope.iconText = function (elementName) {
+			return getElementIconText(elementName);
+		}
+		
+		$scope.selectPipeline = function(vis) {
+			$scope.selectedVisualisation = vis;
+		}
+
+		$scope.selectVisType = function(type) {
+			$scope.selectedType = type;
+		}
+
+		$scope.getSelectedPipelineCss = function(vis) {
+			return getSelectedCss($scope.selectedVisualisation, vis);
+		}
+
+		$scope.getSelectedVisTypeCss = function(type) {
+			return getSelectedCss($scope.selectedType, type);
+		}
+
+		var getSelectedCss = function(selected, current) {
+			if (selected == current) {
+				return "wizard-preview wizard-preview-selected";
+			} else {
+				return "wizard-preview";
+			}
+		}
 
 		$scope.getTabCss = function(page) {
 			if (page == $scope.page) return "md-fab md-accent";

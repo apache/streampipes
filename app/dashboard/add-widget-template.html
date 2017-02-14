@@ -10,7 +10,7 @@
             </div>
         </md-toolbar>
 
-        <div style="width:800px;height:810px;padding-top:20px;">
+        <div style="width:900px;height:810px;padding-top:20px;">
             <div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
                 <div layout="column" flex="33" layout-align="center center"
                      ng-repeat="(index, p) in pages track by $index">
@@ -19,6 +19,7 @@
                     {{p.title}}
                 </div>
             </div>
+            <md-divider/>
             <!-- Select element to visualize -->
             <div flex="100" style="margin:20px;width:80%">
                 <md-dialog-content ng-show="page == 'select-viz'">
@@ -26,11 +27,18 @@
                         <md-select-header>
                             <h4>{{pages[0].description}}</h4>
                         </md-select-header>
-                        <md-select ng-model="selectedVisualisation">
-                            <md-option ng-value="opt.doc" ng-repeat="opt in visualizablePipelines">{{ opt.doc.name }}
-                            </md-option>
-                        </md-select>
                     </md-input-container>
+                    <md-grid-list
+                            md-cols="4" md-row-height="2:2"
+                            md-gutter="12px">
+
+                        <md-grid-tile class="gray" ng-repeat="opt in visualizablePipelines">
+                            <div ng-class="getSelectedPipelineCss(opt.doc)" ng-click="selectPipeline(opt.doc)">
+                                {{iconText(opt.doc.name)}}
+                                <h5>{{opt.doc.name}}</h5>
+                            </div>
+                        </md-grid-tile>
+                    </md-grid-list>
                 </md-dialog-content>
 
                 <!-- Select Type -->
@@ -39,31 +47,39 @@
                         <md-select-header>
                             <h4>{{pages[1].description}}</h4>
                         </md-select-header>
-                        <md-select ng-model="selectedType">
-                            <md-option ng-value="opt.name" ng-repeat="opt in possibleVisualisationTypes">{{ opt.label }}
-                            </md-option>
-                        </md-select>
                     </md-input-container>
+                    <md-grid-list
+                            md-cols="4" md-row-height="2:2"
+                            md-gutter="12px">
+
+                        <md-grid-tile class="gray" ng-repeat="opt in possibleVisualisationTypes">
+                            <div ng-class="getSelectedVisTypeCss(opt.name)" ng-click="selectVisType(opt.name)">
+                                {{iconText(opt.label)}}
+                                <h5>{{opt.label}}</h5>
+                            </div>
+                        </md-grid-tile>
+                    </md-grid-list>
                 </md-dialog-content>
 
                 <!-- Select Scheme -->
                 <md-dialog-content ng-show="page == 'select-scheme'">
                     <md-select-header>
-                        <h4>{{pages[2].description}}</h4>
+                        <b><h4>{{pages[2].description}}</h4></b>
                     </md-select-header>
                     <md-input-container id="scheme-selection">
                     </md-input-container>
                 </md-dialog-content>
-            </div>
-        </div>
 
-        <div class="md-actions" layout="row">
-            <md-button ng-click="cancel()" style="margin-right:20px;">
-                Cancel
-            </md-button>
-            <md-button ng-click="next()" class="md-raised md-accent" style="margin-right:20px;">
-                Next
-            </md-button>
+            </div>
+            <md-divider/>
+            <div class="md-actions" layout="row">
+                <md-button ng-click="cancel()" style="margin-right:20px;">
+                    Cancel
+                </md-button>
+                <md-button ng-click="next()" class="md-raised md-accent" style="margin-right:20px;">
+                    Next
+                </md-button>
+            </div>
         </div>
     </form>
 </md-dialog>

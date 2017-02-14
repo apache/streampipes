@@ -41,6 +41,7 @@
     "bootstrap": "3.3.4",
     "angular-markdown-directive": "0.3.1",
     "lodash": "3.10.1",
+    "angular-google-maps" : "2.4.1",
     "d3": "3.4.13",
     "epoch-charting": "0.8.4",
     "slick-carousel": "1.6.0"

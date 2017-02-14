@@ -17,6 +17,29 @@ body {
 	background-attachment: fixed;	
 }
 
+.angular-google-map-container { height: 400px; }
+
+.wizard-preview {
+	height: 150px !important;
+	width: 150px !important;
+	box-shadow: 0 0 2px rgb(255,64,129);
+	display: inline-block;
+	vertical-align: middle;
+	background-color: white;
+	line-height: 110px;
+	text-align: center;
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+	font-size: 30px;
+	font-family: RobotoDraft;
+	margin-top:20px;
+}
+
+.wizard-preview-selected {
+	border: 5px solid rgb(255,64,129);
+}
+
 .letter-circle {
 	display:flex;
 	align-items:center;

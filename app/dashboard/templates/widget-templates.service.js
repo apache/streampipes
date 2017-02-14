@@ -1,11 +1,20 @@
-WidgetTemplates.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel', 'TrafficlightDataModel'];
+WidgetTemplates.$inject = ['TableDataModel',
+    'NumberDataModel',
+    'LineDataModel',
+    'VerticalbarDataModel',
+    'GaugeDataModel',
+    'TrafficlightDataModel',
+    'RawDataModel',
+    'MapDataModel'];
 
 export default function WidgetTemplates(TableDataModel,
-                                          NumberDataModel,
-                                          LineDataModel,
-                                          VerticalbarDataModel,
-                                          GaugeDataModel,
-                                          TrafficlightDataModel) {
+                                        NumberDataModel,
+                                        LineDataModel,
+                                        VerticalbarDataModel,
+                                        GaugeDataModel,
+                                        TrafficlightDataModel,
+                                        RawDataModel,
+                                        MapDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {
@@ -43,6 +52,18 @@ export default function WidgetTemplates(TableDataModel,
             label: 'Traffic Light',
             directive: 'sp-trafficlight-widget',
             dataModel: TrafficlightDataModel,
+        },
+        raw: {
+            name: 'raw',
+            label: 'Raw Data',
+            directive: 'sp-raw-widget',
+            dataModel: RawDataModel,
+        },
+        map: {
+            name: 'map',
+            label: 'Map',
+            directive: 'sp-map-widget',
+            dataModel: MapDataModel,
         }
 
     }
