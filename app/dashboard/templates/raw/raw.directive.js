@@ -13,7 +13,6 @@ export default function rawWidget(WidgetInstances) {
         },
         controller: function ($scope) {
             WidgetInstances.get($scope.widgetId).then(function(data) {
-                $scope.selectedNumberProperty = data.visualisation.schema.selectedNumberProperty.properties.runtimeName;
             });
         },
         link: function postLink(scope) {
