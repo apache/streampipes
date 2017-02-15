@@ -10,7 +10,12 @@ import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
 import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
 import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.EpaType;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.Response;
+import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -26,11 +31,12 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 
-import javax.json.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.json.JsonObject;
 
 public class PredictionController implements SemanticEventProcessingAgentDeclarer {
 
@@ -139,8 +145,7 @@ public class PredictionController implements SemanticEventProcessingAgentDeclare
 //		int modelId = 1;
         String errorMessage = "";
 
-        int i = pipelineId.lastIndexOf("-");
-        pipelineId = pipelineId.substring(0, i);
+        pipelineId = pipelineId.substring(0, 35);
 
         JsonObject params = Utils.getModelDetachMessage(pipelineId);
 
