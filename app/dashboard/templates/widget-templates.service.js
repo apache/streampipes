@@ -5,7 +5,8 @@ WidgetTemplates.$inject = ['TableDataModel',
     'GaugeDataModel',
     'TrafficlightDataModel',
     'RawDataModel',
-    'MapDataModel'];
+    'MapDataModel',
+    'HeatmapDataModel'];
 
 export default function WidgetTemplates(TableDataModel,
                                         NumberDataModel,
@@ -14,7 +15,8 @@ export default function WidgetTemplates(TableDataModel,
                                         GaugeDataModel,
                                         TrafficlightDataModel,
                                         RawDataModel,
-                                        MapDataModel) {
+                                        MapDataModel,
+                                        HeatmapDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {
@@ -64,6 +66,12 @@ export default function WidgetTemplates(TableDataModel,
             label: 'Map',
             directive: 'sp-map-widget',
             dataModel: MapDataModel,
+        },
+        heatmap: {
+            name: 'heatmap',
+            label: 'Heatmap',
+            directive: 'sp-heatmap-widget',
+            dataModel: HeatmapDataModel,
         }
 
     }

@@ -53,6 +53,10 @@ import spMapWidget from './templates/map/map.directive';
 import spMapWidgetConfig from './templates/map/map-config.directive';
 import MapDataModel from './templates/map/map-data-model.service';
 
+import spHeatmapWidget from './templates/heatmap/heatmap.directive';
+import spHeatmapWidgetConfig from './templates/heatmap/heatmap-config.directive';
+import HeatmapDataModel from './templates/heatmap/heatmap-data-model.service';
+
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
 	.factory('AddWidgetController', AddWidgetController)
@@ -97,5 +101,9 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.directive('spMapWidget', spMapWidget)
 	.directive('spMapWidgetConfig', spMapWidgetConfig)
 	.factory('MapDataModel', MapDataModel)
+
+	.directive('spHeatmapWidget', spHeatmapWidget)
+	.directive('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
+	.factory('HeatmapDataModel', HeatmapDataModel)
 
 	.name;

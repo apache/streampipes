@@ -19,15 +19,8 @@ export default function mapWidget(WidgetInstances, NgMap) {
         link: function postLink(scope) {
             scope.$watch('data', function (data) {
                 if (data) {
-                    NgMap.getMap().then(function(map) {
-                        console.log(map);
-                    });
-                    console.log("show");
-                    scope.items = data;
-                    console.log(scope.items);
                     scope.currentLocation = [data[scope.widgetConfig.selectedLongitudeMapping.properties.runtimeName],
                         data[scope.widgetConfig.selectedLatitudeMapping.properties.runtimeName]];
-                    console.log(scope.currentLocation);
                 }
             });
         }
