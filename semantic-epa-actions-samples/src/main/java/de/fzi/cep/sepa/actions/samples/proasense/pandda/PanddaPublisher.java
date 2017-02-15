@@ -3,7 +3,6 @@ package de.fzi.cep.sepa.actions.samples.proasense.pandda;
 import de.fzi.cep.sepa.messaging.EventListener;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
-import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.PDFType;
 import eu.proasense.internal.PredictedEvent;
 import org.apache.thrift.TBase;
@@ -21,14 +20,14 @@ import java.util.Optional;
  */
 public class PanddaPublisher implements EventListener<byte[]> {
 
-  private static final String PanddaOutputTopic = "";
+  private static final String PanddaOutputTopic = "eu.proasense.internal.oa.mhwirth.predicted";
 
   private EventProducer kafkaProducer;
   private PanddaParameters panddaParameters;
   private TSerializer serializer;
 
   public PanddaPublisher(String kafkaHost, Integer kafkaPort, PanddaParameters panddaParameters) {
-    this.kafkaProducer = new StreamPipesKafkaProducer(buildUrl(kafkaHost, kafkaPort));
+    this.kafkaProducer = new StreamPipesKafkaProducer(buildUrl(kafkaHost, kafkaPort), PanddaOutputTopic);
     this.panddaParameters = panddaParameters;
     this.serializer = new TSerializer(new TBinaryProtocol.Factory());
   }
@@ -54,13 +53,13 @@ public class PanddaPublisher implements EventListener<byte[]> {
 
   private PredictedEvent buildPredictedEvent(String inputJson) {
     PredictedEvent predictedEvent = new PredictedEvent();
-    predictedEvent.eventName = "<please put the stream id here>";
+    predictedEvent.eventName = "prediction";
     predictedEvent.timestamp =  new Date().getTime() / 1000;
     predictedEvent.pdfType = PDFType.EXPONENTIAL;
-    predictedEvent.eventProperties = new HashMap<String,ComplexValue>();
+    predictedEvent.eventProperties = new HashMap<>();
 
-    predictedEvent.params = new ArrayList<Double>();
-    predictedEvent.timestamps = new ArrayList<Long>();
+    predictedEvent.params = new ArrayList<>();
+    predictedEvent.timestamps = new ArrayList<>();
 
     double lambda = 1 / 222.2;
     predictedEvent.params.add(lambda);
