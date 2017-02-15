@@ -1,8 +1,8 @@
 import WidgetInstances from '../../widget-instances.service.js'
 'use strict';
-mapWidget.$inject = ['WidgetInstances'];
+mapWidget.$inject = ['WidgetInstances', 'NgMap'];
 
-export default function mapWidget(WidgetInstances) {
+export default function mapWidget(WidgetInstances, NgMap) {
     return {
         restrict: 'A',
         replace: true,
@@ -14,17 +14,20 @@ export default function mapWidget(WidgetInstances) {
         controller: function ($scope) {
             WidgetInstances.get($scope.widgetId).then(function (data) {
                 $scope.widgetConfig = data.visualisation.schema.config;
-                $scope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
-
             });
-
         },
-        link: function postLink(scope, element) {
+        link: function postLink(scope) {
             scope.$watch('data', function (data) {
                 if (data) {
-                    scope.show = true;
+                    NgMap.getMap().then(function(map) {
+                        console.log(map);
+                    });
                     console.log("show");
                     scope.items = data;
+                    console.log(scope.items);
+                    scope.currentLocation = [data[scope.widgetConfig.selectedLongitudeMapping.properties.runtimeName],
+                        data[scope.widgetConfig.selectedLatitudeMapping.properties.runtimeName]];
+                    console.log(scope.currentLocation);
                 }
             });
         }

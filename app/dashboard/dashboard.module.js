@@ -10,7 +10,7 @@ import 'legacy/mlhr-table';
 import 'legacy/malhar-angular-dashboard';
 import 'npm/d3';
 import 'npm/epoch-charting';
-import 'npm/angular-google-maps'
+import 'npm/ngmap'
 
 
 import DashboardCtrl from './dashboard.controller';
@@ -53,7 +53,7 @@ import spMapWidget from './templates/map/map.directive';
 import spMapWidgetConfig from './templates/map/map-config.directive';
 import MapDataModel from './templates/map/map-data-model.service';
 
-export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable'])
+export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
 	.factory('AddWidgetController', AddWidgetController)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
