@@ -17,7 +17,7 @@ public abstract class AbstractNycStream implements EventStreamDeclarer{
 	}
 	
 	public void executeReplay(File file) {
-		new Thread(new TaxiStreamGenerator(file, SimulationSettings.REALTIME, publisher)).start();
+		new Thread(new TaxiStreamGenerator(file, SimulationSettings.DEMONSTRATE_10, publisher)).start();
 	}
 
 	
