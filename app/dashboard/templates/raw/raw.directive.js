@@ -18,7 +18,7 @@ export default function rawWidget(WidgetInstances) {
         link: function postLink(scope) {
             scope.$watch('data', function (data) {
                 if (data) {
-                    scope.item = data;
+                    scope.items = data;
                 }
             });
         }
