@@ -20,7 +20,7 @@ public class Prediction2BreakdownProgram extends FlinkSepaRuntime<Prediction2Bre
   }
 
   @Override
-  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-    return messageStream.flatMap(new Prediction2BreakDownMapper());
+  protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+    return messageStream[0].flatMap(new Prediction2BreakDownMapper());
   }
 }

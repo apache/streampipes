@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.flink.samples;
 
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
+import de.fzi.cep.sepa.flink.samples.batchstream.FirstBatchThenStreamController;
 import de.fzi.cep.sepa.flink.samples.breakdown.Prediction2BreakdownController;
 import de.fzi.cep.sepa.flink.samples.classification.number.NumberClassificationController;
 import de.fzi.cep.sepa.flink.samples.elasticsearch.ElasticSearchController;
@@ -19,6 +20,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
             //.add(new WordCountController())
+            .add(new FirstBatchThenStreamController())
             .add(new ElasticSearchController())
             .add(new NumberClassificationController())
             .add(new TimestampController())

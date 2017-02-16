@@ -25,11 +25,11 @@ public class FileSinkProgram extends FlinkSecRuntime implements Serializable {
     }
 
     @Override
-    public DataStreamSink<Map<String, Object>> getSink(DataStream<Map<String, Object>> convertedStream) {
+    public void getSink(DataStream<Map<String, Object>>... convertedStream) {
         RollingSink sink = new RollingSink<String>("./");
         sink.setBucketer(new DateTimeBucketer("yyyy-MM-dd--HHmm"));
         sink.setWriter(new CsvWriter());
         sink.setBatchSize(1024 * 1024 * 400); // this is 400 MB,
-        return convertedStream.addSink(sink);
+        convertedStream[0].addSink(sink);
     }
 }

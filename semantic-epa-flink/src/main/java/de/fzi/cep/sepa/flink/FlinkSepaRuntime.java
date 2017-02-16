@@ -37,7 +37,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		}
 	
 	@SuppressWarnings("deprecation")
-	public boolean execute(DataStream<Map<String, Object>> convertedStream)
+	public boolean execute(DataStream<Map<String, Object>>... convertedStream)
 	{
 		DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
 		
@@ -56,7 +56,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 	}
 	
 	
-	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream);
+	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream);
 		
 	private String getOutputTopic()
 	{
@@ -86,13 +86,13 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 				.getTransportProtocol();
 	}
 	
-	private Properties getProducerProperties() {
-		Properties properties = new Properties();
-		properties.put("client.id", graph.getCorrespondingPipeline()+"-" +getOutputTopic());
-		properties.put("metadata.broker.list", getProperties().get("bootstrap.servers"));
-		properties.put("bootstrap.servers", getProperties().get("bootstrap.servers"));
-		return properties;
-	}
+//	private Properties getProducerProperties() {
+//		Properties properties = new Properties();
+//		properties.put("client.id", graph.getCorrespondingPipeline()+"-" +getOutputTopic());
+//		properties.put("metadata.broker.list", getProperties().get("bootstrap.servers"));
+//		properties.put("bootstrap.servers", getProperties().get("bootstrap.servers"));
+//		return properties;
+//	}
 
 	private String getKafkaUrl() {
 		return String.valueOf(getProperties().get("bootstrap.servers"));

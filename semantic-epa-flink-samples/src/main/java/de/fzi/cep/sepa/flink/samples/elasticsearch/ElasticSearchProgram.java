@@ -34,8 +34,8 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
     }
 
     @Override
-    public DataStreamSink<Map<String, Object>> getSink(
-            DataStream<Map<String, Object>> convertedStream) {
+    public void getSink(
+            DataStream<Map<String, Object>>... convertedStream) {
 
         Map<String, String> config = new HashMap<>();
         config.put("bulk.flush.max.actions", "100");
@@ -60,7 +60,7 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
 
 //        transports.add(new InetSocketAddress("ipe-koi05.fzi.de", 9300));
 
-        return convertedStream.flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
+        convertedStream[0].flatMap(new FlatMapFunction<Map<String, Object>, Map<String, Object>>() {
 
             @Override
             public void flatMap(Map<String, Object> arg0, Collector<Map<String, Object>> arg1) throws Exception {

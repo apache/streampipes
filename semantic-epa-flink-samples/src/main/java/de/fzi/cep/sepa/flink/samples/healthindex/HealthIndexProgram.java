@@ -21,8 +21,8 @@ public class HealthIndexProgram extends FlinkSepaRuntime<HealthIndexParameters> 
 
 
     @Override
-    protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>> messageStream) {
-        return messageStream
+    protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
+        return messageStream[0]
                 .countWindowAll(2, 1)
                 .apply(new HealthIndexCalculator2(params.getFrictionMapping(), params.getTimestampMapping(), params.getMachineTypeMapping(), params.getHealthIndexVariables()));
     }
