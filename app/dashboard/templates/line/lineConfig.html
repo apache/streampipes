@@ -1,14 +1,35 @@
-<h3>Select time mapping</h3>
+<h4>Select time mapping</h4>
 <md-input-container class="md-block" flex-gt-sm>
-	<md-select ng-model="wid.schema.config.selectedTimestampMapping">
-		<!--<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties | soDateTime">{{ time.properties.runtimeName }}</md-option>-->
-		<md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties ">{{ time.properties.runtimeName }}</md-option>
-	</md-select>
+    <md-select ng-model="wid.schema.config.selectedTimestampMapping">
+        <md-option ng-value="time" ng-repeat="time in wid.schema.eventProperties | soDateTime">{{
+            time.properties.runtimeName }}
+        </md-option>
+    </md-select>
 </md-input-container>
 
-<h3>Select number mapping</h3>
+<h4>Select number mapping</h4>
 <md-input-container class="md-block" flex-gt-sm>
-	<md-select ng-model="wid.schema.config.selectedNumberMapping">
-		<md-option ng-value="lineValue" ng-repeat="lineValue in wid.schema.eventProperties | numberFilter">{{ lineValue.properties.runtimeName }}</md-option>
-	</md-select>
+    <md-select ng-model="wid.schema.config.selectedNumberMapping">
+        <md-option ng-value="lineValue" ng-repeat="lineValue in wid.schema.eventProperties | numberFilter">{{
+            lineValue.properties.runtimeName }}
+        </md-option>
+    </md-select>
 </md-input-container>
+
+<div flex="100">
+    <h3>Range</h3>
+    <div layout="row" flex="100" layout-align="center center">
+        <div flex="50">
+            <md-input-container>
+                <label>Minimum</label>
+                <input ng-model="wid.schema.config.range.min" style="color:black;">
+            </md-input-container>
+        </div>
+        <div flex="50">
+            <md-input-container>
+                <label>Maximum</label>
+                <input ng-model="wid.schema.config.range.max" style="color:black;">
+            </md-input-container>
+        </div>
+    </div>
+</div>

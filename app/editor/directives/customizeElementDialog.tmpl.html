@@ -66,6 +66,9 @@
                     <div ng-if="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
                         <matching-property static-property="staticProperty"></matching-property>
                     </div>
+                    <div ng-if="staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
+                        <collection-static-property static-property="staticProperty"></collection-static-property>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,11 +1,22 @@
-WidgetTemplates.$inject = ['TableDataModel', 'NumberDataModel', 'LineDataModel', 'VerticalbarDataModel', 'GaugeDataModel', 'TrafficlightDataModel'];
+WidgetTemplates.$inject = ['TableDataModel',
+    'NumberDataModel',
+    'LineDataModel',
+    'VerticalbarDataModel',
+    'GaugeDataModel',
+    'TrafficlightDataModel',
+    'RawDataModel',
+    'MapDataModel',
+    'HeatmapDataModel'];
 
 export default function WidgetTemplates(TableDataModel,
-                                          NumberDataModel,
-                                          LineDataModel,
-                                          VerticalbarDataModel,
-                                          GaugeDataModel,
-                                          TrafficlightDataModel) {
+                                        NumberDataModel,
+                                        LineDataModel,
+                                        VerticalbarDataModel,
+                                        GaugeDataModel,
+                                        TrafficlightDataModel,
+                                        RawDataModel,
+                                        MapDataModel,
+                                        HeatmapDataModel) {
     //Register the new widgets here
     var widgetTypes = {
         table: {
@@ -43,6 +54,24 @@ export default function WidgetTemplates(TableDataModel,
             label: 'Traffic Light',
             directive: 'sp-trafficlight-widget',
             dataModel: TrafficlightDataModel,
+        },
+        raw: {
+            name: 'raw',
+            label: 'Raw Data',
+            directive: 'sp-raw-widget',
+            dataModel: RawDataModel,
+        },
+        map: {
+            name: 'map',
+            label: 'Map',
+            directive: 'sp-map-widget',
+            dataModel: MapDataModel,
+        },
+        heatmap: {
+            name: 'heatmap',
+            label: 'Heatmap',
+            directive: 'sp-heatmap-widget',
+            dataModel: HeatmapDataModel,
         }
 
     }

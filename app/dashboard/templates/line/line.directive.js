@@ -24,7 +24,8 @@ export default function lineWidget(WidgetInstances) {
 							scope.myChart = element.epoch({
 								type: 'time.line',
 								data: [{ label: "Series 1", values: []}],
-								axes: ['bottom', 'left']
+								axes: ['bottom', 'left'],
+								range: [scope.widgetConfig.range.min, scope.widgetConfig.range.max]
 							});
 						} else {
 							var time_value = data[scope.widgetConfig.selectedTimestampMapping.properties.runtimeName];

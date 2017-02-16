@@ -43,6 +43,13 @@ return function(eventProperties) {
 	//return uniqueArraybyId(result, runtimeName);
 }
 
+function geoLat() {
+	return filter('http://www.w3.org/2003/01/geo/wgs84_pos#lat');
+}
+
+function geoLng() {
+	return filter('http://www.w3.org/2003/01/geo/wgs84_pos#long');
+}
 
 function soNumber() {
 	return filter('http://schema.org/Number');
@@ -55,5 +62,7 @@ function soDateTime() {
 export default {
 	nu: nu,
 	soNumber: soNumber,
-	soDateTime: soDateTime
+	soDateTime: soDateTime,
+	geoLat: geoLat,
+	geoLng: geoLng
 }

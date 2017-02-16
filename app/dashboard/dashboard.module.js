@@ -10,6 +10,7 @@ import 'legacy/mlhr-table';
 import 'legacy/malhar-angular-dashboard';
 import 'npm/d3';
 import 'npm/epoch-charting';
+import 'npm/ngmap'
 
 
 import DashboardCtrl from './dashboard.controller';
@@ -44,7 +45,19 @@ import spTrafficlightWidget from './templates/trafficlight/trafficlight.directiv
 import spTrafficlightWidgetConfig from './templates/trafficlight/trafficlight-config.directive';
 import TrafficlightDataModel from './templates/trafficlight/trafficlight-data-model.service';
 
-export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable'])
+import spRawWidget from './templates/raw/raw.directive';
+import spRawWidgetConfig from './templates/raw/raw-config.directive';
+import RawDataModel from './templates/raw/raw-data-model.service';
+
+import spMapWidget from './templates/map/map.directive';
+import spMapWidgetConfig from './templates/map/map-config.directive';
+import MapDataModel from './templates/map/map-data-model.service';
+
+import spHeatmapWidget from './templates/heatmap/heatmap.directive';
+import spHeatmapWidgetConfig from './templates/heatmap/heatmap-config.directive';
+import HeatmapDataModel from './templates/heatmap/heatmap-data-model.service';
+
+export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
 	.factory('AddWidgetController', AddWidgetController)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
@@ -54,6 +67,8 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.filter('soNumber', soFilter.soNumber)
 	.filter('soDateTime', soFilter.soDateTime)
 	.filter('numberFilter', soFilter.nu)
+	.filter('geoLat', soFilter.geoLat)
+	.filter('geoLng', soFilter.geoLng)
 
 	.directive('spNumberWidget', spNumberWidget)
 	.directive('spNumberWidgetConfig', spNumberWidgetConfig)
@@ -78,5 +93,17 @@ export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhr
 	.directive('spTrafficlightWidget', spTrafficlightWidget)
 	.directive('spTrafficlightWidgetConfig', spTrafficlightWidgetConfig)
 	.factory('TrafficlightDataModel', TrafficlightDataModel)
-	
+
+	.directive('spRawWidget', spRawWidget)
+	.directive('spRawWidgetConfig', spRawWidgetConfig)
+	.factory('RawDataModel', RawDataModel)
+
+	.directive('spMapWidget', spMapWidget)
+	.directive('spMapWidgetConfig', spMapWidgetConfig)
+	.factory('MapDataModel', MapDataModel)
+
+	.directive('spHeatmapWidget', spHeatmapWidget)
+	.directive('spHeatmapWidgetConfig', spHeatmapWidgetConfig)
+	.factory('HeatmapDataModel', HeatmapDataModel)
+
 	.name;
