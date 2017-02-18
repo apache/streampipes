@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.manager.matching;
 
-import com.sun.org.apache.regexp.internal.RE;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingJsonSchemaException;
 import de.fzi.cep.sepa.commons.exceptions.NoSepaInPipelineException;
 import de.fzi.cep.sepa.commons.exceptions.RemoteServerNotAccessibleException;
@@ -26,25 +25,23 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
-import de.fzi.cep.sepa.model.impl.staticproperty.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.Option;
+import de.fzi.cep.sepa.model.impl.staticproperty.RemoteOneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URI;
-import java.rmi.server.RemoteServer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static jline.ConsoleRunner.property;
 
 public class PipelineVerificationHandler {
 
@@ -120,6 +117,7 @@ public class PipelineVerificationHandler {
         List<String> connectedTo = rdfRootElement.getConnectedTo();
         String domId = rdfRootElement.getDOM();
 
+        List<EventStream> tempStreams = new ArrayList<>();
 
         for (int i = 0; i < connectedTo.size(); i++) {
             NamedSEPAElement element = TreeUtils.findSEPAElement(rdfRootElement
@@ -148,12 +146,13 @@ public class PipelineVerificationHandler {
 
                 }
 
+                tempStreams.add(incomingStream);
                 if (rdfRootElement.getStreamRequirements().size() - 1 == i) {
                     PipelineModification modification = new PipelineModification(
                             domId,
                             rdfRootElement.getElementId(),
                             rdfRootElement.getStaticProperties());
-                    modification.addInputStream(incomingStream);
+                    modification.setInputStreams(tempStreams);
                     if (rdfRootElement instanceof SepaInvocation)
                         modification.setOutputStrategies(((SepaInvocation) rdfRootElement).getOutputStrategies());
                     pipelineModificationMessage

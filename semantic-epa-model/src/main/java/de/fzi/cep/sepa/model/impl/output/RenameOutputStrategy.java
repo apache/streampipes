@@ -1,10 +1,10 @@
 package de.fzi.cep.sepa.model.impl.output;
 
-import javax.persistence.Entity;
-
 import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
+
+import javax.persistence.Entity;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -17,6 +17,9 @@ public class RenameOutputStrategy extends OutputStrategy {
 	@RdfProperty("sepa:eventName")
 	String eventName;
 
+	@RdfProperty("sepa:keepBoth")
+	private boolean keepBoth;
+
 	public RenameOutputStrategy()
 	{
 		super();
@@ -26,11 +29,18 @@ public class RenameOutputStrategy extends OutputStrategy {
 	{
 		super(other);
 		this.eventName = other.getEventName();
+		this.keepBoth = other.isKeepBoth();
 	}
 	
 	public RenameOutputStrategy(String name, String eventName) {
 		super(name);
 		this.eventName = eventName;
+		this.keepBoth = true;
+	}
+
+	public RenameOutputStrategy(String name, boolean keepBoth) {
+		super(name);
+		this.keepBoth = keepBoth;
 	}
 
 	public String getEventName() {
@@ -40,5 +50,12 @@ public class RenameOutputStrategy extends OutputStrategy {
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
-	
+
+	public boolean isKeepBoth() {
+		return keepBoth;
+	}
+
+	public void setKeepBoth(boolean keepBoth) {
+		this.keepBoth = keepBoth;
+	}
 }

@@ -43,6 +43,10 @@ public class OutputStrategies {
         return new RenameOutputStrategy();
     }
 
+    public static RenameOutputStrategy keep(boolean mergeInputStreams) {
+        return new RenameOutputStrategy("Rename", mergeInputStreams);
+    }
+
     public static ListOutputStrategy list(String propertyRuntimeName) {
         return new ListOutputStrategy(propertyRuntimeName);
     }
