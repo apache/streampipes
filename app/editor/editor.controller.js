@@ -1070,7 +1070,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     function modifyPipeline(pipelineModifications) {
         var id;
-
         for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
             id = "#" + modification.domId;
             if ($(id) !== "undefined") {
