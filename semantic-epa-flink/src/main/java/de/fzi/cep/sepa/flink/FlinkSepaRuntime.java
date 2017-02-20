@@ -18,66 +18,66 @@ import java.util.Properties;
 public abstract class FlinkSepaRuntime<B extends BindingParameters> extends FlinkRuntime<SepaInvocation> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	protected B params;
-	
-	
+
+
 	public FlinkSepaRuntime(B params)
 	{
 		super(params.getGraph());
 		this.params = params;
 	}
-	
+
 	public FlinkSepaRuntime(B params, FlinkDeploymentConfig config)
 	{
 		super(params.getGraph(), config);
 		this.params = params;
-		}
-	
+	}
+
 	@SuppressWarnings("deprecation")
 	public boolean execute(DataStream<Map<String, Object>>... convertedStream)
 	{
 		DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
-		
+
 		SerializationSchema<Map<String, Object>> kafkaSerializer = new SimpleKafkaSerializer();
 		SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
 		//applicationLogic.print();
 		if (isOutputKafkaProtocol()) applicationLogic
-			.addSink(new NonParallelKafkaProducer<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
+				.addSink(new NonParallelKafkaProducer<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
 		else applicationLogic
-			.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
-		
+				.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
+
 		thread = new Thread(this);
 		thread.start();
-				
+
 		return true;
 	}
-	
-	
+
+
 	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream);
-		
+
 	private String getOutputTopic()
 	{
 		return protocol()
 				.getTopicName();
 	}
-	
+
 	private String getJmsBrokerAddress()
 	{
 		return ((JmsTransportProtocol) protocol())
 				.getBrokerHostname()
 				+":"
 				+((JmsTransportProtocol) protocol())
-						.getPort();
+				.getPort();
 	}
-		
+
 	private boolean isOutputKafkaProtocol()
 	{
 		return protocol() instanceof KafkaTransportProtocol;
 	}
-	
+
 	private TransportProtocol protocol() {
 		return params
 				.getGraph()
@@ -85,7 +85,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 				.getEventGrounding()
 				.getTransportProtocol();
 	}
-	
+
 //	private Properties getProducerProperties() {
 //		Properties properties = new Properties();
 //		properties.put("client.id", graph.getCorrespondingPipeline()+"-" +getOutputTopic());
@@ -95,7 +95,11 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 //	}
 
 	private String getKafkaUrl() {
-		return String.valueOf(getProperties().get("bootstrap.servers"));
+		// TODO add also jms support
+		return protocol().getBrokerHostname() +
+				":" +
+				((KafkaTransportProtocol) protocol()).getKafkaPort();
+//		return String.valueOf(getProperties().get("bootstrap.servers"));
 	}
 
 	public B getParams() {
