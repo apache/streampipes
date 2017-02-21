@@ -26,7 +26,7 @@ public class PanddaController extends NonVisualizableActionController {
 
   @Override
   public SecDescription declareModel() {
-      return DataSinkBuilder.create("pandda", "Decision Making", "Forwards a breakdown prediction" +
+      return DataSinkBuilder.create("pandda", "PANDDA", "Forwards an event" +
               " to the ProaSense PANDDA component")
               .stream1PropertyRequirementWithUnaryMapping(EpRequirements.domainPropertyReq
                       (ProaSense.PDFTYPE), PdfMapping, "PDF Type", "")
