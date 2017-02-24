@@ -50,7 +50,7 @@ public class PanddaPublisher implements EventListener<byte[]> {
     json.add("timestamp", new JsonPrimitive(System.currentTimeMillis()));
     json.add("eventName", new JsonPrimitive("prediction"));
     json.add("params", buildParams());
-    json.add("pdfType", new JsonPrimitive("expontential"));
+    json.add("pdfType", new JsonPrimitive("exponential"));
     json.add("eventProperties", buildEventProperties());
     json.add("timestamps", new JsonArray());
 
