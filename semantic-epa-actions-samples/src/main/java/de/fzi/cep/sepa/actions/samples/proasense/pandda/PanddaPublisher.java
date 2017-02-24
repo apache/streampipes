@@ -1,18 +1,16 @@
 package de.fzi.cep.sepa.actions.samples.proasense.pandda;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import de.fzi.cep.sepa.messaging.EventListener;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
-import eu.proasense.internal.PDFType;
-import eu.proasense.internal.PredictedEvent;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -20,7 +18,7 @@ import java.util.Optional;
  */
 public class PanddaPublisher implements EventListener<byte[]> {
 
-  private static final String PanddaOutputTopic = "eu.proasense.internal.oa.mhwirth.predicted";
+  private static final String PanddaOutputTopic = "si.ijs.internal.oa_output";
 
   private EventProducer kafkaProducer;
   private PanddaParameters panddaParameters;
@@ -43,31 +41,39 @@ public class PanddaPublisher implements EventListener<byte[]> {
   @Override
   public void onEvent(byte[] event) {
     String inputJson = new String(event);
-    PredictedEvent predictedEvent = buildPredictedEvent(inputJson);
-
-    Optional<byte[]> serializedEvent = serialize(predictedEvent);
-    if (serializedEvent.isPresent()) {
-      this.kafkaProducer.publish(serializedEvent.get());
-    }
+    this.kafkaProducer.publish(buildPredictedEvent(inputJson));
   }
 
-  private PredictedEvent buildPredictedEvent(String inputJson) {
-    PredictedEvent predictedEvent = new PredictedEvent();
-    predictedEvent.eventName = "prediction";
-    predictedEvent.timestamp =  new Date().getTime() / 1000;
-    predictedEvent.pdfType = PDFType.EXPONENTIAL;
-    predictedEvent.eventProperties = new HashMap<>();
+  private String buildPredictedEvent(String inputJson) {
+    JsonObject json = new JsonObject();
 
-    predictedEvent.params = new ArrayList<>();
-    predictedEvent.timestamps = new ArrayList<>();
+    json.add("timestamp", new JsonPrimitive(System.currentTimeMillis()));
+    json.add("eventName", new JsonPrimitive("prediction"));
+    json.add("params", buildParams());
+    json.add("pdfType", new JsonPrimitive("expontential"));
+    json.add("eventProperties", buildEventProperties());
+    json.add("timestamps", new JsonArray());
 
-    double lambda = 0.0045;
-    predictedEvent.params.add(lambda);
-    predictedEvent.timestamps.add(System.currentTimeMillis());
-
-    return predictedEvent;
+    System.out.println(json.toString());
+    return json.toString();
   }
 
+  private JsonArray buildParams() {
+    JsonArray jsonArray = new JsonArray();
+    jsonArray.add(new JsonPrimitive(0.0045));
+
+    return jsonArray;
+  }
+
+  private JsonObject buildEventProperties() {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.add("timeUnit", new JsonPrimitive("hour"));
+    jsonObject.add("coeff", new JsonPrimitive(0.023453107960687173));
+    jsonObject.add("std", new JsonPrimitive(0.0031882800000000004));
+    jsonObject.add("zScore", new JsonPrimitive(6.519465442623263));
+
+    return jsonObject;
+  }
   private Optional<byte[]> serialize(TBase tbase)
   {
     try {
@@ -76,5 +82,10 @@ public class PanddaPublisher implements EventListener<byte[]> {
       e.printStackTrace();
     }
     return Optional.empty();
+  }
+
+  public static void main(String[] args) {
+    PanddaPublisher publisher = new PanddaPublisher("ipe-koi15.fzi.de", 9092, null);
+    publisher.onEvent(new String("abc").getBytes());
   }
 }
