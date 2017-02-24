@@ -61,7 +61,7 @@ public class PanddaPublisher implements EventListener<byte[]> {
     predictedEvent.params = new ArrayList<>();
     predictedEvent.timestamps = new ArrayList<>();
 
-    double lambda = 1 / 222.2;
+    double lambda = 0.0045;
     predictedEvent.params.add(lambda);
     predictedEvent.timestamps.add(System.currentTimeMillis());
 
