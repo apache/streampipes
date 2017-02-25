@@ -40,8 +40,8 @@ export default function SavePipelineController($scope, $rootScope, $mdDialog, $s
                 if (data.success) {
                     $scope.displaySuccess(data);
                     $scope.hide();
-                    if (switchTab) $state.go("streampipes.pipelines");
-                    if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+                    if (switchTab) $state.go("pipelines");
+                    if ($scope.startPipelineAfterStorage) $state.go("pipelines", {pipeline: data.notifications[1].description});
                     if ($rootScope.state.adjustingPipelineState && $scope.overwrite) {
                         var pipelineId = $rootScope.state.adjustingPipeline._id;
 

@@ -26,37 +26,33 @@
     <!--<script type="text/javascript" src="refactor/ModalBuilder.js"></script>-->
     <link rel="stylesheet" href="css/spinkit.css"/>
     <link rel="stylesheet" href="css/please-wait.css"/>
-	<link rel="stylesheet" href="css/jsplumb.css"/>
-	<link rel="stylesheet" href="css/toastr.css"/>
-	<link rel="stylesheet" href="css/prism.css"/>
-	<link rel="stylesheet" href="css/loading-bar.min.css"/>
-	<link rel="stylesheet" type="text/css" href="css/main.css" />
-	<link rel="stylesheet" type="text/css" href="css/ng-prettyjson.min.css" />
-	<link rel="stylesheet" href="css/themes/default/style.min.css" />
-	<link rel="stylesheet" href="css/angular-ui-tree.min.css">
-	<link rel="stylesheet" href="css/mlhr-table.css">
-	<link rel="stylesheet" href="css/malhar-angular-dashboard.css"/>
-	<link rel="stylesheet" href="css/epoch.min.css"/>
+    <link rel="stylesheet" href="css/jsplumb.css"/>
+    <link rel="stylesheet" href="css/toastr.css"/>
+    <link rel="stylesheet" href="css/prism.css"/>
+    <link rel="stylesheet" href="css/loading-bar.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ng-prettyjson.min.css"/>
+    <link rel="stylesheet" href="css/angular-ui-tree.min.css">
+    <link rel="stylesheet" href="css/mlhr-table.css">
+    <link rel="stylesheet" href="css/malhar-angular-dashboard.css"/>
+    <link rel="stylesheet" href="css/epoch.min.css"/>
     <link rel="stylesheet" href="css/trafficlight.css"/>
 
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css"/>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
 
+    <link rel="stylesheet" href="css/colors.css"/>
 
     <script type="text/javascript">
         var domain = "";
         var standardUrl = window.location.protocol + "//" + window.location.host + "/semantic-epa-backend/api/";
-        //		var testUrl = "http://anemone06.fzi.de/semantic-epa-backend/api/";
-        //		var currentTutorialPage;
-        //		var state = new State();
-
     </script>
 </head>
 
@@ -70,58 +66,26 @@
 
     });
 </script>
-<div flex layout="column" tabIndex="-1" role="main" id="topDiv">
 
-    <div ui-view="top"></div>
-    <div ui-view="container" flex layout="column" style="min-height: 100vh"></div>
+<div layout="column" style="height:100%;scrolling:no;" role="main" tabindex="-1" flex>
 
-</div>
-
-<div id="manageModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title">Manage</h4>
-            </div>
-            <div class="modal-body">
-                <div id="elementList">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
+    <div ui-view="spNavbar"></div>
+    <div layout="row" >
+        <div md-whiteframe="6" style="width:40px;height:calc(100vh - 50px);color:white;background:rgb(48,66,105);" ui-view="spIconBar"></div>
+        <div flex="100">
+            <md-content id="content" ui-view="spMain" style="height:calc(100vh - 50px);"></md-content>
         </div>
     </div>
+
 </div>
 
+<!--<div layout="column" layout-fill>-->
+<!--<div flex ui-view="spNavbar"></div>-->
+<!--<md-content layout="column" flex>-->
+<!--<div ui-view="spMain" flex layout="column" layout-fill></div>-->
+<!--</md-content>-->
+<!--</div>-->
 
-<div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title">Tutorial</h4>
-            </div>
-            <div class="modal-body">
-                <div id="tutorial-content">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        Close
-                    </button>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <script type="text/javascript" src="lib/jsPlumb-2.1.0-min.js"></script>
 <script src="https://maps.google.com/maps/api/js?libraries=visualization,drawing,geometry,places&key=AIzaSyBzSOuGRmJJyCe0bmbYJc5pBQokrHKb9dI"></script>
 <script type="text/javascript" src="bundle.js"></script>

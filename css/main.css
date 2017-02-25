@@ -17,6 +17,27 @@ body {
 	background-attachment: fixed;	
 }
 
+md-toolbar.top-nav {
+	min-height:50px !important;
+}
+
+.top-nav {
+	height:50px !important;
+}
+
+md-list-item > .md-button {
+	padding: 0px;
+	min-width:0px;
+}
+
+md-list-item.md-no-proxy, md-list-item .md-no-style {
+	padding: 0px 7px !important;
+}
+
+md-list-item._md-button-wrap>div.md-button:first-child {
+	padding: 0px 7px !important;
+}
+
 .angular-google-map-container { height: 400px; }
 
 .wizard-preview {
@@ -440,7 +461,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .assemblyOptions {
-	background: rgb(63,81,181);
 	color: white;
 	padding: 5px;
 	margin-top: 1%; 
@@ -473,7 +493,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 	overflow: visible;
 	box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
 	padding: 5px;
-	border: 1px solid rgb(63,81,181);
+	border: 1px solid #91BED4;
     height:700px;
     width:100%;    
 }

@@ -1,9 +1,6 @@
-<div flex layout-fill>
+<div flex>
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-        <div flex="none" layout-wrap layout="row" layout-align="start center"
-             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <h5>PIPELINE EDITOR </h5>
-        </div>
+
         <div layout-fill>
             <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab">
 
@@ -97,7 +94,7 @@
         </div>
     </div>
     <div style="margin-left:1%;margin-right:1%;">
-        <div class="assemblyOptions">
+        <div class="assemblyOptions sp-blue-bg">
             <div layout="row" layout-align="start center">
                 <md-button ng-disabled="!isValidPipeline()"
                            class="md-icon-button" ng-click="submit()" type="submit">

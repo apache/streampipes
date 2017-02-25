@@ -15,10 +15,10 @@ export default function authService($http, $rootScope, $location, $state, restAp
                             if (response.data.configured) {
                                 $rootScope.appConfig = response.data.appConfig;
                                 if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
-                                    $state.go("streampipes.login")//$location.path("/login");
+                                    $state.go("login")//$location.path("/login");
                                 }
                             }
-                            else $state.go("streampipes.setup")
+                            else $state.go("setup")
                         })
                 }
                 else {
@@ -52,7 +52,7 @@ export default function authService($http, $rootScope, $location, $state, restAp
                     .then(function (conf) {
                         if (conf.data.configured) {
                         }
-                        else $state.go("streampipes.setup")
+                        else $state.go("setup")
                     })
             });
 

@@ -26,7 +26,7 @@ export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $state) {
 			restApi.logout().then(function() {
 			$scope.user = undefined;
 			$rootScope.authenticated = false;
-			$state.go("streampipes.login");
+			$state.go("login");
 		});
 	};	
 

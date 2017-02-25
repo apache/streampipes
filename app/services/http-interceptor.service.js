@@ -17,7 +17,7 @@ export default function httpInterceptor ($log) {
 						$rootScope.$broadcast("InvalidToken");
 						$rootScope.sessionExpired = true;
 						console.log("GOING ");
-						$state.go("streampipes.login");
+						$state.go("login");
 						$timeout(function() {$rootScope.sessionExpired = false;}, 5000);
 					} else if (response.status == 403) {
 						$rootScope.$broadcast("InsufficientPrivileges");
