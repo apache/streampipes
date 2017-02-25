@@ -17,6 +17,15 @@ body {
 	background-attachment: fixed;	
 }
 
+#ship {
+	border: 1px solid;
+	padding: 10px;
+	background: #dddddd;
+	border-bottom-left-radius: 20em;
+	border-bottom-right-radius: 20em;
+}
+
+
 md-toolbar.top-nav {
 	min-height:50px !important;
 }
