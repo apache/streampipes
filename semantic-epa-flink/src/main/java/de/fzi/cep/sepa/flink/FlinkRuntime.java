@@ -58,19 +58,19 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 			// Add the first source to the topology
 			DataStream<Map<String, Object>> messageStream1 = null;
- 			SourceFunction<String> source1 = getStream1Source();
- 			if (source1 != null) {
- 			    messageStream1 = env
-					.addSource(source1).flatMap(new JsonToMapFormat());
+			SourceFunction<String> source1 = getStream1Source();
+			if (source1 != null) {
+				messageStream1 = env
+						.addSource(source1).flatMap(new JsonToMapFormat());
 			} else {
 				throw new Exception("At least one source must be defined for a flink sepa");
 			}
 
 			DataStream<Map<String, Object>> messageStream2 = null;
- 			SourceFunction<String> source2 = getStream2Source();
- 			if (source2 != null) {
- 			    messageStream2 = env
-					.addSource(source2).flatMap(new JsonToMapFormat());
+			SourceFunction<String> source2 = getStream2Source();
+			if (source2 != null) {
+				messageStream2 = env
+						.addSource(source2).flatMap(new JsonToMapFormat());
 
 				execute(messageStream1, messageStream2);
 			} else {
@@ -146,7 +146,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	protected Properties getProperties() {
 		Properties props = new Properties();
 
-	    // TODO ask Domink ig those properties are still needed or if they were for the old kafka producer
+		// TODO ask Domink ig those properties are still needed or if they were for the old kafka producer
 //		String zookeeperHost = getZookeeperHost();
 //		int zookeeperPort = getZookeeperPort();
 //
@@ -202,15 +202,19 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	 * @return
 	 */
 	private SourceFunction<String> getStreamSource(int i) {
-		EventStream stream = graph.getInputStreams().get(i);
-		if (stream != null) {
-			KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
+		if (graph.getInputStreams().size() - 1 >= i) {
+
+			EventStream stream = graph.getInputStreams().get(i);
+			if (stream != null) {
+				KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
 
-			//new FlinkKafkaConsumer09<>(getInputTopic(), new SimpleStringSchema(), getProperties());
-			return new NonParallelKafkaSource(protocol.getBrokerHostname() + ":" + protocol.getKafkaPort(),
-					protocol.getTopicName());
-		} else {
+				//new FlinkKafkaConsumer09<>(getInputTopic(), new SimpleStringSchema(), getProperties());
+				return new NonParallelKafkaSource(protocol.getBrokerHostname() + ":" + protocol.getKafkaPort(),
+						protocol.getTopicName());
+			} else {
+				return null;
+			}} else {
 			return null;
 		}
 	}
