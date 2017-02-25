@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.sources.samples.mnist.MLDataProducer;
 
 public class MnistSourcesInit extends StandaloneModelSubmitter {
 
+
     public static void main(String[] args) {
 
         DeclarersSingleton.getInstance()

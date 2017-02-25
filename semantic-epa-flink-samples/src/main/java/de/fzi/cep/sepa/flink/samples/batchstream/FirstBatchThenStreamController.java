@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
 import de.fzi.cep.sepa.sdk.helpers.SupportedFormats;
 import de.fzi.cep.sepa.sdk.helpers.SupportedProtocols;
 
+
 public class FirstBatchThenStreamController extends AbstractFlinkAgentDeclarer<FirstBatchThenStreamParameters> {
 
     @Override
@@ -34,6 +35,12 @@ public class FirstBatchThenStreamController extends AbstractFlinkAgentDeclarer<F
 
     @Override
     protected FlinkSepaRuntime<FirstBatchThenStreamParameters> getRuntime(SepaInvocation graph) {
-        return null;
+
+        FirstBatchThenStreamParameters params = new FirstBatchThenStreamParameters(graph);
+
+//        return new FirstBatchThenStreamProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+
+        return new FirstBatchThenStreamProgram(params);
+
     }
 }
