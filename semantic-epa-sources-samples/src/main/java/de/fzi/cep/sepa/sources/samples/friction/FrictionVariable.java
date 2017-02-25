@@ -5,8 +5,8 @@ package de.fzi.cep.sepa.sources.samples.friction;
  */
 public enum FrictionVariable {
 
-    Gearbox("Friction Coefficient Gearbox (Replay)", "", "/gearbox", "de.fzi.cep.sepa.mhwirth.friction.gearbox"),
-    Swivel("Friction Coefficient Swivel (Replay)", "", "/swivel", "de.fzi.cep.sepa.mhwirth.friction.swivel");
+    Gearbox("Friction Coefficient Gearbox (Replay)", "", "gearbox", "de.fzi.cep.sepa.mhwirth.friction.gearbox"),
+    Swivel("Friction Coefficient Swivel (Replay)", "", "swivel", "de.fzi.cep.sepa.mhwirth.friction.swivel");
 
     private String label;
     private String description;
