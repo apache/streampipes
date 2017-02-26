@@ -14,7 +14,7 @@ public class GearboxFrictionCoefficientStream extends FrictionCoefficientStream 
         return getPreparedEventStream(sep,
                 AkerVariables.Friction_Gearbox,
                 AkerVariables.Friction_Gearbox.originalTopic(),
-                "/friction_gearbox");
+                "friction_gearbox");
 
     }
 

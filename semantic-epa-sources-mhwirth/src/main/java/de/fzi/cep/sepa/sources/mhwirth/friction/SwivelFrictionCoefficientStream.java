@@ -14,6 +14,6 @@ public class SwivelFrictionCoefficientStream extends FrictionCoefficientStream {
         return getPreparedEventStream(sep,
                 AkerVariables.Friction_Swivel,
                 AkerVariables.Friction_Swivel.originalTopic(),
-                "/friction_swivel");
+                "friction_swivel");
     }
 }

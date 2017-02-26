@@ -1,10 +1,10 @@
 package de.fzi.cep.sepa.hella.shuttletime;
 
+import de.fzi.cep.sepa.esper.EsperEventEngine;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import de.fzi.cep.sepa.esper.EsperEventEngine;
 
 
 public class ShuttleTime extends EsperEventEngine<ShuttleTimeParameters> {
@@ -25,7 +25,8 @@ public class ShuttleTime extends EsperEventEngine<ShuttleTimeParameters> {
 						+bindingParameters.getTimestampEventName() +" - a." +bindingParameters.getTimestampEventName() +") as timeDifference " 
 						+" from pattern[every a=" +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) 
 						+"(location='" +lacqueringLineId +"', event='WorkDone (Automatic)')"
-						+" -> b=" +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName()) 
+						+" -> b=" +fixEventName(bindingParameters.getInputStreamParams().get(0).getInName
+								())
 						+"(location='" +mm.getMachineId() +"', event='Arrive')"
 						+"] where a." +bindingParameters.getShuttleIdEventName() +"=b." +bindingParameters.getShuttleIdEventName();
 				
