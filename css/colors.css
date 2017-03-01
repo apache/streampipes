@@ -2,6 +2,18 @@
     background: #304269;
 }
 
+.sp-darkblue-text {
+    color: #304269;
+}
+
+.sp-darkblue-border {
+    border: 1px solid #304269;
+}
+
+.sp-gray-border {
+    border: 1px solid #cccccc;
+}
+
 .sp-blue {
     color: #91BED4;
 }

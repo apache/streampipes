@@ -19,13 +19,19 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         controller:'AppCtrl'
     }
 
+    var container = {
+        templateUrl: "templates/streampipes.html",
+        controller: 'AppCtrl'
+    }
+
     $stateProvider
         .state('streampipes', {
             url: '/streampipes',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "container" : container,
+                "spNavbar@streampipes": spNavbar,
+                "spIconBar@streampipes" : spIconBar,
+                "spMain@streampipes": {
                     templateUrl: "app/editor/editor.html",
                     controller: 'EditorCtrl',
                     resolve: {
@@ -36,12 +42,10 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('edit', {
+        .state('streampipes.edit', {
             url: '/editor/:pipeline',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: "app/editor/editor.html",
                     controller: 'EditorCtrl'
                 }
@@ -50,86 +54,70 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('login', {
             url: '/login/:target?session',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "container": {
                     templateUrl: 'templates/login.html',
                     controller: 'LoginCtrl'
                 }
             }
         })
-        .state('pipelines', {
+        .state('streampipes.pipelines', {
             url: '/pipelines/:pipeline',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/pipelines/pipelines.html',
                     controller: 'PipelineCtrl'
                 }
             }
         })
-        .state('dashboard', {
+        .state('streampipes.dashboard', {
             url: '/dashboard',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/dashboard/dashboard.html',
                     controller: 'DashboardCtrl'
                 }
             }
         })
-        .state('ontology', {
+        .state('streampipes.ontology', {
             url: '/ontology',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/ontology/ontology.html',
                     controller: 'OntologyCtrl'
                 }
             }
         })
-        .state('sensors', {
+        .state('streampipes.sensors', {
             url: '/sensors',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/sensors/sensors.html',
                     controller: 'SensorsCtrl'
                 }
             }
         })
-        .state('myelements', {
+        .state('streampipes.myelements', {
             url: '/myelements',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/myelements/myelements.html',
                     controller: 'MyElementsCtrl'
                 }
             }
         })
-        .state('applinks', {
+        .state('streampipes.applinks', {
             url: '/applinks',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/applinks/applinks.tmpl.html',
                     controller: 'AppLinksCtrl'
                 }
             }
         })
-        .state('tutorial', {
+        .state('streampipes.tutorial', {
             url: '/tutorial',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/tutorial/tutorial.html',
                     controller: 'TutorialCtrl'
                 }
@@ -138,31 +126,25 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('register', {
             url: '/register',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "container": {
                     templateUrl: 'templates/register.html',
                     controller: 'RegisterCtrl'
                 }
             }
         })
-        .state('add', {
+        .state('streampipes.add', {
             url: '/add',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/add/add.html',
                     controller: 'AddCtrl'
                 }
             }
         })
-        .state('documentation', {
+        .state('streamppipes.documentation', {
             url: '/docs',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/docs/docs.html',
                     controller: 'DocsCtrl'
                 }
@@ -171,42 +153,34 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
         .state('setup', {
             url: '/setup',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "container": {
                     templateUrl: 'templates/setup.html',
                     controller: 'SetupCtrl'
                 }
             }
         })
-        .state('error', {
+        .state('streampipes.error', {
             url: '/error',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'templates/error.html',
                     controller: 'SetupCtrl'
                 }
             }
         })
-        .state('settings', {
+        .state('streampipes.settings', {
             url: '/settings',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'templates/settings.html',
                     controller: 'SettingsCtrl'
                 }
             }
         })
-        .state('notifications', {
+        .state('streampipes.notifications', {
             url: '/notifications',
             views: {
-                "spNavbar": spNavbar,
-                "spIconBar" : spIconBar,
-                "spMain": {
+                "spMain@streampipes": {
                     templateUrl: 'app/notifications/notifications.html',
                     controller: 'NotificationsCtrl'
                 }

@@ -29,6 +29,8 @@ export default function TutorialCtrl($scope, $timeout) {
         initialSlide: 0,
         infinite: true,
         autoplaySpeed: 1000,
+        initOnload: true,
+        data: $scope.tutorialPages,
         method: {},
         event: {
             beforeChange: function (event, slick, currentSlide, nextSlide) {
@@ -50,7 +52,6 @@ export default function TutorialCtrl($scope, $timeout) {
                 console.log('re-init');
             },
             init: function (event, slick) {
-                console.log('init');
             },
             setPosition: function (evnet, slick) {
                 console.log('setPosition');
@@ -61,8 +62,8 @@ export default function TutorialCtrl($scope, $timeout) {
         }
     };
 
-    $timeout(function () {
+    $timeout(function() {
         $scope.slickConfigLoaded = true;
-    }, 1500);
+    }, 0);
 
 }

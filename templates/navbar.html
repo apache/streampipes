@@ -6,15 +6,18 @@
         <h1 class="md-toolbar-tools">
             <div class="sp-darkblue"
                  style="align-items: left;padding:5px;border-radius:0px;margin-right:15px;">{{title}}
-                &nbsp;&nbsp;</div>
+                |
+                <b style="font-weight:normal;font-variant: small-caps;" class="sp-lightblue"> {{activePage}}
+                </b>
+            </div>
             <div class="sp-darkblue"
-                 style="background:white;color:#304269;padding: 5px 5px;font-size:15px">{{activePage}}
+                 style="color:white;padding: 5px 5px;font-size:15px">
             </div>
         </h1>
-        <div ng-if="appConfig =='StreamPipes'">
+        <div>
             <span flex></span>
             <div layout layout-align="end center" ng-show="authenticated">
-                <md-button ng-click="$parent.go('tutorial')" style="min-width:0px;">
+                <md-button ng-click="$parent.go('streampipes.tutorial')" style="min-width:0px;">
                     <md-icon md-svg-icon="action:ic_help_24px" aria-label="Tutorial" style="color:white;"></md-icon>
                 </md-button>
                 <md-button ng-click="logout()" style="min-width:0px;">
@@ -32,7 +35,7 @@
         <div layout="column" class="md-toolbar-tools-bottom inset">
             <div layout layout-sm="column">
                 <div class="useravatar" user="userInfo"></div>
-                <div style="margin-left:10px; margin-right:10px;">{{email}}</div>
+                <div style="color:white;margin-left:10px; margin-right:10px;">{{email}}</div>
             </div>
             <div style="margin-top:20px;">
                 <md-button style="background:rgb(63,81,181);color:white;" class="md-accent" ng-click="logout()">Logout
@@ -49,7 +52,7 @@
             </div>
 
         </md-list-item>
-        <md-list-item class="md-2-line" role="link" ng-click="$parent.go('notifications')">
+        <md-list-item class="md-2-line" role="link" ng-click="$parent.go('streampipes.notifications')">
             <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"></md-icon>
             <div class="md-list-item-text">
                 <span class="md-body-2">Notifications  <span class="sidebar-badge">{{unreadNotifications.length}}</span></span>

@@ -25,9 +25,13 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
         });
     };
 
+    $scope.isActivePage = function(path) {
+        return ($state.current.name == path);
+    }
+
     var getPageTitle = function (path) {
         var allMenuItems = $scope.menu.concat($scope.admin);
-        var currentTitle = "asd";
+        var currentTitle = "Notifications";
         angular.forEach(allMenuItems, function (m) {
             if (m.link === path) {
                 currentTitle = m.title;
@@ -44,12 +48,12 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
             icon: 'action:ic_dashboard_24px'
         },
         {
-            link: 'pipelines',
+            link: 'streampipes.pipelines',
             title: 'Pipelines',
             icon: 'av:ic_play_arrow_24px'
         },
         {
-            link: 'dashboard',
+            link: 'streampipes.dashboard',
             title: 'Live Dashboard',
             icon: 'editor:ic_insert_chart_24px'
         }
@@ -62,32 +66,32 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     ];
     $scope.admin = [
         {
-            link: 'myelements',
+            link: 'streampipes.myelements',
             title: 'My Elements',
             icon: 'image:ic_portrait_24px'
         },
         {
-            link: 'add',
+            link: 'streampipes.add',
             title: 'Install Pipeline Elements',
             icon: 'file:ic_cloud_download_24px'
         },
         {
-            link: 'sensors',
+            link: 'streampipes.sensors',
             title: 'Pipeline Element Generator',
             icon: 'content:ic_add_24px'
         },
         {
-            link: 'ontology',
+            link: 'streampipes.ontology',
             title: 'Knowledge Management',
             icon: 'social:ic_share_24px'
         },
         {
-            link: 'applinks',
+            link: 'streampipes.applinks',
             title: 'Application Links',
             icon: 'action:ic_open_in_new_24px'
         },
         {
-            link: 'settings',
+            link: 'streampipes.settings',
             title: 'Settings',
             icon: 'action:ic_settings_24px'
         }

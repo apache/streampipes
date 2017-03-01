@@ -61,21 +61,15 @@
 <script type="text/javascript">
     window.loading_screen = window.pleaseWait({
         logo: "img/icons/Logo_StreamPipes_BW.png",
-        backgroundColor: '#3F51B5',
-        loadingHtml: "<div class='sk-spinner sk-spinner-pulse'><div class='sk-rect3'></div></div>"
+        backgroundColor: '#304269',
+        loadingHtml: "<div class='sk-rotating-plane'><div class='sk-rect3'></div></div>"
 
     });
 </script>
 
 <div layout="column" style="height:100%;scrolling:no;" role="main" tabindex="-1" flex>
+    <div ui-view="container" flex layout="column" style="min-height: 100vh"></div>
 
-    <div ui-view="spNavbar"></div>
-    <div layout="row" >
-        <div md-whiteframe="6" style="width:40px;height:calc(100vh - 50px);color:white;background:rgb(48,66,105);" ui-view="spIconBar"></div>
-        <div flex="100">
-            <md-content id="content" ui-view="spMain" style="height:calc(100vh - 50px);"></md-content>
-        </div>
-    </div>
 
 </div>
 

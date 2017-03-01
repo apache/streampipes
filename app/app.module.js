@@ -138,6 +138,6 @@ export default angular
 
         $mdThemingProvider.theme('default')
             .primaryPalette('streamPipesPrimary')
-            .accentPalette('streamPipesAccent')
+            //.accentPalette('streamPipesAccent')
 
     });

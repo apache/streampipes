@@ -17,6 +17,15 @@ body {
 	background-attachment: fixed;	
 }
 
+.page-container {
+	margin:15px;
+	border: 1px solid #cccccc;
+	min-height:calc(100% - 40px);
+}
+
+.page-container-padding {
+	padding-bottom:20px;
+}
 #ship {
 	border: 1px solid;
 	padding: 10px;

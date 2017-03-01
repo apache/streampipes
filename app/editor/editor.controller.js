@@ -50,7 +50,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     $mdDialog.show(confirm).then(function () {
                         user.hideTutorial = true;
                         restApi.updateUserDetails(user).success(function (data) {
-                            $state.go("tutorial");
+                            $state.go("streampipes.tutorial");
                         });
                     }, function () {
 

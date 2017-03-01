@@ -236,7 +236,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
 
 
     function showPipelineInEditor(id) {
-        $state.go("edit", {pipeline: id});
+        $state.go("streampipes.edit", {pipeline: id});
     }
 
     function PipelineStatusDialogController($scope, $mdDialog, data) {
