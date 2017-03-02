@@ -26,7 +26,7 @@ public class DelayProgram extends FlinkSepaRuntime<DelayParameters> implements S
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>[] messageStream) {
         DataStream<Map<String, Object>> dataStream = messageStream[0];
 //
-        dataStream
+        DataStream<Map<String, Object>> result = dataStream
                 .map(new MapFunction<Map<String, Object>, Tuple2<Integer, Map<String, Object>>>() {
                     @Override
                     public Tuple2<Integer, Map<String, Object>> map(Map<String, Object> value) throws Exception {
@@ -34,9 +34,9 @@ public class DelayProgram extends FlinkSepaRuntime<DelayParameters> implements S
                     }
                 })
                 .keyBy(0)
-                .flatMap(new SendToKafkaFlatMap(this.params));
+                .flatMap(new Delay(this.params));
 
-        return dataStream;
+        return result;
     }
 
 

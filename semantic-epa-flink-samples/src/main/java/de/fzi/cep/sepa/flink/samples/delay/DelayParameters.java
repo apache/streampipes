@@ -5,17 +5,15 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
 public class DelayParameters extends BindingParameters {
     private int delayValue;
-    private String labelName;
     private String labelPropertyMapping;
 
     public DelayParameters(SepaInvocation graph) {
         super(graph);
     }
 
-    public DelayParameters(SepaInvocation graph, int delayValue, String labelName, String labelPropertyMapping) {
+    public DelayParameters(SepaInvocation graph, int delayValue, String labelPropertyMapping) {
         super(graph);
         this.delayValue = delayValue;
-        this.labelName = labelName;
         this.labelPropertyMapping = labelPropertyMapping;
     }
 
@@ -25,14 +23,6 @@ public class DelayParameters extends BindingParameters {
 
     public void setDelayValue(int delayValue) {
         this.delayValue = delayValue;
-    }
-
-    public String getLabelName() {
-        return labelName;
-    }
-
-    public void setLabelName(String labelName) {
-        this.labelName = labelName;
     }
 
     public String getLabelPropertyMapping() {

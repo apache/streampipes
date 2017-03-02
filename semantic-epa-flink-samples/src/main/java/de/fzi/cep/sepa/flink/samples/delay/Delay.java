@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.flink.samples.delay;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
@@ -10,12 +11,12 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Map;
 
-public class SendToKafkaFlatMap extends RichFlatMapFunction<Tuple2<Integer, Map<String, Object>>, Map<String, Object>> implements Serializable {
+public class Delay extends RichFlatMapFunction<Tuple2<Integer, Map<String, Object>>, Map<String, Object>> implements Serializable {
 
     private int delayValue;
-    private String labelName;
     private String labelPropertyMapping;
 
     /**
@@ -25,11 +26,9 @@ public class SendToKafkaFlatMap extends RichFlatMapFunction<Tuple2<Integer, Map<
     private transient ListState<Map<String, Object>> state;
 
 
-    public SendToKafkaFlatMap(DelayParameters params) {
+    public Delay(DelayParameters params) {
         this.delayValue = params.getDelayValue();
-        this.labelName = params.getLabelName();
         this.labelPropertyMapping = params.getLabelPropertyMapping();
-
     }
 
     @Override
@@ -39,22 +38,46 @@ public class SendToKafkaFlatMap extends RichFlatMapFunction<Tuple2<Integer, Map<
         long currentTime = System.currentTimeMillis();
 
         // emit the unlabeled event
-        out.collect(value.f1);
+//        Map<String, Object> ll = new HashedMap();
+//        ll.put("ble", "bla");
+//        out.collect(ll);
 
-        // add emit timestamt to the new event
-        long emitTimestamp = System.currentTimeMillis() + (delayValue * 60000);
+        out.collect(value.f1);
+//        // add emit timestamt to the new event
+
+//        long emitTimestamp = System.currentTimeMillis() + (delayValue * 60000);
+        long emitTimestamp = System.currentTimeMillis() + (delayValue * 30000);
         value.f1.put("internal_emit_timestamp", emitTimestamp);
 
-        // append new event to the state
+//        // append new event to the state
         state.add(value.f1);
 
-        // get the last event from state and check emit timestamp
-        Map<String, Object> lastElement = state.get().iterator().next();
-        System.out.println(lastElement.toString());
 
-        // append label to the old event
+        state.get().
+//
+//        // get the last event from state and check emit timestamp
+//        Iterator iter = state.get().iterator();
+//        while (iter.hasNext()) {
+        Map<String, Object> lastElement = (Map<String, Object>) state.get().iterator().next();
+//
+            Object tmp = lastElement.get("internal_emit_timestamp");
+            long tmp1 = (long) tmp;
 
-        // emit the old event with label
+        if (lastElement!= null && tmp1 < currentTime) {
+            lastElement.remove("internal_emit_timestamp");
+
+            // append label to the old event
+            // emit the old event with label
+            lastElement.put("delay_label", value.f1.get(labelPropertyMapping));
+            out.collect(lastElement);
+
+//            lastElement = (Map<String, Object>) iter.next();
+//        } else {
+//            state.add(lastElement);
+//        }
+
+
+        }
 
     }
 
