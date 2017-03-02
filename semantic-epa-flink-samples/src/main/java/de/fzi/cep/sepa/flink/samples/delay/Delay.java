@@ -4,6 +4,8 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.state.ValueState;
+import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -11,11 +13,14 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Delay extends RichFlatMapFunction<Tuple2<Integer, Map<String, Object>>, Map<String, Object>> implements Serializable {
 
+    private static String internal_timestamp_string = "internal_emit_timestamp";
     private int delayValue;
     private String labelPropertyMapping;
 
@@ -23,7 +28,7 @@ public class Delay extends RichFlatMapFunction<Tuple2<Integer, Map<String, Objec
      * The state contains a list with the old values that need to be emitted when
      * the delay is over
      */
-    private transient ListState<Map<String, Object>> state;
+    private transient ValueState<List<Map<String, Object>>> state;
 
 
     public Delay(DelayParameters params) {
@@ -33,59 +38,45 @@ public class Delay extends RichFlatMapFunction<Tuple2<Integer, Map<String, Objec
 
     @Override
     public void flatMap(Tuple2<Integer, Map<String, Object>> value, Collector<Map<String, Object>> out) throws Exception {
+        List<Map<String, Object>> currentState =  state.value();
 
         //TODO make it configuratble what is used for the time
         long currentTime = System.currentTimeMillis();
 
-        // emit the unlabeled event
-//        Map<String, Object> ll = new HashedMap();
-//        ll.put("ble", "bla");
-//        out.collect(ll);
-
         out.collect(value.f1);
+        currentState.add(value.f1);
+
 //        // add emit timestamt to the new event
+        long emitTimestamp = System.currentTimeMillis() + (delayValue * 60000);
+        value.f1.put(internal_timestamp_string, emitTimestamp);
 
-//        long emitTimestamp = System.currentTimeMillis() + (delayValue * 60000);
-        long emitTimestamp = System.currentTimeMillis() + (delayValue * 30000);
-        value.f1.put("internal_emit_timestamp", emitTimestamp);
+        // TODO this loop can be optimized
+        for (Iterator<Map<String, Object>> iterator = currentState.iterator(); iterator.hasNext();) {
+            Map<String, Object> element = iterator.next();
 
-//        // append new event to the state
-        state.add(value.f1);
+            if ((long) element.get(internal_timestamp_string) < currentTime) {
+                element.remove(internal_timestamp_string);
 
+                // append label to the old event
+                // emit the old event with label
+                element.put(DelayController.OUTPUT_LABEL, value.f1.get(labelPropertyMapping));
+                out.collect(element);
 
-        state.get().
-//
-//        // get the last event from state and check emit timestamp
-//        Iterator iter = state.get().iterator();
-//        while (iter.hasNext()) {
-        Map<String, Object> lastElement = (Map<String, Object>) state.get().iterator().next();
-//
-            Object tmp = lastElement.get("internal_emit_timestamp");
-            long tmp1 = (long) tmp;
-
-        if (lastElement!= null && tmp1 < currentTime) {
-            lastElement.remove("internal_emit_timestamp");
-
-            // append label to the old event
-            // emit the old event with label
-            lastElement.put("delay_label", value.f1.get(labelPropertyMapping));
-            out.collect(lastElement);
-
-//            lastElement = (Map<String, Object>) iter.next();
-//        } else {
-//            state.add(lastElement);
-//        }
-
-
+                iterator.remove();
+            }
         }
 
+        state.update(currentState);
     }
 
     @Override
     public void open(Configuration config) {
-        ListStateDescriptor<Map<String, Object>> descriptor = new ListStateDescriptor<>(
-                "oldEvents",
-                TypeInformation.of(new TypeHint<Map<String, Object>>() {}));
-        state = this.getRuntimeContext().getListState(descriptor);
+        ValueStateDescriptor<List<Map<String, Object>>> descriptor =
+                new ValueStateDescriptor<>(
+                        "oldEvents",
+                        TypeInformation.of(new TypeHint<List<Map<String, Object>>>() {}),
+                        new ArrayList<>()
+                );
+        state = this.getRuntimeContext().getState(descriptor);
     }
 }

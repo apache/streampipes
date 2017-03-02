@@ -17,8 +17,8 @@ import de.fzi.cep.sepa.sdk.helpers.SupportedProtocols;
 
 public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters> {
 
+    public static String OUTPUT_LABEL = "delay_label";
     private static String DELAY_VALUE_NAME = "delay_value";
-//    private static String LABEL_NAME = "label_name";
     private static String LABEL_PROPERTY_NAME = "label_property";
 
 
@@ -32,12 +32,11 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
                 .iconUrl("url")
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
-                .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value", "Minutes till the correct label is knonwn")
-//                .requiredTextParameter(LABEL_NAME, "Label Name", "The name of the appended label")
+                .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value [min]", "Minutes till the correct label is knonwn")
                 .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
                         "Label Property", "The property that is selected for the label")
                 .outputStrategy(OutputStrategies.append(new EventPropertyPrimitive(
-                        XSD._long.toString(), "delay_label", "",
+                        XSD._long.toString(), OUTPUT_LABEL, "",
                         de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"))
                 ))
                 .build();
@@ -49,13 +48,12 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
     protected FlinkSepaRuntime<DelayParameters> getRuntime(SepaInvocation graph) {
 
         int delayValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, DELAY_VALUE_NAME));
-//        String labelName = SepaUtils.getFreeTextStaticPropertyValue(graph, LABEL_NAME);
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 
         DelayParameters params = new DelayParameters(graph, delayValue, labelPropertyMapping);
 
-//        return new DelayProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new DelayProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 
-        return new DelayProgram(params);
+//        return new DelayProgram(params);
     }
 }
