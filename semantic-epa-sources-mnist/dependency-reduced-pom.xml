@@ -21,7 +21,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>de.fzi.cep.sepa.sources.samples.MnistSourcesInit</mainClass>
+                  <mainClass>de.fzi.cep.sepa.sources.samples.MLSourcesInit</mainClass>
                 </transformer>
                 <transformer />
               </transformers>
@@ -49,7 +49,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>de.fzi.cep.sepa.sources.samples.MnistSourcesInit</mainClass>
+              <mainClass>de.fzi.cep.sepa.sources.samples.MLSourcesInit</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

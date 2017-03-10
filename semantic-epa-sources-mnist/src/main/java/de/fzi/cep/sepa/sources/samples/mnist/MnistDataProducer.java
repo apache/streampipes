@@ -12,9 +12,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MLDataProducer implements SemanticEventProducerDeclarer {
 
-    static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
+public class MnistDataProducer implements SemanticEventProducerDeclarer {
+
+    static final Logger LOG = LoggerFactory.getLogger(MnistDataProducer.class);
 
 //    public static String dataFolder =System.getProperty("user.home") + File.separator +".streampipes" +
 //            File.separator +"sources" + File.separator +"data" + File.separator +"mnist" + File.separator;

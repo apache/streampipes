@@ -45,9 +45,7 @@ public class CsvReader {
                 long counter = 0;
 
                 while ((line = br.readLine()) != null) {
-                    // TODO method for line normalization
-                    line = line.replaceAll("; ", ";");
-                    line = line.replaceAll(", ", ",");
+                    line = removeWhiteSpace(line);
 
                     if ((counter == 0) && csvSettings.isHeaderIncluded()) {
                         counter++;
@@ -55,6 +53,8 @@ public class CsvReader {
                     }
 
                     String[] map = line.split(csvSettings.getColumnSeparator());
+
+                    //TODO add wait here when time is needed
 
                     // Transfrom the data to a Map
                     Map<String, Object> data = schemaTransformer.transform(map);
@@ -74,5 +74,13 @@ public class CsvReader {
             LOG.error("The File: " + file.toString() + " does not exist");
         }
 
+    }
+
+    private String removeWhiteSpace(String s) {
+        String result = s;
+        result = result.replaceAll("; ", ";");
+        result = result.replaceAll(", ", ",");
+
+        return result;
     }
 }
