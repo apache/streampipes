@@ -32,6 +32,10 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
 
     protected EventGrounding supportedGrounding;
 
+    protected boolean stream1 = false;
+    protected boolean stream2 = false;
+
+
     protected AbstractProcessingElementBuilder(String id, String label, String description, T element) {
         super(id, label, description, element);
         this.streamRequirements = new ArrayList<>();
@@ -148,6 +152,16 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU setStream1() {
+        stream1 = true;
+        return me();
+    }
+
+    public BU setStream2() {
+        stream2 = true;
+        return me();
+    }
+
     private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {
         return new FreeTextStaticProperty(internalId,
                 label,
@@ -160,11 +174,11 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     public void prepareBuild() {
         this.elementDescription.setStaticProperties(staticProperties);
 
-        if (stream1Properties.size() > 0) {
+        if (stream1Properties.size() > 0 || stream1) {
             this.streamRequirements.add(buildStream(stream1Properties));
         }
 
-        if (stream2Properties.size() > 0) {
+        if (stream2Properties.size() > 0 || stream2) {
             this.streamRequirements.add(buildStream(stream2Properties));
         }
 

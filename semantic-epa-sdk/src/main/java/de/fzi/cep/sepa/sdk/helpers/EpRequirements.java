@@ -48,6 +48,11 @@ public class EpRequirements {
 		return datatypeReq(SO.Number);
 	}
 
+	public static EventPropertyPrimitive anyProperty() {
+	    return datatypeReq(XSD._anyType.toString());
+    }
+
+
 	public static EventPropertyPrimitive booleanReq(String domainProperty)
 	{
 		return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);

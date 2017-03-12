@@ -24,10 +24,10 @@ public class WordCountProgram extends FlinkSepaRuntime<WordCountParameters> impl
 	
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
-			DataStream<Map<String, Object>> messageStream) {
+			DataStream<Map<String, Object>>... messageStream) {
 		
 		String textMapping = SepaUtils.getMappingPropertyName(params.getGraph(), "text-mapping");
-		return messageStream
+		return messageStream[0]
 				.flatMap(new WordSplitter(textMapping))
 				.keyBy("word")
 				.sum("count")

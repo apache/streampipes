@@ -52,7 +52,6 @@ public class NonParallelKafkaSource implements SourceFunction<String>, EventList
         kafkaConsumer.close();
     }
 
-
     @Override
     public void onEvent(byte[] event) {
         this.queue.add(new String(event));

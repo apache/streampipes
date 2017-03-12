@@ -34,6 +34,11 @@ public class EpProperties {
 		return list;
 	}
 
+	public static EventPropertyPrimitive timestampProperty(String runtimeName) {
+		// TODO we need a real timestamp property!
+		return ep(XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
+	}
+
 	public static EventPropertyList listIntegerEp(String runtimeName, String domainProperty) {
 		return listEp(runtimeName, Datatypes.Integer, domainProperty);
 	}

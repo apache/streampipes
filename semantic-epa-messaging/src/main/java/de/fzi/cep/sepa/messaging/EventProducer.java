@@ -1,9 +1,11 @@
 package de.fzi.cep.sepa.messaging;
 
+import java.io.Serializable;
+
 /**
  * Created by riemer on 01.10.2016.
  */
-public interface EventProducer {
+public interface EventProducer extends Serializable {
 
     void openProducer();
 

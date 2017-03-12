@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class MnistStream implements EventStreamDeclarer {
-    static final Logger LOG = LoggerFactory.getLogger(CsvReader.class);
+    static final Logger LOG = LoggerFactory.getLogger(MnistStream.class);
 
 
     private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
@@ -91,25 +92,8 @@ public class MnistStream implements EventStreamDeclarer {
         } else {
             LOG.error("The SEP MnistStream is not executable");
         }
-
-
-//        System.out.println("Execute Mnist");
-//        EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
-//
-//        // TODO implement Line Parser
-//       	CsvReadingTask csvReadingTask = new CsvReadingTask(getReadingTasks(), ",", "variable_timestamp", mnistLineParser, true);
-//
-//		Thread mouldingReplayThread = new Thread(new CsvPublisher(publisher, csvReadingTask, SimulationSettings.DEMONSTRATE_10));
-//		mouldingReplayThread.start();
-
     }
 
-//    private List<FolderReadingTask> getReadingTasks() {
-//        List<FolderReadingTask> tasks = new ArrayList<>();
-//
-//        tasks.add(new FolderReadingTask(dataFolder, "mnist_1", "csv", 0, 1));
-//        return tasks;
-//    }
 
     @Override
     public boolean isExecutable() {

@@ -23,8 +23,8 @@ public abstract class FlinkSecRuntime extends FlinkRuntime<SecInvocation>{
 	}
 
 	@Override
-	public boolean execute(DataStream<Map<String, Object>> convertedStream) {
-		DataStreamSink<Map<String, Object>> sink = getSink(convertedStream);
+	public boolean execute(DataStream<Map<String, Object>>... convertedStream) {
+		getSink(convertedStream);
 				
 		thread = new Thread(this);
 		thread.start();
@@ -32,6 +32,7 @@ public abstract class FlinkSecRuntime extends FlinkRuntime<SecInvocation>{
 		return true;
 	}
 
-	public abstract DataStreamSink<Map<String, Object>> getSink(DataStream<Map<String, Object>>convertedStream);
-	
+//	public abstract DataStreamSink<Map<String, Object>> getSink(DataStream<Map<String, Object>>... convertedStream1);
+	public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);
+
 }

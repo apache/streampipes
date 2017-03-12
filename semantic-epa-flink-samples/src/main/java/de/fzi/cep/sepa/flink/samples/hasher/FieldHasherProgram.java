@@ -22,8 +22,8 @@ public class FieldHasherProgram extends FlinkSepaRuntime<FieldHasherParameters>
 
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
-			DataStream<Map<String, Object>> messageStream) {
-		return messageStream.flatMap(new FieldHasher(params.getPropertyName(), 
+			DataStream<Map<String, Object>>... messageStream) {
+		return messageStream[0].flatMap(new FieldHasher(params.getPropertyName(),
 				params.getHashAlgorithmType().hashAlgorithm()));
 	}
 

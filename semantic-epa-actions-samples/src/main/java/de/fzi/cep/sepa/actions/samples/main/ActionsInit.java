@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.actions.samples.couchdb.CouchDbController;
 import de.fzi.cep.sepa.actions.samples.dashboard.DashboardController;
 import de.fzi.cep.sepa.actions.samples.debs.DebsOutputController;
 import de.fzi.cep.sepa.actions.samples.evaluation.EvaluationController;
+import de.fzi.cep.sepa.actions.samples.file.FileController;
 import de.fzi.cep.sepa.actions.samples.jms.JMSConsumer;
 import de.fzi.cep.sepa.actions.samples.kafka.KafkaController;
 import de.fzi.cep.sepa.actions.samples.notification.NotificationController;
@@ -22,7 +23,7 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new JMSConsumer())
             //.add(new MapsController())
 
-            //.add(new FileController())
+            .add(new FileController())
             //.add(new MultiRowTableController())
             .add(new DebsOutputController())
             //.add(new HeatmapController())

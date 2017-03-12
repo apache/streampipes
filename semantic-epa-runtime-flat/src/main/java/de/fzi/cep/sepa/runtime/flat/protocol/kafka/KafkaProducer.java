@@ -5,7 +5,9 @@ import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Producer;
 
-public class KafkaProducer extends Producer {
+import java.io.Serializable;
+
+public class KafkaProducer extends Producer implements Serializable {
 
 	private String kafkaHostname;
 	private int kafkaPort;
