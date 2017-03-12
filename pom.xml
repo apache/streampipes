@@ -353,6 +353,7 @@
         <module>semantic-epa-sources-kd2</module>
         <module>semantic-epa-sdk</module>
         <module>semantic-epa-sources-mnist</module>
+        <module>semantic-epa-sdk-tutorial</module>
     </modules>
 
     <!-- Build Settings -->
