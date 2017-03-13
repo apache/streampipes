@@ -45,12 +45,8 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
                         console.log(response.data.token);
                         $rootScope.token = response.data.token;
                         $rootScope.authenticated = true;
-                        //if ($stateParams.target != "") {
-                        //    console.log("going to " + $stateParams.target);
-                        //    $state.go($stateParams.target);
-                        //}
-                        if ($rootScope.appConfig == 'ProaSense') $state.go("home");
-                        else $state.go("streampipes");
+
+                        $state.go("streampipes");
                     }
                     else {
                         $rootScope.authenticated = false;
