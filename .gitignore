@@ -55,4 +55,5 @@ fabric.properties
 # JS 
 dist/
 
+./target/*
 npm-debug.log
