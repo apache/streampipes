@@ -354,6 +354,7 @@
         <module>semantic-epa-sdk</module>
         <module>semantic-epa-sources-mnist</module>
         <module>semantic-epa-sdk-tutorial</module>
+        <module>semantic-epa-sources-axoom-hmi</module>
     </modules>
 
     <!-- Build Settings -->
