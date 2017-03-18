@@ -1,12 +1,16 @@
-flink:
-    image: laus.fzi.de:5000/fzi/flink
-    net: "host"
+version: "2"
+
+services:
+  jobmanager:
+    image: laus.fzi.de:8201/streampipes/flink
     ports:
-        - "8081:8081"
-        - "9010:9010"
-        - "6123:6123"
-    expose:
-        - "8081"
-        - "6123"
+      - "8081:8081"
+    command: jobmanager
     volumes:
-        - ./config/flink:/opt/flink/conf
+      - /home/riemer/swarm/config/flink:/opt/flink/conf
+
+  taskmanager:
+    image: laus.fzi.de:8201/streampipes/flink
+    command: taskmanager
+    volumes:
+      - /home/riemer/swarm/config/flink:/opt/flink/conf
