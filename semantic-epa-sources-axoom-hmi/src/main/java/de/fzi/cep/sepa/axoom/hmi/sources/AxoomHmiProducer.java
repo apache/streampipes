@@ -27,10 +27,13 @@ public class AxoomHmiProducer implements SemanticEventProducerDeclarer {
 
   @Override
   public List<EventStreamDeclarer> getEventStreams() {
-    return Arrays.asList(new MachineStream(),
-            new MaintenanceStream(),
-            new OrderStream(AxoomHmiConfig.EUROBLECH),
+    return Arrays.asList(new MachineStream(AxoomHmiConfig.FABTECH),
+            new MaintenanceStream(AxoomHmiConfig.FABTECH),
             new OrderStream(AxoomHmiConfig.FABTECH),
-            new TrendStream());
+            new TrendStream(AxoomHmiConfig.FABTECH),
+            new MachineStream(AxoomHmiConfig.EUROBLECH),
+            new MaintenanceStream(AxoomHmiConfig.EUROBLECH),
+            new OrderStream(AxoomHmiConfig.EUROBLECH),
+            new TrendStream(AxoomHmiConfig.EUROBLECH));
   }
 }

@@ -9,18 +9,14 @@ import de.fzi.cep.sepa.sdk.builder.DataStreamBuilder;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.Formats;
 import de.fzi.cep.sepa.sdk.helpers.Protocols;
-import de.fzi.cep.sepa.sources.AbstractAlreadyExistingStream;
 
 /**
  * Created by riemer on 16.03.2017.
  */
-public class OrderStream extends AbstractAlreadyExistingStream {
-
-  private AxoomHmiConfig eventType;
+public class OrderStream extends AbstractAxoomHmiStream {
 
   public OrderStream(AxoomHmiConfig eventType) {
-    super();
-    this.eventType = eventType;
+    super(eventType);
   }
 
   @Override
@@ -42,7 +38,7 @@ public class OrderStream extends AbstractAlreadyExistingStream {
                     "http://schema.org/DateTime")))
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
-                    ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("orders")))
+                    ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("order")))
             .build();
   }
 }
