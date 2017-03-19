@@ -7,6 +7,7 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.sdk.builder.DataStreamBuilder;
 import de.fzi.cep.sepa.sdk.helpers.Formats;
 import de.fzi.cep.sepa.sdk.helpers.Protocols;
+import org.apache.commons.lang.WordUtils;
 
 /**
  * Created by riemer on 16.03.2017.
@@ -21,8 +22,8 @@ public class MaintenanceStream extends AbstractAxoomHmiStream {
   public EventStream declareModel(SepDescription sep) {
     return DataStreamBuilder.create
             ("axoom-maintenance-" + eventType.getEventType(), "Maintenance "
-                            + eventType.getEventType().toUpperCase(),
-                    "Provides a stream of the " +
+                            + WordUtils.capitalize(eventType.getEventType()),
+                    "Provides a stream of " +
                             "current " +
                             "maintenance events")
             .format(Formats.jsonFormat())
