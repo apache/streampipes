@@ -305,6 +305,12 @@
                 <artifactId>logback-classic</artifactId>
                 <version>1.1.9</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.drapostolos</groupId>
+                <artifactId>type-parser</artifactId>
+                <version>0.6.0</version>
+            </dependency>
+
 
 
         </dependencies>

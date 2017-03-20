@@ -1,10 +1,13 @@
 package de.fzi.cep.sepa.sdk.builder;
 
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by riemer on 20.11.2016.
@@ -27,6 +30,14 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
 
     public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
         this.outputStrategies.add(outputStrategy);
+        return me();
+    }
+
+    public ProcessingElementBuilder category(EpaType... epaCategory) {
+        this.elementDescription.setCategory(Arrays
+                .stream(epaCategory)
+                .map(Enum::name)
+                .collect(Collectors.toList()));
         return me();
     }
 

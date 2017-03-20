@@ -7,9 +7,12 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
+import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -82,6 +85,36 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU requiredSingleValueSelection(String internalId, String label, String description,
+                                           Option... options) {
+        return requiredSingleValueSelection(internalId, label, description, Arrays.asList(options));
+    }
+
+    public BU requiredSingleValueSelection(String internalId, String label, String description,
+                                           List<Option> options) {
+        OneOfStaticProperty osp = new OneOfStaticProperty(internalId, label, description);
+        osp.setOptions(options);
+
+        this.staticProperties.add(osp);
+        return me();
+
+    }
+
+    public BU requiredMultiValueSelection(String internalId, String label, String description,
+                                           Option... options) {
+        return requiredMultiValueSelection(internalId, label, description, Arrays.asList(options));
+    }
+
+    public BU requiredMultiValueSelection(String internalId, String label, String description,
+                                           List<Option> options) {
+        AnyStaticProperty asp = new AnyStaticProperty(internalId, label, description);
+        asp.setOptions(options);
+
+        this.staticProperties.add(asp);
+        return me();
+
+    }
+
     public BU requiredIntegerParameter(String internalId, String label, String description, Integer min, Integer max, Integer step) {
         FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
                 label,
@@ -90,6 +123,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
 
         PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
         fsp.setValueSpecification(valueSpecification);
+        this.staticProperties.add(fsp);
         return me();
     }
 
@@ -109,6 +143,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     public BU requiredPropertyStream1(EventProperty propertyRequirement) {
         this.stream1Properties.add(propertyRequirement);
 
+        return me();
+    }
+
+    public BU naryMappingPropertyWithoutRequirement(String internalName, String label, String
+            description) {
+        this.staticProperties.add(new MappingPropertyNary(internalName, label, description));
         return me();
     }
 
@@ -143,12 +183,20 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     }
 
     public BU supportedFormats(TransportFormat... format) {
-        this.supportedGrounding.setTransportFormats(Arrays.asList(format));
+        return supportedFormats(Arrays.asList(format));
+    }
+
+    public BU supportedFormats(List<TransportFormat> formats) {
+        this.supportedGrounding.setTransportFormats(formats);
         return me();
     }
 
     public BU supportedProtocols(TransportProtocol... protocol) {
-        this.supportedGrounding.setTransportProtocols(Arrays.asList(protocol));
+       return supportedProtocols(Arrays.asList(protocol));
+    }
+
+    public BU supportedProtocols(List<TransportProtocol> protocols) {
+        this.supportedGrounding.setTransportProtocols(protocols);
         return me();
     }
 

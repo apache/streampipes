@@ -7,6 +7,7 @@ import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.EPRuntime;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
+import de.fzi.cep.sepa.sdk.extractor.ProcessingElementParameterExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,10 @@ public abstract class EpDeclarer<B extends BindingParameters, EPR extends EPRunt
 			e.printStackTrace();
 			return new Response(elementId, false, e.getMessage());
 		}
+	}
+
+	protected ProcessingElementParameterExtractor getExtractor(SepaInvocation graph) {
+		return ProcessingElementParameterExtractor.from(graph);
 	}
 	
 	public abstract void preDetach() throws Exception;

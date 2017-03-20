@@ -18,6 +18,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.drapostolos</groupId>
+            <artifactId>type-parser</artifactId>
         </dependency>
     </dependencies>
 
