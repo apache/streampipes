@@ -3,19 +3,22 @@ package de.fzi.cep.sepa.flink.samples.elasticsearch;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSecRuntime;
+import de.fzi.cep.sepa.flink.samples.elasticsearch.elastic5.Elasticsearch5Sink;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.DataStreamSink;
-import org.apache.flink.streaming.connectors.elasticsearch2.ElasticsearchSink;
 import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ElasticSearchProgram extends FlinkSecRuntime implements Serializable {
 
@@ -68,6 +71,7 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
                 arg1.collect(arg0);
             }
 
-        }).addSink(new ElasticsearchSink<>(config, transports, new ElasticSearchIndexRequestBuilder(indexName, typeName)));
+        }).addSink(new Elasticsearch5Sink<>(config, transports, new
+                ElasticSearchIndexRequestBuilder(indexName, typeName)));
     }
 }

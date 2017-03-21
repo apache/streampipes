@@ -1,12 +1,13 @@
-import java.util.Properties;
-
-import de.fzi.cep.sepa.flink.source.NonParallelKafkaSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.apache.flink.util.Collector;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 
 public class FlinkKafkaPerformanceTest {
@@ -30,7 +31,9 @@ public class FlinkKafkaPerformanceTest {
 
 	    ParameterTool parameterTool = ParameterTool.fromArgs(args);
 	    DataStream<String> dataStream4 = //env.addSource(new FlinkKafkaConsumer09<>("SEPA.SEP.Random.Number.Json", new SimpleStringSchema(), props)).setParallelism(1);
-				env.addSource(new NonParallelKafkaSource(props.getProperty("zookeeper.connect"), "SEPA.SEP.Random.Number.Json"));
+				env.addSource(new FlinkKafkaConsumer010<String>("SEPA.SEP.Random.Number", new
+								SimpleStringSchema(), props));
+
 
 			         dataStream4.flatMap(new FlatMapFunction<String, Integer>() {
 	        long received = 0;

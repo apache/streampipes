@@ -8,6 +8,9 @@
 		<artifactId>semantic-epa-parent</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
+	<properties>
+		<elasticsearch.version>5.1.2</elasticsearch.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
@@ -47,14 +50,35 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-filesystem_2.10</artifactId>
-			<version>1.1.2</version>
+			<artifactId>flink-connector-filesystem_2.11</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
 			<version>3.6.1</version>
 		</dependency>
+
+
+		<!-- Elasticsearch 5 dependencies, remove after official connector has been released -->
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+
+		<!-- Dependency for Elasticsearch 5.x Java Client -->
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>transport</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-to-slf4j</artifactId>
+			<version>2.7</version>
+		</dependency>
+
 
 
 	</dependencies>

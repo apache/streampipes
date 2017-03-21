@@ -1,19 +1,18 @@
 package de.fzi.cep.sepa.flink;
 
 import de.fzi.cep.sepa.flink.converter.JsonToMapFormat;
-import de.fzi.cep.sepa.flink.source.NonParallelKafkaSource;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.JobID;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Runnable, Serializable {
@@ -138,53 +137,24 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 	}
 
-//	protected String getInputTopic()
-//	{
-//		return protocol().getTopicName();
-//	}
 
-	protected Properties getProperties() {
+	protected Properties getProperties(KafkaTransportProtocol protocol) {
 		Properties props = new Properties();
 
-		// TODO ask Domink ig those properties are still needed or if they were for the old kafka producer
-//		String zookeeperHost = getZookeeperHost();
-//		int zookeeperPort = getZookeeperPort();
-//
-//		String kafkaHost = getKafkaHost();
-//		int kafkaPort = getKafkaPort();
+		String zookeeperHost = protocol.getZookeeperHost();
+		int zookeeperPort = protocol.getZookeeperPort();
 
-//		props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
-//		props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
+		String kafkaHost = protocol.getBrokerHostname();
+		int kafkaPort = protocol.getKafkaPort();
+
+		props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
+		props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
 		props.put("group.id", UUID.randomUUID().toString());
 		props.put("zookeeper.session.timeout.ms", "60000");
 		props.put("zookeeper.sync.time.ms", "20000");
 		props.put("auto.commit.interval.ms", "10000");
 		return props;
 	}
-
-//	private String getKafkaHost() {
-//		return ((KafkaTransportProtocol) protocol()).getBrokerHostname();
-//	}
-//
-//	private Integer getKafkaPort() {
-//		return ((KafkaTransportProtocol) protocol()).getKafkaPort();
-//	}
-//
-//	private String getZookeeperHost() {
-//		return ((KafkaTransportProtocol) protocol()).getZookeeperHost();
-//	}
-//
-//	private Integer getZookeeperPort() {
-//		return ((KafkaTransportProtocol) protocol()).getZookeeperPort();
-//	}
-//
-//	private KafkaTransportProtocol protocol1() {
-//		return (KafkaTransportProtocol) graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol();
-//	}
-//
-//	private KafkaTransportProtocol protocol2() {
-//		return (KafkaTransportProtocol) graph.getInputStreams().get(0).getEventGrounding().getTransportProtocol();
-//	}
 
 	private SourceFunction<String> getStream1Source() {
 		return getStreamSource(0);
@@ -208,10 +178,8 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 			if (stream != null) {
 				KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
-
-				//new FlinkKafkaConsumer09<>(getInputTopic(), new SimpleStringSchema(), getProperties());
-				return new NonParallelKafkaSource(protocol.getBrokerHostname() + ":" + protocol.getKafkaPort(),
-						protocol.getTopicName());
+				return new FlinkKafkaConsumer010<>(protocol.getTopicName(), new SimpleStringSchema
+								(), getProperties(protocol));
 			} else {
 				return null;
 			}} else {
