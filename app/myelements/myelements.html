@@ -22,10 +22,10 @@
             <md-list-item ng-repeat="item in currentElements | orderBy:'+name'">
 
                 <div flex="100" layout="row" style="border:1px solid darkblue;margin-bottom:10px;background:white;margin-left:30px;margin-right:30px;">
-                    <div flex="20" layout="row" style="margin:10px;">
-                        <img ng-src="{{item.iconUrl}}" class="md-card-image connectable-element" alt="{{item.name}}"
+                    <div flex="20" layout="row" layout-align="start center" style="margin:10px;">
+                        <img ng-src="{{item.iconUrl}}" class="md-card-image draggable-icon {{currentTabType}}" alt="{{item.name}}"
                              ng-show="(item.iconUrl != null && item.iconUrl != 'http://localhost:8080/img')"/>
-						<span class="connectable-element"
+						<span class="draggable-icon {{currentTabType}}"
                               ng-show="(item.iconUrl == null || item.iconUrl == 'http://localhost:8080/img')">{{elementTextIcon(item.name)}}</span>
                         </span>
                     </div>

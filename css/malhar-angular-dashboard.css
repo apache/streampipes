@@ -25,7 +25,7 @@
 .widget {
   margin: 0 1em 0 0;
   background-color: white;
-  border: 1px solid rgb(63,81,181);
+  border: 1px solid #6DA9E4;
   position: relative;
   height: 100%;
 }
@@ -33,7 +33,6 @@
   overflow: hidden;
   padding: 10px 15px;
   color: white;
-  background-color: rgb(63,81,181);
 }
 .widget-header .label {
   display: inline-block;

@@ -1,4 +1,3 @@
-
 CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'elementData', 'sepaName', 'sourceEndpoint'];
 
 export default function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint) {
@@ -12,6 +11,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
     $scope.helpDialogVisible = false;
     $scope.currentStaticProperty;
     $scope.validationErrors = [];
+    $scope.configVisible = false;
 
     $scope.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
         {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
@@ -145,4 +145,20 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         return false;
     }
 
+    var isCustomOutput = function () {
+        var custom = false;
+        angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
+            if (strategy.type == 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy') {
+                custom = true;
+            }
+        });
+        return custom;
+    }
+
+    console.log($scope.selectedElement);
+    if ($scope.selectedElement.staticProperties.length > 0 || isCustomOutput()) {
+        $scope.configVisible = true;
+    } else {
+        $scope.saveProperties();
+    }
 }

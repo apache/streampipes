@@ -31,7 +31,7 @@
 	<div ui-sortable="sortableOptions" ng-model="widgets" class="dashboard-widget-area">
 		<div ng-repeat="widget in widgets" ng-style="widget.containerStyle" class="widget-container" widget>
 			<div class="widget">
-				<div class="widget-header">
+				<div class="widget-header sp-blue-bg">
 					<div layout="row" layout-align="start center">	
 
 						<span class="widget-title" ng-dblclick="editTitle(widget)" ng-hide="widget.editingTitle">{{widget.name}} </span>
@@ -41,12 +41,12 @@
 						<!--                         <span class="widget-label widget-label-accent" ng-if="!options.hideWidgetName">{{widget.name}}</span> -->
 						<span flex></span>
 						<md-button class="md-icon-button" ng-click="widget.contentStyle.display = widget.contentStyle.display === 'none' ? 'block' : 'none'">
-							<i ng-if="widget.contentStyle.display === 'none'" class="material-icons">fullscreen</i>
-							<i ng-if="widget.contentStyle.display !== 'none'" class="material-icons">fullscreen_exit</i>
+							<i ng-if="widget.contentStyle.display === 'none'" class="material-icons">visibility</i>
+							<i ng-if="widget.contentStyle.display !== 'none'" class="material-icons">visibility_off</i>
 						</md-button>
 						<!--                  			<md-button class="md-icon-button" ng-click="openWidgetSettings(widget);" ng-if="!options.hideWidgetSettings"><i class="material-icons">settings</i></md-button> -->
-						<md-button class="md-icon-button" ng-click="openVizInNewWindow(widget);"><i class="material-icons">open_in_new</i></md-button> 
-
+						<md-button class="md-icon-button" ng-click="maximizeWidget();" ng-if="!maximized"><i class="material-icons">fullscreen</i></md-button>
+						<md-button class="md-icon-button" ng-click="minimizeWidget();" ng-if="maximized"><i class="material-icons">fullscreen_exit</i></md-button>
 						<md-button class="md-icon-button" ng-click="removeSpWidget(widget);" ng-if="!options.hideWidgetClose"><i class="material-icons">clear</i></md-button>
 					</div>
 				</div>
