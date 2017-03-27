@@ -1,5 +1,5 @@
 <md-dialog aria-label="Customize" flex="60">
-    <md-toolbar>
+    <md-toolbar ng-if="configVisible">
         <div class="md-toolbar-tools">
             <h2>Customize {{sepaName}}</h2>
             <span flex></span>
@@ -9,7 +9,7 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content flex="100" class="md-dialog-content">
+    <md-dialog-content flex="100" class="md-dialog-content" ng-if="configVisible">
         <div layout="column" class="customize-item-main-help">
             <div class="customize-item-title-help" flex="100" layout="row">
                 <div flex="70" layout="row" layout-align="start center" ng-click="toggleHelpDialog()">
@@ -48,7 +48,8 @@
                         <oneof static-property="staticProperty"></oneof>
                     </div>
                     <div ng-if="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
-                        <freetext input-streams="selectedElement.inputStreams" static-property="staticProperty"></freetext>
+                        <freetext input-streams="selectedElement.inputStreams"
+                                  static-property="staticProperty"></freetext>
                     </div>
                     <div ng-if="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
                         <any static-property="staticProperty"></any>
@@ -109,7 +110,7 @@
             </div>
         </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row">
+    <div class="md-actions" layout="row" ng-if="configVisible">
         <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="saveProperties()">
             Save
         </md-button>

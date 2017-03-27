@@ -5,20 +5,24 @@
     <div ng-if="staticProperty.properties.multiLine">
         <h5>{{staticProperty.properties.description}}</h5>
         <h5>Possible placeholders: </h5>
-        <span ng-repeat = "property in inputStreams[0].eventSchema.eventProperties">#{{property.properties.runtimeName}}#&nbsp;</span>
+        <span ng-repeat="property in inputStreams[0].eventSchema.eventProperties">#{{property.properties.runtimeName}}#&nbsp;</span>
         <md-input-container flex="100" layout="column">
             <textarea name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"
                       md-maxlength="1500" rows="10"></textarea>
         </md-input-container>
     </div>
 </div>
-<div ng-if="staticProperty.properties.valueSpecification">
-    <md-input-container flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
-        <input name="{{staticProperty.properties.elementName}}" type="text" ng-model="staticProperty.properties.value">
-        <md-slider flex min="{{staticProperty.properties.valueSpecification.minValue}}"
+<div ng-if="staticProperty.properties.valueSpecification" style="margin-top:20px;">
+    <md-slider-container>
+        <span>{{staticProperty.properties.description}}</span>
+        <md-slider md-discrete flex min="{{staticProperty.properties.valueSpecification.minValue}}"
                    max="{{staticProperty.properties.valueSpecification.maxValue}}"
                    step="{{staticProperty.properties.valueSpecification.step}}"
-                   ng-model="staticProperty.properties.value" class>
+                   ng-model="staticProperty.properties.value">
         </md-slider>
-    </md-input-container>
+        <md-input-container flex="100">
+            <input name="{{staticProperty.properties.elementName}}" type="number"
+                   ng-model="staticProperty.properties.value">
+        </md-input-container>
+    </md-slider-container>
 </div>

@@ -15,11 +15,11 @@
 }
 
 .sp-blue {
-    color: #91BED4;
+    color: #6DA9E4;
 }
 
 .sp-blue-bg {
-    background: #91BED4;
+    background: #6DA9E4;
 }
 
 .sp-lightblue {
@@ -39,7 +39,11 @@
 }
 
 .sp-accent {
-    color: #CC2800;
+    color: rgb(255,64,129);
+}
+
+.sp-accent-bg {
+    background: rgb(255,64,129);
 }
 
 .sp-accent-light {

@@ -22,7 +22,7 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
         controller: function ($scope) {
             $scope.recommendationsAvailable = false;
             $scope.possibleElements = [];
-            
+
             $scope.openHelpDialog = function () {
                 $mdDialog.show({
                     controller: HelpDialogController,
@@ -48,11 +48,11 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                 })
             };
 
-            $scope.removeElement = function() {
+            $scope.removeElement = function () {
                 $scope.deleteFunction($scope.getDomElement($scope.internalId));
             }
 
-            $scope.openCustomizeDialog = function() {
+            $scope.openCustomizeDialog = function () {
                 $scope.showCustomizeDialogFunction($scope.getDomElement($scope.internalId));
             }
 
@@ -148,19 +148,19 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                 return pipelineElement;
             }
 
-            $scope.getDomElement = function(internalId) {
-                return $("span[id=" +internalId +"]");
+            $scope.getDomElement = function (internalId) {
+                return $("span[id=" + internalId + "]");
             }
 
             initRecs($rootScope.state.currentPipeline, $scope.getDomElement($scope.internalId));
             $scope.pipelineElement = $scope.getPipelineElementContents($scope.pipelineElementId);
             console.log($scope.pipelineElement);
 
-            $scope.isRootElement = function() {
+            $scope.isRootElement = function () {
                 return jsPlumb.getConnections({source: $scope.getDomElement($scope.internalId)}).length == 0;
             }
 
-            $scope.isConfigured = function() {
+            $scope.isConfigured = function () {
                 if ($scope.pipelineElement.type == 'stream') return true;
                 else {
                     return $($scope.getDomElement($scope.internalId)).data("JSON").configured;
