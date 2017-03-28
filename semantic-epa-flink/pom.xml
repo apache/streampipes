@@ -3,7 +3,7 @@
     <parent>
         <groupId>de.fzi.cep.sepa</groupId>
         <artifactId>semantic-epa-parent</artifactId>
-        <version>0.40.2</version>
+        <version>0.40.3-SNAPSHOT</version>
     </parent>
     <artifactId>semantic-epa-flink</artifactId>
     <properties>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-runtime</artifactId>
-            <version>0.40.2</version>
+            <version>0.40.3-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>
