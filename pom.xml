@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- The Basics -->
     <groupId>de.fzi.cep.sepa</groupId>
     <artifactId>semantic-epa-parent</artifactId>
-    <version>0.40.1-SNAPSHOT</version>
+    <version>0.40.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <sesame.version>2.7.15</sesame.version>
@@ -268,22 +266,22 @@
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging</artifactId>
-                <version>0.40.1-SNAPSHOT</version>
+                <version>0.40.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-sdk</artifactId>
-                <version>0.40.1-SNAPSHOT</version>
+                <version>0.40.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging-kafka</artifactId>
-                <version>0.40.1-SNAPSHOT</version>
+                <version>0.40.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging-jms</artifactId>
-                <version>0.40.1-SNAPSHOT</version>
+                <version>0.40.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>

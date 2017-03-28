@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
-		<version>0.40.1-SNAPSHOT</version>
+		<version>0.40.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>semantic-epa-manager</artifactId>
 
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-commons</artifactId>
-			<version>0.40.1-SNAPSHOT</version>
+			<version>0.40.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
