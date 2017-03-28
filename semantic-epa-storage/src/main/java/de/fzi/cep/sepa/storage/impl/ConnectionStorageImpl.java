@@ -1,64 +1,79 @@
 package de.fzi.cep.sepa.storage.impl;
 
+import com.google.common.net.UrlEscapers;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import de.fzi.cep.sepa.model.client.connection.Connection;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendation;
+import de.fzi.cep.sepa.storage.api.ConnectionStorage;
+import de.fzi.cep.sepa.storage.util.Utils;
+import org.apache.http.client.fluent.Request;
+import org.lightcouch.CouchDbClient;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.http.client.fluent.Request;
-import org.lightcouch.CouchDbClient;
+public class ConnectionStorageImpl extends Storage<PipelineElementRecommendation> implements ConnectionStorage {
 
-import com.google.common.net.UrlEscapers;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import de.fzi.cep.sepa.messages.ElementRecommendation;
-import de.fzi.cep.sepa.model.client.connection.Connection;
-import de.fzi.cep.sepa.storage.api.ConnectionStorage;
-import de.fzi.cep.sepa.storage.util.Utils;
-
-public class ConnectionStorageImpl implements ConnectionStorage {
-
+	public ConnectionStorageImpl() {
+		super(PipelineElementRecommendation.class);
+	}
 	@Override
 	public void addConnection(Connection connection) {
-		CouchDbClient dbClient = Utils.getCouchDbConnectionClient();
+		CouchDbClient dbClient = getCouchDbClient();
 		dbClient.save(connection);
 		dbClient.shutdown();
 	}
 
 	@Override
-	public List<ElementRecommendation> getRecommendedElements(String from) {
-		CouchDbClient dbClient = Utils.getCouchDbConnectionClient();
+	public List<PipelineElementRecommendation> getRecommendedElements(String from) {
 		// doesn't work as required object array is not created by lightcouch
 		//List<JsonObject> obj = dbClient.view("connection/frequent").startKey(from).endKey(from, new Object()).group(true).query(JsonObject.class);
 		String query;
-		query = buildQuery(dbClient, from);
+		query = buildQuery(from);
+		System.out.println(query);
 		Optional<JsonObject> jsonObjectOpt = getFrequentConnections(query);
 		if (jsonObjectOpt.isPresent()) return handleResponse(jsonObjectOpt.get());
 		else return Collections.emptyList();
 		
 	}
 	
-	private String buildQuery(CouchDbClient dbClient, String from)  {
-			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&limit=10&group=true");
-			return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
+	private String buildQuery(String from)  {
+			CouchDbClient dbClient = getCouchDbClient();
+			String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" +from +"\"]&endkey=[\"" +from +"\", {}]&group=true");
+		return dbClient.getDBUri() +"_design/connection/_view/frequent?" + escapedPath ;
 	}
 
-	private List<ElementRecommendation> handleResponse(JsonObject jsonObject) {
-		List<ElementRecommendation> recommendations = new ArrayList<>();
+	private List<PipelineElementRecommendation> handleResponse(JsonObject jsonObject) {
+		List<PipelineElementRecommendation> recommendations = new ArrayList<>();
 		JsonArray jsonArray = jsonObject.get("rows").getAsJsonArray();
-		jsonArray.forEach(resultObj -> recommendations.add(new ElementRecommendation(resultObj.getAsJsonObject().get("key").getAsJsonArray().get(1).getAsString(), "", "")));
+		jsonArray.forEach(resultObj ->
+				recommendations.add(makeRecommendation(resultObj)));
 		return recommendations;
 	}
 
-	public static void main(String[] args)
-	{
-		List<ElementRecommendation> recs = new ConnectionStorageImpl().getRecommendedElements("http://localhost:8089/taxi/sample");
-		recs.forEach(rec -> System.out.println(rec.getElementId()));
+	private PipelineElementRecommendation makeRecommendation(JsonElement resultObj) {
+		PipelineElementRecommendation recommendation = new PipelineElementRecommendation();
+		recommendation.setElementId(resultObj
+				.getAsJsonObject()
+				.get("key")
+				.getAsJsonArray()
+				.get(1).getAsString());
+
+		recommendation.setCount(resultObj
+				.getAsJsonObject()
+				.get("value")
+				.getAsInt());
+
+		return recommendation;
 	}
-	
+
 	private Optional<JsonObject> getFrequentConnections(String query) {
 		try {
 			return Optional.of((JsonObject)new JsonParser().parse(Request.Get(query).execute().returnContent().asString()));
@@ -68,4 +83,8 @@ public class ConnectionStorageImpl implements ConnectionStorage {
 		}
 	}
 
+	@Override
+	protected CouchDbClient getCouchDbClient() {
+		return Utils.getCouchDbConnectionClient();
+	}
 }

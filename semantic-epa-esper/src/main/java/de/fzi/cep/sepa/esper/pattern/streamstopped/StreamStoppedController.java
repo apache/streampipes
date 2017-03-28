@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -17,7 +17,6 @@ import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
@@ -38,7 +37,7 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
@@ -69,13 +68,8 @@ public class StreamStoppedController extends FlatEpDeclarer<StreamStoppedParamet
 	
 		String topic = SepaUtils.getFreeTextStaticPropertyValue(sepa, "topic");
 		StreamStoppedParameter staticParam = new StreamStoppedParameter(sepa, topic);
-		
-		try {
-			invokeEPRuntime(staticParam, StreamStopped::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, StreamStopped::new, sepa);
+
 	}
 }

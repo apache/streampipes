@@ -1,10 +1,10 @@
 package de.fzi.cep.sepa.runtime.flat.protocol.jms;
 
-import javax.jms.JMSException;
-
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQConsumer;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQConsumer;
 import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Consumer;
+
+import javax.jms.JMSException;
 
 public class JmsConsumer extends Consumer<String> {
 

@@ -7,7 +7,6 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -25,11 +24,8 @@ public class DebsOutputController extends ActionController {
 	public SecDescription declareModel() {
 		
 		SecDescription sec = new SecDescription("debs", "Debs Challenge Output Generator", "", "");
-		sec.setEcTypes(Arrays.asList(EcType.STORAGE.name()));
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
-		
+		sec.setCategory(Arrays.asList(EcType.STORAGE.name()));
+
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		
 		

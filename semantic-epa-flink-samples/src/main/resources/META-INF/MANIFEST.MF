@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: SemanticEpaFlink bundle
-Bundle-SymbolicName: de.fzi.semantic-epa-flink
-Bundle-Version: 1.0.0
-Bundle-Activator: de.fzi.cep.sepa.flink.samples.FlinkInit
-Import-Package: javax.ws.rs,javax.ws.rs.core,org.osgi.framework,javax.xml,javax.xml.datatype,org.osgi.service.cm,org.osgi.util.tracker,javax.servlet,org.osgi.service.http,org.glassfish.jersey.servlet
-Export-Package: de.fzi.cep.sepa.client.osgi.init
-Meta-Persistence: 

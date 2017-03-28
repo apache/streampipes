@@ -20,8 +20,8 @@ public class FieldRenamerProgram extends FlinkSepaRuntime<FieldRenamerParameters
 
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
-			DataStream<Map<String, Object>> messageStream) {
-		return messageStream.flatMap(new FieldRenamer(params.getOldPropertyName(), 
+			DataStream<Map<String, Object>>... messageStream) {
+		return messageStream[0].flatMap(new FieldRenamer(params.getOldPropertyName(),
 				params.getNewPropertyName()));
 	}
 }

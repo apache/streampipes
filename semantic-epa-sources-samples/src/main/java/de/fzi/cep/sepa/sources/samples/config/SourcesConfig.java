@@ -12,7 +12,7 @@ public class SourcesConfig {
 	
 	static {
 		serverUrl = ClientConfiguration.INSTANCE.getSourcesUrl();
-		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
+		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/img";
 		eventReplayURI = "http://89.216.116.44:8084";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";

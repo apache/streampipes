@@ -7,8 +7,8 @@ import java.util.List;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -45,7 +45,7 @@ public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalP
 
 		SepaDescription desc = new SepaDescription("observenumerical", "Observe Numerical",
 				"Throws an alert when value exceeds a threshold value");
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 
 		desc.addEventStream(stream1);
 
@@ -91,14 +91,8 @@ public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalP
 		
 		ObserveNumericalParameters params = new ObserveNumericalParameters(invocationGraph, valueLimit, threshold, value, outputProperty);
 
+		return submit(params, ObserveNumerical::new, invocationGraph);
 
-		try {
-			invokeEPRuntime(params, ObserveNumerical::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
 	}
 
 }

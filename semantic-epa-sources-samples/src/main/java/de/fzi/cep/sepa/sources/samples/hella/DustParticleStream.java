@@ -7,9 +7,9 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.model.builder.EpProperties;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -18,11 +18,11 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
-import de.fzi.cep.sepa.sources.samples.csv.CsvPublisher;
-import de.fzi.cep.sepa.sources.samples.csv.CsvReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.FolderReadingTask;
-import de.fzi.cep.sepa.sources.samples.csv.LineParser;
-import de.fzi.cep.sepa.sources.samples.csv.SimulationSettings;
+import de.fzi.cep.sepa.sources.samples.adapter.CsvPublisher;
+import de.fzi.cep.sepa.sources.samples.adapter.CsvReadingTask;
+import de.fzi.cep.sepa.sources.samples.adapter.FolderReadingTask;
+import de.fzi.cep.sepa.sources.samples.adapter.LineParser;
+import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.hella.parser.DustLineParser;
 
 public class DustParticleStream extends AbstractHellaStream {
@@ -72,7 +72,7 @@ public class DustParticleStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Dust replay");
-		IMessagePublisher<byte[]> publisher = new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Dust.topic());
+		EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Dust.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

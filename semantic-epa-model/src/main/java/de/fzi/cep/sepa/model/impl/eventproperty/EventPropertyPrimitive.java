@@ -1,22 +1,19 @@
 package de.fzi.cep.sepa.model.impl.eventproperty;
 
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.util.ModelUtils;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
-import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
-import de.fzi.cep.sepa.model.util.ModelUtils;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"})
@@ -35,7 +32,7 @@ public class EventPropertyPrimitive extends EventProperty {
 	
 	@RdfProperty("sepa:valueSpecification")
 	@OneToOne(cascade = {CascadeType.ALL})
-	private PropertyValueSpecification valueSpecification;
+	private ValueSpecification valueSpecification;
 	
 	public EventPropertyPrimitive()
 	{
@@ -82,11 +79,11 @@ public class EventPropertyPrimitive extends EventProperty {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public PropertyValueSpecification getValueSpecification() {
+	public ValueSpecification getValueSpecification() {
 		return valueSpecification;
 	}
 
-	public void setValueSpecification(PropertyValueSpecification valueSpecification) {
+	public void setValueSpecification(ValueSpecification valueSpecification) {
 		this.valueSpecification = valueSpecification;
 	}
 

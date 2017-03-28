@@ -1,9 +1,5 @@
 package de.fzi.cep.sepa.sources.samples.taxi;
 
-import java.io.File;
-
-import org.apache.log4j.Logger;
-
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -12,10 +8,14 @@ import de.fzi.cep.sepa.model.impl.graph.SepDescription;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
 import de.fzi.cep.sepa.sources.samples.config.ProaSenseSettings;
 import de.fzi.cep.sepa.sources.samples.config.SourcesConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class NYCTaxiStream extends AbstractNycStream {
 	
-	public static final Logger logger = Logger.getLogger(NYCTaxiStream.class);
+	public static final Logger logger = LoggerFactory.getLogger(NYCTaxiStream.class);
 
 	public NYCTaxiStream() {
 		super(NycSettings.sampleTopic);
@@ -36,7 +36,7 @@ public class NYCTaxiStream extends AbstractNycStream {
 		stream.setEventSchema(schema);
 		stream.setName("NYC Taxi Sample Stream");
 		stream.setDescription("NYC Taxi Sample Stream Description");
-		stream.setUri(sep.getUri() + "/sample");
+		stream.setUri("taxi-sample");
 
 		return stream;
 	}

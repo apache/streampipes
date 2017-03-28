@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -30,7 +30,7 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 		EventStream stream2 = new EventStream();
 		
 		SepaDescription desc = new SepaDescription("absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
@@ -56,18 +56,12 @@ public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		int timeWindowSize = Integer.parseInt(
 				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
 		
 		AbsenceParameters staticParam = new AbsenceParameters(sepa, selectProperties, timeWindowSize);
-		
-		try {
-			invokeEPRuntime(staticParam, Absence::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Absence::new, sepa);
 	}
 }

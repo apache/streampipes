@@ -13,7 +13,6 @@ import com.espertech.esper.client.EPException;
 import com.espertech.esper.client.EventSender;
 import com.espertech.esper.client.time.CurrentTimeEvent;
 
-import de.fzi.cep.sepa.esper.debs.c1.StatusEvent;
 import de.fzi.cep.sepa.esper.main.EsperEngineSettings;
 
 public class EnrichedDataSimulator implements Runnable {

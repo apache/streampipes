@@ -11,6 +11,7 @@ import de.fzi.cep.sepa.esper.collection.TestCollectionController;
 import de.fzi.cep.sepa.esper.compose.ComposeController;
 import de.fzi.cep.sepa.esper.distribution.DistributionController;
 import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnrichedController;
+import de.fzi.cep.sepa.esper.enrich.binarymath.BinaryMathController;
 import de.fzi.cep.sepa.esper.enrich.fixed.StaticValueEnricherController;
 import de.fzi.cep.sepa.esper.enrich.grid.GridEnrichmentController;
 import de.fzi.cep.sepa.esper.enrich.math.MathController;
@@ -79,7 +80,8 @@ public class EsperInit extends StandaloneModelSubmitter {
 		.add(new IncreaseController())
 		.add(new GeofencingController())
 		.add(new DurationOfStayController())
-		.add(new StreamStoppedController());
+		.add(new StreamStoppedController())
+		.add(new BinaryMathController());
 
         DeclarersSingleton.getInstance().setPort(8090);
 

@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface FormatGenerator {
 
-	public Object makeOutputFormat(Map<String, Object> event);
+	Object makeOutputFormat(Map<String, Object> event);
 	
 }

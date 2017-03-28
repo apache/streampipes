@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.esper.writer;
 
 import com.espertech.esper.client.EventBean;
-import com.google.gson.Gson;
 
 import de.fzi.cep.sepa.runtime.OutputCollector;
 

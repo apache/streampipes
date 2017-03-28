@@ -3,9 +3,8 @@
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.40.2</version>
 	</parent>
-	<groupId>de.fzi.cep.sepa.component</groupId>
 	<artifactId>semantic-epa-samples-embedded</artifactId>
 	<packaging>war</packaging>
 	<name>semantic-epa-samples-embedded</name>
@@ -19,12 +18,10 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-runtime-flat</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-client-standalone</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cybozu.labs</groupId>

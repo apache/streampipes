@@ -20,12 +20,10 @@ import de.fzi.cep.sepa.model.util.Cloner;
 @Entity
 public class ReplaceOutputStrategy extends OutputStrategy {
 
-	private static final long serialVersionUID = 1L;
-
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:replacesProperty")
-	protected List<UriPropertyMapping> replaceProperties;
+	private List<UriPropertyMapping> replaceProperties;
 	
 	public ReplaceOutputStrategy() {
 		super();

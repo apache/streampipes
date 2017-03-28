@@ -8,8 +8,8 @@ import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.util.StringOperator;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -47,7 +47,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 		
 		SepaDescription desc = new SepaDescription("textfilter", "Text Filter", "Text Filter Description");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Textual_Filter_Icon_HQ.png");
 		
 		//TODO check if needed
@@ -92,13 +92,7 @@ public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
 				StringOperator.valueOf(operation), 
 				filterProperty);
 		
-		
-		try {
-			invokeEPRuntime(staticParam, TextFilter::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, TextFilter::new, sepa);
+
 	}
 }

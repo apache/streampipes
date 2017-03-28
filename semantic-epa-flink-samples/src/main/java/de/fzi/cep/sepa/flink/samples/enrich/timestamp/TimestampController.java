@@ -1,8 +1,5 @@
 package de.fzi.cep.sepa.flink.samples.enrich.timestamp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
@@ -20,6 +17,9 @@ import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampParameters>{
 
@@ -47,7 +47,8 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 
 		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
 		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(),
-				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number")));
+				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema" +
+						".org/DateTime")));
 		
 		outputStrategy.setEventProperties(appendProperties);
 		strategies.add(outputStrategy);
@@ -60,7 +61,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 	@Override
 	protected FlinkSepaRuntime<TimestampParameters> getRuntime(
 			SepaInvocation graph) {
-		
+		System.out.println(Config.JAR_FILE);
 		AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
 
 		String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");
@@ -77,6 +78,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 				selectProperties);
 		
 		return new TimestampProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+//		return new TimestampProgram(staticParam);
 	}
 
 }

@@ -1,16 +1,15 @@
 package de.fzi.cep.sepa.component.main.algorithm.langdetect;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
-
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 

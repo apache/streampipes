@@ -1,19 +1,34 @@
 package de.fzi.cep.sepa.actions.samples;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class ActionController implements SemanticEventConsumerDeclarer {
 
+	protected StreamPipesKafkaConsumer kafkaConsumer;
+
+	protected void startKafkaConsumer(String kafkaUrl, String topic, EventListener<byte[]> eventListener) {
+		kafkaConsumer = new StreamPipesKafkaConsumer(kafkaUrl, topic, eventListener);
+		Thread thread = new Thread(kafkaConsumer);
+		thread.start();
+	}
+
+	protected void stopKafkaConsumer() {
+		if (kafkaConsumer != null) {
+			kafkaConsumer.close();
+		}
+	}
 	
 	protected String createWebsocketUri(SecInvocation sec)
 	{

@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.streampipes.codegeneration.api;
 
 import de.fzi.cep.sepa.model.client.deployment.*;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaCodeGenerator;
 import org.junit.Test;

@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -46,7 +46,7 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 		SepaDescription desc = new SepaDescription("movement", "Movement Analysis",
 				"Movement Analysis Enricher");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_1_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
+		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
 		try {
 			EventStream stream1 = new EventStream();
 
@@ -133,13 +133,7 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 				Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
 				yProperty, 8000L); // TODO reduce param overhead
 
-		try {
-			invokeEPRuntime(staticParam, MovementAnalysis::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+		return submit(staticParam, MovementAnalysis::new, sepa);
 
 	}
 }

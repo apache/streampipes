@@ -36,7 +36,7 @@ public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 		
 		SepaDescription desc = new SepaDescription("enrich_timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Timer_Icon_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.ENRICH.name()));	
+		desc.setCategory(Arrays.asList(EpaType.ENRICH.name()));
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId());
 		
@@ -80,13 +80,8 @@ public class TimestampController extends FlatEpDeclarer<TimestampParameter>{
 				sepa, 
 				appendTimePropertyName,
 				selectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, TimestampEnrichment::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, TimestampEnrichment::new, sepa);
+
 	}
 }

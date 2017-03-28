@@ -1,7 +1,6 @@
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
+
 import javax.jms.JMSException;
-
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
-
 
 public class NoiseLevelSimulator {
 

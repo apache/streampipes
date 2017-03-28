@@ -1,13 +1,13 @@
-import java.util.Properties;
-
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
-import org.apache.flink.streaming.util.serialization.RawSchema;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.apache.flink.util.Collector;
 import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
 
 
 public class FlinkKafkaPerformanceTest {
@@ -30,16 +30,19 @@ public class FlinkKafkaPerformanceTest {
 	   // StreamExecutionEnvironment env = StreamExecutionEnvironment.createRemoteEnvironment("ipe-koi05.fzi.de", 6123);
 
 	    ParameterTool parameterTool = ParameterTool.fromArgs(args);
-	    DataStream<byte[]> dataStream4 = env.addSource(new FlinkKafkaConsumer082<>("SEPA.SEP.Random.Number.Json", new RawSchema(), props)).setParallelism(1);
+	    DataStream<String> dataStream4 = //env.addSource(new FlinkKafkaConsumer09<>("SEPA.SEP.Random.Number.Json", new SimpleStringSchema(), props)).setParallelism(1);
+				env.addSource(new FlinkKafkaConsumer010<String>("SEPA.SEP.Random.Number", new
+								SimpleStringSchema(), props));
 
-	    dataStream4.flatMap(new FlatMapFunction<byte[], Integer>() {
+
+			         dataStream4.flatMap(new FlatMapFunction<String, Integer>() {
 	        long received = 0;
 	        long logfreq = 10000;
 	        long lastLog = -1;
 	        long lastElements = 0;
 
 	        @Override
-	        public void flatMap(byte[] element, Collector<Integer> collector) throws Exception {
+	        public void flatMap(String element, Collector<Integer> collector) throws Exception {
 	        	
 	            received++;
 	            if (received % logfreq == 0) {

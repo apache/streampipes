@@ -10,41 +10,41 @@ import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.api.SepaInvocationStorage;
 import de.fzi.cep.sepa.storage.util.Utils;
 
-public class SepaInvocationStorageImpl implements SepaInvocationStorage {
-	Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
+public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implements SepaInvocationStorage {
+    Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
-	@Override
-	public Response storeSepaInvocation(SepaInvocation sepaInvocation) {
-		CouchDbClient dbClient = Utils.getCouchDbSepaInvocationClient();
-		Response res = dbClient.save(sepaInvocation);
+    public SepaInvocationStorageImpl() {
+        super(SepaInvocation.class);
+    }
 
-		dbClient.shutdown();
+    @Override
+    public Response storeSepaInvocation(SepaInvocation sepaInvocation) {
+        CouchDbClient dbClient = getCouchDbClient();
+        Response response = dbClient.save(sepaInvocation);
+        dbClient.shutdown();
+        return response;
+    }
 
-		return res;
-	}
+    @Override
+    public SepaInvocation getSepaInvovation(String sepaInvocationId) {
+        // TODO return optional instead of null
+        return getWithNullIfEmpty(sepaInvocationId);
+    }
 
-	@Override
-	public SepaInvocation getSepaInvovation(String sepaInvocationId) {
-		CouchDbClient dbClient = Utils.getCouchDbSepaInvocationClient();
+    @Override
+    public boolean removeSepaInvovation(String sepaInvocationId, String sepaInvocationRev) {
+        try {
+            CouchDbClient dbClient = getCouchDbClient();
+            dbClient.remove(sepaInvocationId, sepaInvocationRev);
+            dbClient.shutdown();
+            return true;
+        } catch (NoDocumentException e) {
+            return false;
+        }
+    }
 
-		try {
-			SepaInvocation sepaInvocation = dbClient.find(SepaInvocation.class, sepaInvocationId);
-			dbClient.shutdown();
-			return sepaInvocation;
-		} catch (NoDocumentException e) {
-			LOG.error("No invocation wit ID %s found", sepaInvocationId);
-			return null;
-		}
-	}
-
-	@Override
-	public boolean removeSepaInvovation(String sepaInvocationId, String sepaInvocationRev) {
-
-		CouchDbClient dbClient = Utils.getCouchDbSepaInvocationClient();
-		dbClient.remove(sepaInvocationId, sepaInvocationRev);
-		dbClient.shutdown();
-
-		return true;
-	}
-
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbSepaInvocationClient();
+    }
 }

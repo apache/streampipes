@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.40.2</version>
 	</parent>
 	<artifactId>semantic-epa-client</artifactId>
 	<description>Large scale event processing agents with semantic checking for combinability.
@@ -16,14 +16,18 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.rendersnake</groupId>
 			<artifactId>rendersnake</artifactId>
 			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<artifactId>semantic-epa-sdk</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

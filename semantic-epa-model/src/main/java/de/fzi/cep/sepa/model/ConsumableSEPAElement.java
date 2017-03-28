@@ -1,19 +1,17 @@
 package de.fzi.cep.sepa.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import de.fzi.cep.sepa.model.impl.EventGrounding;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.Cloner;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import com.clarkparsia.empire.annotation.RdfProperty;
-
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.util.Cloner;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 
@@ -24,8 +22,7 @@ public abstract class ConsumableSEPAElement extends NamedSEPAElement {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:requires")
 	protected List<EventStream> eventStreams;
-	
-	
+
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasStaticProperty")

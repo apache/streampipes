@@ -1,10 +1,11 @@
 package de.fzi.cep.sepa.runtime.flat.protocol.jms;
 
-import javax.jms.JMSException;
 
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
 import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
 import de.fzi.cep.sepa.runtime.flat.protocol.Producer;
+
+import javax.jms.JMSException;
 
 public class JmsProducer extends Producer {
 
@@ -23,12 +24,7 @@ public class JmsProducer extends Producer {
 	
 	@Override
 	public void publish(Object message) {
-		try {
-			publisher.sendText(new String(dataType.marshal(message)));
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		publisher.publish(new String(dataType.marshal(message)));
 	}
 
 	@Override
@@ -43,12 +39,7 @@ public class JmsProducer extends Producer {
 
 	@Override
 	public void closeProducer() {
-		try {
-			publisher.close();
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		publisher.closeProducer();
 	}
 
 }

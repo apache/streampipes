@@ -1,10 +1,5 @@
 package de.fzi.cep.sepa.runtime.flat.manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.model.impl.TransportFormat;
@@ -16,6 +11,11 @@ import de.fzi.cep.sepa.runtime.flat.protocol.jms.JmsConsumer;
 import de.fzi.cep.sepa.runtime.flat.protocol.jms.JmsProducer;
 import de.fzi.cep.sepa.runtime.flat.protocol.kafka.KafkaConsumer;
 import de.fzi.cep.sepa.runtime.flat.protocol.kafka.KafkaProducer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ProtocolManager {
 
@@ -52,7 +52,7 @@ public class ProtocolManager {
 	
 	private static Consumer<?> makeConsumer(TransportProtocol protocol, DatatypeDefinition dataType) {
 		if (protocol instanceof KafkaTransportProtocol) {
-			KafkaConsumer kafkaConsumer = new KafkaConsumer(((KafkaTransportProtocol) protocol).getZookeeperHost(), ((KafkaTransportProtocol) protocol).getZookeeperPort(), topicName(protocol), dataType);
+			KafkaConsumer kafkaConsumer = new KafkaConsumer(((KafkaTransportProtocol) protocol).getBrokerHostname(), ((KafkaTransportProtocol) protocol).getKafkaPort(), topicName(protocol), dataType);
 			kafkaConsumer.openConsumer();
 			consumers.put(topicPrefix +topicName(protocol), kafkaConsumer); 
 			return kafkaConsumer;

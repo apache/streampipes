@@ -46,6 +46,14 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+.DS_Store
+
 # Maven
 */log/*
 */target/*
+
+# JS 
+dist/
+
+./target/*
+npm-debug.log

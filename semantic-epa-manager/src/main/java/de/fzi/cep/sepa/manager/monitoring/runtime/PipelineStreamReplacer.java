@@ -5,19 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.StaticProperty;
-import de.fzi.cep.sepa.model.client.StaticPropertyType;
-import de.fzi.cep.sepa.model.client.StreamClient;
-import de.fzi.cep.sepa.model.client.input.CheckboxInput;
-import de.fzi.cep.sepa.model.client.input.Option;
-import de.fzi.cep.sepa.model.client.input.SelectFormInput;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
+import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 public class PipelineStreamReplacer {
 
@@ -35,25 +29,25 @@ public class PipelineStreamReplacer {
 		Operations.stopPipeline(currentPipeline);
 		currentPipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
 		try {
-			StreamClient newStreamClient = ClientModelTransformer.toStreamClientModel(getSep(streamToReplace), streamToReplace);
-			newStreamClient.setDOM(streamDomId);
-			currentPipeline.setStreams(Arrays.asList(newStreamClient));
+			streamToReplace.setDOM(streamDomId);
+			currentPipeline.setStreams(Arrays.asList(streamToReplace));
 			
-			for(SEPAClient sepaClient : currentPipeline.getSepas()) {
-				for(StaticProperty staticProperty : sepaClient.getStaticProperties()) {
-					if (staticProperty.getType() == StaticPropertyType.CUSTOM_OUTPUT) {
-						CheckboxInput input = (CheckboxInput) staticProperty.getInput();
-						for(Option option : input.getOptions()) {
-							option.setElementId(getElementId(option.getHumanDescription()));
-						}
-					}
-					else if (staticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
-						SelectFormInput input = (SelectFormInput) staticProperty.getInput();
-						for(Option option : input.getOptions()) {
-							option.setElementId(getElementId(option.getHumanDescription()));
-						}
-					}
-				}
+			for(SepaInvocation sepaClient : currentPipeline.getSepas()) {
+				// TODO
+//				for(StaticProperty staticProperty : sepaClient.getStaticProperties()) {
+//					if (staticProperty.getType() == StaticPropertyType.CUSTOM_OUTPUT) {
+//						CheckboxInput input = (CheckboxInput) staticProperty.getInput();
+//						for(Option option : input.getOptions()) {
+//							option.setElementId(getElementId(option.getHumanDescription()));
+//						}
+//					}
+//					else if (staticProperty.getType() == StaticPropertyType.MAPPING_PROPERTY) {
+//						SelectFormInput input = (SelectFormInput) staticProperty.getInput();
+//						for(Option option : input.getOptions()) {
+//							option.setElementId(getElementId(option.getHumanDescription()));
+//						}
+//					}
+//				}
 			}
 			String newPipelineId = UUID.randomUUID().toString();
 			currentPipeline.setPipelineId(newPipelineId);

@@ -8,9 +8,9 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.esper.geo.geofencing.GeofencingData;
-import de.fzi.cep.sepa.model.builder.EpProperties;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -45,7 +45,7 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		schema.setEventProperties(Arrays.asList(e1, e2, e3, e4));
 		
 		SepaDescription desc = new SepaDescription("durationofstay", "Duration of Stay", "Calculates the duration of stay of a location-based object within a specified radius around a specified point-based coordinate.");
-		desc.setEpaTypes(Arrays.asList(EpaType.GEO.name()));	
+		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema);
@@ -108,14 +108,8 @@ public class DurationOfStayController extends FlatEpDeclarer<DurationOfStayParam
 		String partitionMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-partition");
 		String timestampMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-timestamp");
 		DurationOfStayParameters params = new DurationOfStayParameters(invocationGraph, geofencingData, latitudeMapping, longitudeMapping, partitionMapping, timestampMapping);
-		
-		try {
-			invokeEPRuntime(params, DurationOfStay::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, DurationOfStay::new, invocationGraph);
 	}
 
 }

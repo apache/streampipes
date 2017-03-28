@@ -1,16 +1,19 @@
 package de.fzi.cep.sepa.manager.matching.v2;
 
-import java.util.List;
-
-import de.fzi.cep.sepa.messages.MatchingResultMessage;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
+
+import java.util.List;
 
 public class ListPropertyMatch implements Matcher<EventPropertyList, EventPropertyList> {
 
 	@Override
 	public boolean match(EventPropertyList offer, EventPropertyList requirement, List<MatchingResultMessage> errorLog) {
-		// TODO Auto-generated method stub
-		return false;
+		if (requirement.getEventProperties() == null || requirement.getEventProperties().size() == 0) {
+			return false;
+		} else {
+			return new PropertyMatch().match(offer.getEventProperties().get(0),
+							requirement.getEventProperties().get(0), errorLog);
+		}
 	}
-
 }

@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.storm.messaging;
 
-import java.io.IOException;
-import java.util.Map;
-
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
@@ -11,12 +8,15 @@ import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.param.EngineParameters;
 import de.fzi.cep.sepa.storm.utils.Serializer;
 
+import java.io.IOException;
+import java.util.Map;
+
 
 //TODO Do I need this class?
 public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 
-	private ProaSenseInternalProducer kafkaDataProducer;
-	private ProaSenseInternalProducer kafkaConfigProducer;
+	private StreamPipesKafkaProducer kafkaDataProducer;
+	private StreamPipesKafkaProducer kafkaConfigProducer;
 	private String configurationId;
 	
 	public KafkaSender(String producerKafkaUrl, String producerTopic, String configurationId)
@@ -35,7 +35,7 @@ public class KafkaSender<B extends BindingParameters> implements EPEngine<B>{
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		try {
 			event.put("configurationId", configurationId);
-			kafkaDataProducer.send(Serializer.serialize(event));
+			kafkaDataProducer.publish(Serializer.serialize(event));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

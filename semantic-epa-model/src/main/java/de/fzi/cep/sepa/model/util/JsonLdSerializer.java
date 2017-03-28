@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.model.util;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
 import com.google.gson.JsonDeserializationContext;
@@ -32,8 +33,13 @@ public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<
 	public JsonElement serialize(T src, Type typeOfSrc,
 			JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
-        result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
-        result.add("properties", context.serialize(src, src.getClass()));
+        try {
+            result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
+            result.add("properties", context.serialize(src, src.getClass()));
+        } catch (MalformedParameterizedTypeException e) {
+            System.out.println(src.getClass().getCanonicalName());
+            System.out.println("Malformed");
+        }
  
         return result;
 	}

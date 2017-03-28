@@ -9,7 +9,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -53,7 +53,7 @@ public class MapAreaController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("maparealist", "Map area view (list input)", "", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		EventPropertyList listProperty = new EventPropertyList();
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

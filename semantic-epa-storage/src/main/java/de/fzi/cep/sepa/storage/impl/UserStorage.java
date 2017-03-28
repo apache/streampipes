@@ -16,49 +16,52 @@ import java.util.stream.Collectors;
  *
  * Created by robin on 21.06.15.
  */
-public class UserStorage {
+public class UserStorage extends Storage<User> {
 
     Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+
+    public UserStorage() {
+        super(User.class);
+    }
     
     public List<User> getAllUsers()
     {
-    	CouchDbClient dbClient = Utils.getCouchDbUserClient();
-    	List<User> users = dbClient.view("_all_docs")
-   			  .includeDocs(true)
-   			  .query(User.class);
+        List<User> users = getAll();
     	return users.stream().filter(u -> (u.getUsername() != null)).collect(Collectors.toList());
     }
 
     public User getUser(String username) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
+        // TODO improve
+        CouchDbClient dbClient = getCouchDbClient();
         List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
         if (users.size() != 1) LOG.error("None or to many users with matching username");
-        dbClient.shutdown();
         return users.get(0);
     }
 
     public void storeUser(User user) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        dbClient.save(user);
-        dbClient.shutdown();
+        add(user);
     }
 
     public void updateUser(User user) {
-        CouchDbClient dbClient = Utils.getCouchDbUserClient();
-        dbClient.update(user);
-        dbClient.shutdown();
+        update(user);
     }
     
     public boolean emailExists(String email)
     {
-    	List<User> users = getAllUsers();
-    	return users.stream().anyMatch(u -> u.getEmail().equals(email));
+    	List<User> users = getAll();
+    	return users
+                .stream()
+                .filter(u -> u.getEmail() != null)
+                .anyMatch(u -> u.getEmail().equals(email));
     }
     
     public boolean usernameExists(String username)
     {
-    	List<User> users = getAllUsers();
-    	return users.stream().anyMatch(u -> u.getUsername().equals(username));
+    	List<User> users = getAll();
+    	return users
+                .stream()
+                .filter(u -> u.getUsername() != null)
+                .anyMatch(u -> u.getUsername().equals(username));
     }
     
     /**
@@ -67,17 +70,13 @@ public class UserStorage {
     * @return True if user exists exactly once, false otherwise
     */
    public boolean checkUser(String username) {
-       CouchDbClient dbClient = Utils.getCouchDbUserClient();
+       CouchDbClient dbClient = getCouchDbClient();
        List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
        return users.size() == 1;
    }
-   
-   public static void main(String[] args) {
-       UserStorage stor = new UserStorage();
-       //User user = stor.getUser("user");
-       //user.deletePipeline("f0471513-7d17-468c-a2fc-8a32aa8b126d");
-       //stor.updateUser(user);
-       System.out.println(stor.getUser("riemer@fzi.de").getUsername());
-   }
 
+    @Override
+    protected CouchDbClient getCouchDbClient() {
+        return Utils.getCouchDbUserClient();
+    }
 }

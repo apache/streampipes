@@ -1,76 +1,83 @@
 # Kibana is served by a back end server. This controls which port to use.
-port: 5601
+# server.port: 5601
 
 # The host to bind the server to.
-host: "0.0.0.0"
+ server.host: "ipe-koi05.fzi.de"
+
+# If you are running kibana behind a proxy, and want to mount it at a path,
+# specify that path here. The basePath can't end in a slash.
+# server.basePath: ""
+
+# The maximum payload size in bytes on incoming server requests.
+# server.maxPayloadBytes: 1048576
 
 # The Elasticsearch instance to use for all your queries.
-elasticsearch_url: "http://elasticsearch:9200"
+ elasticsearch.url: "http://ipe-koi05.fzi.de:9200"
 
 # preserve_elasticsearch_host true will send the hostname specified in `elasticsearch`. If you set it to false,
 # then the host you use to connect to *this* Kibana instance will be sent.
-elasticsearch_preserve_host: true
+# elasticsearch.preserveHost: true
 
 # Kibana uses an index in Elasticsearch to store saved searches, visualizations
 # and dashboards. It will create a new index if it doesn't already exist.
-kibana_index: ".kibana"
-
-# If your Elasticsearch is protected with basic auth, this is the user credentials
-# used by the Kibana server to perform maintence on the kibana_index at statup. Your Kibana
-# users will still need to authenticate with Elasticsearch (which is proxied thorugh
-# the Kibana server)
-# kibana_elasticsearch_username: user
-# kibana_elasticsearch_password: pass
-
-# If your Elasticsearch requires client certificate and key
-# kibana_elasticsearch_client_crt: /path/to/your/client.crt
-# kibana_elasticsearch_client_key: /path/to/your/client.key
-
-# If you need to provide a CA certificate for your Elasticsarech instance, put
-# the path of the pem file here.
-# ca: /path/to/your/CA.pem
+# kibana.index: ".kibana"
 
 # The default application to load.
-default_app_id: "discover"
+# kibana.defaultAppId: "discover"
 
-# Time in milliseconds to wait for elasticsearch to respond to pings, defaults to
-# request_timeout setting
-# ping_timeout: 1500
+# If your Elasticsearch is protected with basic auth, these are the user credentials
+# used by the Kibana server to perform maintenance on the kibana_index at startup. Your Kibana
+# users will still need to authenticate with Elasticsearch (which is proxied through
+# the Kibana server)
+# elasticsearch.username: "user"
+# elasticsearch.password: "pass"
 
-# Time in milliseconds to wait for responses from the back end or elasticsearch.
-# This must be > 0
-request_timeout: 300000
+# SSL for outgoing requests from the Kibana Server to the browser (PEM formatted)
+# server.ssl.cert: /path/to/your/server.crt
+# server.ssl.key: /path/to/your/server.key
 
-# Time in milliseconds for Elasticsearch to wait for responses from shards.
-# Set to 0 to disable.
-shard_timeout: 0
+# Optional setting to validate that your Elasticsearch backend uses the same key files (PEM formatted)
+# elasticsearch.ssl.cert: /path/to/your/client.crt
+# elasticsearch.ssl.key: /path/to/your/client.key
 
-# Time in milliseconds to wait for Elasticsearch at Kibana startup before retrying
-# startup_timeout: 5000
+# If you need to provide a CA certificate for your Elasticsearch instance, put
+# the path of the pem file here.
+# elasticsearch.ssl.ca: /path/to/your/CA.pem
 
 # Set to false to have a complete disregard for the validity of the SSL
 # certificate.
-verify_ssl: true
+# elasticsearch.ssl.verify: true
 
-# SSL for outgoing requests from the Kibana Server (PEM formatted)
-# ssl_key_file: /path/to/your/server.key
-# ssl_cert_file: /path/to/your/server.crt
+# Time in milliseconds to wait for elasticsearch to respond to pings, defaults to
+# request_timeout setting
+# elasticsearch.pingTimeout: 1500
+
+# Time in milliseconds to wait for responses from the back end or elasticsearch.
+# This must be > 0
+# elasticsearch.requestTimeout: 30000
+
+# Header names and values that are sent to Elasticsearch. Any custom headers cannot be overwritten
+# by client-side headers.
+# elasticsearch.customHeaders: {}
+
+# Time in milliseconds for Elasticsearch to wait for responses from shards.
+# Set to 0 to disable.
+# elasticsearch.shardTimeout: 0
+
+# Time in milliseconds to wait for Elasticsearch at Kibana startup before retrying
+# elasticsearch.startupTimeout: 5000
 
 # Set the path to where you would like the process id file to be created.
-# pid_file: /var/run/kibana.pid
+# pid.file: /var/run/kibana.pid
 
 # If you would like to send the log output to a file you can set the path below.
-# This will also turn off the STDOUT log output.
-# log_file: ./kibana.log
-# Plugins that are included in the build, and no longer found in the plugins/ folder
-bundled_plugin_ids:
- - plugins/dashboard/index
- - plugins/discover/index
- - plugins/doc/index
- - plugins/kibana/index
- - plugins/markdown_vis/index
- - plugins/metric_vis/index
- - plugins/settings/index
- - plugins/table_vis/index
- - plugins/vis_types/index
- - plugins/visualize/index
+# logging.dest: stdout
+
+# Set this to true to suppress all logging output.
+# logging.silent: false
+
+# Set this to true to suppress all logging output except for error messages.
+# logging.quiet: false
+
+# Set this to true to log all events, including system usage information and all requests.
+# logging.verbose: false

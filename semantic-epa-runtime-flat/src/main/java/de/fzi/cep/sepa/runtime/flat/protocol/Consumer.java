@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.runtime.flat.protocol;
 
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.runtime.flat.datatype.DatatypeDefinition;
-
-public abstract class Consumer<T> implements IMessageListener<T> {
+public abstract class Consumer<T> implements EventListener<T> {
 
 	protected Map<String, ConsumerMessageListener> listeners;
 	protected DatatypeDefinition dataType;

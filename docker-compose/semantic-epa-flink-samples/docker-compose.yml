@@ -1,0 +1,12 @@
+flink-samples:
+  image: laus.fzi.de:5000/fzi/semantic-epa-flink-samples
+  net: "host"
+  ports:
+    - "8094:8094"
+    - "48080:48080"
+    - "48081:48081"
+    - "6123:6123"
+    - "8081:8081"
+    - "50000-62000:50000-62000"
+  volumes:
+    - "./config:/root/.streampipes"

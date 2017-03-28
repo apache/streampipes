@@ -1,0 +1,7 @@
+esper:
+  image: laus.fzi.de:5000/fzi/semantic-epa-esper
+  net: "host"
+  ports:
+    - "8090:8090"
+  volumes:
+    - ./config:/root/.streampipes

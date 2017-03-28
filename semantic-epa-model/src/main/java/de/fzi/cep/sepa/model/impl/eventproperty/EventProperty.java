@@ -1,25 +1,19 @@
 package de.fzi.cep.sepa.model.impl.eventproperty;
 
+import com.clarkparsia.empire.annotation.Namespaces;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import de.fzi.cep.sepa.model.UnnamedSEPAElement;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
+import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
+import de.fzi.cep.sepa.model.util.Cloner;
+
+import javax.persistence.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import de.fzi.cep.sepa.model.UnnamedSEPAElement;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
-import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
-import de.fzi.cep.sepa.model.util.Cloner;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -50,7 +44,6 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:domainProperty")
 	protected List<URI> domainProperties;
-	
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -62,8 +55,6 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	@RdfProperty("sepa:hasEventPropertyQualityRequirement")
 	protected List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
-	
-	
 	public EventProperty()
 	{
 		super(prefix + UUID.randomUUID().toString());

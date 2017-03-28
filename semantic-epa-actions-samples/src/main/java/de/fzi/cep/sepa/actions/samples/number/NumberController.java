@@ -14,7 +14,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -52,7 +52,7 @@ public class NumberController extends ActionController {
         public SecDescription declareModel() {
                 SecDescription sec = new SecDescription("number", "Number", "Displays a colored circle with value", "");
                 //sec.setIconUrl(ActionConfig.iconBaseUrl + "/---.png");
-                sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+                sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
                 
                 List<EventProperty> eventProperties = new ArrayList<EventProperty>();
                 EventProperty e1 = EpRequirements.numberReq();

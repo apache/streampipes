@@ -1,34 +1,29 @@
 package de.fzi.cep.sepa.storage.api;
 
-import java.util.List;
-
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.RunningVisualization;
 import de.fzi.cep.sepa.model.client.VirtualSensor;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+
+import java.util.List;
 
 public interface PipelineStorage {
 
-	public List<Pipeline> getAllPipelines();
+	List<Pipeline> getAllPipelines();
 
-	public List<Pipeline> getAllUserPipelines();
-	
-	public List<RunningVisualization> getRunningVisualizations();
-	
-	public void storeVisualization(RunningVisualization vizualization);
-	
-	public void deleteVisualization(String pipelineId);
-	
-	public void storePipeline(Pipeline pipeline);
-	
-	public void updatePipeline(Pipeline pipeline);
-	
-	public Pipeline getPipeline(String pipelineId);
-	
-	public void deletePipeline(String pipelineId);
-	
-	public <T> void store(T object);
-	
-	public void storeVirtualSensor(String username, VirtualSensor virtualSensor);
-	
-	public List<VirtualSensor> getVirtualSensors(String username);
+	List<Pipeline> getSystemPipelines();
+
+	List<Pipeline> getAllUserPipelines();
+
+	void storePipeline(Pipeline pipeline);
+
+	void updatePipeline(Pipeline pipeline);
+
+	Pipeline getPipeline(String pipelineId);
+
+	void deletePipeline(String pipelineId);
+
+	void store(Pipeline object);
+
+	void storeVirtualSensor(String username, VirtualSensor virtualSensor);
+
+	List<VirtualSensor> getVirtualSensors(String username);
 }

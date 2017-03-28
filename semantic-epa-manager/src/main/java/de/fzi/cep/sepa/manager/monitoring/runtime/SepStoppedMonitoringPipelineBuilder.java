@@ -12,26 +12,19 @@ import de.fzi.cep.sepa.commons.config.ConfigurationManager;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingFormatException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingProtocolException;
 import de.fzi.cep.sepa.commons.exceptions.NoMatchingSchemaException;
-import de.fzi.cep.sepa.manager.matching.PipelineValidationHandler;
+import de.fzi.cep.sepa.manager.matching.PipelineVerificationHandler;
 import de.fzi.cep.sepa.manager.operations.Operations;
-import de.fzi.cep.sepa.messages.PipelineModificationMessage;
-import de.fzi.cep.sepa.model.client.ActionClient;
-import de.fzi.cep.sepa.model.client.Pipeline;
-import de.fzi.cep.sepa.model.client.SEPAClient;
-import de.fzi.cep.sepa.model.client.SEPAElement;
-import de.fzi.cep.sepa.model.client.StaticProperty;
-import de.fzi.cep.sepa.model.client.StaticPropertyType;
-import de.fzi.cep.sepa.model.client.StreamClient;
-import de.fzi.cep.sepa.model.client.input.DomainConceptInput;
-import de.fzi.cep.sepa.model.client.input.ElementType;
-import de.fzi.cep.sepa.model.client.input.SupportedProperty;
-import de.fzi.cep.sepa.model.client.input.TextInput;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineModificationMessage;
+import de.fzi.cep.sepa.model.NamedSEPAElement;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
+
 import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.graph.SecDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
+import de.fzi.cep.sepa.model.impl.graph.*;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
-import de.fzi.cep.sepa.storage.util.ClientModelTransformer;
 
 public class SepStoppedMonitoringPipelineBuilder {
 
@@ -64,11 +57,11 @@ public class SepStoppedMonitoringPipelineBuilder {
 
 	public Pipeline buildPipeline()
 			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException, Exception {
-		SEPAClient rateSepaClient = ClientModelTransformer.toSEPAClientModel(streamStoppedSepaDescription);
-		StreamClient streamClient = ClientModelTransformer.toStreamClientModel(sepDescription, stream);
-		ActionClient kafkaActionClient = ClientModelTransformer.toSECClientModel(kafkaSecDescription);
+		SepaInvocation rateSepaClient = new SepaInvocation(streamStoppedSepaDescription);
+		EventStream streamClient = new EventStream(stream);
+		SecInvocation kafkaActionClient = new SecInvocation(kafkaSecDescription);
 
-		List<SEPAElement> elements = new ArrayList<>();
+		List<NamedSEPAElement> elements = new ArrayList<>();
 		elements.add(streamClient);
 
 		rateSepaClient.setConnectedTo(Arrays.asList("stream"));
@@ -81,19 +74,19 @@ public class SepStoppedMonitoringPipelineBuilder {
 
 		pipeline.setSepas(Arrays.asList(rateSepaClient));
 
-		PipelineModificationMessage message = new PipelineValidationHandler(pipeline, true).validateConnection()
+		PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection()
 				.computeMappingProperties().getPipelineModificationMessage();
 
-		SEPAClient updatedSepa = updateStreamStoppedSepa(rateSepaClient, message);
+		SepaInvocation updatedSepa = updateStreamStoppedSepa(rateSepaClient, message);
 		pipeline.setSepas(Arrays.asList(updatedSepa));
 
 		kafkaActionClient.setConnectedTo(Arrays.asList("rate"));
-		pipeline.setAction(kafkaActionClient);
+		pipeline.setActions(Arrays.asList(kafkaActionClient));
 
-		message = new PipelineValidationHandler(pipeline, false).validateConnection().computeMappingProperties()
+		message = new PipelineVerificationHandler(pipeline).validateConnection().computeMappingProperties()
 				.getPipelineModificationMessage();
 
-		pipeline.setAction(updateKafkaSec(kafkaActionClient, message));
+		pipeline.setActions(Arrays.asList(updateKafkaSec(kafkaActionClient, message)));
 
 		pipeline.setPipelineId(UUID.randomUUID().toString());
 		pipeline.setName("Monitoring - " + stream.getName());
@@ -109,18 +102,17 @@ public class SepStoppedMonitoringPipelineBuilder {
 		return StorageManager.INSTANCE.getStorageAPI().getSEPAById(RATE_SEPA_URI);
 	}
 
-	private ActionClient updateKafkaSec(ActionClient actionClient, PipelineModificationMessage message) {
+	private SecInvocation updateKafkaSec(SecInvocation actionClient, PipelineModificationMessage message) {
 		List<StaticProperty> properties = message.getPipelineModifications().get(0).getStaticProperties();
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {
-			if (p.getType() == StaticPropertyType.STATIC_PROPERTY) {
-				if (p.getInput().getElementType() == ElementType.TEXT_INPUT) {
+			if (p instanceof FreeTextStaticProperty ||p instanceof DomainStaticProperty) {
+				if (p instanceof FreeTextStaticProperty) {
 					if (p.getInternalName().equals("topic"))
-						((TextInput) p.getInput()).setValue(outputTopic);
+						((FreeTextStaticProperty) p).setValue(outputTopic);
 				}
-				else if (p.getInput().getElementType() == ElementType.DOMAIN_CONCEPT) {
-					DomainConceptInput input = (DomainConceptInput) p.getInput();
-					for(SupportedProperty sp : input.getSupportedProperties()) {
+				else if (p instanceof DomainStaticProperty) {
+					for(SupportedProperty sp : ((DomainStaticProperty) p).getSupportedProperties()) {
 						if (sp.getPropertyId().equals("http://schema.org/kafkaHost"))
 							sp.setValue(String
 								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
@@ -137,16 +129,15 @@ public class SepStoppedMonitoringPipelineBuilder {
 		return actionClient;
 	}
 
-	private SEPAClient updateStreamStoppedSepa(SEPAClient newSEPA, PipelineModificationMessage message) {
+	private SepaInvocation updateStreamStoppedSepa(SepaInvocation newSEPA, PipelineModificationMessage message) {
 		List<StaticProperty> properties = message.getPipelineModifications().get(0).getStaticProperties();
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {
-			if (p.getType() == StaticPropertyType.STATIC_PROPERTY) {
+			if (p instanceof FreeTextStaticProperty) {
 
-				if (p.getInput().getElementType() == ElementType.TEXT_INPUT) {
 					if (p.getInternalName().equals("topic"))
-						((TextInput) p.getInput()).setValue(String.valueOf(streamUri));
-				}
+						((FreeTextStaticProperty) p).setValue(String.valueOf(streamUri));
+
 			}
 			newStaticProperties.add(p);
 		}

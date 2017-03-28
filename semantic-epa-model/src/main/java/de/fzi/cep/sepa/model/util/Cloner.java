@@ -1,41 +1,20 @@
 package de.fzi.cep.sepa.model.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.JmsTransportProtocol;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.TransportProtocol;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyList;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.FixedOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.ListOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.UriPropertyMapping;
+import de.fzi.cep.sepa.model.impl.output.*;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityDefinition;
 import de.fzi.cep.sepa.model.impl.quality.EventPropertyQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.MeasurementCapability;
 import de.fzi.cep.sepa.model.impl.quality.MeasurementObject;
-import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cloner {
 
@@ -52,6 +31,7 @@ public class Cloner {
 	public StaticProperty staticProperty(StaticProperty o) {
 		if (o instanceof FreeTextStaticProperty) return new FreeTextStaticProperty((FreeTextStaticProperty) o);
 		else if (o instanceof OneOfStaticProperty) return new OneOfStaticProperty((OneOfStaticProperty) o);
+		else if (o instanceof RemoteOneOfStaticProperty) return new RemoteOneOfStaticProperty((RemoteOneOfStaticProperty) o);
 		else if (o instanceof MappingPropertyNary) return new MappingPropertyNary((MappingPropertyNary) o);
 		else if (o instanceof DomainStaticProperty) return new DomainStaticProperty((DomainStaticProperty) o);
 		else if (o instanceof AnyStaticProperty) return new AnyStaticProperty((AnyStaticProperty) o);
@@ -152,6 +132,10 @@ public class Cloner {
 
 	public List<MeasurementObject> mo(List<MeasurementObject> measurementObject) {
 		return measurementObject.stream().map(m -> new MeasurementObject(m)).collect(Collectors.toList());
+	}
+
+	public List<ApplicationLink> al(List<ApplicationLink> applicationLinks) {
+		return applicationLinks.stream().map(m -> new ApplicationLink(m)).collect(Collectors.toList());
 	}
 	
 }

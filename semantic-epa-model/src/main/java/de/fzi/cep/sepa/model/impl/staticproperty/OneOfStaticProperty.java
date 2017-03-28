@@ -32,7 +32,7 @@ public class OneOfStaticProperty extends StaticProperty {
 	
 	
 	public OneOfStaticProperty() {
-		super();
+		super(StaticPropertyType.OneOfStaticProperty);
 		options = new ArrayList<Option>();
 	}
 	
@@ -42,7 +42,7 @@ public class OneOfStaticProperty extends StaticProperty {
 	}
 
 	public OneOfStaticProperty(String internalName, String label, String description) {
-		super(internalName, label, description);
+		super(StaticPropertyType.OneOfStaticProperty, internalName, label, description);
 		options = new ArrayList<Option>();
 	}
 

@@ -1,42 +1,41 @@
+import de.fzi.cep.sepa.messaging.EventListener;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import eu.proasense.internal.*;
+import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TBinaryProtocol;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
 
-import de.fzi.cep.sepa.commons.messaging.IMessageListener;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.PDFType;
-import eu.proasense.internal.PredictedEvent;
-import eu.proasense.internal.RecommendationEvent;
-import eu.proasense.internal.VariableType;
-
-
-public class TestKafkaConnection implements IMessageListener<byte[]> {
+public class TestKafkaConnection implements EventListener<byte[]> {
 	
 	private static final int MAX_MESSAGES = 100;
 	private int counter = 0;
 	
-	private ProaSenseInternalProducer producer;
-	private ProaSenseInternalProducer producer2;
+	private EventProducer producer;
+	private EventProducer producer2;
 	
 	public TestKafkaConnection(String url, int kafkaTopic, int zookeeperTopic, String topic)
 	{
-		producer = new ProaSenseInternalProducer(url+kafkaTopic, topic);
-		
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(url+zookeeperTopic, "storm",
-				new String[] {topic}, this);
-		kafkaConsumerGroup.run(1);
+		producer = new StreamPipesKafkaProducer(url+kafkaTopic, topic);
+
+
+		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(url+kafkaTopic,
+				topic, this);
+
+		Thread thread = new Thread(kafkaConsumerGroup);
+		thread.start();
+
 	}
-	
-	
-	
+
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181, "FZI.SEPA.4ee6e8b4-f0e6-4c19-8b77-a2e1c55749b2");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi04.fzi.de:", 9092, 2181,
+						"de.fzi.random.number.list");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {
@@ -85,7 +84,7 @@ public class TestKafkaConnection implements IMessageListener<byte[]> {
 	
 	public void publishMessage(byte[] bytes)
 	{
-		producer.send(bytes);
+		producer.publish(bytes);
 	}
 	
 	

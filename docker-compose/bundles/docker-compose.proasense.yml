@@ -1,0 +1,76 @@
+actions:
+  image: laus.fzi.de:5000/fzi/semantic-epa-actions-samples
+  net: "host"
+  ports:
+    - "8091:8091"
+  volumes:
+    - "./config:/root/.streampipes"
+activemq:
+  image: laus.fzi.de:5000/fzi/activemq
+  net: "host"
+  ports:
+    - "61616:61616"
+    - "8161:8161"
+flink:
+    image: laus.fzi.de:5000/fzi/flink
+    net: "host"
+    ports:
+        - "8081:8081"
+        - "9010:9010"
+        - "6123:6123"
+    expose:
+        - "8081"
+        - "6123"
+    volumes:
+        - ./config/flink:/opt/flink/conf
+esper:
+  image: laus.fzi.de:5000/fzi/semantic-epa-esper
+  net: "host"
+  ports:
+    - "8090:8090"
+  volumes:
+    - ./config:/root/.streampipes
+semantic-epa-flink:
+  image: laus.fzi.de:5000/fzi/semantic-epa-flink-samples
+  net: "host"
+  ports:
+    - "8094:8094"
+    - "8081:8081"
+  volumes:
+    - "./config:/root/.streampipes"
+backend:
+  image: laus.fzi.de:5000/fzi/semantic-epa-backend
+  net: "host"
+  ports:
+    - "8080:8080"
+  volumes:
+    - "./config:/root/.streampipes"
+    - "./config/aduna:/root/.aduna"
+nginx:
+  image: laus.fzi.de:5000/fzi/nginx
+  net: "host"
+  ports:
+    - "80:80"
+couchdb:
+   image: couchdb
+   net: "host"
+   ports:
+     - "5984:5984"
+   volumes:
+     - "./config/couchdb/data:/usr/local/var/lib/couchdb"
+elasticsearch:
+   image: elasticsearch:2.4.1
+   net: "host"
+   ports:
+       - "9200:9200"
+       - "9300:9300"
+   volumes:
+       - ./config/elasticsearch/data:/usr/share/elasticsearch/data
+       - ./config/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+kibana:
+   image: kibana:4.6.1
+   net: "host"
+   ports:
+       - "5601:5601"
+   volumes:
+       - ./config/kibana/kibana.yml:/opt/kibana/config/kibana.yml

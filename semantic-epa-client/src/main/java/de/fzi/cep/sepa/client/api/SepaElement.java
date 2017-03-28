@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.client.api;
 
 import java.util.List;
-import java.util.StringJoiner;
 
 import javax.ws.rs.Path;
 

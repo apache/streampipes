@@ -1,33 +1,29 @@
 package de.fzi.cep.sepa.storm.topology;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.jms.JMSException;
-
-import org.apache.thrift.TException;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import backtype.storm.spout.Scheme;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Tuple;
-
 import com.google.gson.Gson;
-
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
-import de.fzi.cep.sepa.commons.messaging.activemq.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 import de.fzi.cep.sepa.runtime.util.ThriftSerializer;
 import de.fzi.cep.sepa.storm.utils.StormUtils;
+import org.apache.thrift.TException;
+import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jms.JMSException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class SinkSepaBolt<B extends BindingParameters> extends BaseRichBolt {
@@ -44,7 +40,7 @@ private static final long serialVersionUID = -3694170770048756860L;
     private Gson gson;
     private TSerializer serializer;
     private ActiveMQPublisher activeMqProducer;
-    private ProaSenseInternalProducer kafkaProducer;
+    private StreamPipesKafkaProducer kafkaProducer;
     private EventStream eventStream;
         
     public SinkSepaBolt(String id, EventStream eventStream) {
@@ -62,7 +58,7 @@ private static final long serialVersionUID = -3694170770048756860L;
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
 
     	if (eventStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
-    		this.kafkaProducer = new ProaSenseInternalProducer(broker, topic);
+    		this.kafkaProducer = new StreamPipesKafkaProducer(broker, topic);
     	} else {
     		try {
 				this.activeMqProducer = new ActiveMQPublisher(broker, topic);
@@ -99,7 +95,7 @@ private static final long serialVersionUID = -3694170770048756860L;
 
 	private void sendToKafka(Map<String, Object> event)
 	{
-			kafkaProducer.send(toJsonOutputFormat(event));
+			kafkaProducer.publish(toJsonOutputFormat(event));
 	}
 	
 	private byte[] toOutputFormat(Map<String, Object> event, B parameters) throws TException

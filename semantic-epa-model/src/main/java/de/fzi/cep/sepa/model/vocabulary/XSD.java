@@ -39,7 +39,9 @@ public class XSD {
 	public static final URI _double = toURI("double");
 	
 	public static final URI _decimal = toURI("decimal");
-	
+
+	public static final URI _anyType = toURI("anyType");
+
 	/**
 	 * As discussed in
 	 * http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127
@@ -152,7 +154,7 @@ public class XSD {
 	        _IDREFS, _ENTITIES, _NMTOKEN, _NMTOKENS, _Name, _NCName, _ID, _IDREF, _ENTITY,
 	        _integer, _nonPositiveInteger, _negativeInteger, _long, _int, _short, _byte,
 	        _nonNegativeInteger, _unsignedLong, _unsignedInt, _unsignedShort, _unsignedByte,
-	        _positiveInteger
+	        _positiveInteger, _anyType
 
 	};
 	

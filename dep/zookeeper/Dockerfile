@@ -1,21 +1,34 @@
-FROM alpine
+FROM wurstmeister/base
 
-RUN apk add --update openjdk7-jre wget ca-certificates && \
-	cd /tmp && \
-	wget 	"https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" \
-				"https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-bin-2.21-r2.apk" && \
-	apk add --allow-untrusted glibc-2.21-r2.apk glibc-bin-2.21-r2.apk && \
-	/usr/glibc/usr/bin/ldconfig /lib /usr/glibc/usr/lib && \
-	echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+MAINTAINER Wurstmeister
 
-RUN wget http://ftp.fau.de/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz
-RUN rm /tmp/* /var/cache/apk/*
-RUN apk del wget ca-certificates
+ENV ZOOKEEPER_VERSION 3.4.6
 
-RUN tar -zxvf zookeeper-3.3.6.tar.gz
+#Download Zookeeper
+RUN wget -q http://mirror.vorboss.net/apache/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz && \
+wget -q https://www.apache.org/dist/zookeeper/KEYS && \
+wget -q https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc && \
+wget -q https://www.apache.org/dist/zookeeper/zookeeper-${ZOOKEEPER_VERSION}/zookeeper-${ZOOKEEPER_VERSION}.tar.gz.md5
 
-EXPOSE 2181
+#Verify download
+RUN md5sum -c zookeeper-${ZOOKEEPER_VERSION}.tar.gz.md5 && \
+gpg --import KEYS && \
+gpg --verify zookeeper-${ZOOKEEPER_VERSION}.tar.gz.asc
 
-ADD /zoo.cfg ./zookeeper-3.3.6/conf/zoo.cfg
+#Install
+RUN tar -xzf zookeeper-${ZOOKEEPER_VERSION}.tar.gz -C /opt
 
-ENTRYPOINT ["./zookeeper-3.3.6/bin/zkServer.sh", "start-foreground"]
+#Configure
+RUN mv /opt/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo_sample.cfg /opt/zookeeper-${ZOOKEEPER_VERSION}/conf/zoo.cfg
+
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+ENV ZK_HOME /opt/zookeeper-${ZOOKEEPER_VERSION}
+RUN sed  -i "s|/tmp/zookeeper|$ZK_HOME/data|g" $ZK_HOME/conf/zoo.cfg; mkdir $ZK_HOME/data
+
+ADD start-zk.sh /usr/bin/start-zk.sh
+EXPOSE 2181 2888 3888
+
+WORKDIR /opt/zookeeper-${ZOOKEEPER_VERSION}
+VOLUME ["/opt/zookeeper-${ZOOKEEPER_VERSION}/conf", "/opt/zookeeper-${ZOOKEEPER_VERSION}/data"]
+
+CMD /usr/sbin/sshd && bash /usr/bin/start-zk.sh

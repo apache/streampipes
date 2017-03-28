@@ -1,27 +1,20 @@
 package de.fzi.cep.sepa.actions.samples.notification;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.kafka.KafkaConsumerGroup;
-import de.fzi.cep.sepa.model.impl.EcType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
+import de.fzi.cep.sepa.model.impl.*;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.graph.SecDescription;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class NotificationController extends ActionController {
 
@@ -40,7 +33,7 @@ public class NotificationController extends ActionController {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("notification", "Notification", "Displays a notification in the UI panel", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/notification_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.NOTIFICATION.name()));
+		sec.setCategory(Arrays.asList(EcType.NOTIFICATION.name()));
 
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventSchema schema1 = new EventSchema();
@@ -52,7 +45,11 @@ public class NotificationController extends ActionController {
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
 		staticProperties.add(new FreeTextStaticProperty("title", "Title", ""));
-		staticProperties.add(new FreeTextStaticProperty("content", "Content", ""));
+
+		FreeTextStaticProperty contentProp = new FreeTextStaticProperty("content", "Content", "Enter the notification text. You can use place holders like #fieldName# to add the value of a stream variable.");
+		contentProp.setMultiLine(true);
+		contentProp.setHtmlAllowed(true);
+		staticProperties.add(contentProp);
 
 		sec.addEventStream(stream1);
 		sec.setStaticProperties(staticProperties);
@@ -69,16 +66,16 @@ public class NotificationController extends ActionController {
 	@Override
 	public Response invokeRuntime(SecInvocation sec) {
 		String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
-		
-		KafkaConsumerGroup kafkaConsumerGroup = new KafkaConsumerGroup(ClientConfiguration.INSTANCE.getZookeeperUrl(), consumerTopic,
-				new String[] {consumerTopic}, new NotificationProducer(sec));
-		kafkaConsumerGroup.run(1);
+
+		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+				new NotificationProducer(sec));
 		
 		return new Response(sec.getElementId(), true);
 	}
 
 	@Override
 	public Response detachRuntime(String pipelineId) {
+		stopKafkaConsumer();
 		return new Response(pipelineId, true);
 	}
 

@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.client.util;
 
 import com.google.gson.Gson;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
-import de.fzi.cep.sepa.client.init.ModelSubmitter;
 import de.fzi.cep.sepa.model.impl.Response;
 
 public class Util {

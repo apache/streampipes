@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 
 import javax.persistence.Entity;
 
@@ -28,8 +28,14 @@ public class User {
 	protected List<String> preferredSources;
 	protected List<String> preferredSepas;
 	protected List<String> preferredActions;
+
+	protected boolean hideTutorial;
 	
 	private Set<Role> roles;	
+
+	public User() {
+		this.hideTutorial = false;
+	}
 	
 	public User(String username, String email, String password, Set<Role> roles, List<Pipeline> pipelines, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
 		super();
@@ -43,6 +49,8 @@ public class User {
 		this.ownSources = ownSources;
 		this.ownSepas = ownSepas;
 		this.ownActions = ownActions;
+
+		this.hideTutorial = false;
 	}
 	
 	public User(String username, String email, String password, Set<Role> roles)
@@ -61,6 +69,8 @@ public class User {
 		this.preferredActions = new ArrayList<>();
 		this.preferredSepas = new ArrayList<>();
 		this.preferredSources = new ArrayList<>();
+
+		this.hideTutorial = false;
 	}
 
 	public String getUsername() {
@@ -218,4 +228,11 @@ public class User {
 		return source.stream().filter(f -> f.getElementId().equals(elementId)).findFirst().orElseThrow(IllegalArgumentException::new);
 	}
 
+	public boolean isHideTutorial() {
+		return hideTutorial;
+	}
+
+	public void setHideTutorial(boolean hideTutorial) {
+		this.hideTutorial = hideTutorial;
+	}
 }

@@ -33,9 +33,9 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 		
 		SepaDescription desc = new SepaDescription("project", "Projection", "Outputs a selectable subset of an input event type");
 
-		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
+		stream1.setUri(EsperConfig.serverUrl +"/" +desc.getElementId() +"/stream");
 		desc.addEventStream(stream1);
-		desc.setEpaTypes(Arrays.asList(EpaType.TRANSFORM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.TRANSFORM.name()));
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(new CustomOutputStrategy());
 		desc.setOutputStrategies(strategies);
@@ -50,7 +50,7 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
-					
+					System.out.println("invoke");
 		List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 		
 		for(EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties())
@@ -61,13 +61,8 @@ public class ProjectController extends FlatEpDeclarer<ProjectParameter>{
 		ProjectParameter staticParam = new ProjectParameter(
 				sepa, 
 				projectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, Project::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, Project::new, sepa);
+
 	}
 }

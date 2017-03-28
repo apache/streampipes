@@ -10,7 +10,7 @@ import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.util.ActionUtils;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -29,7 +29,7 @@ public class GaugeController implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("gauge", "Gauge", "Monitors numeric values");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/gauge_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
 		
 		EventStream stream1 = new EventStream();
 		EventSchema schema1 = new EventSchema();

@@ -13,64 +13,64 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 
 public interface StorageRequests {
 	
-	public boolean storeInvocableSEPAElement(InvocableSEPAElement element);
+	boolean storeInvocableSEPAElement(InvocableSEPAElement element);
 
-	public boolean storeSEP(SepDescription sep);
+	boolean storeSEP(SepDescription sep);
 	
-	public boolean storeSEP(String jsonld);
+	boolean storeSEP(String jsonld);
 	
-	public boolean storeSEPA(SepaDescription sepa);
+	boolean storeSEPA(SepaDescription sepa);
 	
-	public boolean storeSEPA(String jsonld);
+	boolean storeSEPA(String jsonld);
 	
-	public SepDescription getSEPById(URI rdfId);
+	SepDescription getSEPById(URI rdfId);
 	
-	public SepDescription getSEPById(String rdfId) throws URISyntaxException;
+	SepDescription getSEPById(String rdfId) throws URISyntaxException;
 	
-	public SepaDescription getSEPAById(String rdfId) throws URISyntaxException;
+	SepaDescription getSEPAById(String rdfId) throws URISyntaxException;
 	
-	public SepaDescription getSEPAById(URI rdfId);
+	SepaDescription getSEPAById(URI rdfId);
 	
-	public SecDescription getSECById(String rdfId) throws URISyntaxException;
+	SecDescription getSECById(String rdfId) throws URISyntaxException;
 	
-	public SecDescription getSECById(URI rdfId);
+	SecDescription getSECById(URI rdfId);
 	
-	public List<SepDescription> getAllSEPs();
+	List<SepDescription> getAllSEPs();
 	
-	public List<SepaDescription> getAllSEPAs();
+	List<SepaDescription> getAllSEPAs();
 	
-	public List<SepDescription> getSEPsByDomain(String domain);
+	List<SepDescription> getSEPsByDomain(String domain);
 	
-	public List<SepaDescription> getSEPAsByDomain(String domain);
+	List<SepaDescription> getSEPAsByDomain(String domain);
 	
-	public boolean deleteSEP(SepDescription sep);
+	boolean deleteSEP(SepDescription sep);
 	
-	public boolean deleteSEP(String rdfId);
+	boolean deleteSEP(String rdfId);
 	
-	public boolean deleteSEPA(SepaDescription sepa);
+	boolean deleteSEPA(SepaDescription sepa);
 	
-	public boolean deleteSEPA(String rdfId);
+	boolean deleteSEPA(String rdfId);
 	
-	public boolean exists(SepDescription sep);
+	boolean exists(SepDescription sep);
 	
-	public boolean exists(SepaDescription sepa);
+	boolean exists(SepaDescription sepa);
 	
-	public boolean update(SepDescription sep);
+	boolean update(SepDescription sep);
 	
-	public boolean update(SepaDescription sepa);
+	boolean update(SepaDescription sepa);
 
-	public boolean exists(SecDescription sec);
+	boolean exists(SecDescription sec);
 
-	public boolean update(SecDescription sec);
+	boolean update(SecDescription sec);
 
-	public boolean deleteSEC(SecDescription sec);
+	boolean deleteSEC(SecDescription sec);
 	
-	public boolean storeSEC(SecDescription sec);
+	boolean storeSEC(SecDescription sec);
 
-	public List<SecDescription> getAllSECs();
+	List<SecDescription> getAllSECs();
 	
-	public StaticProperty getStaticPropertyById(String rdfId);
+	StaticProperty getStaticPropertyById(String rdfId);
 	
-	public EventStream getEventStreamById(String rdfId);
+	EventStream getEventStreamById(String rdfId);
 	
 }

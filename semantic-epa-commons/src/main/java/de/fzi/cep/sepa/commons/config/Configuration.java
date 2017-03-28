@@ -1,13 +1,6 @@
 package de.fzi.cep.sepa.commons.config;
 
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
+import de.fzi.cep.sepa.commons.Utils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.openrdf.rio.RDFFormat;
@@ -17,7 +10,13 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
 
-import de.fzi.cep.sepa.commons.Utils;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Configuration objects containing loads all properties from a file
@@ -68,7 +67,7 @@ public class Configuration {
 	public String JMS_PROTOCOL;
 	public int JMS_PORT;
 	
-	public  String TCP_SERVER_URL;
+	public String TCP_SERVER_URL;
 	public int TCP_SERVER_PORT;
 	
 	public int WEBAPP_PORT;

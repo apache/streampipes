@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import com.google.common.io.Resources;
 
-import de.fzi.cep.sepa.model.client.Pipeline;
+import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 /**

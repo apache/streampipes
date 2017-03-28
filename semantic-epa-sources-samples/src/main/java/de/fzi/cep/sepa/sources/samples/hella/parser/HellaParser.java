@@ -4,7 +4,7 @@ package de.fzi.cep.sepa.sources.samples.hella.parser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import de.fzi.cep.sepa.sources.samples.csv.LineParser;
+import de.fzi.cep.sepa.sources.samples.adapter.LineParser;
 
 public abstract class HellaParser implements LineParser {
 

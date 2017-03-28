@@ -1,5 +1,7 @@
 package de.fzi.cep.sepa.model.client;
 
+import de.fzi.cep.sepa.model.client.pipeline.ElementComposition;
+
 public class VirtualSensor extends ElementComposition {
 
 	protected String createdBy;

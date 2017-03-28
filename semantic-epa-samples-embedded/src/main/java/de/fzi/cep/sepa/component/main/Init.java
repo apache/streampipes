@@ -1,16 +1,5 @@
 package de.fzi.cep.sepa.component.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import de.fzi.cep.sepa.actions.samples.areachart.AreaChartController;
-import de.fzi.cep.sepa.actions.samples.maparea.MapAreaController;
-import de.fzi.cep.sepa.component.main.algorithm.langdetect.LanguageDetectionController;
-import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
-
 //public class Init extends EmbeddedModelSubmitter {
     public class Init {
 

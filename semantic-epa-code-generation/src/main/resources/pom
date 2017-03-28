@@ -42,6 +42,11 @@
 			<artifactId>semantic-epa-flink</artifactId>
 			<version>####version####</version>
 		</dependency>
+		<dependency>
+        	<groupId>de.fzi.cep.sepa</groupId>
+        	<artifactId>semantic-epa-sdk</artifactId>
+        	<version>####version####</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>

@@ -27,9 +27,10 @@ public class TransportFormat extends UnnamedSEPAElement {
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("rdf:type")
 	protected List<URI> rdfType;
-	
+
 	public TransportFormat(String transportFormatType)
 	{
+		super();
 		this.rdfType = new ArrayList<URI>();
 		this.rdfType.add(URI.create(transportFormatType));
 	}
@@ -42,6 +43,7 @@ public class TransportFormat extends UnnamedSEPAElement {
 	
 	public TransportFormat()
 	{
+		super();
 		this.rdfType = new ArrayList<>();
 	}
 

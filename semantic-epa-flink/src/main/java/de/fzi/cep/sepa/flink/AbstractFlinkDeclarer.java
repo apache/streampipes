@@ -16,10 +16,12 @@ public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extend
 		runtime = getRuntime(graph);
 		this.graph = graph;
 		
-		if (runtime.startExecution())
+		if (runtime.startExecution()) {
 			return new Response(graph.getElementId(), true);
-		else
-			return new Response(graph.getElementId(), false); 
+		}
+		else {
+			return new Response(graph.getElementId(), false);
+		}
 	}
 	
 	@Override

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -164,14 +164,8 @@ public class DebsChallenge1Controller extends FlatEpDeclarer<DebsChallenge1Param
 				latProperty2Name, 
 				lngProperty2Name,
 				selectProperties);
-	
-		try {
-			invokeEPRuntime(staticParam, DebsChallenge1::new, sepa);
-			new Thread(new TaxiDataInputProvider(staticParam.getInputStreamParams().get(0).getInName())).start();
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, DebsChallenge1::new, sepa);
+
 	}
 }

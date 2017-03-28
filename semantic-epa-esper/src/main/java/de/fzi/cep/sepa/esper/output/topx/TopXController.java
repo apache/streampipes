@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -42,7 +42,7 @@ public class TopXController extends FlatEpDeclarer<TopXParameter>{
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property");
-		desc.setEpaTypes(Arrays.asList(EpaType.TRANSFORM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.TRANSFORM.name()));
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
 		desc.addEventStream(stream1);
@@ -102,13 +102,8 @@ public class TopXController extends FlatEpDeclarer<TopXParameter>{
 		}
 		
 		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
-		
-		try {
-			invokeEPRuntime(staticParam, TopX::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, TopX::new, sepa);
+
 	}
 }

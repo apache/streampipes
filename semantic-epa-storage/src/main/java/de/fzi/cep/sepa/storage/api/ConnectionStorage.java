@@ -2,13 +2,13 @@ package de.fzi.cep.sepa.storage.api;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.messages.ElementRecommendation;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementRecommendation;
 import de.fzi.cep.sepa.model.client.connection.Connection;
 
 public interface ConnectionStorage {
 
-	public void addConnection(Connection connection);
+	void addConnection(Connection connection);
 	
-	public List<ElementRecommendation> getRecommendedElements(String from);
+	List<PipelineElementRecommendation> getRecommendedElements(String from);
 	
 }

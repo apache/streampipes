@@ -44,14 +44,9 @@ public class DrillingStopController extends FlatEpDeclarer<DrillingStopParameter
 				minTorque,
 				latPropertyName,
 				lngPropertyName);
-	
-		try {
-			invokeEPRuntime(staticParam, DrillingStop::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, DrillingStop::new, sepa);
+
 	}
 	
 	@Override
@@ -71,7 +66,7 @@ public class DrillingStopController extends FlatEpDeclarer<DrillingStopParameter
 		
 		SepaDescription desc = new SepaDescription("drillingstop", "Driling Stop", "Detects stop of a drilling process");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));	
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

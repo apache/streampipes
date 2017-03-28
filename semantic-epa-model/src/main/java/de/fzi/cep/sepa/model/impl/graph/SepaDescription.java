@@ -36,21 +36,21 @@ public class SepaDescription extends ConsumableSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:epaType")
-	protected List<String> epaTypes;
+	protected List<String> category;
 
 	public SepaDescription(SepaDescription other)
 	{
 		super(other);
 		this.outputStrategies = new Cloner().strategies(other.getOutputStrategies());
 		this.pathName = other.getPathName();
-		this.epaTypes = new Cloner().epaTypes(other.getEpaTypes());
+		this.category = new Cloner().epaTypes(other.getCategory());
 	}
 	
 	public SepaDescription()
 	{
 		super();
 		this.outputStrategies = new ArrayList<>();
-		this.epaTypes = new ArrayList<>();
+		this.category = new ArrayList<>();
 	}
 	
 	public SepaDescription(String uri, String name, String description, String iconUrl, List<EventStream> eventStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies)
@@ -80,12 +80,12 @@ public class SepaDescription extends ConsumableSEPAElement {
 
 	
 
-	public List<String> getEpaTypes() {
-		return epaTypes;
+	public List<String> getCategory() {
+		return category;
 	}
 
-	public void setEpaTypes(List<String> epaTypes) {
-		this.epaTypes = epaTypes;
+	public void setCategory(List<String> category) {
+		this.category = category;
 	}
 
 	public String getPathName() {
@@ -102,5 +102,6 @@ public class SepaDescription extends ConsumableSEPAElement {
 
 	public void setOutputStrategies(List<OutputStrategy> outputStrategies) {
 		this.outputStrategies = outputStrategies;
-	}		
+	}
+
 }

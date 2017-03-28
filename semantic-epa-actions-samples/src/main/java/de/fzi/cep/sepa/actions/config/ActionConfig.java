@@ -9,6 +9,6 @@ public class ActionConfig {
 	
 	static {
 		serverUrl = ClientConfiguration.INSTANCE.getActionUrl();
-		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/semantic-epa-backend/img";
+		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/img";
 	}
 }

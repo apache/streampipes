@@ -21,7 +21,7 @@ public class MappingPropertyUnary extends MappingProperty{
 	
 	public MappingPropertyUnary()
 	{
-		super();
+		super(StaticPropertyType.MappingPropertyUnary);
 	}
 	
 	public MappingPropertyUnary(MappingPropertyUnary other)
@@ -32,12 +32,12 @@ public class MappingPropertyUnary extends MappingProperty{
 	
 	public MappingPropertyUnary(URI mapsFrom, String internalName, String label, String description)
 	{
-		super(mapsFrom, internalName, label, description);	
+		super(StaticPropertyType.MappingPropertyUnary, mapsFrom, internalName, label, description);
 	}
 	
 	public MappingPropertyUnary(String internalName, String label, String description)
 	{
-		super(internalName, label, description);
+		super(StaticPropertyType.MappingPropertyUnary, internalName, label, description);
 	}
 
 	public URI getMapsTo() {

@@ -38,7 +38,7 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		
 		SepaDescription desc = new SepaDescription("sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Sequence_Icon_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));	
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
@@ -49,7 +49,7 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		desc.addEventStream(stream2);	
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new CustomOutputStrategy(true));
+		strategies.add(new CustomOutputStrategy(false));
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -95,14 +95,9 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
 		List<String> matchingProperties = new ArrayList<>();
 		SequenceParameters params = new SequenceParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
-		
-		try {
-			invokeEPRuntime(params, Sequence::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, Sequence::new, invocationGraph);
+
 	}
 
 }

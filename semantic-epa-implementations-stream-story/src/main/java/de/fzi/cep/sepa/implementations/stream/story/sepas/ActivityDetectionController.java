@@ -7,6 +7,13 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
+import de.fzi.cep.sepa.model.impl.*;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+import de.fzi.cep.sepa.model.impl.staticproperty.RemoteOneOfStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.MhWirth;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
@@ -21,11 +28,6 @@ import de.fzi.cep.sepa.implementations.stream.story.utils.EnrichedUtils;
 import de.fzi.cep.sepa.implementations.stream.story.utils.ProaSenseSettings;
 import de.fzi.cep.sepa.implementations.stream.story.utils.Utils;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.impl.EpaType;
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
@@ -36,16 +38,27 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 	@Override
 	public SepaDescription declareModel() {
-		SepaDescription desc = new SepaDescription("sepas", "ActivityDetection",
+		SepaDescription desc = new SepaDescription("activity", "ActivityDetection",
 				"ActivityDetection description");
 
-		desc.setEpaTypes(Arrays.asList(EpaType.ALGORITHM.name()));		
+		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding
 				.setTransportFormats(de.fzi.cep.sepa.commons.Utils.createList(new TransportFormat(MessageFormat.Json)));
 
 		EventStream stream = EnrichedUtils.getEnrichedStream();
+
+		//Add some stream restrictions to ensure it just works with Enriched Stream
+		EventPropertyPrimitive p1 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.Torque));
+		EventPropertyPrimitive p2 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.SwivelOilTemperature));
+		EventPropertyPrimitive p3 = new EventPropertyPrimitive(de.fzi.cep.sepa.commons.Utils.createURI(MhWirth.RamVelMeasured));
+
+		EventSchema schema = new EventSchema();
+		schema.addEventProperty(p1);
+		schema.addEventProperty(p2);
+		schema.addEventProperty(p3);
+		stream.setEventSchema(schema);
 
 //		stream.setEventGrounding(grounding);
 		desc.setSupportedGrounding(grounding);
@@ -54,6 +67,14 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		strategies.add(Utils.getActivityDetectionScheme());
 		desc.setOutputStrategies(strategies);
+
+
+
+		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
+		String streamStoryUrl = ClientConfiguration.INSTANCE.getStreamStoryUrl();
+
+		staticProperties.add(new RemoteOneOfStaticProperty("modelId", "Model Id", "the id of the model", streamStoryUrl, "id", "name", "description", true));
+		desc.setStaticProperties(staticProperties);
 
 		return desc;
 	}
@@ -68,8 +89,9 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 	@Override
 	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		// TODO make modelId dynamic
-		int modelId = 1;
+		String selectedProperty = SepaUtils.getRemoteOneOfProperty(invocationGraph, "modelId");
+		int modelId = Integer.parseInt(selectedProperty);
+
 
 		String pipelineId = invocationGraph.getCorrespondingPipeline();
 		String errorMessage = "";
@@ -78,10 +100,12 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 
 		ModelInvocationRequestParameters params = Utils.getModelInvocationRequestParameters(pipelineId, modelId,
 				inputTopic, outputTopic);
-		JsonObject payload = Utils.getModelInvocationMessage(params);
+
+		// TODO ask Luka
+		JsonObject payload = Utils.getModelInvocationMessage(params, "ActivityDetection");
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "invoke").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "streampipes/invoke").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(payload.toString(), ContentType.APPLICATION_JSON)
 					.execute();
 			Response ress = handleResponse(res, pipelineId);
@@ -101,13 +125,13 @@ public class ActivityDetectionController implements SemanticEventProcessingAgent
 	@Override
 	public Response detachRuntime(String pipelineId) {
 		// TODO make modelId dynamic
-		int modelId = 1;
+//		int modelId = 1;
 		String errorMessage = "";
 
-		JsonObject params = Utils.getModelDetachMessage(pipelineId, modelId);
+		JsonObject params = Utils.getModelDetachMessage(pipelineId);
 
 		try {
-			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "detach").useExpectContinue()
+			org.apache.http.client.fluent.Response res = Request.Post(StreamStoryInit.STREAMSTORY_URL + "streampipes/detach").useExpectContinue()
 					.version(HttpVersion.HTTP_1_1).bodyString(params.toString(), ContentType.APPLICATION_JSON)
 					.execute();
 			return handleResponse(res, pipelineId);

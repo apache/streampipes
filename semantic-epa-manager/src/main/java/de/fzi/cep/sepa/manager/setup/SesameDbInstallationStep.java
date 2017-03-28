@@ -13,8 +13,8 @@ import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
 import org.openrdf.sail.memory.config.MemoryStoreConfig;
 
-import de.fzi.cep.sepa.messages.Message;
-import de.fzi.cep.sepa.messages.Notifications;
+import de.fzi.cep.sepa.model.client.messages.Message;
+import de.fzi.cep.sepa.model.client.messages.Notifications;
 import de.fzi.cep.sepa.storage.controller.StorageManager;
 
 public class SesameDbInstallationStep implements InstallationStep {

@@ -6,5 +6,5 @@ import de.fzi.cep.sepa.manager.verification.messages.VerificationResult;
 
 public interface Verifier {
 
-	public List<VerificationResult> validate();
+	List<VerificationResult> validate();
 }

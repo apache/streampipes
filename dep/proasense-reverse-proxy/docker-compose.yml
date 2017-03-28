@@ -1,0 +1,6 @@
+reverse-proxy:
+  image: URL/proasense/proasense-reverse-proxy
+  net: "host"
+  ports:
+    - "80:80"
+

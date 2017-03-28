@@ -1,9 +1,6 @@
 package de.fzi.cep.sepa.esper.pattern.and;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.EpaType;
@@ -22,7 +19,10 @@ import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AndController extends FlatEpDeclarer<AndParameters> {
 
@@ -36,7 +36,7 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		
 		SepaDescription desc = new SepaDescription("and", "Co-Occurrence", "Detects a co-occurrence of events in the following form: Event A happens together with Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
-		desc.setEpaTypes(Arrays.asList(EpaType.PATTERN_DETECT.name()));	
+		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
@@ -47,7 +47,7 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		desc.addEventStream(stream2);	
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new CustomOutputStrategy(true));
+		strategies.add(new CustomOutputStrategy(false));
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -93,14 +93,9 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		//List<String> matchingProperties = SepaUtils.getMatchingPropertyNames(invocationGraph, "matching");
 		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
-		
-		try {
-			invokeEPRuntime(params, And::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+
+		return submit(params, And::new, invocationGraph);
+
 	}
 
 }

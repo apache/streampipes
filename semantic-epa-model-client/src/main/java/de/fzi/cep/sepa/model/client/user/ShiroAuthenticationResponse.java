@@ -4,6 +4,8 @@ public class ShiroAuthenticationResponse {
 
 	private Info info;
 	private boolean success;
+	private String callbackUrl;
+	private String token;
 	
 	public ShiroAuthenticationResponse(Info info) {
 		super();
@@ -26,5 +28,20 @@ public class ShiroAuthenticationResponse {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-	
+
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

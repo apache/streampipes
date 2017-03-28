@@ -8,9 +8,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
 
-import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnriched;
 import de.fzi.cep.sepa.esper.drillingstart.single.DrillingStartEnrichedController;
-import de.fzi.cep.sepa.esper.proasense.drillingstart.DrillingStartController;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.storage.util.Transformer;
 

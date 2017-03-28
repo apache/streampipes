@@ -7,8 +7,8 @@ import java.util.List;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
-import de.fzi.cep.sepa.model.builder.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -46,7 +46,7 @@ public class ObserveNumericalWindowController extends FlatEpDeclarer<ObserveNume
 
 		SepaDescription desc = new SepaDescription("observenumericalvaluewindow", "Observe Numerical Value Window",
 				"");
-		desc.setEpaTypes(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
 
 		desc.addEventStream(stream1);
 
@@ -110,13 +110,8 @@ public class ObserveNumericalWindowController extends FlatEpDeclarer<ObserveNume
 		ObserveNumericalWindowParameters params = new ObserveNumericalWindowParameters(invocationGraph, valueLimit,
 				threshold, toObserve, windowType, windowSize, groupBy, messageName, averageName);
 
-		try {
-			invokeEPRuntime(params, ObserveNumericalWindow::new, invocationGraph);
-			return new Response(invocationGraph.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(invocationGraph.getElementId(), false, e.getMessage());
-		}
+		return submit(params, ObserveNumericalWindow::new, invocationGraph);
+
 	}
 
 }

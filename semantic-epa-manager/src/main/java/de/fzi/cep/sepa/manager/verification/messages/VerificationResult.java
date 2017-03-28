@@ -1,7 +1,7 @@
 package de.fzi.cep.sepa.manager.verification.messages;
 
-import de.fzi.cep.sepa.messages.Notification;
-import de.fzi.cep.sepa.messages.NotificationType;
+import de.fzi.cep.sepa.model.client.messages.Notification;
+import de.fzi.cep.sepa.model.client.messages.NotificationType;
 
 public abstract class VerificationResult {
 

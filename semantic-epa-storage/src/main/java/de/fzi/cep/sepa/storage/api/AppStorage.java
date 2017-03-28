@@ -6,13 +6,13 @@ import de.fzi.cep.sepa.appstore.shared.BundleInfo;
 
 public interface AppStorage {
 
-	public BundleInfo getBundleById(String id);
+	BundleInfo getBundleById(String id);
 		
-	public List<BundleInfo> getInstalledBundles();
+	List<BundleInfo> getInstalledBundles();
 	
-	public boolean updateBundle(BundleInfo bundleInfo);
+	boolean updateBundle(BundleInfo bundleInfo);
 	
-	public boolean deleteBundle(BundleInfo bundleInfo);
+	boolean deleteBundle(BundleInfo bundleInfo);
 	
-	public boolean storeBundle(BundleInfo bundleInfo);
+	boolean storeBundle(BundleInfo bundleInfo);
 }

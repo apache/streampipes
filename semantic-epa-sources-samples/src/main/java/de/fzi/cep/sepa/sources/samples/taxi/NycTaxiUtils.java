@@ -1,18 +1,18 @@
 package de.fzi.cep.sepa.sources.samples.taxi;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.commons.messaging.IMessagePublisher;
-import de.fzi.cep.sepa.commons.messaging.ProaSenseInternalProducer;
+import de.fzi.cep.sepa.messaging.EventProducer;
+import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NycTaxiUtils {
 
@@ -21,8 +21,10 @@ public class NycTaxiUtils {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "medallion", "", Utils.createURI(SO.Text)));
 		eventProperties.add(new EventPropertyPrimitive(XSD._string.toString(), "hack_license", "", Utils.createURI(SO.Text)));
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "pickup_datetime", "", Utils.createURI("http://test.de/timestamp")));
-		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "dropoff_datetime", "", Utils.createURI("http://test.de/timestamp")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "pickup_datetime", "",
+						Utils.createURI("http://schema.org/DateTime")));
+		eventProperties.add(new EventPropertyPrimitive(XSD._long.toString(), "dropoff_datetime",
+						"", Utils.createURI("http://schema.org/DateTime")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._integer.toString(), "trip_time_in_secs", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "trip_distance", "", Utils.createURI("http://schema.org/Number")));
 		eventProperties.add(new EventPropertyPrimitive(XSD._double.toString(), "pickup_longitude", "", Utils.createURI(Geo.lng)));
@@ -43,10 +45,10 @@ public class NycTaxiUtils {
 		return new EventSchema(eventProperties);
 	}
 	
-	public static IMessagePublisher streamPublisher(String topicName)
+	public static EventProducer streamPublisher(String topicName)
 	{
 		
-			return new ProaSenseInternalProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
+			return new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);
 	}
 	
 }

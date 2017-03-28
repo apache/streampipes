@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>de.fzi.cep.sepa</groupId>
 		<artifactId>semantic-epa-parent</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.40.2</version>
 	</parent>
 
 	<artifactId>semantic-epa-implementations-stream-story</artifactId>
@@ -32,14 +31,14 @@
    		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-client-container</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.40.2</version>
 		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-sources-mhwirth</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-			<type>war</type>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>de.fzi.cep.sepa</groupId>-->
+			<!--<artifactId>semantic-epa-sources-mhwirth</artifactId>-->
+			<!--<version>0.0.2-SNAPSHOT</version>-->
+			<!--<type>war</type>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
@@ -61,6 +60,7 @@
 			<artifactId>wiremock</artifactId>
 			<version>1.57</version>
 			<classifier>standalone</classifier>
+			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.mortbay.jetty</groupId>
@@ -107,7 +107,21 @@
 		<dependency>
 			<groupId>de.fzi.cep.sepa</groupId>
 			<artifactId>semantic-epa-client-standalone</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>de.fzi.cep.sepa</groupId>
+			<artifactId>semantic-epa-messaging-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.5.2</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import de.fzi.cep.sepa.messages.MatchingResultMessage;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 

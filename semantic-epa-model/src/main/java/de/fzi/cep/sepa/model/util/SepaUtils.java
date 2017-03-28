@@ -1,12 +1,5 @@
 package de.fzi.cep.sepa.model.util;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -16,17 +9,14 @@ import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyNested;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.impl.staticproperty.MatchingStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.Option;
-import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
-import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SepaUtils {
 
@@ -262,6 +252,26 @@ public class SepaUtils {
 				if (p instanceof OneOfStaticProperty)
 				{
 					OneOfStaticProperty thisProperty = (OneOfStaticProperty) p;
+					for(Option option : thisProperty.getOptions())
+					{
+						if (option.isSelected()) return option.getName();
+					}
+				}
+			}
+		}
+		return null;
+		//TODO exceptions
+	}
+
+	public static String getRemoteOneOfProperty(InvocableSEPAElement sepa,
+			String staticPropertyName) {
+		for(StaticProperty p : sepa.getStaticProperties())
+		{
+			if (p.getInternalName().equals(staticPropertyName))
+			{
+				if (p instanceof RemoteOneOfStaticProperty)
+				{
+					RemoteOneOfStaticProperty thisProperty = (RemoteOneOfStaticProperty) p;
 					for(Option option : thisProperty.getOptions())
 					{
 						if (option.isSelected()) return option.getName();

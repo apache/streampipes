@@ -1,14 +1,20 @@
 package de.fzi.cep.sepa.manager.matching.output;
 
+import de.fzi.cep.sepa.model.impl.EventSchema;
+import de.fzi.cep.sepa.model.impl.EventStream;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
+import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.output.RenameOutputStrategy;
-
 public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<RenameOutputStrategy> {
+
+	private RenameOutputStrategy strategy;
+
+	public RenameOutputSchemaGenerator(RenameOutputStrategy strategy) {
+		this.strategy = strategy;
+	}
 
 	@Override
 	public EventSchema buildFromOneStream(EventStream stream) {
@@ -21,7 +27,10 @@ public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<Rename
 		EventSchema resultSchema = new EventSchema();
 		List<EventProperty> properties = new ArrayList<>();
 		properties.addAll(stream1.getEventSchema().getEventProperties());
-		properties.addAll(new PropertyDuplicateRemover(properties, stream2.getEventSchema().getEventProperties()).rename());
+		if (strategy.isKeepBoth()) {
+			properties.addAll(new PropertyDuplicateRemover(properties,
+							stream2.getEventSchema().getEventProperties()).rename());
+		}
 		
 		resultSchema.setEventProperties(properties);
 		return resultSchema;

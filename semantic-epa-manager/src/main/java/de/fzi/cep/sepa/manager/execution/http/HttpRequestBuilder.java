@@ -1,22 +1,17 @@
 package de.fzi.cep.sepa.manager.execution.http;
 
-import java.io.IOException;
-
-import org.apache.http.Consts;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import de.fzi.cep.sepa.commons.Utils;
+import de.fzi.cep.sepa.model.InvocableSEPAElement;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineElementStatus;
+import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.messages.PipelineElementStatus;
-import de.fzi.cep.sepa.model.InvocableSEPAElement;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
-import org.apache.http.params.CoreProtocolPNames;
+import java.io.IOException;
 
 public class HttpRequestBuilder {
 
@@ -29,6 +24,7 @@ public class HttpRequestBuilder {
 	
 	public PipelineElementStatus invoke()
 	{
+		System.out.println("Invoking element: " +payload.getBelongsTo());
 		try {
             Response httpResp = Request.Post(payload.getBelongsTo()).bodyForm(new BasicNameValuePair("json", jsonLd())).execute();
 //			Response httpResp = Request.Post(payload.getBelongsTo()).bodyString(jsonLd(), ContentType.APPLICATION_JSON).execute();
@@ -36,6 +32,7 @@ public class HttpRequestBuilder {
 		} catch(Exception e)
 		{
 			e.printStackTrace();
+			System.out.println("Internal Server Error: de.fzi.cep.sepa.manager.execution");
 			return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), false, e.getMessage());
 		}
 	}

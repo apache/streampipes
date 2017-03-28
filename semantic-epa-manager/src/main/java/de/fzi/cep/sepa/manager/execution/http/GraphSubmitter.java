@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.manager.execution.http;
 
 import java.util.List;
 
-import de.fzi.cep.sepa.messages.PipelineOperationStatus;
+import de.fzi.cep.sepa.model.client.pipeline.PipelineOperationStatus;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 
 public class GraphSubmitter {

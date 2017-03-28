@@ -1,6 +1,5 @@
 package de.fzi.cep.sepa.flink.samples.classification.number;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

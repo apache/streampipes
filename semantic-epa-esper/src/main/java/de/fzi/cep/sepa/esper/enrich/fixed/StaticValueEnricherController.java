@@ -34,14 +34,9 @@ public class StaticValueEnricherController extends FlatEpDeclarer<StaticValueEnr
 		StaticValueEnricherParameters staticParam = new StaticValueEnricherParameters(
 				sepa, 
 				"drillingStatus", value);
-	
-		try {
-			invokeEPRuntime(staticParam, StaticValueEnricher::new, sepa);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return submit(staticParam, StaticValueEnricher::new, sepa);
+
 	}
 	
 	@Override
@@ -58,7 +53,7 @@ public class StaticValueEnricherController extends FlatEpDeclarer<StaticValueEnr
 		
 		
 		SepaDescription desc = new SepaDescription("staticValueEnricher", "Static value enricher", "Static Value Enrichment");
-		desc.setEpaTypes(Arrays.asList(EpaType.ENRICH.name()));
+		desc.setCategory(Arrays.asList(EpaType.ENRICH.name()));
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema1);
 		desc.addEventStream(stream1);

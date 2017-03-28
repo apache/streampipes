@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.client.html;
 
-import java.util.List;
-
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
 import de.fzi.cep.sepa.client.html.model.Description;
+import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
+
+import java.util.List;
 
 public class JSONGenerator {
 
@@ -24,8 +24,27 @@ private List<Description> description;
 		return jsonArray.toString();
 	 }
 
-	private JsonElement getJsonElement(Description d) {
-		JsonPrimitive uri = new JsonPrimitive(d.getUri().toString());
-		return uri;
+	private JsonObject getJsonElement(Description d) {
+		JsonObject obj = makeDescription(d);
+		if (d instanceof SemanticEventProducerDescription) {
+			SemanticEventProducerDescription producerDesc = (SemanticEventProducerDescription) d;
+			JsonArray array = new JsonArray();
+
+			producerDesc.getStreams().forEach(s -> {
+				array.add(makeDescription(s));
+			});
+
+			obj.add("streams", array);
+		}
+		return obj;
+	}
+
+	private JsonObject makeDescription(Description d) {
+		JsonObject obj = new JsonObject();
+		obj.add("uri", new JsonPrimitive(d.getUri().toString()));
+		obj.add("name", new JsonPrimitive(d.getName()));
+		obj.add("description", new JsonPrimitive(d.getDescription()));
+		obj.add("type", new JsonPrimitive(d.getType()));
+		return obj;
 	}
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.builder.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EcType;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
@@ -31,7 +31,7 @@ public class RouteController implements SemanticEventConsumerDeclarer{
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("route", "Routes", "Displays routes of moving location-based events", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/route_icon.png");
-		sec.setEcTypes(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
+		sec.setCategory(Arrays.asList(EcType.VISUALIZATION_GEO.name()));
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);

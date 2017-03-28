@@ -1,11 +1,12 @@
 package de.fzi.cep.sepa.runtime.flat.datatype;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface DatatypeDefinition {
+public interface DatatypeDefinition extends Serializable {
 
-	public Map<String, Object> unmarshal(byte[] input);
+	Map<String, Object> unmarshal(byte[] input);
 	
-	public byte[] marshal(Object event);
+	byte[] marshal(Object event);
 	
 }

@@ -1,12 +1,12 @@
 package de.fzi.cep.sepa.manager.matching.v2;
 
+import de.fzi.cep.sepa.manager.matching.v2.utils.MatchingUtils;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultMessage;
+import de.fzi.cep.sepa.model.client.matching.MatchingResultType;
+import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
+
 import java.net.URI;
 import java.util.List;
-
-import de.fzi.cep.sepa.manager.matching.v2.utils.MatchingUtils;
-import de.fzi.cep.sepa.messages.MatchingResultMessage;
-import de.fzi.cep.sepa.messages.MatchingResultType;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 
 public class PrimitivePropertyMatch extends AbstractMatcher<EventPropertyPrimitive, EventPropertyPrimitive>{
 
@@ -22,7 +22,7 @@ public class PrimitivePropertyMatch extends AbstractMatcher<EventPropertyPrimiti
 						datatypeMatch(offer.getRuntimeType(), requirement.getRuntimeType(), errorLog) &&
 						domainPropertyMatch(offer.getDomainProperties(), requirement.getDomainProperties(), errorLog));
 		
-		if (!matches) buildErrorMessage(errorLog, buildText(requirement));
+		//if (!matches) buildErrorMessage(errorLog, buildText(requirement));
 		return matches;
 	}
 

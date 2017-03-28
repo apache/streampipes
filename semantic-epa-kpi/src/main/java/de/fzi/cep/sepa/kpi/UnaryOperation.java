@@ -14,6 +14,10 @@ public class UnaryOperation extends Operation {
 	private String partitionProperty;
 	
 	private Window window;
+
+	public UnaryOperation() {
+		super();
+	}
 	
 	
 	public String getSensorId() {

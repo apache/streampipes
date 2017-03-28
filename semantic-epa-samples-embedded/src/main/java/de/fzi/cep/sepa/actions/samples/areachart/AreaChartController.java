@@ -8,7 +8,6 @@ import java.util.List;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.component.config.Config;
 import de.fzi.cep.sepa.client.declarer.SemanticEventConsumerDeclarer;
-import de.fzi.cep.sepa.model.impl.Domain;
 import de.fzi.cep.sepa.model.impl.EventGrounding;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -32,9 +31,6 @@ public class AreaChartController implements SemanticEventConsumerDeclarer {
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("area", "Area chart", "Real-Time area chart", "");
 		//sec.setIconUrl(ActionConfig.iconBaseUrl + "/Map_Icon_HQ.png");
-		List<String> domains = new ArrayList<String>();
-		domains.add(Domain.DOMAIN_PERSONAL_ASSISTANT.toString());
-		domains.add(Domain.DOMAIN_PROASENSE.toString());
 		
 		EventPropertyList outputProperty = new EventPropertyList();
 		outputProperty.setRuntimeName("output");
