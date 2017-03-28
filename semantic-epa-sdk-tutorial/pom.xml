@@ -3,7 +3,7 @@
     <parent>
         <artifactId>semantic-epa-parent</artifactId>
         <groupId>de.fzi.cep.sepa</groupId>
-        <version>0.40.3-SNAPSHOT</version>
+        <version>0.40.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,17 +13,17 @@
         <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-client-standalone</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <version>0.40.2</version>
         </dependency>
         <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-sdk</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <version>0.40.2</version>
         </dependency>
         <dependency>
             <groupId>de.fzi.cep.sepa</groupId>
             <artifactId>semantic-epa-sources</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <version>0.40.2</version>
         </dependency>
     </dependencies>
 
