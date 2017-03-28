@@ -5,7 +5,7 @@
     <!-- The Basics -->
     <groupId>de.fzi.cep.sepa</groupId>
     <artifactId>semantic-epa-parent</artifactId>
-    <version>0.40.2-SNAPSHOT</version>
+    <version>0.40.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <sesame.version>2.7.15</sesame.version>
@@ -266,22 +266,22 @@
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging</artifactId>
-                <version>0.40.2-SNAPSHOT</version>
+                <version>0.40.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-sdk</artifactId>
-                <version>0.40.2-SNAPSHOT</version>
+                <version>0.40.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging-kafka</artifactId>
-                <version>0.40.2-SNAPSHOT</version>
+                <version>0.40.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>de.fzi.cep.sepa</groupId>
                 <artifactId>semantic-epa-messaging-jms</artifactId>
-                <version>0.40.2-SNAPSHOT</version>
+                <version>0.40.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
