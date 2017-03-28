@@ -397,8 +397,12 @@
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
                         <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <pullDevelop>true</pullDevelop>
+                    <pullMaster>true</pullMaster>
+                    <pushReleases>true</pushReleases>
                     <squash>true</squash>
-                    <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
+                    <scmCommentPrefix>[RELEASE] </scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
