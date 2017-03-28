@@ -46,16 +46,16 @@ RUN set -x \
 
 EXPOSE 8080
 
-ADD ./de.fzi.cep.sepa/semantic-epa-server/0.0.2-SNAPSHOT/semantic-epa-server-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/semantic-epa-backend.war
+ADD ./de.fzi.cep.sepa/semantic-epa-server/0.40.3-SNAPSHOT/semantic-epa-server-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/semantic-epa-backend.war
 ADD /openrdf-sesame.war /usr/local/tomcat/webapps/openrdf-sesame.war
 ADD /openrdf-workbench.war /usr/local/tomcat/webapps/openrdf-workbench.war
-ADD ./de.fzi.cep.sepa/semantic-epa-sources-hella/0.0.2-SNAPSHOT/semantic-epa-sources-hella-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-hella.war
-ADD ./de.fzi.cep.sepa/semantic-epa-sources-mhwirth/0.0.2-SNAPSHOT/semantic-epa-sources-mhwirth-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-mhwirth.war
-ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/0.0.2-SNAPSHOT/semantic-epa-sources-proasense-monitoring-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-monitoring.war
-ADD ./de.fzi.cep.sepa/semantic-epa-sources-demonstrator/0.0.2-SNAPSHOT/semantic-epa-sources-demonstrator-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
-ADD ./de.fzi.cep.sepa/semantic-epa-implementations-stream-story/0.0.2-SNAPSHOT/semantic-epa-implementations-stream-story-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/stream-story.war
-ADD ./de.fzi.cep.sepa/semantic-epa-implementations-slack/0.0.2-SNAPSHOT/semantic-epa-implementations-slack-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/slack.war
-ADD ./de.fzi.cep.sepa/semantic-epa-sources-kd2/0.0.2-SNAPSHOT/semantic-epa-sources-kd2-0.0.2-SNAPSHOT.war /usr/local/tomcat/webapps/sources-kd2.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-hella/0.40.3-SNAPSHOT/semantic-epa-sources-hella-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-hella.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-mhwirth/0.40.3-SNAPSHOT/semantic-epa-sources-mhwirth-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-mhwirth.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-proasense-monitoring/0.40.3-SNAPSHOT/semantic-epa-sources-proasense-monitoring-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-monitoring.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-demonstrator/0.40.3-SNAPSHOT/semantic-epa-sources-demonstrator-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
+ADD ./de.fzi.cep.sepa/semantic-epa-implementations-stream-story/0.40.3-SNAPSHOT/semantic-epa-implementations-stream-story-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/stream-story.war
+ADD ./de.fzi.cep.sepa/semantic-epa-implementations-slack/0.40.3-SNAPSHOT/semantic-epa-implementations-slack-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/slack.war
+ADD ./de.fzi.cep.sepa/semantic-epa-sources-kd2/0.40.3-SNAPSHOT/semantic-epa-sources-kd2-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-kd2.war
 
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml

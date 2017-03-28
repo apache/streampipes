@@ -33,12 +33,6 @@
 			<artifactId>semantic-epa-client-container</artifactId>
 			<version>0.40.3-SNAPSHOT</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>de.fzi.cep.sepa</groupId>-->
-			<!--<artifactId>semantic-epa-sources-mhwirth</artifactId>-->
-			<!--<version>0.0.2-SNAPSHOT</version>-->
-			<!--<type>war</type>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>

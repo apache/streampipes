@@ -1,14 +1,13 @@
 package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
-import javax.lang.model.element.Modifier;
-
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.streampipes.codegeneration.Generator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
+
+import javax.lang.model.element.Modifier;
 
 public class ConfigGenerator extends Generator {
 
@@ -20,7 +19,7 @@ public class ConfigGenerator extends Generator {
 	public JavaFile build() {
 		FieldSpec jar = FieldSpec.builder(JFC.STRING, "JAR_FILE")
 			    .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-			    .initializer("$S" , "./" + name + "-0.0.2-SNAPSHOT.jar")
+			    .initializer("$S" , "./" + name + "-0.40.3-SNAPSHOT.jar")
 			    .build();
 
 		FieldSpec flinkHost = FieldSpec.builder(JFC.STRING, "FLINK_HOST")

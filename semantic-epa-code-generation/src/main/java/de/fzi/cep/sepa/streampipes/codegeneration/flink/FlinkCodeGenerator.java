@@ -1,13 +1,13 @@
 package de.fzi.cep.sepa.streampipes.codegeneration.flink;
 
-import java.io.File;
-
 import de.fzi.cep.sepa.model.ConsumableSEPAElement;
 import de.fzi.cep.sepa.model.client.deployment.DeploymentConfiguration;
 import de.fzi.cep.sepa.streampipes.codegeneration.api.ImplementationCodeGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.DirectoryBuilder;
 import de.fzi.cep.sepa.streampipes.codegeneration.utils.JFC;
+
+import java.io.File;
 
 public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 	protected String packageName;
@@ -22,7 +22,7 @@ public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 		super(config, element);
 		packageName = config.getGroupId() + "." + config.getArtifactId();
 		name = config.getClassNamePrefix();
-		version = "0.0.2-SNAPSHOT";
+		version = "0.40.3-SNAPSHOT";
 		port = Integer.toString(config.getPort());
 		
 		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;
