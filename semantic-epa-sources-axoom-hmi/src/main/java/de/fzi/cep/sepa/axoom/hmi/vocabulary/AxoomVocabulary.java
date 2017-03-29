@@ -14,4 +14,10 @@ public class AxoomVocabulary {
   public static final String MachineName = PREFIX +"machineName";
   public static final String MachineDisplayName = PREFIX +"machineDisplayName";
   public static final String MachineModel = PREFIX +"machineModel";
+
+  public static final String MilkRefilled = PREFIX +"milkRefilled";
+  public static final String SugarRefilled = PREFIX +"sugarRefilled";
+  public static final String State = PREFIX +"state";
+  public static final String MaintenanceTime = PREFIX +"maintenanceTime";
+
 }

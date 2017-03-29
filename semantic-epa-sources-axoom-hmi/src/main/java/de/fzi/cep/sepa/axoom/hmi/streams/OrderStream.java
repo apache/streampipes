@@ -21,21 +21,20 @@ public class OrderStream extends AbstractAxoomHmiStream {
 
   @Override
   public EventStream declareModel(SepDescription sep) {
-    return DataStreamBuilder.create("axoom-orders-" +eventType.getEventType(), "Orders "
-                    +eventType.getEventType().toUpperCase(),
+    return DataStreamBuilder.create("axoom-orders-" + eventType.getEventType(), "Orders "
+                    + eventType.getEventType().toUpperCase(),
             "Provides a stream of " +
-            "current " +
-            "coffee orders")
+                    "current " +
+                    "coffee orders")
             .property(EpProperties.stringEp("customer", AxoomVocabulary.Name))
             .property(EpProperties.stringEp("machineId", AxoomVocabulary.MachineId))
-            .property(EpProperties.integerEp("milk", AxoomVocabulary.MilkIncluded))
-            .property(EpProperties.integerEp("sugar", AxoomVocabulary.SugarIncluded))
+            .property(EpProperties.booleanEp("milk", AxoomVocabulary.MilkIncluded))
+            .property(EpProperties.booleanEp("sugar", AxoomVocabulary.SugarIncluded))
             .property(EpProperties.stringEp("machineName", AxoomVocabulary.MachineName))
             .property(EpProperties.stringEp("machineDisplayName", AxoomVocabulary
                     .MachineDisplayName))
-            .property(EpProperties.stringEp("machineModel", AxoomVocabulary.MachineModel))
-            .property(EpProperties.nestedEp("date", EpProperties.longEp("$$date",
-                    "http://schema.org/DateTime")))
+            .property(EpProperties.longEp("timestamp",
+                    "http://schema.org/DateTime"))
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
                     ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("order")))
