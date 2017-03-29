@@ -1,10 +1,8 @@
 package de.fzi.cep.sepa.axoom.hmi.sources;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
-import de.fzi.cep.sepa.axoom.hmi.streams.MachineStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.MaintenanceStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.OrderStream;
-import de.fzi.cep.sepa.axoom.hmi.streams.TrendStream;
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
 import de.fzi.cep.sepa.model.impl.graph.SepDescription;
@@ -27,13 +25,15 @@ public class AxoomHmiProducer implements SemanticEventProducerDeclarer {
 
   @Override
   public List<EventStreamDeclarer> getEventStreams() {
-    return Arrays.asList(new MachineStream(AxoomHmiConfig.FABTECH),
+    return Arrays.asList(//new MachineStream(AxoomHmiConfig.FABTECH),
             new MaintenanceStream(AxoomHmiConfig.FABTECH),
             new OrderStream(AxoomHmiConfig.FABTECH),
-            new TrendStream(AxoomHmiConfig.FABTECH),
-            new MachineStream(AxoomHmiConfig.EUROBLECH),
+            //new TrendStream(AxoomHmiConfig.FABTECH),
+            //new MachineStream(AxoomHmiConfig.EUROBLECH),
             new MaintenanceStream(AxoomHmiConfig.EUROBLECH),
             new OrderStream(AxoomHmiConfig.EUROBLECH),
-            new TrendStream(AxoomHmiConfig.EUROBLECH));
+            new OrderStream(AxoomHmiConfig.HMI),
+            new MaintenanceStream(AxoomHmiConfig.HMI));
+    //new TrendStream(AxoomHmiConfig.EUROBLECH));
   }
 }
