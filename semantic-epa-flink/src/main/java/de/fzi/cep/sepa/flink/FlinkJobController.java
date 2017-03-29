@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FlinkJobController {
 
-	private final static FiniteDuration askTimeout = new FiniteDuration(10000, TimeUnit.MILLISECONDS);
-	private final static FiniteDuration lookupTimeout = new FiniteDuration(10000, TimeUnit.MILLISECONDS);
+	private final static FiniteDuration askTimeout = new FiniteDuration(120000, TimeUnit.MILLISECONDS);
+	private final static FiniteDuration lookupTimeout = new FiniteDuration(120000, TimeUnit.MILLISECONDS);
 	
 	private final Configuration config;
 	
