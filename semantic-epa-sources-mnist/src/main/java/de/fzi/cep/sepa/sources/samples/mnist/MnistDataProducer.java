@@ -17,14 +17,7 @@ public class MnistDataProducer implements SemanticEventProducerDeclarer {
 
     static final Logger LOG = LoggerFactory.getLogger(MnistDataProducer.class);
 
-//    public static String dataFolder =System.getProperty("user.home") + File.separator +".streampipes" +
-//            File.separator +"sources" + File.separator +"data" + File.separator +"mnist" + File.separator;
-
-    public static String dataFolder = ClientConfiguration.INSTANCE.getMnistDatalocation();
-
-
-//    private static String dataFolder = System.getProperty("user.home") + File.separator +"Coding" +File.separator +
-//            "data" +File.separator +"semmnist" + File.separator;
+    public static String dataFolder = ClientConfiguration.INSTANCE.getDatalocation() + "mnist/";
 
     @Override
     public SepDescription declareModel() {

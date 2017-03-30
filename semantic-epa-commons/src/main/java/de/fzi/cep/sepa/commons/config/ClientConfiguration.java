@@ -98,8 +98,7 @@ public enum ClientConfiguration {
 	private int podPort;
 	private String podDeploymentDirectory;
 
-	private String mnistDatalocation;
-	private String taxiDatalocation;
+	private String datalocation;
 
 	private PropertiesConfiguration config;
 	
@@ -265,8 +264,7 @@ public enum ClientConfiguration {
 
 			this.slackToken = config.getString("slackToken");
 
-			this.mnistDatalocation = config.getString("mnistDatalocation");
-			this.taxiDatalocation = config.getString("taxiDatalocation");
+			this.datalocation = config.getString("datalocation");
 
 			this.streamStoryUrl = config.getString("streamStoryUrl");
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
@@ -483,20 +481,12 @@ public enum ClientConfiguration {
 		return podHostname;
 	}
 
-	public String getMnistDatalocation() {
-		return mnistDatalocation;
+	public String getDatalocation() {
+		return datalocation;
 	}
 
-	public void setMnistDatalocation(String mnistDatalocation) {
-		this.mnistDatalocation = mnistDatalocation;
-	}
-
-	public void setTaxiDatalocation(String taxiDatalocation) {
-		this.taxiDatalocation = taxiDatalocation;
-	}
-
-	public String getTaxiDatalocation() {
-		return taxiDatalocation;
+	public void setDatalocation(String datalocation) {
+		this.datalocation = datalocation;
 	}
 
 	public int getPodPort() {
