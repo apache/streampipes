@@ -6,7 +6,8 @@ import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 import de.fzi.cep.sepa.flink.samples.batchstream.FirstBatchThenStreamController;
 import de.fzi.cep.sepa.flink.samples.breakdown.Prediction2BreakdownController;
 import de.fzi.cep.sepa.flink.samples.classification.number.NumberClassificationController;
-import de.fzi.cep.sepa.flink.samples.delay.DelayController;
+import de.fzi.cep.sepa.flink.samples.delay.sensor.DelayController;
+import de.fzi.cep.sepa.flink.samples.delay.taxi.DelayTaxiController;
 import de.fzi.cep.sepa.flink.samples.elasticsearch.ElasticSearchController;
 import de.fzi.cep.sepa.flink.samples.enrich.timestamp.TimestampController;
 import de.fzi.cep.sepa.flink.samples.file.FileSinkController;
@@ -23,6 +24,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
             //.add(new WordCountController())
             .add(new FirstBatchThenStreamController())
             .add(new DelayController())
+            .add(new DelayTaxiController())
             .add(new ElasticSearchController())
             .add(new NumberClassificationController())
             .add(new TimestampController())
