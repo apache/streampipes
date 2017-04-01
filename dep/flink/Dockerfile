@@ -9,9 +9,10 @@ ENV FLINK_INSTALL_PATH /opt
 ENV FLINK_HOME $FLINK_INSTALL_PATH/flink
 ENV PATH $PATH:$FLINK_HOME/bin
 
+RUN apt-get install curl
 RUN set -x && \
     mkdir -p ${FLINK_INSTALL_PATH} && \
-    apk --update add --virtual curl && \
+    #apk --update add --virtual curl && \
     curl -s https://archive.apache.org/dist/flink/flink-${FLINK_VERSION}/flink-${FLINK_VERSION}-bin-hadoop${HADOOP_VERSION}-scala_${SCALA_BINARY_VERSION}.tgz | \
     tar xz -C ${FLINK_INSTALL_PATH} && \
     ln -s ${FLINK_INSTALL_PATH}/flink-${FLINK_VERSION} ${FLINK_HOME} && \
