@@ -16,7 +16,7 @@ public class TaxiDataProducer implements SemanticEventProducerDeclarer {
 
     static final Logger LOG = LoggerFactory.getLogger(TaxiDataProducer.class);
 
-    public static String dataFolder = ClientConfiguration.INSTANCE.getTaxiDatalocation();
+    public static String dataFolder = ClientConfiguration.INSTANCE.getDatalocation() + "taxi/";
 
     @Override
     public SepDescription declareModel() {
