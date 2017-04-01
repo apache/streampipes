@@ -1,4 +1,5 @@
-FROM denvazh/scala:2.10.5-openjdk8
+FROM guoguojin/ubuntu-scala
+#FROM denvazh/scala:2.10.5-openjdk8
 
 ARG HADOOP_VERSION=26
 ARG FLINK_VERSION=1.2.0
