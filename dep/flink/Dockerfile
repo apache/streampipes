@@ -20,7 +20,8 @@ RUN set -x && \
     rm -rf /var/cache/apk/* && \
     echo Installed Flink ${FLINK_VERSION} to ${FLINK_HOME}
 
-RUN apk update && apk add netcat-openbsd
+#RUN apk update && apk add netcat-openbsd
+RUN apt-get update && apt-get install netcat-openbsd
 
 ADD docker-entrypoint.sh ${FLINK_HOME}/bin/
 # Additional output to console, allows gettings logs with 'docker-compose logs'
