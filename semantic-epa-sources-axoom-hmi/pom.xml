@@ -24,6 +24,21 @@
             <artifactId>semantic-epa-sources</artifactId>
             <version>0.40.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-runtime</artifactId>
+            <version>0.40.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-flink</artifactId>
+            <version>0.40.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-sdk</artifactId>
+            <version>0.40.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
