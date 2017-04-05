@@ -40,8 +40,8 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 
-//        return new LabelOrderProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
-
-        return new LabelOrderProgram(params);
+        return new LabelOrderProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
+//
+//        return new LabelOrderProgram(params);
     }
 }
