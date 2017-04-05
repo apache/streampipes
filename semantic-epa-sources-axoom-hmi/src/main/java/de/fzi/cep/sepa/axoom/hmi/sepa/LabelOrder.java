@@ -33,7 +33,7 @@ public class LabelOrder extends RichCoFlatMapFunction<Tuple2<Integer, Map<String
      * @throws Exception
      */
     @Override
-    public void flatMap2(Tuple2<Integer, Map<String, Object>> value, Collector<Map<String, Object>> out) throws Exception {
+    public void flatMap1(Tuple2<Integer, Map<String, Object>> value, Collector<Map<String, Object>> out) throws Exception {
 
         int currentCount = count.value() + 1;
         count.update(currentCount);
@@ -51,7 +51,7 @@ public class LabelOrder extends RichCoFlatMapFunction<Tuple2<Integer, Map<String
      * @throws Exception
      */
     @Override
-    public void flatMap1(Tuple2<Integer, Map<String, Object>> value, Collector<Map<String, Object>> out) throws Exception {
+    public void flatMap2(Tuple2<Integer, Map<String, Object>> value, Collector<Map<String, Object>> out) throws Exception {
 
 //        long timeStamp = (long) value.f1.get("maintenanceEndTime");
         long timeStamp = (long) value.f1.get("maintenanceStartTime");
