@@ -49,7 +49,7 @@ public class EpRequirements {
 	}
 
 	public static EventPropertyPrimitive anyProperty() {
-	    return datatypeReq(XSD._anyType.toString());
+	    return new EventPropertyPrimitive();
     }
 
 
