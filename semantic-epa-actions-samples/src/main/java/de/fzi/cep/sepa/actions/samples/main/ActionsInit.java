@@ -12,6 +12,7 @@ import de.fzi.cep.sepa.actions.samples.notification.NotificationController;
 import de.fzi.cep.sepa.actions.samples.proasense.ProaSenseTopologyController;
 import de.fzi.cep.sepa.actions.samples.proasense.kpi.ProaSenseKpiController;
 import de.fzi.cep.sepa.actions.samples.proasense.pandda.PanddaController;
+import de.fzi.cep.sepa.actions.samples.rabbitmq.RabbitMqController;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 
@@ -42,7 +43,8 @@ public class ActionsInit extends StandaloneModelSubmitter {
             //.add(new VerticalBarController())
             .add(new DashboardController())
             .add(new AlarmLightController())
-            .add(new PanddaController());
+            .add(new PanddaController())
+            .add(new RabbitMqController());
     //.add(new HistogramController())
 
     DeclarersSingleton.getInstance().setPort(8091);
