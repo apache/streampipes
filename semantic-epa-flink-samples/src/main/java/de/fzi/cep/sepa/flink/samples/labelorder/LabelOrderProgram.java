@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.axoom.hmi.sepa;
+package de.fzi.cep.sepa.flink.samples.labelorder;
 
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
@@ -6,8 +6,6 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.functions.co.CoFlatMapFunction;
-import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
 import java.util.Map;

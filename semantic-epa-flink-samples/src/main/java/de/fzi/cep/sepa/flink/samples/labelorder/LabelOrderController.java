@@ -1,9 +1,9 @@
-package de.fzi.cep.sepa.axoom.hmi.sepa;
+package de.fzi.cep.sepa.flink.samples.labelorder;
 
-import de.fzi.cep.sepa.axoom.hmi.config.FlinkConfig;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -40,7 +40,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 
-        return new LabelOrderProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
+        return new LabelOrderProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 //
 //        return new LabelOrderProgram(params);
     }

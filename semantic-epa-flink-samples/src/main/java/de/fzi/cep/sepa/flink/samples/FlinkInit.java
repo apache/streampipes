@@ -13,6 +13,7 @@ import de.fzi.cep.sepa.flink.samples.enrich.timestamp.TimestampController;
 import de.fzi.cep.sepa.flink.samples.file.FileSinkController;
 import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.healthindex.HealthIndexController;
+import de.fzi.cep.sepa.flink.samples.labelorder.LabelOrderController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
 import de.fzi.cep.sepa.flink.samples.statistics.StatisticsSummaryController;
 import de.fzi.cep.sepa.flink.samples.timetofailure.TimeToFailureController;
@@ -25,6 +26,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new FirstBatchThenStreamController())
             .add(new DelayController())
             .add(new DelayTaxiController())
+            .add(new LabelOrderController())
             .add(new ElasticSearchController())
             .add(new NumberClassificationController())
             .add(new TimestampController())
