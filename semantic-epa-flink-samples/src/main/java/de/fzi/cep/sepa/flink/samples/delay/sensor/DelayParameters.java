@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.flink.samples.delay;
+package de.fzi.cep.sepa.flink.samples.delay.sensor;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;

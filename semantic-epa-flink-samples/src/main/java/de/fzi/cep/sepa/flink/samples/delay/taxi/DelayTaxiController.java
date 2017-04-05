@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.flink.samples.delay;
+package de.fzi.cep.sepa.flink.samples.delay.taxi;
 
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
@@ -15,7 +15,7 @@ import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
 import de.fzi.cep.sepa.sdk.helpers.SupportedFormats;
 import de.fzi.cep.sepa.sdk.helpers.SupportedProtocols;
 
-public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters> {
+public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiParameters> {
 
     public static String OUTPUT_LABEL = "delay_label";
     private static String DELAY_VALUE_NAME = "delay_value";
@@ -25,16 +25,16 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
     @Override
     public SepaDescription declareModel() {
         SepaDescription delayDescription = ProcessingElementBuilder
-                .create("delay", "Delay", "This SEPA hands the event without the label to the next component " +
-                        "and stores it in kafka. Once the delay time is passed it reads the event from kafka " +
-                        "and adds the correct value of the label to the event and passes the new event to the " +
-                        "next component")
+                .create("delay_taxi", "Delay Taxi", "Waits a configured time and adds the labeld to the correspondig grid cell to " +
+                        "the event")
                 .iconUrl("url")
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value [min]", "Minutes till the correct label is knonwn")
                 .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
                         "Label Property", "The property that is selected for the label")
+                //TODO add cell id requirement
+//                .requiredPropertyStream1(EpRequirements.stringReq("cellid"))
                 .outputStrategy(OutputStrategies.append(new EventPropertyPrimitive(
                         XSD._long.toString(), OUTPUT_LABEL, "",
                         de.fzi.cep.sepa.commons.Utils.createURI("http://schema.org/Number"))
@@ -45,14 +45,14 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
     }
 
     @Override
-    protected FlinkSepaRuntime<DelayParameters> getRuntime(SepaInvocation graph) {
+    protected FlinkSepaRuntime<DelayTaxiParameters> getRuntime(SepaInvocation graph) {
 
         int delayValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, DELAY_VALUE_NAME));
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 
-        DelayParameters params = new DelayParameters(graph, delayValue, labelPropertyMapping);
+        DelayTaxiParameters params = new DelayTaxiParameters(graph, delayValue, labelPropertyMapping);
 
-        return new DelayProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new DelayTaxiProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 
 //        return new DelayProgram(params);
     }

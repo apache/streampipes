@@ -10,7 +10,8 @@ import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 public class AxoomHmiInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance().add(new AxoomHmiProducer());
+    DeclarersSingleton.getInstance()
+            .add(new AxoomHmiProducer());
     DeclarersSingleton.getInstance().setPort(8070);
     new AxoomHmiInit().init();
   }

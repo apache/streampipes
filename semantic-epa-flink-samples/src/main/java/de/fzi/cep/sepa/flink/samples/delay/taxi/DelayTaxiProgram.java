@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.flink.samples.delay;
+package de.fzi.cep.sepa.flink.samples.delay.taxi;
 
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
@@ -9,16 +9,16 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import java.io.Serializable;
 import java.util.Map;
 
-public class DelayProgram extends FlinkSepaRuntime<DelayParameters> implements Serializable {
+public class DelayTaxiProgram extends FlinkSepaRuntime<DelayTaxiParameters> implements Serializable {
 
 
 
-    public DelayProgram(DelayParameters params) {
+    public DelayTaxiProgram(DelayTaxiParameters params) {
         super(params);
 
     }
 
-    public DelayProgram(DelayParameters params, FlinkDeploymentConfig config) {
+    public DelayTaxiProgram(DelayTaxiParameters params, FlinkDeploymentConfig config) {
         super(params, config);
     }
 
@@ -34,7 +34,7 @@ public class DelayProgram extends FlinkSepaRuntime<DelayParameters> implements S
                     }
                 })
                 .keyBy(0)
-                .flatMap(new Delay(this.params));
+                .flatMap(new DelayTaxi(this.params));
 
         return result;
     }

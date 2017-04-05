@@ -1,9 +1,6 @@
-package de.fzi.cep.sepa.flink.samples.delay;
+package de.fzi.cep.sepa.flink.samples.delay.sensor;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
-import org.apache.flink.api.common.state.ListState;
-import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
