@@ -44,6 +44,7 @@ public enum RabbitMqPublisher {
 
   private void setupConnection() throws IOException, TimeoutException {
     this.factory = new ConnectionFactory();
+    this.factory.setPort(AdapterConfiguration.INSTANCE.getRabbitMqPort());
     this.factory.setHost(AdapterConfiguration.INSTANCE.getRabbitMqHost());
     this.factory.setUsername(AdapterConfiguration.INSTANCE.getRabbitMqUser());
     this.factory.setPassword(AdapterConfiguration.INSTANCE.getRabbitMqPassword());

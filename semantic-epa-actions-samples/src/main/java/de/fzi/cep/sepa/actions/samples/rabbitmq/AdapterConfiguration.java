@@ -13,6 +13,7 @@ public enum AdapterConfiguration {
     INSTANCE;
 
     private String rabbitMqHost;
+    private Integer rabbitMqPort;
     private String rabbitMqUser;
     private String rabbitMqPassword;
 
@@ -35,6 +36,9 @@ public enum AdapterConfiguration {
                     .rabbitmqUserKey);
             this.rabbitMqPassword = propertiesConfiguration.getString(StreamPipesConstants
                     .rabbitMqPasswordKey);
+            this.rabbitMqPort = propertiesConfiguration.getInt(StreamPipesConstants
+                    .rabbitMqPortKey);
+
 
 
         } catch (ConfigurationException e) {
@@ -42,6 +46,7 @@ public enum AdapterConfiguration {
             this.rabbitMqHost = StreamPipesConstants.rabbitMqHostDefault;
             this.rabbitMqUser = StreamPipesConstants.rabbitMqUserDefault;
             this.rabbitMqPassword = StreamPipesConstants.rabbitMqPasswordDefault;
+            this.rabbitMqPort = StreamPipesConstants.rabbitMqPortDefault;
         }
     }
 
@@ -57,4 +62,7 @@ public enum AdapterConfiguration {
         return rabbitMqPassword;
     }
 
+    public Integer getRabbitMqPort() {
+        return rabbitMqPort;
+    }
 }
