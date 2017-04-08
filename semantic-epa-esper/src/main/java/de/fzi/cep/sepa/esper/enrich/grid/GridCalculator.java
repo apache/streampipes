@@ -19,7 +19,10 @@ public class GridCalculator {
 		
 		int cellX = calculateXCoordinate(longitude);
 	    int cellY = calculateYCoordinate(latitude);
-         
+
+//	    System.out.println(cellX);
+//		System.out.println(cellY);
+
         //LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
 	    //LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
  		System.out.println("x=" +cellX+ " y=" +cellY);
@@ -41,10 +44,9 @@ public class GridCalculator {
 		LatLng nw = move(move(startLocation, 315, cellSize/2), 90, (cellX-1)*cellSize);
 		LatLng se = move(move(startLocation, 135, cellSize/2), 90, (cellY-1)*cellSize);
 		
-		/*
-		System.out.println("nw lat " +nw.getLatitude());
-		System.out.println("nw lng " +nw.getLongitude());
-		*/
+//		System.out.println("nw lat " +nw.getLatitude());
+//		System.out.println("nw lng " +nw.getLongitude());
+
 		return new CellOption(cellX, cellY, nw.getLatitude(), nw.getLongitude(), se.getLatitude(), se.getLongitude(), 500);
 	}
 	

@@ -28,7 +28,8 @@ public class CountController extends FlatEpDeclarer<CountParameter>{
 						"Performs an aggregation based on a given event property and outputs the number of occurrences.")
 						.category(EpaType.AGGREGATE)
 						.iconUrl(EsperConfig.iconBaseUrl +"/Counter_Icon_HQ.png")
-						.requiredPropertyStream1(EpRequirements.anyProperty())
+//						.requiredPropertyStream1(EpRequirements.anyProperty())
+                		.setStream1()
 						.naryMappingPropertyWithoutRequirement("groupBy", "Group Stream By", "")
 						.outputStrategy(OutputStrategies.append(EpProperties.integerEp("countValue",
 										"http://schema.org/Number")))
