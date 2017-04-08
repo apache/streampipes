@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.flink.samples.spatial.gridenricher;
 
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.Geo;
@@ -72,7 +73,7 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
     SpatialGridEnrichmentParameters params = new SpatialGridEnrichmentParameters(graph,
             enrichmentSettings);
 
-    return new SpatialGridEnrichmentProgram(params);
+    return new SpatialGridEnrichmentProgram(params, makeDeploymentConfig(Config.JAR_FILE));
 
   }
 }
