@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.sdk;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 
 import java.net.URI;
@@ -33,5 +34,9 @@ public class StaticProperties {
 		FreeTextStaticProperty fsp = integerFreeTextProperty(string, string2, string);
 		fsp.setValueSpecification(propertyValueSpecification);
 		return fsp;
+	}
+
+	public static SupportedProperty supportedDomainProperty(String rdfPropertyUri, boolean required) {
+		return new SupportedProperty(rdfPropertyUri, required);
 	}
 }

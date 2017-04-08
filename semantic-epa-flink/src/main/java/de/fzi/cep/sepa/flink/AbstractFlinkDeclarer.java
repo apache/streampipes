@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.flink;
 
 import de.fzi.cep.sepa.client.declarer.InvocableDeclarer;
+import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.InvocableSEPAElement;
 import de.fzi.cep.sepa.model.NamedSEPAElement;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -33,5 +34,11 @@ public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extend
 	}
 	
 	protected abstract ER getRuntime(I graph);
+
+	protected FlinkDeploymentConfig makeDeploymentConfig(String jarFileLocation) {
+		return new FlinkDeploymentConfig(jarFileLocation,
+						ClientConfiguration.INSTANCE.getFlinkHost(),
+						ClientConfiguration.INSTANCE.getFlinkPort());
+	}
 	
 }

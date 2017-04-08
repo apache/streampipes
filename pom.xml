@@ -343,8 +343,6 @@
         <module>semantic-epa-sources-mhwirth</module>
         <module>semantic-epa-sources-proasense-monitoring</module>
         <module>semantic-epa-storage</module>
-        <module>semantic-epa-storm-topology</module>
-        <module>semantic-epa-storm-topology-sentiment-new</module>
         <module>semantic-epa-sources-samples</module>
         <module>semantic-epa-units</module>
         <module>semantic-epa-appstore</module>

@@ -15,4 +15,12 @@ public class ProcessingElementParameterExtractor extends AbstractParameterExtrac
     super(sepaElement);
   }
 
+  public String outputTopic() {
+    return sepaElement
+            .getOutputStream()
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicName();
+  }
+
 }

@@ -4,11 +4,12 @@ import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
+import java.net.URI;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
-import java.net.URI;
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
 	 "dc",   "http://purl.org/dc/terms/"})
@@ -35,6 +36,9 @@ public class FreeTextStaticProperty extends StaticProperty {
 
 	@RdfProperty("sepa:htmlAllowed")
 	protected boolean htmlAllowed;
+
+	@RdfProperty("sepa:placeholdersSupported")
+	protected boolean placeholdersSupported;
 	
 	@OneToOne(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -53,6 +57,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.value = other.getValue();
 		this.htmlAllowed = other.isHtmlAllowed();
 		this.multiLine = other.isMultiLine();
+		this.placeholdersSupported = other.isPlaceholdersSupported();
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description)
@@ -125,5 +130,13 @@ public class FreeTextStaticProperty extends StaticProperty {
 
 	public void setHtmlAllowed(boolean htmlAllowed) {
 		this.htmlAllowed = htmlAllowed;
+	}
+
+	public boolean isPlaceholdersSupported() {
+		return placeholdersSupported;
+	}
+
+	public void setPlaceholdersSupported(boolean placeholdersSupported) {
+		this.placeholdersSupported = placeholdersSupported;
 	}
 }
