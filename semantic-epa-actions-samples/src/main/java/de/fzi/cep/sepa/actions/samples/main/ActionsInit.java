@@ -22,30 +22,18 @@ public class ActionsInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
 
             .add(new JMSConsumer())
-            //.add(new MapsController())
-
             .add(new FileController())
-            //.add(new MultiRowTableController())
             .add(new DebsOutputController())
-            //.add(new HeatmapController())
             .add(new ProaSenseTopologyController())
-            //.add(new GaugeController())
-            //.add(new RouteController())
-            //.add(new BarChartController())
-            //.add(new MapAreaController())
-            //.add(new de.fzi.cep.sepa.actions.samples.maparealist.MapAreaController())
             .add(new ProaSenseKpiController())
             .add(new NotificationController())
             .add(new KafkaController())
             .add(new EvaluationController())
             .add(new CouchDbController())
-            //.add(new NumberController())
-            //.add(new VerticalBarController())
             .add(new DashboardController())
             .add(new AlarmLightController())
             .add(new PanddaController())
             .add(new RabbitMqController());
-    //.add(new HistogramController())
 
     DeclarersSingleton.getInstance().setPort(8091);
 

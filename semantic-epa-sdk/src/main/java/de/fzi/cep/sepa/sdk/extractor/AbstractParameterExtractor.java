@@ -23,6 +23,15 @@ public abstract class AbstractParameterExtractor<T extends InvocableSEPAElement>
     this.typeParser = TypeParser.newBuilder().build();
   }
 
+  public String inputTopic(Integer streamIndex) {
+    return sepaElement
+            .getInputStreams()
+            .get(streamIndex)
+            .getEventGrounding()
+            .getTransportProtocol()
+            .getTopicName();
+  }
+
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {
     return typeParser.parse(getStaticPropertyByName(internalName, FreeTextStaticProperty.class)
             .getValue(), targetClass);

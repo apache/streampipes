@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.impl.TransportFormat;
 import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
@@ -16,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sdk.helpers.Label;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -58,11 +60,36 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
+        CollectionStaticProperty collection = prepareStaticProperty(label, new
+                CollectionStaticProperty());
+        collection.setMembers(Arrays.asList(staticProperty));
+
+        return me();
+    }
+
     public BU requiredTextParameter(String internalId, String label, String description) {
         this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
                 label,
                 description,
                 XSD._string.toString()));
+
+        return me();
+    }
+
+    // TODO distinguish between multiLine and placeholderSupported
+    public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
+        FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label.getInternalId(),
+                label.getLabel(),
+                label.getDescription(),
+                XSD._string.toString());
+        if (multiLine) {
+            fsp.setMultiLine(true);
+        }
+        if (placeholdersSupported) {
+            fsp.setPlaceholdersSupported(true);
+        }
+        this.staticProperties.add(fsp);
 
         return me();
     }
@@ -240,4 +267,5 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         stream.setEventSchema(new EventSchema(streamProperties));
         return stream;
     }
+
 }

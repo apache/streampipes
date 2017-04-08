@@ -8,6 +8,7 @@ import de.fzi.cep.sepa.model.impl.graph.SecInvocation;
 import de.fzi.cep.sepa.sdk.builder.DataSinkBuilder;
 import de.fzi.cep.sepa.sdk.extractor.DataSinkParameterExtractor;
 import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.sdk.helpers.Labels;
 import de.fzi.cep.sepa.sdk.helpers.SupportedFormats;
 import de.fzi.cep.sepa.sdk.helpers.SupportedProtocols;
 
@@ -20,7 +21,8 @@ public class RabbitMqController extends ActionController {
     return DataSinkBuilder.create("rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
             "RabbitMQ broker")
             .requiredPropertyStream1(EpRequirements.anyProperty())
-            .requiredTextParameter("topic", "RabbitMQ Topic", "Select a RabbitMQ topic")
+            .requiredTextParameter(Labels.from("topic", "RabbitMQ Topic", "Select a RabbitMQ " +
+                    "topic"), false, true)
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
@@ -39,9 +41,11 @@ public class RabbitMqController extends ActionController {
   @Override
   public Response invokeRuntime(SecInvocation sec) {
 
-    String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
+    DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(sec);
 
-    String publisherTopic = DataSinkParameterExtractor.from(sec).selectedSingleValue("topic",
+    String consumerTopic = extractor.inputTopic(0);
+
+    String publisherTopic = extractor.singleValueParameter("topic",
             String.class);
 
     startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,

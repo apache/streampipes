@@ -25,7 +25,7 @@ public enum RabbitMqPublisher {
 
   private Gson gson;
 
-  private static final String EXCHANGE_NAME = "topic";
+  private static final String EXCHANGE_NAME = "Axoom.IoT";
 
   RabbitMqPublisher() {
     try {
@@ -56,6 +56,7 @@ public enum RabbitMqPublisher {
     if (!channelActive(topic)) {
       setupChannel(topic);
     }
+    System.out.println(topic);
     try {
       queueMap.get(topic).basicPublish(EXCHANGE_NAME, topic, null, event.getBytes());
     } catch (IOException e) {
@@ -66,7 +67,7 @@ public enum RabbitMqPublisher {
   private void setupChannel(String topic) {
     try {
       Channel channel = connection.createChannel();
-      channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+      channel.exchangeDeclare(EXCHANGE_NAME, "topic", true, false, null);
 
       queueMap.put(topic, channel);
     } catch (IOException e) {

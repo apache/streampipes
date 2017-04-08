@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.actions.samples.rabbitmq;
 
+import de.fzi.cep.sepa.actions.samples.util.PlaceholderExtractor;
 import de.fzi.cep.sepa.messaging.EventListener;
 
 /**
@@ -15,6 +16,7 @@ public class RabbitMqConsumer implements EventListener<byte[]> {
 
   @Override
   public void onEvent(byte[] event) {
-    RabbitMqPublisher.INSTANCE.fire(new String(event), topic);
+    RabbitMqPublisher.INSTANCE.fire(new String(event),
+            PlaceholderExtractor.replacePlaceholders(topic, new String(event)));
   }
 }
