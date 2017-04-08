@@ -9,6 +9,7 @@ import de.fzi.cep.sepa.model.impl.TransportProtocol;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.AnyStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.CollectionStaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.DomainStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyNary;
 import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
@@ -16,6 +17,7 @@ import de.fzi.cep.sepa.model.impl.staticproperty.OneOfStaticProperty;
 import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
+import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sdk.helpers.Label;
 
@@ -60,10 +62,30 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU requiredOntologyConcept(Label label, SupportedProperty...
+            supportedOntologyProperties) {
+        DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
+        dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
+        this.staticProperties.add(dsp);
+
+        return me();
+    }
+
+    public BU requiredOntologyConcept(Label label, String requiredConceptUri, SupportedProperty...
+            supportedOntologyProperties) {
+        DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
+        dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
+        dsp.setRequiredClass(requiredConceptUri);
+        this.staticProperties.add(dsp);
+
+        return me();
+    }
+
     public BU requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
         CollectionStaticProperty collection = prepareStaticProperty(label, new
                 CollectionStaticProperty());
         collection.setMembers(Arrays.asList(staticProperty));
+        this.staticProperties.add(collection);
 
         return me();
     }
@@ -77,7 +99,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
-    // TODO distinguish between multiLine and placeholderSupported
     public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
         FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label.getInternalId(),
                 label.getLabel(),

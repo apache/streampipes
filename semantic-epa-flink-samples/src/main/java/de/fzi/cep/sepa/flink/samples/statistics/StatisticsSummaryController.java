@@ -56,7 +56,8 @@ public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<Stat
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);
 
-    return new StatisticsSummaryProgram(params);
+    return new StatisticsSummaryProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config
+            .FLINK_HOST, Config.FLINK_PORT));
 
   }
 }
