@@ -6,6 +6,7 @@ import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.JobID;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
@@ -54,6 +55,9 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 					.createRemoteEnvironment(config.getHost(), config.getPort(), config.getJarFile());
 
 			List<DataStream<Map<String, Object>>> messageStreams = new ArrayList<>();
+
+			//TODO not sure how to make this variable
+			this.env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
 			// Add the first source to the topology
 			DataStream<Map<String, Object>> messageStream1 = null;
