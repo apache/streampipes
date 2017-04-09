@@ -19,7 +19,7 @@ let config = {
         alias: {
             'npm': path.join(__dirname, 'node_modules'),
             'legacy': path.join(__dirname, 'lib'),
-            "jquery-ui": path.join(__dirname, 'lib', 'jquery-ui.min.js'),
+            "jquery-ui": path.join(__dirname, 'lib', 'jquery-ui.min.js')
         }
     },
     module: {

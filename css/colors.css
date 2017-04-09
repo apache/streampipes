@@ -22,6 +22,16 @@
     background: #6DA9E4;
 }
 
+.sp-blue-border {
+    border: 1px solid #6DA9E4;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.sp-blue-border-nopadding {
+    border: 1px solid #6DA9E4;
+}
+
 .sp-lightblue {
     color: #D9E8F5;
 }

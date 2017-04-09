@@ -18,57 +18,39 @@
         <div>
             <md-content layout-padding>
                 <div flayout="row">
-                    <md-button ng-click="startAllPipelines(true)" type="button" class="md-accent">Start all pipelines</md-button>
-                    <md-button ng-click="startAllPipelines(false)" type="button" class="md-accent">Stop all pipelines</md-button>
+                    <md-button ng-click="startAllPipelines(true)" type="button" class="md-accent">Start all pipelines
+                    </md-button>
+                    <md-button ng-click="startAllPipelines(false)" type="button" class="md-accent">Stop all pipelines
+                    </md-button>
                 </div>
                 <md-list>
-
-                    <div layout="row" layout-align="center center" layout-padding class="md-with-secondary">
-                        <span flex="10"><b>Run/Stop</b></span>
-                        <span flex="35"><b>Name/Description</b></span>
-                        <span flex="20"><b>Created</b></span>
-                        <div flex layout="row" layout-align="center center">
-								<span flex flex-order="1" layout="row" layout-align="center center">
-									<span><b>Inspect</b></span>
-								</span>
-								<span flex flex-order="2" layout="row" layout-align="center center">
-									<span><b>Modify</b></span>
-								</span>
-								<span flex flex-order="3" layout="row" layout-align="center center">
-									<span><b>Status</b></span>
-								</span>
-								<span flex flex-order="4" layout="row" layout-align="center center">
-									<span><b>Delete</b></span>
-								</span>
-                        </div>
-                    </div>
-                    <md-divider></md-divider>
-                    <div flex="100">
+                    <div class="assemblyOptions sp-blue-bg">
                         <h4>My pipelines</h4>
                     </div>
-                    <md-divider></md-divider>
-                    <div layout="column"
-                         ng-repeat="pipeline in pipelines | pipelineCategoryFilter: activeCategory | orderBy:'+name'">
-                        <pipeline-details></pipeline-details>
-                    </div>
-                    <div layout="row" layout-align="center center" ng-if="pipelines.length == 0">
-                        <h5>(no pipelines available)</h5>
+                    <div class="sp-blue-border">
+                        <div layout="column"
+                             ng-repeat="pipeline in pipelines | pipelineCategoryFilter: activeCategory | orderBy:'+name'">
+                            <pipeline-details></pipeline-details>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="pipelines.length == 0">
+                            <h5>(no pipelines available)</h5>
+                        </div>
                     </div>
                     <div flex="100" style="margin-top:20px;margin-bottom:20px;">
-                    <md-divider></md-divider>
-                    <md-divider></md-divider>
                     </div>
-                    <div flex="100">
+                    <div class="assemblyOptions sp-blue-bg">
                         <h4>System-generated pipelines</h4>
                     </div>
-                    <md-divider></md-divider>
-                    <div layout="column"
-                         ng-repeat="pipeline in systemPipelines | pipelineCategoryFilter: activeCategory | orderBy:'+name'">
-                        <pipeline-details></pipeline-details>
+                    <div class="sp-blue-border">
+                        <div layout="column"
+                             ng-repeat="pipeline in systemPipelines | pipelineCategoryFilter: activeCategory | orderBy:'+name'">
+                            <pipeline-details></pipeline-details>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="systemPipelines.length == 0">
+                            <h5>(no system pipelines available)</h5>
+                        </div>
                     </div>
-                    <div layout="row" layout-align="center center" ng-if="systemPipelines.length == 0">
-                        <h5>(no system pipelines available)</h5>
-                    </div>
+
                 </md-list>
             </md-content>
         </div>

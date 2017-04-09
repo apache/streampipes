@@ -2,10 +2,6 @@
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
         <div flex="none" layout-wrap layout="row" layout-align="start center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <h5>INSTALL PIPELINE ELEMENTS </h5>
-        </div>
-        <div flex="none" layout-wrap layout="row" layout-align="start center"
-             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
             <md-button class="md-accent" ng-click="showManageRdfEndpointsDialog()">Manage Endpoints</md-button>
         </div>
         <div layout-fill>
@@ -60,9 +56,9 @@
                     </div>
                     <div ng-if="!endpointItemsLoadingComplete">
                         <div flex="100" layout="row">
-                            <md-progress-circular class="md-accent" style="width:12px;height:12px;" md-mode="indeterminate"
+                            <md-progress-circular class="md-accent" md-mode="indeterminate"
                                                   ></md-progress-circular>
-                            <h4>Fetching data from endpoints, please wait...</h4>
+                            <h4>&nbsp;&nbsp;Fetching data from endpoints, please wait...</h4>
                         </div>
                     </div>
                 </div>
