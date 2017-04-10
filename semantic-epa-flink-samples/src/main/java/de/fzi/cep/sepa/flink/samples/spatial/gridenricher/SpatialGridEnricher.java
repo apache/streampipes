@@ -25,7 +25,7 @@ public class SpatialGridEnricher implements FlatMapFunction<Map<String, Object>,
     Double longitude = toDouble(in.get(settings.getLngPropertyName()));
 
     CellOption result = calculator.computeCells(latitude, longitude);
-    System.out.println("x=" +result.getCellX() +", y=" +result.getCellY());
+//    System.out.println("x=" +result.getCellX() +", y=" +result.getCellY());
 
     out.collect(toOutput(in, result));
   }

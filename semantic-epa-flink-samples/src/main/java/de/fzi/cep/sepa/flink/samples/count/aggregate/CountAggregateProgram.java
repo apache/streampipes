@@ -55,8 +55,10 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 						String newKey = "";
 
 						for (String s : groupBy) {
-							newKey = newKey + value.get(s).toString();
+							newKey = newKey + value.get(s).toString() + "x";
 						}
+
+						newKey = newKey.substring(0, newKey.length()-1);
 
 						return new Tuple2<String, Map<String, Object>>(newKey, value);
 					}
@@ -71,6 +73,8 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 				.keyBy(0)
 				.timeWindow(params.getTimeWindowSize(), params.getSlideWindowSize())
 				.apply(new MyWindow2Function())
+				//TODO remove this parallelism
+				.setParallelism(1)
 				.map(new MapFunction< Tuple2<String, Map<String, Object>>, Map<String, Object>>() {
 					@Override
 					public Map<String, Object> map(Tuple2<String, Map<String, Object>> value) throws Exception {
@@ -104,6 +108,10 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			int mtaTaxCount = 0;
 			int improvementSurchargeCount = 0;
 
+			double grid_lat_nw_key = 0;
+			double grid_lon_nw_key = 0;
+			double grid_lat_SE_key = 0;
+			double grid_lon_SE_key = 0;
 
 			while(iterator.hasNext()) {
 				Tuple2<String, Map<String, Object>> tmp = iterator.next();
@@ -133,8 +141,13 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 					improvementSurchargeCount++;
 				}
 
-
 				result.put("vendor_id", tmp.f1.get("vendor_id"));
+				grid_lat_nw_key = toDouble(tmp.f1.get(CountAggregateConstants.GRID_LAT_NW_KEY));
+				grid_lon_nw_key = toDouble(tmp.f1.get(CountAggregateConstants.GRID_LON_NW_KEY));
+				grid_lat_SE_key = toDouble(tmp.f1.get(CountAggregateConstants.GRID_LAT_SE_KEY));
+				grid_lon_SE_key = toDouble(tmp.f1.get(CountAggregateConstants.GRID_LON_SE_KEY));
+
+
 				key = tmp.f0;
 			}
 
@@ -146,43 +159,50 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			double tolls_amountAvg = ((double) tolls_amount) / count;
 			double total_amountAvg = ((double) total_amount) / count;
 
-			result.put("window_time_start", timeWindow.getStart());
-			result.put("window_time_end", timeWindow.getEnd());
+			result.put(CountAggregateConstants.WINDOW_TIME_START, timeWindow.getStart());
+			result.put(CountAggregateConstants.WINDOW_TIME_END, timeWindow.getEnd());
 
-			result.put("passenger_count_avg", passengerCountAvg);
+			result.put(CountAggregateConstants.PASSENGER_COUNT_AVG, passengerCountAvg);
 
-			result.put("trip_distance_avg", tripDistanceAvg);
-			result.put("fare_amount_avg", fareAmountAvg);
-			result.put("extra_avg", extraAvg);
-			result.put("tip_amount_avg", tip_amountAvg);
-			result.put("tolls_amount_avg", tolls_amountAvg);
-			result.put("total_amount_avg", total_amountAvg);
+			result.put(CountAggregateConstants.TRIP_DISTANCE_AVG, tripDistanceAvg);
+			result.put(CountAggregateConstants.FARE_AMOUNT_AVG, fareAmountAvg);
+			result.put(CountAggregateConstants.EXTRA_AVG, extraAvg);
+			result.put(CountAggregateConstants.TIP_AMOUNT_AVG, tip_amountAvg);
+			result.put(CountAggregateConstants.TOLLS_AMOUNT_AVG, tolls_amountAvg);
+			result.put(CountAggregateConstants.TOTAL_AMOUNT_AVG, total_amountAvg);
 
 			// Rate code count
-			result.put("rate_code_id_1", rateCodeIdValues[0]);
-			result.put("rate_code_id_2", rateCodeIdValues[1]);
-			result.put("rate_code_id_3", rateCodeIdValues[2]);
-			result.put("rate_code_id_4", rateCodeIdValues[3]);
-			result.put("rate_code_id_5", rateCodeIdValues[4]);
-			result.put("rate_code_id_6", rateCodeIdValues[5]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_1, rateCodeIdValues[0]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_2, rateCodeIdValues[1]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_3, rateCodeIdValues[2]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_4, rateCodeIdValues[3]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_5, rateCodeIdValues[4]);
+			result.put(CountAggregateConstants.RATE_CODE_ID_6, rateCodeIdValues[5]);
 
 			//Payment type count
-			result.put("payment_type_1", paymentTypeValues[0]);
-			result.put("payment_type_2", paymentTypeValues[1]);
-			result.put("payment_type_3", paymentTypeValues[2]);
-			result.put("payment_type_4", paymentTypeValues[3]);
-			result.put("payment_type_5", paymentTypeValues[4]);
-			result.put("payment_type_6", paymentTypeValues[5]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_1, paymentTypeValues[0]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_2, paymentTypeValues[1]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_3, paymentTypeValues[2]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_4, paymentTypeValues[3]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_5, paymentTypeValues[4]);
+			result.put(CountAggregateConstants.PAYMENT_TYPE_6, paymentTypeValues[5]);
 
-			result.put("mta_tax", mtaTaxCount);
-			result.put("improvement_surcharge", improvementSurchargeCount);
+			result.put(CountAggregateConstants.MTA_TAX, mtaTaxCount);
+			result.put(CountAggregateConstants.IMPROVEMENT_SURCHARGE, improvementSurchargeCount);
 
+			result.put(CountAggregateConstants.GRID_LAT_NW_KEY, grid_lat_nw_key);
+			result.put(CountAggregateConstants.GRID_LON_NW_KEY, grid_lon_nw_key);
+			result.put(CountAggregateConstants.GRID_LAT_SE_KEY, grid_lat_SE_key);
+			result.put(CountAggregateConstants.GRID_LON_SE_KEY, grid_lon_SE_key);
+
+			result.put(CountAggregateConstants.GRID_CELL_ID, key);
 
 			result.put(AGGREGATE_COUNT, count);
 
+
 //			System.out.println("============================================");
 //			System.out.println("Window start: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getStart()));
-//            System.out.println(result);
+//			System.out.println(result);
 //			System.out.println("Window end: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getEnd()));
 //			System.out.println("============================================");
 
@@ -195,7 +215,7 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 	private static double toDouble(Object o) {
 		double result;
 		if (o instanceof Integer) {
-		    result = (Integer) o;
+			result = (Integer) o;
 		} else {
 			result = (double) o;
 
