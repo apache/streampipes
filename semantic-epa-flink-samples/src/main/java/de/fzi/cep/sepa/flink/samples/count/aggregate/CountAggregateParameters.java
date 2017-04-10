@@ -2,31 +2,24 @@ package de.fzi.cep.sepa.flink.samples.count.aggregate;
 
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.List;
 
 public class CountAggregateParameters extends BindingParameters {
 
-	private int timeWindow;
+	private Time timeWindowSize;
+	private Time slideWindowSize;
 	private List<String> groupBy;
-	private TimeScale timeScale;
-	private List<String> selectProperties;
 
-	public CountAggregateParameters(SepaInvocation graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
+	public CountAggregateParameters(SepaInvocation graph, Time timeWindowSize, Time slideWindowSize
+			, List<String> groupBy) {
 		super(graph);
-		this.timeScale = timeScale;
 		this.groupBy = groupBy;
-		this.timeWindow = timeWindow;
-		this.selectProperties = selectProperties;
+		this.timeWindowSize = timeWindowSize;
+		this.slideWindowSize = slideWindowSize;
 	}
 
-	public int getTimeWindow() {
-		return timeWindow;
-	}
-
-	public void setTimeWindow(int timeWindow) {
-		this.timeWindow = timeWindow;
-	}
 
 	public List<String> getGroupBy() {
 		return groupBy;
@@ -36,21 +29,19 @@ public class CountAggregateParameters extends BindingParameters {
 		this.groupBy = groupBy;
 	}
 
-	public TimeScale getTimeScale() {
-		return timeScale;
+	public Time getTimeWindowSize() {
+		return timeWindowSize;
 	}
 
-	public void setTimeScale(TimeScale timeScale) {
-		this.timeScale = timeScale;
+	public void setTimeWindowSize(Time timeWindowSize) {
+		this.timeWindowSize = timeWindowSize;
 	}
 
-	public List<String> getSelectProperties() {
-		return selectProperties;
+	public Time getSlideWindowSize() {
+		return slideWindowSize;
 	}
 
-	public void setSelectProperties(List<String> selectProperties) {
-		this.selectProperties = selectProperties;
+	public void setSlideWindowSize(Time slideWindowSize) {
+		this.slideWindowSize = slideWindowSize;
 	}
-
-
 }

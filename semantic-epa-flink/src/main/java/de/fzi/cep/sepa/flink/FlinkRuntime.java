@@ -25,6 +25,8 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 	protected boolean debug;
 
+	protected TimeCharacteristic streamTimeCharacteristic;
+
 	protected Thread thread;
 
 	protected StreamExecutionEnvironment env;
@@ -56,8 +58,11 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 			List<DataStream<Map<String, Object>>> messageStreams = new ArrayList<>();
 
-			//TODO not sure how to make this variable
-			this.env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+			//This sets the stream time characteristics
+			//The default value is TimeCharacteristic.ProcessingTime
+			if (this.streamTimeCharacteristic != null) {
+				this.env.setStreamTimeCharacteristic(this.streamTimeCharacteristic);
+			}
 
 			// Add the first source to the topology
 			DataStream<Map<String, Object>> messageStream1 = null;
@@ -141,6 +146,9 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 
 	}
 
+	public void setStreamTimeCharacteristic(TimeCharacteristic streamTimeCharacteristic) {
+		this.streamTimeCharacteristic = streamTimeCharacteristic;
+	}
 
 	protected Properties getProperties(KafkaTransportProtocol protocol) {
 		Properties props = new Properties();

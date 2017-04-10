@@ -2,27 +2,18 @@ package de.fzi.cep.sepa.flink.samples.count.aggregate;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
-import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
-import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.EpaType;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.output.AppendOutputStrategy;
-import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
-import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
-import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.impl.staticproperty.FreeTextStaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.sdk.builder.ProcessingElementBuilder;
+import de.fzi.cep.sepa.sdk.extractor.ProcessingElementParameterExtractor;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.Options;
 import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +22,7 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 
 	@Override
 	public SepaDescription declareModel() {
-		return ProcessingElementBuilder.create("count", "Flink Count Aggregation",
+		return ProcessingElementBuilder.create("count", "Flink Taxi Count Aggregation",
 				"Performs an aggregation based on a given event property and outputs the number of occurrences.")
 				.category(EpaType.AGGREGATE)
 //						.iconUrl("")
@@ -39,8 +30,8 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 				.naryMappingPropertyWithoutRequirement("groupBy", "Group Stream By", "")
 				.outputStrategy(OutputStrategies.append(EpProperties.integerEp("countValue",
 						"http://schema.org/Number")))
-				.requiredIntegerParameter("timeWindow", "Time Window Size", "Size of the time window " +
-						"in seconds")
+				.requiredIntegerParameter("timeWindow", "Time Window Size", "Size of the time window")
+				.requiredIntegerParameter("slideWindow", "Slide Window Size", "Time how much the window should slide")
 				.requiredSingleValueSelection("scale", "Time Window Scale", "",
 						Options.from("Hours", "Minutes", "Seconds"))
 				.supportedFormats(StandardTransportFormat.standardFormat())
@@ -52,31 +43,35 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 	@Override
 	protected FlinkSepaRuntime<CountAggregateParameters> getRuntime(
 			SepaInvocation sepa) {
+		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 				"groupBy", true);
 
-		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
+		int timeWindowSize = extractor.singleValueParameter("timeWindow", Integer.class);
+		int slidingWindowSize = extractor.singleValueParameter("slideWindow", Integer.class);
 
 		String scale = SepaUtils.getOneOfProperty(sepa,
 				"scale");
 
-		TimeScale timeScale;
+		Time timeWindow;
+		Time slideWindow;
 
-		if (scale.equals("Hours")) timeScale = TimeScale.HOURS;
-		else if (scale.equals("Minutes")) timeScale = TimeScale.MINUTES;
-		else timeScale = TimeScale.SECONDS;
-
-		List<String> selectProperties = new ArrayList<>();
-		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
-		{
-			selectProperties.add(p.getRuntimeName());
+		if (scale.equals("Hours")) {
+			timeWindow = Time.hours(timeWindowSize);
+			slideWindow = Time.hours(slidingWindowSize);
+		}
+		else if (scale.equals("Minutes")) {
+			timeWindow = Time.minutes(timeWindowSize);
+			slideWindow = Time.minutes(slidingWindowSize);
+		}
+		else {
+	    	timeWindow = Time.seconds(timeWindowSize);
+			slideWindow = Time.seconds(slidingWindowSize);
 		}
 
-		CountAggregateParameters staticParam = new CountAggregateParameters(sepa, timeWindowSize, groupBy, timeScale, selectProperties);
 
-
+		CountAggregateParameters staticParam = new CountAggregateParameters(sepa, timeWindow, slideWindow, groupBy);
 
 //		return new CountAggregateProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 		return new CountAggregateProgram(staticParam);
