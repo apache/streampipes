@@ -22,8 +22,8 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 
 	@Override
 	public SepaDescription declareModel() {
-		return ProcessingElementBuilder.create("count", "Flink Taxi Count Aggregation",
-				"Performs an aggregation based on a given event property and outputs the number of occurrences.")
+		return ProcessingElementBuilder.create("taxi_aggregare_count", "Flink Taxi Count Aggregation",
+				"Performs an aggregation based on taxi data")
 				.category(EpaType.AGGREGATE)
 //						.iconUrl("")
 				.setStream1()

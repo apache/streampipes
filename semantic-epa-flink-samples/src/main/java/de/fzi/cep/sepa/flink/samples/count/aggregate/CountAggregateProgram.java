@@ -92,24 +92,75 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			String key = "";
 			Iterator<Tuple2<String, Map<String, Object>>> iterator = iterable.iterator();
 			int count = 0;
+			long passengerCount = 0;
+			double tripDistance = 0;
+			double fareAmount = 0;
+			double extra = 0;
+			double tip_amount = 0;
+			double tolls_amount = 0;
+			double total_amount = 0;
+
 
 			while(iterator.hasNext()) {
 				Tuple2<String, Map<String, Object>> tmp = iterator.next();
 				count++;
 
+				passengerCount += (int) tmp.f1.get("passenger_count");
+				tripDistance = toDouble(tmp.f1.get("trip_distance"));
+				fareAmount = toDouble(tmp.f1.get("fare_amount"));
+				extra = toDouble(tmp.f1.get("extra"));
+				tip_amount = toDouble(tmp.f1.get("tip_amount"));
+				tolls_amount = toDouble(tmp.f1.get("tolls_amount"));
+				total_amount = toDouble(tmp.f1.get("total_amount"));
+
 				result.put("vendor_id", tmp.f1.get("vendor_id"));
 				key = tmp.f0;
 			}
 
+			double passengerCountAvg = ((double) passengerCount) / count;
+			double tripDistanceAvg = ((double) tripDistance) / count;
+			double fareAmountAvg = ((double) fareAmount) / count;
+			double extraAvg = ((double) extra) / count;
+			double tip_amountAvg = ((double) tip_amount) / count;
+			double tolls_amountAvg = ((double) tolls_amount) / count;
+			double total_amountAvg = ((double) total_amount) / count;
+
+
+
+			result.put("window_time_start", timeWindow.getStart());
+			result.put("window_time_end", timeWindow.getEnd());
+			result.put("passenger_count_avg", passengerCountAvg);
+			result.put("trip_distance_avg", tripDistanceAvg);
+			result.put("fare_amount_avg", fareAmountAvg);
+			result.put("extra_avg", extraAvg);
+			result.put("tip_amount_avg", tip_amountAvg);
+			result.put("tolls_amount_avg", tolls_amountAvg);
+			result.put("total_amount_avg", total_amountAvg);
+
+			result.put(AGGREGATE_COUNT, count);
+
 			System.out.println("============================================");
 			System.out.println("Window start: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getStart()));
-			System.out.println("Vendor Id: " + result.get("vendor_id") + " Count: " + count);
+            System.out.println(result);
 			System.out.println("Window end: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getEnd()));
 			System.out.println("============================================");
 
-			result.put(AGGREGATE_COUNT, count);
+
+
 			collector.collect(new Tuple2<String, Map<String, Object>>(key, result));
 		}
+	}
+
+	private static double toDouble(Object o) {
+		double result;
+		if (o instanceof Integer) {
+		    result = (Integer) o;
+		} else {
+			result = (double) o;
+
+		}
+
+		return result;
 	}
 
 }
