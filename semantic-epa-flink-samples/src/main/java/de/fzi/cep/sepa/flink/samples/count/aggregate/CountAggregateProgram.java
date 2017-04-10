@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParameters>{
 
-	private static String AGGREGATE_COUNT = "aggregate_count";
+	private static String AGGREGATE_COUNT = "aggregate_taxi_count";
 	public CountAggregateProgram(CountAggregateParameters params) {
 		super(params);
 		this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
@@ -99,6 +99,10 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			double tip_amount = 0;
 			double tolls_amount = 0;
 			double total_amount = 0;
+			int[] rateCodeIdValues = {0, 0, 0, 0, 0, 0};
+			int[] paymentTypeValues = {0, 0, 0, 0, 0, 0};
+			int mtaTaxCount = 0;
+			int improvementSurchargeCount = 0;
 
 
 			while(iterator.hasNext()) {
@@ -106,12 +110,29 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 				count++;
 
 				passengerCount += (int) tmp.f1.get("passenger_count");
-				tripDistance = toDouble(tmp.f1.get("trip_distance"));
-				fareAmount = toDouble(tmp.f1.get("fare_amount"));
-				extra = toDouble(tmp.f1.get("extra"));
-				tip_amount = toDouble(tmp.f1.get("tip_amount"));
-				tolls_amount = toDouble(tmp.f1.get("tolls_amount"));
-				total_amount = toDouble(tmp.f1.get("total_amount"));
+				tripDistance += toDouble(tmp.f1.get("trip_distance"));
+				fareAmount += toDouble(tmp.f1.get("fare_amount"));
+				extra += toDouble(tmp.f1.get("extra"));
+				tip_amount += toDouble(tmp.f1.get("tip_amount"));
+				tolls_amount += toDouble(tmp.f1.get("tolls_amount"));
+				total_amount += toDouble(tmp.f1.get("total_amount"));
+
+				int rateCodeId = (int) tmp.f1.get("ratecode_id");
+				rateCodeIdValues[rateCodeId - 1] += 1;
+
+				int paymentType = (int) tmp.f1.get("payment_type");
+				paymentTypeValues[paymentType - 1] += 1;
+
+				double mtaTax = toDouble(tmp.f1.get("mta_tax"));
+				if (mtaTax == 0.5) {
+					mtaTaxCount++;
+				}
+
+				double improvementSurcharge = toDouble(tmp.f1.get("improvement_surcharge"));
+				if (improvementSurcharge == 0.3) {
+					improvementSurchargeCount++;
+				}
+
 
 				result.put("vendor_id", tmp.f1.get("vendor_id"));
 				key = tmp.f0;
@@ -125,11 +146,11 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			double tolls_amountAvg = ((double) tolls_amount) / count;
 			double total_amountAvg = ((double) total_amount) / count;
 
-
-
 			result.put("window_time_start", timeWindow.getStart());
 			result.put("window_time_end", timeWindow.getEnd());
+
 			result.put("passenger_count_avg", passengerCountAvg);
+
 			result.put("trip_distance_avg", tripDistanceAvg);
 			result.put("fare_amount_avg", fareAmountAvg);
 			result.put("extra_avg", extraAvg);
@@ -137,13 +158,33 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			result.put("tolls_amount_avg", tolls_amountAvg);
 			result.put("total_amount_avg", total_amountAvg);
 
+			// Rate code count
+			result.put("rate_code_id_1", rateCodeIdValues[0]);
+			result.put("rate_code_id_2", rateCodeIdValues[1]);
+			result.put("rate_code_id_3", rateCodeIdValues[2]);
+			result.put("rate_code_id_4", rateCodeIdValues[3]);
+			result.put("rate_code_id_5", rateCodeIdValues[4]);
+			result.put("rate_code_id_6", rateCodeIdValues[5]);
+
+			//Payment type count
+			result.put("payment_type_1", paymentTypeValues[0]);
+			result.put("payment_type_2", paymentTypeValues[1]);
+			result.put("payment_type_3", paymentTypeValues[2]);
+			result.put("payment_type_4", paymentTypeValues[3]);
+			result.put("payment_type_5", paymentTypeValues[4]);
+			result.put("payment_type_6", paymentTypeValues[5]);
+
+			result.put("mta_tax", mtaTaxCount);
+			result.put("improvement_surcharge", improvementSurchargeCount);
+
+
 			result.put(AGGREGATE_COUNT, count);
 
-			System.out.println("============================================");
-			System.out.println("Window start: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getStart()));
-            System.out.println(result);
-			System.out.println("Window end: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getEnd()));
-			System.out.println("============================================");
+//			System.out.println("============================================");
+//			System.out.println("Window start: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getStart()));
+//            System.out.println(result);
+//			System.out.println("Window end: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getEnd()));
+//			System.out.println("============================================");
 
 
 

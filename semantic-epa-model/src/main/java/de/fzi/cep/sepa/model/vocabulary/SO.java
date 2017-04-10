@@ -107,6 +107,7 @@ public class SO {
     public static String DateModified = "http://schema.org/dateModified";
     public static String DatePosted = "http://schema.org/datePosted";
     public static String DatePublished = "http://schema.org/datePublished";
+    public static String DateTime = "http://schema.org/DateTime";
     public static String Dateline = "http://schema.org/dateline";
     public static String DeathDate = "http://schema.org/deathDate";
     public static String DepartureGate = "http://schema.org/departureGate";
