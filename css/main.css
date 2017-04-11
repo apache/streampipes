@@ -17,10 +17,58 @@ body {
 	background-attachment: fixed;	
 }
 
+.button-margin-iconbar {
+	padding:0px !important;
+	margin:0px !important;
+}
+md-content {
+	background: #fff !important;
+}
+
+.current-nav-page-box {
+	margin-top:25px;
+	position: relative;
+	z-index: 1;
+	white-space: nowrap;
+}
+
+.current-nav-page-content {
+	position: relative;
+	display: inline-block;
+	padding: 1.5em 1.5em 1em;
+	color: inherit;
+	text-decoration: none;
+	margin: 0 -7px;
+}
+
+.current-nav-page-content::before {
+	border: .1em solid #fff;
+	content: ''; /* To generate the box */
+	position: absolute;
+	top: 0; right: 0; bottom: .5em; left: 0;
+	z-index: -1;
+	border-bottom: none;
+	border-radius: 10px 10px 0 0;
+	background: #fff;
+	box-shadow: 0 2px #fff inset;
+	transform: perspective(6px) rotateX(2deg);
+	transform-origin: bottom;
+	height: calc(100% - 20px);
+}
+
+.current-nav-page {
+	padding: 10px;
+	border-bottom: 2px solid #304269;
+	display: inline-block;
+	margin-top: 20px;
+	background: white;
+	border-bottom: 0px;
+}
+
 .page-container {
-	margin:15px;
+	margin:10px;
 	border: 1px solid #cccccc;
-	min-height:calc(100% - 40px);
+	min-height:calc(100% - 20px);
 }
 
 .page-container-padding {
@@ -129,7 +177,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .wizard-row:before {
-    top: 50px;
+    top: 210px;
     bottom: 0;
     position: absolute;
     content: " ";

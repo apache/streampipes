@@ -3,10 +3,16 @@
                ng-disabled="starting" ng-if="!pipeline.running">
         <md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start"
                  class="md-accent"></md-icon>
+        <md-tooltip md-direction="top">
+            Start Pipeline
+        </md-tooltip>
     </md-button>
     <md-button flex="10" ng-click="stopPipeline(pipeline._id)" class="md-icon-button"
                ng-disabled="stopping" ng-if="pipeline.running">
         <md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon>
+        <md-tooltip md-direction="top">
+            Stop Pipeline
+        </md-tooltip>
     </md-button>
     <div class="md-list-item-text" flex="35" layout="column">
         <h4 style="margin-bottom:0px;">{{pipeline.name}}</h4>
@@ -16,26 +22,45 @@
         <h5>{{pipeline.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
     </div>
     <div flex layout="row">
-								<span flex flex-order="1" layout="row" layout-align="center center">
-									<md-button ng-click="showPipeline(pipeline)" class="md-icon-button"><md-icon
-                                            md-svg-icon="action:ic_search_24px" aria-label="Inspect"
-                                            class="md-accent"></md-icon></md-button>
-								</span>
-								<span flex flex-order="2" layout="row" layout-align="center center">
-									<md-button ng-click="modifyPipeline(pipeline._id)" class="md-icon-button"><md-icon
-                                            md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
-                                            class="md-accent"></md-icon></md-button>
-								</span>
-								<span flex flex-order="3" layout="row" layout-align="center center">
-									<md-button ng-click="getPipelineStatus(pipeline)" class="md-icon-button"><i
-                                            class="material-icons md-accent"
-                                            style="color: rgb(255,64,129);">help</i></md-button>
-								</span>
-								<span flex flex-order="4" layout="row" layout-align="center center">
-									<md-button ng-click="deletePipeline($event, pipeline._id)" class="md-icon-button"><md-icon
-                                            md-svg-icon="action:ic_delete_24px"
-                                            aria-label="Delete"></md-icon></md-button>
-								</span>
+        <span flex flex-order="1" layout="row" layout-align="center center">
+            <md-button ng-click="showPipeline(pipeline)" class="md-icon-button"><md-icon
+                    md-svg-icon="action:ic_search_24px" aria-label="Inspect"
+                    class="md-accent"></md-icon>
+            <md-tooltip md-direction="top">
+                Show Pipeline
+            </md-tooltip>
+            </md-button>
+        </span>
+        <span flex flex-order="2" layout="row" layout-align="center center">
+            <md-button ng-click="modifyPipeline(pipeline._id)" class="md-icon-button">
+                <md-icon
+                    md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
+                    class="md-accent">
+                </md-icon>
+                <md-tooltip md-direction="top">
+                Modify Pipeline
+            </md-tooltip>
+            </md-button>
+        </span>
+        <span flex flex-order="3" layout="row" layout-align="center center">
+            <md-button ng-click="getPipelineStatus(pipeline)" class="md-icon-button">
+                <i
+                    class="material-icons md-accent"
+                    style="color: rgb(255,64,129);">help</i>
+                <md-tooltip md-direction="top">
+                Details
+            </md-tooltip>
+            </md-button>
+        </span>
+        <span flex flex-order="4" layout="row" layout-align="center center">
+            <md-button ng-click="deletePipeline($event, pipeline._id)" class="md-icon-button"><md-icon
+                    md-svg-icon="action:ic_delete_24px"
+                    aria-label="Delete"></md-icon>
+                <md-tooltip md-direction="top">
+                Delete Pipeline
+            </md-tooltip>
+            </md-button>
+        </span>
     </div>
 
 

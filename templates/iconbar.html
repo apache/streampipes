@@ -1,13 +1,34 @@
 <md-list style="padding-top:0px;">
-    <md-list-item class="md-1-line" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};" ng-repeat="item in menu" role="link" ng-click="$parent.go(item.link)" style="min-width:0px;padding:0px;">
-        <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}" style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+    <md-list-item class="md-1-line" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};"
+                  ng-repeat="item in menu" role="link" style="min-width:0px;padding:0px;">
+        <md-button class="md-icon-button button-margin-iconbar" ng-click="$parent.go(item.link)">
+            <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
+                     style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+            <md-tooltip md-direction="right">
+                {{item.title}}
+            </md-tooltip>
+        </md-button>
     </md-list-item>
-    <md-list-item class="md-1-line" role="link" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};" ng-click="$parent.go('streampipes.notifications')">
-        <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications" style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+    <md-list-item class="md-1-line" role="link" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};">
+        <md-button class="md-icon-button button-margin-iconbar" ng-click="$parent.go('streampipes.notifications')">
+            <md-icon md-svg-icon="communication:ic_chat_24px" aria-label="Notifications"
+                     style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+            <md-tooltip md-direction="right">
+                Notifications
+            </md-tooltip>
+        </md-button>
     </md-list-item>
-    <md-divider style="color:white;"></md-divider>
-    <md-list-item class="md-1-line" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};" ng-repeat="item in admin" role="link" ng-click="$parent.go(item.link)">
-        <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}" style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+    <md-divider style="border-top-color:white;"></md-divider>
+    <md-list-item class="md-1-line" style="background:{{isActivePage(item.link) ? 'white' : '#304269'}};"
+                  ng-repeat="item in admin" role="link">
+        <md-button class="md-icon-button button-margin-iconbar" ng-click="$parent.go(item.link)">
+            <md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"
+                     style="color:{{isActivePage(item.link) ? '#304269' : 'white'}};"></md-icon>
+            <md-tooltip md-direction="right">
+                {{item.title}}
+            </md-tooltip>
+        </md-button>
+        <md-divider ng-if="item.link=='streampipes.applinks'" style="border-top-color:white;"></md-divider>
 
     </md-list-item>
 </md-list>
