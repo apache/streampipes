@@ -10,7 +10,7 @@ import org.apache.flink.runtime.instance.ActorGateway;
 import org.apache.flink.runtime.jobgraph.JobStatus;
 import org.apache.flink.runtime.leaderretrieval.LeaderRetrievalService;
 import org.apache.flink.runtime.messages.JobManagerMessages;
-import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob;
+import org.apache.flink.runtime.messages.JobManagerMessages.StopJob;
 import org.apache.flink.runtime.messages.JobManagerMessages.RunningJobsStatus;
 import org.apache.flink.runtime.util.LeaderRetrievalUtils;
 import scala.Some;
@@ -85,7 +85,7 @@ public class FlinkJobController {
 		
 		try {
 			ActorGateway jobManager = getJobManagerGateway();
-			Future<Object> response = jobManager.ask(new CancelJob(jobId), askTimeout);
+			Future<Object> response = jobManager.ask(new StopJob(jobId), askTimeout);
 			Await.result(response, askTimeout);
 			return true;
 		}
