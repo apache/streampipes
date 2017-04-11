@@ -2,7 +2,6 @@ package de.fzi.cep.sepa.sources.samples.taxiaggregated;
 
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.flink.samples.count.aggregate.CountAggregateConstants;
 import de.fzi.cep.sepa.messaging.EventProducer;
 import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -12,7 +11,6 @@ import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.sdk.builder.DataStreamBuilder;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.Formats;
-import de.fzi.cep.sepa.sdk.helpers.Groundings;
 import de.fzi.cep.sepa.sdk.helpers.Protocols;
 import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReaderSettings;

@@ -1,13 +1,8 @@
 package de.fzi.cep.sepa.sources.samples.taxiaggregated;
 
-import de.fzi.cep.sepa.flink.samples.count.aggregate.CountAggregateConstants;
-import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.sources.samples.adapter.AdapterSchemaTransformer;
 import org.apache.commons.collections.map.HashedMap;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 public class AggregatedTaxiLineTransformer implements AdapterSchemaTransformer {
