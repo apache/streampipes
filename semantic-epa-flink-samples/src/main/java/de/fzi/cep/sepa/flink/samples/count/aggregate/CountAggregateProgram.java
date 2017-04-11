@@ -54,6 +54,7 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 						return new Tuple2<String, Map<String, Object>>(newKey, value);
 					}
 				})
+				.setParallelism(1)
 				.assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Tuple2<String, Map<String, Object>>>() {
 
 					@Override

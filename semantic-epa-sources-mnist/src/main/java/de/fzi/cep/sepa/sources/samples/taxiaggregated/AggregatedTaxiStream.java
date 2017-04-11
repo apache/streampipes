@@ -52,8 +52,6 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
 //                .format(Groundings.jsonFormat())
 //                .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
 
-                .property(EpProperties.stringEp("delay_label", SO.Text))
-                .property(EpProperties.integerEp(CountAggregateConstants.AGGREGATE_TAXI_COUNT, SO.Number))
                 .property(EpProperties.longEp(CountAggregateConstants.WINDOW_TIME_START, SO.DateTime))
                 .property(EpProperties.longEp(CountAggregateConstants.WINDOW_TIME_END, SO.DateTime))
                 .property(EpProperties.integerEp(CountAggregateConstants.PASSENGER_COUNT_AVG, SO.Number))

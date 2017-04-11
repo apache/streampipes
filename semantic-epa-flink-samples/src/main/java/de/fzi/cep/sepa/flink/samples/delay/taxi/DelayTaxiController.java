@@ -47,7 +47,6 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
         DelayTaxiParameters params = new DelayTaxiParameters(graph, labelPropertyMapping);
 
         return new DelayTaxiProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
-
 //        return new DelayTaxiProgram(params);
     }
 }
