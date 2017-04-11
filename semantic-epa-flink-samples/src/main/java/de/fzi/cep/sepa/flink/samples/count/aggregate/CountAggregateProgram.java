@@ -64,8 +64,6 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 				.keyBy(0)
 				.timeWindow(params.getTimeWindowSize(), params.getSlideWindowSize())
 				.apply(new MyWindow2Function())
-				//TODO remove this parallelism
-				.setParallelism(1)
 				.map(new MapFunction< Tuple2<String, Map<String, Object>>, Map<String, Object>>() {
 					@Override
 					public Map<String, Object> map(Tuple2<String, Map<String, Object>> value) throws Exception {

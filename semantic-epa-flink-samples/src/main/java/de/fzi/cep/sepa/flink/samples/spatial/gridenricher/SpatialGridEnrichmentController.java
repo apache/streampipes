@@ -73,8 +73,8 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
     SpatialGridEnrichmentParameters params = new SpatialGridEnrichmentParameters(graph,
             enrichmentSettings);
 
-//    return new SpatialGridEnrichmentProgram(params, makeDeploymentConfig(Config.JAR_FILE));
-    return new SpatialGridEnrichmentProgram(params);
+    return new SpatialGridEnrichmentProgram(params, makeDeploymentConfig(Config.JAR_FILE));
+//    return new SpatialGridEnrichmentProgram(params);
 
   }
 }
