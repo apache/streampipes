@@ -11,7 +11,9 @@ import de.fzi.cep.sepa.model.vocabulary.Geo;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.sdk.builder.DataStreamBuilder;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.Formats;
 import de.fzi.cep.sepa.sdk.helpers.Groundings;
+import de.fzi.cep.sepa.sdk.helpers.Protocols;
 import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReaderSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReplayTask;
@@ -49,9 +51,10 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
 
         EventStream stream = DataStreamBuilder
                 .create(name, name, "Produces a replay of the mnist dataset")
-                .format(Groundings.jsonFormat())
-                .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
+//                .format(Groundings.jsonFormat())
+//                .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
 
+                .property(EpProperties.stringEp("delay_label", SO.Text))
                 .property(EpProperties.integerEp(CountAggregateConstants.AGGREGATE_TAXI_COUNT, SO.Number))
                 .property(EpProperties.longEp(CountAggregateConstants.WINDOW_TIME_START, SO.DateTime))
                 .property(EpProperties.longEp(CountAggregateConstants.WINDOW_TIME_END, SO.DateTime))
@@ -82,6 +85,9 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
                 .property(EpProperties.doubleEp(CountAggregateConstants.GRID_LAT_SE_KEY, Geo.lat))
                 .property(EpProperties.doubleEp(CountAggregateConstants.GRID_LON_SE_KEY, Geo.lng))
                 .property(EpProperties.stringEp(CountAggregateConstants.GRID_CELL_ID, SO.Text))
+                .format(Formats.jsonFormat())
+                .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
+                        ClientConfiguration.INSTANCE.getKafkaPort(), topic))
                 .build();
 
 

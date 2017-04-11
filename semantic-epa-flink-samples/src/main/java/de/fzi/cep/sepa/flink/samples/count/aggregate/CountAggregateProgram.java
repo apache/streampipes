@@ -61,9 +61,11 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 						return (long) element.f1.get("tpep_pickup_datetime");
 					}
 				})
+				.setParallelism(1)
 				.keyBy(0)
 				.timeWindow(params.getTimeWindowSize(), params.getSlideWindowSize())
 				.apply(new MyWindow2Function())
+				.setParallelism(1)
 				.map(new MapFunction< Tuple2<String, Map<String, Object>>, Map<String, Object>>() {
 					@Override
 					public Map<String, Object> map(Tuple2<String, Map<String, Object>> value) throws Exception {
