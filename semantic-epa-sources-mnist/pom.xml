@@ -38,6 +38,10 @@
             <artifactId>json</artifactId>
             <version>20151123</version>
         </dependency>
+        <dependency>
+            <groupId>de.fzi.cep.sepa</groupId>
+            <artifactId>semantic-epa-flink-samples</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

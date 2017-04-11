@@ -29,25 +29,16 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 
 	public CountAggregateProgram(CountAggregateParameters params, FlinkDeploymentConfig config) {
 		super(params, config);
+		this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
 	}
 
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
 
-//		this.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-
 		List<String> groupBy = params.getGroupBy();
 
 		DataStream<Map<String, Object>> result = messageStream[0]
-//                .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Map<String, Object>>() {
-//
-//					@Override
-//					public long extractAscendingTimestamp(Map<String, Object> element) {
-//					    System.out.println(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format((long) element.get("tpep_pickup_datetime")));
-//						return (long) element.get("tpep_pickup_datetime");
-//					}
-//				})
 				.map(new MapFunction<Map<String, Object>, Tuple2<String, Map<String, Object>>>() {
 					@Override
 					public Tuple2<String, Map<String, Object>> map(Map<String, Object> value) throws Exception {
@@ -126,10 +117,14 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 				total_amount += toDouble(tmp.f1.get("total_amount"));
 
 				int rateCodeId = (int) tmp.f1.get("ratecode_id");
-				rateCodeIdValues[rateCodeId - 1] += 1;
+				if (rateCodeId > -1 && rateCodeId < 6) {
+					rateCodeIdValues[rateCodeId - 1] += 1;
+				}
 
 				int paymentType = (int) tmp.f1.get("payment_type");
-				paymentTypeValues[paymentType - 1] += 1;
+				if (paymentType > - 1 && paymentType < 6) {
+					paymentTypeValues[paymentType - 1] += 1;
+				}
 
 				double mtaTax = toDouble(tmp.f1.get("mta_tax"));
 				if (mtaTax == 0.5) {
@@ -200,11 +195,11 @@ public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParame
 			result.put(AGGREGATE_COUNT, count);
 
 
-//			System.out.println("============================================");
+//			System.out.println("===================== Taxi Aggregate =======================");
 //			System.out.println("Window start: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getStart()));
 //			System.out.println(result);
 //			System.out.println("Window end: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timeWindow.getEnd()));
-//			System.out.println("============================================");
+//			System.out.println("============================================================");
 
 
 

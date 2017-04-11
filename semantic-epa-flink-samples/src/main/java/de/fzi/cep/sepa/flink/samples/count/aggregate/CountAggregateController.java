@@ -2,7 +2,9 @@ package de.fzi.cep.sepa.flink.samples.count.aggregate;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.samples.Config;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
@@ -16,7 +18,6 @@ import de.fzi.cep.sepa.sdk.helpers.Options;
 import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAggregateParameters>{
@@ -104,8 +105,8 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 
 		CountAggregateParameters staticParam = new CountAggregateParameters(sepa, timeWindow, slideWindow, groupBy);
 
-//		return new CountAggregateProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
-		return new CountAggregateProgram(staticParam);
+		return new CountAggregateProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+//		return new CountAggregateProgram(staticParam);
 	}
 
 }
