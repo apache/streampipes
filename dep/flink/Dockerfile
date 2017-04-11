@@ -24,6 +24,9 @@ RUN set -x && \
 #RUN apk update && apk add netcat-openbsd
 RUN apt-get update && apt-get install netcat-openbsd
 
+WORKDIR ${FLINK_HOME}/lib
+RUN curl -u external:streampipes2017 https://laus.fzi.de/nexus/content/repositories/snapshots/de/fzi/nd4j-platform-fatjar/1.0-SNAPSHOT/nd4j-platform-fatjar-1.0-SNAPSHOT.jar
+
 ADD docker-entrypoint.sh ${FLINK_HOME}/bin/
 # Additional output to console, allows gettings logs with 'docker-compose logs'
 
