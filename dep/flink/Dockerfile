@@ -24,7 +24,12 @@ RUN set -x && \
 #RUN apk update && apk add netcat-openbsd
 RUN apt-get update && apt-get install netcat-openbsd
 
+WORKDIR ${FLINK_HOME}/lib
+
+#include nd4j native libraries into flink image to avoid classloader issues
+RUN cd ${FLINK_HOME}/lib && curl -O -u external:streampipes2017 https://laus.fzi.de/nexus/content/repositories/snapshots/de/fzi/nd4j-platform-fatjar/1.0-SNAPSHOT/nd4j-platform-fatjar-1.0-20170411.204457-1.jar
 ADD docker-entrypoint.sh ${FLINK_HOME}/bin/
+
 # Additional output to console, allows gettings logs with 'docker-compose logs'
 
 ADD log4j.properties ${FLINK_HOME}/conf/
