@@ -8,21 +8,16 @@ import java.util.List;
 public class ConfigurableTimestampParameters extends BindingParameters {
 
 	private String appendTimePropertyName;
-	private List<String> selectProperties;
-	
+
 	public ConfigurableTimestampParameters(SepaInvocation graph,
-                                           String appendTimePropertyName, List<String> selectProperties) {
+                                           String appendTimePropertyName) {
 		super(graph);
 		this.appendTimePropertyName = appendTimePropertyName;
-		this.selectProperties = selectProperties;
 	}
 
 	public String getAppendTimePropertyName() {
 		return appendTimePropertyName;
 	}
 
-	public List<String> getSelectProperties() {
-		return selectProperties;
-	}
 
 }
