@@ -16,7 +16,13 @@ import de.fzi.cep.sepa.model.impl.output.OutputStrategy;
 import de.fzi.cep.sepa.model.impl.quality.EventStreamQualityRequirement;
 import de.fzi.cep.sepa.model.impl.quality.Frequency;
 import de.fzi.cep.sepa.model.util.SepaUtils;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sdk.builder.ProcessingElementBuilder;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
+import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
+import de.fzi.cep.sepa.sdk.helpers.SupportedFormats;
+import de.fzi.cep.sepa.sdk.helpers.SupportedProtocols;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,37 +31,46 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
 
 	@Override
 	public SepaDescription declareModel() {
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
-		EventSchema schema1 = new EventSchema();
-		schema1.setEventProperties(eventProperties);
-		
-		EventStream stream1 = new EventStream();
-		stream1.setEventSchema(schema1);
-		
-		SepaDescription desc = new SepaDescription("enrich_timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
-		
-		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
-		Frequency minFrequency = new Frequency(1);
-		Frequency maxFrequency = new Frequency(100);
-		eventStreamQualities.add(new EventStreamQualityRequirement(minFrequency, maxFrequency));
-		stream1.setRequiresEventStreamQualities(eventStreamQualities);
+	 return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
+			 "Appends the current time in ms to the event payload using Flink")
+             .setStream1()
+            .supportedProtocols(SupportedProtocols.kafka())
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .outputStrategy(OutputStrategies.append(
+                    EpProperties.longEp("appendedTime", SO.DateTime)))
+            .build();
 
-		desc.addEventStream(stream1);
-		
-		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
-
-		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
-		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(),
-				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema" +
-						".org/DateTime")));
-		
-		outputStrategy.setEventProperties(appendProperties);
-		strategies.add(outputStrategy);
-		desc.setOutputStrategies(strategies);
-		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		
-		return desc;
+//		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
+//		EventSchema schema1 = new EventSchema();
+//		schema1.setEventProperties(eventProperties);
+//
+//		EventStream stream1 = new EventStream();
+//		stream1.setEventSchema(schema1);
+//
+//		SepaDescription desc = new SepaDescription("enrich_timestamp", "Flink Timestamp Enrichment", "Appends the current time in ms to the event payload using Flink");
+//
+//		List<EventStreamQualityRequirement> eventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
+//		Frequency minFrequency = new Frequency(1);
+//		Frequency maxFrequency = new Frequency(100);
+//		eventStreamQualities.add(new EventStreamQualityRequirement(minFrequency, maxFrequency));
+//		stream1.setRequiresEventStreamQualities(eventStreamQualities);
+//
+//		desc.addEventStream(stream1);
+//
+//		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
+//		AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+//
+//		List<EventProperty> appendProperties = new ArrayList<EventProperty>();
+//		appendProperties.add(new EventPropertyPrimitive(XSD._long.toString(),
+//				"appendedTime", "", de.fzi.cep.sepa.commons.Utils.createURI("http://schema" +
+//						".org/DateTime")));
+//
+//		outputStrategy.setEventProperties(appendProperties);
+//		strategies.add(outputStrategy);
+//		desc.setOutputStrategies(strategies);
+//		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
+//
+//		return desc;
 	}
 
 	@Override
