@@ -27,11 +27,11 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
     private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
     private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
 
-    private String topic = "de.fzi.cep.sep.taxi";
+    private String topic = "de.fzi.cep.sep.aggregatedtaxi";
     private String dataFolder;
 
     private boolean isExecutable = false;
-    private String name = "taxi";
+    private String name = "aggregatedtaxi";
 
     public AggregatedTaxiStream() {
         topic += ".stream";

@@ -11,17 +11,16 @@ public class AggregatedTaxiLineTransformer implements AdapterSchemaTransformer {
     public Map<String, Object> transform(Object[] data) {
         Map<String, Object> result = new HashedMap();
 
-
         result.put(CountAggregateConstants.AGGREGATE_TAXI_COUNT, Integer.parseInt((String) data[25]));
         result.put(CountAggregateConstants.WINDOW_TIME_START, Long.parseLong((String) data[21]));
         result.put(CountAggregateConstants.WINDOW_TIME_END, Long.parseLong((String) data[5]));
-        result.put(CountAggregateConstants.PASSENGER_COUNT_AVG, Integer.parseInt((String) data[30]));
-        result.put(CountAggregateConstants.TRIP_DISTANCE_AVG, Integer.parseInt((String) data[4]));
-        result.put(CountAggregateConstants.EXTRA_AVG, Integer.parseInt((String) data[2]));
-        result.put(CountAggregateConstants.TIP_AMOUNT_AVG, Integer.parseInt((String) data[11]));
-        result.put(CountAggregateConstants.TOLLS_AMOUNT_AVG, Integer.parseInt((String) data[9]));
-        result.put(CountAggregateConstants.FARE_AMOUNT_AVG, Integer.parseInt((String) data[1]));
-        result.put(CountAggregateConstants.TOTAL_AMOUNT_AVG, Integer.parseInt((String) data[0]));
+        result.put(CountAggregateConstants.PASSENGER_COUNT_AVG, Double.parseDouble((String) data[30]));
+        result.put(CountAggregateConstants.TRIP_DISTANCE_AVG, Double.parseDouble((String) data[4]));
+        result.put(CountAggregateConstants.EXTRA_AVG, Double.parseDouble((String) data[2]));
+        result.put(CountAggregateConstants.TIP_AMOUNT_AVG, Double.parseDouble((String) data[11]));
+        result.put(CountAggregateConstants.TOLLS_AMOUNT_AVG, Double.parseDouble((String) data[9]));
+        result.put(CountAggregateConstants.FARE_AMOUNT_AVG, Double.parseDouble((String) data[1]));
+        result.put(CountAggregateConstants.TOTAL_AMOUNT_AVG, Double.parseDouble((String) data[0]));
         result.put(CountAggregateConstants.RATE_CODE_ID_1, Integer.parseInt((String) data[19]));
         result.put(CountAggregateConstants.RATE_CODE_ID_2, Integer.parseInt((String) data[18]));
         result.put(CountAggregateConstants.RATE_CODE_ID_3, Integer.parseInt((String) data[22]));
