@@ -40,7 +40,8 @@ public class ConfigurableTimestampEnricher extends RichFlatMapFunction<Map<Strin
 			state.update(currentState);
 		}
 
-		in.put(appendTimePropertyName, System.currentTimeMillis() - currentState);
+//		in.put(appendTimePropertyName, System.currentTimeMillis() - currentState);
+		in.put("appendedTime", System.currentTimeMillis() - currentState);
 		out.collect(in);
 	}
 

@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -31,10 +32,12 @@ public class ConfigurableTimestampController extends AbstractFlinkAgentDeclarer<
 	public SepaDescription declareModel() {
 		return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
 				"Appends the current time in ms to the event payload using Flink")
+				.category(EpaType.ENRICH)
 				.requiredTextParameter("timestamp_name", "Timestamp Name", "The label that is used for the appended timestamp")
+				.requiredIntegerParameter("blk", "sdf", "asdf")
 				.requiredPropertyStream1(EpRequirements.anyProperty())
-//				.outputStrategy(OutputStrategies.append(
-//						EpProperties.longEp("appendedTime", SO.DateTime)))
+				.outputStrategy(OutputStrategies.append(
+						EpProperties.longEp("appendedTime", SO.DateTime)))
 				.supportedProtocols(SupportedProtocols.kafka())
 				.supportedFormats(SupportedFormats.jsonFormat())
 				.build();
