@@ -7,10 +7,12 @@ import java.util.Map;
 
 public class BiggisConcatLineTransformer implements AdapterSchemaTransformer {
     @Override
-    public Map<String, Object> transform(Object[] data) {
+    public Map<String, Object> transform(Object[] data, boolean withLabel) {
         Map<String, Object> result = new HashedMap();
 
-        result.put("label" , Double.parseDouble((String) data[0]));
+        if (withLabel) {
+            result.put("label", Double.parseDouble((String) data[0]));
+        }
 
         result.put("red0" , Double.parseDouble((String) data[1]));
         result.put("green0" , Double.parseDouble((String) data[2]));

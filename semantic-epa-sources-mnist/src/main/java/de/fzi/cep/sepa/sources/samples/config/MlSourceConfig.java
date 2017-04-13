@@ -22,7 +22,7 @@ public enum MlSourceConfig {
         try {
             propertiesConfiguration = new PropertiesConfiguration(configFile);
 
-            this.withLabel = propertiesConfiguration.getBoolean("wihLabel");
+            this.withLabel = propertiesConfiguration.getBoolean("withLabel");
 
         } catch (ConfigurationException e) {
             e.printStackTrace();
