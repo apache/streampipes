@@ -11,7 +11,7 @@ import java.util.Map;
 public class TaxiLineTransformer implements AdapterSchemaTransformer {
 
     @Override
-    public Map<String, Object> transform(Object[] data) {
+    public Map<String, Object> transform(Object[] data, boolean withLabel) {
         Map<String, Object> result = new HashedMap();
 
 

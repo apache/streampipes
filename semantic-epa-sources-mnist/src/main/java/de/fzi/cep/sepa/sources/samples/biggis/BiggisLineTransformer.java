@@ -7,10 +7,13 @@ import java.util.Map;
 
 public class BiggisLineTransformer implements AdapterSchemaTransformer {
     @Override
-    public Map<String, Object> transform(Object[] data) {
+    public Map<String, Object> transform(Object[] data, boolean withLabel) {
         Map<String, Object> result = new HashedMap();
 
-        result.put("label" , Double.parseDouble((String) data[0]));
+        if (withLabel) {
+            result.put("label" , Double.parseDouble((String) data[0]));
+        }
+
         result.put("blue" , Double.parseDouble((String) data[1]));
         result.put("green" , Double.parseDouble((String) data[2]));
         result.put("red" , Double.parseDouble((String) data[3]));

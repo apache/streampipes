@@ -8,10 +8,12 @@ import java.util.Map;
 
 public class MnistLineTransformer implements AdapterSchemaTransformer {
     @Override
-    public Map<String, Object> transform(Object[] data) {
+    public Map<String, Object> transform(Object[] data, boolean withLabel) {
         Map<String, Object> result = new HashedMap();
 
-        result.put("label" , Double.parseDouble((String) data[0]));
+        if (withLabel) {
+            result.put("label" , Double.parseDouble((String) data[0]));
+        }
 
         Double[] image = new Double[data.length - 1];
 
@@ -22,4 +24,5 @@ public class MnistLineTransformer implements AdapterSchemaTransformer {
 
         return result;
     }
+
 }

@@ -15,6 +15,7 @@ import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReader;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReaderSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.csv.CsvReplayTask;
 import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
+import de.fzi.cep.sepa.sources.samples.config.MlSourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

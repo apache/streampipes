@@ -8,7 +8,7 @@ import java.util.Map;
 public class AggregatedTaxiLineTransformer implements AdapterSchemaTransformer {
 
     @Override
-    public Map<String, Object> transform(Object[] data) {
+    public Map<String, Object> transform(Object[] data, boolean withLabel) {
         Map<String, Object> result = new HashedMap();
 
         result.put(CountAggregateConstants.AGGREGATE_TAXI_COUNT, Integer.parseInt((String) data[25]));
@@ -40,8 +40,10 @@ public class AggregatedTaxiLineTransformer implements AdapterSchemaTransformer {
         result.put(CountAggregateConstants.GRID_LAT_SE_KEY, Double.parseDouble((String) data[3]));
         result.put(CountAggregateConstants.GRID_LON_SE_KEY,Double.parseDouble((String) data[28]));
         result.put(CountAggregateConstants.GRID_CELL_ID, (String) data[6]);
-        result.put("delay_label", (String) data[26]);
 
+        if (withLabel) {
+            result.put("delay_label", (String) data[26]);
+        }
 
         return result;
     }

@@ -5,6 +5,7 @@ import de.fzi.cep.sepa.sources.samples.adapter.AdapterSchemaTransformer;
 import de.fzi.cep.sepa.sources.samples.adapter.JsonTransformer;
 import de.fzi.cep.sepa.sources.samples.adapter.SimulationSettings;
 import de.fzi.cep.sepa.sources.samples.adapter.Utils;
+import de.fzi.cep.sepa.sources.samples.config.MlSourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,8 @@ public class CsvReader {
 
         long previousTime = 0;
 
+        boolean withLabel = MlSourceConfig.INSTANCE.getWithLabel();
+
         Optional<BufferedReader> readerOpt = Utils.getReader(file);
         if (readerOpt.isPresent()) {
             try {
@@ -57,7 +60,7 @@ public class CsvReader {
                     //TODO add wait here when time is needed
 
                     // Transfrom the data to a Map
-                    Map<String, Object> data = schemaTransformer.transform(map);
+                    Map<String, Object> data = schemaTransformer.transform(map, withLabel);
 
                     //Serialize the data to JSON
                     JsonTransformer jsonTransformer = new JsonTransformer();
