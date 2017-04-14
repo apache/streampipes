@@ -598,7 +598,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .canvas-preview{
 	overflow: visible;
 	position:absolute; left:0px; top:0px;
-	height: 300px;
+	height: 100%;
 	width: 100%;
 	z-index:0;
 	background-color:white;
@@ -644,16 +644,25 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .connectable{
 	cursor: move;
 	position:absolute;
-	height: 110px !important;
-	width: 110px !important;
 	box-shadow: 0 0 2px #555;
 	display: inline-block;
 	vertical-align: middle;
 	background-color: white;
-	line-height: 110px;
 	text-align: center;
 	font-size: 24px;
 	font-family: RobotoDraft;
+}
+
+.connectable-preview {
+	height: 75px !important;
+	width: 75px !important;
+	line-height:75px;
+}
+
+.connectable-editor {
+	height: 110px !important;
+	width: 110px !important;
+	line-height:110px;
 }
 
 .connectable-element{

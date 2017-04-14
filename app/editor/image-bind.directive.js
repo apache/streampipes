@@ -1,13 +1,13 @@
-imageBind.$inject = [];
+imageBind.$inject = ['pipelineElementIconService'];
 
-export default function imageBind() {
+export default function imageBind(pipelineElementIconService) {
         return {
             restrict: 'A',
             link: function (scope, elem, attrs) {
                 if (attrs.imageBind == 'block') {
-                    scope.addImageOrTextIcon(elem, scope.element, false, 'block');
+                    pipelineElementIconService.addImageOrTextIcon(elem, scope.element, false, 'block');
                 } else if (attrs.imageBind == 'draggable') {
-                    scope.addImageOrTextIcon(elem, scope.element, false, 'draggable');
+                    pipelineElementIconService.addImageOrTextIcon(elem, scope.element, false, 'draggable');
                 }
 
             }

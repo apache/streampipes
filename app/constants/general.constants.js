@@ -6,26 +6,30 @@ export default {
 		streamEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "Bezier",
+			connector: ["Bezier", { curviness:80 }],
 			isSource: true,
 			maxConnections: -1,
 			anchor:"Right",
 			type : "token",
 			connectorOverlays: [
-				["Arrow", {width: 20, length: 10, location: 0.5, id: "arrow"}],
+				["Arrow", {width: 30, length: 30, location: 0.5, id: "arrow", paintStyle: {fillStyle: "#BDBDBD",
+					strokeStyle: "#9E9E9E",
+					lineWidth: 2}}],
 			]
 		},
 
 		sepaEndpointOptions : {
 			endpoint: ["Dot", {radius:12}],
 			connectorStyle: {strokeStyle: "#BDBDBD", outlineColor : "#9E9E9E", lineWidth: 5},
-			connector: "Bezier",
+			connector: ["Bezier", { curviness:80 }],
 			isSource: true,
 			maxConnections: -1,
 			anchor: "Right",
 			type : "empty",
 			connectorOverlays: [
-				["Arrow", {width: 25, length: 20, location: 0.5, id: "arrow"}],
+				["Arrow", {width: 30, length: 30, location: 0.5, id: "arrow", paintStyle: {fillStyle: "#BDBDBD",
+					strokeStyle: "#9E9E9E",
+					lineWidth: 2}}],
 			]
 		},
 

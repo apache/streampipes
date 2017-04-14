@@ -16,10 +16,17 @@ EditorCtrl.$inject = ['$scope',
     'apiConstants',
     '$q',
     '$mdDialog',
-    '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast', 'jsplumbService'];
+    '$window',
+    '$compile',
+    'imageChecker',
+    'getElementIconText',
+    'initTooltips',
+    '$mdToast',
+    'jsplumbService',
+    'pipelinePositioningService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, pipelinePositioningService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -271,7 +278,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     });
     $rootScope.$on("elements.loaded", function () {
         makeDraggable();
-        bindContextMenu();
         //initTooltips();
     });
     $scope.openContextMenu = function ($mdOpenMenu, event) {
@@ -305,7 +311,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     $scope.displayPipelineById = function () {
         restApi.getPipelineById($scope.currentModifiedPipeline)
             .success(function (pipeline) {
-                $scope.displayPipeline(pipeline);
+                pipelinePositioningService.displayPipeline($scope, jsPlumb, pipeline, "#assembly", false);
+                $scope.currentPipelineName = pipeline.name;
+                $scope.currentPipelineDescription = pipeline.description;
 
             })
             .error(function (msg) {
@@ -314,83 +322,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     };
 
-    $scope.displayPipeline = function (pipeline) {
-        var currentx = 50;
-        var currenty = 50;
-        for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
-            $scope.streamDropped(createNewAssemblyElement(stream, {'x': currentx, 'y': currenty}));
-            currenty += 300;
-        }
-        currenty = 50;
-        for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++) {
-            currentx += 300;
-            var $sepa = $scope.sepaDropped(createNewAssemblyElement(sepa, {'x': currentx, 'y': currenty})
-                .data("options", true));
-            if (jsPlumb.getConnections({source: sepa.DOM}).length == 0) { //Output Element
-                jsPlumb.addEndpoint($sepa, apiConstants.sepaEndpointOptions);
-            }
-        }
-        currentx += 200;
-        for (var i = 0, action; action = pipeline.actions[i]; i++) {
-            var $action = $scope.actionDropped(createNewAssemblyElement(action, {'x': currentx, 'y': currenty})
-                .data("options", true));
-            currenty += 200;
-            jsPlumb.addEndpoint($action, apiConstants.leftTargetPointOptions);
-        }
-
-        connectPipelineElements(pipeline, true);
-        jsPlumb.repaintEverything();
-
-        $scope.currentPipelineName = pipeline.name;
-        $scope.currentPipelineDescription = pipeline.description;
-    };
-
-    function bindContextMenu() {
-        $(".draggable-icon").off("contextmenu").on("contextmenu", staticContextMenu);
-    }
-
-    function connectPipelineElements(json, detachable) {
-        var source, target;
-        var sourceEndpoint;
-        var targetEndpoint
-
-        jsPlumb.setSuspendDrawing(true);
-
-        //Sepas --> Streams / Sepas --> Sepas---------------------//
-        for (var i = 0, sepa; sepa = json.sepas[i]; i++) {
-            for (var j = 0, connection; connection = sepa.connectedTo[j]; j++) {
-
-                source = connection;
-                target = sepa.DOM;
-
-
-                var options;
-                var id = "#" + source;
-                if ($(id).hasClass("sepa")) {
-                    options = apiConstants.sepaEndpointOptions;
-                } else {
-                    options = apiConstants.streamEndpointOptions;
-                }
-
-                sourceEndpoint = jsPlumb.addEndpoint(source, options);
-                targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
-            }
-        }
-        for (var i = 0, action; action = json.actions[i]; i++) {
-            //Action --> Sepas----------------------//
-            target = action.DOM;
-
-            for (var j = 0, connection; connection = action.connectedTo[j]; j++) {
-                source = connection;
-
-                sourceEndpoint = jsPlumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
-                targetEndpoint = jsPlumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
-                jsPlumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
-            }
-        }
-        jsPlumb.setSuspendDrawing(false, true);
-    }
 
     $scope.tabs = [
 
@@ -569,64 +500,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     };
 
-    var loadOptionsButtons = function ($newElement) {
-        $scope.currentPipelineElement = $newElement.data("JSON");
-        $scope.currentPipelineElementDom = $newElement[0].id;
-        var elementId = $scope.currentPipelineElement.type == 'stream' ? $scope.currentPipelineElement.elementId : $scope.currentPipelineElement.belongsTo;
-        $newElement.append($compile('<pipeline-element-options show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' + elementId + ' internal-id=' + $scope.currentPipelineElementDom + '></pipeline-element-options>')($scope));
-    }
-
-    $scope.streamDropped = function ($newElement, endpoints) {
-        $scope.isStreamInAssembly = true;
-        $newElement.addClass("connectable stream");
-        $newElement.id = "sp_stream_" + ($rootScope.state.currentPipeline.streams.length + 1);
-        var pipelinePart = new objectProvider.Pipeline();
-        pipelinePart.addElement($newElement);
-        $rootScope.state.currentPipeline = pipelinePart;
-        if (endpoints) {
-            jsPlumb.addEndpoint($newElement, apiConstants.streamEndpointOptions);
-        }
-        loadOptionsButtons($newElement);
-        return $newElement;
-    };
-
-    $scope.sepaDropped = function ($newElement, endpoints) {
-        $scope.isSepaInAssembly = true;
-        $newElement.addClass("connectable sepa");
-        loadOptionsButtons($newElement);
-        if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState && !$newElement.data("options")) {
-            $newElement
-                .addClass('disabled');
-        }
-
-
-        if (endpoints) {
-            if ($newElement.data("JSON").inputStreams.length < 2) { //1 InputNode
-                //jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
-                jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
-            } else {
-                jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.25));
-
-                jsPlumb.addEndpoint($newElement, getNewTargetPoint(0, 0.75));
-            }
-            jsPlumb.addEndpoint($newElement, apiConstants.sepaEndpointOptions);
-        }
-        return $newElement;
-    };
-    $scope.actionDropped = function ($newElement, endpoints) {
-        $scope.isActionInAssembly = true;
-        $newElement
-            .addClass("connectable action");
-        loadOptionsButtons($newElement);
-        if ($newElement.data("JSON").staticProperties != null && !$rootScope.state.adjustingPipelineState) {
-            $newElement
-                .addClass('disabled');
-        }
-        if (endpoints) {
-            jsPlumb.addEndpoint($newElement, apiConstants.leftTargetPointOptions);
-        }
-        return $newElement;
-    };
 
     var makeInternalId = function () {
         return "a" + $rootScope.state.currentPipeline.streams.length
@@ -653,7 +526,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     //TODO ANGULARIZE
     //Initiate assembly and jsPlumb functionality-------
     function initPlumb() {
-
         $rootScope.state.plumbReady = true;
 
         jsplumbService.prepareJsplumb(jsPlumb);
@@ -760,15 +632,15 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     var $newState;
                     //Neues Container Element für Icon / identicon erstellen
                     if (ui.draggable.hasClass("block")) {
-                        $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), true);
+                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), getCoordinates(ui), true, "#assembly");
                     } else {
-                        $newState = createNewAssemblyElement(ui.draggable.data("JSON"), getCoordinates(ui), false);
+                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), getCoordinates(ui), false, "#assembly");
                     }
 
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
 
-                        $scope.streamDropped($newState, true);
+                        jsplumbService.streamDropped($scope, jsPlumb, $newState, true);
 
                         //initRecs(tempPipeline, $newState);
                         //$rootScope.$broadcast("StreamDropped", $newState);
@@ -776,11 +648,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
                         //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
-                        $scope.sepaDropped($newState, true);
+                        jsplumbService.sepaDropped($scope, jsPlumb, $newState, true);
 
                         //Droppable Actions
                     } else if (ui.draggable.hasClass('action')) {
-                        $scope.actionDropped($newState, true);
+                        jsplumbService.actionDropped($scope, jsPlumb, $newState, true);
                     } else if (ui.draggable.hasClass('block')) {
                         $scope.blockDropped($newState, true)
                     }
@@ -949,10 +821,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
         var $target;
+        var $createdElement = jsplumbService.createNewAssemblyElement(jsPlumb, json, coord, false , "#assembly");
         if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
-            $target = $scope.sepaDropped(createNewAssemblyElement(json, coord), true);
+            $target = jsplumbService.sepaDropped($scope, jsPlumb, $createdElement , true);
         } else {
-            $target = $scope.actionDropped(createNewAssemblyElement(json, coord), true);
+            $target = jsplumbService.actionDropped($scope, jsPlumb, $createdElement, true);
         }
 
         var options;
@@ -989,23 +862,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         $rootScope.state.currentElement = null;
     };
 
-    function ContextMenuClickHandler(type) {
-
-        if (type === "static") {
-            $('#staticContextMenu').off('click').on('click', function (e) {
-                $(this).hide();
-                var $invokedOn = $(this).data("invokedOn");
-                while ($invokedOn.parent().get(0) != $("#editor-icon-stand").get(0)) {
-                    $invokedOn = $invokedOn.parent();
-                }
-                var json = $invokedOn.data("JSON");
-                $('#description-title').text(json.name);
-                $('#modal-description').text(json.description);
-                $('#descrModal').modal('show');
-            });
-        }
-    }
-
     $scope.handleDeleteOption = function ($element) {
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
@@ -1018,37 +874,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         return {
             'x': newLeft,
             'y': newTop
-        };
-    }
-
-    function createNewAssemblyElement(json, coordinates, block) {
-
-        var $newState = $('<span>')
-            .data("JSON", $.extend(true, {}, json))
-            .appendTo('#assembly');
-        if (typeof json.DOM !== "undefined") { //TODO TESTTEST
-            $newState.attr("id", json.DOM);
-            $newState.addClass('a'); //Flag so customize modal won't get triggered
-        }
-
-        jsPlumb.draggable($newState, {containment: 'parent'});
-
-        $newState
-            .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x});
-
-        if (!block) {
-            $scope.addImageOrTextIcon($newState, json, false, 'connectable');
-        }
-
-        return $newState;
-    }
-
-    function getNewTargetPoint(x, y) {
-        return {
-            endpoint: ["Dot", {radius: 12}],
-            type: "empty",
-            anchor: [x, y, -1, 0],
-            isTarget: true
         };
     }
 
@@ -1191,21 +1016,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         return {x: midLeft, y: midTop};
     }
 
-    /**
-     * Shows the contextmenu for given element
-     * @param {Object} e
-     */
-    function staticContextMenu(e) {
-        $('#staticContextMenu').data("invokedOn", $(e.target)).show().css({
-            position: "fixed",
-            left: getLeftLocation(e, "static"),
-            top: getTopLocation(e, "static")
-        });
-        ContextMenuClickHandler("static");
-        return false;
-
-    }
-
     function showToast(type, title, description) {
         $mdToast.show(
             $mdToast.simple()
@@ -1236,93 +1046,4 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         return newLeft;
     }
 
-    /**
-     *
-     * @param {Object} e
-     * @param {Object} type
-     */
-    function getLeftLocation(e, type) {
-        if (type === "static") {
-            var menuWidth = $('#staticContextMenu').width();
-        } else {
-            var menuWidth = $('#assemblyContextMenu').width();
-        }
-        var mainCoords = $('#main').position();
-        var mouseWidth = e.pageX;
-        var pageWidth = $(window).width();
-
-        // opening menu would pass the side of the page
-        if (mouseWidth + menuWidth > pageWidth && menuWidth < mouseWidth) {
-            return mouseWidth - menuWidth;
-        }
-        return mouseWidth;
-    }
-
-    function getTopLocation(e, type) {
-
-        if (type === "static") {
-            var menuHeight = $('#staticContextMenu').height();
-        } else {
-            var menuHeight = $('#assemblyContextMenu').height();
-        }
-
-        var mouseHeight = e.pageY - $(window).scrollTop();
-        var pageHeight = $(window).height();
-
-        if (mouseHeight + menuHeight > pageHeight && menuHeight < mouseHeight) {
-            return mouseHeight - menuHeight;
-        }
-
-        return mouseHeight;
-
-    }
-
-    $scope.addImageOrTextIcon = function ($element, json, small, type) {
-        var iconUrl = "";
-        if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
-            iconUrl = json.streams[0].iconUrl;
-        } else {
-            iconUrl = json.iconUrl;
-        }
-        imageChecker.imageExists(iconUrl, function (exists) {
-            if (exists) {
-                var $img = $('<img>')
-                    .attr("src", iconUrl)
-                    .data("JSON", $.extend(true, {}, json));
-                if (type == 'draggable') {
-                    $img.addClass("draggable-img tt");
-                } else if (type == 'connectable') {
-                    $img.addClass('connectable-img tt');
-                } else if (type == 'block') {
-                    $img.addClass('block-img tt');
-                } else if (type == 'recommended') {
-                    $img.addClass('recommended-item-img tt');
-                }
-                $element.append($img);
-            } else {
-                var name = "";
-                if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
-                    name = json.streams[0].name;
-                } else {
-                    name = json.name;
-                }
-                var $span = $("<span>")
-                    .text(getElementIconText(name) || "N/A")
-                    .attr(
-                        {
-                            "data-toggle": "tooltip",
-                            "data-placement": "top",
-                            "data-delay": '{"show": 1000, "hide": 100}',
-                            title: name
-                        })
-                    .data("JSON", $.extend(true, {}, json));
-                if (small) {
-                    $span.addClass("element-text-icon-small")
-                } else {
-                    $span.addClass("element-text-icon")
-                }
-                $element.append($span);
-            }
-        });
-    }
 };

@@ -45,6 +45,5 @@ export default angular.module('sp.editor', [spServices])
     .directive('oneof', oneof)
     .directive('replaceOutput', replaceOutput)
     .directive('multipleValueInput', multipleValueInput)
-    .directive('pipelineElementOptions', pipelineElementOptions)
     .directive('collectionStaticProperty', collectionStaticProperty)
     .name;

@@ -1,4 +1,5 @@
 import angular from 'npm/angular';
+import 'npm/dagre';
 
 import spConstants from '../constants/constants.module'
 
@@ -14,6 +15,8 @@ import deploymentService from './deployment.service'
 import objectProvider from './object-provider.service'
 import pipelinePositioningService from './pipeline-positioning.service'
 import jsplumbService from './jsplumb.service'
+import pipelineElementIconService from './pipeline-icon.service'
+import pipelineElementOptions from '../editor/directives/pipeline-element-options/pipeline-element-options.directive'
 
 export default angular.module('sp.services', [spConstants])
 	.factory('imageChecker', imageChecker)
@@ -26,6 +29,8 @@ export default angular.module('sp.services', [spConstants])
 	.factory('httpInterceptor', httpInterceptor)
 	.factory('measurementUnitsService', measurementUnits)
 	.factory('deploymentService', deploymentService)
-	.factory('pipelinePositioningService', pipelinePositioningService)
 	.factory('jsplumbService', jsplumbService)
+	.factory('pipelineElementIconService', pipelineElementIconService)
+	.factory('pipelinePositioningService', pipelinePositioningService)
+	.directive('pipelineElementOptions', pipelineElementOptions)
 	.name;

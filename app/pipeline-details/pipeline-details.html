@@ -11,7 +11,7 @@
 
     <div flex layout="row" layout-align="start top">
         <div flex="70" class="md-padding">
-            <pipeline-preview pipeline="pipeline"></pipeline-preview>
+            <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}" ng-if="pipeline.name!=undefined"></pipeline-preview>
         </div>
         <div flex="30" class="md-padding">
             <div class="assembly-options-preview sp-blue-bg">

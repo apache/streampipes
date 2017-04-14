@@ -44,7 +44,8 @@
     "ngmap" : "1.18.0",
     "d3": "3.4.13",
     "epoch-charting": "0.8.4",
-    "slick-carousel": "1.6.0"
+    "slick-carousel": "1.6.0",
+    "dagre" : "0.7.4"
   },
   "devDependencies": {
     "babel": "^6.5.2",
