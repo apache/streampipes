@@ -5,10 +5,21 @@ import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
 import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
 
-EditorCtrl.$inject = ['$scope', '$rootScope', '$state', '$timeout', '$http', 'restApi', '$stateParams', 'objectProvider', 'apiConstants', '$q', '$mdDialog', '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast'];
+EditorCtrl.$inject = ['$scope',
+    '$rootScope',
+    '$state',
+    '$timeout',
+    '$http',
+    'restApi',
+    '$stateParams',
+    'objectProvider',
+    'apiConstants',
+    '$q',
+    '$mdDialog',
+    '$window', '$compile', 'imageChecker', 'getElementIconText', 'initTooltips', '$mdToast', 'jsplumbService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -308,11 +319,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         var currenty = 50;
         for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
             $scope.streamDropped(createNewAssemblyElement(stream, {'x': currentx, 'y': currenty}));
-            currenty += 200;
+            currenty += 300;
         }
         currenty = 50;
         for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++) {
-            currentx += 200;
+            currentx += 300;
             var $sepa = $scope.sepaDropped(createNewAssemblyElement(sepa, {'x': currentx, 'y': currenty})
                 .data("options", true));
             if (jsPlumb.getConnections({source: sepa.DOM}).length == 0) { //Output Element
@@ -645,34 +656,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
         $rootScope.state.plumbReady = true;
 
-        jsPlumb.registerEndpointTypes({
-            "empty": {
-                paintStyle: {
-                    fillStyle: "white",
-                    strokeStyle: "#9E9E9E",
-                    lineWidth: 2
-                }
-            },
-            "token": {
-                paintStyle: {
-                    fillStyle: "#BDBDBD",
-                    strokeStyle: "#9E9E9E",
-                    lineWidth: 2
-                },
-                hoverPaintStyle: {
-                    fillStyle: "#BDBDBD",
-                    strokeStyle: "#4CAF50",
-                    lineWidth: 4
-                }
-            },
-            "highlight": {
-                paintStyle: {
-                    fillStyle: "white",
-                    strokeStyle: "#4CAF50",
-                    lineWidth: 4
-                }
-            }
-        });
+        jsplumbService.prepareJsplumb(jsPlumb);
 
         jsPlumb.unbind("connection");
 

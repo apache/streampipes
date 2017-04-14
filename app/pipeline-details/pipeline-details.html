@@ -1,0 +1,27 @@
+<div flex class="page-container page-container-padding">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+        <div layout-fill>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Overview" md-on-select="setSelectedTab('overview')"></md-tab>
+                <md-tab label="Statistics" md-on-select="setSelectedTab('statistics')"></md-tab>
+                <md-tab label="Errors" md-on-select="setSelectedTab('errors')"></md-tab>
+            </md-tabs>
+        </div>
+    </div>
+
+    <div flex layout="row" layout-align="start top">
+        <div flex="70" class="md-padding">
+            <pipeline-preview pipeline="pipeline"></pipeline-preview>
+        </div>
+        <div flex="30" class="md-padding">
+            <div class="assembly-options-preview sp-blue-bg">
+                <h4>Components</h4>
+            </div>
+            <div class="sp-blue-border">
+                <div layout="row" layout-align="center center">
+                    <h5>(no pipelines available)</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

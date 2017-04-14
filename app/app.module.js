@@ -23,6 +23,7 @@ import spPipelines from './pipelines/pipelines.module';
 import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
 import spTutorial from './tutorial/tutorial.module';
+import spPipelineDetails from './pipeline-details/pipeline-details.module'
 
 const MODULE_NAME = 'streamPipesApp';
 
@@ -44,6 +45,7 @@ export default angular
         spSensors,
         spTutorial,
         spAppLinks,
+        spPipelineDetails,
         uiRouter,
     ])
     .run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {

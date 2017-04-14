@@ -17,6 +17,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
         $mdSidenav('left').close();
     };
 
+    $rootScope.go = function (path, payload) {
+        $state.go(path, payload);
+        $rootScope.activePage = getPageTitle(path);
+    };
+
     $scope.logout = function () {
         restApi.logout().then(function () {
             $scope.user = undefined;
@@ -37,7 +42,12 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
                 currentTitle = m.title;
             }
         });
-
+        console.log(path);
+        if (path == 'streampipes.pipelineDetails') {
+            currentTitle = "Pipeline Details";
+        } else if (path == 'streampipes.edit') {
+            currentTitle = $scope.menu[0].title;
+        }
         return currentTitle;
     }
 

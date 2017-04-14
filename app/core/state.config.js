@@ -51,6 +51,15 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('streampipes.pipelineDetails', {
+            url: '/pipelines/:pipeline/details',
+            views: {
+                "spMain@streampipes": {
+                    templateUrl: "app/pipeline-details/pipeline-details.html",
+                    controller: 'PipelineDetailsCtrl'
+                }
+            }
+        })
         .state('login', {
             url: '/login/:target?session',
             views: {
