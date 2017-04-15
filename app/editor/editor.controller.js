@@ -291,18 +291,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         alert("open context menu");
     };
 
-    $scope.getOwnBlocks = function () {
-        return restApi.getBlocks();           //TODO anpassen
-    };
-
 
     $scope.loadCurrentElements = function (type) {
 
         $scope.currentElements = [];
-        if (type == 'block') {
-            $scope.loadOptions("block");
-            $scope.currentElements = $scope.allElements["block"];
-        } else if (type == 'stream') {
+        if (type == 'stream') {
             $scope.loadOptions("stream");
             $scope.currentElements = $scope.allElements["stream"];
         } else if (type == 'sepa') {
@@ -327,7 +320,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             });
 
     };
-
 
     $scope.tabs = [
         {
@@ -385,15 +377,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     };
 
-    $scope.loadBlocks = function () {
-        restApi.getBlocks().then(function (data) {
-            data.data.forEach(function (block, i, blocks) {
-                block.type = "block";
-            });
-            $scope.allElements["block"] = data.data;
-        });
-    };
-
     $scope.loadSources = function () {
         var tempStreams = [];
         restApi.getOwnSources()
@@ -444,7 +427,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             });
     };
 
-    $scope.loadBlocks();
     $scope.loadSources();
     $scope.loadSepas();
     $scope.loadActions();
@@ -462,51 +444,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 $('#outerAssemblyArea').css('border', '1px solid rgb(63,81,181)');
             }
         });
-        $('.block').draggable({
-            revert: 'invalid',
-            helper: 'clone',
-            stack: '.block',
-            start: function (el, ui) {
-                ui.helper.appendTo('#content');
-                $('#assemblyArea').css('border-color', '3px dashed rgb(255,64,129)');
-            },
-            stop: function (el, ui) {
-                $('#assemblyArea').css('border', '1px solid rgb(63,81,181)');
-            }
-        });
     };
-
-    $scope.blockDropped = function ($newElement, endpoints) {
-        $scope.isStreamInAssembly = true;
-        $scope.isSepaInAssembly = true;
-        var data = $.extend({}, $newElement.data("JSON"));
-        $newElement
-            .addClass("connectable-block")
-            .data("block", data)
-            .append($('<div>').addClass("block-name tt").text(data.name)
-                .attr({
-                    "data-toggle": "tooltip",
-                    "data-placement": "top",
-                    "data-delay": '{"show": 100, "hide": 100}',
-                    title: data.description
-                })
-            )
-            .append($('<div>').addClass("block-img-container")
-                .append($('<img>').addClass('block-img').attr("src", data.streams[0].iconUrl)));
-
-        if (endpoints) {
-            jsPlumb.addEndpoint($newElement, apiConstants.sepaEndpointOptions);
-        }
-
-
-    };
-
-
-    var makeInternalId = function () {
-        return "a" + $rootScope.state.currentPipeline.streams.length
-            + $rootScope.state.currentPipeline.sepas.length
-        $rootScope.state.currentPipeline.actions.length;
-    }
 
     $scope.elementTextIcon = function (string) {
         var result = "";
@@ -571,7 +509,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                                 var id = "#" + sepa.DOM;
                                 if ($(id).length > 0) {
                                     if ($(id).data("JSON").configured != true) {
-                                        if (!isFullyConnected(id)) {
+                                        if (!pipelineEditorService.isFullyConnected(id, jsPlumb)) {
                                             return;
                                         }
                                         var sourceEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
@@ -583,7 +521,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                                 var id = "#" + action.DOM;
                                 if ($(id).length > 0) {
                                     if ($(id).data("JSON").configured != true) {
-                                        if (!isFullyConnected(id)) {
+                                        if (!pipelineEditorService.isFullyConnected(id, jsPlumb)) {
                                             return;
                                         }
                                         var actionEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
@@ -601,7 +539,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     });
             }
         });
-
 
         window.onresize = function (event) {
             jsPlumb.repaintEverything(true);
@@ -625,27 +562,17 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             tolerance: "fit",
             drop: function (element, ui) {
 
-                if (ui.draggable.hasClass('draggable-icon') || ui.draggable.hasClass('block')) {
+                if (ui.draggable.hasClass('draggable-icon')) {
                     if (ui.draggable.data("JSON") == null) {
                         alert("No JSON - Data for Dropped element");
                         return false;
                     }
-                    var $newState;
-                    //Neues Container Element für Icon / identicon erstellen
-                    if (ui.draggable.hasClass("block")) {
-                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), true, "#assembly");
-                    } else {
-                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), false, "#assembly");
-                    }
+                    var $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), false, "#assembly");
 
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
 
                         jsplumbService.streamDropped($scope, jsPlumb, $newState, true);
-
-                        //initRecs(tempPipeline, $newState);
-                        //$rootScope.$broadcast("StreamDropped", $newState);
-                        //$newState.hover(showRecButton, hideRecButton);
 
                         //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
@@ -654,8 +581,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                         //Droppable Actions
                     } else if (ui.draggable.hasClass('action')) {
                         jsplumbService.actionDropped($scope, jsPlumb, $newState, true);
-                    } else if (ui.draggable.hasClass('block')) {
-                        $scope.blockDropped($newState, true)
                     }
                     initTooltips();
                 }
@@ -751,7 +676,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         $('#assembly').find('.connectable, .connectable-block').each(function (i, element) {
             var $element = $(element);
 
-            if (!isConnected(element)) {
+            if (!pipelineEditorService.isConnected(element, jsPlumb)) {
                 error = true;
 
                 showToast("error", "All elements must be connected", "Submit Error");
@@ -783,10 +708,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     error = true;
 
                 }
-            } else if ($element.hasClass('connectable-block')) {
-                streamPresent = true;
-                sepaPresent = true;
-                pipelineNew.addElement(element);
             }
         });
         if (!streamPresent) {
@@ -883,130 +804,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         }
     }
 
-    function isConnected(element) {
-
-        if (jsPlumb.getConnections({source: element}).length < 1 && jsPlumb.getConnections({target: element}).length < 1) {
-            return false;
-        }
-        return true;
-    }
-
-    function isFullyConnected(element) {
-        return $(element).data("JSON").inputStreams == null || jsPlumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
-    }
-
-    //----------------------------------------------------
-    // Block Methods
-    //----------------------------------------------------
-
-    $scope.blockElements = function () {
-        var blockData = createBlock();
-        var block = blockData[0];
-        if (block == false) {
-            showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Block Creation Error");
-            return;
-        }
-
-        if (blockData.length == 2 && blockData[1] === "on") {
-            restApi.saveBlock(block)
-                .then(function (successData) {
-                    console.log(successData);
-                }, function (errorData) {
-                    console.log(errorData);
-                });
-        }
-
-        //sendToServer();
-        var $selectedElements = $('.ui-selected');
-        var blockCoords = getMidpointOfAssemblyElements($selectedElements);
-        var $block = block.getjQueryElement()
-            .appendTo("#assembly")
-            .css({"top": blockCoords.y, "left": blockCoords.x, "position": "absolute"});
-        initTooltips();
-        $('.block-name').flowtype({
-            minFont: 12,
-            maxFont: 25,
-            fontRatio: 10
-        });
-        jsPlumb.draggable($block, {containment: 'parent'});
-
-        $block.on("contextmenu", function (e) {
-            $('#customize, #division ').hide();
-            $('#blockButton, #division1 ').show();
-            $('#blockButton').text("Revert to Pipeline");
-            $('#assemblyContextMenu')
-                .data("invokedOn", $(e.target))
-                .show()
-                .css({
-                    position: "absolute",
-                    left: getLeftLocation(e, "assembly"),
-                    top: getTopLocation(e, "assembly")
-                });
-            ContextMenuClickHandler("assembly");
-            return false;
-        });
-
-        //CLEANUP
-        $selectedElements.each(function (i, element) {
-            jsPlumb.remove(element);
-        });
-        //jsPlumb.remove($selectedElements);
-        //$selectedElements.remove();
-        //jsPlumb.deleteEveryEndpoint();
-        jsPlumb.addEndpoint($block, apiConstants.sepaEndpointOptions);
-
-
-    }
-
-
-    function createBlock() {
-        var blockData = $('#blockNameForm').serializeArray(); //TODO SAVE
-        var blockPipeline = new objectProvider.Pipeline();
-        $('.ui-selected').each(function () {
-            var $el = $(this)
-            if ($el.hasClass("sepa") && $el.data("JSON").staticProperties != null && $el.data("options")) {
-                blockPipeline.addElement(this);
-            } else if ($el.hasClass("stream")) {
-                blockPipeline.addElement(this);
-            } else {
-                return false;
-            }
-        });
-        var block = new objectProvider.Block(blockData[0].value, blockData[1].value, blockPipeline);
-        var data;
-        if (blockData.length = 3) {
-            data = [block, blockData[2].value];
-        } else {
-            data = [block];
-        }
-
-        return data;
-
-    }
-
-    function getMidpointOfAssemblyElements($elements) {
-        var maxLeft, minLeft, maxTop, minTop;
-
-        $elements.each(function (i, element) {
-            var offsetObject = $(element).position();
-            if (i == 0) {
-                maxLeft = offsetObject.left;
-                minLeft = offsetObject.left;
-                maxTop = offsetObject.top;
-                minTop = offsetObject.top;
-            }
-            else {
-                minLeft = Math.min(minLeft, offsetObject.left);
-                maxLeft = Math.max(maxLeft, offsetObject.left);
-                minTop = Math.min(minTop, offsetObject.top);
-                maxTop = Math.max(maxTop, offsetObject.top);
-            }
-        });
-        var midLeft = (minLeft + maxLeft) / 2;
-        var midTop = (minTop + maxTop) / 2;
-        return {x: midLeft, y: midTop};
-    }
-
     function showToast(type, title, description) {
         $mdToast.show(
             $mdToast.simple()
@@ -1015,6 +812,4 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 .hideDelay(3000)
         );
     }
-
-
 };

@@ -14,6 +14,17 @@ export default function pipelineEditorService($rootScope, jsplumbService, apiCon
         };
     }
 
+    pipelineEditorService.isConnected = function(element, jsplumb) {
+        if (jsplumb.getConnections({source: element}).length < 1 && jsplumb.getConnections({target: element}).length < 1) {
+            return false;
+        }
+        return true;
+    }
+
+    pipelineEditorService.isFullyConnected = function(element, jsplumb) {
+        return $(element).data("JSON").inputStreams == null || jsplumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
+    }
+
     var getDropPositionY = function(helper, currentZoomLevel) {
         var newTop;
         var helperPos = helper.offset();
