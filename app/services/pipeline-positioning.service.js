@@ -28,12 +28,12 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
         }
 
         connectPipelineElements(jsplumb, pipeline, true);
-        layoutGraph(targetCanvas, "span.a", jsplumb, isPreview ? 75 : 110, isPreview);
+        pipelinePositioningService.layoutGraph(targetCanvas, "span.a", jsplumb, isPreview ? 75 : 110, isPreview);
         jsplumb.repaintEverything();
 
     };
 
-    var layoutGraph = function (canvas, nodeIdentifier, jsplumb, dimension, isPreview) {
+    pipelinePositioningService.layoutGraph = function (canvas, nodeIdentifier, jsplumb, dimension, isPreview) {
         var g = new dagre.graphlib.Graph();
         g.setGraph({rankdir : "LR", ranksep : isPreview ? "50" : "100"});
         g.setDefaultEdgeLabel(function () {
@@ -50,6 +50,7 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
             g.setEdge(c.source.id, c.target.id);
         }
         dagre.layout(g);
+        console.log(g);
         g.nodes().forEach(function (v) {
             $("#" + v).css("left", g.node(v).x + "px");
             $("#" + v).css("top", g.node(v).y + "px");

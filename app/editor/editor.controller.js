@@ -23,10 +23,11 @@ EditorCtrl.$inject = ['$scope',
     'initTooltips',
     '$mdToast',
     'jsplumbService',
-    'pipelinePositioningService'];
+    'pipelinePositioningService',
+    'pipelineEditorService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, pipelinePositioningService) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, pipelinePositioningService, pipelineEditorService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -37,7 +38,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     $scope.currentModifiedPipeline = $stateParams.pipeline;
     $scope.possibleElements = [];
     $scope.activePossibleElementFilter = {};
-    $scope.selectedTab = 1;
+    $scope.selectedTab = 0;
     $rootScope.title = "StreamPipes";
     $scope.options = [];
     $scope.selectedOptions = [];
@@ -111,6 +112,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             }
         })
     };
+
+    $scope.autoLayout = function () {
+        pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", jsPlumb, 110, false);
+        jsPlumb.repaintEverything();
+    }
 
     $("#assembly").panzoom({
         disablePan: true,
@@ -324,11 +330,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
 
     $scope.tabs = [
-
-        {
-            title: 'Blocks',
-            type: 'block',
-        },
         {
             title: 'Data Streams',
             type: 'stream',
@@ -632,9 +633,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     var $newState;
                     //Neues Container Element für Icon / identicon erstellen
                     if (ui.draggable.hasClass("block")) {
-                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), getCoordinates(ui), true, "#assembly");
+                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), true, "#assembly");
                     } else {
-                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), getCoordinates(ui), false, "#assembly");
+                        $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), false, "#assembly");
                     }
 
                     //Droppable Streams
@@ -821,9 +822,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
         var $target;
-        var $createdElement = jsplumbService.createNewAssemblyElement(jsPlumb, json, coord, false , "#assembly");
+        var $createdElement = jsplumbService.createNewAssemblyElement(jsPlumb, json, coord, false, "#assembly");
         if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
-            $target = jsplumbService.sepaDropped($scope, jsPlumb, $createdElement , true);
+            $target = jsplumbService.sepaDropped($scope, jsPlumb, $createdElement, true);
         } else {
             $target = jsplumbService.actionDropped($scope, jsPlumb, $createdElement, true);
         }
@@ -865,16 +866,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     $scope.handleDeleteOption = function ($element) {
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
-    }
-
-    function getCoordinates(ui) {
-
-        var newLeft = getDropPositionX(ui.helper);
-        var newTop = getDropPositionY(ui.helper);
-        return {
-            'x': newLeft,
-            'y': newTop
-        };
     }
 
     function modifyPipeline(pipelineModifications) {
@@ -1025,25 +1016,5 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         );
     }
 
-
-    /**
-     * Gets the position of the dropped element insidy the assembly
-     * @param {Object} helper
-     */
-    function getDropPositionY(helper) {
-        var newTop;
-        var helperPos = helper.offset();
-        var divPos = $('#assembly').offset();
-        newTop = (helperPos.top - divPos.top) + (1 - $scope.currentZoomLevel) * ((helperPos.top - divPos.top) * 2);
-        return newTop;
-    }
-
-    function getDropPositionX(helper) {
-        var newLeft;
-        var helperPos = helper.offset();
-        var divPos = $('#assembly').offset();
-        newLeft = (helperPos.left - divPos.left) + (1 - $scope.currentZoomLevel) * ((helperPos.left - divPos.left) * 2);
-        return newLeft;
-    }
 
 };

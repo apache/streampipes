@@ -17,6 +17,7 @@ import pipelinePositioningService from './pipeline-positioning.service'
 import jsplumbService from './jsplumb.service'
 import pipelineElementIconService from './pipeline-icon.service'
 import pipelineElementOptions from '../editor/directives/pipeline-element-options/pipeline-element-options.directive'
+import pipelineEditorService from './pipeline-editor.service'
 
 export default angular.module('sp.services', [spConstants])
 	.factory('imageChecker', imageChecker)
@@ -32,5 +33,6 @@ export default angular.module('sp.services', [spConstants])
 	.factory('jsplumbService', jsplumbService)
 	.factory('pipelineElementIconService', pipelineElementIconService)
 	.factory('pipelinePositioningService', pipelinePositioningService)
+	.factory('pipelineEditorService', pipelineEditorService)
 	.directive('pipelineElementOptions', pipelineElementOptions)
 	.name;
