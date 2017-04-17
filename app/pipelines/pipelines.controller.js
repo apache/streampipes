@@ -11,8 +11,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
     var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
     $scope.starting = false;
     $scope.stopping = false;
-
-    $scope.pipelineStatus = [];
+    
     $scope.pipelineCategories = [];
     $scope.activeCategory = "";
 
@@ -157,14 +156,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
             });
     };
 
-    $scope.getPipelineStatus = function (pipeline) {
-        restApi.getPipelineStatusById(pipeline._id)
-            .success(function (data) {
 
-                $scope.pipelineStatus[pipeline._id] = data;
-                pipeline.displayStatus = !pipeline.displayStatus;
-            })
-    }
 
 
     if ($scope.startPipelineDirectly != "") {

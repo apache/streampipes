@@ -23,11 +23,12 @@ EditorCtrl.$inject = ['$scope',
     'initTooltips',
     '$mdToast',
     'jsplumbService',
+    'jsplumbConfigService',
     'pipelinePositioningService',
     'pipelineEditorService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, pipelinePositioningService, pipelineEditorService) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -54,6 +55,8 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     $scope.currentPipelineElement;
     $scope.currentPipelineElementDom;
+
+    var jsplumbConfig = jsplumbConfigService.getEditorConfig();
 
     if ($rootScope.email != undefined) {
         restApi
@@ -99,7 +102,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     }
 
     $scope.showElementInfo = function (element) {
-        console.log("show");
         $mdDialog.show({
             controller: HelpDialogController,
             templateUrl: 'app/editor/directives/pipeline-element-options/help-dialog.tmpl.html',
@@ -752,9 +754,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
         var options;
         if ($parentElement.hasClass("stream")) {
-            options = apiConstants.streamEndpointOptions;
+            options = jsplumbConfig.streamEndpointOptions;
         } else {
-            options = apiConstants.sepaEndpointOptions;
+            options = jsplumbConfig.sepaEndpointOptions;
         }
         var sourceEndPoint;
         if (jsPlumb.selectEndpoints({source: $parentElement}).length > 0) {

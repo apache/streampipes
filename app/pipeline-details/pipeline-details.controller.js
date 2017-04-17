@@ -5,6 +5,18 @@ export default function PipelineDetailsCtrl($scope, restApi, $rootScope, $stateP
     var currentPipeline = $stateParams.pipeline;
     $scope.pipeline = {};
 
+    $scope.selectedTab = "overview";
+    $scope.selectedElement = "";
+
+    $scope.setSelectedTab = function(tabTitle) {
+        $scope.selectedTab = tabTitle;
+    }
+
+    $scope.updateSelected = function(selected) {
+        $scope.selectedElement = selected;
+        $scope.$apply();
+    }
+
     var loadPipeline = function () {
         restApi.getPipelineById(currentPipeline)
             .success(function (pipeline) {

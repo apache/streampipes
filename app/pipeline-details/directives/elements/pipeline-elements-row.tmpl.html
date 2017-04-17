@@ -1,0 +1,16 @@
+<div flex="100" layout="column">
+    <div layout="row" flex="100">
+        <div flex="30" layout="row" style="margin-bottom:10px;">
+            <img ng-src="{{element.iconUrl}}" class="md-card-image draggable-icon {{elementType}}"
+                 alt="{{element.name}}"
+                 ng-show="(element.iconUrl != null && element.iconUrl != 'http://localhost:8080/img')"/>
+        <span class="draggable-icon {{elementType}}"
+              ng-show="(element.iconUrl == null || element.iconUrl == 'http://localhost:8080/img')">{{elementTextIcon(element.name)}}</span>
+            </span>
+        </div>
+        <div flex="70" layout="column" layout-align="center left">
+            <b>{{element.name}}</b>
+            {{element.description}}
+        </div>
+    </div>
+</div>

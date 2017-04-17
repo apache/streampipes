@@ -5,22 +5,41 @@
                 <md-tab label="Overview" md-on-select="setSelectedTab('overview')"></md-tab>
                 <md-tab label="Statistics" md-on-select="setSelectedTab('statistics')"></md-tab>
                 <md-tab label="Errors" md-on-select="setSelectedTab('errors')"></md-tab>
+                <md-tab label="QuickEdit" md-on-select="setSelectedTab('quick-edit')"></md-tab>
             </md-tabs>
         </div>
     </div>
 
-    <div flex layout="row" layout-align="start top">
-        <div flex="70" class="md-padding">
-            <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}" ng-if="pipeline.name!=undefined"></pipeline-preview>
-        </div>
-        <div flex="30" class="md-padding">
-            <div class="assembly-options-preview sp-blue-bg">
-                <h4>Components</h4>
+    <div flex layout="row" layout-align="start top" ng-if="selectedTab == 'overview'">
+        <div flex="60" class="md-padding">
+            <div flex layout="column">
+                <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}" update-selected="updateSelected(selected)"
+                                  ng-if="pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
+                <pipeline-elements pipeline="pipeline" ng-if="pipeline.name != undefined"
+                                   selected-element="selectedElement"></pipeline-elements>
+
             </div>
-            <div class="sp-blue-border">
-                <div layout="row" layout-align="center center">
-                    <h5>(no pipelines available)</h5>
-                </div>
+        </div>
+        <div flex="40" class="md-padding">
+            <div flex layout="column">
+                <pipeline-actions pipeline="pipeline" ng-if="pipeline.name != undefined"
+                                  style="margin-bottom:15px;"></pipeline-actions>
+                <pipeline-status pipeline="pipeline" ng-if="pipeline.name != undefined"></pipeline-status>
+            </div>
+        </div>
+    </div>
+    <div flex layout="row" layout-align="start top" ng-if="selectedTab == 'quick-edit'">
+        <div flex="60" class="md-padding">
+            <div flex layout="column">
+                <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}"
+                                  ng-if="pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
+                <pipeline-status pipeline="pipeline" ng-if="pipeline.name != undefined"></pipeline-status>
+            </div>
+        </div>
+        <div flex="40" class="md-padding">
+            <div flex layout="column">asd
+                <pipeline-actions pipeline="pipeline"></pipeline-actions>
+                <pipeline-elements pipeline="pipeline" ng-if="pipeline.name != undefined"></pipeline-elements>
             </div>
         </div>
     </div>

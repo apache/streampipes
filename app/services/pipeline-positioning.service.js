@@ -1,14 +1,16 @@
 import _ from 'npm/lodash';
 import * as dagre from "dagre";
 
-pipelinePositioningService.$inject = ['$rootScope', 'jsplumbService', 'apiConstants'];
+pipelinePositioningService.$inject = ['$rootScope', 'jsplumbService', 'apiConstants', 'jsplumbConfigService'];
 
-export default function pipelinePositioningService($rootScope, jsplumbService, apiConstants) {
+export default function pipelinePositioningService($rootScope, jsplumbService, apiConstants, jsplumbConfigService) {
 
     var pipelinePositioningService = {};
 
     pipelinePositioningService.displayPipeline = function (scope, jsplumb, pipeline, targetCanvas, isPreview) {
         var tempPos = {x : 0, y: 0};
+        var jsplumbConfig = isPreview ? jsplumbConfigService.getPreviewConfig() : jsplumbConfigService.getEditorConfig();
+
         for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
             jsplumbService
                 .streamDropped(scope, jsplumb, jsplumbService
@@ -18,16 +20,16 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
             var $sepa = jsplumbService.sepaDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, sepa, tempPos, false, targetCanvas)
                 .data("options", true), false, isPreview);
             if (jsplumb.getConnections({source: sepa.DOM}).length == 0) { //Output Element
-                jsplumb.addEndpoint($sepa, apiConstants.sepaEndpointOptions);
+                jsplumb.addEndpoint($sepa, jsplumbConfig.sepaEndpointOptions);
             }
         }
         for (var i = 0, action; action = pipeline.actions[i]; i++) {
             var $action = jsplumbService.actionDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, action, tempPos, false, targetCanvas)
                 .data("options", true), true, isPreview);
-            jsplumb.addEndpoint($action, apiConstants.leftTargetPointOptions);
+            jsplumb.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
         }
 
-        connectPipelineElements(jsplumb, pipeline, true);
+        connectPipelineElements(jsplumb, pipeline, !isPreview, jsplumbConfig);
         pipelinePositioningService.layoutGraph(targetCanvas, "span.a", jsplumb, isPreview ? 75 : 110, isPreview);
         jsplumb.repaintEverything();
 
@@ -50,14 +52,13 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
             g.setEdge(c.source.id, c.target.id);
         }
         dagre.layout(g);
-        console.log(g);
         g.nodes().forEach(function (v) {
             $("#" + v).css("left", g.node(v).x + "px");
             $("#" + v).css("top", g.node(v).y + "px");
         });
     };
 
-    function connectPipelineElements(jsplumb, json, detachable) {
+    function connectPipelineElements(jsplumb, json, detachable, jsplumbConfig) {
         var source, target;
         var sourceEndpoint;
         var targetEndpoint
@@ -71,17 +72,16 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
                 source = connection;
                 target = sepa.DOM;
 
-
                 var options;
                 var id = "#" + source;
                 if ($(id).hasClass("sepa")) {
-                    options = apiConstants.sepaEndpointOptions;
+                    options = jsplumbConfig.sepaEndpointOptions;
                 } else {
-                    options = apiConstants.streamEndpointOptions;
+                    options = jsplumbConfig.streamEndpointOptions;
                 }
 
                 sourceEndpoint = jsplumb.addEndpoint(source, options);
-                targetEndpoint = jsplumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
+                targetEndpoint = jsplumb.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
                 jsplumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
             }
         }
@@ -92,8 +92,8 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
             for (var j = 0, connection; connection = action.connectedTo[j]; j++) {
                 source = connection;
 
-                sourceEndpoint = jsplumb.addEndpoint(source, apiConstants.sepaEndpointOptions);
-                targetEndpoint = jsplumb.addEndpoint(target, apiConstants.leftTargetPointOptions);
+                sourceEndpoint = jsplumb.addEndpoint(source, jsplumbConfig.sepaEndpointOptions);
+                targetEndpoint = jsplumb.addEndpoint(target, jsplumbConfig.leftTargetPointOptions);
                 jsplumb.connect({source: sourceEndpoint, target: targetEndpoint, detachable: detachable});
             }
         }

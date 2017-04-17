@@ -42,7 +42,6 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
                 currentTitle = m.title;
             }
         });
-        console.log(path);
         if (path == 'streampipes.pipelineDetails') {
             currentTitle = "Pipeline Details";
         } else if (path == 'streampipes.edit') {

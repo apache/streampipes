@@ -1,0 +1,22 @@
+<div>
+    <div class="assembly-options-preview sp-blue-bg">
+        <div layout="row" layout-align="start center">
+            <h4>Element Details</h4>
+        </div>
+    </div>
+    <div class="sp-blue-border" style="max-height: 800px;overflow:auto;">
+        <div ng-if="selectedElement != ''">
+            <div layout="column" style="padding:5px;padding-left:10px;">
+                <pipeline-elements-row element-type="{{getElementType(pipeline, selectedElement)}}"
+                                       element="selectedElement"></pipeline-elements-row>
+
+                <md-divider/>
+                <div style="margin-bottom:15px;"></div>
+
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" ng-if="selectedElement == ''">
+            (select an element in the preview window to see details)
+        </div>
+    </div>
+</div>
