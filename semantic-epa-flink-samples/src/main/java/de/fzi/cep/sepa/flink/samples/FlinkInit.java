@@ -3,6 +3,7 @@ package de.fzi.cep.sepa.flink.samples;
 
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
+import de.fzi.cep.sepa.flink.samples.axoom.MaintenancePredictionController;
 import de.fzi.cep.sepa.flink.samples.batchstream.FirstBatchThenStreamController;
 import de.fzi.cep.sepa.flink.samples.breakdown.Prediction2BreakdownController;
 import de.fzi.cep.sepa.flink.samples.classification.number.NumberClassificationController;
@@ -40,7 +41,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new FileSinkController())
             .add(new StatisticsSummaryController())
             .add(new Prediction2BreakdownController())
-            .add(new SpatialGridEnrichmentController());
+            .add(new SpatialGridEnrichmentController())
+            .add(new MaintenancePredictionController());
 
 
     DeclarersSingleton.getInstance().setPort(8094);

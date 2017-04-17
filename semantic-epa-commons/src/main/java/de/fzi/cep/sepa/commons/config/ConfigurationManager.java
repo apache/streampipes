@@ -21,6 +21,16 @@ public class ConfigurationManager {
 	{
 		return getStreamPipesConfigFileLocation() + getStreamPipesConfigFilename();
 	}
+
+	public static File getConfigFile(String filename) throws IOException {
+		File file = new File(getStreamPipesConfigFileLocation() +filename);
+		if (!file.exists()) {
+			throw new IOException("Could not find config file " +filename);
+		}
+		else {
+			return file;
+		}
+	}
 	
 	public static String getStreamPipesClientConfigFullPath()
 	{
