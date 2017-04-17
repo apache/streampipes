@@ -2,6 +2,7 @@ package de.fzi.cep.sepa.axoom.hmi.sources;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
 import de.fzi.cep.sepa.axoom.hmi.iot.AxoomIotStreamBuilder;
+import de.fzi.cep.sepa.axoom.hmi.streams.EnergyStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.MaintenanceStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.OrderStream;
 import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
@@ -37,7 +38,8 @@ public class AxoomHmiProducer implements SemanticEventProducerDeclarer {
             //new MaintenanceStream(AxoomHmiConfig.EUROBLECH),
             //new OrderStream(AxoomHmiConfig.EUROBLECH),
             new OrderStream(AxoomHmiConfig.HMI),
-            new MaintenanceStream(AxoomHmiConfig.HMI)));
+            new MaintenanceStream(AxoomHmiConfig.HMI),
+            new EnergyStream(AxoomHmiConfig.HMI)));
 
     axoomStreams.addAll(AxoomIotStreamBuilder.buildIotStreams());
     return axoomStreams;
