@@ -22,7 +22,7 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
   @Override
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("maintenance-prediction", "Coffee Maintenance " +
-            "Prediction", "Predicts the next maintenance based on coffee orders")
+            "Prediction (Rule-based)", "Predicts the next maintenance based on coffee orders")
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .requiredPropertyStream2(EpRequirements.anyProperty())
             .outputStrategy(OutputStrategies.fixed(EpProperties.longEp("timestamp", SO.DateTime)
