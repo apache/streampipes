@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.flink.samples.axoom;
 
+import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -19,6 +20,11 @@ public class MaintenancePredictionProgram extends FlinkSepaRuntime<MaintenancePr
 
   public MaintenancePredictionProgram(MaintenancePredictionParameters params) {
     super(params);
+    this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
+  }
+
+  public MaintenancePredictionProgram(MaintenancePredictionParameters params, FlinkDeploymentConfig config) {
+    super(params, config);
     this.streamTimeCharacteristic = TimeCharacteristic.EventTime;
   }
 
