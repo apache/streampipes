@@ -4,7 +4,9 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.sdk.builder.ProcessingElementBuilder;
+import de.fzi.cep.sepa.sdk.helpers.EpProperties;
 import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.sdk.helpers.OutputStrategies;
 import de.fzi.cep.sepa.sdk.helpers.SupportedFormats;
@@ -21,7 +23,9 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
             "Prediction", "Predicts the next maintenance based on coffee orders")
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .requiredPropertyStream2(EpRequirements.anyProperty())
-            .outputStrategy(OutputStrategies.keep(false))
+            .outputStrategy(OutputStrategies.fixed(EpProperties.longEp("timestamp", SO.DateTime)
+                    , EpProperties.stringEp("machineId", "http://axoom.com/machineId"),
+                    EpProperties.longEp("predictedMaintenanceTime", SO.DateTime)))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
