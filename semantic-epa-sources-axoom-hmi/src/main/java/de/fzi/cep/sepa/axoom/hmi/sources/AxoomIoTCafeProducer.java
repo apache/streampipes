@@ -1,7 +1,6 @@
 package de.fzi.cep.sepa.axoom.hmi.sources;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
-import de.fzi.cep.sepa.axoom.hmi.iot.AxoomIotStreamBuilder;
 import de.fzi.cep.sepa.axoom.hmi.streams.EnergyStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.MaintenanceStream;
 import de.fzi.cep.sepa.axoom.hmi.streams.OrderStream;
@@ -17,12 +16,14 @@ import java.util.List;
 /**
  * Created by riemer on 16.03.2017.
  */
-public class AxoomHmiProducer implements SemanticEventProducerDeclarer {
+public class AxoomIoTCafeProducer implements SemanticEventProducerDeclarer {
 
   @Override
   public SepDescription declareModel() {
-    return DataSourceBuilder.create("axoom-hmi", "Axoom Data Source", "Source that produces data " +
-            "for the Axoom HMI showcase")
+    return DataSourceBuilder.create("axoom-hmi-cafe", "Axoom IoT Cafeteria", "Source that " +
+            "provides " +
+            "data " +
+            "from the Axoom IoT Cafe")
             .build();
   }
 
@@ -40,8 +41,6 @@ public class AxoomHmiProducer implements SemanticEventProducerDeclarer {
             new OrderStream(AxoomHmiConfig.HMI),
             new MaintenanceStream(AxoomHmiConfig.HMI),
             new EnergyStream(AxoomHmiConfig.HMI)));
-
-    axoomStreams.addAll(AxoomIotStreamBuilder.buildIotStreams());
     return axoomStreams;
   }
 }

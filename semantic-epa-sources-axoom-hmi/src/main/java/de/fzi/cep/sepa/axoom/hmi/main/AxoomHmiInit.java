@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.axoom.hmi.main;
 
-import de.fzi.cep.sepa.axoom.hmi.sources.AxoomHmiProducer;
+import de.fzi.cep.sepa.axoom.hmi.sources.AxoomIoTCafeProducer;
+import de.fzi.cep.sepa.axoom.hmi.sources.AxoomIotHubProducer;
 import de.fzi.cep.sepa.client.init.DeclarersSingleton;
 import de.fzi.cep.sepa.client.standalone.init.StandaloneModelSubmitter;
 
@@ -11,7 +12,8 @@ public class AxoomHmiInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            .add(new AxoomHmiProducer());
+            .add(new AxoomIoTCafeProducer())
+            .add(new AxoomIotHubProducer());
     DeclarersSingleton.getInstance().setPort(8070);
     new AxoomHmiInit().init();
   }
