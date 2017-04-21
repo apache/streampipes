@@ -13,4 +13,8 @@ public class Config {
 	public static final int FLINK_PORT = ClientConfiguration.INSTANCE.getFlinkPort();
 
 	public static final String iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/img";
+
+	public static final String getIconUrl(String pictureName) {
+		return iconBaseUrl +"/" +pictureName +".png";
+	}
 }

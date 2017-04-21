@@ -16,9 +16,11 @@ import de.fzi.cep.sepa.flink.samples.file.FileSinkController;
 import de.fzi.cep.sepa.flink.samples.hasher.FieldHasherController;
 import de.fzi.cep.sepa.flink.samples.healthindex.HealthIndexController;
 import de.fzi.cep.sepa.flink.samples.labelorder.LabelOrderController;
+import de.fzi.cep.sepa.flink.samples.peak.PeakDetectionController;
 import de.fzi.cep.sepa.flink.samples.rename.FieldRenamerController;
 import de.fzi.cep.sepa.flink.samples.spatial.gridenricher.SpatialGridEnrichmentController;
 import de.fzi.cep.sepa.flink.samples.statistics.StatisticsSummaryController;
+import de.fzi.cep.sepa.flink.samples.statistics.window.StatisticsSummaryControllerWindow;
 import de.fzi.cep.sepa.flink.samples.timetofailure.TimeToFailureController;
 
 public class FlinkInit extends StandaloneModelSubmitter {
@@ -42,7 +44,9 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new StatisticsSummaryController())
             .add(new Prediction2BreakdownController())
             .add(new SpatialGridEnrichmentController())
-            .add(new MaintenancePredictionController());
+            .add(new MaintenancePredictionController())
+            .add(new StatisticsSummaryControllerWindow())
+            .add(new PeakDetectionController());
 
 
     DeclarersSingleton.getInstance().setPort(8094);

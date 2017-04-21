@@ -11,4 +11,8 @@ public class ActionConfig {
 		serverUrl = ClientConfiguration.INSTANCE.getActionUrl();
 		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/img";
 	}
+
+	public static final String getIconUrl(String pictureName) {
+		return iconBaseUrl +"/" +pictureName +".png";
+	}
 }

@@ -38,6 +38,7 @@ public class DashboardController extends ActionController {
         desc.setCategory(Arrays.asList(EcType.VISUALIZATION_CHART.name()));
         stream.setUri(ActionConfig.serverUrl + "/" + Utils.getRandomString());
         desc.addEventStream(stream);
+        desc.setIconUrl(ActionConfig.getIconUrl("dashboard-icon"));
 
         List<StaticProperty> staticProperties = new ArrayList<>();
         desc.setStaticProperties(staticProperties);

@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.esper.aggregate.rate;
 
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.Response;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
@@ -19,6 +20,7 @@ public class EventRateController extends FlatEpDeclarer<EventRateParameter> {
 
 		return ProcessingElementBuilder.create("eventrate", "Event rate", "Computes current event rate")
 						.category(EpaType.AGGREGATE)
+						.iconUrl(EsperConfig.getIconUrl("rate-icon"))
 						.requiredPropertyStream1(EpRequirements.anyProperty())
 						.outputStrategy(OutputStrategies.fixed(EpProperties.doubleEp("rate",
 										"http://schema.org/Number")))

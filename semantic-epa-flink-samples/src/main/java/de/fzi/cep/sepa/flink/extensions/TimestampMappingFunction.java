@@ -1,4 +1,4 @@
-package de.fzi.cep.sepa.flink.samples.axoom;
+package de.fzi.cep.sepa.flink.extensions;
 
 import org.apache.flink.api.common.functions.Function;
 

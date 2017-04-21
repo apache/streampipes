@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.actions.samples.rabbitmq;
 
+import de.fzi.cep.sepa.actions.config.ActionConfig;
 import de.fzi.cep.sepa.actions.samples.ActionController;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -20,6 +21,7 @@ public class RabbitMqController extends ActionController {
   public SecDescription declareModel() {
     return DataSinkBuilder.create("rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
             "RabbitMQ broker")
+            .iconUrl(ActionConfig.getIconUrl("rabbitmq-icon"))
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .requiredTextParameter(Labels.from("topic", "RabbitMQ Topic", "Select a RabbitMQ " +
                     "topic"), false, true)

@@ -14,6 +14,10 @@ public class EsperConfig {
 		serverUrl = ClientConfiguration.INSTANCE.getEsperUrl();
 		iconBaseUrl = ClientConfiguration.INSTANCE.getIconUrl() +"/img";
 	}
+
+	public static final String getIconUrl(String pictureName) {
+		return iconBaseUrl +"/" +pictureName +".png";
+	}
 	
 	public static <T> Writer getDefaultWriter(OutputCollector collector, T params)
 	{

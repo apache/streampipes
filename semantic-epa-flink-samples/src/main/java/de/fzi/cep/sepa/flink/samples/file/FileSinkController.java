@@ -32,7 +32,7 @@ public class FileSinkController extends AbstractFlinkConsumerDeclarer {
         stream1.setEventSchema(schema1);
 
         SecDescription desc = new SecDescription("file", "HDFS File Sink", "Writes data to an HDFS file system.");
-        desc.setIconUrl(Config.iconBaseUrl + "/file_icon.png");
+        desc.setIconUrl(Config.getIconUrl("hadoop-icon"));
 
         desc.addEventStream(stream1);
 

@@ -1,14 +1,8 @@
 package de.fzi.cep.sepa.esper.observe.numerical.value;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
-import de.fzi.cep.sepa.sdk.StaticProperties;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -28,6 +22,13 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
+import de.fzi.cep.sepa.sdk.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalParameters> {
 
@@ -46,6 +47,7 @@ public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalP
 		SepaDescription desc = new SepaDescription("observenumerical", "Observe Numerical",
 				"Throws an alert when value exceeds a threshold value");
 		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
+		desc.setIconUrl(EsperConfig.getIconUrl("observe-numerical-icon"));
 
 		desc.addEventStream(stream1);
 

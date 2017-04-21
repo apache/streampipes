@@ -20,7 +20,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
         SepaDescription delayDescription = ProcessingElementBuilder
                 .create("labelorder", "Label Orders", "This component labels the orders with the time difference to" +
                         "the next maintenance step.")
-                .iconUrl("url")
+                .iconUrl(Config.getIconUrl("label-icon"))
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 //TODO add stream requirements

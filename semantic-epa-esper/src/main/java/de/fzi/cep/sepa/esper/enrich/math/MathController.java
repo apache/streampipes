@@ -1,10 +1,7 @@
 package de.fzi.cep.sepa.esper.enrich.math;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.esper.config.EsperConfig;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.Response;
@@ -21,7 +18,11 @@ import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MathController extends FlatEpDeclarer<MathParameter>{
 
@@ -31,6 +32,7 @@ public class MathController extends FlatEpDeclarer<MathParameter>{
 		SepaDescription desc = new SepaDescription("math", "Math EPA",
 				"performs simple calculations on event properties");
 		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
+		desc.setIconUrl(EsperConfig.getIconUrl("math-icon"));
 		try {
 			EventStream stream1 = new EventStream();
 

@@ -2,6 +2,8 @@ package de.fzi.cep.sepa.flink.samples.axoom;
 
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
+import de.fzi.cep.sepa.flink.extensions.SlidingEventTimeWindow;
+import de.fzi.cep.sepa.flink.extensions.TimestampMappingFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;

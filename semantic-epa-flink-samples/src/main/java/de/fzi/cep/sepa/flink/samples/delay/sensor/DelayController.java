@@ -29,7 +29,7 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
                         "and stores it in kafka. Once the delay time is passed it reads the event from kafka " +
                         "and adds the correct value of the label to the event and passes the new event to the " +
                         "next component")
-                .iconUrl("url")
+                .iconUrl(Config.getIconUrl("delay-icon"))
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value [min]", "Minutes till the correct label is knonwn")

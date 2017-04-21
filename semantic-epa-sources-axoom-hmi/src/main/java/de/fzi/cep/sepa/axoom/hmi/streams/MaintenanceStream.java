@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.axoom.hmi.streams;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
+import de.fzi.cep.sepa.axoom.hmi.config.SourceConfig;
 import de.fzi.cep.sepa.axoom.hmi.vocabulary.AxoomVocabulary;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -28,6 +29,7 @@ public class MaintenanceStream extends AbstractAxoomHmiStream {
                     "Provides a stream of " +
                             "current " +
                             "maintenance events")
+            .iconUrl(SourceConfig.getIconUrl("coffee-maintenance"))
             .property(EpProperties.longEp("timestamp", "http://schema.org/DateTime"))
             .property(EpProperties.longEp("maintenanceStartTime", "http://schema.org/DateTime"))
             .property(EpProperties.longEp("maintenanceEndTime", "http://schema.org/DateTime"))

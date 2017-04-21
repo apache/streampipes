@@ -1,14 +1,8 @@
 package de.fzi.cep.sepa.esper.pattern.increase;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.commons.Utils;
 import de.fzi.cep.sepa.esper.config.EsperConfig;
-import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
-import de.fzi.cep.sepa.sdk.StaticProperties;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -26,7 +20,13 @@ import de.fzi.cep.sepa.model.impl.staticproperty.PropertyValueSpecification;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.runtime.flat.declarer.FlatEpDeclarer;
-import de.fzi.cep.sepa.client.util.StandardTransportFormat;
+import de.fzi.cep.sepa.sdk.StaticProperties;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 
@@ -40,7 +40,7 @@ public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 		
 		SepaDescription desc = new SepaDescription("increase", "Increase", "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.");
 		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
-		
+		desc.setIconUrl(EsperConfig.getIconUrl("increase-icon"));
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
 	

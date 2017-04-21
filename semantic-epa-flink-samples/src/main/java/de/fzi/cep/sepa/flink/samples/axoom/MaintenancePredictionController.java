@@ -4,6 +4,7 @@ import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
+import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.model.vocabulary.SO;
@@ -23,6 +24,8 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("maintenance-prediction", "Coffee Maintenance " +
             "Prediction (Rule-based)", "Predicts the next maintenance based on coffee orders")
+            .category(EpaType.ALGORITHM)
+            .iconUrl(Config.getIconUrl("prediction-icon"))
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .requiredPropertyStream2(EpRequirements.anyProperty())
             .outputStrategy(OutputStrategies.fixed(EpProperties.longEp("timestamp", SO.DateTime)

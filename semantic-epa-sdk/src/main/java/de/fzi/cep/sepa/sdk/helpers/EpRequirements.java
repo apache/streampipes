@@ -88,4 +88,8 @@ public class EpRequirements {
 		property.setDomainProperties(Utils.createURI(domainProperty));
 		return property;
 	}
+
+  public static EventPropertyPrimitive timestampReq() {
+		return domainPropertyReq("http://schema.org/DateTime");
+  }
 }

@@ -1,5 +1,6 @@
 package de.fzi.cep.sepa.axoom.hmi.iot;
 
+import de.fzi.cep.sepa.axoom.hmi.config.SourceConfig;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -28,17 +29,24 @@ public class AxoomIotStream extends AbstractAlreadyExistingStream {
   public EventStream declareModel(SepDescription sep) {
     DataStreamBuilder builder = DataStreamBuilder.create("axoom-iot-" + machine.getId(),
             machine.getName(), machine.getManufacturer() + " " + machine.getEquipmentNo())
+            .iconUrl(SourceConfig.getIconUrl(makeIconName()))
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
                     ClientConfiguration.INSTANCE.getKafkaPort(), "axoom.hmi.hmi." + machine.getId()))
             .property(EpProperties.longEp("timestamp",
-                    "http://schema.org/DateTime"));
+                    "http://schema.org/DateTime"))
+            .property(EpProperties.stringEp("machineId",
+                    "http://schema.org/machineId"));
 
     for (Sensor sensor : machine.getSensors()) {
       builder.property(makeProperty(sensor));
     }
 
     return builder.build();
+  }
+
+  private String makeIconName() {
+    return machine.getEquipmentNo();
   }
 
   private EventProperty makeProperty(Sensor sensor) {

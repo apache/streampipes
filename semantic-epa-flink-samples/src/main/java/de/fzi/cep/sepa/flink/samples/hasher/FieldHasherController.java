@@ -1,8 +1,5 @@
 package de.fzi.cep.sepa.flink.samples.hasher;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
@@ -21,6 +18,9 @@ import de.fzi.cep.sepa.model.impl.staticproperty.Option;
 import de.fzi.cep.sepa.model.impl.staticproperty.StaticProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHasherParameters>{
 
 	@Override
@@ -33,7 +33,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("fieldhasher", "Field Hasher", "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.");
-		
+		desc.setIconUrl(Config.getIconUrl("field-hasher-icon"));
 		desc.addEventStream(stream1);
 		
 		List<StaticProperty> staticProperties = new ArrayList<>();

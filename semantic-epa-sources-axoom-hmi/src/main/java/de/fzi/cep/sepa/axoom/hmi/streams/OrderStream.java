@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.axoom.hmi.streams;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
+import de.fzi.cep.sepa.axoom.hmi.config.SourceConfig;
 import de.fzi.cep.sepa.axoom.hmi.vocabulary.AxoomVocabulary;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -26,6 +27,7 @@ public class OrderStream extends AbstractAxoomHmiStream {
             "Provides a stream of " +
                     "current " +
                     "coffee orders")
+            .iconUrl(SourceConfig.getIconUrl("coffee-order"))
             .property(EpProperties.stringEp("customer", AxoomVocabulary.Name))
             .property(EpProperties.stringEp("machineId", AxoomVocabulary.MachineId))
             .property(EpProperties.booleanEp("milk", AxoomVocabulary.MilkIncluded))

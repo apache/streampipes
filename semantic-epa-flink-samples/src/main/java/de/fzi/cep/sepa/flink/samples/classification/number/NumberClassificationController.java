@@ -1,17 +1,10 @@
 package de.fzi.cep.sepa.flink.samples.classification.number;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.fzi.cep.sepa.client.util.StandardTransportFormat;
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
-import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
 import de.fzi.cep.sepa.model.impl.EventSchema;
 import de.fzi.cep.sepa.model.impl.EventStream;
 import de.fzi.cep.sepa.model.impl.eventproperty.EventProperty;
@@ -28,6 +21,13 @@ import de.fzi.cep.sepa.model.impl.staticproperty.SupportedProperty;
 import de.fzi.cep.sepa.model.util.SepaUtils;
 import de.fzi.cep.sepa.model.vocabulary.SO;
 import de.fzi.cep.sepa.model.vocabulary.XSD;
+import de.fzi.cep.sepa.sdk.helpers.EpRequirements;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NumberClassificationController extends AbstractFlinkAgentDeclarer<NumberClassificationParameters> {
 
@@ -41,9 +41,9 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 		
 		EventStream stream1 = new EventStream();
 		stream1.setEventSchema(schema1);
-		
+
 		SepaDescription desc = new SepaDescription("classification_number", "Flink Number classification", "Label your data. Based on Apache Flink.");
-		
+		desc.setIconUrl(Config.getIconUrl("classification-icon"));
 		desc.addEventStream(stream1);
 		
 		List<StaticProperty> staticProperties = new ArrayList<>();

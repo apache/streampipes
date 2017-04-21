@@ -1,6 +1,7 @@
 package de.fzi.cep.sepa.axoom.hmi.streams;
 
 import de.fzi.cep.sepa.axoom.hmi.config.AxoomHmiConfig;
+import de.fzi.cep.sepa.axoom.hmi.config.SourceConfig;
 import de.fzi.cep.sepa.axoom.hmi.vocabulary.AxoomVocabulary;
 import de.fzi.cep.sepa.commons.config.ClientConfiguration;
 import de.fzi.cep.sepa.model.impl.EventStream;
@@ -27,6 +28,7 @@ public class EnergyStream extends AbstractAxoomHmiStream {
             "Provides a stream of " +
                     "energy " +
                     "events")
+            .iconUrl(SourceConfig.getIconUrl("coffee-energy"))
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
                     ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("energy")))
