@@ -13,7 +13,7 @@
     <div flex layout="row" layout-align="start top" ng-if="selectedTab == 'overview'">
         <div flex="60" class="md-padding">
             <div flex layout="column">
-                <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}" update-selected="updateSelected(selected)"
+                <pipeline-preview jspcanvas="assembly-preview" pipeline="pipeline" name="{{pipeline.name}}" update-selected="updateSelected(selected)"
                                   ng-if="pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
                 <pipeline-elements pipeline="pipeline" ng-if="pipeline.name != undefined"
                                    selected-element="selectedElement"></pipeline-elements>
@@ -29,17 +29,11 @@
         </div>
     </div>
     <div flex layout="row" layout-align="start top" ng-if="selectedTab == 'quick-edit'">
-        <div flex="60" class="md-padding">
+        <div flex="100" class="md-padding">
             <div flex layout="column">
-                <pipeline-preview pipeline="pipeline" name="{{pipeline.name}}"
+                <pipeline-preview jspcanvas="assembly-quick" pipeline="pipeline" name="{{pipeline.name}}" update-selected="updateSelected(selected)"
                                   ng-if="pipeline.name!=undefined" style="margin-bottom:15px;"></pipeline-preview>
-                <pipeline-status pipeline="pipeline" ng-if="pipeline.name != undefined"></pipeline-status>
-            </div>
-        </div>
-        <div flex="40" class="md-padding">
-            <div flex layout="column">asd
-                <pipeline-actions pipeline="pipeline"></pipeline-actions>
-                <pipeline-elements pipeline="pipeline" ng-if="pipeline.name != undefined"></pipeline-elements>
+                <quick-edit pipeline="pipeline" selected-element="selectedElement" ng-if="pipeline.name != undefined"></quick-edit>
             </div>
         </div>
     </div>

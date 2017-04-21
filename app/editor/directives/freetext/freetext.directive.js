@@ -10,7 +10,9 @@ export default function freetext() {
 			inputStreams : "="
 		},
 		link: function (scope) {
-console.log(scope.inputStreams);
+			if (scope.staticProperty.properties.valueSpecification) {
+				scope.staticProperty.properties.value = (scope.staticProperty.properties.value*1);
+			}
 		}
 	}
 

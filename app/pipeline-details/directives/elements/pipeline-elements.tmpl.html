@@ -7,8 +7,7 @@
     <div class="sp-blue-border" style="max-height: 800px;overflow:auto;">
         <div ng-if="selectedElement != ''">
             <div layout="column" style="padding:5px;padding-left:10px;">
-                <pipeline-elements-row element-type="{{getElementType(pipeline, selectedElement)}}"
-                                       element="selectedElement"></pipeline-elements-row>
+                <pipeline-elements-row pipeline="pipeline" element="selectedElement"></pipeline-elements-row>
 
                 <md-divider/>
                 <div style="margin-bottom:15px;"></div>

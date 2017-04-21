@@ -14,17 +14,17 @@ export default function pipelinePositioningService($rootScope, jsplumbService, a
         for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
             jsplumbService
                 .streamDropped(scope, jsplumb, jsplumbService
-                    .createNewAssemblyElement(jsplumb, stream, tempPos, false, targetCanvas), true, isPreview);
+                    .createNewAssemblyElement(jsplumb, stream, tempPos, false, targetCanvas, isPreview), true, isPreview);
         }
         for (var i = 0, sepa; sepa = pipeline.sepas[i]; i++) {
-            var $sepa = jsplumbService.sepaDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, sepa, tempPos, false, targetCanvas)
+            var $sepa = jsplumbService.sepaDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, sepa, tempPos, false, targetCanvas, isPreview)
                 .data("options", true), false, isPreview);
             if (jsplumb.getConnections({source: sepa.DOM}).length == 0) { //Output Element
                 jsplumb.addEndpoint($sepa, jsplumbConfig.sepaEndpointOptions);
             }
         }
         for (var i = 0, action; action = pipeline.actions[i]; i++) {
-            var $action = jsplumbService.actionDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, action, tempPos, false, targetCanvas)
+            var $action = jsplumbService.actionDropped(scope, jsplumb, jsplumbService.createNewAssemblyElement(jsplumb, action, tempPos, false, targetCanvas, isPreview)
                 .data("options", true), true, isPreview);
             jsplumb.addEndpoint($action, jsplumbConfig.leftTargetPointOptions);
         }

@@ -1,0 +1,44 @@
+<div>
+    <div class="assembly-options-preview sp-blue-bg">
+        <div layout="row" layout-align="start center">
+            <h4>Quick Edit</h4>
+            <span flex></span>
+            <md-button
+                       class="md-icon-button" ng-click="updatePipeline()" type="submit">
+                <md-tooltip md-direction="top">
+                    Update Pipeline
+                </md-tooltip>
+                <i class="material-icons">save</i>
+            </md-button>
+        </div>
+    </div>
+    <div class="sp-blue-border">
+        <div ng-if="selectedElement != ''">
+            <div layout="column" style="padding:5px;padding-left:10px;">
+                <pipeline-elements-row pipeline="pipeline"
+                                       element="selectedElement"></pipeline-elements-row>
+
+                <div flex="100" layout="column" class="customize-item-main sp-blue-border-nopadding"
+                     ng-repeat="staticProperty in selectedElement.staticProperties">
+                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
+                        <div flex="80" layout="row" layout-align="start center">
+                            {{staticProperty.properties.label}}
+                        </div>
+                        <div flex="20" layout="row" layout-align="end center" style="padding-left:10px;">
+                            <i class="material-icons"
+                               style="color: white;" popup-show="modules/editor/templates/popup.html"
+                               popup-placement="bottom">help</i>
+                        </div>
+                    </div>
+                    <div class="md-padding">
+                        <customize-dialog selected-element="selectedElement"
+                                          static-property="staticProperty"></customize-dialog>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="column" layout-align="center center" ng-if="selectedElement == ''">
+            (select an element in the preview window to modify it)
+        </div>
+    </div>
+</div>

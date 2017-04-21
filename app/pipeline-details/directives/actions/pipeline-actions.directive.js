@@ -12,10 +12,7 @@ export default function pipelineActions() {
             pipeline: "=",
         },
         controller: function ($scope) {
-
-            console.log("actions");
-            console.log($scope.pipeline);
-
+            
             $scope.startPipeline = function() {
 
             }

@@ -35,7 +35,7 @@ export default function jsplumbService($http, $rootScope, pipelineElementIconSer
         });
     }
 
-    jsplumbService.createNewAssemblyElement = function(jsplumb, json, coordinates, block, target) {
+    jsplumbService.createNewAssemblyElement = function(jsplumb, json, coordinates, block, target, isPreview) {
         var $newState = $('<span>')
             .data("JSON", $.extend(true, {}, json))
             .appendTo(target);
@@ -44,12 +44,10 @@ export default function jsplumbService($http, $rootScope, pipelineElementIconSer
             $newState.addClass('a'); //Flag so customize modal won't get triggered
         }
 
-
-
         $newState
             .css({'position': 'absolute', 'top': coordinates.y, 'left': coordinates.x});
 
-        if (target == '#assembly-preview') {
+        if (isPreview) {
             $newState.addClass('connectable-preview');
         } else {
             $newState.addClass('connectable-editor');

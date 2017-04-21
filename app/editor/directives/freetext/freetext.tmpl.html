@@ -15,7 +15,7 @@
     </div>
 </div>
 <div ng-if="staticProperty.properties.valueSpecification" style="margin-top:20px;">
-    <md-slider-container>
+    <div layout="column">
         <span>{{staticProperty.properties.description}}</span>
         <md-slider md-discrete flex min="{{staticProperty.properties.valueSpecification.minValue}}"
                    max="{{staticProperty.properties.valueSpecification.maxValue}}"
@@ -23,8 +23,8 @@
                    ng-model="staticProperty.properties.value">
         </md-slider>
         <md-input-container flex="100">
-            <input name="{{staticProperty.properties.elementName}}" type="number"
+            <input name="{{staticProperty.properties.elementName}}"
                    ng-model="staticProperty.properties.value">
         </md-input-container>
-    </md-slider-container>
+    </div>
 </div>

@@ -27,6 +27,7 @@ import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
 import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
 import pipelineElementOptions from './directives/pipeline-element-options/pipeline-element-options.directive';
 import collectionStaticProperty from './directives/collection/collection.directive';
+import customizeDialog from './directives/customize/customize-dialog.directive';
 
 
 export default angular.module('sp.editor', [spServices])
@@ -46,4 +47,5 @@ export default angular.module('sp.editor', [spServices])
     .directive('replaceOutput', replaceOutput)
     .directive('multipleValueInput', multipleValueInput)
     .directive('collectionStaticProperty', collectionStaticProperty)
+    .directive('customizeDialog', customizeDialog)
     .name;

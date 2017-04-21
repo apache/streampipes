@@ -32,8 +32,8 @@
             </div>
         </div>
         <div ng-repeat="staticProperty in selectedElement.staticProperties">
-            <div layout="column" class="customize-item-main">
-                <div class="customize-item-title" layout="row" flex="100">
+            <div layout="column" class="customize-item-main sp-blue-border-nopadding">
+                <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                     <div flex="80" layout="row" layout-align="start center">
                         {{staticProperty.properties.label}}
                     </div>
@@ -44,40 +44,15 @@
                     </div>
                 </div>
                 <div class="customize-item-content">
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'OneOfStaticProperty'">
-                        <oneof static-property="staticProperty"></oneof>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
-                        <freetext input-streams="selectedElement.inputStreams"
-                                  static-property="staticProperty"></freetext>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
-                        <any static-property="staticProperty"></any>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'DomainStaticProperty'">
-                        <domain-concept-input static-property="staticProperty"
-                                              auto-complete-static-property="staticProperty"></domain-concept-input>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'MappingPropertyUnary'">
-                        <mapping-property-unary static-property="staticProperty"></mapping-property-unary>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'MappingPropertyNary'">
-                        <mapping-property-nary static-property="staticProperty"></mapping-property-nary>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'MatchingProperty'">
-                        <matching-property static-property="staticProperty"></matching-property>
-                    </div>
-                    <div ng-if="staticProperty.properties.staticPropertyType == 'CollectionStaticProperty'">
-                        <collection-static-property static-property="staticProperty"></collection-static-property>
-                    </div>
+                    <customize-dialog selected-element="selectedElement" static-property="staticProperty"></customize-dialog>
                 </div>
             </div>
         </div>
         <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
-            <div layout="column" class="customize-item-main">
+            <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                 <div ng-if="outputStrategy.type === 'de.fzi.cep.sepa.model.impl.output.ReplaceOutputStrategy'">
 
-                    <div class="customize-item-title" layout="row" flex="100">
+                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">
                             Replace property
                         </div>
@@ -89,7 +64,7 @@
                 </div>
                 <div ng-if="outputStrategy.type === 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy'">
 
-                    <div class="customize-item-title" layout="row" flex="100">
+                    <div class="customize-item-title sp-blue-bg" layout="row" flex="100">
                         <div flex="80" layout="row" layout-align="start center">
                             Select Output
                         </div>

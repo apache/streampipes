@@ -13,24 +13,7 @@ export default function pipelineElements() {
             selectedElement: "="
         },
         controller: function ($scope) {
-
-            $scope.getElementType = function(pipeline, element) {
-                var elementType = "action";
-
-                angular.forEach(pipeline.streams, function(el) {
-                   if (element.DOM == el.DOM) {
-                       elementType = "stream";
-                   }
-                });
-
-                angular.forEach(pipeline.sepas, function(el) {
-                    if (element.DOM == el.DOM) {
-                        elementType = "sepa";
-                    }
-                });
-
-                return elementType;
-            }
+            
         },
         link: function postLink(scope, element) {
         }

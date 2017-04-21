@@ -184,7 +184,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     width: 80%;
     left: 10%;
     margin-right:auto;
-    height: 1px;
+    height: 0px;
     background-color: #ccc;
     z-order: 0;
 }
@@ -263,7 +263,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .customize-item-main {
-	border: 1px solid rgb(63,81,181);
 	border-radius: 0px;
 	margin:5px;
 }
@@ -274,7 +273,6 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 
 .customize-item-title {
 /* 	background: rgb(140,158,255); */
-	background: rgb(63,81,181);
 	color:white;
 	font-size: 12pt;
 	padding:  5px;
