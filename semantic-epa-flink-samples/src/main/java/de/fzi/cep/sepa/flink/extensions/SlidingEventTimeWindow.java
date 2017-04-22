@@ -4,6 +4,7 @@ import org.apache.flink.streaming.api.operators.AbstractUdfStreamOperator;
 import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class SlidingEventTimeWindow<IN> extends AbstractUdfStreamOperator<List<IN>,
         TimestampMappingFunction<IN>>
         implements
-        OneInputStreamOperator<IN, List<IN>> {
+        OneInputStreamOperator<IN, List<IN>>, Serializable {
 
   private Long timeWindowSizeInMillis;
   private List<IN> currentEvents;

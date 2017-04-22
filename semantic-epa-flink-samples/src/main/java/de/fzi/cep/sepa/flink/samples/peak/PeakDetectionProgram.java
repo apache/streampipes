@@ -21,35 +21,40 @@ public class PeakDetectionProgram extends FlinkSepaRuntime<PeakDetectionParamete
   }
 
   public PeakDetectionProgram(PeakDetectionParameters params,
-                                        FlinkDeploymentConfig config) {
+                              FlinkDeploymentConfig config) {
     super(params, config);
   }
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>[] messageStream) {
+
+    Integer lag = params.getLag();
+    String groupBy = params.getGroupBy();
+    String valueToObserve = params.getValueToObserve();
+    Double threshold = params.getThreshold();
+    Double influence = params.getInfluence();
+    Integer countWindowSize = params.getCountWindowSize();
+
     return messageStream[0]
             .keyBy(getKeySelector())
             .transform
                     ("sliding-batch-window-shift",
                             TypeInformation.of(new TypeHint<List<Map<String, Object>>>() {
-                            }), new SlidingBatchWindow<>(params.getLag() +2))
-            .flatMap(new PeakDetectionCalculator(params.getGroupBy(),
-                    params.getValueToObserve(),
-                    params.getLag(),
-                    params.getThreshold(),
-                    params.getInfluence()));
+                            }), new SlidingBatchWindow<>(countWindowSize))
+            .flatMap(new PeakDetectionCalculator(groupBy,
+                    valueToObserve,
+                    lag,
+                    threshold,
+                    influence));
   }
 
   private KeySelector<Map<String, Object>, String> getKeySelector() {
+    String groupBy = params.getGroupBy();
     return new KeySelector<Map<String, Object>, String>() {
       @Override
       public String getKey(Map<String, Object> in) throws Exception {
-        return String.valueOf(in.get(getGroupBy()));
+        return String.valueOf(in.get(groupBy));
       }
     };
-  }
-
-  private String getGroupBy() {
-    return params.getGroupBy();
   }
 }

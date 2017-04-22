@@ -1,16 +1,12 @@
 package de.fzi.cep.sepa.flink.samples.peak;
 
-import static de.fzi.cep.sepa.flink.samples.statistics.StatisticsSummaryController.*;
-
 import de.fzi.cep.sepa.flink.AbstractFlinkAgentDeclarer;
 import de.fzi.cep.sepa.flink.FlinkDeploymentConfig;
 import de.fzi.cep.sepa.flink.FlinkSepaRuntime;
 import de.fzi.cep.sepa.flink.samples.Config;
-import de.fzi.cep.sepa.flink.samples.statistics.StatisticsSummaryController;
 import de.fzi.cep.sepa.model.impl.EpaType;
 import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.vocabulary.Statistics;
 import de.fzi.cep.sepa.sdk.builder.ProcessingElementBuilder;
 import de.fzi.cep.sepa.sdk.extractor.ProcessingElementParameterExtractor;
 import de.fzi.cep.sepa.sdk.helpers.EpProperties;
@@ -29,12 +25,13 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
   private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
   private static final String LAG_KEY = "sp-lag";
   private static final String THRESHOLD_KEY = "sp-threshold";
+  private static final String COUNT_WINDOW_SIZE = "sp-count-window";
   private static final String INFLUENCE_KEY = "sp-influence";
 
   @Override
   public SepaDescription declareModel() {
-    return ProcessingElementBuilder.create("peak-detection", "Peak Detection ",
-            "Detect peaks in time-series data.")
+    return ProcessingElementBuilder.create("peak-detection", "Peak Detection",
+            "Detect peaks in time series data")
             .category(EpaType.ALGORITHM)
             .iconUrl(Config.getIconUrl("peak-detection-icon"))
             .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
@@ -44,20 +41,17 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
                     TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
             .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(),
                     PARTITION_BY, "Group by", "Partition the stream by a given id")
-            .requiredIntegerParameter(LAG_KEY, "Lag", "Defines the lag of the smoothing function")
+            .requiredIntegerParameter(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
+                    "the size of the count window", 60)
+            .requiredIntegerParameter(LAG_KEY, "Lag", "Defines the lag of the smoothing " +
+                    "function", 5)
             .requiredFloatParameter(THRESHOLD_KEY, "Threshold", "Defines the standard deviation " +
-                    "threshold")
-            .requiredFloatParameter(INFLUENCE_KEY, "Influence", "Defines the influence")
-            .outputStrategy(OutputStrategies.append(
+                    "threshold", 2.0f)
+            .requiredFloatParameter(INFLUENCE_KEY, "Influence", "Defines the influence", 0.5f)
+            .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp("machineId", "http://schema.org/id"),
-                    EpProperties.doubleEp(StatisticsSummaryController.MEAN, Statistics.MEAN),
-                    EpProperties.doubleEp(MIN, Statistics.MIN),
-                    EpProperties.doubleEp(MAX, Statistics.MAX),
-                    EpProperties.doubleEp(SUM, Statistics.SUM),
-                    EpProperties.doubleEp(STDDEV, Statistics.STDDEV),
-                    EpProperties.doubleEp(VARIANCE, Statistics.VARIANCE),
-                    EpProperties.doubleEp(N, Statistics.N)))
+                    EpProperties.stringEp("id", "http://schema.org/id"),
+                    EpProperties.integerEp("signal", "http://schema.org/Number")))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
@@ -71,17 +65,20 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String groupBy = extractor.mappingPropertyValue(PARTITION_BY);
 
+    Integer countWindowSize = extractor.singleValueParameter(COUNT_WINDOW_SIZE, Integer.class);
+
     Integer lag = extractor.singleValueParameter(LAG_KEY, Integer.class);
     Double threshold = extractor.singleValueParameter(THRESHOLD_KEY, Double.class);
     Double influence = extractor.singleValueParameter(INFLUENCE_KEY, Double.class);
 
 
-    PeakDetectionParameters params = new PeakDetectionParameters(graph,
-            valueToObserve, timestampMapping, groupBy, lag, threshold, influence);
+    PeakDetectionParameters params = new PeakDetectionParameters(sepa,
+            valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
+
+    //return new PeakDetectionProgram(params);
 
     return new PeakDetectionProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config
-                    .FLINK_HOST, Config.FLINK_PORT));
+            Config.FLINK_HOST, Config.FLINK_PORT));
 
   }
 }

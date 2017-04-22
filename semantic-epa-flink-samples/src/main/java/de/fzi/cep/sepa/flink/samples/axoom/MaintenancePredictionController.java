@@ -42,5 +42,7 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
 
     return new MaintenancePredictionProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE,
             Config.FLINK_HOST, Config.FLINK_PORT));
+
+    //return new MaintenancePredictionProgram(params);
   }
 }

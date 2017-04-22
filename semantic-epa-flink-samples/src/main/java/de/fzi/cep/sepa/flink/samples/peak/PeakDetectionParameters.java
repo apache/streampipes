@@ -3,10 +3,12 @@ package de.fzi.cep.sepa.flink.samples.peak;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.param.BindingParameters;
 
+import java.io.Serializable;
+
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionParameters extends BindingParameters {
+public class PeakDetectionParameters extends BindingParameters implements Serializable {
 
   private String valueToObserve;
   private String timestampMapping;
@@ -14,12 +16,16 @@ public class PeakDetectionParameters extends BindingParameters {
   private Integer lag;
   private Double threshold;
   private Double influence;
+  private Integer countWindowSize;
 
   public PeakDetectionParameters(SepaInvocation graph) {
     super(graph);
   }
 
-  public PeakDetectionParameters(SepaInvocation graph, String valueToObserve, String timestampMapping, String groupBy, Integer lag, Double threshold, Double influence) {
+  public PeakDetectionParameters(SepaInvocation graph, String valueToObserve, String
+          timestampMapping, String groupBy, Integer countWindowSize, Integer lag, Double
+          threshold, Double
+          influence) {
     super(graph);
     this.valueToObserve = valueToObserve;
     this.timestampMapping = timestampMapping;
@@ -27,6 +33,7 @@ public class PeakDetectionParameters extends BindingParameters {
     this.lag = lag;
     this.threshold = threshold;
     this.influence = influence;
+    this.countWindowSize = countWindowSize;
   }
 
   public String getValueToObserve() {
@@ -51,5 +58,9 @@ public class PeakDetectionParameters extends BindingParameters {
 
   public Double getInfluence() {
     return influence;
+  }
+
+  public Integer getCountWindowSize() {
+    return countWindowSize;
   }
 }

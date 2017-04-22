@@ -124,12 +124,34 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU requiredIntegerParameter(String internalId, String label, String description,
+                                       Integer defaultValue) {
+        FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+                label,
+                description,
+                XSD._integer.toString());
+        fsp.setValue(String.valueOf(defaultValue));
+        this.staticProperties.add(fsp);
+        return me();
+    }
+
     public BU requiredFloatParameter(String internalId, String label, String description) {
         this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
                 label,
                 description,
                 XSD._double.toString()));
 
+        return me();
+    }
+
+    public BU requiredFloatParameter(String internalId, String label, String description, Float
+            defaultValue) {
+        FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+                label,
+                description,
+                XSD._double.toString());
+        fsp.setValue(String.valueOf(defaultValue));
+        this.staticProperties.add(fsp);
         return me();
     }
 

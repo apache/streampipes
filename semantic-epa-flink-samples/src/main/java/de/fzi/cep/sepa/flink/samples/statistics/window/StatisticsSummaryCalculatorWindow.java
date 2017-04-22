@@ -5,6 +5,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * Created by riemer on 20.04.2017.
  */
 public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<Map<String,
-        Object>>, Map<String, Object>> {
+        Object>>, Map<String, Object>>, Serializable {
 
   private String partitionMapping;
   private String valueToObserveMapping;

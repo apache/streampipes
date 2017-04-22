@@ -1,37 +1,29 @@
 package de.fzi.cep.sepa.flink.samples.statistics.window;
 
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by riemer on 20.04.2017.
  */
-public class StatisticsSummaryParametersWindow extends BindingParameters {
+public class StatisticsSummaryParamsSerializable implements Serializable {
 
   private String valueToObserve;
   private String timestampMapping;
   private String groupBy;
-  private Long timeWindowSize;
+  private long timeWindowSize;
   private TimeUnit timeUnit;
 
-
-
-  public StatisticsSummaryParametersWindow(SepaInvocation graph) {
-    super(graph);
-  }
-
-  public StatisticsSummaryParametersWindow(SepaInvocation graph, String valueToObserve,
-                                           String timestampMapping, String groupBy, Long
-                                                   timeWindowSize, TimeUnit timeUnit) {
-    super(graph);
+  public StatisticsSummaryParamsSerializable(String valueToObserve, String timestampMapping,
+                                             String groupBy, Long timeWindowSize, TimeUnit
+                                                     timeUnit) {
     this.valueToObserve = valueToObserve;
     this.timestampMapping = timestampMapping;
     this.groupBy = groupBy;
     this.timeWindowSize = timeWindowSize;
     this.timeUnit = timeUnit;
   }
+
 
   public String getValueToObserve() {
     return valueToObserve;

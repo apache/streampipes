@@ -89,12 +89,13 @@ public class StatisticsSummaryControllerWindow extends
       timeUnit = TimeUnit.SECONDS;
     }
 
-    StatisticsSummaryParametersWindow params = new StatisticsSummaryParametersWindow(graph,
+    StatisticsSummaryParametersWindow params = new StatisticsSummaryParametersWindow(sepa,
             valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config
-                    .FLINK_HOST, Config.FLINK_PORT));
+    StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
+            (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
+
+    return new StatisticsSummaryProgramWindow(params, serializableParams, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
 
   }
 }

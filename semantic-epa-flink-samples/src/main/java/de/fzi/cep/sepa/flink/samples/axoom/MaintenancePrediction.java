@@ -48,7 +48,9 @@ public class MaintenancePrediction extends RichCoFlatMapFunction<List<Map<String
     System.out.println("Predicted Maintenance (" +recentOrder.get("machineId") +") : "
             +maintenanceDate);
 
-    out.collect(makeMaintenancePredictionEvent(extractFromMap("machineId", recentOrder), predictedMaintenanceTime));
+    if (predictedMaintenanceTime > 0) {
+      out.collect(makeMaintenancePredictionEvent(extractFromMap("machineId", recentOrder), predictedMaintenanceTime));
+    }
   }
 
   private Map<String,Object> makeMaintenancePredictionEvent(String machineId, Long predictedMaintenanceTime) {
