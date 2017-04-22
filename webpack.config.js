@@ -59,7 +59,7 @@ let config = {
                 secure: false
             },
             '/streampipes/ws': {
-                target: 'ws://ipe-koi04.fzi.de:61614',
+                target: 'ws://ipe-koi15.fzi.de:61614',
                 ws: true,
                 secure: false
             }
