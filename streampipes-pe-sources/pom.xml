@@ -9,7 +9,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-container-embedded</artifactId>
+			<artifactId>streampipes-container</artifactId>
 		</dependency>
 	</dependencies>
 </project>

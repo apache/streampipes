@@ -150,6 +150,11 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sources</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-slack</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -226,22 +231,22 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-messaging</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-sdk</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-messaging-kafka</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-messaging-jms</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -274,40 +279,40 @@
     </dependencyManagement>
 
     <modules>
-        <module>streampipes-pe-sinks-standalone</module>
-        <module>streampipes-pe-algorithms-standalone</module>
+        <module>streampipes-backend</module>
+        <module>streampipes-code-generation</module>
+        <module>streampipes-commons</module>
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
-        <module>streampipes-code-generation</module>
-        <module>streampipes-commons</module>
-        <module>streampipes-pe-algorithms-esper</module>
         <module>streampipes-manager</module>
-        <module>streampipes-model</module>
-        <module>streampipes-model-client</module>
-        <module>streampipes-wrapper-flink</module>
-        <module>streampipes-pe-mixed-flink</module>
-        <module>streampipes-pe-slack</module>
-        <module>streampipes-rest</module>
-        <module>streampipes-runtime</module>
-        <module>streampipes-runtime-flat</module>
-        <module>streampipes-backend</module>
-        <module>streampipes-pe-sources</module>
-        <module>streampipes-pe-sources-demonstrator</module>
-        <module>streampipes-pe-sources-hella</module>
-        <module>streampipes-pe-sources-mhwirth</module>
-        <module>streampipes-pe-sources-proasense-monitoring</module>
-        <module>streampipes-storage</module>
-        <module>streampipes-pe-sources-samples</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
         <module>streampipes-messaging-jms</module>
-        <module>streampipes-pe-sources-kd2</module>
-        <module>streampipes-sdk</module>
-        <module>streampipes-pe-sources-mnist</module>
-        <module>streampipes-sdk-tutorial</module>
+        <module>streampipes-model</module>
+        <module>streampipes-model-client</module>
+        <module>streampipes-pe-algorithms-esper</module>
+        <module>streampipes-pe-algorithms-standalone</module>
+        <module>streampipes-pe-mixed-flink</module>
+        <module>streampipes-pe-sinks-standalone</module>
+        <module>streampipes-pe-slack</module>
         <module>streampipes-pe-sources-axoom-hmi</module>
+        <module>streampipes-pe-sources</module>
+        <module>streampipes-pe-sources-kd2</module>
+        <module>streampipes-pe-sources-demonstrator</module>
+        <module>streampipes-pe-sources-hella</module>
+        <module>streampipes-pe-sources-mhwirth</module>
+        <module>streampipes-pe-sources-mnist</module>
+        <module>streampipes-pe-sources-proasense-monitoring</module>
+        <module>streampipes-pe-sources-samples</module>
+        <module>streampipes-rest</module>
+        <module>streampipes-runtime</module>
+        <module>streampipes-runtime-flat</module>
+        <module>streampipes-sdk</module>
+        <module>streampipes-sdk-tutorial</module>
+        <module>streampipes-storage</module>
+        <module>streampipes-wrapper-flink</module>
     </modules>
 
     <!-- Build Settings -->

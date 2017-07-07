@@ -12,6 +12,18 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-pe-sources</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container-embedded</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-sdk</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
+		</dependency>
 	</dependencies>
 	<repositories>
 	<repository>

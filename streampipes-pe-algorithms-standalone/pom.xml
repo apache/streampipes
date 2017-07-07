@@ -15,7 +15,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-container-standalone</artifactId>
+			<artifactId>streampipes-container-embedded</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cybozu.labs</groupId>

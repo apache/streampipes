@@ -8,8 +8,28 @@ import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import de.fzi.cep.sepa.commons.config.Configuration;
 import de.fzi.cep.sepa.model.transform.CustomAnnotationProvider;
-import de.fzi.cep.sepa.storage.api.*;
-import de.fzi.cep.sepa.storage.impl.*;
+import de.fzi.cep.sepa.storage.api.BackgroundKnowledgeStorage;
+import de.fzi.cep.sepa.storage.api.ConnectionStorage;
+import de.fzi.cep.sepa.storage.api.ContextStorage;
+import de.fzi.cep.sepa.storage.api.MonitoringDataStorage;
+import de.fzi.cep.sepa.storage.api.NotificationStorage;
+import de.fzi.cep.sepa.storage.api.PipelineCategoryStorage;
+import de.fzi.cep.sepa.storage.api.PipelineStorage;
+import de.fzi.cep.sepa.storage.api.RdfEndpointStorage;
+import de.fzi.cep.sepa.storage.api.StorageRequests;
+import de.fzi.cep.sepa.storage.api.VisualizationStorage;
+import de.fzi.cep.sepa.storage.impl.BackgroundKnowledgeStorageImpl;
+import de.fzi.cep.sepa.storage.impl.ConnectionStorageImpl;
+import de.fzi.cep.sepa.storage.impl.ContextStorageImpl;
+import de.fzi.cep.sepa.storage.impl.InMemoryStorage;
+import de.fzi.cep.sepa.storage.impl.MonitoringDataStorageImpl;
+import de.fzi.cep.sepa.storage.impl.NotificationStorageImpl;
+import de.fzi.cep.sepa.storage.impl.PipelineCategoryStorageImpl;
+import de.fzi.cep.sepa.storage.impl.PipelineStorageImpl;
+import de.fzi.cep.sepa.storage.impl.RdfEndpointStorageImpl;
+import de.fzi.cep.sepa.storage.impl.SesameStorageRequests;
+import de.fzi.cep.sepa.storage.impl.UserStorage;
+import de.fzi.cep.sepa.storage.impl.VisualizationStorageImpl;
 import de.fzi.cep.sepa.storage.service.UserService;
 import de.fzi.cep.sepa.storage.util.StorageUtils;
 import org.openrdf.repository.Repository;
@@ -17,10 +37,11 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.spi.PersistenceProvider;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.spi.PersistenceProvider;
 
 public enum StorageManager {
 
@@ -165,10 +186,6 @@ public enum StorageManager {
 
     public PipelineCategoryStorage getPipelineCategoryStorageApi() {
         return new PipelineCategoryStorageImpl();
-    }
-
-    public AppStorage getAppStorageApi() {
-        return new AppStorageImpl();
     }
 
     public VisualizationStorage getVisualizationStorageApi() {
