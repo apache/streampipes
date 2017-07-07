@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.streampipes</groupId>
-		<artifactId>streampipes-ce-parent</artifactId>
+		<artifactId>streampipes-parent</artifactId>
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>streampipes-pe-algorithms-storm</artifactId>
