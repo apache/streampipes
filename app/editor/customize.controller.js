@@ -124,7 +124,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         });
 
         angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
-            if (strategy.type == 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy') {
+            if (strategy.type == 'org.streampipes.model.impl.output.CustomOutputStrategy') {
                 if (!strategy.properties.eventProperties && !strategy.properties.eventProperties.length > 0) {
                     valid = false;
                 }
@@ -148,7 +148,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
     var isCustomOutput = function () {
         var custom = false;
         angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
-            if (strategy.type == 'de.fzi.cep.sepa.model.impl.output.CustomOutputStrategy') {
+            if (strategy.type == 'org.streampipes.model.impl.output.CustomOutputStrategy') {
                 custom = true;
             }
         });

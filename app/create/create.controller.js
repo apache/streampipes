@@ -10,7 +10,7 @@ export default function CreateCtrl($rootScope, $scope, restApi, $mdToast) {
 	$scope.deployment = {};
 	$scope.deployment.deploymentType = "standalone";
 	$scope.deployment.sepaType = "storm";
-	$scope.deployment.groupId = "de.fzi.cep.sepa.test";
+	$scope.deployment.groupId = "org.streampipes.test";
 	$scope.deployment.artifactId = "test-project";
 	$scope.deployment.classNamePrefix = "TestProject";
 	$scope.deployment.port = 8093;

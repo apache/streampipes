@@ -29,7 +29,7 @@ export default function eventProperties(restApi) {
 
 	$scope.addProperty = function(properties) {
 		if (properties == undefined) properties = [];
-		properties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeType" : "", "domainProperties" : [""]}});
+		properties.push({"type" : "org.streampipes.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeType" : "", "domainProperties" : [""]}});
 	}
 	$scope.loadProperties();
 		}

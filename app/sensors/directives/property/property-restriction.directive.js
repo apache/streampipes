@@ -13,7 +13,7 @@ export default function propertyRestriction() {
 
 			$scope.addPropertyRestriction = function(key, restriction) {
 				if (restriction.eventSchema.eventProperties == undefined) restriction.eventSchema.eventProperties = [];
-				restriction.eventSchema.eventProperties.push({"type" : "de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"elementName" : makeElementName(), "runtimeType" : "", "domainProperties" : []}});
+				restriction.eventSchema.eventProperties.push({"type" : "org.streampipes.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"elementName" : makeElementName(), "runtimeType" : "", "domainProperties" : []}});
 			}
 
 

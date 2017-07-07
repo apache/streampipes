@@ -17,8 +17,8 @@ export default function supportedGrounding() {
 			var thriftFormat = "http://sepa.event-processing.org/sepa#thrift";
 			var jsonFormat = "http://sepa.event-processing.org/sepa#json";
 
-			$scope.kafkaClass = "de.fzi.cep.sepa.model.impl.KafkaTransportProtocol";
-			$scope.jmsClass = "de.fzi.cep.sepa.model.impl.JmsTransportProtocol";
+			$scope.kafkaClass = "org.streampipes.model.impl.KafkaTransportProtocol";
+			$scope.jmsClass = "org.streampipes.model.impl.JmsTransportProtocol";
 
 			$scope.kafkaSelected = function(transportProtocols)
 			{
