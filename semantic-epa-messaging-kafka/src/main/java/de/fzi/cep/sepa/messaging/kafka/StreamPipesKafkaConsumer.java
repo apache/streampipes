@@ -51,10 +51,12 @@ public class StreamPipesKafkaConsumer implements Consumer, Runnable, Serializabl
         props.put("bootstrap.servers", kafkaUrl);
         props.put("group.id", groupId);
         props.put("enable.auto.commit", "true");
-        props.put("auto.commit.interval.ms", "1000");
+        props.put("auto.commit.interval.ms", "10000");
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
+        props.put("zookeeper.session.timeout.ms", "60000");
+        props.put("zookeeper.sync.time.ms", "20000");
         return props;
     }
 }

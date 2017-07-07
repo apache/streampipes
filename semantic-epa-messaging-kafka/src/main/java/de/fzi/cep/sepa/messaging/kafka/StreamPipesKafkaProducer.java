@@ -38,7 +38,12 @@ public class StreamPipesKafkaProducer implements EventProducer, Serializable {
     }
 
     public void publish(byte[] message, String kafkaTopic) {
-        producer.send(new ProducerRecord<String, byte[]>(kafkaTopic, message));
+        System.out.println("sending!");
+        try {
+            producer.send(new ProducerRecord<String, byte[]>(kafkaTopic, message));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void publish(String event, String kafkaTopic) {
