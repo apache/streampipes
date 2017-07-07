@@ -120,7 +120,6 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		{
 			epStatements.add(epService.getEPAdministrator().createEPL(statement));
 		}
-		epStatements.add(epService.getEPAdministrator().createEPL("select * from StatusEvent"));
 	}
 
 	@Override

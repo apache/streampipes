@@ -59,7 +59,9 @@ public abstract class AbstractQueueRunnable<T> extends Thread
 
     public void add(T data) throws InterruptedException 
     {
-        queue.put(data);
+        if (data != null) {
+            queue.put(data);
+        }
     }
 
     protected abstract void doNext(T data) throws Exception;

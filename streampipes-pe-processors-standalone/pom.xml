@@ -5,7 +5,7 @@
 		<artifactId>streampipes-parent</artifactId>
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>strempipes-pe-processors-standalone</artifactId>
+	<artifactId>streampipes-pe-processors-standalone</artifactId>
 	<packaging>war</packaging>
 
 	<dependencies>
