@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import org.streampipes.pe.algorithms.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;

@@ -1,13 +1,13 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.pe.algorithms.esper.geo.geofencing.GeofencingController;
+import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingController;
 import org.streampipes.model.client.exception.InvalidConnectionException;
 import junit.framework.TestCase;
 
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.streampipes.pe.algorithms.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.manager.matching.v2.TestUtils;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;

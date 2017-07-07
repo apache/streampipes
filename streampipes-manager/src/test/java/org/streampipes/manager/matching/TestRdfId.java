@@ -1,6 +1,6 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.pe.algorithms.esper.extract.ProjectController;
+import org.streampipes.pe.processors.esper.extract.ProjectController;
 import org.streampipes.manager.matching.v2.TestUtils;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepaInvocation;

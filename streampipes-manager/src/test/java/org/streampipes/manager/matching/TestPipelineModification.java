@@ -1,6 +1,6 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.pe.algorithms.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.manager.matching.v2.TestUtils;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.client.pipeline.Pipeline;

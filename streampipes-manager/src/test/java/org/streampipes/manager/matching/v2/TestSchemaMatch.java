@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import org.streampipes.pe.algorithms.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;

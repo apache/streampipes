@@ -90,7 +90,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>semantic-pe-algorithms-standalone</artifactId>
+                <artifactId>semantic-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -120,7 +120,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-algorithms-esper</artifactId>
+                <artifactId>streampipes-pe-processors-esper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -220,7 +220,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-algorithms-storm</artifactId>
+                <artifactId>streampipes-pe-processors-storm</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -292,8 +292,8 @@
         <module>streampipes-messaging-jms</module>
         <module>streampipes-model</module>
         <module>streampipes-model-client</module>
-        <module>streampipes-pe-algorithms-esper</module>
-        <module>streampipes-pe-algorithms-standalone</module>
+        <module>streampipes-pe-processors-esper</module>
+        <module>streampipes-pe-processors-standalone</module>
         <module>streampipes-pe-mixed-flink</module>
         <module>streampipes-pe-sinks-standalone</module>
         <module>streampipes-pe-slack</module>
