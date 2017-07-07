@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Optional;
 
-import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.streampipes.pe.sources.samples.util.Utils;
 
 
 public class HellaExtractor {

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.streampipes.pe.sources.samples.util.Utils;
 
 
 public class EnvironmentalDataCleanser {

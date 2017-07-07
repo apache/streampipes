@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 import com.google.common.io.Resources;
 
-import de.fzi.cep.sepa.model.client.pipeline.Pipeline;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.storage.controller.StorageManager;
 
 /**
  * Created by robin on 31.10.14.

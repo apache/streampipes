@@ -1,4 +1,4 @@
-import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;

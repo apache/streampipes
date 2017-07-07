@@ -14,7 +14,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <listener>
-        <listener-class>de.fzi.proasense.hella.main.SourcesHellaInit</listener-class>
+        <listener-class>org.streampipes.pe.sources.hella.main.SourcesHellaInit</listener-class>
     </listener>
     <servlet-mapping>
         <servlet-name>Client REST Service</servlet-name>

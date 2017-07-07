@@ -12,10 +12,10 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
-import de.fzi.cep.sepa.commons.Utils;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
-import de.fzi.cep.sepa.storage.controller.StorageManager;
+import org.streampipes.commons.Utils;
+import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.storage.controller.StorageManager;
 
 public class TestTransformation {
 

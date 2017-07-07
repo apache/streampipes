@@ -1,4 +1,4 @@
-import de.fzi.cep.sepa.sources.samples.hella.MaterialMovementStream;
+import org.streampipes.pe.sources.samples.hella.MaterialMovementStream;
 
 
 public class TestHellaReplay {

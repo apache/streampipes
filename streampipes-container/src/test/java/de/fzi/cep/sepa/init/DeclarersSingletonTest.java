@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.fzi.cep.sepa.client.declarer.Declarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.init.DeclarersSingleton;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.model.impl.Response;
+import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.impl.graph.SepaInvocation;
 
 public class DeclarersSingletonTest {
     @Test

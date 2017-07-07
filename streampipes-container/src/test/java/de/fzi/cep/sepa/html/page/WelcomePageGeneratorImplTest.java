@@ -11,19 +11,19 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.fzi.cep.sepa.client.declarer.Declarer;
-import de.fzi.cep.sepa.client.declarer.EventStreamDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProcessingAgentDeclarer;
-import de.fzi.cep.sepa.client.declarer.SemanticEventProducerDeclarer;
-import de.fzi.cep.sepa.client.html.model.Description;
-import de.fzi.cep.sepa.client.html.model.SemanticEventProducerDescription;
-import de.fzi.cep.sepa.client.html.page.WelcomePageGenerator;
-import de.fzi.cep.sepa.client.html.page.WelcomePageGeneratorImpl;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.Response;
-import de.fzi.cep.sepa.model.impl.graph.SepDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.html.model.Description;
+import org.streampipes.container.html.model.SemanticEventProducerDescription;
+import org.streampipes.container.html.page.WelcomePageGenerator;
+import org.streampipes.container.html.page.WelcomePageGeneratorImpl;
+import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.impl.Response;
+import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.impl.graph.SepaInvocation;
 
 public class WelcomePageGeneratorImplTest {
 

@@ -44,7 +44,7 @@
 		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 	</listener>
 	<listener>
-		<listener-class>de.fzi.cep.sepa.rest.notifications.NotificationListener</listener-class>
+		<listener-class>org.streampipes.rest.notifications.NotificationListener</listener-class>
 	</listener>
 
 	<servlet>
@@ -54,7 +54,7 @@
 		</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>de.fzi.cep.sepa.rest.application.StreamPipesApplication</param-value>
+			<param-value>org.streampipes.rest.application.StreamPipesApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>

@@ -5,19 +5,19 @@ import java.util.Random;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
-import de.fzi.cep.sepa.model.impl.EventGrounding;
-import de.fzi.cep.sepa.model.impl.EventSchema;
-import de.fzi.cep.sepa.model.impl.EventStream;
-import de.fzi.cep.sepa.model.impl.KafkaTransportProtocol;
-import de.fzi.cep.sepa.model.impl.TransportFormat;
-import de.fzi.cep.sepa.model.impl.eventproperty.EventPropertyPrimitive;
-import de.fzi.cep.sepa.model.impl.graph.SepaDescription;
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.impl.staticproperty.MappingPropertyUnary;
-import de.fzi.cep.sepa.model.vocabulary.MessageFormat;
-import de.fzi.cep.sepa.model.vocabulary.SO;
-import de.fzi.cep.sepa.model.vocabulary.XSD;
-import de.fzi.cep.sepa.storm.sentiment.controller.SentimentDetectionController;
+import org.streampipes.model.impl.EventGrounding;
+import org.streampipes.model.impl.EventSchema;
+import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.impl.TransportFormat;
+import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.model.vocabulary.SO;
+import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.pe.algorithms.storm.controller.SentimentDetectionController;
 
 
 public class TestSentiment {

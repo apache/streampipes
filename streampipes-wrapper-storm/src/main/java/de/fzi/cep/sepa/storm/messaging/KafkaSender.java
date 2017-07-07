@@ -4,8 +4,8 @@ import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
 import de.fzi.cep.sepa.runtime.EPEngine;
 import de.fzi.cep.sepa.runtime.OutputCollector;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
-import de.fzi.cep.sepa.runtime.param.EngineParameters;
+import org.streampipes.runtime.param.BindingParameters;
+import org.streampipes.runtime.param.EngineParameters;
 import de.fzi.cep.sepa.storm.utils.Serializer;
 
 import java.io.IOException;

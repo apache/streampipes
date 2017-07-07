@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.streampipes.pe.sources.samples.util.Utils;
 
 
 public class HellaParametersExtractor {

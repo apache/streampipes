@@ -10,9 +10,10 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
-import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.model.transform.JsonLdTransformer;
-import de.fzi.cep.sepa.storage.impl.SepaInvocationStorageImpl;
+import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.storage.impl.SepaInvocationStorageImpl;
+import org.streampipes.model.util.GsonSerializer;
 
 
 public class TestInvocationGraphToCouchDb {
@@ -24,7 +25,7 @@ public class TestInvocationGraphToCouchDb {
 		
 		
 		//System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(invocationGraph)));
-		System.out.println(de.fzi.cep.sepa.model.util.GsonSerializer.getGson().toJson(invocationGraph));
+		System.out.println(GsonSerializer.getGson().toJson(invocationGraph));
 		new SepaInvocationStorageImpl().storeSepaInvocation(invocationGraph);
 		
 		SepaInvocation invocation2 = new SepaInvocationStorageImpl().getSepaInvovation("2b1fe4a1422d4ab8b4df7bc916d7364c");

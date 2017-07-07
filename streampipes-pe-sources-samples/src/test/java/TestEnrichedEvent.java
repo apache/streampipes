@@ -1,8 +1,8 @@
 import com.google.gson.JsonObject;
-import de.fzi.cep.sepa.commons.config.ClientConfiguration;
-import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
-import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
-import de.fzi.cep.sepa.sources.samples.enriched.EnrichedStream;
+import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.pe.sources.samples.config.AkerVariables;
+import org.streampipes.pe.sources.samples.enriched.EnrichedStream;
 
 import javax.jms.JMSException;
 

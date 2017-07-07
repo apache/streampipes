@@ -1,5 +1,5 @@
-import de.fzi.cep.sepa.sources.samples.config.AkerVariables;
-import de.fzi.cep.sepa.sources.samples.util.Utils;
+import org.streampipes.pe.sources.samples.config.AkerVariables;
+import org.streampipes.pe.sources.samples.util.Utils;
 
 /**
  * Created by robin on 10.10.14.

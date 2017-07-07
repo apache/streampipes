@@ -2,7 +2,7 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryException;
 
-import de.fzi.cep.sepa.storage.controller.StorageManager;
+import org.streampipes.storage.controller.StorageManager;
 
 
 public class TestBackgroundKnowledge {

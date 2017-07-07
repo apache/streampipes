@@ -11,7 +11,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <listener>
-        <listener-class>de.fzi.proasense.monitoring.main.SourcesMonitoringProasenseInit</listener-class>
+        <listener-class>org.streampipes.pe.proasense.monitoring.main.SourcesMonitoringProasenseInit</listener-class>
     </listener>
     <servlet-mapping>
         <servlet-name>Client REST Service</servlet-name>

@@ -1,4 +1,4 @@
-import de.fzi.cep.sepa.messaging.jms.ActiveMQPublisher;
+import org.streampipes.messaging.jms.ActiveMQPublisher;
 
 import javax.jms.JMSException;
 

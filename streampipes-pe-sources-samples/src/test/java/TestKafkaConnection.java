@@ -1,7 +1,7 @@
-import de.fzi.cep.sepa.messaging.EventListener;
-import de.fzi.cep.sepa.messaging.EventProducer;
-import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaConsumer;
-import de.fzi.cep.sepa.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventProducer;
+import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import eu.proasense.internal.*;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;

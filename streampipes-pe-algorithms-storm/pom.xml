@@ -69,7 +69,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>de.fzi.cep.sepa.storm.sentiment.topology.Main</mainClass>
+							<mainClass>org.streampipes.pe.algorithms.storm.topology.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

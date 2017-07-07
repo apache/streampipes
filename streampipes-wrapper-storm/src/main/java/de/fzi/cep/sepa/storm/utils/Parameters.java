@@ -2,7 +2,7 @@ package de.fzi.cep.sepa.storm.utils;
 
 
 import de.fzi.cep.sepa.model.impl.graph.SepaInvocation;
-import de.fzi.cep.sepa.runtime.param.BindingParameters;
+import org.streampipes.runtime.param.BindingParameters;
 
 public class Parameters extends BindingParameters {
 	
