@@ -15,15 +15,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>semantic-epa-rest</artifactId>
+			<artifactId>streampipes-rest</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>semantic-epa-storage</artifactId>
+			<artifactId>streampipes-storage</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>semantic-epa-messaging-kafka</artifactId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.thetransactioncompany</groupId>

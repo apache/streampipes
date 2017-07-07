@@ -9,12 +9,8 @@
 	</parent>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-kpi</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>

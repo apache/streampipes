@@ -26,8 +26,8 @@
 			<version>1.8</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-sdk</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-sdk</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

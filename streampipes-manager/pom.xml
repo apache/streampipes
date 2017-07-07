@@ -14,37 +14,28 @@
 			<version>20140107</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-appstore-shared</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-storage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-storage</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-kpi</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
-			<version>0.40.3-SNAPSHOT</version>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-code-generation</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-code-generation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-messaging-kafka</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>uk.com.robust-it</groupId>
@@ -52,18 +43,18 @@
 			<version>1.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-esper</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-pe-algorithms-esper</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-sources-samples</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-pe-sources-samples</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-units</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-measurement-units</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -98,7 +89,6 @@
 			<artifactId>wiremock</artifactId>
 			<version>2.2.2</version>
 		</dependency>
-
 
 	</dependencies>
 </project>

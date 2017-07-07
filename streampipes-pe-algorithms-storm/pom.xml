@@ -8,8 +8,8 @@
 	<artifactId>streampipes-pe-algorithms-storm</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-storm-topology</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-wrapper-storm</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>

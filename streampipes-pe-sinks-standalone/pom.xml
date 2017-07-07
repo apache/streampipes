@@ -34,16 +34,16 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-commons</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-messaging-kafka</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-kafka</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-messaging-jms</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
         <dependency>
             <groupId>org.rendersnake</groupId>
@@ -51,12 +51,12 @@
             <version>1.8</version>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-client-standalone</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-sdk</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
             <groupId>org.lightcouch</groupId>

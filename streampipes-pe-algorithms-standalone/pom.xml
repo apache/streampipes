@@ -10,12 +10,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-runtime-flat</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-runtime-flat</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-container</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container-standalone</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cybozu.labs</groupId>

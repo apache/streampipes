@@ -5,7 +5,7 @@
 		<artifactId>streampipes-ce-parent</artifactId>
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>streampipes-pe-sources-samples</artifactId>
+	<artifactId>streampipes-pe-sources-proasense-monitoring</artifactId>
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>

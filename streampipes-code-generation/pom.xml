@@ -18,8 +18,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-flink</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-wrapper-flink</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.flink</groupId>
@@ -72,12 +72,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model-client</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-sdk</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-sdk</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

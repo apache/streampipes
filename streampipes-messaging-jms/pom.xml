@@ -15,8 +15,8 @@
             <version>5.9.1</version>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-messaging</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging</artifactId>
         </dependency>
     </dependencies>
 
