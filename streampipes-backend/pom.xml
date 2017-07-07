@@ -10,19 +10,19 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model-client</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
+			<groupId>org.streampipes</groupId>
 			<artifactId>semantic-epa-rest</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
+			<groupId>org.streampipes</groupId>
 			<artifactId>semantic-epa-storage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
+			<groupId>org.streampipes</groupId>
 			<artifactId>semantic-epa-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
