@@ -9,8 +9,8 @@
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-sources</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-pe-sources</artifactId>
 		</dependency>
 	</dependencies>
 	<repositories>

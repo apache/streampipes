@@ -11,12 +11,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-sources</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-pe-sources</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-client-container</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-embedded</artifactId>
         </dependency>
     </dependencies>
 

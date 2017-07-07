@@ -8,8 +8,8 @@
 	<artifactId>streampipes-pe-sources</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-container</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container-embedded</artifactId>
 		</dependency>
 	</dependencies>
 </project>

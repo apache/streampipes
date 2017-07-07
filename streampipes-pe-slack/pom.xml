@@ -28,12 +28,12 @@
 			<artifactId>streampipes-commons</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-client-container</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-container-embedded</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-messaging-kafka</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 	</dependencies>
 

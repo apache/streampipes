@@ -13,28 +13,20 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-appstore-shared</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-manager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-manager</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-storage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-kpi</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-storage</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
@@ -43,16 +35,16 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-manager</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-manager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-messaging-kafka</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-units</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-measurement-units</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.imgscalr</groupId>

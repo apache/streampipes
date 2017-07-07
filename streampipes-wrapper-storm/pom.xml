@@ -8,8 +8,8 @@
 	<artifactId>semantic-wrapper-storm</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-runtime-camel</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>semantic-epa-runtime-flat</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>log4j</groupId>

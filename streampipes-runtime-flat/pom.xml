@@ -9,16 +9,16 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-runtime</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-runtime</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-messaging-kafka</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-messaging-jms</artifactId>
+			<groupId>org.streampipes</groupId>
+            <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
 	</dependencies>
 </project>

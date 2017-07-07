@@ -10,8 +10,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-commons</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-commons</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
@@ -24,16 +24,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-appstore-shared</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.fzi.cep.sepa</groupId>
-			<artifactId>semantic-epa-model-client</artifactId>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.lightcouch</groupId>

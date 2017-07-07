@@ -10,8 +10,8 @@
     <artifactId>streampipes-sdk</artifactId>
     <dependencies>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-model</artifactId>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-model</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

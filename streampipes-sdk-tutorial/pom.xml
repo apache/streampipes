@@ -11,19 +11,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-client-standalone</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-sdk</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-sdk</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.fzi.cep.sepa</groupId>
-            <artifactId>semantic-epa-sources</artifactId>
-            <version>0.40.3-SNAPSHOT</version>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-pe-sources</artifactId>
         </dependency>
     </dependencies>
 
