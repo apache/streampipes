@@ -27,7 +27,7 @@ import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.runtime.flat.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
 public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParameter> {

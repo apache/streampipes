@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-pe-algorithms-esper</artifactId>
+			<artifactId>streampipes-pe-processors-esper</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

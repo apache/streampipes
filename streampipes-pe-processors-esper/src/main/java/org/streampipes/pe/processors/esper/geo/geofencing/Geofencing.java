@@ -18,7 +18,7 @@ import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
 
 import org.streampipes.pe.processors.esper.EsperEventEngine;
-import org.streampipes.runtime.InputStreamParameters;
+import org.streampipes.wrapper.InputStreamParameters;
 
 public class Geofencing extends EsperEventEngine<GeofencingParameters> {
 

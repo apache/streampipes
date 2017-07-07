@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.filter.text;
 
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class TextFilterParameter extends BindingParameters {
 

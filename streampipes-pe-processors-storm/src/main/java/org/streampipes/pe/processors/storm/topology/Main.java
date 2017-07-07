@@ -13,7 +13,7 @@ import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 import de.fzi.cep.sepa.storm.topology.SepaSpout;
 import de.fzi.cep.sepa.storm.topology.SinkSepaBolt;
 import de.fzi.cep.sepa.storm.utils.Utils;

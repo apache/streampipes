@@ -22,7 +22,7 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.runtime.flat.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 
 public class NumericalFilterController extends FlatEpDeclarer<NumericalFilterParameter> {
 

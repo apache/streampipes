@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.delay.taxi;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class DelayTaxiParameters extends BindingParameters {
     private String labelPropertyMapping;

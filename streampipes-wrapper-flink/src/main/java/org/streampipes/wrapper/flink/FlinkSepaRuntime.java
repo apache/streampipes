@@ -7,7 +7,7 @@ import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;

@@ -21,11 +21,11 @@ import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.main.EsperEngineSettings;
 import org.streampipes.pe.processors.esper.writer.Writer;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.EPEngine;
-import org.streampipes.runtime.OutputCollector;
-import org.streampipes.runtime.BindingParameters;
-import org.streampipes.runtime.EngineParameters;
-import org.streampipes.runtime.routing.Timer;
+import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.OutputCollector;
+import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.routing.Timer;
 
 public abstract class EsperEventEngine<T extends BindingParameters> implements EPEngine<T>{
 

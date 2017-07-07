@@ -165,12 +165,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-runtime</artifactId>
+                <artifactId>streampipes-wrapper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-runtime-flat</artifactId>
+                <artifactId>streampipes-wrapper-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -307,12 +307,12 @@
         <module>streampipes-pe-sources-proasense-monitoring</module>
         <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
-        <module>streampipes-runtime</module>
-        <module>streampipes-runtime-flat</module>
         <module>streampipes-sdk</module>
         <module>streampipes-sdk-tutorial</module>
         <module>streampipes-storage</module>
+        <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-standalone</module>
     </modules>
 
     <!-- Build Settings -->

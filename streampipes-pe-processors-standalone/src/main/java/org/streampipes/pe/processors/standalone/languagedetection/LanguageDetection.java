@@ -17,9 +17,9 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.EPEngine;
-import org.streampipes.runtime.OutputCollector;
-import org.streampipes.runtime.EngineParameters;
+import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.OutputCollector;
+import org.streampipes.wrapper.EngineParameters;
 
 public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 

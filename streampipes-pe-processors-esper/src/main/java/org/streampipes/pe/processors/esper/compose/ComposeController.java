@@ -18,7 +18,7 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.output.RenameOutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.runtime.flat.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
 public class ComposeController extends FlatEpDeclarer<ComposeParameters>{

@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.geo.durationofstay;
 
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class DurationOfStayParameters extends BindingParameters {
 

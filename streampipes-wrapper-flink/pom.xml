@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-runtime</artifactId>
+            <artifactId>streampipes-wrapper</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.kafka</groupId>

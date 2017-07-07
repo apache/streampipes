@@ -3,7 +3,7 @@ package org.streampipes.pe.processors.esper.enrich.timer;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class TimestampParameter extends BindingParameters {
 

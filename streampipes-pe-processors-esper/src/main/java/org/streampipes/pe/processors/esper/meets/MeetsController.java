@@ -23,7 +23,7 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.runtime.flat.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
 public class MeetsController extends FlatEpDeclarer<MeetsParameters>{

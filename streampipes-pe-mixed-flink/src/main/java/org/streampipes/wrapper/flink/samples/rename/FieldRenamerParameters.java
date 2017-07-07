@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.rename;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class FieldRenamerParameters extends BindingParameters {
 

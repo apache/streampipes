@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.numerical.window;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class ObserveNumericalWindowParameters extends BindingParameters {
 

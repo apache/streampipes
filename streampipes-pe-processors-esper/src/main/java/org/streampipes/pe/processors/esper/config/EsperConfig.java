@@ -3,7 +3,7 @@ package org.streampipes.pe.processors.esper.config;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.pe.processors.esper.writer.SEPAWriter;
 import org.streampipes.pe.processors.esper.writer.Writer;
-import org.streampipes.runtime.OutputCollector;
+import org.streampipes.wrapper.OutputCollector;
 
 public class EsperConfig {
 

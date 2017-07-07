@@ -14,7 +14,7 @@ import com.espertech.esper.client.soda.SelectClause;
 import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.runtime.InputStreamParameters;
+import org.streampipes.wrapper.InputStreamParameters;
 
 public class And extends EsperEventEngine<AndParameters> {
 

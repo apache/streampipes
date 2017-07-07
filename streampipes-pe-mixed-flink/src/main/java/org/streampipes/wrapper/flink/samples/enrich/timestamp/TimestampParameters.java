@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.enrich.timestamp;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class TimestampParameters extends BindingParameters {
 

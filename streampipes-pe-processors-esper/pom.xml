@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>streampipes-pe-algorithms-esper</artifactId>
+	<artifactId>streampipes-pe-processors-esper</artifactId>
 	<name>Semantic Event Processing Esper Runtime</name>
 	<description>Event processing runtime behavior implemented with esper.</description>
 	<parent>
@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-runtime-flat</artifactId>
+			<artifactId>streampipes-wrapper-standalone</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>

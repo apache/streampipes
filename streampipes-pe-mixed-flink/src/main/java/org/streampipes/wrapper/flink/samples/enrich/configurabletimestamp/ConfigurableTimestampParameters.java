@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.enrich.configurabletimestamp;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class ConfigurableTimestampParameters extends BindingParameters {
 

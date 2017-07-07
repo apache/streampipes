@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.EPEngine;
-import org.streampipes.runtime.OutputCollector;
-import org.streampipes.runtime.EngineParameters;
+import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.OutputCollector;
+import org.streampipes.wrapper.EngineParameters;
 
 public class Distribution implements EPEngine<DistributionParameters>{
 

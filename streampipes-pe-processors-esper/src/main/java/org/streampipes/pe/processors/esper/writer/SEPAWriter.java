@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.writer;
 
 import com.espertech.esper.client.EventBean;
 
-import org.streampipes.runtime.OutputCollector;
+import org.streampipes.wrapper.OutputCollector;
 
 public class SEPAWriter implements Writer {
 

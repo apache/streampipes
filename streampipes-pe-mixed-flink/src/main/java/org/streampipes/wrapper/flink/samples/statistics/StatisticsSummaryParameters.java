@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.statistics;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 /**
  * Created by riemer on 29.01.2017.

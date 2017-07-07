@@ -14,7 +14,7 @@ import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
-import org.streampipes.runtime.flat.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 //import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class TestCollectionController extends FlatEpDeclarer<TestCollectionParameters>{

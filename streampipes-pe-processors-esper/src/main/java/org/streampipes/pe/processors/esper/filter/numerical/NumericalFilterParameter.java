@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.filter.numerical;
 
 import org.streampipes.pe.processors.esper.util.NumericalOperator;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.runtime.BindingParameters;
+import org.streampipes.wrapper.BindingParameters;
 
 public class NumericalFilterParameter extends BindingParameters {
 
