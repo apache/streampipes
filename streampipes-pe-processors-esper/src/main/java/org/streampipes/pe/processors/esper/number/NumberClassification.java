@@ -1,19 +1,17 @@
 package org.streampipes.pe.processors.esper.number;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.SelectClause;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NumberClassification extends EsperEventEngine<NumberClassificationParameters> {
 	private static final Logger logger = LoggerFactory.getLogger(NumberClassification.class.getSimpleName());

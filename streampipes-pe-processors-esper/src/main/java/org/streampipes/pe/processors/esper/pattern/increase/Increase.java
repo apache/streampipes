@@ -1,7 +1,5 @@
 package org.streampipes.pe.processors.esper.pattern.increase;
 
-import java.util.List;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
@@ -13,9 +11,10 @@ import com.espertech.esper.client.soda.PatternStream;
 import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.RelationalOpExpression;
 import com.espertech.esper.client.soda.SelectClause;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.wrapper.InputStreamParameters;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.List;
 
 public class Increase extends EsperEventEngine<IncreaseParameters> {
 

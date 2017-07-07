@@ -34,6 +34,7 @@ import org.streampipes.pe.processors.esper.proasense.drillingstop.DrillingStopCo
 import org.streampipes.pe.processors.esper.extract.ProjectController;
 import org.streampipes.pe.processors.esper.hella.minshuttletime.MinShuttleTimeController;
 import org.streampipes.pe.processors.esper.hella.shuttletime.ShuttleTimeController;
+import org.streampipes.wrapper.esper.EsperEngineSettings;
 
 public class EsperInit extends StandaloneModelSubmitter {
 

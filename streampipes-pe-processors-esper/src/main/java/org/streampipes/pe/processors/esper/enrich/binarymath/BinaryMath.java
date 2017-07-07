@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.enrich.binarymath;
 
 import com.espertech.esper.client.soda.*;
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 import org.streampipes.pe.processors.esper.enrich.math.Operation;
 import org.streampipes.pe.processors.esper.enrich.math.Math;
 

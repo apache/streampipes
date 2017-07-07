@@ -1,4 +1,4 @@
-package org.streampipes.pe.processors.esper.main;
+package org.streampipes.wrapper.esper;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPServiceProvider;
@@ -9,8 +9,6 @@ import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.metric.EngineMetric;
 import com.espertech.esper.client.metric.StatementMetric;
 import com.espertech.esper.client.time.CurrentTimeEvent;
-
-import org.streampipes.pe.processors.esper.debs.c1.StatusEvent;
 
 public class EsperEngineSettings implements Runnable {
 
@@ -27,7 +25,6 @@ public class EsperEngineSettings implements Runnable {
 //		config.getEngineDefaults().getThreading().setThreadPoolOutbound(true);
 //		config.getEngineDefaults().getThreading().setThreadPoolOutboundNumThreads(5);
 		//config.setMetricsReportingEnabled();
-		config.addEventType(StatusEvent.class);
 //		config.getEngineDefaults().getThreading().setInternalTimerEnabled(false);
 //		config.getEngineDefaults().getStreamSelection()
 //	    .setDefaultStreamSelector(StreamSelector.RSTREAM_ISTREAM_BOTH);

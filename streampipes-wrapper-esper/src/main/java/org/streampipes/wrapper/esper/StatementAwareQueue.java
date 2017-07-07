@@ -1,8 +1,8 @@
-package org.streampipes.pe.processors.esper;
+package org.streampipes.wrapper.esper;
 
 import com.espertech.esper.client.EventBean;
 
-import org.streampipes.pe.processors.esper.writer.Writer;
+import org.streampipes.wrapper.esper.writer.Writer;
 
 public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{
 

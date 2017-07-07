@@ -1,4 +1,4 @@
-package org.streampipes.pe.processors.esper.writer;
+package org.streampipes.wrapper.esper.writer;
 
 import com.espertech.esper.client.EventBean;
 

@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.aggregate.avg;
 
-import java.util.List;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.List;
 
 public class Aggregation extends EsperEventEngine<AggregationParameter> {
 

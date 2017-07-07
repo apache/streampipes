@@ -1,8 +1,8 @@
-package org.streampipes.pe.processors.esper.config;
+package org.streampipes.wrapper.esper.config;
 
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.pe.processors.esper.writer.SEPAWriter;
-import org.streampipes.pe.processors.esper.writer.Writer;
+import org.streampipes.wrapper.esper.writer.SEPAWriter;
+import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.OutputCollector;
 
 public class EsperConfig {

@@ -1,7 +1,5 @@
 package org.streampipes.pe.processors.esper.pattern.sequence;
 
-import java.util.List;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FromClause;
@@ -11,11 +9,12 @@ import com.espertech.esper.client.soda.PatternExpr;
 import com.espertech.esper.client.soda.PatternStream;
 import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.SelectClause;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.wrapper.InputStreamParameters;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.List;
 
 public class Sequence extends EsperEventEngine<SequenceParameters> {
 

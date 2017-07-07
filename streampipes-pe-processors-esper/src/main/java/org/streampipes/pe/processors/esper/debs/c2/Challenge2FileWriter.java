@@ -2,9 +2,8 @@ package org.streampipes.pe.processors.esper.debs.c2;
 
 import com.espertech.esper.client.EventBean;
 import com.google.gson.Gson;
-
 import org.streampipes.pe.processors.esper.debs.c1.DebsOutputParameters;
-import org.streampipes.pe.processors.esper.writer.Writer;
+import org.streampipes.wrapper.esper.writer.Writer;
 
 public class Challenge2FileWriter implements Writer {
 

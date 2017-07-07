@@ -1,15 +1,14 @@
 package org.streampipes.pe.processors.esper.enrich.timer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.SelectClause;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class TimestampEnrichment extends EsperEventEngine<TimestampParameter> {
 

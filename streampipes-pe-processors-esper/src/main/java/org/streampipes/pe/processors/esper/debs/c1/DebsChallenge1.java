@@ -1,11 +1,5 @@
 package org.streampipes.pe.processors.esper.debs.c1;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
@@ -15,13 +9,18 @@ import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.OrderByElement;
 import com.espertech.esper.client.soda.SelectClause;
 import com.espertech.esper.client.soda.View;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.pe.processors.esper.debs.c2.DebsChallenge2;
 import org.streampipes.pe.processors.esper.debs.c2.DebsChallenge2Parameters;
 import org.streampipes.pe.processors.esper.enrich.grid.CellOption;
 import org.streampipes.pe.processors.esper.enrich.grid.GridCalculator;
 import org.streampipes.pe.processors.esper.topx.OrderDirection;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class DebsChallenge1 extends EsperEventEngine<DebsChallenge1Parameters> {
 

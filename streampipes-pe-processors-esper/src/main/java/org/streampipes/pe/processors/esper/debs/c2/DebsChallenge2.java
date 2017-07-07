@@ -2,22 +2,21 @@ package org.streampipes.pe.processors.esper.debs.c2;
 
 import static com.espertech.esper.client.soda.Expressions.property;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.InsertIntoClause;
 import com.espertech.esper.client.soda.SelectClause;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.pe.processors.esper.enrich.grid.CellOption;
 import org.streampipes.pe.processors.esper.enrich.grid.GridCalculator;
 import org.streampipes.pe.processors.esper.enrich.grid.GridEnrichment;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class DebsChallenge2 extends EsperEventEngine<DebsChallenge2Parameters>{
 

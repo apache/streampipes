@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.enrich.math;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;

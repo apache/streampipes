@@ -1,8 +1,8 @@
 package org.streampipes.pe.processors.esper.numerical.window;
 
-import java.util.List;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.List;
 
 public class ObserveNumericalWindow extends EsperEventEngine<ObserveNumericalWindowParameters> {
 

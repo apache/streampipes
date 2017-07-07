@@ -1,5 +1,18 @@
 package org.streampipes.pe.processors.esper.writer;
 
+import com.espertech.esper.client.EventBean;
+import com.google.gson.Gson;
+import org.streampipes.pe.processors.esper.debs.c1.CellData;
+import org.streampipes.pe.processors.esper.debs.c1.CellDataComparator;
+import org.streampipes.pe.processors.esper.debs.c1.DebsOutput;
+import org.streampipes.pe.processors.esper.debs.c1.DebsOutputParameters;
+import org.streampipes.pe.processors.esper.debs.c1.OutputType;
+import org.streampipes.pe.processors.esper.debs.c1.StatusEvent;
+import org.streampipes.pe.processors.esper.debs.c1.TaxiDataInputProvider;
+import org.streampipes.pe.processors.esper.debs.c2.CellDataBest;
+import org.streampipes.pe.processors.esper.debs.c2.DebsOutputC2;
+import org.streampipes.wrapper.esper.writer.Writer;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,19 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import com.espertech.esper.client.EventBean;
-import com.google.gson.Gson;
-
-import org.streampipes.pe.processors.esper.debs.c1.CellData;
-import org.streampipes.pe.processors.esper.debs.c1.CellDataComparator;
-import org.streampipes.pe.processors.esper.debs.c1.DebsOutput;
-import org.streampipes.pe.processors.esper.debs.c1.DebsOutputParameters;
-import org.streampipes.pe.processors.esper.debs.c1.OutputType;
-import org.streampipes.pe.processors.esper.debs.c1.StatusEvent;
-import org.streampipes.pe.processors.esper.debs.c1.TaxiDataInputProvider;
-import org.streampipes.pe.processors.esper.debs.c2.CellDataBest;
-import org.streampipes.pe.processors.esper.debs.c2.DebsOutputC2;
 
 public class Challenge1FileWriter implements Writer {
 	

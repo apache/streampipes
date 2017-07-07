@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.enrich.math;
 
 import com.espertech.esper.client.soda.*;
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,9 +2,6 @@ package org.streampipes.pe.processors.esper.geo.geofencing;
 
 import static com.espertech.esper.client.soda.Expressions.property;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FromClause;
@@ -16,9 +13,11 @@ import com.espertech.esper.client.soda.SelectClause;
 import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
 import org.streampipes.wrapper.InputStreamParameters;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Geofencing extends EsperEventEngine<GeofencingParameters> {
 

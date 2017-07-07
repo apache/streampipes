@@ -1,31 +1,28 @@
-package org.streampipes.pe.processors.esper;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.streampipes.wrapper.esper;
 
 import com.espertech.esper.client.ConfigurationException;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
-
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.pe.processors.esper.main.EsperEngineSettings;
-import org.streampipes.pe.processors.esper.writer.Writer;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
-import org.streampipes.wrapper.OutputCollector;
 import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.EPEngine;
 import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.OutputCollector;
+import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.routing.Timer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public abstract class EsperEventEngine<T extends BindingParameters> implements EPEngine<T>{
 

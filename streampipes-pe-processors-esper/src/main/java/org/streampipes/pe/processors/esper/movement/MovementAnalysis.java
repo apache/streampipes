@@ -1,19 +1,7 @@
 package org.streampipes.pe.processors.esper.movement;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import static com.espertech.esper.client.soda.Expressions.*;
 import static java.util.stream.Collectors.toList;
-
-import org.geotools.geometry.DirectPosition2D;
-import org.geotools.referencing.CRS;
-import org.geotools.referencing.GeodeticCalculator;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
@@ -28,9 +16,19 @@ import com.espertech.esper.client.soda.MatchRecognizeRegExConcatenation;
 import com.espertech.esper.client.soda.MatchRecognizeSkipClause;
 import com.espertech.esper.client.soda.SelectClause;
 import com.espertech.esper.client.soda.SelectClauseExpression;
+import org.geotools.geometry.DirectPosition2D;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.GeodeticCalculator;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import static com.espertech.esper.client.soda.Expressions.*;
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class MovementAnalysis extends EsperEventEngine<MovementParameter> {
 

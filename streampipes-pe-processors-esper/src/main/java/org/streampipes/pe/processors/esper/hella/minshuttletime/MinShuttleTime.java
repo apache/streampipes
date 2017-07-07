@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.hella.minshuttletime;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.ArrayList;
 import java.util.HashMap;

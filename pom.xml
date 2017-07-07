@@ -10,6 +10,7 @@
     <properties>
         <sesame.version>2.7.15</sesame.version>
     </properties>
+    <name>StreamPipes Parent POM</name>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -273,6 +274,11 @@
                 <artifactId>type-parser</artifactId>
                 <version>0.6.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-esper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
         </dependencies>
@@ -313,6 +319,7 @@
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-wrapper-esper</module>
     </modules>
 
     <!-- Build Settings -->
@@ -389,9 +396,6 @@
 
     </build>
 
-
-    <!-- More Project Information -->
-    <name>streampipes-ce-parent</name>
 
     <!-- Environment Settings -->
     <scm>

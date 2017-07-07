@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.StaticProperties;

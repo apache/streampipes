@@ -1,20 +1,18 @@
 package org.streampipes.pe.processors.esper.filter.numerical;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.SelectClause;
-
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.pe.processors.esper.util.NumericalOperator;
+import org.streampipes.wrapper.esper.EsperEventEngine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class NumericalFilter extends EsperEventEngine<NumericalFilterParameter>{

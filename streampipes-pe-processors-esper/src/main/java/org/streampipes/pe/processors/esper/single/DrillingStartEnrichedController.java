@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;

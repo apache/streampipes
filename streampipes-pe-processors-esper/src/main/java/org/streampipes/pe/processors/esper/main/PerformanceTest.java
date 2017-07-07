@@ -1,6 +1,7 @@
 package org.streampipes.pe.processors.esper.main;
 
 import com.espertech.esper.client.EPServiceProvider;
+import org.streampipes.wrapper.esper.EsperEngineSettings;
 
 public class PerformanceTest {
 

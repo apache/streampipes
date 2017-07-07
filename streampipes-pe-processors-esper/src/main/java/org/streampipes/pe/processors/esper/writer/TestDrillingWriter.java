@@ -1,14 +1,14 @@
 package org.streampipes.pe.processors.esper.writer;
 
+import com.espertech.esper.client.EventBean;
+import org.apache.commons.collections.MapUtils;
+import org.streampipes.wrapper.esper.writer.Writer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Map;
-
-import org.apache.commons.collections.MapUtils;
-
-import com.espertech.esper.client.EventBean;
 
 public class TestDrillingWriter implements Writer {
 

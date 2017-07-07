@@ -1,16 +1,15 @@
 package org.streampipes.pe.processors.esper.numerical.value;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.SelectClause;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ObserveNumerical extends EsperEventEngine<ObserveNumericalParameters> {
 	private static String UPPER_LIMIT =  "Upper Limit";

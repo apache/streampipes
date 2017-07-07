@@ -1,4 +1,4 @@
-package org.streampipes.pe.processors.esper;
+package org.streampipes.wrapper.esper;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

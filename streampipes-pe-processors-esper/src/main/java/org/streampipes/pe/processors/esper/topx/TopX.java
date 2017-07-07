@@ -1,9 +1,5 @@
 package org.streampipes.pe.processors.esper.topx;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.Expression;
 import com.espertech.esper.client.soda.Expressions;
@@ -12,8 +8,11 @@ import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.OrderByElement;
 import com.espertech.esper.client.soda.SelectClause;
 import com.espertech.esper.client.soda.View;
+import org.streampipes.wrapper.esper.EsperEventEngine;
 
-import org.streampipes.pe.processors.esper.EsperEventEngine;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class TopX extends EsperEventEngine<TopXParameter>{
 

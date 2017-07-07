@@ -7,6 +7,7 @@
 	</parent>
 	<artifactId>streampipes-backend</artifactId>
 	<packaging>war</packaging>
+	<name>StreamPipes CE Backend</name>
 
 	<dependencies>
 		<dependency>

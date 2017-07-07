@@ -6,6 +6,7 @@
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>streampipes-wrapper-storm</artifactId>
+	<name>StreamPipes Wrapper for Apache Storm</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>
