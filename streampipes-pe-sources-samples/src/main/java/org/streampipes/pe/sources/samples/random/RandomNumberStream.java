@@ -1,13 +1,8 @@
 package org.streampipes.pe.sources.samples.random;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -22,6 +17,11 @@ import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
@@ -82,7 +82,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 				int j = 0;
 				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
 					try {
-						if (j % 10000 == 0) {
+						if (j % 50 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
 						}
 						Optional<byte[]> nextMsg = getMessage(System.currentTimeMillis(), random.nextInt(100), j);
