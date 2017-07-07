@@ -16,7 +16,6 @@ public class InstallationConfiguration {
 		steps.add(new SesameDbInstallationStep(settings.getSesameUrl(), settings.getSesameDbName()));
 		steps.add(new CouchDbInstallationStep());
 		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminUserName(), settings.getAdminPassword()));
-		steps.add(new ProaSenseDemoUserInstallationStep());
 		
 		return steps;
 	}

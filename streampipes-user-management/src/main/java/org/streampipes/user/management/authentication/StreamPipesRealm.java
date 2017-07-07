@@ -1,9 +1,12 @@
-package org.streampipes.rest.authentication;
+package org.streampipes.user.management.authentication;
 
 
 import com.google.gson.JsonObject;
-import org.apache.shiro.authc.*;
-import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.lightcouch.CouchDbClient;
@@ -33,10 +36,10 @@ public  class StreamPipesRealm implements Realm {
 
     Logger LOG = LoggerFactory.getLogger(StreamPipesRealm.class);
 
-    SimpleCredentialsMatcher credentialsMatcher;
+    StreamPipesCredentialsMatcher credentialsMatcher;
 
     public StreamPipesRealm() {
-        this.credentialsMatcher = new SimpleCredentialsMatcher();
+        this.credentialsMatcher = new StreamPipesCredentialsMatcher();
     }
 
     @Override
@@ -64,7 +67,8 @@ public  class StreamPipesRealm implements Realm {
             try {
                 String email = ((UsernamePasswordToken) authenticationToken).getUsername();
                 List<JsonObject> users = dbClient.view("users/password").key(email).includeDocs(true).query(JsonObject.class);
-                if (users.size() != 1) throw new AuthenticationException("None or to many users with matching username");
+                if (users.size() != 1) throw new AuthenticationException("None or too many users " +
+                        "with matching username");
                 JsonObject user = users.get(0);
                 String password = user.get("password").getAsString();
 
@@ -73,7 +77,6 @@ public  class StreamPipesRealm implements Realm {
                 principals.add(email, this.getName());
 
                 LOG.info(principals.toString());
-
                 info.setPrincipals(principals);
                 info.setCredentials(password);
 

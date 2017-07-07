@@ -1,11 +1,11 @@
 package org.streampipes.manager.setup;
 
+import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.model.client.messages.Message;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.streampipes.commons.config.WebappConfigurationSettings;
-import org.streampipes.model.client.messages.Message;
 
 public class Installer {
 
@@ -22,9 +22,6 @@ public class Installer {
 	public List<Message> install() {	
 		List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(file, pathToFile, settings);
 		List<Message> result = new ArrayList<>();
-//		result.add(Notifications.success("Test"));
-//		result.add(Notifications.success("Test2"));
-//		result.add(Notifications.error("Test2"));
 		steps.forEach(s -> result.addAll(s.install()));
 		return result;
 	}

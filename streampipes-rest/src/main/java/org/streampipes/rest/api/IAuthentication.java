@@ -10,8 +10,6 @@ public interface IAuthentication {
 
 	Response doLogin(ShiroAuthenticationRequest token);
 
-	Response doLoginFromSso(ShiroAuthenticationRequest token, String componentId, String sessionId);
-	
 	Response doLogout();
 	
 	Response doRegister(RegistrationData registrationData);

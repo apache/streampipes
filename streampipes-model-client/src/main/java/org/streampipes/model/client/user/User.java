@@ -1,36 +1,35 @@
 package org.streampipes.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
-
 import org.streampipes.model.client.pipeline.Pipeline;
-
-import javax.persistence.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Entity;
+
 @Entity
 public class User {
 
-	protected @SerializedName("_id") String userId;
+	private @SerializedName("_id") String userId;
 	protected @SerializedName("_rev") String rev;
 	protected String username;
 	protected String email;
-	protected String password;
+	private String password;
 		
-	protected List<Pipeline> pipelines;
+	private List<Pipeline> pipelines;
 	
-	protected List<Element> ownSources;
-	protected List<Element> ownSepas;
-	protected List<Element> ownActions;
+	private List<Element> ownSources;
+	private List<Element> ownSepas;
+	private List<Element> ownActions;
 	
-	protected List<String> preferredSources;
-	protected List<String> preferredSepas;
-	protected List<String> preferredActions;
+	private List<String> preferredSources;
+	private List<String> preferredSepas;
+	private List<String> preferredActions;
 
-	protected boolean hideTutorial;
-	
+	private boolean hideTutorial;
+
 	private Set<Role> roles;	
 
 	public User() {
@@ -235,4 +234,5 @@ public class User {
 	public void setHideTutorial(boolean hideTutorial) {
 		this.hideTutorial = hideTutorial;
 	}
+
 }

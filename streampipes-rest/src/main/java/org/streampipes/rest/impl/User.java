@@ -18,7 +18,8 @@ public class User extends AbstractRestInterface implements IUser {
     @Produces(MediaType.APPLICATION_JSON)
     @Override
     public Response getUserDetails(@PathParam("username") String email) {
-        org.streampipes.model.client.user.User user = StorageManager.INSTANCE.getUserStorageAPI().getUser(email);
+        org.streampipes.model.client.user.User user = getUser(email);
+        user.setPassword("");
 
         if (user != null) {
             return ok(user);
@@ -33,10 +34,16 @@ public class User extends AbstractRestInterface implements IUser {
     @Override
     public Response updateUserDetails(org.streampipes.model.client.user.User user) {
         if (user != null) {
+            org.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
+            user.setPassword(existingUser.getPassword());
             StorageManager.INSTANCE.getUserStorageAPI().updateUser(user);
             return ok(Notifications.success("User updated"));
         } else {
             return statusMessage(Notifications.error("User not found"));
         }
+    }
+
+    private org.streampipes.model.client.user.User getUser(String email) {
+        return StorageManager.INSTANCE.getUserStorageAPI().getUser(email);
     }
 }
