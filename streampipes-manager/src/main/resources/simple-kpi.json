@@ -1,0 +1,23 @@
+{
+  "kpiId": 30,
+  "kpiName": "Test 2",
+  "kpiOperation": "ADD",
+  "kpiDescription": "Test 2 Description",
+  "operation": {
+    "type": "de.fzi.cep.sepa.kpi.UnaryOperation",
+    "properties": {
+      "unaryOperationType": "NONE",
+      "partition": "false",
+      "eventPropertyName": "shuttle",
+      "propertyRestriction": "partition",
+      "propertyType": "double",
+      "window": {
+        "value": 2,
+        "windowType": "TIME",
+        "timeUnit": "week"
+      },
+      "sensorId": "montrac",
+      "operationType": "NUMERIC"
+    }
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "@graph" : [ {
+    "@id" : "http://frosch.fzi.de:8090/project/37755a66-5285-4847-9376-3a3ab32bf590-FZI.SEPA.adeOnBIkAtuShFZoORVG",
+    "@type" : "sepa:SEPAInvocationGraph",
+    "sepa:belongsTo" : "http://frosch.fzi.de:8090/sepa/project",
+    "sepa:correspondingPipeline" : "37755a66-5285-4847-9376-3a3ab32bf590",
+    "sepa:hasName" : "General Project EPA",
+    "sepa:hasOutputStrategy" : {
+      "@id" : "urn:fzi.de:customoutputstrategy:jpsxVB"
+    },
+    "sepa:hasURI" : "http://frosch.fzi.de:8090/sepa/project/37755a66-5285-4847-9376-3a3ab32bf590-FZI.SEPA.adeOnBIkAtuShFZoORVG",
+    "sepa:produces" : {
+      "@id" : "urn:fzi.de:eventstream:iXHYBv"
+    },
+    "sepa:receives" : {
+      "@id" : "localhost:8090sepa/project"
+    },
+    "http://www.w3.org/2000/01/rdf-schema#description" : "Outputs a selectable subset of an input event type"
+  }, {
+    "@id" : "localhost:8090sepa/project",
+    "@type" : "sepa:EventStream",
+    "sepa:hasGrounding" : {
+      "@id" : "urn:fzi.de:eventgrounding:eYGRGy"
+    },
+    "sepa:hasSchema" : {
+      "@id" : "urn:fzi.de:eventschema:MJuFaW"
+    },
+    "sepa:hasURI" : "localhost:8090sepa/project"
+  }, {
+    "@id" : "urn:fzi.de:customoutputstrategy:jpsxVB",
+    "@type" : "sepa:CustomOutputStrategy",
+    "sepa:elementName" : "urn:fzi.de:customoutputstrategy:jpsxVB",
+    "sepa:producesProperty" : [ {
+      "@id" : "fzi:2758b011-966a-4621-b098-00fcd268996e"
+    }, {
+      "@id" : "fzi:339abfa6-5401-4907-8a28-edbc47846419"
+    }, {
+      "@id" : "fzi:5a784fb5-ea59-4abe-9513-ee25b7a1c0ea"
+    } ]
+  }, {
+    "@id" : "urn:fzi.de:eventgrounding:eYGRGy",
+    "@type" : "sepa:EventGrounding",
+    "sepa:elementName" : "urn:fzi.de:eventgrounding:eYGRGy",
+    "sepa:hasProtocol" : {
+      "@id" : "urn:fzi.de:kafkatransportprotocol:QgeAuT"
+    },
+    "sepa:transportFormat" : {
+      "@id" : "urn:fzi.de:transportformat:VsnHxn"
+    }
+  }, {
+    "@id" : "urn:fzi.de:eventgrounding:oHHGqU",
+    "@type" : "sepa:EventGrounding",
+    "sepa:elementName" : "urn:fzi.de:eventgrounding:oHHGqU",
+    "sepa:hasProtocol" : {
+      "@id" : "urn:fzi.de:kafkatransportprotocol:xjGXNU"
+    },
+    "sepa:transportFormat" : {
+      "@id" : "urn:fzi.de:transportformat:VsnHxn"
+    }
+  }, {
+    "@id" : "urn:fzi.de:eventschema:MJuFaW",
+    "@type" : "sepa:EventSchema",
+    "sepa:elementName" : "urn:fzi.de:eventschema:MJuFaW",
+    "sepa:hasEventProperty" : [ {
+      "@id" : "fzi:2758b011-966a-4621-b098-00fcd268996e"
+    }, {
+      "@id" : "fzi:339abfa6-5401-4907-8a28-edbc47846419"
+    }, {
+      "@id" : "fzi:8d1fb547-c3f0-49be-91d5-2054895e8be7"
+    }, {
+      "@id" : "fzi:f22b5f6e-bb6b-49ea-9adf-5013f6e4c602"
+    }, {
+      "@id" : "fzi:daa355b7-e5e0-4ad3-acce-2dc223f15279"
+    }, {
+      "@id" : "fzi:678b9a2c-f320-410d-b72c-e4b8162ccbc6"
+    }, {
+      "@id" : "fzi:a8c15aff-d0e2-4518-8ead-4f18b0229ad6"
+    }, {
+      "@id" : "fzi:12ff017c-1878-4d0f-8d7c-bf36991297f0"
+    }, {
+      "@id" : "fzi:735bc0e9-35fc-45f2-ba11-3b2cecb80dd2"
+    }, {
+      "@id" : "fzi:12abcb63-2ae5-4c12-8a5b-f7e69905233c"
+    }, {
+      "@id" : "fzi:ef363bc5-df5f-49ca-b4e3-69ff9e619a32"
+    }, {
+      "@id" : "fzi:f7bf3159-d6df-46fd-af93-dfe5e4839fd0"
+    }, {
+      "@id" : "fzi:ab8e11e8-4290-42af-af97-c8e8ae62b9a9"
+    }, {
+      "@id" : "fzi:1d0fd825-f9f4-4d9b-8a07-e67ffab0e670"
+    }, {
+      "@id" : "fzi:f4b445ea-edcc-42aa-b391-298a529edec6"
+    }, {
+      "@id" : "fzi:0c8b0aa2-9c2c-4332-9982-1187a824623b"
+    }, {
+      "@id" : "fzi:d555c78f-a1a1-45a7-82ab-cc1c13c590c6"
+    }, {
+      "@id" : "fzi:5a784fb5-ea59-4abe-9513-ee25b7a1c0ea"
+    } ]
+  }, {
+    "@id" : "urn:fzi.de:eventschema:mwZEiS",
+    "@type" : "sepa:EventSchema",
+    "sepa:elementName" : "urn:fzi.de:eventschema:mwZEiS",
+    "sepa:hasEventProperty" : [ {
+      "@id" : "fzi:2758b011-966a-4621-b098-00fcd268996e"
+    }, {
+      "@id" : "fzi:339abfa6-5401-4907-8a28-edbc47846419"
+    }, {
+      "@id" : "fzi:5a784fb5-ea59-4abe-9513-ee25b7a1c0ea"
+    } ]
+  }, {
+    "@id" : "urn:fzi.de:eventstream:iXHYBv",
+    "@type" : "sepa:EventStream",
+    "sepa:hasGrounding" : {
+      "@id" : "urn:fzi.de:eventgrounding:oHHGqU"
+    },
+    "sepa:hasSchema" : {
+      "@id" : "urn:fzi.de:eventschema:mwZEiS"
+    },
+    "sepa:hasURI" : "urn:fzi.de:eventstream:iXHYBv"
+  }, {
+    "@id" : "urn:fzi.de:kafkatransportprotocol:QgeAuT",
+    "@type" : "sepa:KafkaTransportProtocol",
+    "sepa:brokerHostname" : "ipe-koi04.fzi.de",
+    "sepa:elementName" : "urn:fzi.de:kafkatransportprotocol:QgeAuT",
+    "sepa:kafkaPort" : {
+      "@type" : "xsd:int",
+      "@value" : "9092"
+    },
+    "sepa:topic" : "SEPA.SEP.NYC.Taxi",
+    "sepa:zookeeperHost" : "ipe-koi04.fzi.de",
+    "sepa:zookeeperPort" : {
+      "@type" : "xsd:int",
+      "@value" : "2181"
+    }
+  }, {
+    "@id" : "urn:fzi.de:kafkatransportprotocol:xjGXNU",
+    "@type" : "sepa:KafkaTransportProtocol",
+    "sepa:brokerHostname" : "ipe-koi04.fzi.de",
+    "sepa:elementName" : "urn:fzi.de:kafkatransportprotocol:xjGXNU",
+    "sepa:kafkaPort" : {
+      "@type" : "xsd:int",
+      "@value" : "9092"
+    },
+    "sepa:topic" : "FZI.SEPA.adeOnBIkAtuShFZoORVG",
+    "sepa:zookeeperHost" : "ipe-koi04.fzi.de",
+    "sepa:zookeeperPort" : {
+      "@type" : "xsd:int",
+      "@value" : "2181"
+    }
+  }, {
+    "@id" : "fzi:0c8b0aa2-9c2c-4332-9982-1187a824623b",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:0c8b0aa2-9c2c-4332-9982-1187a824623b",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "tolls_amount",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:12abcb63-2ae5-4c12-8a5b-f7e69905233c",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://www.w3.org/2003/01/geo/wgs84_pos#lat"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:12abcb63-2ae5-4c12-8a5b-f7e69905233c",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "dropoff_latitude",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:12ff017c-1878-4d0f-8d7c-bf36991297f0",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://www.w3.org/2003/01/geo/wgs84_pos#lat"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:12ff017c-1878-4d0f-8d7c-bf36991297f0",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "pickup_latitude",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:1d0fd825-f9f4-4d9b-8a07-e67ffab0e670",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:1d0fd825-f9f4-4d9b-8a07-e67ffab0e670",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "mta_tax",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:2758b011-966a-4621-b098-00fcd268996e",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/text"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:2758b011-966a-4621-b098-00fcd268996e",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
+    "sepa:hasRuntimeName" : "medallion",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:339abfa6-5401-4907-8a28-edbc47846419",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/text"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:339abfa6-5401-4907-8a28-edbc47846419",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
+    "sepa:hasRuntimeName" : "hack_license",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:5a784fb5-ea59-4abe-9513-ee25b7a1c0ea",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:5a784fb5-ea59-4abe-9513-ee25b7a1c0ea",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#long",
+    "sepa:hasRuntimeName" : "read_datetime",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:678b9a2c-f320-410d-b72c-e4b8162ccbc6",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:678b9a2c-f320-410d-b72c-e4b8162ccbc6",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "trip_distance",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:735bc0e9-35fc-45f2-ba11-3b2cecb80dd2",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://www.w3.org/2003/01/geo/wgs84_pos#long"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:735bc0e9-35fc-45f2-ba11-3b2cecb80dd2",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "dropoff_longitude",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:8d1fb547-c3f0-49be-91d5-2054895e8be7",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://test.de/timestamp"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:8d1fb547-c3f0-49be-91d5-2054895e8be7",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#long",
+    "sepa:hasRuntimeName" : "pickup_datetime",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:a8c15aff-d0e2-4518-8ead-4f18b0229ad6",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://www.w3.org/2003/01/geo/wgs84_pos#long"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:a8c15aff-d0e2-4518-8ead-4f18b0229ad6",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "pickup_longitude",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:ab8e11e8-4290-42af-af97-c8e8ae62b9a9",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:ab8e11e8-4290-42af-af97-c8e8ae62b9a9",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "surcharge",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:d555c78f-a1a1-45a7-82ab-cc1c13c590c6",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:d555c78f-a1a1-45a7-82ab-cc1c13c590c6",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "total_amount",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:daa355b7-e5e0-4ad3-acce-2dc223f15279",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:daa355b7-e5e0-4ad3-acce-2dc223f15279",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#integer",
+    "sepa:hasRuntimeName" : "trip_time_in_secs",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:ef363bc5-df5f-49ca-b4e3-69ff9e619a32",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/text"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:ef363bc5-df5f-49ca-b4e3-69ff9e619a32",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#string",
+    "sepa:hasRuntimeName" : "payment_type",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f22b5f6e-bb6b-49ea-9adf-5013f6e4c602",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://test.de/timestamp"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:f22b5f6e-bb6b-49ea-9adf-5013f6e4c602",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#long",
+    "sepa:hasRuntimeName" : "dropoff_datetime",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f4b445ea-edcc-42aa-b391-298a529edec6",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:f4b445ea-edcc-42aa-b391-298a529edec6",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "tip_amount",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "fzi:f7bf3159-d6df-46fd-af93-dfe5e4839fd0",
+    "@type" : "sepa:EventPropertyPrimitive",
+    "sepa:domainProperty" : {
+      "@id" : "http://schema.org/Number"
+    },
+    "sepa:elementName" : "urn:fzi.de:sepa:f7bf3159-d6df-46fd-af93-dfe5e4839fd0",
+    "sepa:hasPropertyType" : "http://www.w3.org/2001/XMLSchema#double",
+    "sepa:hasRuntimeName" : "fare_amount",
+    "sepa:required" : {
+      "@type" : "xsd:boolean",
+      "@value" : "false"
+    }
+  }, {
+    "@id" : "urn:fzi.de:transportformat:VsnHxn",
+    "@type" : [ "sepa:TransportFormat", "sepa:json", "http://www.w3.org/2000/01/rdf-schema#Resource" ],
+    "sepa:elementName" : "urn:fzi.de:transportformat:VsnHxn"
+  } ],
+  "@context" : {
+    "sepa" : "http://sepa.event-processing.org/sepa#",
+    "ssn" : "http://purl.oclc.org/NET/ssnx/ssn#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "empire" : "urn:clarkparsia.com:empire:",
+    "fzi" : "urn:fzi.de:sepa:"
+  }
+}
