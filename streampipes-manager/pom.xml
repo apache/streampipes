@@ -38,6 +38,10 @@
 			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-user-management</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>uk.com.robust-it</groupId>
 			<artifactId>cloning</artifactId>
 			<version>1.9.0</version>
