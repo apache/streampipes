@@ -46,10 +46,10 @@ RUN set -x \
 
 EXPOSE 8080
 
-ADD ./org.streampipes/streampipes-backend/0.40.3-SNAPSHOT/streampipes-backend-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/streampipes-backend.war
+ADD ./org.streampipes/streampipes-backend/0.41.0-SNAPSHOT/streampipes-backend-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/streampipes-backend.war
 ADD /openrdf-sesame.war /usr/local/tomcat/webapps/openrdf-sesame.war
 ADD /openrdf-workbench.war /usr/local/tomcat/webapps/openrdf-workbench.war
-ADD ./org.streampipes/streampipes-pe-sources-demonstrator/0.40.3-SNAPSHOT/streampipes-pe-sources-demonstrator-0.40.3-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
+ADD ./org.streampipes/streampipes-pe-sources-demonstrator/0.41.0-SNAPSHOT/streampipes-pe-sources-demonstrator-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
 
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml
