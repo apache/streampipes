@@ -1,7 +1,7 @@
 export default {
     url: "http://localhost",
     port: "8080",
-    contextPath: "/semantic-epa-backend",
+    contextPath: "/streampipes-backend",
     api: "/api/v2",
 		
 };
