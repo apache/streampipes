@@ -18,7 +18,7 @@ import org.streampipes.model.impl.quality.EventStreamQualityDefinition;
 import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.impl.quality.MeasurementRange;
 import org.streampipes.model.impl.quality.Resolution;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.mhwirth.config.AkerVariables;
 import org.streampipes.pe.sources.mhwirth.config.ProaSenseSettings;
 import org.streampipes.pe.sources.mhwirth.config.SourcesConfig;

@@ -7,7 +7,7 @@ import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.demonstrator.config.DemonstratorVariables;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.demonstrator.config.ProaSenseSettings;
 
 public abstract class AbstractDemonstratorStream extends AbstractAlreadyExistingStream implements EventStreamDeclarer{

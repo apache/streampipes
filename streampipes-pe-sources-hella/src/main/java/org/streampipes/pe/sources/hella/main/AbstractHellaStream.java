@@ -6,7 +6,7 @@ import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.hella.config.ProaSenseSettings;
 
 public abstract class AbstractHellaStream extends AbstractAlreadyExistingStream implements EventStreamDeclarer {

@@ -1,4 +1,4 @@
-package org.streampipes.pe.sources;
+package org.streampipes.sources;
 
 
 import org.streampipes.container.declarer.EventStreamDeclarer;

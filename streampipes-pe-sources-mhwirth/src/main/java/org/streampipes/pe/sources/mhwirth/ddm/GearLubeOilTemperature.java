@@ -14,7 +14,7 @@ import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.MessageFormat;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.mhwirth.config.AkerVariables;
 import org.streampipes.pe.sources.mhwirth.config.ProaSenseSettings;
 import org.streampipes.pe.sources.mhwirth.config.SourcesConfig;

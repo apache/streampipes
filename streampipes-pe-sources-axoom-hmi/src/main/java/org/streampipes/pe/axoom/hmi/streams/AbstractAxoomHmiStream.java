@@ -1,7 +1,7 @@
 package org.streampipes.pe.axoom.hmi.streams;
 
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 
 /**
  * Created by riemer on 19.03.2017.

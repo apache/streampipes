@@ -7,7 +7,7 @@ import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
-import org.streampipes.pe.sources.AbstractAlreadyExistingStream;
+import org.streampipes.sources.AbstractAlreadyExistingStream;
 
 public class VehiclePositionStream extends AbstractAlreadyExistingStream {
 
