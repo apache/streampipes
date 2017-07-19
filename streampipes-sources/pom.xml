@@ -5,7 +5,7 @@
 		<artifactId>streampipes-parent</artifactId>
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>streampipes-pe-sources</artifactId>
+	<artifactId>streampipes-sources</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>

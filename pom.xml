@@ -151,7 +151,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources</artifactId>
+                <artifactId>streampipes-sources</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -309,7 +309,7 @@
         <module>streampipes-pe-sinks-standalone</module>
         <module>streampipes-pe-slack</module>
         <module>streampipes-pe-sources-axoom-hmi</module>
-        <module>streampipes-pe-sources</module>
+        <module>streampipes-sources</module>
         <module>streampipes-pe-sources-kd2</module>
         <module>streampipes-pe-sources-demonstrator</module>
         <module>streampipes-pe-sources-hella</module>
@@ -422,28 +422,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>semweb4j</id>
-            <name>semweb4j repo</name>
-            <url>http://mavenrepo.fzi.de/semweb4j.org/repo/</url>
-        </repository>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.com</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>cumulusrdf-repo</id>
-            <url>http://cumulusrdf.googlecode.com/svn/repository</url>
-        </repository>
-
-        <repository>
             <id>apache</id>
             <url>https://repository.apache.org/content/repositories/releases/</url>
         </repository>
-
         <repository>
             <id>archiva.public</id>
             <name>Nissatech Public Repository</name>

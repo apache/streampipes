@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-pe-sources</artifactId>
+            <artifactId>streampipes-sources</artifactId>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
