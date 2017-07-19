@@ -4,7 +4,7 @@ import org.streampipes.commons.config.ClientConfiguration;
 
 public class Config {
 
-	public static final String JAR_FILE = "./streampipes-pe-mixed-flink-0.41.0-SNAPSHOT.jar";
+	public static final String JAR_FILE = "./streampipes-pe-mixed-flink.jar";
 //	public static final String JAR_FILE = "c:\\git\\semantic-epa-parent\\semantic-epa-flink-samples\\target\\semantic-epa-flink-samples-0.40.3-SNAPSHOT.jar";
 //	public static final String JAR_FILE = "/Users/philippzehnder/Coding/fzi/semantic-epa-parent/semantic-epa-flink-samples/target/semantic-epa-flink-samples-0.40.3-SNAPSHOT.jar";
 	
