@@ -12,14 +12,14 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
 public class CodeGeneratorTest {
-    @Test
-    public void getGeneratorImplementationFlinkSepaStandalone() throws Exception {
-        DeploymentConfiguration config = new DeploymentConfiguration();
-        config.setOutputType(OutputType.IMPLEMENTATION);
-        config.setRuntimeType(RuntimeType.FLINK);
-        config.setDeploymentType(DeploymentType.STANDALONE);
-
-        assertThat(CodeGenerator.getCodeGenerator(config, new SepaDescription()),instanceOf(FlinkSepaCodeGenerator.class));
-    }
+//    @Test
+//    public void getGeneratorImplementationFlinkSepaStandalone() throws Exception {
+//        DeploymentConfiguration config = new DeploymentConfiguration();
+//        config.setOutputType(OutputType.IMPLEMENTATION);
+//        config.setRuntimeType(RuntimeType.FLINK);
+//        config.setDeploymentType(DeploymentType.STANDALONE);
+//
+//        assertThat(CodeGenerator.getCodeGenerator(config, new SepaDescription()),instanceOf(FlinkSepaCodeGenerator.class));
+//    }
 
 }

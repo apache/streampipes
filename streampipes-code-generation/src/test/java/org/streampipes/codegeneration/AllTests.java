@@ -16,11 +16,11 @@ import org.streampipes.codegeneration.flink.sepa.ParametersGeneratorTest;
 import org.streampipes.codegeneration.utils.DirectoryBuilderTest;
 import org.streampipes.codegeneration.utils.UtilsTest;
 
-@RunWith(Suite.class)
-@SuiteClasses({ FlinkSepaControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class,
-		XmlGeneratorTest.class, FlinkSepaProgramGeneratorTest.class, ImplementationGeneratorTest.class,
-		ParametersGeneratorTest.class, ConfigGeneratorTest.class, DirectoryBuilderTest.class,
-		FlinkSecControllerGeneratorTest.class, FlinkSecProgramGeneratorTest.class})
-public class AllTests {
-
-}
+//@RunWith(Suite.class)
+//@SuiteClasses({ FlinkSepaControllerGeneratorTest.class, UtilsTest.class, InitGeneratorTest.class,
+//		XmlGeneratorTest.class, FlinkSepaProgramGeneratorTest.class, ImplementationGeneratorTest.class,
+//		ParametersGeneratorTest.class, ConfigGeneratorTest.class, DirectoryBuilderTest.class,
+//		FlinkSecControllerGeneratorTest.class, FlinkSecProgramGeneratorTest.class})
+//public class AllTests {
+//
+//}
