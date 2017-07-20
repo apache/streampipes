@@ -11,7 +11,7 @@
         </md-toolbar>
         <div>
             <div flex="100" class="md-dialog-content" style="padding:20px;" ng-show="page == 'preview'">
-                <h4>You are about to {{!action ? 'start' : 'stop'}} the following pipelines:</h4>
+                <h4>You are about to {{action ? 'start' : 'stop'}} the following pipelines:</h4>
                 <div ng-repeat="pipeline in pipelinesToModify">
                     <h5>{{pipeline.name}}</h5>
                 </div>
@@ -19,7 +19,7 @@
             </div>
             <div flex="100" class="md-dialog-content" style="padding:20px;" ng-show="page == 'installation'">
                 <div ng-repeat="status in installationStatus">
-                    <h4>{{!action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id+1}} of {{pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
+                    <h4>{{action ? 'Starting pipeline ' : 'Stopping pipeline'}} {{status.id+1}} of {{pipelinesToModify.length}} ({{status.name}})...{{status.status}}</h4>
                 </div>
                 <div ng-if="pipelinesToModify.length == 0">
                     <h4>Sorry, there are no pipelines that are currently {{action ? "idle." : "running."}}</h4>
