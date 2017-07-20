@@ -42,7 +42,7 @@ let config = {
         contentBase: `${__dirname}/`,
         port: 8082,
         proxy: {
-            '/semantic-epa-backend': {
+            '/streampipes-backend': {
                 target: 'http://localhost:8030',
                 secure: false
             },

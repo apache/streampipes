@@ -12,7 +12,6 @@ import spAdd from './add/add.module';
 import spCore from './core/core.module';
 import spCreate from './create/create.module';
 import spDashboard from './dashboard/dashboard.module';
-import spDocs from './docs/docs.module';
 import spEditor from './editor/editor.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
@@ -22,7 +21,6 @@ import spOntology from './ontology/ontology.module';
 import spPipelines from './pipelines/pipelines.module';
 import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
-import spTutorial from './tutorial/tutorial.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module'
 
 const MODULE_NAME = 'streamPipesApp';
@@ -34,7 +32,6 @@ export default angular
         spCore,
         spCreate,
         spDashboard,
-        spDocs,
         spEditor,
         spLayout,
         spLogin,
@@ -43,7 +40,6 @@ export default angular
         spOntology,
         spPipelines,
         spSensors,
-        spTutorial,
         spAppLinks,
         spPipelineDetails,
         uiRouter,
