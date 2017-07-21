@@ -319,7 +319,6 @@
         <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-sdk-tutorial</module>
         <module>streampipes-storage</module>
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-flink</module>
