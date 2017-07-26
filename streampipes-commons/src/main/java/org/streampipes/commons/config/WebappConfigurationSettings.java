@@ -14,13 +14,7 @@ public class WebappConfigurationSettings {
 	private String adminEmail;
 	private String adminUserName;
 	private String adminPassword;
-	
-	private String hippoUrl;
-	private String panddaUrl;
-	private String streamStoryUrl;
-	private String humanInspectionReportUrl;
-	private String humanMaintenanceReportUrl;
-	
+
 	private String kafkaProtocol;
 	private int kafkaPort;
 	private String kafkaHost;
@@ -32,19 +26,7 @@ public class WebappConfigurationSettings {
 	private String zookeeperProtocol;
 	private int zookeeperPort;
 	private String zookeeperHost;
-	
-	private String couchDbUserDbName;
-	private String couchDbPipelineDbName;
-	private String couchDbConnectionDbName;
-	private String couchDbMonitoringDbName;
-	private String couchDbNotificationDbName;
-	
-	private String appConfig;
-	private String marketplaceUrl;
-	private List<String> podUrls;
-	
-	
-	
+
 	public WebappConfigurationSettings(String couchDbHost, String sesameUrl, String sesameDbName,
 			String adminEmail, String adminUserName, String adminPassword) {
 		super();
@@ -85,30 +67,6 @@ public class WebappConfigurationSettings {
 
 	public void setAdminEmail(String adminEmail) {
 		this.adminEmail = adminEmail;
-	}
-
-	public String getHippoUrl() {
-		return hippoUrl;
-	}
-
-	public void setHippoUrl(String hippoUrl) {
-		this.hippoUrl = hippoUrl;
-	}
-
-	public String getPanddaUrl() {
-		return panddaUrl;
-	}
-
-	public void setPanddaUrl(String panddaUrl) {
-		this.panddaUrl = panddaUrl;
-	}
-
-	public String getStreamStoryUrl() {
-		return streamStoryUrl;
-	}
-
-	public void setStreamStoryUrl(String streamStoryUrl) {
-		this.streamStoryUrl = streamStoryUrl;
 	}
 
 	public String getSesameDbName() {
@@ -216,85 +174,4 @@ public class WebappConfigurationSettings {
 		this.zookeeperHost = zookeeperHost;
 	}
 
-	public String getCouchDbUserDbName() {
-		return couchDbUserDbName;
-	}
-
-	public void setCouchDbUserDbName(String couchDbUserDbName) {
-		this.couchDbUserDbName = couchDbUserDbName;
-	}
-
-	public String getCouchDbPipelineDbName() {
-		return couchDbPipelineDbName;
-	}
-
-	public void setCouchDbPipelineDbName(String couchDbPipelineDbName) {
-		this.couchDbPipelineDbName = couchDbPipelineDbName;
-	}
-
-	public String getCouchDbConnectionDbName() {
-		return couchDbConnectionDbName;
-	}
-
-	public void setCouchDbConnectionDbName(String couchDbConnectionDbName) {
-		this.couchDbConnectionDbName = couchDbConnectionDbName;
-	}
-
-	public String getCouchDbMonitoringDbName() {
-		return couchDbMonitoringDbName;
-	}
-
-	public void setCouchDbMonitoringDbName(String couchDbMonitoringDbName) {
-		this.couchDbMonitoringDbName = couchDbMonitoringDbName;
-	}
-
-	public String getCouchDbNotificationDbName() {
-		return couchDbNotificationDbName;
-	}
-
-	public void setCouchDbNotificationDbName(String couchDbNotificationDbName) {
-		this.couchDbNotificationDbName = couchDbNotificationDbName;
-	}
-
-	public String getHumanInspectionReportUrl() {
-		return humanInspectionReportUrl;
-	}
-
-	public void setHumanInspectionReportUrl(String humanInspectionReportUrl) {
-		this.humanInspectionReportUrl = humanInspectionReportUrl;
-	}
-
-	public String getHumanMaintenanceReportUrl() {
-		return humanMaintenanceReportUrl;
-	}
-
-	public void setHumanMaintenanceReportUrl(String humanMaintenanceReportUrl) {
-		this.humanMaintenanceReportUrl = humanMaintenanceReportUrl;
-	}
-
-	public String getAppConfig() {
-		return appConfig;
-	}
-
-	public void setAppConfig(String appConfig) {
-		this.appConfig = appConfig;
-	}
-
-	public String getMarketplaceUrl() {
-		return marketplaceUrl;
-	}
-
-	public void setMarketplaceUrl(String marketplaceUrl) {
-		this.marketplaceUrl = marketplaceUrl;
-	}
-
-	public List<String> getPodUrls() {
-		return podUrls;
-	}
-
-	public void setPodUrls(List<String> podUrls) {
-		this.podUrls = podUrls;
-	}
-	
-	
 }

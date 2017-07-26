@@ -30,13 +30,6 @@ public class Configuration {
 	
 	public RDFFormat RDF_FORMAT = RDFFormat.JSONLD;
 	
-	public String COUCHDB_USER_DB;
-	public String COUCHDB_PIPELINE_DB;
-	public String COUCHDB_SEPA_INVOCATION_DB;
-	public String COUCHDB_MONITORING_DB;
-	public String COUCHDB_CONNECTION_DB; 
-	public String COUCHDB_NOTIFICATION_DB;
-	public String COUCHDB_PIPELINE_CATEGORY_DB;
 	public String COUCHDB_PROTOCOL;
 	public String COUCHDB_HOSTNAME;
 	public int COUCHDB_PORT = 5984;
@@ -46,16 +39,6 @@ public class Configuration {
 	
 	private String HOSTNAME;
 	public  String SERVER_URL;
-	
-	public int ACTION_PORT;
-	public int ESPER_PORT;
-	public int ALGORITHM_PORT;
-	public int SOURCES_PORT;
-	
-	public String ALGORITHM_BASE_URL = SERVER_URL +":" +ALGORITHM_PORT;
-	public String ESPER_BASE_URL = SERVER_URL + ":" + ESPER_PORT;
-	public String ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
-	public  String SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 	
 	public String CONTEXT_PATH = "/semantic-epa-backend";
 	
@@ -77,13 +60,8 @@ public class Configuration {
 	public int ZOOKEEPER_PORT;
 	public String ZOOKEEPER_PROTOCOL;
 	
-	public String HIPPO_URL;
-	public String PANDDA_URL;
-	public String STREAMSTORY_URL;	
-	public String HUMAN_INSPECTION_REPORT_URL;
-	public String HUMAN_MAINTENANCE_REPORT_URL;
-	
 	public String APP_CONFIG;
+
 	
 	public String MARKETPLACE_URL;
 	public List<String> POD_URLS;
@@ -103,15 +81,7 @@ public class Configuration {
 					SERVER_URL = config.getString("server_url");
 					TCP_SERVER_URL = config.getString("tcp_server_url");
 					TCP_SERVER_PORT = config.getInt("tcp_server_port")	;
-					ACTION_PORT = config.getInt("action_port");
-					ESPER_PORT = config.getInt("esper_port");
-					ALGORITHM_PORT = config.getInt("algorithm_port");
-					SOURCES_PORT = config.getInt("sources_port");
 					WEBAPP_PORT = config.getInt("webapp_port");
-					ALGORITHM_BASE_URL = SERVER_URL +":" +ALGORITHM_PORT;
-					ESPER_BASE_URL = SERVER_URL + ":" + ESPER_PORT;
-					ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
-					SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
 					SESAME_URI = config.getString("sesameUrl");
 					
@@ -119,15 +89,7 @@ public class Configuration {
 					COUCHDB_HOSTNAME = config.getString("couchDbHost");
 
 					COUCHDB_PORT = config.getInt("couchDbPort");
-					
-					COUCHDB_USER_DB = config.getString("couchDbUserDbName");
-					COUCHDB_PIPELINE_DB = config.getString("couchDbPipelineDbName");
-					COUCHDB_SEPA_INVOCATION_DB = config.getString("couchDbSepaInvocationDbName");
-					COUCHDB_MONITORING_DB = config.getString("couchDbMonitoringDbName");
-					COUCHDB_CONNECTION_DB = config.getString("couchDbConnectionDbName");
-					COUCHDB_NOTIFICATION_DB = config.getString("couchDbNotificationDbName");
-					COUCHDB_PIPELINE_CATEGORY_DB = config.getString("couchDbPipelineCategoryDbName");
-					
+
 					SESAME_REPOSITORY_ID = config.getString("sesameDbName");
 					CONTEXT_PATH = config.getString("context_path");
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
@@ -143,18 +105,7 @@ public class Configuration {
 					ZOOKEEPER_HOST  = config.getString("zookeeperHost");
 					ZOOKEEPER_PROTOCOL = config.getString("zookeeperProtocol");
 					ZOOKEEPER_PORT = config.getInt("zookeeperPort");
-					
-					HIPPO_URL = config.getString("hippoUrl");
-					PANDDA_URL = config.getString("panddaUrl");
-					STREAMSTORY_URL = config.getString("streamStoryUrl");	
-					HUMAN_INSPECTION_REPORT_URL = config.getString("humanInspectionReportUrl");
-					HUMAN_MAINTENANCE_REPORT_URL = config.getString("humanMaintenanceReportUrl");
-					
-					APP_CONFIG= config.getString("appConfig");
-					
-					POD_URLS = Arrays.asList(config.getStringArray("podUrls"));
-					MARKETPLACE_URL = config.getString("marketplaceUrl");
-		
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					loadDefaults();
@@ -168,13 +119,6 @@ public class Configuration {
 	
 	private void loadDefaults() {
 		// load defaults
-					COUCHDB_USER_DB = "users";
-					COUCHDB_PIPELINE_DB = "pipeline";
-					COUCHDB_SEPA_INVOCATION_DB = "invocation";
-					COUCHDB_MONITORING_DB = "monitoring";
-					COUCHDB_CONNECTION_DB = "connection"; 
-					COUCHDB_NOTIFICATION_DB = "notification";
-					COUCHDB_PIPELINE_CATEGORY_DB = "pipelineCategories";
 					COUCHDB_PROTOCOL = "http";
 					COUCHDB_HOSTNAME = Utils.getHostname();
 //					COUCHDB_HOSTNAME = "localhost";
@@ -185,16 +129,6 @@ public class Configuration {
 					
 					HOSTNAME =Utils.getHostname();
 					SERVER_URL = "http://" +HOSTNAME;
-					
-					ACTION_PORT = 8091;
-					ESPER_PORT = 8090;
-					ALGORITHM_PORT = 8092;
-					SOURCES_PORT = 8089;
-					
-					ALGORITHM_BASE_URL = SERVER_URL +":" +ALGORITHM_PORT;
-					ESPER_BASE_URL = SERVER_URL + ":" + ESPER_PORT;
-					ACTION_BASE_URL = SERVER_URL + ":" + ACTION_PORT;
-					SOURCES_BASE_URL = SERVER_URL + ":" + SOURCES_PORT;
 					
 					CONTEXT_PATH = "/semantic-epa-backend";
 					
@@ -216,19 +150,7 @@ public class Configuration {
 					ZOOKEEPER_PORT = 2181;
 					ZOOKEEPER_PROTOCOL = "http";
 					
-					HIPPO_URL = "";
-					PANDDA_URL = "";
-					STREAMSTORY_URL = "";	
-					HUMAN_INSPECTION_REPORT_URL = "";
-					HUMAN_MAINTENANCE_REPORT_URL = "";
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
-					
-					APP_CONFIG = "StreamPipes";
-					
-					POD_URLS = new ArrayList<>();
-					POD_URLS.add("http://localhost:8081");
-					
-					MARKETPLACE_URL = "http://ipe-koi15.fzi.de:8080";
 	}
 
 	public static Configuration getInstance() {
@@ -239,20 +161,20 @@ public class Configuration {
 		return instance;
 	}
 	
-	public String getJmsAddress()
-	{
-		return JMS_PROTOCOL +"://" +JMS_HOST +":" +JMS_PORT;
-	}
-	
-	public String getHostname() {
-		InetAddress addr;
-		try {
-			addr = InetAddress.getLocalHost();
-			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
-		} catch (UnknownHostException e) {
-			return "http://localhost:";
-		}	
-	}
+//	public String getJmsAddress()
+//	{
+//		return JMS_PROTOCOL +"://" +JMS_HOST +":" +JMS_PORT;
+//	}
+//
+//	public String getHostname() {
+//		InetAddress addr;
+//		try {
+//			addr = InetAddress.getLocalHost();
+//			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
+//		} catch (UnknownHostException e) {
+//			return "http://localhost:";
+//		}
+//	}
 	
 	public static void update() {
 		instance = new Configuration();

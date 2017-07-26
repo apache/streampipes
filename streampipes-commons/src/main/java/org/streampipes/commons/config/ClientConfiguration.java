@@ -281,21 +281,21 @@ public enum ClientConfiguration {
 		return hostname;
 	}
 
-	public int getActionPort() {
-		return actionPort;
-	}
+//	public int getActionPort() {
+//		return actionPort;
+//	}
 
-	public int getEsperPort() {
-		return esperPort;
-	}
+//	public int getEsperPort() {
+//		return esperPort;
+//	}
 
-	public int getAlgorithmPort() {
-		return algorithmPort;
-	}
+//	public int getAlgorithmPort() {
+//		return algorithmPort;
+//	}
 
-	public int getSourcesPort() {
-		return sourcesPort;
-	}
+//	public int getSourcesPort() {
+//		return sourcesPort;
+//	}
 
 	public String getZookeeperHost() {
 		return zookeeperHost;
@@ -329,9 +329,9 @@ public enum ClientConfiguration {
 		return zookeeperUrl;
 	}
 
-	public RDFFormat getRdfFormat() {
-		return rdfFormat;
-	}
+//	public RDFFormat getRdfFormat() {
+//		return rdfFormat;
+//	}
 
 	public String getEsperUrl() {
 		return esperUrl;
@@ -397,17 +397,17 @@ public enum ClientConfiguration {
 		return iconUrl;
 	}
 
-	public String getIconHost() {
-		return iconHost;
-	}
+//	public String getIconHost() {
+//		return iconHost;
+//	}
 
-	public int getIconPort() {
-		return iconPort;
-	}
+//	public int getIconPort() {
+//		return iconPort;
+//	}
 
-	public String getIconScheme() {
-		return iconScheme;
-	}
+//	public String getIconScheme() {
+//		return iconScheme;
+//	}
 	
 	public long getSimulationMaxEvents() {
 		return simulationMaxEvents;
@@ -429,17 +429,17 @@ public enum ClientConfiguration {
 		return waitForMs;
 	}
 	
-	public int getKafkaBatchSize() {
-		return kafkaBatchSize;
-	}
+//	public int getKafkaBatchSize() {
+//		return kafkaBatchSize;
+//	}
 	
-	public long getKafkaLingerMs() {
-		return kafkaLingerMs;
-	}
+//	public long getKafkaLingerMs() {
+//		return kafkaLingerMs;
+//	}
 	
-	public String getKafkaAcks() {
-		return kafkaAcks;
-	}
+//	public String getKafkaAcks() {
+//		return kafkaAcks;
+//	}
 	
 	public String getFlinkHost() {
 		return flinkHost;
@@ -457,13 +457,13 @@ public enum ClientConfiguration {
 		return elasticsearchPort;
 	}
 	
-	public String getElasticsearchUrl() {
-		return getElasticsearchHost() +":" +getElasticsearchPort();
-	}
+//	public String getElasticsearchUrl() {
+//		return getElasticsearchHost() +":" +getElasticsearchPort();
+//	}
 	
-	public String getStreamStoryUrl() {
-		return streamStoryUrl;
-	}
+//	public String getStreamStoryUrl() {
+//		return streamStoryUrl;
+//	}
 
 	public String getSlackToken() {
 		return slackToken;
@@ -477,40 +477,40 @@ public enum ClientConfiguration {
 		return couchDbPort;
 	}
 	
-	public String getPodHostname() {
-		return podHostname;
-	}
+//	public String getPodHostname() {
+//		return podHostname;
+//	}
 
 	public String getDatalocation() {
 		return datalocation;
 	}
 
-	public void setDatalocation(String datalocation) {
-		this.datalocation = datalocation;
-	}
+//	public void setDatalocation(String datalocation) {
+//		this.datalocation = datalocation;
+//	}
 
-	public int getPodPort() {
-		return podPort;
-	}
+//	public int getPodPort() {
+//		return podPort;
+//	}
 
-	public String getPodDeploymentDirectory() {
-		return podDeploymentDirectory;
-	}
+//	public String getPodDeploymentDirectory() {
+//		return podDeploymentDirectory;
+//	}
 
-	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
-	{
-		RDFWriter writer = Rio.createWriter(rdfFormat, stream);
-
-		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
-		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
-		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
-		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
-
-		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-
-		return writer;
-	}
+//	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
+//	{
+//		RDFWriter writer = Rio.createWriter(rdfFormat, stream);
+//
+//		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+//		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
+//		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
+//		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
+//		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+//
+//		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+//		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+//
+//		return writer;
+//	}
 	
 }

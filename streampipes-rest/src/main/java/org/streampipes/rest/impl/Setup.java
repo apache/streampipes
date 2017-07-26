@@ -34,7 +34,6 @@ public class Setup extends AbstractRestInterface implements ISetup {
 			if (ConfigurationManager.isConfigured()) 
 				{
 					obj.addProperty("configured", true);
-					obj.addProperty("appConfig", ConfigurationManager.getWebappConfigurationFromProperties().getAppConfig());
 					return ok(obj.toString());
 				}
 			else 

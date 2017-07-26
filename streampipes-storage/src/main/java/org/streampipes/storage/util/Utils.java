@@ -8,20 +8,22 @@ import org.streampipes.commons.config.Configuration;
 
 public class Utils {
 
+
+
 	public static CouchDbClient getCouchDbPipelineClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_PIPELINE_DB));
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "pipeline"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbSepaInvocationClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_SEPA_INVOCATION_DB));
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "invocation"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbConnectionClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_CONNECTION_DB));
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "connection"));
 		return dbClient;
 	}
 
@@ -46,7 +48,7 @@ public class Utils {
 	}
 
 	public static CouchDbClient getCouchDbUserClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_USER_DB));
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "users"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
@@ -58,16 +60,16 @@ public class Utils {
 	}
 	
 	public static CouchDbClient getCouchDbMonitoringClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_MONITORING_DB));
+		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "monitoring"));
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbNotificationClient() {
-		return new CouchDbClient(props(cfg(), cfg().COUCHDB_NOTIFICATION_DB));
+		return new CouchDbClient(props(cfg(), "notification"));
 	}
 	
 	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
-		return new CouchDbClient(props(cfg(), "pipelinecategories"));
+		return new CouchDbClient(props(cfg(), "pipelineCategories"));
 	}
 	
 	public static CouchDbClient getCouchDbAppStorageClient() {
