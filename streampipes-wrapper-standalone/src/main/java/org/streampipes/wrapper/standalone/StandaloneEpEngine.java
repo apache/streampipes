@@ -16,8 +16,6 @@ public abstract class StandaloneEpEngine<B extends BindingParameters> implements
 
   private Optional<OutputCollector> collectorOpt;
 
-  protected SepaInvocation graph;
-
   @Override
   public void bind(EngineParameters<B> parameters, OutputCollector collector, SepaInvocation graph) {
     this.collectorOpt = Optional.of(collector);
@@ -36,10 +34,13 @@ public abstract class StandaloneEpEngine<B extends BindingParameters> implements
   @Override
   public void discard() {
     this.collectorOpt = Optional.empty();
+    onDetach();
   }
 
   public abstract void onInvocation(EngineParameters<B> params, SepaInvocation graph);
 
   public abstract void onEvent(Map<String, Object> event, String sourceInfo, OutputCollector
           collector);
+
+  public abstract void onDetach();
 }
