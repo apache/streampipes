@@ -36,7 +36,8 @@ public class UserRegistrationInstallationStep implements InstallationStep {
 
 		try {
 			String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
-			StorageManager.INSTANCE.getUserStorageAPI().storeUser(new User(adminUsername, adminEmail, adminPassword, roles));
+			StorageManager.INSTANCE.getUserStorageAPI().storeUser(new User(adminUsername, adminEmail,
+							encryptedPassword, roles));
 			return Arrays.asList(Notifications.success("Creating admin user..."));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			e.printStackTrace();
