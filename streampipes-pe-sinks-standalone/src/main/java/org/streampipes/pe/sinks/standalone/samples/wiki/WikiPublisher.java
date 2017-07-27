@@ -19,7 +19,7 @@ public class WikiPublisher implements EventListener<byte[]> {
 	public void onEvent(byte[] message) {
 		JsonObject newObj = new JsonParser().parse(message.toString()).getAsJsonObject();
 		JsonElement timestamp = newObj.get("timestamp");
-		JsonElement locations = newObj.get("locationList");
+		JsonElement locations = newObj.get("message");
 
 		System.out.println("timestamp: " + timestamp.toString());
 		System.out.println("locationList: " + locations.toString());
