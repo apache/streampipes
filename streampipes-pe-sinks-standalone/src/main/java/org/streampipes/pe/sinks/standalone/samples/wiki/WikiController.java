@@ -18,7 +18,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 public class WikiController extends ActionController {
   @Override
   public SecDescription declareModel() {
-    return DataSinkBuilder.create("wiki_sink", "Wiki Sink", "Store the optimal route in the wiki")
+    return DataSinkBuilder.create("wikisink", "Wiki Sink", "Store the optimal route in the wiki")
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())

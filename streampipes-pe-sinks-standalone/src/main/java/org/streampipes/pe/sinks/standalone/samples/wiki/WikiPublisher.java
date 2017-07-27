@@ -17,14 +17,16 @@ public class WikiPublisher implements EventListener<byte[]> {
 	
 	@Override
 	public void onEvent(byte[] message) {
-		JsonObject newObj = new JsonParser().parse(message.toString()).getAsJsonObject();
+		String m = new String(message);
+		JsonObject newObj = new JsonParser().parse(m).getAsJsonObject();
 		JsonElement timestamp = newObj.get("timestamp");
 		JsonElement locations = newObj.get("message");
 
 		System.out.println("timestamp: " + timestamp.toString());
 		System.out.println("locationList: " + locations.toString());
 
-		producer.publish(timestamp.toString() + "," + locations);
+//		producer.publish(timestamp.toString() + "," + locations);
+		producer.publish(locations.toString().substring(0, locations.toString().lastIndexOf(",")));
 	}
 
 }
