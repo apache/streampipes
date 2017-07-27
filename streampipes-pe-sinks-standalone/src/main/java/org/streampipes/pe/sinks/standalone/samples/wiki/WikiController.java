@@ -5,16 +5,10 @@ import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.util.SepaUtils;
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
-import org.streampipes.pe.sinks.standalone.samples.kafka.KafkaPublisher;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
@@ -25,6 +19,7 @@ public class WikiController extends ActionController {
   @Override
   public SecDescription declareModel() {
     return DataSinkBuilder.create("wiki_sink", "Wiki Sink", "Store the optimal route in the wiki")
+            .requiredPropertyStream1(EpRequirements.anyProperty())
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
