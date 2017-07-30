@@ -136,7 +136,7 @@ public class Configuration {
 					KAFKA_PROTOCOL = config.getString("kafkaProtocol");
 					KAFKA_PORT = config.getInt("kafkaPort");
 					
-					JMS_HOST  = config.getString("jmsHost");;
+					JMS_HOST  = config.getString("jmsHost");
 					JMS_PROTOCOL = config.getString("jmsProtocol");
 					JMS_PORT = config.getInt("jmsPort");
 					

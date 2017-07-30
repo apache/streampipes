@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Utils {
@@ -36,7 +37,7 @@ public class Utils {
 
 	public static List<URI> createURI(String...uris)
 	{
-		List<URI> result = new ArrayList<URI>();
+		List<URI> result = new ArrayList<>();
 		for(String uri : uris)
 		{
 			result.add(URI.create(uri));
@@ -47,11 +48,8 @@ public class Utils {
 	@SafeVarargs
 	public static <T> List<T> createList(T...objects)
 	{
-		List<T> result = new ArrayList<T>();
-		for(T object : objects)
-		{
-			result.add(object);
-		}
+		List<T> result = new ArrayList<>();
+		Collections.addAll(result, objects);
 		return result;
 	}
 	
