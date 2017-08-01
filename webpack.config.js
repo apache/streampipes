@@ -42,27 +42,27 @@ let config = {
         contentBase: `${__dirname}/`,
         port: 8082,
         proxy: {
-            '/streampipes-backend': {
-                target: 'http://localhost:8030',
-                secure: false
-            },
-            '/visualizablepipeline': {
-                target: 'http://localhost:5984',
-                secure: false
-            },
-            '/dashboard': {
-                target: 'http://localhost:5984',
-                secure: false
-            },
-            '/pipeline': {
-                target: 'http://localhost:5984',
-                secure: false
-            },
-            '/streampipes/ws': {
-                target: 'ws://ipe-koi04.fzi.de:61614',
-                ws: true,
-                secure: false
-            }
+						'/streampipes-backend': {
+								target: 'http://localhost:8030',
+								secure: false
+						},
+						'/visualizablepipeline': {
+								target: 'http://localhost:5984',
+								secure: false
+						},
+						'/dashboard': {
+								target: 'http://localhost:5984',
+								secure: false
+						},
+						'/pipeline': {
+								target: 'http://localhost:5984',
+								secure: false
+						},
+						'/streampipes/ws': {
+								target: 'ws://ipe-koi15.fzi.de:61614',
+								ws: true,
+								secure: false
+						}
         }
         //inline: true
     },
