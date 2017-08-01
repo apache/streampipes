@@ -18,9 +18,9 @@
         <div>
             <md-content layout-padding>
                 <div flayout="row">
-                    <md-button ng-click="startAllPipelines(true)" type="button" class="md-accent">Start all pipelines
+                    <md-button ng-click="startAllPipelines(true)" ng-disabled="checkCurrentSelectionStatus(false)" type="button" class="md-accent">Start all pipelines
                     </md-button>
-                    <md-button ng-click="startAllPipelines(false)" type="button" class="md-accent">Stop all pipelines
+                    <md-button ng-click="startAllPipelines(false)" ng-disabled="checkCurrentSelectionStatus(true)" type="button" class="md-accent">Stop all pipelines
                     </md-button>
                 </div>
                 <md-list>

@@ -69,6 +69,19 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         return 'active-pipeline';
     }
 
+    $scope.checkCurrentSelectionStatus = function(status) {
+        var active = true;
+        angular.forEach($scope.pipelines, function(pipeline) {
+            if ($scope.activeCategory == "" || pipeline.pipelineCategories == $scope.activeCategory) {
+                if (pipeline.running == status) {
+                    active = false;
+                }
+            }
+        });
+
+        return active;
+    }
+
     $scope.startAllPipelines = function(action) {
         $mdDialog.show({
             controller: StartAllPipelinesController,
@@ -187,7 +200,6 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
                 .success(function (data) {
                     $scope.getPipelines();
                     $scope.getSystemPipelines();
-                    console.log(data);
                 })
                 .error(function (data) {
                     console.log(data);

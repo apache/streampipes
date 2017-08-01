@@ -123,15 +123,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.tutorial', {
-            url: '/tutorial',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/tutorial/tutorial.html',
-                    controller: 'TutorialCtrl'
-                }
-            }
-        })
         .state('register', {
             url: '/register',
             views: {
@@ -147,15 +138,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 "spMain@streampipes": {
                     templateUrl: 'app/add/add.html',
                     controller: 'AddCtrl'
-                }
-            }
-        })
-        .state('streamppipes.documentation', {
-            url: '/docs',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/docs/docs.html',
-                    controller: 'DocsCtrl'
                 }
             }
         })

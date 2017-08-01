@@ -8,6 +8,7 @@ export default function StartAllPipelinesController($scope, $mdDialog, restApi, 
     $scope.page = "preview";
     $scope.nextButton = "Next";
     $scope.installationRunning = false;
+    $scope.action = action;
 
     $scope.hide = function () {
         $mdDialog.hide();

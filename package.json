@@ -9,7 +9,7 @@
   "homepage": "http://streampipes.fzi.de",
   "repository": {
     "type": "git",
-    "url": "https://laus.fzi.de/gitlab/streampipes/semantic-epa-parent"
+    "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
   },
   "scripts": {
     "dev-build": "webpack -d --display-modules --progress",

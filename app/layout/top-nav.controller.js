@@ -28,7 +28,11 @@ export default function TopNavCtrl($scope, $rootScope, restApi, $sce, $state) {
 			$rootScope.authenticated = false;
 			$state.go("login");
 		});
-	};	
+	};
+
+	$scope.openDocumentation = function(){
+		$window.open('/site', '_blank');
+	};
 
 	$scope.loadConfig();
 };

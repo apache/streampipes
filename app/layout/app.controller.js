@@ -1,6 +1,6 @@
-AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state'];
+AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state', '$window'];
 
-export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state) {
+export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state, $window) {
 
     $rootScope.unreadNotifications = [];
     $rootScope.title = "StreamPipes";
@@ -28,6 +28,10 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
             $rootScope.authenticated = false;
             $state.go("login");
         });
+    };
+
+    $scope.openDocumentation = function(){
+        $window.open('/site', '_blank');
     };
 
     $scope.isActivePage = function(path) {
