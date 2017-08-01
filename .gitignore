@@ -2,3 +2,4 @@ node_modules/
 .idea
 bundle.js
 bundle.js.map
+*/.DS_Store
