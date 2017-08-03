@@ -1,6 +1,6 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.model.client.messages.ProaSenseNotificationMessage;

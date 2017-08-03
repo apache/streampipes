@@ -8,7 +8,7 @@ import java.util.List;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;

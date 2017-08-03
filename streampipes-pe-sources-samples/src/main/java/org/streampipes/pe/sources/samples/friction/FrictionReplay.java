@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.samples.friction;
 
 import com.google.gson.Gson;
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.pe.sources.samples.util.Utils;
 

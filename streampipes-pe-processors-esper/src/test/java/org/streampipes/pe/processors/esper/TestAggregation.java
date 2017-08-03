@@ -8,7 +8,7 @@ import java.util.List;
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.eventproperty.EventProperty;

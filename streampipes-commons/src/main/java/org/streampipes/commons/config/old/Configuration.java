@@ -1,8 +1,7 @@
-package org.streampipes.commons.config;
+package org.streampipes.commons.config.old;
 
 import org.streampipes.commons.Utils;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
@@ -11,10 +10,6 @@ import org.openrdf.rio.helpers.JSONLDMode;
 import org.openrdf.rio.helpers.JSONLDSettings;
 
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,10 +24,6 @@ public class Configuration {
 	private PropertiesConfiguration config;
 	
 	public RDFFormat RDF_FORMAT = RDFFormat.JSONLD;
-	
-	public String COUCHDB_PROTOCOL;
-	public String COUCHDB_HOSTNAME;
-	public int COUCHDB_PORT = 5984;
 	
 	public String SESAME_URI;
 	public String SESAME_REPOSITORY_ID;
@@ -85,11 +76,6 @@ public class Configuration {
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
 					SESAME_URI = config.getString("sesameUrl");
 					
-					COUCHDB_PROTOCOL = config.getString("couchDbProtocol");
-					COUCHDB_HOSTNAME = config.getString("couchDbHost");
-
-					COUCHDB_PORT = config.getInt("couchDbPort");
-
 					SESAME_REPOSITORY_ID = config.getString("sesameDbName");
 					CONTEXT_PATH = config.getString("context_path");
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
@@ -119,11 +105,6 @@ public class Configuration {
 	
 	private void loadDefaults() {
 		// load defaults
-					COUCHDB_PROTOCOL = "http";
-					COUCHDB_HOSTNAME = Utils.getHostname();
-//					COUCHDB_HOSTNAME = "localhost";
-					COUCHDB_PORT = 5984;
-					
 					SESAME_URI = "http://" +Utils.getHostname() +":8080/openrdf-sesame";
 					SESAME_REPOSITORY_ID = "test-6";
 					

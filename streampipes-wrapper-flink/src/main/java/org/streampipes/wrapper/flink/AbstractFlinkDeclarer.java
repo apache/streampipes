@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink;
 
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.impl.Response;

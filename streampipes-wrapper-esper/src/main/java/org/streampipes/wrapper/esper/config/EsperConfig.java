@@ -1,6 +1,6 @@
 package org.streampipes.wrapper.esper.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.wrapper.esper.writer.SEPAWriter;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.OutputCollector;

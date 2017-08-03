@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.taxiaggregated;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

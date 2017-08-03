@@ -1,7 +1,7 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.commons.config.BrokerConfig;
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.BrokerConfig;
+import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
 

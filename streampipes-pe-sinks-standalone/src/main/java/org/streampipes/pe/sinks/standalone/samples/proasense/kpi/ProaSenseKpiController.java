@@ -5,7 +5,7 @@ import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.pe.sinks.standalone.samples.proasense.ProaSenseEventNotifier;
 import org.streampipes.pe.sinks.standalone.samples.proasense.ProaSenseTopologyViewer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;

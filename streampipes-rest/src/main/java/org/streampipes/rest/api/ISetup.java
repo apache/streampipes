@@ -1,6 +1,6 @@
 package org.streampipes.rest.api;
 
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.commons.config.old.WebappConfigurationSettings;
 
 import javax.ws.rs.core.Response;
 

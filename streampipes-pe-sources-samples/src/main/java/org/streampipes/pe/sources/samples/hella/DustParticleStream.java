@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.sdk.helpers.EpProperties;

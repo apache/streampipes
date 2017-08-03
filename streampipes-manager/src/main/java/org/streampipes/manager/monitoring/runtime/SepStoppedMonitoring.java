@@ -1,6 +1,6 @@
 package org.streampipes.manager.monitoring.runtime;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;

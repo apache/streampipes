@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 
-import org.streampipes.commons.config.ConfigurationManager;
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.commons.config.old.ConfigurationManager;
+import org.streampipes.commons.config.old.WebappConfigurationSettings;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 

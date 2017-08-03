@@ -1,7 +1,7 @@
 package org.streampipes.pe.axoom.hmi.streams;
 
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.sdk.builder.DataStreamBuilder;

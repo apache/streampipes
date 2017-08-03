@@ -10,7 +10,7 @@ import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.UnsupportedRDFormatException;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.commons.exceptions.SepaParseException;
 
 public class StatementBuilder {

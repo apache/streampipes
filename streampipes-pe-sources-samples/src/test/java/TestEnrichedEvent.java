@@ -1,5 +1,5 @@
 import com.google.gson.JsonObject;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.enriched.EnrichedStream;

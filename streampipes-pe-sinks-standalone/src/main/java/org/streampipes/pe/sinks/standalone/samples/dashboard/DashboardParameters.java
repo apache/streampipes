@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.graph.SecInvocation;
 

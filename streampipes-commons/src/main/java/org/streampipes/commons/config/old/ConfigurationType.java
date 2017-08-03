@@ -1,4 +1,4 @@
-package org.streampipes.commons.config;
+package org.streampipes.commons.config.old;
 
 public enum ConfigurationType {
 	SERVER(ConfigurationManager.getStreamPipesConfigFileLocation() + ConfigurationManager.getStreamPipesConfigFileLocation()), CLIENT(ConfigurationManager.getStreamPipesConfigFileLocation() +ConfigurationManager.getStreamPipesClientConfigFilename());

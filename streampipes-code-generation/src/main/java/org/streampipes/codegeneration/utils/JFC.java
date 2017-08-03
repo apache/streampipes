@@ -9,7 +9,7 @@ import com.squareup.javapoet.ClassName;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;

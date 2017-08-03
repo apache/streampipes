@@ -4,7 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;

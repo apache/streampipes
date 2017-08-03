@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.elasticsearch;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSecRuntime;

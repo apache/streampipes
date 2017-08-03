@@ -30,7 +30,7 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.clarkparsia.empire.annotation.RdfGenerator;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.model.AbstractSEPAElement;
 import org.streampipes.model.vocabulary.SEPA;
 

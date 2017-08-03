@@ -3,7 +3,7 @@ package org.streampipes.pe.axoom.hmi.streams;
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
 import org.streampipes.pe.axoom.hmi.config.SourceConfig;
 import org.streampipes.pe.axoom.hmi.vocabulary.AxoomVocabulary;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.SO;

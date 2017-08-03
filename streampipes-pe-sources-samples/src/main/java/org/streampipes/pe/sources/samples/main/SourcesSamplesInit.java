@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.main;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.pe.sources.samples.ddm.DDMProducer;
 import org.streampipes.pe.sources.samples.drillbit.DrillBitProducer;
 import org.streampipes.pe.sources.samples.enriched.EnrichedEventProducer;

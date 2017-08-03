@@ -1,6 +1,6 @@
 package org.streampipes.pe.proasense.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportProtocol;
 

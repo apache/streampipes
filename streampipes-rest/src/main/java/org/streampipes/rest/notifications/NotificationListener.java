@@ -1,6 +1,6 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

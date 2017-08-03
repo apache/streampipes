@@ -1,6 +1,6 @@
 package org.streampipes.commons;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.Configuration;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;

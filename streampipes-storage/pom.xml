@@ -9,6 +9,7 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
@@ -21,6 +22,10 @@
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpclient-cache</artifactId>
 				</exclusion>
+				<!--<exclusion>-->
+					<!--<groupId>com.fasterxml.jackson.core</groupId>-->
+					<!--<artifactId>jackson-databind</artifactId>-->
+				<!--</exclusion>-->
 			</exclusions>
 		</dependency>
 		<dependency>

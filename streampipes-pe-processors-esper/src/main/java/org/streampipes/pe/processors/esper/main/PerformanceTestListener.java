@@ -9,7 +9,7 @@ import java.util.Calendar;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 
 public class PerformanceTestListener implements UpdateListener {
 

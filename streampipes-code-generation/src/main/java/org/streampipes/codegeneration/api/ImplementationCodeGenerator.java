@@ -7,7 +7,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.model.ConsumableSEPAElement;
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.streampipes.codegeneration.ZipFileGenerator;

@@ -13,8 +13,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonObject;
 
-import org.streampipes.commons.config.ConfigurationManager;
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.commons.config.old.ConfigurationManager;
+import org.streampipes.commons.config.old.WebappConfigurationSettings;
 import org.streampipes.manager.setup.Installer;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;

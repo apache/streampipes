@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.kd2;
 import de.fzi.cep.sepa.adapter.kd2.builder.EventBuilder;
 import de.fzi.cep.sepa.adapter.kd2.events.BiodataEvent;
 import de.fzi.cep.sepa.adapter.kd2.publisher.StreamPipesPublisher;
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ConfigurationManager;
 
 import java.io.*;
 

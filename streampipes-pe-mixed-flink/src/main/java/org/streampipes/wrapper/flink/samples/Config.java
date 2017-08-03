@@ -1,6 +1,6 @@
 package org.streampipes.wrapper.flink.samples;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 
 public class Config {
 

@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.hella.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 
 public class SourcesConfig {
 

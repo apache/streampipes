@@ -3,7 +3,7 @@ package org.streampipes.pe.sinks.standalone.samples.kafka;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;

@@ -7,7 +7,7 @@ import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 
 public class DeclarersSingleton {
     private static DeclarersSingleton instance;

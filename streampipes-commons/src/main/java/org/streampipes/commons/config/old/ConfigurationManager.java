@@ -1,4 +1,4 @@
-package org.streampipes.commons.config;
+package org.streampipes.commons.config.old;
 
 import org.streampipes.commons.Utils;
 
@@ -55,9 +55,6 @@ public class ConfigurationManager {
 	public static WebappConfigurationSettings getWebappConfigurationFromProperties() {
 		Configuration cfg = Configuration.getInstance();
 		WebappConfigurationSettings settings = new WebappConfigurationSettings();
-		settings.setCouchDbHost(cfg.COUCHDB_HOSTNAME);
-		settings.setCouchDbPort(cfg.COUCHDB_PORT);
-		settings.setCouchDbProtocol(cfg.COUCHDB_PROTOCOL);
 		settings.setJmsHost(cfg.JMS_HOST);
 		settings.setJmsPort(cfg.JMS_PORT);
 		settings.setJmsProtocol(cfg.JMS_PROTOCOL);
@@ -81,10 +78,6 @@ public class ConfigurationManager {
 		        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
 		    }
 		};
-		
-		properties.put("couchDbProtocol", settings.getCouchDbProtocol());
-		properties.put("couchDbHost", settings.getCouchDbHost());
-		properties.put("couchDbPort", String.valueOf(settings.getCouchDbPort()));
 		
 		properties.put("kafkaProtocol", settings.getKafkaProtocol());
 		properties.put("kafkaHost", settings.getKafkaHost());

@@ -1,6 +1,6 @@
 package org.streampipes.pe.slack.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 
 public class SlackConfig {
     public final static String serverUrl;

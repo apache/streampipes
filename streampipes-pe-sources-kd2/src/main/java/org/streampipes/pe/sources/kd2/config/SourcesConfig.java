@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.kd2.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 
 /**
  * Created by riemer on 18.11.2016.

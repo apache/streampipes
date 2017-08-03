@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.twitter;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;

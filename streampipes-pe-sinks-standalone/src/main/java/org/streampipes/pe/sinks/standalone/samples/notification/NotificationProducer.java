@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.notification;
 
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;

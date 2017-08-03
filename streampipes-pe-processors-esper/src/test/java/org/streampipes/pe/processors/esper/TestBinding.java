@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper;
 
 import com.clarkparsia.empire.SupportsRdfId.URIKey;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;

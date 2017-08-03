@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 

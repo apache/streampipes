@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.proasense.pandda;
 
 import org.streampipes.pe.sinks.standalone.samples.NonVisualizableActionController;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;

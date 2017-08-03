@@ -3,8 +3,8 @@ package org.streampipes.pe.sinks.standalone.samples.evaluation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.commons.config.old.ClientConfiguration;
+import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 

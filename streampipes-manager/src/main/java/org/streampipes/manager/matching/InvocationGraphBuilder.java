@@ -1,6 +1,6 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphHelpers;
 import org.streampipes.manager.matching.output.OutputSchemaFactory;

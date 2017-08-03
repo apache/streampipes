@@ -1,15 +1,7 @@
 package org.streampipes.pe.axoom.hmi.iot;
 
-import org.streampipes.pe.axoom.hmi.config.SourceConfig;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.sdk.builder.DataStreamBuilder;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.Formats;
-import org.streampipes.sdk.helpers.Protocols;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 
 /**

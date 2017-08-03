@@ -1,6 +1,6 @@
 package org.streampipes.manager.setup;
 
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.commons.config.old.WebappConfigurationSettings;
 
 import java.io.File;
 import java.util.ArrayList;

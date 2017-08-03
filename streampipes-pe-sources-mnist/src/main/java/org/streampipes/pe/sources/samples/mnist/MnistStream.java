@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.samples.mnist;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventStream;

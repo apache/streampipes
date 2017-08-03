@@ -1,18 +1,12 @@
-package org.streampipes.commons.config;
+package org.streampipes.commons.config.old;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Properties;

@@ -13,7 +13,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import org.streampipes.pe.slack.config.SlackConfig;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
