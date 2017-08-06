@@ -1,8 +1,8 @@
 package org.streampipes.commons.config;
 
+import org.streampipes.commons.SpConfigChangeCallback;
 import org.streampipes.commons.config.consul.ConsulSpConfig;
 
-import java.util.Map;
 
 public abstract class SpConfig {
 
@@ -11,10 +11,16 @@ public abstract class SpConfig {
 
     }
 
-    // TODO need an idea
-//    public abstract void onConfigChange();
+    public SpConfig(String serviceName, SpConfigChangeCallback callback) {
+
+    }
+
     public static SpConfig getSpConfig(String serviceName) {
         return new ConsulSpConfig(serviceName);
+    }
+
+    public static SpConfig getSpConfig(String serviceName, SpConfigChangeCallback callback) {
+        return new ConsulSpConfig(serviceName, callback);
     }
 
     public abstract void register(String key, boolean defaultValue, String description);

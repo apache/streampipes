@@ -3,28 +3,62 @@ package org.streampipes.commons.config.consul;
 import com.google.common.base.Optional;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
+import com.orbitz.consul.model.kv.Value;
+import org.streampipes.commons.SpConfigChangeCallback;
 import org.streampipes.commons.config.SpConfig;
 
-public class ConsulSpConfig extends SpConfig {
+import java.util.HashMap;
+import java.util.Map;
+
+public class ConsulSpConfig extends SpConfig implements Runnable {
+//public class ConsulSpConfig extends SpConfig {
     private static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
-    private String serviceName;
-    KeyValueClient kvClient;
-
-    public static void main(String[] args) {
-         Consul consul = Consul.builder().build(); // connect to Consul on localhost
-        KeyValueClient kvClient = consul.keyValueClient();;
+    private static String serviceName;
+    private  KeyValueClient kvClient;
 
 
-    }
+    // TODO Implement mechanism to update the client when some configutation parameters change in Consul
+    private SpConfigChangeCallback callback;
+    private Map<String, Object> configProps;
 
     public ConsulSpConfig(String serviceName) {
         super(serviceName);
         //TDOO use consul adress from an environment variable
 //        Consul consul = Consul.builder().withUrl("http://localhost:8500").build(); // connect to Consul on localhost
+
         Consul consul = Consul.builder().build(); // connect to Consul on localhost
         kvClient = consul.keyValueClient();
 
-        this.serviceName = serviceName;
+        ConsulSpConfig.serviceName = serviceName;
+    }
+
+    public ConsulSpConfig(String serviceName, SpConfigChangeCallback callback) {
+        this(serviceName);
+        this.callback = callback;
+        this.configProps = new HashMap<>();
+        new Thread(this).start();
+    }
+
+    @Override
+    public void run() {
+        Consul consulThread = Consul.builder().build(); // connect to Consul on localhost
+        KeyValueClient kvClientThread = consulThread.keyValueClient();
+        while (true) {
+
+            configProps.keySet().stream().forEach((s) -> {
+                Optional<Value> te = kvClientThread.getValue(addSn(s));
+                if (!te.get().getValueAsString().get().equals(configProps.get(s))) {
+                    callback.onChange();
+                    configProps.put(s, te.get().getValueAsString().get());
+                }
+            });
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -45,10 +79,16 @@ public class ConsulSpConfig extends SpConfig {
 
     @Override
     public void register(String key, String defaultValue, String description) {
-        Optional<String> i = kvClient.getValueAsString(key);
+
+        Optional<String> i = kvClient.getValueAsString(addSn(key));
+        // TODO this check does not work
         if (!i.isPresent()) {
             kvClient.putValue(addSn(key), defaultValue);
             kvClient.putValue(addSn(key) + "_description", description);
+        }
+
+        if (configProps != null) {
+            configProps.put(key, getString(key));
         }
     }
 
@@ -73,6 +113,8 @@ public class ConsulSpConfig extends SpConfig {
     }
 
     private String addSn(String key) {
-       return SERVICE_ROUTE_PREFIX + serviceName + "/" + key;
+       return SERVICE_ROUTE_PREFIX + ConsulSpConfig.serviceName + "/" + key;
     }
+
+
 }
