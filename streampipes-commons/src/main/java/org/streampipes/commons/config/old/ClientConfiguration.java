@@ -18,7 +18,6 @@ public enum ClientConfiguration {
 	
 	private String hostname;
 	
-	private int esperPort;
 	private int algorithmPort;
 	private int sourcesPort;
 	
@@ -34,7 +33,6 @@ public enum ClientConfiguration {
 	private String kafkaUrl;
 	private String zookeeperUrl;
 
-	private String esperUrl;
 	private String algorithmUrl;
 	private String sourcesUrl;
 	private String jmsUrl;
@@ -97,7 +95,6 @@ public enum ClientConfiguration {
 			};
 			
 			properties.put("hostname", "localhost");
-			properties.put("esper_port", "8090");
 			properties.put("sources_port", "8089");
 			properties.put("algorithm_port", "8093");
 			
@@ -170,12 +167,10 @@ public enum ClientConfiguration {
 			config = new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
 			
 			this.hostname = config.getString("hostname");
-			this.esperPort = config.getInt("esper_port");
 			this.algorithmPort = config.getInt("algorithm_port");
 			this.sourcesPort = config.getInt("sources_port");
 			
 			this.algorithmUrl = hostname +":" +algorithmPort;
-			this.esperUrl = hostname + ":" + esperPort;
 			this.sourcesUrl = hostname + ":" + sourcesPort;
 			
 			this.kafkaHost = config.getString("kafkaHost");
@@ -267,10 +262,6 @@ public enum ClientConfiguration {
 
 	public String getZookeeperUrl() {
 		return zookeeperUrl;
-	}
-
-	public String getEsperUrl() {
-		return esperUrl;
 	}
 
 	public String getAlgorithmUrl() {
