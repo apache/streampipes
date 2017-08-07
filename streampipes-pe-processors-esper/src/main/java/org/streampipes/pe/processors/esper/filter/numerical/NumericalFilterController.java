@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.NumericalOperator;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EventSchema;

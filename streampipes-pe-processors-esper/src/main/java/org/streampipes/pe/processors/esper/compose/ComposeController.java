@@ -9,7 +9,7 @@ import org.openrdf.rio.RDFHandlerException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;

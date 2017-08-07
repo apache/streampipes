@@ -6,6 +6,7 @@ import org.streampipes.pe.processors.esper.absence.AbsenceController;
 import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.pe.processors.esper.aggregate.count.CountController;
 import org.streampipes.pe.processors.esper.aggregate.rate.EventRateController;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.number.NumberClassificationController;
 import org.streampipes.pe.processors.esper.collection.TestCollectionController;
 import org.streampipes.pe.processors.esper.compose.ComposeController;
@@ -84,7 +85,7 @@ public class EsperInit extends StandaloneModelSubmitter {
 		.add(new StreamStoppedController())
 		.add(new BinaryMathController());
 
-        DeclarersSingleton.getInstance().setPort(8090);
+        DeclarersSingleton.getInstance().setPort(EsperConfig.INSTANCE.getPort());
 
 		new Thread(new EsperEngineSettings()).start();
         new EsperInit().init();

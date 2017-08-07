@@ -14,7 +14,7 @@ import org.streampipes.wrapper.BindingParameters;
 import org.streampipes.wrapper.EPEngine;
 import org.streampipes.wrapper.EngineParameters;
 import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.wrapper.esper.config.EsperEngineConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.routing.Timer;
 
@@ -183,6 +183,6 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		
 	protected Writer getWriter(OutputCollector collector, T params)
 	{
-		return EsperConfig.getDefaultWriter(collector, params);
+		return EsperEngineConfig.getDefaultWriter(collector, params);
 	}
 }

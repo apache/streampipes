@@ -25,7 +25,7 @@ public enum ActionConfig {
 		config = SpConfig.getSpConfig("pe/sinks");
 
        	config.register(HOST, "sinks", "Hostname for the pe sinks");
-        config.register(PORT, 8091, "Port for the pe sinks");
+        config.register(PORT, 8090, "Port for the pe sinks");
       	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
         config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
        	config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");

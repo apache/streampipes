@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.aggregate.count;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;

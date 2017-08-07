@@ -9,7 +9,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;

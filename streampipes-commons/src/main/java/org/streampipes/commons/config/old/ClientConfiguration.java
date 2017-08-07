@@ -73,8 +73,6 @@ public enum ClientConfiguration {
 	private String elasticsearchHost;
 	private int elasticsearchPort;
 
-	private String slackToken;
-
 	private String datalocation;
 
 	private PropertiesConfiguration config;
@@ -223,8 +221,6 @@ public enum ClientConfiguration {
 			this.elasticsearchPort = config.getInt("elasticsearchPort");
 			this.elasticsearchHost = config.getString("elasticsearchHost");
 			
-			this.slackToken = config.getString("slackToken");
-
 			this.datalocation = config.getString("datalocation");
 
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
@@ -368,10 +364,6 @@ public enum ClientConfiguration {
 
 	public int getElasticsearchPort() {
 		return elasticsearchPort;
-	}
-
-	public String getSlackToken() {
-		return slackToken;
 	}
 
 
