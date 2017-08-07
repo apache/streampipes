@@ -73,8 +73,6 @@ public enum ClientConfiguration {
 
 	private String datalocation;
 
-	private PropertiesConfiguration config;
-	
 	ClientConfiguration()
 	{
 		pathToFile = new File(ConfigurationManager.getStreamPipesConfigFileLocation());
@@ -90,7 +88,7 @@ public enum ClientConfiguration {
 			Properties properties = new Properties() {
 			    @Override
 			    public synchronized Enumeration<Object> keys() {
-			        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+			        return Collections.enumeration(new TreeSet<>(super.keySet()));
 			    }
 			};
 			
@@ -164,7 +162,7 @@ public enum ClientConfiguration {
 
 	private void loadPropertySettings() {
 		try {
-			config = new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
+			PropertiesConfiguration config = new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
 			
 			this.hostname = config.getString("hostname");
 			this.algorithmPort = config.getInt("algorithm_port");
@@ -177,7 +175,7 @@ public enum ClientConfiguration {
 			this.kafkaPort = config.getInt("kafkaPort");
 			this.kafkaUrl = kafkaHost + ":" +kafkaPort;
 			
-			this.jmsHost  = config.getString("jmsHost");;
+			this.jmsHost  = config.getString("jmsHost");
 			this.jmsPort = config.getInt("jmsPort");
 			this.jmsUrl =  jmsHost +":" +jmsPort;
 			

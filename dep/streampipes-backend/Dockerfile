@@ -50,6 +50,7 @@ ADD ./org.streampipes/streampipes-backend/0.41.0-SNAPSHOT/streampipes-backend-0.
 ADD /openrdf-sesame.war /usr/local/tomcat/webapps/openrdf-sesame.war
 ADD /openrdf-workbench.war /usr/local/tomcat/webapps/openrdf-workbench.war
 ADD ./org.streampipes/streampipes-pe-sources-demonstrator/0.41.0-SNAPSHOT/streampipes-pe-sources-demonstrator-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/sources-demonstrator.war
+ADD ./org.streampipes/streampipes-pe-slack/0.41.0-SNAPSHOT/streampipes-pe-slack-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/slack.war
 
 ADD /catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD /server.xml /usr/local/tomcat/conf/server.xml

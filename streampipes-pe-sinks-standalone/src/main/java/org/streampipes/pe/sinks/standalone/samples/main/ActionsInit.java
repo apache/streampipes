@@ -16,7 +16,7 @@ import org.streampipes.pe.sinks.standalone.samples.rabbitmq.RabbitMqController;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 //import org.streampipes.pe.sinks.standalone.samples.wiki.WikiController;
-
+//
 public class ActionsInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {

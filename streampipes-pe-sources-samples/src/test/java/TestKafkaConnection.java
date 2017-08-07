@@ -1,10 +1,15 @@
+import eu.proasense.internal.ComplexValue;
+import eu.proasense.internal.PDFType;
+import eu.proasense.internal.PredictedEvent;
+import eu.proasense.internal.RecommendationEvent;
+import eu.proasense.internal.VariableType;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import eu.proasense.internal.*;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +39,8 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 
 	public static void main(String[] args)
 	{
-		TestKafkaConnection connection = new TestKafkaConnection("10.16.34.18:", 9092, 2181,
-						"axoom.hmi.hmi.energy");
+		TestKafkaConnection connection = new TestKafkaConnection("ipe-koi15.fzi.de:", 9092, 2181,
+						"org.streampipes.kt2017.wiki");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e1) {
@@ -63,22 +68,22 @@ public class TestKafkaConnection implements EventListener<byte[]> {
 		
 		TSerializer serializer = new TSerializer(new TBinaryProtocol.Factory());
 		
-//		for(int i = 0; i < MAX_MESSAGES; i++)
-//		{
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			connection.publishMessage(RandomStringUtils.randomAlphabetic(12).getBytes());
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
+		for(int i = 0; i < MAX_MESSAGES; i++)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			connection.publishMessage(RandomStringUtils.randomAlphabetic(12).getBytes());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
