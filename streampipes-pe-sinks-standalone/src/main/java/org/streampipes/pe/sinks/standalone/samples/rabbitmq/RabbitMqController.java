@@ -2,7 +2,6 @@ package org.streampipes.pe.sinks.standalone.samples.rabbitmq;
 
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
@@ -50,7 +49,7 @@ public class RabbitMqController extends ActionController {
     String publisherTopic = extractor.singleValueParameter("topic",
             String.class);
 
-    startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+    startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
             new RabbitMqConsumer(publisherTopic));
 
     String pipelineId = sec.getCorrespondingPipeline();

@@ -18,7 +18,6 @@ public enum ClientConfiguration {
 	
 	private String hostname;
 	
-	private int actionPort;
 	private int esperPort;
 	private int algorithmPort;
 	private int sourcesPort;
@@ -34,15 +33,9 @@ public enum ClientConfiguration {
 	
 	private String kafkaUrl;
 	private String zookeeperUrl;
-	
-	private RDFFormat rdfFormat;
-
-	private String couchDbHost;
-	private int couchDbPort;
 
 	private String esperUrl;
 	private String algorithmUrl;
-	private String actionUrl;
 	private String sourcesUrl;
 	private String jmsUrl;
 	
@@ -74,10 +67,6 @@ public enum ClientConfiguration {
 	private long waitEvery;
 	private long waitForMs;
 	
-	private long kafkaLingerMs;
-	private int kafkaBatchSize;
-	private String kafkaAcks;
-	
 	private String flinkHost;
 	private int flinkPort;
 	
@@ -85,12 +74,6 @@ public enum ClientConfiguration {
 	private int elasticsearchPort;
 
 	private String slackToken;
-
-	private String streamStoryUrl;
-	
-	private String podHostname;
-	private int podPort;
-	private String podDeploymentDirectory;
 
 	private String datalocation;
 
@@ -116,7 +99,6 @@ public enum ClientConfiguration {
 			};
 			
 			properties.put("hostname", "localhost");
-			properties.put("action_port", "8091");
 			properties.put("esper_port", "8090");
 			properties.put("sources_port", "8089");
 			properties.put("algorithm_port", "8093");
@@ -190,17 +172,13 @@ public enum ClientConfiguration {
 			config = new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
 			
 			this.hostname = config.getString("hostname");
-			this.actionPort = config.getInt("action_port");	
 			this.esperPort = config.getInt("esper_port");
 			this.algorithmPort = config.getInt("algorithm_port");
 			this.sourcesPort = config.getInt("sources_port");
 			
 			this.algorithmUrl = hostname +":" +algorithmPort;
 			this.esperUrl = hostname + ":" + esperPort;
-			this.actionUrl = hostname + ":" + actionPort;
 			this.sourcesUrl = hostname + ":" + sourcesPort;
-			
-			this.rdfFormat = RDFFormat.JSONLD;
 			
 			this.kafkaHost = config.getString("kafkaHost");
 			this.kafkaPort = config.getInt("kafkaPort");
@@ -225,9 +203,6 @@ public enum ClientConfiguration {
 			this.mhwirthReplayActive = config.getBoolean("mhwirthReplayActive");
 			this.proveItActive = config.getBoolean("proveItActive");
 
-			this.couchDbHost = config.getString("couchDbHost");
-			this.couchDbPort = config.getInt("couchDbPort");
-
 			this.nissatechRunning = config.getBoolean("nissatechRunning");
 			
 			this.simulationMaxEvents = config.getLong("simulationMaxEvents");
@@ -236,10 +211,6 @@ public enum ClientConfiguration {
 			
 			this.waitEvery = config.getLong("waitEvery");
 			this.waitForMs = config.getLong("waitForMs");
-			
-			this.kafkaBatchSize = config.getInt("kafkaBatchSize");
-			this.kafkaLingerMs = config.getLong("kafkaLingerMs");
-			this.kafkaAcks = config.getString("kafkaAcks");
 			
 			this.flinkHost = config.getString("flinkHost");
 			this.flinkPort = config.getInt("flinkPort");
@@ -252,15 +223,10 @@ public enum ClientConfiguration {
 			this.elasticsearchPort = config.getInt("elasticsearchPort");
 			this.elasticsearchHost = config.getString("elasticsearchHost");
 			
-			this.podHostname = config.getString("podHostname");
-			this.podPort = config.getInt("podPort");
-			this.podDeploymentDirectory = config.getString("podDeploymentDirectory");
-
 			this.slackToken = config.getString("slackToken");
 
 			this.datalocation = config.getString("datalocation");
 
-			this.streamStoryUrl = config.getString("streamStoryUrl");
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
 			
 			
@@ -274,22 +240,6 @@ public enum ClientConfiguration {
 	public String getHostname() {
 		return hostname;
 	}
-
-//	public int getActionPort() {
-//		return actionPort;
-//	}
-
-//	public int getEsperPort() {
-//		return esperPort;
-//	}
-
-//	public int getAlgorithmPort() {
-//		return algorithmPort;
-//	}
-
-//	public int getSourcesPort() {
-//		return sourcesPort;
-//	}
 
 	public String getZookeeperHost() {
 		return zookeeperHost;
@@ -323,20 +273,12 @@ public enum ClientConfiguration {
 		return zookeeperUrl;
 	}
 
-//	public RDFFormat getRdfFormat() {
-//		return rdfFormat;
-//	}
-
 	public String getEsperUrl() {
 		return esperUrl;
 	}
 
 	public String getAlgorithmUrl() {
 		return algorithmUrl;
-	}
-
-	public String getActionUrl() {
-		return actionUrl;
 	}
 
 	public String getSourcesUrl() {
@@ -391,18 +333,6 @@ public enum ClientConfiguration {
 		return iconUrl;
 	}
 
-//	public String getIconHost() {
-//		return iconHost;
-//	}
-
-//	public int getIconPort() {
-//		return iconPort;
-//	}
-
-//	public String getIconScheme() {
-//		return iconScheme;
-//	}
-	
 	public long getSimulationMaxEvents() {
 		return simulationMaxEvents;
 	}
@@ -422,18 +352,7 @@ public enum ClientConfiguration {
 	public long getWaitForMs() {
 		return waitForMs;
 	}
-	
-//	public int getKafkaBatchSize() {
-//		return kafkaBatchSize;
-//	}
-	
-//	public long getKafkaLingerMs() {
-//		return kafkaLingerMs;
-//	}
-	
-//	public String getKafkaAcks() {
-//		return kafkaAcks;
-//	}
+
 	
 	public String getFlinkHost() {
 		return flinkHost;
@@ -450,61 +369,14 @@ public enum ClientConfiguration {
 	public int getElasticsearchPort() {
 		return elasticsearchPort;
 	}
-	
-//	public String getElasticsearchUrl() {
-//		return getElasticsearchHost() +":" +getElasticsearchPort();
-//	}
-	
-//	public String getStreamStoryUrl() {
-//		return streamStoryUrl;
-//	}
 
 	public String getSlackToken() {
 		return slackToken;
 	}
 
-	public String getCouchDbHost() {
-		return couchDbHost;
-	}
-
-	public int getCouchDbPort() {
-		return couchDbPort;
-	}
-	
-//	public String getPodHostname() {
-//		return podHostname;
-//	}
 
 	public String getDatalocation() {
 		return datalocation;
 	}
 
-//	public void setDatalocation(String datalocation) {
-//		this.datalocation = datalocation;
-//	}
-
-//	public int getPodPort() {
-//		return podPort;
-//	}
-
-//	public String getPodDeploymentDirectory() {
-//		return podDeploymentDirectory;
-//	}
-
-//	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
-//	{
-//		RDFWriter writer = Rio.createWriter(rdfFormat, stream);
-//
-//		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
-//		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
-//		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
-//		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-//		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
-//
-//		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
-//		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
-//
-//		return writer;
-//	}
-	
 }

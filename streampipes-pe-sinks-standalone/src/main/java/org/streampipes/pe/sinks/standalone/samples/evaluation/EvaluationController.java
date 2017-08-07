@@ -8,7 +8,6 @@ import java.util.List;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -55,7 +54,9 @@ public class EvaluationController extends ActionController {
 		
 		EventGrounding grounding = new EventGrounding();
 
-		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+		grounding.setTransportProtocol(new KafkaTransportProtocol(ActionConfig.INSTANCE.getKafkaHost(),
+				ActionConfig.INSTANCE.getKafkaPort(), "", ActionConfig.INSTANCE.getZookeeperHost(),
+				ActionConfig.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		sec.setSupportedGrounding(grounding);
 		

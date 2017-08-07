@@ -38,9 +38,6 @@ public class Configuration {
 	public String JMS_PROTOCOL;
 	public int JMS_PORT;
 	
-	public String TCP_SERVER_URL;
-	public int TCP_SERVER_PORT;
-	
 	public int WEBAPP_PORT;
 	public String WEBAPP_BASE_URL;
 	
@@ -67,13 +64,11 @@ public class Configuration {
 					
 					HOSTNAME = config.getString("hostname");
 					SERVER_URL = config.getString("server_url");
-					TCP_SERVER_URL = config.getString("tcp_server_url");
-					TCP_SERVER_PORT = config.getInt("tcp_server_port")	;
 					WEBAPP_PORT = config.getInt("webapp_port");
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
 
 					CONTEXT_PATH = config.getString("context_path");
-					RDF_FORMAT = RDF_FORMAT.JSONLD;
+//					RDF_FORMAT = RDF_FORMAT.JSONLD;
 					
 					KAFKA_HOST = config.getString("kafkaHost");
 					KAFKA_PROTOCOL = config.getString("kafkaProtocol");
@@ -113,8 +108,8 @@ public class Configuration {
 					JMS_PROTOCOL = "tcp";
 					JMS_PORT = 61616;
 					
-					TCP_SERVER_URL = "tcp://" +HOSTNAME;
-					TCP_SERVER_PORT = 61616;
+//					TCP_SERVER_URL = "tcp://" +HOSTNAME;
+//					TCP_SERVER_PORT = 61616;
 					
 					WEBAPP_PORT = 8080;
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
@@ -123,7 +118,7 @@ public class Configuration {
 					ZOOKEEPER_PORT = 2181;
 					ZOOKEEPER_PROTOCOL = "http";
 					
-					RDF_FORMAT = RDF_FORMAT.JSONLD;
+//					RDF_FORMAT = RDF_FORMAT.JSONLD;
 	}
 
 	public static Configuration getInstance() {
@@ -133,22 +128,7 @@ public class Configuration {
 		}
 		return instance;
 	}
-	
-//	public String getJmsAddress()
-//	{
-//		return JMS_PROTOCOL +"://" +JMS_HOST +":" +JMS_PORT;
-//	}
-//
-//	public String getHostname() {
-//		InetAddress addr;
-//		try {
-//			addr = InetAddress.getLocalHost();
-//			return Protocol.getProtocol("http").getScheme()  + "://" +addr.getCanonicalHostName() +":";
-//		} catch (UnknownHostException e) {
-//			return "http://localhost:";
-//		}
-//	}
-	
+
 	public static void update() {
 		instance = new Configuration();
 	}
@@ -159,7 +139,6 @@ public class Configuration {
 
 
 	// Default values if something can't be read from the config file
-	
 
 
 	public RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException

@@ -3,7 +3,6 @@ package org.streampipes.pe.sinks.standalone.samples.kafka;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
@@ -61,7 +60,9 @@ public class KafkaController extends ActionController {
 		
 		EventGrounding grounding = new EventGrounding();
 
-		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+		grounding.setTransportProtocol(new KafkaTransportProtocol(ActionConfig.INSTANCE.getKafkaHost(),
+				ActionConfig.INSTANCE.getKafkaPort(), "", ActionConfig.INSTANCE.getZookeeperHost(),
+				ActionConfig.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		desc.setSupportedGrounding(grounding);
 		
@@ -78,7 +79,7 @@ public class KafkaController extends ActionController {
 			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaHost");
 			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 			
-			startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+			startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
 					new KafkaPublisher(new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
 
 			

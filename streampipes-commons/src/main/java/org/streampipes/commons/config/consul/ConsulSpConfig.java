@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
+import org.slf4j.Logger;
 import org.streampipes.commons.SpConfigChangeCallback;
 import org.streampipes.commons.config.SpConfig;
 
@@ -11,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConsulSpConfig extends SpConfig implements Runnable {
+//    final static Logger logger = LogUtil.getInstance(ConsulSpConfig.class);
+
 //public class ConsulSpConfig extends SpConfig {
     private static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     private String serviceName;
@@ -110,6 +113,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     @Override
     public String getString(String key) {
         Optional<String> os = kvClient.getValueAsString(addSn(key));
+
         String s = os.get();
         return s;
 

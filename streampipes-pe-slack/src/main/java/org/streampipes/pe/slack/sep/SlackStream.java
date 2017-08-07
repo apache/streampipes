@@ -6,9 +6,9 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
+import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -22,6 +22,7 @@ import org.streampipes.model.vocabulary.MessageFormat;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.json.JSONObject;
+import org.streampipes.pe.slack.config.SlackConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,9 @@ public class SlackStream implements EventStreamDeclarer {
 
 
         EventGrounding grounding = new EventGrounding();
-        grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), topic, ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+        grounding.setTransportProtocol(new KafkaTransportProtocol(SlackConfig.INSTANCE.getKafkaHost(),
+                SlackConfig.INSTANCE.getKafkaPort(), topic, SlackConfig.INSTANCE.getZookeeperHost(),
+                SlackConfig.INSTANCE.getZookeeperPort()));
         grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
         stream.setEventGrounding(grounding);
 
@@ -70,7 +73,7 @@ public class SlackStream implements EventStreamDeclarer {
     public void executeStream() {
         SlackMessagePostedListener messagePostedListener = new SlackMessagePostedListener()
         {
-            private StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+            private StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer(SlackConfig.INSTANCE.getKafkaUrl(), topic);
 
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session)
@@ -91,8 +94,8 @@ public class SlackStream implements EventStreamDeclarer {
             }
         };
 
-        String token = ClientConfiguration.INSTANCE.getSlackToken();
-        if (token != null) {
+        String token = SlackConfig.INSTANCE.getSlackToken();
+        if (token != SlackConfig.SLACK_NOT_INITIALIZED) {
             session = SlackSessionFactory.createWebSocketSlackSession(token);
             try {
                 session.connect();
@@ -102,7 +105,7 @@ public class SlackStream implements EventStreamDeclarer {
             session.addMessagePostedListener(messagePostedListener);
         } else {
             try {
-                throw new Exception("Slack Token is not set in the client configuratons file");
+                throw new Exception("Slack Token is not set in the configuratons");
             } catch (Exception e) {
                 e.printStackTrace();
             }

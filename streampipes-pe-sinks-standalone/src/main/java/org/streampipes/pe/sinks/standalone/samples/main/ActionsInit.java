@@ -15,7 +15,7 @@ import org.streampipes.pe.sinks.standalone.samples.proasense.pandda.PanddaContro
 import org.streampipes.pe.sinks.standalone.samples.rabbitmq.RabbitMqController;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.pe.sinks.standalone.samples.wiki.WikiController;
+//import org.streampipes.pe.sinks.standalone.samples.wiki.WikiController;
 
 public class ActionsInit extends StandaloneModelSubmitter {
 
@@ -33,7 +33,7 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new CouchDbController())
             .add(new DashboardController())
             .add(new AlarmLightController())
-            .add(new WikiController())
+//            .add(new WikiController())
             .add(new PanddaController())
             .add(new RabbitMqController());
 

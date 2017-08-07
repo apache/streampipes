@@ -3,7 +3,6 @@ package org.streampipes.pe.sinks.standalone.samples.alarm;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -54,7 +53,9 @@ public class AlarmLightController extends ActionController {
 		
 		EventGrounding grounding = new EventGrounding();
 
-		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+		grounding.setTransportProtocol(new KafkaTransportProtocol(ActionConfig.INSTANCE.getKafkaHost(),
+				ActionConfig.INSTANCE.getKafkaPort(), "", ActionConfig.INSTANCE.getZookeeperHost(),
+				ActionConfig.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		desc.setSupportedGrounding(grounding);
 		
@@ -68,7 +69,7 @@ public class AlarmLightController extends ActionController {
 		
 		AlarmLightParameters params = new AlarmLightParameters(selectedOption);
 
-		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic, new AlarmLight(params));
+		startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic, new AlarmLight(params));
 
 		return new Response(invocationGraph.getElementId(), true);
 	}

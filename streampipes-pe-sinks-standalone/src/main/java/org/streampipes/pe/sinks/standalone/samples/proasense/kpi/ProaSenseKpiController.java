@@ -5,7 +5,6 @@ import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.pe.sinks.standalone.samples.proasense.ProaSenseEventNotifier;
 import org.streampipes.pe.sinks.standalone.samples.proasense.ProaSenseTopologyViewer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -67,7 +66,8 @@ public class ProaSenseKpiController extends ActionController {
 
 		EventGrounding grounding = new EventGrounding();
 
-		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+		//TODO add new Config
+//		grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
 		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
 		desc.setSupportedGrounding(grounding);
 		
@@ -86,8 +86,8 @@ public class ProaSenseKpiController extends ActionController {
 		int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 		String kpiId = SepaUtils.getFreeTextStaticPropertyValue(sec, "kpi");
 		kpiPublisher = new ProaSenseKpiPublisher(kafkaHost, kafkaPort, topic, kpiId);
-		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
-				kpiPublisher);
+//		startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+//				kpiPublisher);
 
 		//consumer.setListener(new ProaSenseTopologyPublisher(sec));
 		String pipelineId = sec.getCorrespondingPipeline();

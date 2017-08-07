@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.proasense.pandda;
 
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.NonVisualizableActionController;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
@@ -50,9 +50,9 @@ public class PanddaController extends NonVisualizableActionController {
     panddaParams.setParamsPropertyKey(SepaUtils.getMappingPropertyName(sec, TimestampMapping));
     panddaParams.setParamsPropertyKey(SepaUtils.getMappingPropertyName(sec, ParamsMapping));
 
-    panddaPublisher = new PanddaPublisher(ClientConfiguration.INSTANCE.getKafkaHost(),
-            ClientConfiguration.INSTANCE.getKafkaPort(), panddaParams);
-    startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+    panddaPublisher = new PanddaPublisher(ActionConfig.INSTANCE.getKafkaHost(),
+            ActionConfig.INSTANCE.getKafkaPort(), panddaParams);
+    startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
             panddaPublisher);
 
     String pipelineId = sec.getCorrespondingPipeline();
