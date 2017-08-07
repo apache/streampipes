@@ -13,7 +13,7 @@ import java.util.Map;
 public class ConsulSpConfig extends SpConfig implements Runnable {
 //public class ConsulSpConfig extends SpConfig {
     private static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
-    private static String serviceName;
+    private String serviceName;
     private  KeyValueClient kvClient;
 
 
@@ -29,7 +29,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         Consul consul = Consul.builder().build(); // connect to Consul on localhost
         kvClient = consul.keyValueClient();
 
-        ConsulSpConfig.serviceName = serviceName;
+        this.serviceName = serviceName;
     }
 
     public ConsulSpConfig(String serviceName, SpConfigChangeCallback callback) {
@@ -109,11 +109,15 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public String getString(String key) {
-        return String.valueOf(kvClient.getValueAsString(addSn(key)).get());
+        Optional<String> os = kvClient.getValueAsString(addSn(key));
+        String s = os.get();
+        return s;
+
+//        return kvClient.getValueAsString(addSn(key)).get();
     }
 
     private String addSn(String key) {
-       return SERVICE_ROUTE_PREFIX + ConsulSpConfig.serviceName + "/" + key;
+       return SERVICE_ROUTE_PREFIX + serviceName + "/" + key;
     }
 
 

@@ -61,8 +61,6 @@ public class ConfigurationManager {
 		settings.setKafkaHost(cfg.KAFKA_HOST);
 		settings.setKafkaPort(cfg.KAFKA_PORT);
 		settings.setKafkaProtocol(cfg.KAFKA_PROTOCOL);
-		settings.setSesameDbName(cfg.SESAME_REPOSITORY_ID);
-		settings.setSesameUrl(cfg.SESAME_URI);
 		settings.setZookeeperHost(cfg.ZOOKEEPER_HOST);
 		settings.setZookeeperPort(cfg.ZOOKEEPER_PORT);
 		settings.setZookeeperProtocol(cfg.ZOOKEEPER_PROTOCOL);

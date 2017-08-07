@@ -25,9 +25,6 @@ public class Configuration {
 	
 	public RDFFormat RDF_FORMAT = RDFFormat.JSONLD;
 	
-	public String SESAME_URI;
-	public String SESAME_REPOSITORY_ID;
-	
 	private String HOSTNAME;
 	public  String SERVER_URL;
 	
@@ -74,9 +71,7 @@ public class Configuration {
 					TCP_SERVER_PORT = config.getInt("tcp_server_port")	;
 					WEBAPP_PORT = config.getInt("webapp_port");
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
-					SESAME_URI = config.getString("sesameUrl");
-					
-					SESAME_REPOSITORY_ID = config.getString("sesameDbName");
+
 					CONTEXT_PATH = config.getString("context_path");
 					RDF_FORMAT = RDF_FORMAT.JSONLD;
 					
@@ -105,9 +100,6 @@ public class Configuration {
 	
 	private void loadDefaults() {
 		// load defaults
-					SESAME_URI = "http://" +Utils.getHostname() +":8080/openrdf-sesame";
-					SESAME_REPOSITORY_ID = "test-6";
-					
 					HOSTNAME =Utils.getHostname();
 					SERVER_URL = "http://" +HOSTNAME;
 					
