@@ -35,10 +35,4 @@ public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extend
 	
 	protected abstract ER getRuntime(I graph);
 
-	protected FlinkDeploymentConfig makeDeploymentConfig(String jarFileLocation) {
-		return new FlinkDeploymentConfig(jarFileLocation,
-						ClientConfiguration.INSTANCE.getFlinkHost(),
-						ClientConfiguration.INSTANCE.getFlinkPort());
-	}
-	
 }

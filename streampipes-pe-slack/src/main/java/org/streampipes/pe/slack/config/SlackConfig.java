@@ -22,7 +22,7 @@ public enum SlackConfig {
     public final static String iconBaseUrl;
 
     SlackConfig() {
-        config = SpConfig.getSpConfig("pe/slack");
+        config = SpConfig.getSpConfig("pe/org.streampipes.pe.slack");
        	config.register(HOST, "slack", "Hostname for the pe slack integration");
         config.register(PORT, 8090, "Port for the pe slack integration");
        	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");

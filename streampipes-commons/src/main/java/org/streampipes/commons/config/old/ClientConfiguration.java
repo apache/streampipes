@@ -1,8 +1,6 @@
 package org.streampipes.commons.config.old;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
 import java.io.FileWriter;

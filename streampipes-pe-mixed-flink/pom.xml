@@ -138,7 +138,7 @@
 							<transformers>
 								<!-- add Main-Class to manifest file -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.streampipes.wrapper.flink.samples.FlinkInit</mainClass>
+									<mainClass>org.streampipes.pe.mixed.flink.samples.FlinkInit</mainClass>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
