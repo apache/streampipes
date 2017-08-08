@@ -72,4 +72,9 @@ public enum BackendConfig {
 		config.setString(JMS_HOST, s);
 	}
 
+	public void setIsConfigured(boolean b) {
+		config.setBoolean(IS_CONFIGURED, b);
+	}
+
+
 }

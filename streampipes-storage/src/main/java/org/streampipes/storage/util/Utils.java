@@ -63,7 +63,7 @@ public class Utils {
 	}
 	
 	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
-		return new CouchDbClient(props("pipelineCategories"));
+		return new CouchDbClient(props("pipelinecategories"));
 	}
 	
 	private static Configuration cfg() {

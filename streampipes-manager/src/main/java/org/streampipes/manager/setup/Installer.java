@@ -1,5 +1,6 @@
 package org.streampipes.manager.setup;
 
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.setup.InitialSettings;
 
@@ -20,6 +21,7 @@ public class Installer {
 		List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings);
 		List<Message> result = new ArrayList<>();
 		steps.forEach(s -> result.addAll(s.install()));
+		BackendConfig.INSTANCE.setIsConfigured(true);
 		return result;
 	}
 	
