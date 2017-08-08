@@ -18,7 +18,6 @@ export default function RegisterCtrl($scope, restApi) {
 
 		$scope.register = function() {
 			var payload = {};
-			payload.username = $scope.username;
 			payload.password = $scope.password;
 			payload.email = $scope.email;
 			payload.role = $scope.selectedRole;

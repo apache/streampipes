@@ -19,8 +19,6 @@
 			<div flex layout="column">
 				<md-input-container> <label>Email</label> <input
 					type="email" ng-model="email" required> </md-input-container>
-				<md-input-container flex> <label>Username:</label>
-				<input type="text" ng-model="username" required> </md-input-container>
 				<md-input-container flex> <label>Password:</label>
 				<input type="password" ng-model="password" required> </md-input-container>
 				<md-input-container> <label>Role</label> <md-select
@@ -37,11 +35,11 @@
 					      <h5>{{errorMessage}}</h5>
 					</div>
 					<div class="md-success" ng-show="registrationSuccess">
-					      <h4>Registration successful. Go to <a ui-sref="streampipes.login">Login</a> page</h4>
+					      <h4>Registration successful. Go to <a ui-sref="login">Login</a> page</h4>
 					</div>
 				</div>
 			</form>
-			<a ui-sref="streampipes.login">Back to login page</a>
+			<a ui-sref="login">Back to login page</a>
 		</div>
 		</md-content>
 	</div>

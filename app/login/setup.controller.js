@@ -15,7 +15,6 @@ export default function SetupCtr($scope, $rootScope, $location, restApi, $mdToas
         kafkaHost: '', 
         zookeeperHost: '',
         jmsHost: '',
-        adminUsername: '',
         adminEmail: '',
         adminPassword: '',
     };
