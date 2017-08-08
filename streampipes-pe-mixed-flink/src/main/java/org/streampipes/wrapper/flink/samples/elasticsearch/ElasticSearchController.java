@@ -5,7 +5,7 @@ import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSecRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.ApplicationLink;
 import org.streampipes.model.impl.EventSchema;
@@ -37,7 +37,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		stream1.setEventSchema(schema1);
 		
 		SecDescription desc = new SecDescription("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster");
-		desc.setIconUrl(Config.iconBaseUrl + "/elasticsearch_icon.png");
+		desc.setIconUrl(FlinkConfig.iconBaseUrl + "/elasticsearch_icon.png");
 		
 		desc.addEventStream(stream1);
 	
@@ -70,7 +70,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 
 	@Override
 	protected FlinkSecRuntime getRuntime(SecInvocation graph) {
-		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 //		return new ElasticSearchProgram(graph);
 	}
 
@@ -78,7 +78,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		ApplicationLink kibanaLink = new ApplicationLink();
 		kibanaLink.setApplicationName("Kibana");
 		kibanaLink.setApplicationDescription("Kibana lets you visualize and analyze historical data collected by StreamPipes.");
-		kibanaLink.setApplicationIconUrl(Config.iconBaseUrl + "/elasticsearch_icon.png");
+		kibanaLink.setApplicationIconUrl(FlinkConfig.iconBaseUrl + "/elasticsearch_icon.png");
 		kibanaLink.setApplicationLinkType("application");
 		if (!ClientConfiguration.INSTANCE.isNissatechRunning()) {
 			kibanaLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getElasticsearchHost() +":5601");
@@ -92,7 +92,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		ApplicationLink flinkLink = new ApplicationLink();
 		flinkLink.setApplicationName("Flink Dashboard");
 		flinkLink.setApplicationDescription("The Apache Flink Dashboard lets you see and analyze currently running StreamPipes jobs.");
-		flinkLink.setApplicationIconUrl(Config.iconBaseUrl + "/flink_icon.png");
+		flinkLink.setApplicationIconUrl(FlinkConfig.iconBaseUrl + "/flink_icon.png");
 		flinkLink.setApplicationLinkType("system");
 		flinkLink.setApplicationUrl("http://" +ClientConfiguration.INSTANCE.getFlinkHost() +":48081");
 

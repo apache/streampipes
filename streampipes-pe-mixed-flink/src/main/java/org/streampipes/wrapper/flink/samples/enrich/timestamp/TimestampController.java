@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.enrich.timestamp;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -26,7 +26,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("enrich_configurable_timestamp", "Configurable Flink Timestamp Enrichment",
             "Appends the current time in ms to the event payload using Flink")
-            .iconUrl(Config.getIconUrl("enrich-timestamp-icon"))
+            .iconUrl(FlinkConfig.getIconUrl("enrich-timestamp-icon"))
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp("appendedTime", SO.DateTime)))
@@ -38,7 +38,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
   @Override
   protected FlinkSepaRuntime<TimestampParameters> getRuntime(
           SepaInvocation graph) {
-    System.out.println(Config.JAR_FILE);
+    System.out.println(FlinkConfig.JAR_FILE);
     AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
 
     String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");
@@ -53,7 +53,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
             appendTimePropertyName,
             selectProperties);
 
-    return new TimestampProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+    return new TimestampProgram(staticParam, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 //		return new TimestampProgram(staticParam);
   }
 

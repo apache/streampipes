@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.statistics.window;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.wrapper.flink.samples.count.aggregate.CountAggregateConstants;
 import org.streampipes.wrapper.flink.samples.statistics.StatisticsSummaryController;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -37,7 +37,7 @@ public class StatisticsSummaryControllerWindow extends
                     "Statistics",
             "Calculate" +
                     " simple descriptive summary statistics based on a configurable time window")
-            .iconUrl(Config.getIconUrl("statistics-icon"))
+            .iconUrl(FlinkConfig.getIconUrl("statistics-icon"))
             .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
@@ -93,7 +93,7 @@ public class StatisticsSummaryControllerWindow extends
     StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
             (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, serializableParams, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+    return new StatisticsSummaryProgramWindow(params, serializableParams, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 
   }
 }

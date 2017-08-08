@@ -4,7 +4,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.StaticProperties;
@@ -86,7 +86,7 @@ public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFa
 
         TimeToFailureParameters params = new TimeToFailureParameters(graph, healthIndexMapping, mtbfValue);
 
-        return new TimeToFailureProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new TimeToFailureProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
         //return new TimeToFailureProgram(params);
 
     }

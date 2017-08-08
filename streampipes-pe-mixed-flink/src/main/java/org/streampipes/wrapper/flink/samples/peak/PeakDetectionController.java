@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.peak;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -33,7 +33,7 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
     return ProcessingElementBuilder.create("peak-detection", "Peak Detection",
             "Detect peaks in time series data")
             .category(EpaType.ALGORITHM)
-            .iconUrl(Config.getIconUrl("peak-detection-icon"))
+            .iconUrl(FlinkConfig.getIconUrl("peak-detection-icon"))
             .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
@@ -77,8 +77,8 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
 
     //return new PeakDetectionProgram(params);
 
-    return new PeakDetectionProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config.FLINK_HOST, Config.FLINK_PORT));
+    return new PeakDetectionProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+            FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 
   }
 }

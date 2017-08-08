@@ -4,7 +4,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSecRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -32,7 +32,7 @@ public class FileSinkController extends AbstractFlinkConsumerDeclarer {
         stream1.setEventSchema(schema1);
 
         SecDescription desc = new SecDescription("file", "HDFS File Sink", "Writes data to an HDFS file system.");
-        desc.setIconUrl(Config.getIconUrl("hadoop-icon"));
+        desc.setIconUrl(FlinkConfig.getIconUrl("hadoop-icon"));
 
         desc.addEventStream(stream1);
 
@@ -58,6 +58,6 @@ public class FileSinkController extends AbstractFlinkConsumerDeclarer {
 
     @Override
     protected FlinkSecRuntime getRuntime(SecInvocation graph) {
-        return new FileSinkProgram(graph, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new FileSinkProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
     }
 }

@@ -4,7 +4,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -33,7 +33,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 		stream1.setEventSchema(schema1);
 		
 		SepaDescription desc = new SepaDescription("fieldhasher", "Field Hasher", "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.");
-		desc.setIconUrl(Config.getIconUrl("field-hasher-icon"));
+		desc.setIconUrl(FlinkConfig.getIconUrl("field-hasher-icon"));
 		desc.addEventStream(stream1);
 		
 		List<StaticProperty> staticProperties = new ArrayList<>();
@@ -64,7 +64,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 		
 		return new FieldHasherProgram(
 				new FieldHasherParameters(graph, propertyName, hashAlgorithmType),
-				new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+				new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 	}
 
 }

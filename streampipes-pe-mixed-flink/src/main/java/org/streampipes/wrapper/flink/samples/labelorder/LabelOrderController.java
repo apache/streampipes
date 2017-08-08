@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.labelorder;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -21,7 +21,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
         SepaDescription delayDescription = ProcessingElementBuilder
                 .create("labelorder", "Label Orders", "This component labels the orders with the time difference to" +
                         "the next maintenance step.")
-                .iconUrl(Config.getIconUrl("label-icon"))
+                .iconUrl(FlinkConfig.getIconUrl("label-icon"))
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 //TODO add stream requirements
@@ -41,7 +41,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 
-        return new LabelOrderProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new LabelOrderProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 //
 //        return new LabelOrderProgram(params);
     }

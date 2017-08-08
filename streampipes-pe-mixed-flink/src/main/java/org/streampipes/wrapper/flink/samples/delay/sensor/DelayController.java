@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.delay.sensor;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -30,7 +30,7 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
                         "and stores it in kafka. Once the delay time is passed it reads the event from kafka " +
                         "and adds the correct value of the label to the event and passes the new event to the " +
                         "next component")
-                .iconUrl(Config.getIconUrl("delay-icon"))
+                .iconUrl(FlinkConfig.getIconUrl("delay-icon"))
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value [min]", "Minutes till the correct label is knonwn")
@@ -53,7 +53,7 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
 
         DelayParameters params = new DelayParameters(graph, delayValue, labelPropertyMapping);
 
-        return new DelayProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new DelayProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 
 //        return new DelayProgram(params);
     }

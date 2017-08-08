@@ -2,7 +2,7 @@ package org.streampipes.wrapper.flink.samples.spatial.gridenricher;
 
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.vocabulary.Geo;
@@ -73,7 +73,7 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
     SpatialGridEnrichmentParameters params = new SpatialGridEnrichmentParameters(graph,
             enrichmentSettings);
 
-    return new SpatialGridEnrichmentProgram(params, makeDeploymentConfig(Config.JAR_FILE));
+    return new SpatialGridEnrichmentProgram(params, makeDeploymentConfig(FlinkConfig.JAR_FILE));
 //    return new SpatialGridEnrichmentProgram(params);
 
   }

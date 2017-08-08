@@ -4,7 +4,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.util.SepaUtils;
@@ -46,7 +46,7 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
 
         DelayTaxiParameters params = new DelayTaxiParameters(graph, labelPropertyMapping);
 
-        return new DelayTaxiProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new DelayTaxiProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 //        return new DelayTaxiProgram(params);
     }
 }

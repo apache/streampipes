@@ -4,7 +4,7 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -148,7 +148,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
                 machineTypeMapping,
                 variables);
 
-        return new HealthIndexProgram(staticParam, new FlinkDeploymentConfig(Config.JAR_FILE, Config.FLINK_HOST, Config.FLINK_PORT));
+        return new HealthIndexProgram(staticParam, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 
         //return new HealthIndexProgram(staticParam);
     }

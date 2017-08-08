@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.axoom;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -25,7 +25,7 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
     return ProcessingElementBuilder.create("maintenance-prediction", "Coffee Maintenance " +
             "Prediction (Rule-based)", "Predicts the next maintenance based on coffee orders")
             .category(EpaType.ALGORITHM)
-            .iconUrl(Config.getIconUrl("prediction-icon"))
+            .iconUrl(FlinkConfig.getIconUrl("prediction-icon"))
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .requiredPropertyStream2(EpRequirements.anyProperty())
             .outputStrategy(OutputStrategies.fixed(EpProperties.longEp("timestamp", SO.DateTime)
@@ -40,8 +40,8 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
   protected FlinkSepaRuntime<MaintenancePredictionParameters> getRuntime(SepaInvocation graph) {
     MaintenancePredictionParameters params = new MaintenancePredictionParameters(graph);
 
-    return new MaintenancePredictionProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config.FLINK_HOST, Config.FLINK_PORT));
+    return new MaintenancePredictionProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+            FlinkConfig.FLINK_HOST, FlinkConfig.FLINK_PORT));
 
     //return new MaintenancePredictionProgram(params);
   }

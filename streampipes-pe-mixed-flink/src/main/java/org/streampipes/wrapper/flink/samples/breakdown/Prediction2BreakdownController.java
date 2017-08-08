@@ -3,7 +3,7 @@ package org.streampipes.wrapper.flink.samples.breakdown;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.wrapper.flink.samples.Config;
+import org.streampipes.wrapper.flink.samples.FlinkConfig;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.vocabulary.ProaSense;
@@ -43,8 +43,8 @@ public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<P
   protected FlinkSepaRuntime<Prediction2BreakdownParameters> getRuntime(SepaInvocation graph) {
     Prediction2BreakdownParameters params = new Prediction2BreakdownParameters(graph);
 
-    return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config.FLINK_HOST, Config
+    return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+            FlinkConfig.FLINK_HOST, FlinkConfig
             .FLINK_PORT));
   }
 }
