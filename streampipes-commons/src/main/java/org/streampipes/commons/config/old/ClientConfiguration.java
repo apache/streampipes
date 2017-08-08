@@ -75,8 +75,8 @@ public enum ClientConfiguration {
 
 	ClientConfiguration()
 	{
-		pathToFile = new File(ConfigurationManager.getStreamPipesConfigFileLocation());
-		file = new File(ConfigurationManager.getStreamPipesClientConfigFullPath());
+//		pathToFile = new File(ConfigurationManager.getStreamPipesConfigFileLocation());
+//		file = new File(ConfigurationManager.getStreamPipesClientConfigFullPath());
 		 
 //		if (ConfigurationManager.isClientConfigured())
 			loadPropertySettings();
@@ -161,8 +161,8 @@ public enum ClientConfiguration {
 	}
 
 	private void loadPropertySettings() {
-		try {
-			PropertiesConfiguration config = new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
+			PropertiesConfiguration config = null;
+//					new PropertiesConfiguration(ConfigurationManager.getStreamPipesClientConfigFullPath());
 			
 			this.hostname = config.getString("hostname");
 			this.algorithmPort = config.getInt("algorithm_port");
@@ -218,12 +218,6 @@ public enum ClientConfiguration {
 
 			if (iconScheme.equals("https")) this.iconUrl = iconScheme +"://" +iconHost;
 			
-			
-		} catch (ConfigurationException e) {
-			System.out.println(e);
-			createDefaultSettings();
-		}
-		
 	}
 
 	public String getHostname() {

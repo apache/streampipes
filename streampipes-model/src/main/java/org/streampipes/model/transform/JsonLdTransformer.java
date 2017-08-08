@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 
 import com.clarkparsia.empire.annotation.RdfProperty;
+import org.openrdf.rio.RDFFormat;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.openrdf.model.Graph;
 import org.openrdf.model.Model;
@@ -30,7 +31,6 @@ import org.openrdf.rio.UnsupportedRDFormatException;
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 import com.clarkparsia.empire.annotation.RdfGenerator;
 
-import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.model.AbstractSEPAElement;
 import org.streampipes.model.vocabulary.SEPA;
 
@@ -171,7 +171,7 @@ public class JsonLdTransformer implements RdfTransformer {
         InputStream stream = new ByteArrayInputStream(
                 json.getBytes(StandardCharsets.UTF_8));
         Model statements;
-        statements = Rio.parse(stream, "", Configuration.getInstance().RDF_FORMAT);
+        statements = Rio.parse(stream, "", RDFFormat.JSONLD);
 
         Iterator<Statement> st = statements.iterator();
 

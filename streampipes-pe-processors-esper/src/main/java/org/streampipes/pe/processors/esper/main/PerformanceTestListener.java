@@ -9,8 +9,6 @@ import java.util.Calendar;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
-import org.streampipes.commons.config.old.ConfigurationManager;
-
 public class PerformanceTestListener implements UpdateListener {
 
 	private int counter = 0;
@@ -62,7 +60,7 @@ public class PerformanceTestListener implements UpdateListener {
 	
 	private void prepare()
 	{
-		File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() +getFilename());
+		File file = new File(System.getProperty("user.home") + File.separator +".streampipes" +File.separator +getFilename());
 		try {
 			stream = new PrintWriter(new FileOutputStream(file, true), true);
 		} catch (IOException e) {

@@ -2,7 +2,6 @@ package org.streampipes.pe.sources.samples;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.gson.Gson;
-import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.pe.sources.samples.friction.FrictionRawEvent;
 import org.streampipes.pe.sources.samples.util.Utils;
 
@@ -58,12 +57,12 @@ public class FrictionJsonToCsvConverter {
     }
 
     private static File buildFile() {
-        File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() + "/" + FrictionDirectory + FrictionReplayFilename);
+        File file = new File(System.getProperty("user.home") + File.separator +".streampipes" +File.separator + "/" + FrictionDirectory + FrictionReplayFilename);
         return file;
     }
 
     private static File buildOutputFile() {
-        File file = new File(ConfigurationManager.getStreamPipesConfigFileLocation() + "/" + FrictionDirectory + "output.csv");
+        File file = new File(System.getProperty("user.home") + File.separator +".streampipes" +File.separator + "/" + FrictionDirectory + "output.csv");
         return file;
     }
 }

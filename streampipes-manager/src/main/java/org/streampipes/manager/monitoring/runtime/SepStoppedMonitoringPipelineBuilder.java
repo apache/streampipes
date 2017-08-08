@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;

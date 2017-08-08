@@ -4,8 +4,6 @@ import org.streampipes.model.util.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
-import org.streampipes.commons.config.old.Configuration;
-
 public class Utils {
 
 
@@ -66,10 +64,6 @@ public class Utils {
 		return new CouchDbClient(props("pipelinecategories"));
 	}
 	
-	private static Configuration cfg() {
-		return Configuration.getInstance();
-	}
-
 	private static CouchDbProperties props(String dbname)
 	{
 		return new CouchDbProperties(dbname, true, CouchDbConfig.INSTANCE.getProtocol(),

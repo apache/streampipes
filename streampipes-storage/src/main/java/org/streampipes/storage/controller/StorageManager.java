@@ -6,7 +6,6 @@ import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
-import org.streampipes.commons.config.old.Configuration;
 import org.streampipes.model.transform.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;

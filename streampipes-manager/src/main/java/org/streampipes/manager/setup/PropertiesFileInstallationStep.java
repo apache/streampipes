@@ -1,12 +1,10 @@
 package org.streampipes.manager.setup;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 
-import org.streampipes.commons.config.old.ConfigurationManager;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.setup.InitialSettings;
