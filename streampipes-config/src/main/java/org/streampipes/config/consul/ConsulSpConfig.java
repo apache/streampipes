@@ -1,12 +1,11 @@
-package org.streampipes.commons.config.consul;
+package org.streampipes.config.consul;
 
 import com.google.common.base.Optional;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
-import org.slf4j.Logger;
-import org.streampipes.commons.SpConfigChangeCallback;
-import org.streampipes.commons.config.SpConfig;
+import org.streampipes.config.SpConfig;
+import org.streampipes.config.SpConfigChangeCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,6 +117,26 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         return s;
 
 //        return kvClient.getValueAsString(addSn(key)).get();
+    }
+
+    @Override
+    public void setBoolean(String key, Boolean value) {
+        setString(key, value.toString());
+    }
+
+    @Override
+    public void setInteger(String key, int value) {
+        setString(key, String.valueOf(value));
+    }
+
+    @Override
+    public void setDouble(String key, double value) {
+        setString(key, String.valueOf(value));
+    }
+
+    @Override
+    public void setString(String key, String value) {
+        kvClient.putValue(addSn(key), value);
     }
 
     private String addSn(String key) {

@@ -1,6 +1,6 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.commons.config.old.Configuration;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
@@ -24,7 +24,7 @@ public abstract class AbstractNotificationSubscriber implements EventListener<by
     }
 
     public void subscribe() {
-        StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topic,
+        StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(BackendConfig.INSTANCE.getKafkaUrl(), topic,
                 this);
         Thread thread = new Thread(kafkaConsumerGroup);
         thread.start();

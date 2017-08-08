@@ -14,7 +14,6 @@ public class User {
 
 	private @SerializedName("_id") String userId;
 	protected @SerializedName("_rev") String rev;
-	protected String username;
 	protected String email;
 	private String password;
 		
@@ -36,9 +35,8 @@ public class User {
 		this.hideTutorial = false;
 	}
 	
-	public User(String username, String email, String password, Set<Role> roles, List<Pipeline> pipelines, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
+	public User(String email, String password, Set<Role> roles, List<Pipeline> pipelines, List<Element> ownSources, List<Element> ownSepas, List<Element> ownActions) {
 		super();
-		this.username = username;
 		this.email = email;
 		
 		this.password = password;
@@ -52,9 +50,8 @@ public class User {
 		this.hideTutorial = false;
 	}
 	
-	public User(String username, String email, String password, Set<Role> roles)
+	public User(String email, String password, Set<Role> roles)
 	{ 
-		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
@@ -70,14 +67,6 @@ public class User {
 		this.preferredSources = new ArrayList<>();
 
 		this.hideTutorial = false;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getEmail() {

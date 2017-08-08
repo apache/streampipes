@@ -18,23 +18,6 @@ import java.util.List;
 
 public class Utils {
 
-	public static final String SERVER_URL;
-	public static final String CONTEXT_PATH;
-	public static final int PORT;
-	public static final String IMG_DIR;
-
-	static {
-		SERVER_URL = "http://anemone06.fzi.de";
-		CONTEXT_PATH = "/semantic-epa-backend";
-		PORT = 8080;
-		IMG_DIR = "img";
-
-	}
-
-	public static String getImageUrl() {
-		return SERVER_URL + CONTEXT_PATH + "/" + IMG_DIR + "/";
-	}
-
 	public static List<URI> createURI(String...uris)
 	{
 		List<URI> result = new ArrayList<>();
@@ -79,15 +62,4 @@ public class Utils {
 		return stream.toString();
 	}
 	
-	public static String getHostname()
-	{
-		InetAddress addr;
-		try {
-			addr = InetAddress.getLocalHost();
-			System.out.println(addr.getCanonicalHostName());
-			return addr.getCanonicalHostName();
-		} catch (UnknownHostException e) {
-			return "localhost";
-		}	
-	}
 }

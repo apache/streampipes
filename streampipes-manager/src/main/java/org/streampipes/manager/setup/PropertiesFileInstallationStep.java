@@ -7,17 +7,17 @@ import java.util.List;
 
 
 import org.streampipes.commons.config.old.ConfigurationManager;
-import org.streampipes.commons.config.old.WebappConfigurationSettings;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.client.setup.InitialSettings;
 
 public class PropertiesFileInstallationStep implements InstallationStep {
 
-	private WebappConfigurationSettings settings;
+	private InitialSettings settings;
 	private File file;
 	private File pathToFile;
 	
-	public PropertiesFileInstallationStep(File file, File pathToFile, WebappConfigurationSettings settings) {
+	public PropertiesFileInstallationStep(File file, File pathToFile, InitialSettings settings) {
 		this.settings = settings;
 		this.file = file;
 		this.pathToFile = pathToFile;
@@ -25,14 +25,14 @@ public class PropertiesFileInstallationStep implements InstallationStep {
 	
 	@Override
 	public List<Message> install() {
-		try {
-			ConfigurationManager.storeWebappConfigurationToProperties(file, pathToFile, settings);
+//		try {
+//			ConfigurationManager.storeWebappConfigurationToProperties(file, pathToFile, settings);
 
 			return Arrays.asList(Notifications.success("Writing configuration to file..."));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Arrays.asList(Notifications.error("Writing configuration to file..."));
-		}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return Arrays.asList(Notifications.error("Writing configuration to file..."));
+//		}
 	}
 	
 }

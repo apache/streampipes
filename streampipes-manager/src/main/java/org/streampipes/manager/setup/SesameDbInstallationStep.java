@@ -16,15 +16,16 @@ import org.openrdf.sail.memory.config.MemoryStoreConfig;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.storage.util.SesameConfig;
 
 public class SesameDbInstallationStep implements InstallationStep {
 
 	private String sesameUrl;
 	private String sesameDbName;
 	
-	public SesameDbInstallationStep(String sesameUrl, String sesameDbName) {
-		this.sesameUrl = sesameUrl;
-		this.sesameDbName = sesameDbName;
+	public SesameDbInstallationStep() {
+		this.sesameUrl = SesameConfig.INSTANCE.getUri();
+		this.sesameDbName = SesameConfig.INSTANCE.getRepositoryId();
 	}
 
 	@Override

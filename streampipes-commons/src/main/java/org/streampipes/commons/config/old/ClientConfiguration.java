@@ -78,10 +78,10 @@ public enum ClientConfiguration {
 		pathToFile = new File(ConfigurationManager.getStreamPipesConfigFileLocation());
 		file = new File(ConfigurationManager.getStreamPipesClientConfigFullPath());
 		 
-		if (ConfigurationManager.isClientConfigured())
+//		if (ConfigurationManager.isClientConfigured())
 			loadPropertySettings();
-		else
-			createDefaultSettings();
+//		else
+//			createDefaultSettings();
 	}
 
 	private void createDefaultSettings() {
@@ -310,10 +310,6 @@ public enum ClientConfiguration {
 		return proveItActive;
 	}
 	
-	public boolean isNissatechRunning() {
-		return nissatechRunning;
-	}
-
 	public String getIconUrl() {
 		return iconUrl;
 	}

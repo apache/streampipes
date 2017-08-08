@@ -4,7 +4,6 @@ import org.streampipes.rest.impl.ApplicationLink;
 import org.streampipes.rest.impl.Authentication;
 import org.streampipes.rest.impl.AutoComplete;
 import org.streampipes.rest.impl.Deployment;
-import org.streampipes.rest.impl.Icon;
 import org.streampipes.rest.impl.Notification;
 import org.streampipes.rest.impl.OntologyContext;
 import org.streampipes.rest.impl.OntologyKnowledge;
@@ -45,7 +44,6 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(AutoComplete.class);
         apiClasses.add(PipelineElementCategory.class);
         apiClasses.add(Deployment.class);
-        apiClasses.add(Icon.class);
         apiClasses.add(Notification.class);
         apiClasses.add(OntologyContext.class);
         apiClasses.add(OntologyKnowledge.class);

@@ -56,7 +56,8 @@ public class Configuration {
 	 */
 	private Configuration() {
 		
-			if (ConfigurationManager.isConfigured())
+//			if (ConfigurationManager.isConfigured())
+			if (true)
 			{
 				Logger.getAnonymousLogger().info("Loading config file...");
 				try {
@@ -95,16 +96,16 @@ public class Configuration {
 	
 	private void loadDefaults() {
 		// load defaults
-					HOSTNAME =Utils.getHostname();
+//					HOSTNAME =Utils.getHostname();
 					SERVER_URL = "http://" +HOSTNAME;
 					
 					CONTEXT_PATH = "/semantic-epa-backend";
 					
-					KAFKA_HOST = Utils.getHostname();
+//					KAFKA_HOST = Utils.getHostname();
 					KAFKA_PROTOCOL = "http";
 					KAFKA_PORT = 9092;
 					
-					JMS_HOST = Utils.getHostname();
+//					JMS_HOST = Utils.getHostname();
 					JMS_PROTOCOL = "tcp";
 					JMS_PORT = 61616;
 					
@@ -114,7 +115,7 @@ public class Configuration {
 					WEBAPP_PORT = 8080;
 					WEBAPP_BASE_URL = SERVER_URL + ":" + WEBAPP_PORT;
 					
-					ZOOKEEPER_HOST = Utils.getHostname();
+//					ZOOKEEPER_HOST = Utils.getHostname();
 					ZOOKEEPER_PORT = 2181;
 					ZOOKEEPER_PROTOCOL = "http";
 					
@@ -155,16 +156,6 @@ public class Configuration {
 		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
 
 		return writer;
-	}
-
-	public final BrokerConfig getBrokerConfig()
-	{
-		return BrokerConfig.CONFIGURED;
-	}
-
-	public final boolean isDemoMode()
-	{
-		return false;
 	}
 
 }

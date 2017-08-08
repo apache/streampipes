@@ -14,11 +14,7 @@ public class DashboardParameters {
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
         //this.broker = removeProtocol(ClientConfiguration.INSTANCE.getJmsHost()+ ":61614");
         ClientConfiguration config = ClientConfiguration.INSTANCE;
-        if (!config.isNissatechRunning()) {
-            this.broker = "ws://" +config.getWebappHost() +":" +config.getWebappPort() +"/streampipes/ws";
-        } else {
-            this.broker = "ws://proasense-ui.nissatech.com/streampipes/ws";
-        }
+        this.broker = "ws://" +config.getWebappHost() +":" +config.getWebappPort() +"/streampipes/ws";
     }
 
     private String removeProtocol(String url) {

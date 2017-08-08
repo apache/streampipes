@@ -1,6 +1,7 @@
 package org.streampipes.pe.sinks.standalone.config;
 
-import org.streampipes.commons.config.SpConfig;
+
+import org.streampipes.config.SpConfig;
 
 public enum ActionConfig {
 

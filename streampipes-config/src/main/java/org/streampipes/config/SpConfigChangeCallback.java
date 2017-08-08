@@ -1,4 +1,4 @@
-package org.streampipes.commons;
+package org.streampipes.config;
 
 public interface SpConfigChangeCallback {
 

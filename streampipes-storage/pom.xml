@@ -34,6 +34,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-model-client</artifactId>
 		</dependency>
 		<dependency>

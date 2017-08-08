@@ -1,6 +1,7 @@
 package org.streampipes.storage.util;
 
-import org.streampipes.commons.config.SpConfig;
+
+import org.streampipes.config.SpConfig;
 
 public enum SesameConfig {
     INSTANCE;
@@ -22,6 +23,10 @@ public enum SesameConfig {
 
     public String getRepositoryId() {
         return REPOSITORY_ID;
+    }
+
+    public void setUri(String value) {
+        config.setString(URI, value);
     }
 
 }

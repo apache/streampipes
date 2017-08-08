@@ -1,6 +1,7 @@
 package org.streampipes.pe.processors.esper.config;
 
-import org.streampipes.commons.config.SpConfig;
+
+import org.streampipes.config.SpConfig;
 
 public enum EsperConfig {
 	INSTANCE;

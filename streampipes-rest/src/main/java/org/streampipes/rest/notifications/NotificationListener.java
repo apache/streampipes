@@ -1,14 +1,12 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.commons.config.old.ConfigurationManager;
+import org.streampipes.config.backend.BackendConfig;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class NotificationListener implements ServletContextListener {
 
-	private static final String iccsKafkaTopic = "eu.proasense.internal.pandda.mhwirth.recommendation";
-	private static final String iccsKafkaHellaTopic = "eu.proasense.internal.pandda.hella.recommendation";
 	private static final String internalNotificationTopic = "de.fzi.cep.sepa.notifications";
 	
 
@@ -20,12 +18,10 @@ public class NotificationListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		if (ConfigurationManager.isConfigured())
+		if (BackendConfig.INSTANCE.isConfigured())
 		{
 			try {
 			new Thread(new StreamPipesNotificationSubscriber(internalNotificationTopic)).start();
-			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaTopic)).start();
-			new Thread(new ProaSenseNotificationSubscriber(iccsKafkaHellaTopic)).start();
 			} catch (Exception e)
 			{
 				e.printStackTrace();

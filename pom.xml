@@ -101,6 +101,11 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>semantic-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -303,6 +308,7 @@
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
+        <module>streampipes-config</module>
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>

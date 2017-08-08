@@ -1,7 +1,7 @@
 package org.streampipes.storage.util;
 
-import org.streampipes.commons.SpConfigChangeCallback;
-import org.streampipes.commons.config.SpConfig;
+import org.streampipes.config.SpConfig;
+import org.streampipes.config.SpConfigChangeCallback;
 
 public enum CouchDbConfig {
 
@@ -43,5 +43,9 @@ public enum CouchDbConfig {
 
     public String getProtocol() {
         return config.getString(PROTOCOL);
+    }
+
+    public void setHost(String host) {
+        config.setString(HOST, host);
     }
 }
