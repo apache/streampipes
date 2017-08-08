@@ -1,11 +1,11 @@
-package org.streampipes.wrapper;
-
-import java.io.Serializable;
-import java.util.List;
+package org.streampipes.wrapper.params;
 
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class InputStreamParameters implements Serializable {
 
@@ -28,16 +28,8 @@ public class InputStreamParameters implements Serializable {
 		return eventGrounding;
 	}
 	
-	public void setEventGrounding(EventGrounding eventGrounding) {
-		this.eventGrounding = eventGrounding;
-	}
-	
 	public String getInName() {
 		return inName;
-	}
-	
-	public void setInName(String eventName) {
-		this.inName = eventName;
 	}
 	
 	public List<String> getAllProperties() {

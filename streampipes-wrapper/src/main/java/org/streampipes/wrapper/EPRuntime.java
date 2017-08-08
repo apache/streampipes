@@ -1,6 +1,8 @@
 package org.streampipes.wrapper;
 
 
+import org.streampipes.wrapper.params.RuntimeParameters;
+
 public abstract class EPRuntime { // routing container
 
 	protected final EPEngine<?> engine;
@@ -11,7 +13,7 @@ public abstract class EPRuntime { // routing container
 	public EPRuntime(RuntimeParameters<?> params)
 	{
 		this.collector = new OutputCollector();
-		engine = params.getPreparedEngine(this, params.getEngineParameters().getGraph(), collector);
+		engine = params.getPreparedEngine(params.getEngineParameters().getGraph(), collector);
 
 	}
 	

@@ -19,7 +19,7 @@ import com.google.common.io.Resources;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.wrapper.EPEngine;
 import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.params.EngineParameters;
 
 public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 

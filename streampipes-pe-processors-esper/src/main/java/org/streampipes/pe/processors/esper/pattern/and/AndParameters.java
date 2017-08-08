@@ -3,7 +3,7 @@ package org.streampipes.pe.processors.esper.pattern.and;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class AndParameters extends BindingParameters {
 

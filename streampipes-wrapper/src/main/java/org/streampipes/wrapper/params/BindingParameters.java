@@ -1,4 +1,4 @@
-package org.streampipes.wrapper;
+package org.streampipes.wrapper.params;
 
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;

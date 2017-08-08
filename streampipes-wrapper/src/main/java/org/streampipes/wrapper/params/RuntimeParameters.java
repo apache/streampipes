@@ -1,8 +1,10 @@
-package org.streampipes.wrapper;
-
-import java.util.function.Supplier;
+package org.streampipes.wrapper.params;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.OutputCollector;
+
+import java.util.function.Supplier;
 
 public abstract class RuntimeParameters<B extends BindingParameters> { // B - Bind Type
 
@@ -23,7 +25,7 @@ public abstract class RuntimeParameters<B extends BindingParameters> { // B - Bi
 		return uri;
 	}
 
-	public EPEngine<B> getPreparedEngine(EPRuntime container, SepaInvocation graph, OutputCollector collector) {
+	public EPEngine<B> getPreparedEngine(SepaInvocation graph, OutputCollector collector) {
 		EPEngine<B> engine = supplier.get();
 		engine.bind(engineParameters, collector, graph);
 		return engine;

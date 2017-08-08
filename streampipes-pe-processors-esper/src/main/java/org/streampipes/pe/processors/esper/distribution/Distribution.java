@@ -8,7 +8,7 @@ import java.util.Map;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.wrapper.EPEngine;
 import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.params.EngineParameters;
 
 public class Distribution implements EPEngine<DistributionParameters>{
 

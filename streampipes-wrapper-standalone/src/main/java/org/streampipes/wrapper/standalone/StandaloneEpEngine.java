@@ -1,9 +1,9 @@
 package org.streampipes.wrapper.standalone;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 import org.streampipes.wrapper.EPEngine;
-import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.params.EngineParameters;
 import org.streampipes.wrapper.OutputCollector;
 
 import java.util.Map;

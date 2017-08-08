@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.axoom;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 /**
  * Created by riemer on 12.04.2017.

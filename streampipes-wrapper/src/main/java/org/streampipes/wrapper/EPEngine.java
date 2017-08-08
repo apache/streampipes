@@ -1,8 +1,10 @@
 package org.streampipes.wrapper;
 
-import java.util.Map;
-
 import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.EngineParameters;
+
+import java.util.Map;
 
 public interface EPEngine<B extends BindingParameters> { // B - Bind Type
 

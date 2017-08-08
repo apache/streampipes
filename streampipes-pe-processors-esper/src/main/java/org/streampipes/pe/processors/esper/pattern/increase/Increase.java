@@ -11,7 +11,7 @@ import com.espertech.esper.client.soda.PatternStream;
 import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.RelationalOpExpression;
 import com.espertech.esper.client.soda.SelectClause;
-import org.streampipes.wrapper.InputStreamParameters;
+import org.streampipes.wrapper.params.InputStreamParameters;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.List;

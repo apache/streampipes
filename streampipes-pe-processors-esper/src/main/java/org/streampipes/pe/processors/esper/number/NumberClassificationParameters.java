@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.number;
 
-import java.util.List;
-
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
+
+import java.util.List;
 
 public class NumberClassificationParameters extends BindingParameters {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.streampipes.pe.processors.esper.hella.shuttletime.MouldingMachine;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class MinShuttleTimeParameters extends BindingParameters {
 

@@ -13,7 +13,7 @@ import com.espertech.esper.client.soda.SelectClause;
 import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
-import org.streampipes.wrapper.InputStreamParameters;
+import org.streampipes.wrapper.params.InputStreamParameters;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.Arrays;

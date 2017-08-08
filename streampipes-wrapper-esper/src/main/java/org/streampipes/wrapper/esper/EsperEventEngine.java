@@ -10,13 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
 import org.streampipes.wrapper.EPEngine;
-import org.streampipes.wrapper.EngineParameters;
 import org.streampipes.wrapper.OutputCollector;
 import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
-import org.streampipes.wrapper.routing.Timer;
+import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.EngineParameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +125,6 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		//MapUtils.debugPrint(System.out, "", event);
 		//if (i % 10000 == 0) System.out.println(i +" in Esper.");
-		if (i == 0) Timer.start();
 		i++;
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}

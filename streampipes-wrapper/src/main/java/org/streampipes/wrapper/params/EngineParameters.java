@@ -1,8 +1,8 @@
-package org.streampipes.wrapper;
-
-import java.util.Map;
+package org.streampipes.wrapper.params;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
+
+import java.util.Map;
 
 public class EngineParameters<B extends BindingParameters> {
 

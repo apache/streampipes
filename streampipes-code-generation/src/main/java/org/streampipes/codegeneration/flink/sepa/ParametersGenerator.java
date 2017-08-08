@@ -9,7 +9,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import org.streampipes.model.ConsumableSEPAElement;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 import org.streampipes.codegeneration.utils.Utils;

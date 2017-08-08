@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.aggregate.rate;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class EventRateParameter extends BindingParameters {
 

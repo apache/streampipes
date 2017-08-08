@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.geo.geofencing;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class GeofencingParameters extends BindingParameters {
 

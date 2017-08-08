@@ -5,8 +5,8 @@ import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.wrapper.EPEngine;
 import org.streampipes.wrapper.EPRuntime;
-import org.streampipes.wrapper.BindingParameters;
-import org.streampipes.wrapper.EngineParameters;
+import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.EngineParameters;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +40,6 @@ public abstract class EpDeclarer<B extends BindingParameters, EPR extends EPRunt
 		
 		epRuntime = prepareRuntime(bindingParameters, supplier, engineParams);
 		epRuntime.initRuntime();
-		
-		
-		start();
 	}
 		
 	public Response detachRuntime(String pipelineId) {
@@ -63,8 +60,6 @@ public abstract class EpDeclarer<B extends BindingParameters, EPR extends EPRunt
 	public abstract void preDetach() throws Exception;
 	
 	public abstract EPR prepareRuntime(B bindingParameters, Supplier<EPEngine<B>> supplier, EngineParameters<B> engineParams);
-
-	public abstract void start() throws Exception;
 
 	protected Response submit(B staticParams, Supplier<EPEngine<B>> engine, SepaInvocation sepa) {
 		try {

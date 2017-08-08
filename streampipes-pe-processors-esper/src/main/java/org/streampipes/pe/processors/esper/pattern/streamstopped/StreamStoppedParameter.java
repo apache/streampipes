@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.pattern.streamstopped;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class StreamStoppedParameter extends BindingParameters {
 

@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.flink.samples.wordcount;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.BindingParameters;
 
 public class WordCountParameters extends BindingParameters {
 
