@@ -16,7 +16,7 @@
 				<md-divider/>
 					<md-content layout-padding>
 						<div ng-show="!installationFinished">
-							<form name="setupForm" role="form" ng-submit="configure()" >
+							<form name="setupForm" role="form" >
 								<h3>Initial User</h3>
 								<div layout layout-sm="column">
 									<md-input-container flex>
@@ -76,11 +76,12 @@
 												<md-button ng-show="!showAdvancedSettings" ng-click="showAdvancedSettings = !showAdvancedSettings" class="md-raised">Show Advanced Settings</md-button>
 												<md-button ng-show="showAdvancedSettings" ng-click="showAdvancedSettings = !showAdvancedSettings" class="md-raised">Hide Advanced Settings</md-button>
 												<md-button class="md-accent md-raised" type="submit"
-													ng-disabled="setupForm.$pristine || setupForm.$invalid || loading">Install</md-button>
+													ng-disabled="setupForm.$pristine || setupForm.$invalid || loading" ng-click="configure()">Install</md-button>
 												<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
 											</div>
-										</form>
-									</div>
+										</div>
+
+									</form>
 									<div ng-show="installationFinished">
 										<h3>Installation Results</h3>
 										<div ng-repeat="msg in installationResults">
