@@ -42,6 +42,12 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-wrapper-esper</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>

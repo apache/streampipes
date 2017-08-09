@@ -20,6 +20,12 @@
             <groupId>com.espertech</groupId>
             <artifactId>esper</artifactId>
             <version>5.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

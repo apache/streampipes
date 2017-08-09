@@ -1,5 +1,7 @@
 package org.streampipes.pe.sources.samples.main;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
@@ -21,9 +23,11 @@ import org.streampipes.pe.sources.samples.wunderbar.WunderbarProducer2;
 
 public class SourcesSamplesInit extends StandaloneModelSubmitter {
 
+    static Logger LOG = LoggerFactory.getLogger(SourcesSamplesInit.class);
+
     public static void main(String[] args) {
 
-
+        LOG.info("Starting SourcesSamplesInit");
         if (SourcesConfig.INSTANCE.isTwitterActive()) DeclarersSingleton.getInstance().add(new TwitterStreamProducer());
         if (SourcesConfig.INSTANCE.isMhwirthActive()) {
             DeclarersSingleton.getInstance().add(new DDMProducer())
