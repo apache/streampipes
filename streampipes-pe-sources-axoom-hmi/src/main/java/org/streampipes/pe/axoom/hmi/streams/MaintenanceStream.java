@@ -3,7 +3,6 @@ package org.streampipes.pe.axoom.hmi.streams;
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
 import org.streampipes.pe.axoom.hmi.config.SourceConfig;
 import org.streampipes.pe.axoom.hmi.vocabulary.AxoomVocabulary;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.sdk.builder.DataStreamBuilder;
@@ -43,8 +42,8 @@ public class MaintenanceStream extends AbstractAxoomHmiStream {
             .property(EpProperties.stringEp("machineDisplayName", AxoomVocabulary
                     .MachineDisplayName))
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
-                    ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic
+            .protocol(Protocols.kafka(SourceConfig.INSTANCE.getKafkaHost(),
+                    SourceConfig.INSTANCE.getKafkaPort(), eventType.getTopic
                             ("maintenance")))
             .build();
   }

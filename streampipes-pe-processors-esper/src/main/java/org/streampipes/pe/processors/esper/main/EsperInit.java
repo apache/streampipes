@@ -86,14 +86,10 @@ public class EsperInit extends StandaloneModelSubmitter {
 		.add(new BinaryMathController());
 
         DeclarersSingleton.getInstance().setPort(EsperConfig.INSTANCE.getPort());
+		DeclarersSingleton.getInstance().setHostName(EsperConfig.INSTANCE.getHost());
 
 		new Thread(new EsperEngineSettings()).start();
         new EsperInit().init();
 
 	}
-
-//	@Override
-//	public void run() {
-//		declare();
-//	}
 }

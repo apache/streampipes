@@ -16,6 +16,8 @@ public enum ActionConfig {
 	private final static String ZOOKEEPER_PORT = "zookeeper_port";
 	private final static String COUCHDB_HOST = "couchdb_host";
 	private final static String COUCHDB_PORT = "cochdb_port";
+   	private final static String JMS_HOST = "jms_host";
+	private final static String JMS_PORT = "jms_port";
 
 
 
@@ -33,6 +35,8 @@ public enum ActionConfig {
         config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
 		config.register(COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
 		config.register(COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
+  		config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
+        config.register(JMS_PORT, 9092, "Port for pe actions service for active mq");
 	}
 
 
@@ -81,5 +85,16 @@ public enum ActionConfig {
 		return config.getInteger(COUCHDB_PORT);
 	}
 
+    public String getJmsHost() {
+		return config.getString(JMS_HOST);
+	}
+
+	public int getJmsPort() {
+		return config.getInteger(JMS_PORT);
+	}
+
+	public String getJmsUrl() {
+		return getJmsHost() + ":" + getJmsPort();
+	}
 
 }

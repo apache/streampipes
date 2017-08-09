@@ -1,6 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.elasticsearch;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSecRuntime;
 import org.streampipes.pe.mixed.flink.samples.elasticsearch.elastic5.Elasticsearch5Sink;
@@ -56,7 +56,7 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
         List<InetSocketAddress> transports = new ArrayList<>();
 
         try {
-            transports.add(new InetSocketAddress(InetAddress.getByName(ClientConfiguration.INSTANCE.getElasticsearchHost()), ClientConfiguration.INSTANCE.getElasticsearchPort()));
+            transports.add(new InetSocketAddress(InetAddress.getByName(FlinkConfig.INSTANCE.getElasticsearchHost()), FlinkConfig.INSTANCE.getElasticsearchPort()));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

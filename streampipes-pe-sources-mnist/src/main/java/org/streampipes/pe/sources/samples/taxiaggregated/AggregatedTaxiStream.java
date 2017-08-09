@@ -1,13 +1,13 @@
 package org.streampipes.pe.sources.samples.taxiaggregated;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.SO;
+import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
@@ -24,8 +24,8 @@ import java.util.Arrays;
 public class AggregatedTaxiStream implements EventStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(AggregatedTaxiStream.class);
 
-    private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
-    private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
+    private static String kafkaHost = MlSourceConfig.INSTANCE.getKafkaHost();
+    private static int kafkaPort = MlSourceConfig.INSTANCE.getKafkaPort();
 
     private String topic = "de.fzi.cep.sep.aggregatedtaxi";
     private String dataFolder;
@@ -82,8 +82,8 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
                 .property(EpProperties.doubleEp(CountAggregateConstants.GRID_LON_SE_KEY, Geo.lng))
                 .property(EpProperties.stringEp(CountAggregateConstants.GRID_CELL_ID, SO.Text))
                 .format(Formats.jsonFormat())
-                .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
-                        ClientConfiguration.INSTANCE.getKafkaPort(), topic))
+                .protocol(Protocols.kafka(MlSourceConfig.INSTANCE.getKafkaHost(),
+                        MlSourceConfig.INSTANCE.getKafkaPort(), topic))
                 .build();
 
 
@@ -101,7 +101,7 @@ public class AggregatedTaxiStream implements EventStreamDeclarer {
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-                EventProducer producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+                EventProducer producer = new StreamPipesKafkaProducer(MlSourceConfig.INSTANCE.getKafkaUrl(), topic);
 
                 //TODO change Simulation Settings
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new AggregatedTaxiLineTransformer());

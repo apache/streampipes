@@ -12,7 +12,7 @@ import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.sources.demonstrator.config.DemonstratorVariables;
-import org.streampipes.pe.sources.demonstrator.config.SourcesConfig;
+import org.streampipes.pe.sources.demonstrator.config.DemonstratorConfig;
 import org.streampipes.pe.sources.demonstrator.sources.AbstractDemonstratorStream;
 
 public class SiemensFlowRateSensorStream extends AbstractDemonstratorStream {
@@ -48,7 +48,7 @@ public class SiemensFlowRateSensorStream extends AbstractDemonstratorStream {
 		stream.setName(variables.eventName());
 		stream.setDescription(variables.description());
 		stream.setUri(sep.getUri() +"/" +variables.tagNumber());
-		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/" +variables.icon() +".png");
+		stream.setIconUrl(DemonstratorConfig.iconBaseUrl + "/" +variables.icon() +".png");
 		return stream;
 	}
 

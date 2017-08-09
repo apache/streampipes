@@ -24,7 +24,11 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-commons</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
+    </dependencies>
 	<repositories>
 	<repository>
 			<id>laus</id>

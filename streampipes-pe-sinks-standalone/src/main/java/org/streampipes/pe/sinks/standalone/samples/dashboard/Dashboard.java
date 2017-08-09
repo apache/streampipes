@@ -3,6 +3,7 @@ package org.streampipes.pe.sinks.standalone.samples.dashboard;
 import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 
 import javax.jms.JMSException;
 
@@ -11,7 +12,7 @@ public class Dashboard  implements EventListener<byte[]> {
 
     public Dashboard(String topic) {
         try {
-            this.publisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsUrl(), topic);
+            this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), topic);
         } catch (JMSException e) {
             e.printStackTrace();
         }
