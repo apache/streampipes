@@ -1,7 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples;
 
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.model.impl.EventGrounding;

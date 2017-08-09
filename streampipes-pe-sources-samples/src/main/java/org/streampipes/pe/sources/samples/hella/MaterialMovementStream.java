@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -57,7 +57,7 @@ public class MaterialMovementStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Montrac");
-		EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
+		EventProducer publisher = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.MontracMovement.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

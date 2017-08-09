@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
@@ -21,6 +20,7 @@ import org.streampipes.pe.sources.samples.adapter.CsvReadingTask;
 import org.streampipes.pe.sources.samples.adapter.FolderReadingTask;
 import org.streampipes.pe.sources.samples.adapter.LineParser;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.hella.parser.ScrapLineParser;
 
 
@@ -58,7 +58,7 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		EventProducer publisher = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

@@ -1,11 +1,11 @@
 package org.streampipes.pe.sources.samples.friction;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 /**
  * Created by riemer on 26.10.2016.
@@ -23,8 +23,8 @@ public class FrictionCoefficientSwivel extends FrictionCoefficient implements Ev
 
     @Override
     public void executeStream() {
-        EventProducer gearboxProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), FrictionVariable.Gearbox.topic());
-        EventProducer swivelProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), FrictionVariable.Swivel.topic());
+        EventProducer gearboxProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), FrictionVariable.Gearbox.topic());
+        EventProducer swivelProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), FrictionVariable.Swivel.topic());
         Thread thread = new Thread(new FrictionReplay(gearboxProducer, swivelProducer));
         thread.start();
     }

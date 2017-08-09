@@ -1,10 +1,10 @@
 package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
@@ -40,7 +40,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
 
   @Override
   public void executeStream() {
-    kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+    kafkaProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
 
     Runnable r = new Runnable() {
 

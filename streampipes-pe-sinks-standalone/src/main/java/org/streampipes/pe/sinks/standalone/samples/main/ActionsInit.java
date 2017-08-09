@@ -1,5 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.main;
 
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.alarm.AlarmLightController;
 import org.streampipes.pe.sinks.standalone.samples.couchdb.CouchDbController;
 import org.streampipes.pe.sinks.standalone.samples.dashboard.DashboardController;
@@ -28,7 +29,8 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new AlarmLightController())
             .add(new RabbitMqController());
 
-    DeclarersSingleton.getInstance().setPort(8091);
+    DeclarersSingleton.getInstance().setPort(ActionConfig.INSTANCE.getPort());
+    DeclarersSingleton.getInstance().setHostName(ActionConfig.INSTANCE.getHost());
 
     new ActionsInit().init();
 

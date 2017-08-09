@@ -3,9 +3,9 @@ package org.streampipes.pe.sinks.standalone.samples.evaluation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,9 +52,9 @@ public class EvaluationFileWriter implements Runnable, EventListener<byte[]> {
 	private String getFilename() {
 		Calendar calendar = Calendar.getInstance();
 		return "evaluation-" 
-				+ClientConfiguration.INSTANCE.getSimulationMaxEvents() 
+				+ActionConfig.INSTANCE.getSimulationMaxEvents()
 				+"-" 
-				+ClientConfiguration.INSTANCE.getSimulationDelayMs()
+				+ActionConfig.INSTANCE.getSimulationDelay()
 				+"-"
 				+calendar.get(Calendar.YEAR)
 				+"-"
@@ -72,7 +72,7 @@ public class EvaluationFileWriter implements Runnable, EventListener<byte[]> {
 	public void run() {
 		System.out.println("Starting Kafka Consumer");
 		System.out.println(params.getTopic());
-		kafkaConsumer = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
+		kafkaConsumer = new StreamPipesKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(),
 				params.getTopic(), this);
 	}
 

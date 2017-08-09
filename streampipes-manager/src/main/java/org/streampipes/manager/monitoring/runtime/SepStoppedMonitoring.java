@@ -1,9 +1,9 @@
 package org.streampipes.manager.monitoring.runtime;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
@@ -123,7 +123,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 		String topic = "internal.streamepipes.sec.stopped";
 
-		kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getZookeeperUrl(), topic,
+		kafkaConsumerGroup = new StreamPipesKafkaConsumer(BackendConfig.INSTANCE.getKafkaUrl(), topic,
 				new KafkaCallback());
 		Thread thread = new Thread(kafkaConsumerGroup);
 		thread.start();

@@ -1,6 +1,5 @@
 package org.streampipes.pe.mixed.flink.samples;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.config.SpConfig;
 
 public enum FlinkConfig {

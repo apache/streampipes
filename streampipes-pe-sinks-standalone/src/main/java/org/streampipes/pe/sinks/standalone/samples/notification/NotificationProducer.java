@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.notification;
 
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
@@ -24,7 +24,7 @@ public class NotificationProducer implements EventListener<byte[]> {
 	
 	public NotificationProducer(SecInvocation sec)
 	{
-		producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
+		producer = new StreamPipesKafkaProducer(ActionConfig.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
 		this.title = SepaUtils.getFreeTextStaticPropertyValue(sec, "title");
 		this.content = SepaUtils.getFreeTextStaticPropertyValue(sec, "content");
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());

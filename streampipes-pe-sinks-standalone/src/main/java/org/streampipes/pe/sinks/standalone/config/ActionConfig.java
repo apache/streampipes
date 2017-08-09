@@ -18,6 +18,9 @@ public enum ActionConfig {
 	private final static String COUCHDB_PORT = "cochdb_port";
    	private final static String JMS_HOST = "jms_host";
 	private final static String JMS_PORT = "jms_port";
+	private final static String SIMULATION_DELAY = "simulation_delay_ms";
+	private final static String SIMULATION_MAX_EVENTS = "simulation_max_events";
+
 
 
 
@@ -37,6 +40,8 @@ public enum ActionConfig {
 		config.register(COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
   		config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
         config.register(JMS_PORT, 9092, "Port for pe actions service for active mq");
+   		config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
+        config.register(SIMULATION_MAX_EVENTS,105000, "Maximal number of events for the simulation");
 	}
 
 
@@ -95,6 +100,14 @@ public enum ActionConfig {
 
 	public String getJmsUrl() {
 		return getJmsHost() + ":" + getJmsPort();
+	}
+
+	public int getSimulationDelay() {
+		return config.getInteger(SIMULATION_DELAY);
+	}
+
+	public int getSimulationMaxEvents() {
+		return config.getInteger(SIMULATION_MAX_EVENTS);
 	}
 
 }

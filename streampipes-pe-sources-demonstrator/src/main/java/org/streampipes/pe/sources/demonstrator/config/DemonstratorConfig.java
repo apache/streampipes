@@ -1,6 +1,5 @@
 package org.streampipes.pe.sources.demonstrator.config;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.config.SpConfig;
 
 public enum DemonstratorConfig {

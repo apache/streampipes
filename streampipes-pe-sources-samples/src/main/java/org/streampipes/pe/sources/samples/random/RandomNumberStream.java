@@ -1,7 +1,6 @@
 package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
@@ -17,6 +16,7 @@ import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,8 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	StreamPipesKafkaProducer kafkaProducer;
 	private String topic;
 	
-	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
-	final static int SIMULATION_DELAY_NS = ClientConfiguration.INSTANCE.getSimulationDelayNs();
+	final static long SIMULATION_DELAY_MS = SourcesConfig.INSTANCE.getSimulaitonDelayMs();
+	final static int SIMULATION_DELAY_NS = SourcesConfig.INSTANCE.getSimulaitonDelayNs();
 	
 	public RandomNumberStream(String topic) {
 		this.topic = topic;
@@ -72,7 +72,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	@Override
 	public void executeStream() {
 
-		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+		kafkaProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
 
 		Runnable r = new Runnable() {
 
@@ -80,7 +80,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 			public void run() {
 				Random random = new Random();
 				int j = 0;
-				for (int i = 0; i < ClientConfiguration.INSTANCE.getSimulationMaxEvents(); i++) {
+				for (int i = 0; i < SourcesConfig.INSTANCE.getMaxEvents(); i++) {
 					try {
 						if (j % 50 == 0) {
 							System.out.println(j +" Events (Random Number) sent.");
@@ -88,8 +88,8 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 						Optional<byte[]> nextMsg = getMessage(System.currentTimeMillis(), random.nextInt(100), j);
 						if (nextMsg.isPresent()) kafkaProducer.publish(nextMsg.get());
 						Thread.sleep(SIMULATION_DELAY_MS, SIMULATION_DELAY_NS);
-						if (j % ClientConfiguration.INSTANCE.getWaitEvery() == 0) {
-							Thread.sleep(ClientConfiguration.INSTANCE.getWaitForMs());
+						if (j % SourcesConfig.INSTANCE.getSimulationWaitEvery() == 0) {
+							Thread.sleep(SourcesConfig.INSTANCE.getSimulationWaitFor());
 						}
 						j++;
 					} catch (Exception e) {

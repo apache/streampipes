@@ -1,6 +1,5 @@
 package org.streampipes.pe.sinks.standalone.samples.alarm;
 
-import org.streampipes.commons.config.old.ClientConfiguration;
 import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
