@@ -4,7 +4,8 @@ import com.espertech.esper.client.soda.EPStatementObjectModel;
 import com.espertech.esper.client.soda.FilterStream;
 import com.espertech.esper.client.soda.FromClause;
 import com.espertech.esper.client.soda.SelectClause;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class Project extends EsperEventEngine<ProjectParameter> {
 
-	private static final Logger logger = Logger.getLogger(Project.class);
+	private static final Logger logger = LoggerFactory.getLogger(Project.class);
 	
 	@Override
 	protected List<String> statements(ProjectParameter params) {
