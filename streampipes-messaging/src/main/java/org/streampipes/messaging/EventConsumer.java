@@ -1,9 +1,17 @@
 package org.streampipes.messaging;
 
+import org.streampipes.model.impl.EventGrounding;
+
 /**
  * Created by riemer on 01.10.2016.
  */
-public interface EventListener<T> {
+public interface EventConsumer<IN> {
 
-    void onEvent(T event);
+    void openConsumer(EventGrounding eventGrounding) throws Exception;
+
+    void onEvent(IN event);
+
+    byte[] convertToByteArray(IN event);
+
+    void closeConsumer();
 }

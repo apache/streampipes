@@ -1,4 +1,10 @@
 package org.streampipes.messaging;
 
-public class SpProtocolDefinition {
+public interface SpProtocolDefinition<RAW> {
+
+  String getTransportFormatRdfUri();
+
+  EventConsumer<RAW> getConsumer();
+
+  EventProducer<RAW> getProducer();
 }

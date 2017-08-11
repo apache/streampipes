@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.commons.config.ConfigurationManager;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class EvaluationFileWriter implements Runnable, EventListener<byte[]> {
+public class EvaluationFileWriter implements Runnable, EventConsumer<byte[]> {
 
 	EvaluationParameters params;
 	PrintWriter stream;

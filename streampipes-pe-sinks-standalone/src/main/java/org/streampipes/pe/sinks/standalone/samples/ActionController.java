@@ -2,7 +2,7 @@ package org.streampipes.pe.sinks.standalone.samples;
 
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.JmsTransportProtocol;
@@ -18,7 +18,7 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 
 	protected StreamPipesKafkaConsumer kafkaConsumer;
 
-	protected void startKafkaConsumer(String kafkaUrl, String topic, EventListener<byte[]> eventListener) {
+	protected void startKafkaConsumer(String kafkaUrl, String topic, EventConsumer<byte[]> eventListener) {
 		kafkaConsumer = new StreamPipesKafkaConsumer(kafkaUrl, topic, eventListener);
 		Thread thread = new Thread(kafkaConsumer);
 		thread.start();

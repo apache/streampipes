@@ -5,7 +5,7 @@ import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.impl.EventStream;
@@ -99,7 +99,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		return false;
 	}
 
-	private class KafkaCallback implements EventListener<byte[]> {
+	private class KafkaCallback implements EventConsumer<byte[]> {
 
 		@Override
 		public void onEvent(byte[] payload) {

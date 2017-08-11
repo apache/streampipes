@@ -121,6 +121,16 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-processors-esper</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -325,6 +335,8 @@
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-wrapper-esper</module>
         <module>streampipes-user-management</module>
+        <module>streampipes-dataformat</module>
+        <module>streampipes-dataformat-json</module>
     </modules>
 
     <!-- Build Settings -->

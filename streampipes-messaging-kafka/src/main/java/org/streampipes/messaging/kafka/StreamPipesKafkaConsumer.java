@@ -1,7 +1,7 @@
 package org.streampipes.messaging.kafka;
 
 import org.streampipes.messaging.Consumer;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -19,11 +19,11 @@ public class StreamPipesKafkaConsumer implements Consumer, Runnable, Serializabl
     private String kafkaUrl;
     private String topic;
     private String groupId;
-    private EventListener<byte[]> eventListener;
+    private EventConsumer<byte[]> eventListener;
     private KafkaConsumer<String, byte[]> kafkaConsumer;
     private volatile boolean isRunning = true;
 
-    public StreamPipesKafkaConsumer(String kafkaUrl, String topic, EventListener<byte[]> eventListener) {
+    public StreamPipesKafkaConsumer(String kafkaUrl, String topic, EventConsumer<byte[]> eventListener) {
         this.kafkaUrl = kafkaUrl;
         this.topic = topic;
         this.eventListener = eventListener;

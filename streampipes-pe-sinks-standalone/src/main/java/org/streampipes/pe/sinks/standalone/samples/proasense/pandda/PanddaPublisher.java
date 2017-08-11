@@ -3,7 +3,7 @@ package org.streampipes.pe.sinks.standalone.samples.proasense.pandda;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.apache.thrift.TBase;
@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Created by riemer on 12.02.2017.
  */
-public class PanddaPublisher implements EventListener<byte[]> {
+public class PanddaPublisher implements EventConsumer<byte[]> {
 
   private static final String PanddaOutputTopic = "si.ijs.internal.oa_output";
 

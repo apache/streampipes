@@ -1,12 +1,12 @@
 package org.streampipes.pe.sinks.standalone.samples.alarm;
 
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 
 import javax.jms.JMSException;
 
-public class AlarmLight implements EventListener<byte[]> {
+public class AlarmLight implements EventConsumer<byte[]> {
 
 	private ActiveMQPublisher publisher;
 	private AlarmLightParameters params;

@@ -5,13 +5,13 @@ import java.io.Serializable;
 /**
  * Created by riemer on 01.10.2016.
  */
-public interface EventProducer extends Serializable {
+public interface EventProducer<OUT> extends Serializable {
 
     void openProducer();
 
-    void publish(byte[] event);
+    void publish(OUT event);
 
-    void publish(String event);
+    OUT convertFromByteArray(byte[] event);
 
     void closeProducer();
 }

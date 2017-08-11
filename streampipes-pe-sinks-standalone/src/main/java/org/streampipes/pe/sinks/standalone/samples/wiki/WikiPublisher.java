@@ -3,10 +3,10 @@ package org.streampipes.pe.sinks.standalone.samples.wiki;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
 
-public class WikiPublisher implements EventListener<byte[]> {
+public class WikiPublisher implements EventConsumer<byte[]> {
 
 	private EventProducer producer;
 

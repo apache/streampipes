@@ -1,6 +1,6 @@
 package org.streampipes.messaging.jms;
 
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.util.ByteSequence;
 
@@ -24,7 +24,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements Auto
 	        }
 	    }
 
-	    public void setListener(final EventListener<String> listener) {
+	    public void setListener(final EventConsumer<String> listener) {
 	        try {
 	            consumer.setMessageListener(new MessageListener() {
 	                @Override

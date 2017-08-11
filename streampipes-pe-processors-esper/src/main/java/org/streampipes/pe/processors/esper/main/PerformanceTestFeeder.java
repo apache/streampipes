@@ -4,10 +4,10 @@ import com.espertech.esper.client.EPRuntime;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 
-public class PerformanceTestFeeder implements EventListener<byte[]>, Runnable {
+public class PerformanceTestFeeder implements EventConsumer<byte[]>, Runnable {
 
 	private String zookeeperHost;
 	private int zookeeperPort;

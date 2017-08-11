@@ -2,7 +2,7 @@ package org.streampipes.pe.sinks.standalone.samples.notification;
 
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.util.SepaUtils;
@@ -14,7 +14,7 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import java.util.Date;
 import java.util.HashMap;
 
-public class NotificationProducer implements EventListener<byte[]> {
+public class NotificationProducer implements EventConsumer<byte[]> {
 
 	StreamPipesKafkaProducer producer;
 	private TSerializer serializer;

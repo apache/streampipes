@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.streampipes.pe.sinks.standalone.samples.proasense.ProaSenseTopologyPublisher;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-public class ProaSenseKpiPublisher implements EventListener<byte[]> {
+public class ProaSenseKpiPublisher implements EventConsumer<byte[]> {
 
 	private StreamPipesKafkaProducer producer;
 	private TSerializer serializer;

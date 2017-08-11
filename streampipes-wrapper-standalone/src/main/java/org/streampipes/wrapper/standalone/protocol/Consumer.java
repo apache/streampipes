@@ -1,12 +1,12 @@
 package org.streampipes.wrapper.standalone.protocol;
 
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.wrapper.standalone.datatype.DatatypeDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Consumer<T> implements EventListener<T> {
+public abstract class Consumer<T> implements EventConsumer<T> {
 
 	protected Map<String, ConsumerMessageListener> listeners;
 	protected DatatypeDefinition dataType;

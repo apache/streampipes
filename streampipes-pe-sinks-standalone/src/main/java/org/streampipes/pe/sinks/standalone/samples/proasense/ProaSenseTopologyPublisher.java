@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
 import eu.proasense.internal.ComplexValue;
@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-public class ProaSenseTopologyPublisher implements EventListener<byte[]> {
+public class ProaSenseTopologyPublisher implements EventConsumer<byte[]> {
 
 	private StreamPipesKafkaProducer producer;
 	private SecInvocation graph;

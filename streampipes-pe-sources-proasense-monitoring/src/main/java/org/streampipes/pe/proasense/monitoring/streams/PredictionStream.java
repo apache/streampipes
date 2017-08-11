@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventListener;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
 import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PredictionStream implements EventStreamDeclarer, Runnable, EventListener<byte[]> {
+public class PredictionStream implements EventStreamDeclarer, Runnable, EventConsumer<byte[]> {
 
 	private static final String IN_TOPIC = "eu.proasense.internal.oa.mhwirth.predicted";
 	private static final String OUT_TOPIC = "eu.proasense.internal.sp.monitoring.prediction";
