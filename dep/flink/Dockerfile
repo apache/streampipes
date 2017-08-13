@@ -22,7 +22,7 @@ RUN set -x && \
     echo Installed Flink ${FLINK_VERSION} to ${FLINK_HOME}
 
 #RUN apk update && apk add netcat-openbsd
-RUN apk update && add netcat-openbsd
+RUN apk update && apk add netcat-openbsd
 
 WORKDIR ${FLINK_HOME}/lib
 
