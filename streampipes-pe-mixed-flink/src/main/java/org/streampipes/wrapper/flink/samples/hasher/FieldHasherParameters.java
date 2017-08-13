@@ -1,9 +1,9 @@
 package org.streampipes.wrapper.flink.samples.hasher;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class FieldHasherParameters extends BindingParameters {
+public class FieldHasherParameters extends EventProcessorBindingParams {
 	
 	private String propertyName;
 	private HashAlgorithmType hashAlgorithmType;

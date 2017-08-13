@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.topx;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TopXParameter extends BindingParameters{
+public class TopXParameter extends EventProcessorBindingParams {
 
 	OrderDirection orderDirection;
 	String orderByPropertyName;

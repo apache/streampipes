@@ -13,7 +13,7 @@ import com.espertech.esper.client.soda.SelectClause;
 import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
-import org.streampipes.wrapper.params.InputStreamParameters;
+import org.streampipes.wrapper.params.binding.InputStreamParams;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class Geofencing extends EsperEventEngine<GeofencingParameters> {
 		EPStatementObjectModel model = new EPStatementObjectModel();
 		
 		// select * from pattern [every a=GeoEvent -> b=GeoEvent] where !a.isInside() and b.isInside();
-		InputStreamParameters leftStream = params.getInputStreamParams().get(0);
+		InputStreamParams leftStream = params.getInputStreamParams().get(0);
 		
 		model.selectClause(makeSelectClause(params));
 		

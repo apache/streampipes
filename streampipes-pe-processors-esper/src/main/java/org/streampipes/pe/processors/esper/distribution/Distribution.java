@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.params.EngineParameters;
+import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
 
-public class Distribution implements EPEngine<DistributionParameters>{
+public class Distribution implements EventProcessor<DistributionParameters> {
 
 	private Map<String, Integer> currentDistribution;
 	private String propertyName;
@@ -22,11 +22,11 @@ public class Distribution implements EPEngine<DistributionParameters>{
 	
 	
 	@Override
-	public void bind(EngineParameters<DistributionParameters> parameters,
+	public void bind(EventProcessorEngineParams<DistributionParameters> parameters,
 			OutputCollector collector, SepaInvocation graph) {
 		this.currentDistribution = new HashMap<String, Integer>();
-		this.propertyName = parameters.getStaticProperty().getMappingProperty();
-		this.batchSize = parameters.getStaticProperty().getTimeWindow();
+		this.propertyName = parameters.getBindingParameters().getMappingProperty();
+		this.batchSize = parameters.getBindingParameters().getTimeWindow();
 		this.queue = new ArrayList<>();		
 		this.collector = collector;
 	}

@@ -2,9 +2,9 @@ package org.streampipes.pe.processors.esper.filter.numerical;
 
 import org.streampipes.pe.processors.esper.util.NumericalOperator;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class NumericalFilterParameter extends BindingParameters {
+public class NumericalFilterParameter extends EventProcessorBindingParams {
 
 	private double threshold;
 	private NumericalOperator numericalOperator;

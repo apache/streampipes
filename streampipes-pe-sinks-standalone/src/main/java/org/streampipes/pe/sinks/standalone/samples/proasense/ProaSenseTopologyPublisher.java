@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.DerivedEvent;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class ProaSenseTopologyPublisher implements EventConsumer<byte[]> {
 
-	private StreamPipesKafkaProducer producer;
+	private SpKafkaProducer producer;
 	private SecInvocation graph;
 	private static final String DEFAULT_PROASENSE_TOPIC = "eu.proasense.internal.sp.internal.incoming";
 	private TSerializer serializer;
@@ -41,7 +41,7 @@ public class ProaSenseTopologyPublisher implements EventConsumer<byte[]> {
 	
 	public ProaSenseTopologyPublisher(SecInvocation graph, ProaSenseEventNotifier notifier) {
 		this.graph = graph;
-		this.producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
+		this.producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), DEFAULT_PROASENSE_TOPIC);
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 		this.notifier = notifier;
 	}

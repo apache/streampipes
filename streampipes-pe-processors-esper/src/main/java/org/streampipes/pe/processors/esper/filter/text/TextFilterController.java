@@ -25,11 +25,11 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
 
-public class TextFilterController extends FlatEpDeclarer<TextFilterParameter> {
+public class TextFilterController extends FlatEventProcessorDeclarer<TextFilterParameter> {
 	
 	@Override
 	public SepaDescription declareModel() {

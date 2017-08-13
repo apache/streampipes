@@ -1,13 +1,17 @@
 package org.streampipes.container.init;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.dataformat.SpDataFormatDefinition;
+import org.streampipes.dataformat.SpDataFormatManager;
+import org.streampipes.messaging.SpProtocolDefinition;
+import org.streampipes.messaging.SpProtocolManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeclarersSingleton {
     private static DeclarersSingleton instance;
@@ -57,6 +61,14 @@ public class DeclarersSingleton {
         result.addAll(producerDeclarers);
         result.addAll(consumerDeclarers);
         return result;
+    }
+
+    public void registerProtocol(SpProtocolDefinition<?> protocol) {
+        SpProtocolManager.INSTANCE.register(protocol);
+    }
+
+    public void registerDataFormat(SpDataFormatDefinition dataFormatDefinition) {
+        SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
     }
 
     public void addEpaDeclarer(SemanticEventProcessingAgentDeclarer epaDeclarer) {

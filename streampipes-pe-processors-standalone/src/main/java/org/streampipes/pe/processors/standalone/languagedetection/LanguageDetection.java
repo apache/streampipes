@@ -17,11 +17,11 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.params.EngineParameters;
+import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
 
-public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
+public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
 	private static final String PROFILE_FOLDER = "./profiles";
 	
@@ -58,14 +58,14 @@ public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 	
 	
 	@Override
-	public void bind(EngineParameters<LanguageDetectionParameters> parameters,
+	public void bind(EventProcessorEngineParams<LanguageDetectionParameters> parameters,
 			OutputCollector collector, SepaInvocation graph) {
 		mappingPropertyNames.put(parameters
-				.getStaticProperty()
+				.getBindingParameters()
 				.getInputStreamParams().get(0)
 				.getInName(), 
 				parameters
-				.getStaticProperty()
+				.getBindingParameters()
 				.getMappingPropertyName());
 		this.outputPropertyName = "language";
 		this.collector = collector;

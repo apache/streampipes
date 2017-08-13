@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.proximity;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ProximityParameters extends BindingParameters {
+public class ProximityParameters extends EventProcessorBindingParams {
 
 	private List<Location> proximityLocations;
 	private double distance;

@@ -1,9 +1,9 @@
 package org.streampipes.wrapper.flink.samples.delay.sensor;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DelayParameters extends BindingParameters {
+public class DelayParameters extends EventProcessorBindingParams {
     private int delayValue;
     private String labelPropertyMapping;
 

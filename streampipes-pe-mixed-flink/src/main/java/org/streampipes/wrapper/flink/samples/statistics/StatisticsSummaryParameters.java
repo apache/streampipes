@@ -1,12 +1,12 @@
 package org.streampipes.wrapper.flink.samples.statistics;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 /**
  * Created by riemer on 29.01.2017.
  */
-public class StatisticsSummaryParameters extends BindingParameters {
+public class StatisticsSummaryParameters extends EventProcessorBindingParams {
 
   private String listPropertyName;
 

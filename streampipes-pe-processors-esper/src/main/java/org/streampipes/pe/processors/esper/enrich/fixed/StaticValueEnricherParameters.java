@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.enrich.fixed;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class StaticValueEnricherParameters extends BindingParameters {
+public class StaticValueEnricherParameters extends EventProcessorBindingParams {
 
 	private String appendPropertyName;
 	private String value;

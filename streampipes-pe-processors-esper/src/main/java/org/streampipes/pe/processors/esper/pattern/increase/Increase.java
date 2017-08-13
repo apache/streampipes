@@ -11,7 +11,7 @@ import com.espertech.esper.client.soda.PatternStream;
 import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.RelationalOpExpression;
 import com.espertech.esper.client.soda.SelectClause;
-import org.streampipes.wrapper.params.InputStreamParameters;
+import org.streampipes.wrapper.params.binding.InputStreamParams;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class Increase extends EsperEventEngine<IncreaseParameters> {
 		//model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(makeSelectClause(params));
 						 
-		InputStreamParameters leftStream = params.getInputStreamParams().get(0);
+		InputStreamParams leftStream = params.getInputStreamParams().get(0);
 		
 		PatternEveryExpr p1 = Patterns.everyFilter(fixEventName(leftStream.getInName()), "a");
 		PatternFilterExpr p2 = Patterns.filter(fixEventName(leftStream.getInName()), "b");

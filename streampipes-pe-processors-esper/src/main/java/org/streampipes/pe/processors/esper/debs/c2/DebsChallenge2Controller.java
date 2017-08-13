@@ -23,9 +23,9 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 
-public class DebsChallenge2Controller extends FlatEpDeclarer<DebsChallenge2Parameters>{
+public class DebsChallenge2Controller extends FlatEventProcessorDeclarer<DebsChallenge2Parameters> {
 
 	private EventProperty xCellProperty;
 	private EventProperty yCellProperty;

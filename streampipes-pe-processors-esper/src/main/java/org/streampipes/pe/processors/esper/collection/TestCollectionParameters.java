@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.collection;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TestCollectionParameters extends BindingParameters {
+public class TestCollectionParameters extends EventProcessorBindingParams {
 
 	private String propertyName;
 	private List<DataRange> domainConceptData;

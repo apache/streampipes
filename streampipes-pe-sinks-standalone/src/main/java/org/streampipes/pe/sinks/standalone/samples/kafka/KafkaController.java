@@ -4,7 +4,7 @@ import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -79,7 +79,7 @@ public class KafkaController extends ActionController {
 			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
 			
 			startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
-					new KafkaPublisher(new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
+					new KafkaPublisher(new SpKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
 
 			
 			//consumer.setListener(new ProaSenseTopologyPublisher(sec));

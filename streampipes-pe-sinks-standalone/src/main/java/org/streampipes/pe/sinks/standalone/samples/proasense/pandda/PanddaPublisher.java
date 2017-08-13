@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
@@ -25,7 +25,7 @@ public class PanddaPublisher implements EventConsumer<byte[]> {
   private TSerializer serializer;
 
   public PanddaPublisher(String kafkaHost, Integer kafkaPort, PanddaParameters panddaParameters) {
-    this.kafkaProducer = new StreamPipesKafkaProducer(buildUrl(kafkaHost, kafkaPort), PanddaOutputTopic);
+    this.kafkaProducer = new SpKafkaProducer(buildUrl(kafkaHost, kafkaPort), PanddaOutputTopic);
     this.panddaParameters = panddaParameters;
     this.serializer = new TSerializer(new TBinaryProtocol.Factory());
   }

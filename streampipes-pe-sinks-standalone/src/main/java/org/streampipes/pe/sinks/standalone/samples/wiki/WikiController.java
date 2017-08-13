@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.wiki;
 
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
@@ -39,7 +39,7 @@ public class WikiController extends ActionController {
     int kafkaPort = 9092;
 
     startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
-            new WikiPublisher(new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
+            new WikiPublisher(new SpKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
 
     String pipelineId = sec.getCorrespondingPipeline();
     return new Response(pipelineId, true);

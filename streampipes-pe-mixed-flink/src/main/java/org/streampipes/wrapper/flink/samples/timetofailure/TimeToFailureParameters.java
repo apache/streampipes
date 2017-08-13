@@ -1,12 +1,12 @@
 package org.streampipes.wrapper.flink.samples.timetofailure;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 /**
  * Created by riemer on 26.10.2016.
  */
-public class TimeToFailureParameters extends BindingParameters {
+public class TimeToFailureParameters extends EventProcessorBindingParams {
 
     private String healthIndexMapping;
     private Integer mtbfValue;

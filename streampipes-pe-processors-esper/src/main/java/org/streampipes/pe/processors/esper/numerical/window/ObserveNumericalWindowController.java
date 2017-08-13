@@ -27,9 +27,9 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 
-public class ObserveNumericalWindowController extends FlatEpDeclarer<ObserveNumericalWindowParameters> {
+public class ObserveNumericalWindowController extends FlatEventProcessorDeclarer<ObserveNumericalWindowParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

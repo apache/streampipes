@@ -2,7 +2,7 @@ package org.streampipes.rest.notifications;
 
 import org.streampipes.commons.config.Configuration;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
 import org.streampipes.storage.controller.StorageManager;
 import org.apache.thrift.TDeserializer;
@@ -24,7 +24,7 @@ public abstract class AbstractNotificationSubscriber implements EventConsumer<by
     }
 
     public void subscribe() {
-        StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topic,
+        SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topic,
                 this);
         Thread thread = new Thread(kafkaConsumerGroup);
         thread.start();

@@ -1,14 +1,14 @@
 package org.streampipes.wrapper.flink.samples.peak;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.io.Serializable;
 
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionParameters extends BindingParameters implements Serializable {
+public class PeakDetectionParameters extends EventProcessorBindingParams implements Serializable {
 
   private String valueToObserve;
   private String timestampMapping;

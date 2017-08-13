@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ShuttleTimeParameters extends BindingParameters {
+public class ShuttleTimeParameters extends EventProcessorBindingParams {
 
 private static final long serialVersionUID = 4319341875274736697L;
 	

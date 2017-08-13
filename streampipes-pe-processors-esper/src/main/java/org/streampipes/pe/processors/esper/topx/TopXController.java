@@ -24,10 +24,10 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class TopXController extends FlatEpDeclarer<TopXParameter>{
+public class TopXController extends FlatEventProcessorDeclarer<TopXParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

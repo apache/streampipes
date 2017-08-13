@@ -8,7 +8,7 @@ import java.util.List;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -58,7 +58,7 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		EventProducer publisher = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

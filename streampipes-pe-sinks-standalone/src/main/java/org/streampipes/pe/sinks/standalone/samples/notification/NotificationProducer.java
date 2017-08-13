@@ -3,7 +3,7 @@ package org.streampipes.pe.sinks.standalone.samples.notification;
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.util.SepaUtils;
 import eu.proasense.internal.RecommendationEvent;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class NotificationProducer implements EventConsumer<byte[]> {
 
-	StreamPipesKafkaProducer producer;
+	SpKafkaProducer producer;
 	private TSerializer serializer;
 	private String title;
 	private String content;
@@ -24,7 +24,7 @@ public class NotificationProducer implements EventConsumer<byte[]> {
 	
 	public NotificationProducer(SecInvocation sec)
 	{
-		producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
+		producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
 		this.title = SepaUtils.getFreeTextStaticPropertyValue(sec, "title");
 		this.content = SepaUtils.getFreeTextStaticPropertyValue(sec, "content");
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());

@@ -1,17 +1,15 @@
 package org.streampipes.messaging;
 
-import org.streampipes.model.impl.EventGrounding;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.impl.TransportProtocol;
 
 /**
  * Created by riemer on 01.10.2016.
  */
-public interface EventConsumer<IN> {
+public interface EventConsumer<TP extends TransportProtocol> {
 
-    void openConsumer(EventGrounding eventGrounding) throws Exception;
+    void connect(TP protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws
+            SpRuntimeException;
 
-    void onEvent(IN event);
-
-    byte[] convertToByteArray(IN event);
-
-    void closeConsumer();
+    void disconnect() throws SpRuntimeException;
 }

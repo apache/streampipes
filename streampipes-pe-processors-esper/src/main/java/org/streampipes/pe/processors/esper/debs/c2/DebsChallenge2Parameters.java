@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.debs.c2;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DebsChallenge2Parameters extends BindingParameters {
+public class DebsChallenge2Parameters extends EventProcessorBindingParams {
 
 	private double startingLatitude, startingLongitude;
 	private int cellSize;

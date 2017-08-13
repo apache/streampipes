@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.commons.config.ConfigurationManager;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,7 +25,7 @@ public class EvaluationFileWriter implements Runnable, EventConsumer<byte[]> {
 	private JsonParser jsonParser;
 	private List<ReceivedEvent> input;
 
-	private StreamPipesKafkaConsumer kafkaConsumer;
+	private SpKafkaConsumer kafkaConsumer;
 
 	
 	private boolean running;
@@ -73,7 +73,7 @@ public class EvaluationFileWriter implements Runnable, EventConsumer<byte[]> {
 	public void run() {
 		System.out.println("Starting Kafka Consumer");
 		System.out.println(params.getTopic());
-		kafkaConsumer = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
+		kafkaConsumer = new SpKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
 				params.getTopic(), this);
 	}
 

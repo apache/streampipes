@@ -5,8 +5,8 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -33,7 +33,7 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, EventCon
 	
 	
 	private TDeserializer deserializer;
-	private StreamPipesKafkaProducer producer;
+	private SpKafkaProducer producer;
 	
 	@Override
 	public EventStream declareModel(SepDescription sep) {
@@ -100,9 +100,9 @@ public class PredictionStream implements EventStreamDeclarer, Runnable, EventCon
 
 	@Override
 	public void run() {
-		producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), OUT_TOPIC);
+		producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), OUT_TOPIC);
 		deserializer = new TDeserializer(new TBinaryProtocol.Factory());
-		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
+		SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(),
 				IN_TOPIC, this);
 		Thread thread = new Thread(kafkaConsumerGroup);
 		thread.start();

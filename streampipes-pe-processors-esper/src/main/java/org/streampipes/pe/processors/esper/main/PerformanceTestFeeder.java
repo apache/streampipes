@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.streampipes.messaging.EventConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 
 public class PerformanceTestFeeder implements EventConsumer<byte[]>, Runnable {
 
@@ -15,7 +15,7 @@ public class PerformanceTestFeeder implements EventConsumer<byte[]>, Runnable {
 	private EPRuntime runtime;
 	private JsonParser parser;
 	
-	private StreamPipesKafkaConsumer kafkaConsumerGroup;
+	private SpKafkaConsumer kafkaConsumerGroup;
 	
 	public PerformanceTestFeeder(String zookeeperHost, int zookeeperPort, String topic, EPRuntime runtime) {
 		this.zookeeperHost = zookeeperHost;
@@ -45,7 +45,7 @@ public class PerformanceTestFeeder implements EventConsumer<byte[]>, Runnable {
 
 	@Override
 	public void run() {
-		kafkaConsumerGroup = new StreamPipesKafkaConsumer(zookeeperHost +":" +zookeeperPort,
+		kafkaConsumerGroup = new SpKafkaConsumer(zookeeperHost +":" +zookeeperPort,
 				topic, this);
 		Thread thread = new Thread(kafkaConsumerGroup);
 		thread.start();

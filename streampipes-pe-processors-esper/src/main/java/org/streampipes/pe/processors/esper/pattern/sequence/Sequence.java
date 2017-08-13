@@ -11,7 +11,7 @@ import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.SelectClause;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.wrapper.params.InputStreamParameters;
+import org.streampipes.wrapper.params.binding.InputStreamParams;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.List;
@@ -24,8 +24,8 @@ public class Sequence extends EsperEventEngine<SequenceParameters> {
 		model.insertInto(new InsertIntoClause(fixEventName(params.getOutName()))); // out name
 		model.selectClause(createSelect(params));
 						 
-		InputStreamParameters leftStream = params.getInputStreamParams().get(0);
-		InputStreamParameters rightStream = params.getInputStreamParams().get(1);
+		InputStreamParams leftStream = params.getInputStreamParams().get(0);
+		InputStreamParams rightStream = params.getInputStreamParams().get(1);
 		
 		PatternExpr p1 = Patterns.filter(fixEventName(leftStream.getInName()), "a");
 		PatternExpr p2 = Patterns.filter(fixEventName(rightStream.getInName()), "b");

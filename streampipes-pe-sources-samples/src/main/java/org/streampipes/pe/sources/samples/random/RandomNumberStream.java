@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.random;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -25,7 +25,7 @@ import java.util.Random;
 
 public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
-	StreamPipesKafkaProducer kafkaProducer;
+	SpKafkaProducer kafkaProducer;
 	private String topic;
 	
 	final static long SIMULATION_DELAY_MS = ClientConfiguration.INSTANCE.getSimulationDelayMs();
@@ -72,7 +72,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	@Override
 	public void executeStream() {
 
-		kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+		kafkaProducer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 
 		Runnable r = new Runnable() {
 

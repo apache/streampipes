@@ -1,7 +1,8 @@
 package org.streampipes.dataformat.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.model.vocabulary.MessageFormat;
 
@@ -9,9 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JsonDataFormatDefinition implements SpDataFormatDefinition<String> {
-
-  private Logger LOG = L
+public class JsonDataFormatDefinition implements SpDataFormatDefinition {
 
   private ObjectMapper objectMapper;
 
@@ -24,22 +23,22 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition<String> 
     return MessageFormat.Json;
   }
 
-  @Override
-  public String fromBytesArray(byte[] event) {
-    return new String(event);
-  }
 
   @Override
-  public Map<String, Object> toMap(String event) {
+  public Map<String, Object> toMap(byte[] event) throws SpRuntimeException {
     try {
-      return objectMapper.readValue(event, HashMap.class);
+      return objectMapper.readValue(new String(event), HashMap.class);
     } catch (IOException e) {
-      throw new
+      throw new SpRuntimeException("Could not convert event to map data structure");
     }
   }
 
   @Override
-  public String fromMap(Map<String, Object> event) {
-    return null;
+  public byte[] fromMap(Map<String, Object> event) throws SpRuntimeException {
+    try {
+      return objectMapper.writeValueAsBytes(event);
+    } catch (JsonProcessingException e) {
+      throw new SpRuntimeException("Could not convert map data structure to JSON string");
+    }
   }
 }

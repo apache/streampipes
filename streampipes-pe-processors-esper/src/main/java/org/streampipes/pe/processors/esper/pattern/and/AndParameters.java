@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.pattern.and;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class AndParameters extends BindingParameters {
+public class AndParameters extends EventProcessorBindingParams {
 
 	private String timeUnit;
 	private String matchingOperator;

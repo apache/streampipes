@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.sdk.builder.DataStreamBuilder;
@@ -21,7 +21,7 @@ import java.util.Random;
  */
 public class RandomNumberStreamList implements EventStreamDeclarer {
 
-  private StreamPipesKafkaProducer kafkaProducer;
+  private SpKafkaProducer kafkaProducer;
 
   private static final String topic = "de.fzi.random.number.list";
 
@@ -40,7 +40,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
 
   @Override
   public void executeStream() {
-    kafkaProducer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+    kafkaProducer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 
     Runnable r = new Runnable() {
 

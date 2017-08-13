@@ -17,7 +17,7 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.commons.Utils;
 
@@ -25,7 +25,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MathController extends FlatEpDeclarer<MathParameter>{
+public class MathController extends FlatEventProcessorDeclarer<MathParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

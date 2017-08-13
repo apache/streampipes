@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.single;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DrillingStartEnrichedParameters extends BindingParameters {
+public class DrillingStartEnrichedParameters extends EventProcessorBindingParams {
 
 	private int minRpm;
 	private int minTorque;

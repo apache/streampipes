@@ -9,7 +9,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import org.streampipes.model.ConsumableSEPAElement;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 import org.streampipes.codegeneration.utils.Utils;
@@ -40,7 +40,7 @@ public class ParametersGenerator extends Generator {
 		MethodSpec constructor = getConstructor();
 
 		TypeSpec.Builder parameterClass = TypeSpec.classBuilder(name + "Parameters").addModifiers(Modifier.PUBLIC)
-				.superclass(BindingParameters.class).addMethod(constructor);
+				.superclass(EventProcessorBindingParams.class).addMethod(constructor);
 
 		for (StaticProperty sp : element.getStaticProperties()) {
 			String internalName = Utils.toCamelCase(sp.getInternalName());

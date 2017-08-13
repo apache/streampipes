@@ -1,10 +1,12 @@
 package org.streampipes.messaging;
 
-public interface SpProtocolDefinition<RAW> {
+import org.streampipes.model.impl.TransportProtocol;
+
+public interface SpProtocolDefinition<TP extends TransportProtocol> {
 
   String getTransportFormatRdfUri();
 
-  EventConsumer<RAW> getConsumer();
+  EventConsumer<TP> getConsumer();
 
-  EventProducer<RAW> getProducer();
+  EventProducer<TP> getProducer();
 }

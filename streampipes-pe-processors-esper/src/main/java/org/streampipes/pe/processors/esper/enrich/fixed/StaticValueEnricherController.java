@@ -21,10 +21,10 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class StaticValueEnricherController extends FlatEpDeclarer<StaticValueEnricherParameters>{
+public class StaticValueEnricherController extends FlatEventProcessorDeclarer<StaticValueEnricherParameters> {
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {

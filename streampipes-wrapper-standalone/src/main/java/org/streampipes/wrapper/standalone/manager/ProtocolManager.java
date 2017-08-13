@@ -1,7 +1,8 @@
 package org.streampipes.wrapper.standalone.manager;
 
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.messaging.EventConsumer;
+import org.streampipes.messaging.EventProducer;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.wrapper.standalone.datatype.DatatypeDefinition;
@@ -19,8 +20,8 @@ import java.util.Map;
 
 public class ProtocolManager {
 
-	public static Map<String, Consumer<?>> consumers = new HashMap<>();
-	public static Map<String, Producer> producers = new HashMap<>();
+	public static Map<String, EventConsumer<?>> consumers = new HashMap<>();
+	public static Map<String, EventProducer<?>> producers = new HashMap<>();
 	
 	private static final String topicPrefix = "topic://";
 	
@@ -35,7 +36,8 @@ public class ProtocolManager {
 		return consumerLeaderMap.get(topic).get(0).equals(routeId);
 	}
 	
-	public static Consumer<?> findConsumer(TransportProtocol protocol, TransportFormat format, String routeId) {
+	public static EventConsumer<?> findConsumer(TransportProtocol protocol, String routeId) throws
+					SpRuntimeException {
 		
 		if (consumers.containsKey(topicPrefix +topicName(protocol))) {
 			consumerLeaderMap.get(topicPrefix +topicName(protocol)).add(routeId);
@@ -45,45 +47,22 @@ public class ProtocolManager {
 			List<String> consumerList = new ArrayList<>();
 			consumerList.add(routeId);
 			consumerLeaderMap.put(topicPrefix +topicName(protocol), consumerList);
-			return makeConsumer(protocol, DatatypeManager.findDatatypeDefinition(format));
+			return makeConsumer(protocol);
 		}
 		
 	}
 	
-	private static Consumer<?> makeConsumer(TransportProtocol protocol, DatatypeDefinition dataType) {
-		if (protocol instanceof KafkaTransportProtocol) {
-			KafkaConsumer kafkaConsumer = new KafkaConsumer(((KafkaTransportProtocol) protocol).getBrokerHostname(), ((KafkaTransportProtocol) protocol).getKafkaPort(), topicName(protocol), dataType);
-			kafkaConsumer.openConsumer();
-			consumers.put(topicPrefix +topicName(protocol), kafkaConsumer); 
-			return kafkaConsumer;
-		} else if (protocol instanceof JmsTransportProtocol) {
-			JmsConsumer jmsConsumer = new JmsConsumer(protocol.getBrokerHostname(), ((JmsTransportProtocol) protocol).getPort(), protocol.getTopicName(), dataType);
-			jmsConsumer.openConsumer();
-			consumers.put(topicPrefix +topicName(protocol), jmsConsumer);
-			return jmsConsumer;
-		}
-		return null;
+	private static EventConsumer<?> makeConsumer(TransportProtocol protocol) throws SpRuntimeException {
+		return PManager.getConsumer(protocol);
 	}
 
-	public static Producer findProducer(TransportProtocol protocol, TransportFormat format) {
+	public static EventProducer<?> findProducer(TransportProtocol protocol, TransportFormat format) throws SpRuntimeException {
 		if (producers.containsKey(topicPrefix +topicName(protocol))) return producers.get(topicPrefix +topicName(protocol));
-		else return makeProducer(protocol, DatatypeManager.findDatatypeDefinition(format));
+		else return makeProducer(protocol);
 	}
 	
-	private static Producer makeProducer(TransportProtocol protocol, DatatypeDefinition dataType) {
-		if (protocol instanceof KafkaTransportProtocol) {
-			KafkaProducer kafkaProducer = new KafkaProducer(protocol.getBrokerHostname(), ((KafkaTransportProtocol) protocol).getKafkaPort(), topicName(protocol), dataType);
-			kafkaProducer.openProducer();
-			producers.put(topicPrefix +topicName(protocol), kafkaProducer); 
-			
-			return kafkaProducer;
-		} else if (protocol instanceof JmsTransportProtocol) {
-			JmsProducer jmsProducer = new JmsProducer(protocol.getBrokerHostname(), ((JmsTransportProtocol) protocol).getPort(), topicName(protocol), dataType);
-			jmsProducer.openProducer();
-			producers.put(topicPrefix +topicName(protocol), jmsProducer);
-			return jmsProducer;
-		}
-		return null;
+	private static EventProducer<?> makeProducer(TransportProtocol protocol) throws SpRuntimeException {
+		return PManager.getProducer(protocol);
 	}
 
 	private static String topicName(TransportProtocol protocol) {
@@ -91,7 +70,11 @@ public class ProtocolManager {
 	}
 	
 	public static void removeProducer(String topicWithPrefix) {
-		producers.get(topicWithPrefix).closeProducer();
+		try {
+			producers.get(topicWithPrefix).disconnect();
+		} catch (SpRuntimeException e) {
+			e.printStackTrace();
+		}
 		producers.remove(topicWithPrefix);
 	}
 	

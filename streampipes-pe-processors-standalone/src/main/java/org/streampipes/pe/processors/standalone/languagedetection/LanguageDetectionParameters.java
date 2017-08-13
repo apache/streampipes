@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.standalone.languagedetection;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class LanguageDetectionParameters extends BindingParameters{
+public class LanguageDetectionParameters extends EventProcessorBindingParams {
 
 	private String mappingPropertyName;
 	

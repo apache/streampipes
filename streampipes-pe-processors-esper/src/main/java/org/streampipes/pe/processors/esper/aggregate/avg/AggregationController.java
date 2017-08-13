@@ -8,7 +8,7 @@ import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -19,7 +19,7 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AggregationController extends FlatEpDeclarer<AggregationParameter> {
+public class AggregationController extends FlatEventProcessorDeclarer<AggregationParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

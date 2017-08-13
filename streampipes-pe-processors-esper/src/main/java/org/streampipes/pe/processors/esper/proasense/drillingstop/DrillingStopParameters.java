@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.proasense.drillingstop;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DrillingStopParameters extends BindingParameters {
+public class DrillingStopParameters extends EventProcessorBindingParams {
 
 	private int minRpm;
 	private int minTorque;

@@ -28,10 +28,10 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
+public class GeofencingController extends FlatEventProcessorDeclarer<GeofencingParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

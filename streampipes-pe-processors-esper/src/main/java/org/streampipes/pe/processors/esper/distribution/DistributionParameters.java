@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.distribution;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DistributionParameters extends BindingParameters{
+public class DistributionParameters extends EventProcessorBindingParams {
 
 	private int timeWindow;
 	private String mappingProperty;

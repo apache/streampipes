@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.taxi;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.Geo;
@@ -91,7 +91,7 @@ public class TaxiStream implements EventStreamDeclarer {
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-                EventProducer producer = new StreamPipesKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+                EventProducer producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
 
                 //TODO change Simulation Settings
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new TaxiLineTransformer());

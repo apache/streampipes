@@ -18,10 +18,10 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class AbsenceController extends FlatEpDeclarer<AbsenceParameters>{
+public class AbsenceController extends FlatEventProcessorDeclarer<AbsenceParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

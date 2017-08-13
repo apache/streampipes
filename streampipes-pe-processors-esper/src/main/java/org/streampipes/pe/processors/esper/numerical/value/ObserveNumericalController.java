@@ -21,7 +21,7 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ObserveNumericalController extends FlatEpDeclarer<ObserveNumericalParameters> {
+public class ObserveNumericalController extends FlatEventProcessorDeclarer<ObserveNumericalParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

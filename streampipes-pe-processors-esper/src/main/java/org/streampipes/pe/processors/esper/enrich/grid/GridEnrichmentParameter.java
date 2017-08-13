@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.enrich.grid;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class GridEnrichmentParameter extends BindingParameters {
+public class GridEnrichmentParameter extends EventProcessorBindingParams {
 
 	private double latitudeStart;
 	private double longitudeStart;

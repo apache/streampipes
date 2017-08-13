@@ -1,6 +1,6 @@
 package org.streampipes.wrapper.flink.status;
 
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.ElementStatusInfoSettings;
 
@@ -11,7 +11,8 @@ public class PipelineElementStatusSenderFactory {
 
   public static <I extends InvocableSEPAElement> PipelineElementStatusSender getStatusSender(I graph) {
 
-    StreamPipesKafkaProducer kafkaProducer = new StreamPipesKafkaProducer(buildKafkaUrl(graph));
+    SpKafkaProducer kafkaProducer = new SpKafkaProducer();
+    // TODO refactor
 
     return new PipelineElementStatusSender(kafkaProducer,
             graph.getStatusInfoSettings().getErrorTopic(),

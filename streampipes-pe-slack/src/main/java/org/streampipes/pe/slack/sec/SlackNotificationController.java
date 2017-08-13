@@ -14,7 +14,7 @@ import org.streampipes.pe.slack.config.SlackConfig;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
 import org.streampipes.model.impl.EcType;
@@ -37,7 +37,7 @@ import org.streampipes.model.vocabulary.MessageFormat;
 
 public class SlackNotificationController implements SemanticEventConsumerDeclarer {
 
-    StreamPipesKafkaConsumer kafkaConsumerGroup;
+    SpKafkaConsumer kafkaConsumerGroup;
     SlackNotification slackNotification;
 
     @Override
@@ -82,7 +82,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
             String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 
-            kafkaConsumerGroup = new StreamPipesKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+            kafkaConsumerGroup = new SpKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
                     slackNotification);
             Thread thread = new Thread(kafkaConsumerGroup);
             thread.start();

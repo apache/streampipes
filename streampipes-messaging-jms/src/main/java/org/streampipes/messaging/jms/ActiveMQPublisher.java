@@ -1,22 +1,29 @@
 package org.streampipes.messaging.jms;
 
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.streampipes.model.impl.JmsTransportProtocol;
 
 import javax.jms.*;
 
 
-public class ActiveMQPublisher implements EventProducer {
+public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
+
 	private Connection connection;
 	private Session session;
 	private MessageProducer producer;
-	
-	public ActiveMQPublisher(String url, String topic) throws JMSException {
+
+
+	@Override
+	public void connect(JmsTransportProtocol protocolSettings) throws SpRuntimeException {
+
+		String url = protocolSettings.getBrokerHostname() +":" +protocolSettings.getPort();
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
 
-		// TODO fix this 
+		// TODO fix this
 		// it works but we need a better solution
-		// we should retry to connect when the service is not available immediately 
+		// we should retry to connect when the service is not available immediately
 		boolean co = false;
 		do {
 			try {
@@ -31,28 +38,21 @@ public class ActiveMQPublisher implements EventProducer {
 			}
 		} while (!co);
 
-		this.session = connection
-				.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		this.producer = session.createProducer(session.createTopic(topic));
-		this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-		this.connection.start();
-
-	}
-
-	public void sendText(String text) throws JMSException {
-		TextMessage message = session.createTextMessage(text);
-		producer.send(message);
-	}
-
-
-	@Override
-	public void openProducer() {
+		try {
+			this.session = connection
+              .createSession(false, Session.AUTO_ACKNOWLEDGE);
+			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicName()));
+			this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+			this.connection.start();
+		} catch (JMSException e) {
+			throw new SpRuntimeException("could not connect to activemq broker");
+		}
 
 	}
 
 	@Override
 	public void publish(byte[] event)  {
-		BytesMessage message = null;
+		BytesMessage message;
 		try {
 			message = session.createBytesMessage();
 			message.writeBytes(event);
@@ -63,17 +63,7 @@ public class ActiveMQPublisher implements EventProducer {
 	}
 
 	@Override
-	public void publish(String message) {
-		try {
-			sendText(message);
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void closeProducer() {
+	public void disconnect() throws SpRuntimeException {
 		try {
 			producer.close();
 			session.close();
@@ -81,6 +71,7 @@ public class ActiveMQPublisher implements EventProducer {
 			//logger.info("ActiveMQ connection closed successfully.");
 		} catch (JMSException e) {
 			//logger.warn("Could not close ActiveMQ connection.");
+			throw new SpRuntimeException("could not disconnect from activemq broker");
 		}
 	}
 

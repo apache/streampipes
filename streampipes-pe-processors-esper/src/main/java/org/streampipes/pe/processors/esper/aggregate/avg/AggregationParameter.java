@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.aggregate.avg;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class AggregationParameter extends BindingParameters {
+public class AggregationParameter extends EventProcessorBindingParams {
 
 	private AggregationType aggregationType;
 	private int outputEvery;

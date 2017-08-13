@@ -8,8 +8,8 @@ import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +26,10 @@ public class TestKafkaConnection implements EventConsumer<byte[]> {
 	
 	public TestKafkaConnection(String url, int kafkaTopic, int zookeeperTopic, String topic)
 	{
-		producer = new StreamPipesKafkaProducer(url+kafkaTopic, topic);
+		producer = new SpKafkaProducer(url+kafkaTopic, topic);
 
 
-		StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(url+kafkaTopic,
+		SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(url+kafkaTopic,
 				topic, this);
 
 		Thread thread = new Thread(kafkaConsumerGroup);

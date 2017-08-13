@@ -18,13 +18,13 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AndController extends FlatEpDeclarer<AndParameters> {
+public class AndController extends FlatEventProcessorDeclarer<AndParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

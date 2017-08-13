@@ -1,12 +1,12 @@
 package org.streampipes.wrapper.flink.samples.count.aggregate;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.List;
 
-public class CountAggregateParameters extends BindingParameters {
+public class CountAggregateParameters extends EventProcessorBindingParams {
 
 	private Time timeWindowSize;
 	private Time slideWindowSize;

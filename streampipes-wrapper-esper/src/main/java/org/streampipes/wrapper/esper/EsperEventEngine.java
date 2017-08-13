@@ -10,12 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.OutputCollector;
 import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
-import org.streampipes.wrapper.params.BindingParameters;
-import org.streampipes.wrapper.params.EngineParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EsperEventEngine<T extends BindingParameters> implements EPEngine<T>{
+public abstract class EsperEventEngine<T extends EventProcessorBindingParams> implements EventProcessor<T> {
 
 	protected EPServiceProvider epService;
 	protected List<EPStatement> epStatements;	
@@ -37,7 +37,7 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	
 	@Override
-	public void bind(EngineParameters<T> parameters, OutputCollector collector, SepaInvocation graph) {
+	public void bind(EventProcessorEngineParams<T> parameters, OutputCollector collector, SepaInvocation graph) {
 		if (parameters.getInEventTypes().size() != graph.getInputStreams().size())
 			throw new IllegalArgumentException("Input parameters do not match!");
 			
@@ -52,8 +52,8 @@ public abstract class EsperEventEngine<T extends BindingParameters> implements E
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
 		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName(), parameters.getOutEventType());
 		
-		List<String> statements = statements(parameters.getStaticProperty());
-		registerStatements(statements, collector, parameters.getStaticProperty());
+		List<String> statements = statements(parameters.getBindingParameters());
+		registerStatements(statements, collector, parameters.getBindingParameters());
 		
 	}
 

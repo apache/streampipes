@@ -1,4 +1,4 @@
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
@@ -22,7 +22,7 @@ public class TestRecommendation {
 		event.setEventProperties(new HashMap<>());
 		event.setTimestamp(new Date().getTime());
 
-		StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer("ipe-koi04.fzi.de:9092", "de.fzi.cep.sepa.notifications");
+		SpKafkaProducer producer = new SpKafkaProducer("ipe-koi04.fzi.de:9092", "de.fzi.cep.sepa.notifications");
 		try {
 			producer.publish(serializer.serialize(event));
 		} catch (TException e) {
