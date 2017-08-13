@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface EventProcessor<B extends EventProcessorBindingParams> extends PipelineElement<B> {
 
-	void onEvent(Map<String, Object> event, String sourceInfo);
+	void onEvent(Map<String, Object> event, String sourceInfo, SpCollector outputCollector);
 
 }

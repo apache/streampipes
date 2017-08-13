@@ -2,11 +2,12 @@ package org.streampipes.wrapper.standalone.routing;
 
 import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.wrapper.runtime.SpCollector;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class FlatSpCollector {
+public abstract class FlatSpCollector implements SpCollector<Map<S>> {
 
   protected Map<String, InternalEventProcessor<Map<String, Object>>> consumers;
   protected SpDataFormatDefinition dataFormatDefinition;

@@ -16,16 +16,6 @@ public class FlatSpInputCollector extends FlatSpCollector implements InternalEve
   }
 
   @Override
-  protected void connect(TransportProtocol protocol) throws SpRuntimeException {
-    consumer.connect(protocol, this);
-  }
-
-  @Override
-  protected void disconnect() throws SpRuntimeException {
-    consumer.disconnect();
-  }
-
-  @Override
   public void onEvent(byte[] event) {
     consumers.keySet().forEach(c -> {
       try {
