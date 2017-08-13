@@ -9,7 +9,7 @@ ENV FLINK_INSTALL_PATH /opt
 ENV FLINK_HOME $FLINK_INSTALL_PATH/flink
 ENV PATH $PATH:$FLINK_HOME/bin
 
-RUN apt-get install curl
+RUN apk --no-cache add curl
 RUN set -x && \
     mkdir -p ${FLINK_INSTALL_PATH} && \
     #apk --update add --virtual curl && \
@@ -22,7 +22,7 @@ RUN set -x && \
     echo Installed Flink ${FLINK_VERSION} to ${FLINK_HOME}
 
 #RUN apk update && apk add netcat-openbsd
-RUN apt-get update && apt-get install netcat-openbsd
+RUN apk update && add netcat-openbsd
 
 WORKDIR ${FLINK_HOME}/lib
 
