@@ -1,4 +1,4 @@
-FROM docker pull artsy/alpine-scala
+FROM artsy/alpine-scala
 #FROM denvazh/scala:2.10.5-openjdk8
 
 ARG HADOOP_VERSION=26
