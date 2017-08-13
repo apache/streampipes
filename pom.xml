@@ -196,11 +196,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-sources</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-sources-demonstrator</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -331,7 +326,6 @@
         <module>streampipes-pe-sources-hella</module>
         <module>streampipes-pe-sources-mhwirth</module>
         <module>streampipes-pe-sources-mnist</module>
-        <module>streampipes-pe-sources-proasense-monitoring</module>
         <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
