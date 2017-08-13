@@ -38,7 +38,7 @@ public class CsvReader {
 
         long previousTime = 0;
 
-        boolean withLabel = MlSourceConfig.INSTANCE.getWithLabel();
+        boolean withLabel = MlSourceConfig.INSTANCE.isWithLabel();
 
         Optional<BufferedReader> readerOpt = Utils.getReader(file);
         if (readerOpt.isPresent()) {
