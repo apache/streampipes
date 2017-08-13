@@ -14,6 +14,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 //    final static Logger logger = LogUtil.getInstance(ConsulSpConfig.class);
 
 //public class ConsulSpConfig extends SpConfig {
+    private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
     private static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     private String serviceName;
     private  KeyValueClient kvClient;
@@ -26,9 +27,15 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
     public ConsulSpConfig(String serviceName) {
         super(serviceName);
         //TDOO use consul adress from an environment variable
-//        Consul consul = Consul.builder().withUrl("http://localhost:8500").build(); // connect to Consul on localhost
+        Map<String, String> env = System.getenv();
+        Consul consul;
+        if (env.containsKey(CONSUL_ENV_LOCATION)) {
+            consul = Consul.builder().withUrl(CONSUL_ENV_LOCATION).build(); // connect to Consul on localhost
+        } else {
+            consul = Consul.builder().build();
+        }
 
-        Consul consul = Consul.builder().build(); // connect to Consul on localhost
+//        Consul consul = Consul.builder().build(); // connect to Consul on localhost
         kvClient = consul.keyValueClient();
 
         this.serviceName = serviceName;
