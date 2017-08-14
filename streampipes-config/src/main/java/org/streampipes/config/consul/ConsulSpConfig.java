@@ -6,7 +6,10 @@ import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.kv.Value;
 import org.streampipes.config.SpConfig;
 import org.streampipes.config.SpConfigChangeCallback;
+import retrofit2.http.Url;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +33,13 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
         Map<String, String> env = System.getenv();
         Consul consul;
         if (env.containsKey(CONSUL_ENV_LOCATION)) {
-            consul = Consul.builder().withUrl(CONSUL_ENV_LOCATION).build(); // connect to Consul on localhost
+            URL url = null;
+            try {
+                url = new URL("http", env.get(CONSUL_ENV_LOCATION), 8500, "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            consul = Consul.builder().withUrl(url).build(); // connect to Consul on localhost
         } else {
             consul = Consul.builder().build();
         }
