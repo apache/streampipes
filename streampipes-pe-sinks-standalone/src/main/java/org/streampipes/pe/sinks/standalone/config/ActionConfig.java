@@ -28,7 +28,7 @@ public enum ActionConfig {
 	public final static String iconBaseUrl;
 
 	ActionConfig() {
-		config = SpConfig.getSpConfig("pe/sinks");
+		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
 
        	config.register(HOST, "sinks", "Hostname for the pe sinks");
         config.register(PORT, 8090, "Port for the pe sinks");
