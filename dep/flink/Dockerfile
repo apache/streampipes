@@ -1,4 +1,4 @@
-FROM docker pull artsy/alpine-scala
+FROM artsy/alpine-scala
 #FROM denvazh/scala:2.10.5-openjdk8
 
 ARG HADOOP_VERSION=26
@@ -9,7 +9,7 @@ ENV FLINK_INSTALL_PATH /opt
 ENV FLINK_HOME $FLINK_INSTALL_PATH/flink
 ENV PATH $PATH:$FLINK_HOME/bin
 
-RUN apt-get install curl
+RUN apk --no-cache add curl
 RUN set -x && \
     mkdir -p ${FLINK_INSTALL_PATH} && \
     #apk --update add --virtual curl && \
@@ -22,7 +22,7 @@ RUN set -x && \
     echo Installed Flink ${FLINK_VERSION} to ${FLINK_HOME}
 
 #RUN apk update && apk add netcat-openbsd
-RUN apt-get update && apt-get install netcat-openbsd
+RUN apk update && apk add netcat-openbsd
 
 WORKDIR ${FLINK_HOME}/lib
 
