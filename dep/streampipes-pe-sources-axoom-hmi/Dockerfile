@@ -1,5 +1,8 @@
 FROM anapsix/alpine-java
 
+
+ENV CONSUL_LOCATION consul
+
 EXPOSE 8070
 
 ADD ./org.streampipes/streampipes-pe-sources-axoom-hmi/0.41.0-SNAPSHOT/streampipes-pe-sources-axoom-hmi-0.41.0-SNAPSHOT.jar  /streampipes-pe-sources-axoom-hmi.jar

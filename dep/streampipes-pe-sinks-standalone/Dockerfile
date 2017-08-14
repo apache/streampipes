@@ -1,5 +1,8 @@
 FROM anapsix/alpine-java
 
+
+ENV CONSUL_LOCATION consul
+
 EXPOSE 8091
 
 RUN echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
