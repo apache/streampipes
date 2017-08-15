@@ -38,8 +38,6 @@ ADD docker-entrypoint.sh ${FLINK_HOME}/bin/
 ADD log4j.properties ${FLINK_HOME}/conf/
 ADD conf/flink-conf.yaml ${FLINK_HOME}/conf/flink-conf.yaml
 
-RUN echo taskmanager.numberOfTaskSlots: ${FLINK_NUM_SLOTS} >> ${FLINK_HOME}/conf/flink-conf.yaml
-
 WORKDIR ${FLINK_HOME}/bin
 RUN chmod +x docker-entrypoint.sh
 
