@@ -6,4 +6,6 @@ import java.util.Map;
 
 public interface EventProcessorOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String,
         Object>>> {
+
+  void onEvent(Map<String, Object> event);
 }

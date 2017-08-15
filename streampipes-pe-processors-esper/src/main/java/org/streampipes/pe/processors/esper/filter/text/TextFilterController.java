@@ -1,15 +1,6 @@
 package org.streampipes.pe.processors.esper.filter.text;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.pe.processors.esper.util.StringOperator;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.StaticProperties;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -25,8 +16,17 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.util.StringOperator;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class TextFilterController extends StandaloneEventProcessorDeclarer<TextFilterParameter> {
@@ -92,7 +92,7 @@ public class TextFilterController extends StandaloneEventProcessorDeclarer<TextF
 				StringOperator.valueOf(operation),
 				filterProperty);
 		
-		return submit(staticParam, TextFilter::new, sepa);
+		return submit(staticParam, TextFilter::new);
 
 	}
 }

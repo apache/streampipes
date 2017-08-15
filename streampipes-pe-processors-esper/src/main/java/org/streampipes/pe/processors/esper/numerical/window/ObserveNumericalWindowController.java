@@ -1,14 +1,7 @@
 package org.streampipes.pe.processors.esper.numerical.window;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.StaticProperties;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -27,7 +20,14 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ObserveNumericalWindowController extends StandaloneEventProcessorDeclarer<ObserveNumericalWindowParameters> {
 
@@ -110,7 +110,7 @@ public class ObserveNumericalWindowController extends StandaloneEventProcessorDe
 		ObserveNumericalWindowParameters params = new ObserveNumericalWindowParameters(invocationGraph, valueLimit,
 				threshold, toObserve, windowType, windowSize, groupBy, messageName, averageName);
 
-		return submit(params, ObserveNumericalWindow::new, invocationGraph);
+		return submit(params, ObserveNumericalWindow::new);
 
 	}
 

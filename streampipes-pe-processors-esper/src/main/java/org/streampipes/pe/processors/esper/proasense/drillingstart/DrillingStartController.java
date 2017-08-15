@@ -1,12 +1,7 @@
 package org.streampipes.pe.processors.esper.proasense.drillingstart;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -23,8 +18,13 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DrillingStartController extends StandaloneEventProcessorDeclarer<DrillingStartParameters> {
 
@@ -47,7 +47,7 @@ public class DrillingStartController extends StandaloneEventProcessorDeclarer<Dr
 				latPropertyName,
 				lngPropertyName);
 
-		return submit(staticParam, DrillingStart::new, sepa);
+		return submit(staticParam, DrillingStart::new);
 
 	}
 	

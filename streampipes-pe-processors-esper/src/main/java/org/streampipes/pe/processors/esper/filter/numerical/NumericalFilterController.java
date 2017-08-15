@@ -1,13 +1,6 @@
 package org.streampipes.pe.processors.esper.filter.numerical;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.pe.processors.esper.util.NumericalOperator;
-import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
@@ -22,7 +15,14 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.util.NumericalOperator;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NumericalFilterController extends StandaloneEventProcessorDeclarer<NumericalFilterParameter> {
 
@@ -87,7 +87,7 @@ public class NumericalFilterController extends StandaloneEventProcessorDeclarer<
 		
 		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Double.parseDouble(threshold), NumericalOperator.valueOf(operation), filterProperty);
 
-		return submit(staticParam, NumericalFilter::new, sepa);
+		return submit(staticParam, NumericalFilter::new);
 
 	}
 }

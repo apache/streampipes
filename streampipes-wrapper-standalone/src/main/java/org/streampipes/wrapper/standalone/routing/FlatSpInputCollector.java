@@ -1,34 +1,24 @@
 package org.streampipes.wrapper.standalone.routing;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.messaging.SpProtocolDefinition;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.wrapper.routing.EventProcessorInputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
-
-import java.util.Optional;
 
 public class FlatSpInputCollector<T extends TransportProtocol> extends
         FlatSpCollector<T, EventProcessor<?>>
         implements
         InternalEventProcessor<byte[]>, EventProcessorInputCollector {
 
-  private EventConsumer<?> consumer;
   private Boolean singletonEngine;
-
-  private Optional<SpProtocolDefinition<T>> protocolDefinition;
 
 
   public FlatSpInputCollector(T protocol, TransportFormat format,
-                              Boolean singletonEngine) {
+                              Boolean singletonEngine) throws SpRuntimeException {
     super(protocol, format);
-    this.consumer = consumer;
     this.singletonEngine = singletonEngine;
-    this.protocolDefinition = PManager.get
-
   }
 
   @Override
@@ -44,7 +34,7 @@ public class FlatSpInputCollector<T extends TransportProtocol> extends
 
   private void send(EventProcessor<?> processor, byte[] event) {
     try {
-      processor.onEvent(dataFormatDefinition.toMap(event), topic);
+      processor.onEvent(dataFormatDefinition.toMap(event), getTopic());
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }
@@ -52,11 +42,19 @@ public class FlatSpInputCollector<T extends TransportProtocol> extends
 
   @Override
   public void connect() throws SpRuntimeException {
-
+    if (!protocolDefinition.getConsumer().isConnected()) {
+      protocolDefinition.getConsumer().connect
+              (transportProtocol,
+                      this);
+    }
   }
 
   @Override
   public void disconnect() throws SpRuntimeException {
-
+    if (protocolDefinition.getConsumer().isConnected()) {
+      if (consumers.size() == 0) {
+        protocolDefinition.getConsumer().disconnect();
+      }
+    }
   }
 }

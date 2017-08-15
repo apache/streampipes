@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.writer;
 
-import com.espertech.esper.client.EventBean;
+import com.espertech.esper.event.map.MapEventBean;
 import com.google.gson.Gson;
 import org.streampipes.pe.processors.esper.debs.c1.CellData;
 import org.streampipes.pe.processors.esper.debs.c1.CellDataComparator;
@@ -108,7 +108,7 @@ public class Challenge1FileWriter implements Writer {
 	}
 
 	@Override
-	public void onEvent(EventBean bean) {	
+	public void onEvent(MapEventBean bean) {
 	
 	
 		Object object = bean.getUnderlying();

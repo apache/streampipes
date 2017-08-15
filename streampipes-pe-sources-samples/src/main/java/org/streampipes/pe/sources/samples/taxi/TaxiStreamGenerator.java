@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.samples.taxi;
 
 import com.google.gson.JsonObject;
-import org.streampipes.messaging.EventProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 import org.streampipes.pe.sources.samples.util.Utils;
 
@@ -36,9 +36,9 @@ public class TaxiStreamGenerator implements Runnable {
 
   private final File file;
   private final SimulationSettings settings;
-  private EventProducer publisher;
+  private SpKafkaProducer publisher;
 
-  public TaxiStreamGenerator(final File file, final SimulationSettings settings, EventProducer publisher) {
+  public TaxiStreamGenerator(final File file, final SimulationSettings settings, SpKafkaProducer publisher) {
     this.file = file;
     this.settings = settings;
     this.publisher = publisher;

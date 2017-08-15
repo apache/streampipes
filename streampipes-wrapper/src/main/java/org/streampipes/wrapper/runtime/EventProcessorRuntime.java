@@ -30,9 +30,9 @@ public abstract class EventProcessorRuntime extends
 		initRuntime();
 	}
 	
-	public abstract void initRuntime();
+	public abstract void initRuntime() throws SpRuntimeException;
 	
-	public abstract void preDiscard();
+	public abstract void preDiscard() throws SpRuntimeException;
 	
-	public abstract void postDiscard();
+	public abstract void postDiscard() throws SpRuntimeException;
 }

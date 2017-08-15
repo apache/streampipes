@@ -1,10 +1,6 @@
 package org.streampipes.pe.processors.esper.extract;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -16,8 +12,12 @@ import org.streampipes.model.impl.output.CustomOutputStrategy;
 import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProjectController extends StandaloneEventProcessorDeclarer<ProjectParameter> {
 
@@ -62,7 +62,7 @@ public class ProjectController extends StandaloneEventProcessorDeclarer<ProjectP
 				sepa, 
 				projectProperties);
 
-		return submit(staticParam, Project::new, sepa);
+		return submit(staticParam, Project::new);
 
 	}
 }

@@ -1,12 +1,7 @@
 package org.streampipes.pe.processors.esper.absence;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.StaticProperties;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
@@ -18,8 +13,13 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AbsenceController extends StandaloneEventProcessorDeclarer<AbsenceParameters> {
 
@@ -62,6 +62,6 @@ public class AbsenceController extends StandaloneEventProcessorDeclarer<AbsenceP
 		
 		AbsenceParameters staticParam = new AbsenceParameters(sepa, selectProperties, timeWindowSize);
 
-		return submit(staticParam, Absence::new, sepa);
+		return submit(staticParam, Absence::new);
 	}
 }

@@ -1,11 +1,8 @@
 package org.streampipes.pe.processors.esper.filter.advancedtextfilter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.io.Resources;
-
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.container.util.DeclarerUtils;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -13,7 +10,9 @@ import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.DeclarerUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdvancedTextFilterController extends StandaloneEventProcessorDeclarer<AdvancedTextFilterParameters> {
 
@@ -43,6 +42,6 @@ public class AdvancedTextFilterController extends StandaloneEventProcessorDeclar
 					
 		AdvancedTextFilterParameters staticParam = new AdvancedTextFilterParameters(sepa, operation, propertyName, keywords);
 
-		return submit(staticParam, AdvancedTextFilter::new, sepa);
+		return submit(staticParam, AdvancedTextFilter::new);
 	}
 }

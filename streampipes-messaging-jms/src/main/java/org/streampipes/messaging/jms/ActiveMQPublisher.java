@@ -14,6 +14,28 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 	private Session session;
 	private MessageProducer producer;
 
+	private Boolean connected;
+
+	public ActiveMQPublisher() {
+
+	}
+
+	// TODO backwards compatibility, remove later
+	public ActiveMQPublisher(String url, String topic) {
+		JmsTransportProtocol protocol = new JmsTransportProtocol();
+		protocol.setBrokerHostname(url.split(":")[0]);
+		protocol.setPort(Integer.parseInt(url.split(":")[1]));
+		protocol.setTopicName(topic);
+		try {
+			connect(protocol);
+		} catch (SpRuntimeException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendText(String message) throws JMSException {
+		publish(message.getBytes());
+	}
 
 	@Override
 	public void connect(JmsTransportProtocol protocolSettings) throws SpRuntimeException {
@@ -44,6 +66,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicName()));
 			this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 			this.connection.start();
+			this.connected = true;
 		} catch (JMSException e) {
 			throw new SpRuntimeException("could not connect to activemq broker");
 		}
@@ -68,11 +91,17 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 			producer.close();
 			session.close();
 			connection.close();
+			this.connected = false;
 			//logger.info("ActiveMQ connection closed successfully.");
 		} catch (JMSException e) {
 			//logger.warn("Could not close ActiveMQ connection.");
 			throw new SpRuntimeException("could not disconnect from activemq broker");
 		}
+	}
+
+	@Override
+	public Boolean isConnected() {
+		return connected;
 	}
 
 }

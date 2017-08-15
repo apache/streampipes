@@ -24,11 +24,12 @@ public class PerformanceTest {
 		provider.getEPAdministrator().getConfiguration().addEventType(EVENT_NAME, RandomNumberEvent.class);
 		
 		new PerformanceTestPatternGenerator(numberOfBlocks, numberOfEvents, provider.getEPAdministrator()).registerPatterns();
+		// TODO fix performance test
+		//Runnable r = new PerformanceTestFeeder(zookeeperUrl, zookeeperPort, topic, provider
+		//				.getEPRuntime());
 		
-		Runnable r = new PerformanceTestFeeder(zookeeperUrl, zookeeperPort, topic, provider.getEPRuntime());
-		
-		Thread thread = new Thread(r);
-		thread.start();
+		//Thread thread = new Thread(r);
+		//thread.start();
 		
 	}
 }

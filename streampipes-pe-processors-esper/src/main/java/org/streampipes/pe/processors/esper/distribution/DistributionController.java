@@ -59,7 +59,7 @@ public class DistributionController extends StandaloneEventProcessorDeclarer<Dis
             timeWindow,
             mapping);
 
-    return submit(staticParam, Distribution::new, sepa);
+    return submit(staticParam, Distribution::new);
 
   }
 

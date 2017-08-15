@@ -1,10 +1,7 @@
 package org.streampipes.pe.processors.esper.enrich.timer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.commons.Utils;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -19,9 +16,12 @@ import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
 import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.commons.Utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TimestampController extends StandaloneEventProcessorDeclarer<TimestampParameter> {
 
@@ -82,7 +82,7 @@ public class TimestampController extends StandaloneEventProcessorDeclarer<Timest
 				appendTimePropertyName,
 				selectProperties);
 
-		return submit(staticParam, TimestampEnrichment::new, sepa);
+		return submit(staticParam, TimestampEnrichment::new);
 
 	}
 }

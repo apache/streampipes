@@ -5,17 +5,16 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
+import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.runtime.EventProcessor;
-import org.streampipes.wrapper.OutputCollector;
 import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	protected EPServiceProvider epService;
 	protected List<EPStatement> epStatements;	
 	
-	private AbstractQueueRunnable<EventBean[]> queue;
+	private AbstractQueueRunnable<MapEventBean[]> queue;
 	private List<String> eventTypeNames = new ArrayList<>();
 	
 	private static int i = 0;
@@ -37,23 +36,24 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
 	
 	@Override
-	public void bind(EventProcessorEngineParams<T> parameters, OutputCollector collector, SepaInvocation graph) {
-		if (parameters.getInEventTypes().size() != graph.getInputStreams().size())
+	public void bind(T parameters, EventProcessorOutputCollector collector) {
+		if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size())
 			throw new IllegalArgumentException("Input parameters do not match!");
 			
 		epService = EsperEngineSettings.epService;
 
-		System.out.println("Configuring event types for graph " +graph.getName());
+		System.out.println("Configuring event types for graph " +parameters.getGraph().getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
 			checkAndRegisterEventType(e.getKey(), inTypeMap);
 		});
 		
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
-		checkAndRegisterEventType("topic://" +graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName(), parameters.getOutEventType());
+		checkAndRegisterEventType("topic://" +parameters.getGraph().getOutputStream().getEventGrounding()
+						.getTransportProtocol().getTopicName(), parameters.getOutEventType());
 		
-		List<String> statements = statements(parameters.getBindingParameters());
-		registerStatements(statements, collector, parameters.getBindingParameters());
+		List<String> statements = statements(parameters);
+		registerStatements(statements, collector, parameters);
 		
 	}
 
@@ -93,7 +93,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		}
 	}
 	
-	private void registerStatements(List<String> statements, OutputCollector collector, T params)
+	private void registerStatements(List<String> statements, EventProcessorOutputCollector collector, T params)
 	{
 		toEpStatement(statements);
 		queue = new StatementAwareQueue(getWriter(collector, params), 500000);
@@ -152,14 +152,14 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		queue.interrupt();
 	}
 	
-	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<EventBean[]> queue) {
+	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<MapEventBean[]> queue) {
 		return new UpdateListener() {
 				
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 				try {
-					if (newEvents != null) queue.add(newEvents);
-					else queue.add(oldEvents);
+					if (newEvents != null) queue.add((MapEventBean[]) newEvents);
+					else queue.add((MapEventBean[]) oldEvents);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -179,7 +179,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		return Utils.createList(statement);
 	}
 		
-	protected Writer getWriter(OutputCollector collector, T params)
+	protected Writer getWriter(EventProcessorOutputCollector collector, T params)
 	{
 		return EsperConfig.getDefaultWriter(collector, params);
 	}

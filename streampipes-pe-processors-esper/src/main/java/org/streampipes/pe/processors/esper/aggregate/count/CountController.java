@@ -67,6 +67,6 @@ public class CountController extends StandaloneEventProcessorDeclarer<CountParam
 		
 		CountParameter staticParam = new CountParameter(sepa, timeWindowSize, groupBy, timeScale, selectProperties);
 
-		return submit(staticParam, Count::new, sepa);
+		return submit(staticParam, Count::new);
 	}
 }

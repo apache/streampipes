@@ -125,6 +125,6 @@ public class BinaryMathController extends StandaloneEventProcessorDeclarer<Binar
 				rightOperand,
 				appendPropertyName);	
 
-		return submit(staticParam, BinaryMath::new, sepa);
+		return submit(staticParam, BinaryMath::new);
 	}
 }

@@ -2,7 +2,6 @@ package org.streampipes.pe.sources.samples.taxi;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -45,7 +44,7 @@ public class NycTaxiUtils {
 		return new EventSchema(eventProperties);
 	}
 	
-	public static EventProducer streamPublisher(String topicName)
+	public static SpKafkaProducer streamPublisher(String topicName)
 	{
 		
 			return new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topicName);

@@ -41,7 +41,4 @@ public class StandaloneEventProcessorRuntimeParams<B extends EventProcessorBindi
             ().getEventGrounding().getTransportFormats().get(0));
   }
 
-  public Boolean isSingletonEngine() {
-    return singletonEngine;
-  }
 }

@@ -80,7 +80,7 @@ public class IncreaseController extends StandaloneEventProcessorDeclarer<Increas
 		String mapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping");
 		IncreaseParameters params = new IncreaseParameters(invocationGraph, getOperation(operation), increase, duration, mapping);
 
-		return submit(params, Increase::new, invocationGraph);
+		return submit(params, Increase::new);
 
 	}
 	

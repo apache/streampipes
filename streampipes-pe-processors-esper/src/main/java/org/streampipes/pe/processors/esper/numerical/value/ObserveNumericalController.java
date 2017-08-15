@@ -93,7 +93,7 @@ public class ObserveNumericalController extends StandaloneEventProcessorDeclarer
 		
 		ObserveNumericalParameters params = new ObserveNumericalParameters(invocationGraph, valueLimit, threshold, value, outputProperty);
 
-		return submit(params, ObserveNumerical::new, invocationGraph);
+		return submit(params, ObserveNumerical::new);
 
 	}
 

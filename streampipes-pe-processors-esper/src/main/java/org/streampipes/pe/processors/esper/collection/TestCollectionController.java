@@ -1,12 +1,8 @@
 package org.streampipes.pe.processors.esper.collection;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.io.Resources;
-
-import org.streampipes.container.util.DeclarerUtils;
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.container.util.DeclarerUtils;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -15,6 +11,9 @@ import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+
+import java.util.List;
+import java.util.stream.Collectors;
 //import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class TestCollectionController extends StandaloneEventProcessorDeclarer<TestCollectionParameters> {
@@ -49,7 +48,7 @@ public class TestCollectionController extends StandaloneEventProcessorDeclarer<T
 		
 		TestCollectionParameters staticParam = new TestCollectionParameters(sepa, propertyName, domainConceptData);
 
-		return submit(staticParam, TestCollection::new, sepa);
+		return submit(staticParam, TestCollection::new);
 
 	}
 

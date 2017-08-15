@@ -120,6 +120,6 @@ public class MathController extends StandaloneEventProcessorDeclarer<MathParamet
 				rightOperand,
 				appendPropertyName);	
 
-		return submit(staticParam, Math::new, sepa);
+		return submit(staticParam, Math::new);
 	}
 }

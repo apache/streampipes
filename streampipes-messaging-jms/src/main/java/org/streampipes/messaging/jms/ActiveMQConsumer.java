@@ -20,6 +20,8 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   private MessageConsumer consumer;
   private InternalEventProcessor<byte[]> eventProcessor;
 
+  private Boolean connected;
+
   private void initListener() {
     try {
       consumer.setMessageListener(message -> {
@@ -43,6 +45,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
       consumer = session.createConsumer(session.createTopic(protocolSettings.getTopicName()));
       initListener();
+      this.connected = true;
     } catch (JMSException e) {
       throw new SpRuntimeException("could not connect to activemq broker");
     }
@@ -53,10 +56,16 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
     try {
       consumer.close();
       session.close();
+      this.connected = false;
     } catch (JMSException e) {
       throw new SpRuntimeException("could not disconnect from activemq broker");
     }
 
+  }
+
+  @Override
+  public Boolean isConnected() {
+    return connected;
   }
 
   @Override

@@ -1,16 +1,6 @@
 package org.streampipes.pe.processors.esper.enrich.grid;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.StaticProperties;
-import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -27,8 +17,18 @@ import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.stream.SchemaBuilder;
+import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GridEnrichmentController extends StandaloneEventProcessorDeclarer<GridEnrichmentParameter> {
 
@@ -125,7 +125,7 @@ public class GridEnrichmentController extends StandaloneEventProcessorDeclarer<G
 				lngPropertyName,
 				selectProperties);
 
-		return submit(staticParam, GridEnrichment::new, sepa);
+		return submit(staticParam, GridEnrichment::new);
 
 	}
 }

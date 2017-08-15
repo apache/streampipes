@@ -67,7 +67,7 @@ public class AggregationController extends StandaloneEventProcessorDeclarer<Aggr
             outputEvery, groupBy,
 				aggregate, timeWindowSize, selectProperties);
 
-		return submit(staticParam, Aggregation::new, sepa);
+		return submit(staticParam, Aggregation::new);
 
 	}
 

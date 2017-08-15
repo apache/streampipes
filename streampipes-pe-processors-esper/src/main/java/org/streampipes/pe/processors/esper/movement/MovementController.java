@@ -1,16 +1,9 @@
 package org.streampipes.pe.processors.esper.movement;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.container.util.StandardTransportFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.commons.Utils;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -33,8 +26,14 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.commons.Utils;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MovementController extends StandaloneEventProcessorDeclarer<MovementParameter> {
 
@@ -134,7 +133,7 @@ public class MovementController extends StandaloneEventProcessorDeclarer<Movemen
 				Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
 				yProperty, 8000L); // TODO reduce param overhead
 
-		return submit(staticParam, MovementAnalysis::new, sepa);
+		return submit(staticParam, MovementAnalysis::new);
 
 	}
 }

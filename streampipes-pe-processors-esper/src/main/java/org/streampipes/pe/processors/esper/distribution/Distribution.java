@@ -1,14 +1,14 @@
 package org.streampipes.pe.processors.esper.distribution;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.runtime.EventProcessor;
-import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
 
 public class Distribution implements EventProcessor<DistributionParameters> {
 
@@ -18,24 +18,28 @@ public class Distribution implements EventProcessor<DistributionParameters> {
 	private int eventCount = 0;
 	private List<String> queue;
 	
-	private OutputCollector collector;
+	private EventProcessorOutputCollector collector;
+
+	private ObjectMapper mapper;
 	
 	
 	@Override
-	public void bind(EventProcessorEngineParams<DistributionParameters> parameters,
-			OutputCollector collector, SepaInvocation graph) {
+	public void bind(DistributionParameters parameters,
+			EventProcessorOutputCollector collector) {
 		this.currentDistribution = new HashMap<String, Integer>();
-		this.propertyName = parameters.getBindingParameters().getMappingProperty();
-		this.batchSize = parameters.getBindingParameters().getTimeWindow();
+		this.propertyName = parameters.getMappingProperty();
+		this.batchSize = parameters.getTimeWindow();
 		this.queue = new ArrayList<>();		
 		this.collector = collector;
+		mapper = new ObjectMapper();
+
 	}
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		updateDistribution(event);
 		System.out.println(toOutputFormat());
-		collector.send(toOutputFormat());
+		collector.onEvent(mapper.convertValue(toOutputFormat(), new TypeReference<Map<String, Object>>() {}));
 	}
 	
 	private void updateDistribution(Map<String, Object> event) {

@@ -20,6 +20,21 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     private Boolean connected;
 
+    public SpKafkaProducer() {
+
+    }
+
+    // TODO backwards compatibility, remove later
+    public SpKafkaProducer(String url, String topic) {
+        this.brokerUrl = url;
+        this.topic = topic;
+        this.producer = new KafkaProducer<>(getProperties());
+    }
+
+    public void publish(String message) {
+        publish(message.getBytes());
+    }
+
     public void publish(byte[] message) {
         producer.send(new ProducerRecord<>(topic, message));
     }

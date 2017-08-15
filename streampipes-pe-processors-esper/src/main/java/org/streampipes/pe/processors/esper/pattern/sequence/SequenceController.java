@@ -1,12 +1,7 @@
 package org.streampipes.pe.processors.esper.pattern.sequence;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -23,8 +18,13 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SequenceController extends StandaloneEventProcessorDeclarer<SequenceParameters> {
 
@@ -96,7 +96,7 @@ public class SequenceController extends StandaloneEventProcessorDeclarer<Sequenc
 		List<String> matchingProperties = new ArrayList<>();
 		SequenceParameters params = new SequenceParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 
-		return submit(params, Sequence::new, invocationGraph);
+		return submit(params, Sequence::new);
 
 	}
 

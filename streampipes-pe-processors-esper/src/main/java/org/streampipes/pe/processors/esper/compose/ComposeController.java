@@ -1,15 +1,9 @@
 package org.streampipes.pe.processors.esper.compose;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openrdf.rio.RDFHandlerException;
-
 import com.clarkparsia.empire.annotation.InvalidRdfException;
-
+import org.openrdf.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -18,8 +12,12 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.output.RenameOutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComposeController extends StandaloneEventProcessorDeclarer<ComposeParameters> {
 
@@ -63,7 +61,7 @@ public class ComposeController extends StandaloneEventProcessorDeclarer<ComposeP
 		
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 
-		return submit(staticParam, Compose::new, sepa);
+		return submit(staticParam, Compose::new);
 
 	}
 

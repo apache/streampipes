@@ -1,15 +1,6 @@
 package org.streampipes.pe.processors.esper.hella.shuttletime;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
@@ -22,8 +13,17 @@ import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
+import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.stream.SchemaBuilder;
+import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ShuttleTimeController extends StandaloneEventProcessorDeclarer<ShuttleTimeParameters> {
 
@@ -97,7 +97,7 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarer<Shut
 		ShuttleTimeParameters staticParam = new ShuttleTimeParameters(sepa, selectProperties, locationEventName, eventEventName, shuttleEventName, timestampEventName);
 		
 		try {
-			invokeEPRuntime(staticParam, ShuttleTime::new, sepa);
+			invokeEPRuntime(staticParam, ShuttleTime::new);
 			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();

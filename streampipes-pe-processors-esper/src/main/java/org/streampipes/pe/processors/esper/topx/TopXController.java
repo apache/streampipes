@@ -1,12 +1,6 @@
 package org.streampipes.pe.processors.esper.topx;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -24,8 +18,14 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TopXController extends StandaloneEventProcessorDeclarer<TopXParameter> {
 
@@ -103,7 +103,7 @@ public class TopXController extends StandaloneEventProcessorDeclarer<TopXParamet
 		
 		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
 
-		return submit(staticParam, TopX::new, sepa);
+		return submit(staticParam, TopX::new);
 
 	}
 }

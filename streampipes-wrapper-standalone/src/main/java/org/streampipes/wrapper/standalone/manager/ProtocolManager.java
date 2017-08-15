@@ -1,7 +1,6 @@
 package org.streampipes.wrapper.standalone.manager;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.messaging.EventProducer;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.wrapper.standalone.routing.FlatSpInputCollector;
@@ -13,8 +12,6 @@ import java.util.Map;
 public class ProtocolManager {
 
   public static Map<String, FlatSpInputCollector> consumers = new HashMap<>();
-
-  private static final String topicPrefix = "topic://";
 
   public static <T extends TransportProtocol> FlatSpInputCollector findInputCollector
           (T
@@ -40,24 +37,22 @@ public class ProtocolManager {
     return new FlatSpInputCollector<>(protocol, format, singletonEngine);
   }
 
-  public static FlatSpOutputCollector makeOutputCollector(TransportProtocol protocol,
-                                                          TransportFormat format)
+  public static <T extends TransportProtocol> FlatSpOutputCollector makeOutputCollector(T
+                                                                                                protocol, TransportFormat format)
           throws
           SpRuntimeException {
-    return new FlatSpOutputCollector(protocol, format);
+    return new FlatSpOutputCollector<>(protocol, format);
   }
 
 
   private static String topicName(TransportProtocol protocol) {
-    return topicPrefix + protocol.getTopicName();
+    return protocol.getTopicName();
   }
 
-  public static void removeInputCollector(String topicWithPrefix) throws SpRuntimeException {
-    consumers.remove(topicWithPrefix);
+  public static void removeInputCollector(String topic) throws SpRuntimeException {
+    consumers.remove(topic);
   }
 
-  public static void startConsumer(FlatSpInputCollector collector, TransportProtocol protocol) {
 
-  }
 
 }

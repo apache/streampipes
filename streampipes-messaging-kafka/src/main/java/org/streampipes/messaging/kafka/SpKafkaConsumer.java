@@ -68,4 +68,9 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     public void disconnect() throws SpRuntimeException {
         this.isRunning = false;
     }
+
+    @Override
+    public Boolean isConnected() {
+        return isRunning;
+    }
 }

@@ -94,7 +94,7 @@ public class AndController extends StandaloneEventProcessorDeclarer<AndParameter
 		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 
-		return submit(params, And::new, invocationGraph);
+		return submit(params, And::new);
 
 	}
 

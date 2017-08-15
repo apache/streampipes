@@ -1,11 +1,6 @@
 package org.streampipes.pe.processors.esper.debs.c1;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
@@ -23,7 +18,12 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DebsChallenge1Controller extends StandaloneEventProcessorDeclarer<DebsChallenge1Parameters> {
 
@@ -165,7 +165,7 @@ public class DebsChallenge1Controller extends StandaloneEventProcessorDeclarer<D
 				lngProperty2Name,
 				selectProperties);
 
-		return submit(staticParam, DebsChallenge1::new, sepa);
+		return submit(staticParam, DebsChallenge1::new);
 
 	}
 }

@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.writer;
 
-import com.espertech.esper.client.EventBean;
+import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.collections.MapUtils;
 import org.streampipes.wrapper.esper.writer.Writer;
 
@@ -28,7 +28,7 @@ public class TestDrillingWriter implements Writer {
 	}
 	
 	@Override
-	public void onEvent(EventBean bean) {
+	public void onEvent(MapEventBean bean) {
 		Map map = (Map) bean.getUnderlying();
 		MapUtils.debugPrint(System.out, new Object(), (Map) bean.getUnderlying());
 		writer.write(map.get("time") +"," +map.get("drillingStatus") +System.lineSeparator());

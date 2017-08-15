@@ -1,6 +1,5 @@
 package org.streampipes.dataformat;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.impl.TransportFormat;
 
 import java.util.List;
@@ -20,24 +19,18 @@ public enum SpDataFormatManager {
     return availableDataFormats;
   }
 
-  public SpDataFormatDefinition findDefinition(TransportFormat transportFormat) throws SpRuntimeException {
+  public Optional<SpDataFormatDefinition> findDefinition(TransportFormat transportFormat) {
     // TODO why is transportFormat.getRdfType a list?
-    Optional<SpDataFormatDefinition> matchedFormat = this.availableDataFormats
+    return this.availableDataFormats
             .stream()
             .filter
-            (adf -> transportFormat
-                    .getRdfType()
-                    .stream()
-                    .anyMatch(tf -> tf.toString().equals(adf
-                    .getTransportFormatRdfUri())))
+                    (adf -> transportFormat
+                            .getRdfType()
+                            .stream()
+                            .anyMatch(tf -> tf.toString().equals(adf
+                                    .getTransportFormatRdfUri())))
             .findFirst();
 
-    if (matchedFormat.isPresent()) {
-      return matchedFormat.get();
-    } else {
-      throw new SpRuntimeException("Runtime Exception: could not find any supported data" +
-              " format");
-    }
   }
 
 }

@@ -44,7 +44,7 @@ public class EventRateController extends StandaloneEventProcessorDeclarer<EventR
 		EventRateParameter staticParam = new EventRateParameter(sepa, avgRate, outputRate
 						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
 
-		return submit(staticParam, EventRate::new, sepa);
+		return submit(staticParam, EventRate::new);
 
 	}
 }

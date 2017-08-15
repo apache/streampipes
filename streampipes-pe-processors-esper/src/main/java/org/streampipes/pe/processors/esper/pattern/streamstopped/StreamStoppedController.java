@@ -1,12 +1,7 @@
 package org.streampipes.pe.processors.esper.pattern.streamstopped;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.wrapper.esper.config.EsperConfig;
-import org.streampipes.sdk.StaticProperties;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -20,8 +15,13 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class StreamStoppedController extends StandaloneEventProcessorDeclarer<StreamStoppedParameter> {
 
@@ -69,7 +69,7 @@ public class StreamStoppedController extends StandaloneEventProcessorDeclarer<St
 		String topic = SepaUtils.getFreeTextStaticPropertyValue(sepa, "topic");
 		StreamStoppedParameter staticParam = new StreamStoppedParameter(sepa, topic);
 
-		return submit(staticParam, StreamStopped::new, sepa);
+		return submit(staticParam, StreamStopped::new);
 
 	}
 }
