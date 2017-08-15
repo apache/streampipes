@@ -5,6 +5,7 @@ ARG HADOOP_VERSION=26
 ARG FLINK_VERSION=1.2.0
 ARG SCALA_BINARY_VERSION=2.11
 
+ENV FLINK_NUM_SLOTS 1
 ENV FLINK_INSTALL_PATH /opt
 ENV FLINK_HOME $FLINK_INSTALL_PATH/flink
 ENV PATH $PATH:$FLINK_HOME/bin
@@ -33,6 +34,10 @@ ADD docker-entrypoint.sh ${FLINK_HOME}/bin/
 # Additional output to console, allows gettings logs with 'docker-compose logs'
 
 ADD log4j.properties ${FLINK_HOME}/conf/
+ADD conf/flink-conf.yaml ${FLINK_HOME}/conf/flink-conf.yaml
+
+RUN echo taskmanager.numberOfTaskSlots: ${FLINK_NUM_SLOTS} >> ${FLINK_HOME}/conf/flink-conf.yaml
+
 WORKDIR ${FLINK_HOME}/bin
 RUN chmod +x docker-entrypoint.sh
 
