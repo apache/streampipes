@@ -16,10 +16,10 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
 import java.net.URI;
@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 
 public class TextFilterController extends StandaloneEventProcessorDeclarer<TextFilterParameter> {

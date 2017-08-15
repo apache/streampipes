@@ -27,13 +27,13 @@ public class UserStorage extends Storage<User> {
     public List<User> getAllUsers()
     {
         List<User> users = getAll();
-    	return users.stream().filter(u -> (u.getUsername() != null)).collect(Collectors.toList());
+    	return users.stream().collect(Collectors.toList());
     }
 
-    public User getUser(String username) {
+    public User getUser(String email) {
         // TODO improve
         CouchDbClient dbClient = getCouchDbClient();
-        List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
+        List<User> users = dbClient.view("users/username").key(email).includeDocs(true).query(User.class);
         if (users.size() != 1) LOG.error("None or to many users with matching username");
         return users.get(0);
     }
@@ -55,15 +55,7 @@ public class UserStorage extends Storage<User> {
                 .anyMatch(u -> u.getEmail().equals(email));
     }
     
-    public boolean usernameExists(String username)
-    {
-    	List<User> users = getAll();
-    	return users
-                .stream()
-                .filter(u -> u.getUsername() != null)
-                .anyMatch(u -> u.getUsername().equals(username));
-    }
-    
+
     /**
     *
     * @param username

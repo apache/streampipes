@@ -1,6 +1,8 @@
 package org.streampipes.container.init;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
@@ -21,6 +23,7 @@ public class DeclarersSingleton {
     private List<SemanticEventConsumerDeclarer> consumerDeclarers;
     private int port;
     private String route;
+    private String hostName;
 
 
     private DeclarersSingleton() {
@@ -100,12 +103,16 @@ public class DeclarersSingleton {
         this.port = port;
     }
 
+    public void setHostName(String host) {
+        this.hostName = host;
+    }
+
     public void setRoute(String route) {
         this.route = "/" + route + "/";
     }
 
     public String getBaseUri() {
-        return ClientConfiguration.INSTANCE.getHostname() + ":" + port + route;
+        return "http://" + hostName + ":" + port + route;
     }
     
     private void checkAndStartExecutableStreams(SemanticEventProducerDeclarer sourceDeclarer) {

@@ -1,6 +1,13 @@
 package org.streampipes.pe.processors.esper.single;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.streampipes.commons.Utils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
@@ -18,14 +25,8 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class DrillingStopEnrichedController extends StandaloneEventProcessorDeclarer<DrillingStopEnrichedParameters> {
 

@@ -1,6 +1,8 @@
 package org.streampipes.commons;
 
-import org.streampipes.commons.config.Configuration;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.helpers.JSONLDMode;
+import org.openrdf.rio.helpers.JSONLDSettings;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openrdf.model.Graph;
 import org.openrdf.rio.RDFHandlerException;
@@ -17,23 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Utils {
-
-	public static final String SERVER_URL;
-	public static final String CONTEXT_PATH;
-	public static final int PORT;
-	public static final String IMG_DIR;
-
-	static {
-		SERVER_URL = "http://anemone06.fzi.de";
-		CONTEXT_PATH = "/semantic-epa-backend";
-		PORT = 8080;
-		IMG_DIR = "img";
-
-	}
-
-	public static String getImageUrl() {
-		return SERVER_URL + CONTEXT_PATH + "/" + IMG_DIR + "/";
-	}
 
 	public static List<URI> createURI(String...uris)
 	{
@@ -62,7 +47,7 @@ public class Utils {
 	{
 		OutputStream stream = new ByteArrayOutputStream();
 		
-		RDFWriter writer = Configuration.getInstance().getRioWriter(stream);
+		RDFWriter writer = Utils.getRioWriter(stream);
 		
 		//RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 //		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
@@ -78,16 +63,22 @@ public class Utils {
 		Rio.write(graph, writer);
 		return stream.toString();
 	}
-	
-	public static String getHostname()
+
+
+	public static RDFWriter getRioWriter(OutputStream stream) throws RDFHandlerException
 	{
-		InetAddress addr;
-		try {
-			addr = InetAddress.getLocalHost();
-			System.out.println(addr.getCanonicalHostName());
-			return addr.getCanonicalHostName();
-		} catch (UnknownHostException e) {
-			return "localhost";
-		}	
+		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
+
+		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
+		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
+		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
+		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+
+		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
+		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+
+		return writer;
 	}
+	
 }

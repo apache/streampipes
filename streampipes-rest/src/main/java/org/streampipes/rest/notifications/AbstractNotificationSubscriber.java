@@ -1,7 +1,7 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.commons.config.Configuration;
-import org.streampipes.messaging.EventConsumer;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
 import org.streampipes.storage.controller.StorageManager;
@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by riemer on 16.10.2016.
  */
-public abstract class AbstractNotificationSubscriber implements EventConsumer<byte[]>, Runnable {
+public abstract class AbstractNotificationSubscriber implements EventListener<byte[]>, Runnable {
 
     protected String topic;
     protected TDeserializer deserializer;
@@ -24,7 +24,8 @@ public abstract class AbstractNotificationSubscriber implements EventConsumer<by
     }
 
     public void subscribe() {
-        SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(Configuration.getInstance().getBrokerConfig().getKafkaUrl(), topic,
+        SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(BackendConfig.INSTANCE
+                .getKafkaUrl(), topic,
                 this);
         Thread thread = new Thread(kafkaConsumerGroup);
         thread.start();

@@ -11,13 +11,13 @@ import javax.ws.rs.core.Response;
 /**
  * Created by riemer on 01.11.2016.
  */
-@Path("/v2/users/{username}")
+@Path("/v2/users/{email}")
 public class User extends AbstractRestInterface implements IUser {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response getUserDetails(@PathParam("username") String email) {
+    public Response getUserDetails(@PathParam("email") String email) {
         org.streampipes.model.client.user.User user = getUser(email);
         user.setPassword("");
 

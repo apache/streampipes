@@ -14,6 +14,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.7.4</version>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
@@ -87,6 +97,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-sinks-standalone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -187,11 +202,6 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-backend</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-sources</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -303,6 +313,7 @@
         <module>streampipes-backend</module>
         <module>streampipes-code-generation</module>
         <module>streampipes-commons</module>
+        <module>streampipes-config</module>
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
@@ -325,7 +336,6 @@
         <module>streampipes-pe-sources-hella</module>
         <module>streampipes-pe-sources-mhwirth</module>
         <module>streampipes-pe-sources-mnist</module>
-        <module>streampipes-pe-sources-proasense-monitoring</module>
         <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>

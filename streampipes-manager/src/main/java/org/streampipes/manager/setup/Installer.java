@@ -1,28 +1,27 @@
 package org.streampipes.manager.setup;
 
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.setup.InitialSettings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Installer {
 
-	private WebappConfigurationSettings settings;
-	private File file;
-	private File pathToFile;
-	
-	public Installer(WebappConfigurationSettings settings, File file, File pathToFile) {
-		this.file = file;
+	private InitialSettings settings;
+
+	public Installer(InitialSettings settings) {
 		this.settings = settings;
-		this.pathToFile = pathToFile;
 	}
 	
-	public List<Message> install() {	
-		List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(file, pathToFile, settings);
+	public List<Message> install() {
+
+
+		List<InstallationStep> steps = InstallationConfiguration.getInstallationSteps(settings);
 		List<Message> result = new ArrayList<>();
 		steps.forEach(s -> result.addAll(s.install()));
+		BackendConfig.INSTANCE.setIsConfigured(true);
 		return result;
 	}
 	

@@ -1,9 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples;
 
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
-import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.messaging.EventConsumer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
@@ -32,7 +31,6 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 	
 	protected String createWebsocketUri(SecInvocation sec)
 	{
-		if (ClientConfiguration.INSTANCE.isNissatechRunning()) return "wss://proasense.nissatech.com/ws/"; 
 		return getEventGrounding(sec).getTransportProtocol().getBrokerHostname().replace("tcp",  "ws") + ":61614";
 	}
 	

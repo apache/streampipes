@@ -7,7 +7,6 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
-import org.streampipes.commons.config.ConfigurationManager;
 import org.streampipes.model.ConsumableSEPAElement;
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.streampipes.codegeneration.ZipFileGenerator;
@@ -54,11 +53,11 @@ public abstract class ImplementationCodeGenerator extends CodeGenerator {
 	public abstract String getDeclareModel();
 
 	protected String getTempDir() {
-		return ConfigurationManager.getStreamPipesConfigFileLocation() + tempFolder + File.separator;
+		return System.getProperty("user.home") + File.separator +".streampipes" +File.separator + tempFolder + File.separator;
 	}
 
 	protected File toZip() {
-		String generatedProjects = ConfigurationManager.getStreamPipesConfigFileLocation() + "generated_projects"
+		String generatedProjects = System.getProperty("user.home") + File.separator +".streampipes" +File.separator + "generated_projects"
 				+ File.separator;
 		createFolder(generatedProjects);
 

@@ -1,22 +1,12 @@
 package org.streampipes.pe.slack.sec;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
-
-import org.streampipes.pe.slack.config.SlackConfig;
-import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
@@ -32,6 +22,14 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.pe.slack.config.SlackConfig;
+import org.streampipes.sdk.stream.SchemaBuilder;
+import org.streampipes.sdk.stream.StreamBuilder;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 //
 
@@ -43,9 +41,9 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
     @Override
     public Response invokeRuntime(SecInvocation invocationGraph) {
 //        String authToken = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "auth_token"))).getValue();
-        String authToken = ClientConfiguration.INSTANCE.getSlackToken();
+        String authToken = SlackConfig.INSTANCE.getSlackToken();
 
-        if (authToken != null) {
+        if (authToken != SlackConfig.SLACK_NOT_INITIALIZED) {
             // Initialize slack session
             SlackSession session = SlackSessionFactory.createWebSocketSlackSession(authToken);
             try {
@@ -82,7 +80,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
             String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 
-            kafkaConsumerGroup = new SpKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+            kafkaConsumerGroup = new SpKafkaConsumer(SlackConfig.INSTANCE.getKafkaUrl(), consumerTopic,
                     slackNotification);
             Thread thread = new Thread(kafkaConsumerGroup);
             thread.start();
@@ -90,7 +88,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
             return new Response(invocationGraph.getElementId(), true);
         } else {
-            return new Response(invocationGraph.getElementId(), false, "There is no authentication slack token defined in the client config");
+            return new Response(invocationGraph.getElementId(), false, "There is no authentication slack token defined in the configuration");
         }
     }
 
@@ -133,7 +131,9 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
         EventGrounding grounding = new EventGrounding();
 
-        grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+        grounding.setTransportProtocol(new KafkaTransportProtocol(SlackConfig.INSTANCE.getKafkaHost(),
+                SlackConfig.INSTANCE.getKafkaPort(), "", SlackConfig.INSTANCE.getZookeeperHost(),
+                SlackConfig.INSTANCE.getZookeeperPort()));
         grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
         desc.setSupportedGrounding(grounding);
         return desc;

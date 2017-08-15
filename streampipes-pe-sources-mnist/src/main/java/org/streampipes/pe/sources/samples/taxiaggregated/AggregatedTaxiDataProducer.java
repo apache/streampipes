@@ -2,10 +2,10 @@ package org.streampipes.pe.sources.samples.taxiaggregated;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class AggregatedTaxiDataProducer implements SemanticEventProducerDeclarer
 
     static final Logger LOG = LoggerFactory.getLogger(AggregatedTaxiDataProducer.class);
 
-    public static String dataFolder = ClientConfiguration.INSTANCE.getDatalocation() + "aggregated_taxi/";
+    public static String dataFolder = MlSourceConfig.INSTANCE.getDataLocation() + "aggregated_taxi/";
 
     @Override
     public SepDescription declareModel() {

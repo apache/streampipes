@@ -2,7 +2,6 @@ package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -15,6 +14,7 @@ import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 import javax.jms.JMSException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class NestedRandomNumberStream implements EventStreamDeclarer {
 
 	public NestedRandomNumberStream() throws JMSException
 	{
-		samplePublisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsHost() +":61616", "SEPA.SEP.Random.SimpleNestedNumber");
+		samplePublisher = new ActiveMQPublisher(SourcesConfig.INSTANCE.getJmsHost() +":61616", "SEPA.SEP.Random.SimpleNestedNumber");
 	}
 	
 	@Override

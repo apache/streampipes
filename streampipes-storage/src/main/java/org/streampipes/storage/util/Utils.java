@@ -4,82 +4,69 @@ import org.streampipes.model.util.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
-import org.streampipes.commons.config.Configuration;
-
 public class Utils {
 
+
+
 	public static CouchDbClient getCouchDbPipelineClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_PIPELINE_DB));
+		CouchDbClient dbClient = new CouchDbClient(props("pipeline"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbSepaInvocationClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_SEPA_INVOCATION_DB));
+		CouchDbClient dbClient = new CouchDbClient(props("invocation"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbConnectionClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_CONNECTION_DB));
+		CouchDbClient dbClient = new CouchDbClient(props("connection"));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbVisualizationClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "visualizations"));
+		CouchDbClient dbClient = new CouchDbClient(props("visualizations"));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbRdfEndpointClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "rdfendpoint"));
+		CouchDbClient dbClient = new CouchDbClient(props("rdfendpoint"));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbVisualizablePipelineClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "visualizablepipeline"));
+		CouchDbClient dbClient = new CouchDbClient(props("visualizablepipeline"));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbDashboardClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "dashboard"));
+		CouchDbClient dbClient = new CouchDbClient(props("dashboard"));
 		return dbClient;
 	}
 
 	public static CouchDbClient getCouchDbUserClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_USER_DB));
-		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
-		return dbClient;
-	}
-	
-	public static CouchDbClient getCouchDbBlockClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), "blocks"));
+		CouchDbClient dbClient = new CouchDbClient(props("users"));
 		dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbMonitoringClient() {
-		CouchDbClient dbClient = new CouchDbClient(props(cfg(), cfg().COUCHDB_MONITORING_DB));
+		CouchDbClient dbClient = new CouchDbClient(props("monitoring"));
 		return dbClient;
 	}
 	
 	public static CouchDbClient getCouchDbNotificationClient() {
-		return new CouchDbClient(props(cfg(), cfg().COUCHDB_NOTIFICATION_DB));
+		return new CouchDbClient(props("notification"));
 	}
 	
 	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
-		return new CouchDbClient(props(cfg(), "pipelinecategories"));
+		return new CouchDbClient(props("pipelinecategories"));
 	}
 	
-	public static CouchDbClient getCouchDbAppStorageClient() {
-		return new CouchDbClient(props(cfg(), "apps"));
-	}
-
-	private static Configuration cfg() {
-		return Configuration.getInstance();
-	}
-	
-	private static CouchDbProperties props(Configuration cfg, String dbname)
+	private static CouchDbProperties props(String dbname)
 	{
-		return new CouchDbProperties(dbname, true, cfg.COUCHDB_PROTOCOL, cfg.COUCHDB_HOSTNAME, cfg.COUCHDB_PORT, null, null);	
+		return new CouchDbProperties(dbname, true, CouchDbConfig.INSTANCE.getProtocol(),
+				CouchDbConfig.INSTANCE.getHost(), CouchDbConfig.INSTANCE.getPort(), null, null);
 	}
 }

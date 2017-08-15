@@ -3,7 +3,6 @@ package org.streampipes.pe.sinks.standalone.samples.dashboard;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
 
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
@@ -28,8 +27,8 @@ import java.util.List;
 public class DashboardController extends ActionController {
 
     private static String DB_NAME = "visualizablepipeline";
-    private static int DB_PORT = ClientConfiguration.INSTANCE.getCouchDbPort();
-    private static String DB_HOST = ClientConfiguration.INSTANCE.getCouchDbHost();
+    private static int DB_PORT = ActionConfig.INSTANCE.getCouchDbPort();
+    private static String DB_HOST = ActionConfig.INSTANCE.getCouchDbHost();
     private static String DB_PROTOCOL = "http";
 
 
@@ -50,7 +49,9 @@ public class DashboardController extends ActionController {
         desc.setStaticProperties(staticProperties);
 
         EventGrounding grounding = new EventGrounding();
-        grounding.setTransportProtocol(new KafkaTransportProtocol(ClientConfiguration.INSTANCE.getKafkaHost(), ClientConfiguration.INSTANCE.getKafkaPort(), "", ClientConfiguration.INSTANCE.getZookeeperHost(), ClientConfiguration.INSTANCE.getZookeeperPort()));
+        grounding.setTransportProtocol(new KafkaTransportProtocol(ActionConfig.INSTANCE.getKafkaHost(),
+                ActionConfig.INSTANCE.getKafkaPort(), "", ActionConfig.INSTANCE.getZookeeperHost(),
+                ActionConfig.INSTANCE.getZookeeperPort()));
         grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
         desc.setSupportedGrounding(grounding);
         return desc;
@@ -73,7 +74,7 @@ public class DashboardController extends ActionController {
         } else {
             String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
 
-            startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic, new Dashboard(invocationGraph.getCorrespondingPipeline()));
+            startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic, new Dashboard(invocationGraph.getCorrespondingPipeline()));
         }
 
         return new Response(invocationGraph.getElementId(), true);

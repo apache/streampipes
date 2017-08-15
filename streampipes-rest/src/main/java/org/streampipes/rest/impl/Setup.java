@@ -1,6 +1,5 @@
 package org.streampipes.rest.impl;
 
-import java.io.File;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -13,8 +12,8 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonObject;
 
-import org.streampipes.commons.config.ConfigurationManager;
-import org.streampipes.commons.config.WebappConfigurationSettings;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.model.client.setup.InitialSettings;
 import org.streampipes.manager.setup.Installer;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
@@ -31,10 +30,9 @@ public class Setup extends AbstractRestInterface implements ISetup {
     public Response isConfigured()
     {
     	JsonObject obj = new JsonObject();
-			if (ConfigurationManager.isConfigured()) 
+			if (BackendConfig.INSTANCE.isConfigured())
 				{
 					obj.addProperty("configured", true);
-					obj.addProperty("appConfig", ConfigurationManager.getWebappConfigurationFromProperties().getAppConfig());
 					return ok(obj.toString());
 				}
 			else 
@@ -48,12 +46,9 @@ public class Setup extends AbstractRestInterface implements ISetup {
     @Path("/install")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response configure(WebappConfigurationSettings settings)
+    public Response configure(InitialSettings settings)
     {
-    	String configFileLocation = ConfigurationManager.getStreamPipesConfigFileLocation();
-    	String configFilename = ConfigurationManager.getStreamPipesConfigFilename();
-
-    	List<Message> successMessages = new Installer(settings, new File(configFileLocation + configFilename), new File(configFileLocation)).install();
+    	List<Message> successMessages = new Installer(settings).install();
     	new NotificationListener().contextInitialized(null);
     	return ok(successMessages);
     }
@@ -62,14 +57,15 @@ public class Setup extends AbstractRestInterface implements ISetup {
     @Path("/configuration")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
-    public Response updateConfiguration(WebappConfigurationSettings settings)
+    public Response updateConfiguration(InitialSettings settings)
     {
     	try {
-			ConfigurationManager
-                    .storeWebappConfigurationToProperties(
-                            new File(ConfigurationManager.getStreamPipesConfigFullPath()),
-                            new File(ConfigurationManager.getStreamPipesConfigFileLocation()),
-                            settings);
+    	    // TODO implement update consul configs
+//			ConfigurationManager
+//                    .storeWebappConfigurationToProperties(
+//                            new File(ConfigurationManager.getStreamPipesConfigFullPath()),
+//                           new File(ConfigurationManager.getStreamPipesConfigFileLocation()),
+//                            settings);
 			return ok(Notifications.success("Configuration updated"));
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -81,9 +77,16 @@ public class Setup extends AbstractRestInterface implements ISetup {
     @Path("/configuration")
     @Produces(MediaType.APPLICATION_JSON)
     @Override
+    @Deprecated
+    // NOT sure if we need this method
     public Response getConfiguration()
     {
-    	return ok(ConfigurationManager.getWebappConfigurationFromProperties());
+//        InitialSettings is = new InitialSettings();
+//        is.setCouchDBHost(CouchDbConfig.INSTANCE.getHost());
+//        is.setSesameUrl(SesameConfig.INSTANCE.getUri());
+
+//         TODO return here the initial configurations
+    	return ok(true);
     }
 
 }

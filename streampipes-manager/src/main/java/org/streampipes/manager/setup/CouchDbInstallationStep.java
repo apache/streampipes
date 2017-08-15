@@ -4,6 +4,7 @@ import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.impl.RdfEndpointStorageImpl;
+import org.streampipes.storage.util.CouchDbConfig;
 import org.streampipes.storage.util.Utils;
 import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
@@ -31,6 +32,7 @@ public class CouchDbInstallationStep implements InstallationStep {
 
     private List<Message> createDatabases() {
         try {
+
             Utils.getCouchDbUserClient();
             Utils.getCouchDbMonitoringClient();
             Utils.getCouchDbPipelineClient();

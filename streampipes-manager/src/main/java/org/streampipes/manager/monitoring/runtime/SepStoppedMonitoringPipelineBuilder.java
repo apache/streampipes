@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.streampipes.commons.config.ConfigurationManager;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
@@ -119,10 +119,10 @@ public class SepStoppedMonitoringPipelineBuilder {
 					for(SupportedProperty sp : ((DomainStaticProperty) p).getSupportedProperties()) {
 						if (sp.getPropertyId().equals("http://schema.org/kafkaHost"))
 							sp.setValue(String
-								.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaHost()));
+								.valueOf(BackendConfig.INSTANCE.getKafkaHost()));
 						else if (sp.getPropertyId().equals("http://schema.org/kafkaPort"))
 							sp.setValue(String
-									.valueOf(ConfigurationManager.getWebappConfigurationFromProperties().getKafkaPort()));
+									.valueOf(BackendConfig.INSTANCE.getKafkaPort()));
 					}
 				}
 					

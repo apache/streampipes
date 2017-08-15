@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -72,7 +71,8 @@ public class DustParticleStream extends AbstractHellaStream {
 	public void executeStream() {
 		
 		System.out.println("Execute Dust replay");
-		EventProducer publisher = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.Dust.topic());
+		EventProducer publisher = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Dust
+            .topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

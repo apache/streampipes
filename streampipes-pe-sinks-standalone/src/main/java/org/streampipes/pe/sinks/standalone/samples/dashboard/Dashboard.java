@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 
 import javax.jms.JMSException;
 
@@ -11,7 +11,7 @@ public class Dashboard  implements EventConsumer<byte[]> {
 
     public Dashboard(String topic) {
         try {
-            this.publisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsUrl(), topic);
+            this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), topic);
         } catch (JMSException e) {
             e.printStackTrace();
         }

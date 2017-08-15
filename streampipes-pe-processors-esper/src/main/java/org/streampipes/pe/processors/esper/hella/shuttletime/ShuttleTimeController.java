@@ -13,11 +13,11 @@ import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
 import java.net.URI;

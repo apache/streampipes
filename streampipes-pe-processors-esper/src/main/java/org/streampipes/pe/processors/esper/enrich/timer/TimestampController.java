@@ -16,7 +16,7 @@ import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
 import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
 import java.util.ArrayList;

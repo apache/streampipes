@@ -1,12 +1,7 @@
 package org.streampipes.pe.axoom.hmi.iot;
 
-import com.google.gson.Gson;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.ConfigurationManager;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +31,4 @@ public class AxoomIotStreamBuilder {
 //    return new AxoomIotStream(machineDefinition);
 //  }
 
-  private static File getConfigFile() throws IOException {
-    return ConfigurationManager.getConfigFile("machines-and-sensors-cloud.json");
-  }
 }

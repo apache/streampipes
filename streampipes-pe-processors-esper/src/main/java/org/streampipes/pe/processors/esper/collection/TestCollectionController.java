@@ -14,7 +14,6 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDecla
 
 import java.util.List;
 import java.util.stream.Collectors;
-//import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
 public class TestCollectionController extends StandaloneEventProcessorDeclarer<TestCollectionParameters> {
 

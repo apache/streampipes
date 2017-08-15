@@ -24,12 +24,12 @@ public class ConfigGenerator extends Generator {
 
 		FieldSpec flinkHost = FieldSpec.builder(JFC.STRING, "FLINK_HOST")
 			    .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-			    .initializer("$T.INSTANCE.getFlinkHost()", JFC.CLIENT_CONFIGURATION)
+//			    .initializer("$T.INSTANCE.getFlinkHost()", JFC.CLIENT_CONFIGURATION)
 			    .build();
 
 		FieldSpec flinkPort = FieldSpec.builder(int.class, "FLINK_PORT")
 			    .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
-			    .initializer("$T.INSTANCE.getFlinkPort()", JFC.CLIENT_CONFIGURATION)
+//			    .initializer("$T.INSTANCE.getFlinkPort()", JFC.CLIENT_CONFIGURATION)
 			    .build();
 
 		TypeSpec parameterClass = TypeSpec.classBuilder("Config").addModifiers(Modifier.PUBLIC)

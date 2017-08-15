@@ -17,14 +17,11 @@ import java.util.Set;
 public class UserRegistrationInstallationStep implements InstallationStep {
 
 	private String adminEmail;
-	private String adminUsername;
 	private String adminPassword;
 	private Set<Role> roles;
 	
-	public UserRegistrationInstallationStep(String adminEmail,
-			String adminUsername, String adminPassword) {
+	public UserRegistrationInstallationStep(String adminEmail, String adminPassword) {
 		this.adminEmail = adminEmail;
-		this.adminUsername = adminUsername;
 		this.adminPassword = adminPassword;
 		roles = new HashSet<>();
 		roles.add(Role.SYSTEM_ADMINISTRATOR);
@@ -36,7 +33,7 @@ public class UserRegistrationInstallationStep implements InstallationStep {
 
 		try {
 			String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
-			StorageManager.INSTANCE.getUserStorageAPI().storeUser(new User(adminUsername, adminEmail,
+			StorageManager.INSTANCE.getUserStorageAPI().storeUser(new User(adminEmail,
 							encryptedPassword, roles));
 			return Arrays.asList(Notifications.success("Creating admin user..."));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

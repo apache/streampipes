@@ -1,12 +1,12 @@
 package org.streampipes.pe.sources.samples.taxi;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Groundings;
@@ -19,11 +19,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.Arrays;
 
+
 public class TaxiStream implements EventStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(TaxiStream.class);
 
-    private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
-    private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
+    private static String kafkaHost = MlSourceConfig.INSTANCE.getKafkaHost();
+    private static int kafkaPort = MlSourceConfig.INSTANCE.getKafkaPort();
 
     private String topic = "de.fzi.cep.sep.taxi";
     private String dataFolder;
@@ -91,7 +92,7 @@ public class TaxiStream implements EventStreamDeclarer {
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-                EventProducer producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+                EventProducer producer = new SpKafkaProducer(MlSourceConfig.INSTANCE.getKafkaUrl(), topic);
 
                 //TODO change Simulation Settings
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new TaxiLineTransformer());

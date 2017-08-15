@@ -1,6 +1,5 @@
 package org.streampipes.pe.sources.samples.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportProtocol;
@@ -10,18 +9,18 @@ public class SampleSettings {
 	public static TransportProtocol kafkaProtocol(String topicName)
 	{
 		KafkaTransportProtocol protocol = new KafkaTransportProtocol(
-				ClientConfiguration.INSTANCE.getKafkaHost(), 
-				ClientConfiguration.INSTANCE.getKafkaPort(), 
+				SourcesConfig.INSTANCE.getKafkaHost(),
+				SourcesConfig.INSTANCE.getKafkaPort(),
 				topicName, 
-				ClientConfiguration.INSTANCE.getZookeeperHost(), 
-				ClientConfiguration.INSTANCE.getZookeeperPort());
+				SourcesConfig.INSTANCE.getZookeeperHost(),
+				SourcesConfig.INSTANCE.getZookeeperPort());
 		return protocol;
 	}
 	
 	public static TransportProtocol jmsProtocol(String topicName)
 	{
 		JmsTransportProtocol protocol = new JmsTransportProtocol(
-				ClientConfiguration.INSTANCE.getJmsHost(), ClientConfiguration.INSTANCE.getJmsPort(), topicName);
+				SourcesConfig.INSTANCE.getJmsHost(), SourcesConfig.INSTANCE.getJmsPort(), topicName);
 		return protocol;
 	}
 }

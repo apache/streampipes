@@ -1,15 +1,33 @@
 package org.streampipes.pe.processors.standalone.config;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.config.SpConfig;
 
-public class Config {
+public enum Config {
+	INSTANCE;
+
+	private SpConfig config;
+	private final static String HOST = "host";
+	private final static String PORT = "port";
 
 	public final static String serverUrl;
 	public final static String iconBaseUrl;
-	
-	static {
-		serverUrl = ClientConfiguration.INSTANCE.getAlgorithmUrl();
-		iconBaseUrl = ClientConfiguration.INSTANCE.getWebappUrl() +"/semantic-epa-backend/img";
+
+	Config() {
+		config = SpConfig.getSpConfig("pe/org.streampipes.pe.processors.standalone");
+		config.register(HOST, "standalone", "Hostname for the pe standalone processors");
+		config.register(PORT, 8090, "Port for the pe standalone processors");
 	}
-	
+	static {
+		serverUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort();
+		iconBaseUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort() +"/img";
+	}
+
+	public String getHost() {
+		return config.getString(HOST);
+	}
+
+	public int getPort() {
+		return config.getInteger(PORT);
+	}
+
 }

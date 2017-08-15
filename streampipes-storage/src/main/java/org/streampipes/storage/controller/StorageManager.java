@@ -6,7 +6,6 @@ import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
-import org.streampipes.commons.config.Configuration;
 import org.streampipes.model.transform.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;
@@ -31,6 +30,7 @@ import org.streampipes.storage.impl.SesameStorageRequests;
 import org.streampipes.storage.impl.UserStorage;
 import org.streampipes.storage.impl.VisualizationStorageImpl;
 import org.streampipes.storage.service.UserService;
+import org.streampipes.storage.util.SesameConfig;
 import org.streampipes.storage.util.StorageUtils;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -70,8 +70,8 @@ public enum StorageManager {
     }
 
     private void initBackgroundKnowledgeStorage() {
-        bkrepo = new HTTPRepository(Configuration.getInstance().SESAME_URI,
-                Configuration.getInstance().SESAME_REPOSITORY_ID);
+        bkrepo = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
+                SesameConfig.INSTANCE.getRepositoryId());
         try {
             bkrepo.initialize();
             this.backgroundKnowledgeStorage = new BackgroundKnowledgeStorageImpl(bkrepo);
@@ -83,8 +83,8 @@ public enum StorageManager {
 
     private boolean initStorage() {
         try {
-            repository = new HTTPRepository(Configuration.getInstance().SESAME_URI,
-                    Configuration.getInstance().SESAME_REPOSITORY_ID);
+            repository = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
+                    SesameConfig.INSTANCE.getRepositoryId());
             conn = repository.getConnection();
 
             initEmpire();
@@ -110,8 +110,8 @@ public enum StorageManager {
             map.put(RepositoryFactoryKeys.REPO_HANDLE, repository);
             map.put(ConfigKeys.FACTORY, "sesame");
             map.put(ConfigKeys.NAME, "sepa-server");
-            map.put("url", Configuration.getInstance().SESAME_URI);
-            map.put("repo", Configuration.getInstance().SESAME_REPOSITORY_ID);
+            map.put("url", SesameConfig.INSTANCE.getUri());
+            map.put("repo", SesameConfig.INSTANCE.getRepositoryId());
 
             PersistenceProvider provider = Empire.get().persistenceProvider();
             storageManager = provider.createEntityManagerFactory("sepa-server", map).createEntityManager();

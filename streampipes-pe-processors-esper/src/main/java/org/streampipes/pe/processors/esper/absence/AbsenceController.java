@@ -13,8 +13,8 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
-import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
 import java.util.ArrayList;

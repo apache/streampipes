@@ -1,5 +1,6 @@
 package org.streampipes.manager.matching;
 
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.util.TopicGenerator;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
@@ -32,8 +33,8 @@ public class ProtocolSelector extends GroundingSelector {
             if (supportsProtocol(KafkaTransportProtocol.class)) {
                 return kafkaTopic();
             } else if (supportsProtocol(JmsTransportProtocol.class)) {
-                return new JmsTransportProtocol(config.getJmsHost(),
-                        config.getJmsPort(),
+                return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
+                        BackendConfig.INSTANCE.getJmsPort(),
                         outputTopic);
             }
         }
@@ -41,11 +42,11 @@ public class ProtocolSelector extends GroundingSelector {
     }
 
     private TransportProtocol kafkaTopic() {
-        return new KafkaTransportProtocol(config.getKafkaHost(),
-                config.getKafkaPort(),
+        return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
+                BackendConfig.INSTANCE.getKafkaPort(),
                 outputTopic,
-                config.getZookeeperHost(),
-                config.getZookeeperPort());
+                BackendConfig.INSTANCE.getZookeeperHost(),
+                BackendConfig.INSTANCE.getZookeeperPort());
     }
 
 

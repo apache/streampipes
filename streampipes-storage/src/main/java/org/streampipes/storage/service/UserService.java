@@ -32,9 +32,9 @@ public class UserService {
 		return pipelines;
 	}
 	
-	public List<Pipeline> getOwnPipelines(String username)
+	public List<Pipeline> getOwnPipelines(String email)
 	{
-		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getCreatedByUser().equals(username)).collect(Collectors.toList());
+		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getCreatedByUser().equals(email)).collect(Collectors.toList());
 	}
 	
 	public Pipeline getPipeline(String username, String pipelineId) throws ElementNotFoundException
@@ -203,39 +203,39 @@ public class UserService {
 		return actions;
     }
     
-    public List<String> getOwnSepaUris(String username)
+    public List<String> getOwnSepaUris(String email)
     {
-    	return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+    	return userStorage.getUser(email).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
     }
     
-    public List<String> getAvailableSepaUris(String username)
+    public List<String> getAvailableSepaUris(String email)
     {
-    	List<String> sepas = new ArrayList<>(getOwnSepaUris(username));
+    	List<String> sepas = new ArrayList<>(getOwnSepaUris(email));
 		userStorage
 				.getAllUsers()
 				.stream()
-				.filter(u -> !(u.getUsername().equals(username)))
+				.filter(u -> !(u.getEmail().equals(email)))
 				.map(u -> u.getOwnSepas().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(sepas::addAll); 
 		return sepas;
     }
     
-    public List<String> getFavoriteSepaUris(String username)
+    public List<String> getFavoriteSepaUris(String email)
     {
-    	return userStorage.getUser(username).getPreferredSepas();
+    	return userStorage.getUser(email).getPreferredSepas();
     }
     
-    public List<String> getOwnSourceUris(String username)
+    public List<String> getOwnSourceUris(String email)
     {
-    	return userStorage.getUser(username).getOwnSources().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+    	return userStorage.getUser(email).getOwnSources().stream().map(r -> r.getElementId()).collect(Collectors.toList());
     }
     
-    public List<String> getAvailableSourceUris(String username)
+    public List<String> getAvailableSourceUris(String email)
     {
-    	List<String> sources = new ArrayList<>(getOwnSepaUris(username));
+    	List<String> sources = new ArrayList<>(getOwnSepaUris(email));
 		userStorage
 				.getAllUsers()
 				.stream()
-				.filter(u -> !(u.getUsername().equals(username)))
+				.filter(u -> !(u.getEmail().equals(email)))
 				.map(u -> u.getOwnSources().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(sources::addAll); 
 		return sources;
     }

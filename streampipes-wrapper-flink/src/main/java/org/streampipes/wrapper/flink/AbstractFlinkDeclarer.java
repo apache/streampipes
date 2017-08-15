@@ -1,7 +1,6 @@
 package org.streampipes.wrapper.flink;
 
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.impl.Response;
@@ -35,10 +34,4 @@ public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extend
 	
 	protected abstract ER getRuntime(I graph);
 
-	protected FlinkDeploymentConfig makeDeploymentConfig(String jarFileLocation) {
-		return new FlinkDeploymentConfig(jarFileLocation,
-						ClientConfiguration.INSTANCE.getFlinkHost(),
-						ClientConfiguration.INSTANCE.getFlinkPort());
-	}
-	
 }

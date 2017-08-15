@@ -1,6 +1,6 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.commons.config.Configuration;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphHelpers;
 import org.streampipes.manager.matching.output.OutputSchemaFactory;
@@ -104,8 +104,8 @@ public class InvocationGraphBuilder {
 
     private ElementStatusInfoSettings makeStatusInfoSettings(String elementIdentifier) {
         ElementStatusInfoSettings statusSettings = new ElementStatusInfoSettings();
-        statusSettings.setKafkaHost(Configuration.getInstance().getBrokerConfig().getKafkaHost());
-        statusSettings.setKafkaPort(Configuration.getInstance().getBrokerConfig().getKafkaPort());
+        statusSettings.setKafkaHost(BackendConfig.INSTANCE.getKafkaHost());
+        statusSettings.setKafkaPort(BackendConfig.INSTANCE.getKafkaPort());
         statusSettings.setErrorTopic(elementIdentifier +".error");
         statusSettings.setStatsTopic(elementIdentifier +".stats");
         statusSettings.setElementIdentifier(elementIdentifier);

@@ -2,10 +2,10 @@ package org.streampipes.pe.sources.samples.mnist;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class MnistDataProducer implements SemanticEventProducerDeclarer {
 
     static final Logger LOG = LoggerFactory.getLogger(MnistDataProducer.class);
 
-    public static String dataFolder = ClientConfiguration.INSTANCE.getDatalocation() + "mnist/";
+    public static String dataFolder = MlSourceConfig.INSTANCE.getDataLocation() + "mnist/";
 
     @Override
     public SepDescription declareModel() {

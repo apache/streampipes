@@ -39,6 +39,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>de.fzi.streampipes.adapter</groupId>-->
             <!--<artifactId>streampipes-adapter-axoom-model</artifactId>-->

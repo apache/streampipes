@@ -1,11 +1,11 @@
 package org.streampipes.pe.sources.samples.biggis;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Groundings;
@@ -23,8 +23,8 @@ public class BiggisStream implements EventStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(BiggisStream.class);
 
 
-    private static String kafkaHost = ClientConfiguration.INSTANCE.getKafkaHost();
-    private static int kafkaPort = ClientConfiguration.INSTANCE.getKafkaPort();
+    private static String kafkaHost = MlSourceConfig.INSTANCE.getKafkaHost();
+    private static int kafkaPort = MlSourceConfig.INSTANCE.getKafkaPort();
 
     private String topic = "de.fzi.cep.sep.biggis";
     private String dataFolder;
@@ -77,7 +77,7 @@ public class BiggisStream implements EventStreamDeclarer {
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-                EventProducer producer = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), topic);
+                EventProducer producer = new SpKafkaProducer(MlSourceConfig.INSTANCE.getKafkaUrl(), topic);
 
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new BiggisLineTransformer());
 

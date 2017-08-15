@@ -1,5 +1,8 @@
 FROM anapsix/alpine-java
 
+
+ENV CONSUL_LOCATION consul
+
 EXPOSE 8088
 EXPOSE 61616
 

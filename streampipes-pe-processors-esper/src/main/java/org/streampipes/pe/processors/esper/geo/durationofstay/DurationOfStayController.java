@@ -19,11 +19,11 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.esper.config.EsperConfig;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
 import java.net.URI;

@@ -9,7 +9,6 @@ import com.squareup.javapoet.ClassName;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -68,7 +67,6 @@ public abstract class JFC {
 //	public static ClassName SEMANTIC_EVENT_PROCESSING_AGENT_DECLARER = ClassName.get(SemanticEventProcessingAgentDeclarer.class);
 //	public static ClassName SEMANTIC_EVENT_PRODUCER_DECLARER = ClassName.get(SemanticEventProducerDeclarer.class);
 //	public static ClassName SEMANTIC_EVENT_CONSUMER_DECLARER = ClassName.get(SemanticEventConsumerDeclarer.class);
-	public static ClassName CLIENT_CONFIGURATION = ClassName.get(ClientConfiguration.class);
 
 	public static ClassName CONTAINER_MODEL_SUBMITTER = ClassName.get("de.fzi.cep.sepa.client.container.init", "ContainerModelSubmitter");
 	public static ClassName DECLARERS_SINGLETON = ClassName.get(DeclarersSingleton.class);

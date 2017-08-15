@@ -4,7 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.streampipes.commons.config.ConfigurationManager;
+import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
@@ -74,8 +74,6 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
         roles.add(data.getRole());
         if (StorageManager.INSTANCE.getUserStorageAPI().emailExists(data.getEmail())) {
             return ok(Notifications.error("This email address already exists. Please choose another address."));
-        } else if (StorageManager.INSTANCE.getUserStorageAPI().usernameExists(data.getUsername())) {
-            return ok(Notifications.error("This username address already exists. Please choose another username."));
         } else {
             new UserManagementService().registerUser(data, roles);
             return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
@@ -89,7 +87,7 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Override
     public Response userAuthenticated(@Context HttpServletRequest req) {
 
-        if (ConfigurationManager.isConfigured()) {
+        if (BackendConfig.INSTANCE.isConfigured()) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
                 ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
                 System.out.println(SecurityUtils.getSubject().getSession().getId().toString());

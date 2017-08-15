@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
@@ -21,6 +20,7 @@ import org.streampipes.pe.sources.samples.adapter.CsvReadingTask;
 import org.streampipes.pe.sources.samples.adapter.FolderReadingTask;
 import org.streampipes.pe.sources.samples.adapter.LineParser;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.hella.parser.MouldingParametersParser;
 
 public class MouldingParameterStream extends AbstractHellaStream {
@@ -61,7 +61,8 @@ public class MouldingParameterStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new SpKafkaProducer(ClientConfiguration.INSTANCE.getKafkaUrl(), HellaVariables.IMM.topic());
+		EventProducer publisher = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.IMM
+            .topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

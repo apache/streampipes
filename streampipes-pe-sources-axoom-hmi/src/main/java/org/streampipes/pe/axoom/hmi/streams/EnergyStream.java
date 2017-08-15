@@ -3,7 +3,6 @@ package org.streampipes.pe.axoom.hmi.streams;
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
 import org.streampipes.pe.axoom.hmi.config.SourceConfig;
 import org.streampipes.pe.axoom.hmi.vocabulary.AxoomVocabulary;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.vocabulary.SO;
@@ -30,8 +29,8 @@ public class EnergyStream extends AbstractAxoomHmiStream {
                     "events")
             .iconUrl(SourceConfig.getIconUrl("coffee-energy"))
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
-                    ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("energy")))
+            .protocol(Protocols.kafka(SourceConfig.INSTANCE.getKafkaHost(),
+                    SourceConfig.INSTANCE.getKafkaPort(), eventType.getTopic("energy")))
             .property(EpProperties.stringEp("machineId", AxoomVocabulary.MachineId))
             .property(EpProperties.longEp("timestamp",
                     "http://schema.org/DateTime"))

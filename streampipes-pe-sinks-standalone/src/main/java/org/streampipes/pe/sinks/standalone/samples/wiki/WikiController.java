@@ -1,10 +1,10 @@
 package org.streampipes.pe.sinks.standalone.samples.wiki;
 
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -38,7 +38,7 @@ public class WikiController extends ActionController {
     String kafkaHost = "ipe-koi15.fzi.de";
     int kafkaPort = 9092;
 
-    startKafkaConsumer(ClientConfiguration.INSTANCE.getKafkaUrl(), consumerTopic,
+    startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
             new WikiPublisher(new SpKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
 
     String pipelineId = sec.getCorrespondingPipeline();

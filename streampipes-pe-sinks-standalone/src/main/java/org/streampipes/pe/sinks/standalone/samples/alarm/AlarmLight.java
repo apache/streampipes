@@ -1,8 +1,9 @@
 package org.streampipes.pe.sinks.standalone.samples.alarm;
 
-import org.streampipes.commons.config.ClientConfiguration;
+import org.streampipes.messaging.EventListener;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 
 import javax.jms.JMSException;
 
@@ -15,7 +16,7 @@ public class AlarmLight implements EventConsumer<byte[]> {
 	
 	public AlarmLight(AlarmLightParameters params) {
 		try {
-			this.publisher = new ActiveMQPublisher(ClientConfiguration.INSTANCE.getJmsUrl(), ".openHAB");
+			this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), ".openHAB");
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

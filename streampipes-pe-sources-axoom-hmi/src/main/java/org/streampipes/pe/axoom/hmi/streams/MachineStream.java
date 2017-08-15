@@ -1,9 +1,9 @@
 package org.streampipes.pe.axoom.hmi.streams;
 
 import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.pe.axoom.hmi.config.SourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
@@ -25,8 +25,8 @@ public class MachineStream extends AbstractAxoomHmiStream {
                     "machine " +
                     "events")
             .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(ClientConfiguration.INSTANCE.getKafkaHost(),
-                    ClientConfiguration.INSTANCE.getKafkaPort(), eventType.getTopic("machine")))
+            .protocol(Protocols.kafka(SourceConfig.INSTANCE.getKafkaHost(),
+                    SourceConfig.INSTANCE.getKafkaPort(), eventType.getTopic("machine")))
             .build();
   }
 }

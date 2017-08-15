@@ -3,7 +3,6 @@ package org.streampipes.pe.sources.samples.kd2;
 import de.fzi.cep.sepa.adapter.kd2.builder.EventBuilder;
 import de.fzi.cep.sepa.adapter.kd2.events.BiodataEvent;
 import de.fzi.cep.sepa.adapter.kd2.publisher.StreamPipesPublisher;
-import org.streampipes.commons.config.ConfigurationManager;
 
 import java.io.*;
 
@@ -15,7 +14,7 @@ public class Kd2Replay implements Runnable {
     private String kd2DataFileName;
 
     public Kd2Replay() {
-        kd2DataFileName = ConfigurationManager.getStreamPipesConfigFileLocation() + "data/kd2.csv";
+        kd2DataFileName = System.getProperty("user.home") + File.separator +".streampipes" +File.separator + "data/kd2.csv";
     }
 
     @Override

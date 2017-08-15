@@ -2,9 +2,9 @@ package org.streampipes.pe.sources.samples.main;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.commons.config.ClientConfiguration;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.ddm.DDMProducer;
 import org.streampipes.pe.sources.samples.drillbit.DrillBitProducer;
 import org.streampipes.pe.sources.samples.enriched.EnrichedEventProducer;
@@ -28,20 +28,18 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
     public static void main(String[] args) {
 
         LOG.info("Starting SourcesSamplesInit");
-        ClientConfiguration config = ClientConfiguration.INSTANCE;
-
-        if (config.isTwitterActive()) DeclarersSingleton.getInstance().add(new TwitterStreamProducer());
-        if (config.isMhwirthReplayActive()) {
+        if (SourcesConfig.INSTANCE.isTwitterActive()) DeclarersSingleton.getInstance().add(new TwitterStreamProducer());
+        if (SourcesConfig.INSTANCE.isMhwirthActive()) {
             DeclarersSingleton.getInstance().add(new DDMProducer())
                     .add(new DrillBitProducer())
                     .add(new EnrichedEventProducer())
                     .add(new RamProducer())
                     .add(new FrictionCoefficientProducer());
         }
-        if (config.isRandomNumberActive()) DeclarersSingleton.getInstance().add(new RandomDataProducer());
-        if (config.isTaxiActive()) DeclarersSingleton.getInstance().add(new NYCTaxiProducer());
-        if (config.isProveItActive()) DeclarersSingleton.getInstance().add(new ProveITEventProducer());
-        if (config.isHellaReplayActive()) {
+        if (SourcesConfig.INSTANCE.isRandomNumberActive()) DeclarersSingleton.getInstance().add(new RandomDataProducer());
+        if (SourcesConfig.INSTANCE.isTaxiActive()) DeclarersSingleton.getInstance().add(new NYCTaxiProducer());
+        if (SourcesConfig.INSTANCE.isProveItActive()) DeclarersSingleton.getInstance().add(new ProveITEventProducer());
+        if (SourcesConfig.INSTANCE.isHellaActive()) {
             DeclarersSingleton.getInstance().add(new VisualInspectionProducer())
                     .add(new MontracProducer())
                     .add(new MouldingMachineProducer())

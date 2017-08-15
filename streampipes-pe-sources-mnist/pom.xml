@@ -38,6 +38,10 @@
             <artifactId>json</artifactId>
             <version>20151123</version>
         </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-config</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

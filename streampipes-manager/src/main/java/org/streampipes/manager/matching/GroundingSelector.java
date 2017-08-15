@@ -1,7 +1,5 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.commons.config.BrokerConfig;
-import org.streampipes.commons.config.Configuration;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
 
@@ -16,14 +14,10 @@ public abstract class GroundingSelector {
 
     protected NamedSEPAElement source;
     protected Set<InvocableSEPAElement> targets;
-    protected BrokerConfig config;
 
     public GroundingSelector(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
         this.source = source;
         this.targets = targets;
-        this.config = Configuration
-                .getInstance()
-                .getBrokerConfig();
     }
 
     protected List<InvocableSEPAElement> buildInvocables() {
