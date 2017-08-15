@@ -22,9 +22,9 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 
-public class NumericalFilterController extends FlatEventProcessorDeclarer<NumericalFilterParameter> {
+public class NumericalFilterController extends StandaloneEventProcessorDeclarer<NumericalFilterParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

@@ -1,22 +1,24 @@
 package org.streampipes.wrapper.standalone.routing;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
 
 import java.util.Map;
 
-public class FlatSpOutputCollector extends FlatSpCollector implements
+public class FlatSpOutputCollector<T extends TransportProtocol> extends
+        FlatSpCollector<InternalEventProcessor<Map<String,
+        Object>>> implements
         InternalEventProcessor<Map<String,
-        Object>> {
+        Object>>, EventProcessorOutputCollector {
 
   private EventProducer<?> eventProducer;
 
-  public FlatSpOutputCollector(SpDataFormatDefinition dataFormatDefinition, EventProducer<?>
-          producer) {
-   super(dataFormatDefinition);
+  public FlatSpOutputCollector(T protocol, TransportFormat format) {
+   super(protocol, format);
     this.eventProducer = producer;
   }
 
@@ -29,13 +31,5 @@ public class FlatSpOutputCollector extends FlatSpCollector implements
     }
   }
 
-  @Override
-  protected void connect(TransportProtocol protocol) throws SpRuntimeException {
 
-  }
-
-  @Override
-  protected void disconnect() throws SpRuntimeException {
-
-  }
 }

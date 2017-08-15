@@ -9,7 +9,7 @@ import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Options;
@@ -18,7 +18,7 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CountController extends FlatEventProcessorDeclarer<CountParameter> {
+public class CountController extends StandaloneEventProcessorDeclarer<CountParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

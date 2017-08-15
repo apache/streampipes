@@ -19,11 +19,11 @@ import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
 import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
 
-public class TimestampController extends FlatEventProcessorDeclarer<TimestampParameter> {
+public class TimestampController extends StandaloneEventProcessorDeclarer<TimestampParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

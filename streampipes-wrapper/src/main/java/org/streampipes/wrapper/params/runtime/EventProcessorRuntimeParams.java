@@ -1,38 +1,44 @@
 package org.streampipes.wrapper.params.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.runtime.EventProcessor;
-import org.streampipes.wrapper.runtime.SpCollector;
+import org.streampipes.wrapper.routing.EventProcessorInputCollector;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
-				RuntimeParams<B, EventProcessor> { // B - Bind Type
+				RuntimeParams<B, EventProcessor<B>> { // B - Bind Type
 
-	private final Supplier<EventProcessor<B>> supplier;
+	private final EventProcessor<B> engine;
 
 
 	public EventProcessorRuntimeParams(Supplier<EventProcessor<B>> supplier,
 																		 B bindingParams) {
 		super(bindingParams);
-		this.supplier = supplier;
+		this.engine = supplier.get();
 	}
 
-	public EventProcessor<B> getPreparedEngine() {
-		EventProcessor<B> engine = supplier.get();
-		engine.bind(bindingParams);
+	public EventProcessor<?> getEngine() {
 		return engine;
 	}
 
-	protected abstract List<SpCollector<EventProcessor<B>>> getInputCollectors() throws
+
+	public void bindEngine() throws SpRuntimeException {
+		engine.bind(bindingParams, getOutputCollector());
+	}
+
+	public void discardEngine() {
+		engine.discard();
+	}
+
+	public abstract EventProcessorOutputCollector getOutputCollector()
+					throws
 					SpRuntimeException;
 
-	protected abstract SpCollector<InternalEventProcessor<Map<String, Object>>> getOutputCollector()
-					throws
+	public abstract List<EventProcessorInputCollector> getInputCollectors() throws
 					SpRuntimeException;
 
 }

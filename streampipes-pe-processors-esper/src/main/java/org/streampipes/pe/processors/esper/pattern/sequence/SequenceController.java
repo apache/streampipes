@@ -23,10 +23,10 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class SequenceController extends FlatEventProcessorDeclarer<SequenceParameters> {
+public class SequenceController extends StandaloneEventProcessorDeclarer<SequenceParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

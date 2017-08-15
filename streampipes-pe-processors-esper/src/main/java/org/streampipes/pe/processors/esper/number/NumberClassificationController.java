@@ -25,10 +25,10 @@ import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.commons.Utils;
 
-public class NumberClassificationController extends FlatEventProcessorDeclarer<NumberClassificationParameters> {
+public class NumberClassificationController extends StandaloneEventProcessorDeclarer<NumberClassificationParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

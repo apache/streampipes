@@ -1,11 +1,9 @@
 package org.streampipes.wrapper.runtime;
 
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-
-import java.util.Map;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
 
 public interface EventProcessor<B extends EventProcessorBindingParams> extends PipelineElement<B> {
 
-	void onEvent(Map<String, Object> event, String sourceInfo, SpCollector outputCollector);
-
+	void bind(B parameters, EventProcessorOutputCollector collector);
 }

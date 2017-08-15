@@ -18,6 +18,8 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     private String topic;
     private Producer<String, byte[]> producer;
 
+    private Boolean connected;
+
     public void publish(byte[] message) {
         producer.send(new ProducerRecord<>(topic, message));
     }
@@ -40,10 +42,17 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
         this.brokerUrl = protocolSettings.getBrokerHostname() +":" +protocolSettings.getKafkaPort();
         this.topic = protocolSettings.getTopicName();
         this.producer = new KafkaProducer<>(getProperties());
+        this.connected = true;
     }
 
     @Override
     public void disconnect() {
         this.producer.close();
+        this.connected = false;
+    }
+
+    @Override
+    public Boolean isConnected() {
+        return connected;
     }
 }

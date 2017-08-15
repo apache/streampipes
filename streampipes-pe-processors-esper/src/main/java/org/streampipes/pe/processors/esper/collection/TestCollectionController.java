@@ -14,10 +14,10 @@ import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 //import de.fzi.cep.sepa.client.util.DeclarerUtils;
 
-public class TestCollectionController extends FlatEventProcessorDeclarer<TestCollectionParameters> {
+public class TestCollectionController extends StandaloneEventProcessorDeclarer<TestCollectionParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

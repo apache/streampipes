@@ -12,4 +12,6 @@ public interface EventConsumer<TP extends TransportProtocol> {
             SpRuntimeException;
 
     void disconnect() throws SpRuntimeException;
+
+    Boolean isConnected();
 }

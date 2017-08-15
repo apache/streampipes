@@ -23,7 +23,7 @@ public abstract class EventProcessorDeclarer<B extends EventProcessorBindingPara
 		elementId = bindingParameters.getGraph().getElementId();
 
 		epRuntime = prepareRuntime(bindingParameters, supplier);
-		epRuntime.initRuntime();
+		epRuntime.bindRuntime();
 	}
 
 	@Override

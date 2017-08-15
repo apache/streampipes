@@ -7,7 +7,7 @@ import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -18,7 +18,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import java.util.Arrays;
 import java.util.List;
 
-public class DistributionController extends FlatEventProcessorDeclarer<DistributionParameters> {
+public class DistributionController extends StandaloneEventProcessorDeclarer<DistributionParameters> {
 
   @Override
   public SepaDescription declareModel() {

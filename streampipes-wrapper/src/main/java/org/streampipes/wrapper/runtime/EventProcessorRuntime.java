@@ -1,23 +1,33 @@
 package org.streampipes.wrapper.runtime;
 
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
 
-public abstract class EventProcessorRuntime { //
-// routing
-// container
+public abstract class EventProcessorRuntime extends
+				PipelineElementRuntime<EventProcessorRuntimeParams<?>> {
+	// routing container
 
-	protected EventProcessor<?> engine;
+	protected String instanceId;
 
 	public EventProcessorRuntime(EventProcessorRuntimeParams<?> params)
 	{
-		this.engine = params.getPreparedEngine();
+		super(params);
+		this.instanceId = RandomStringUtils.randomAlphabetic(8);
 	}
 
-	public void discardRuntime() {
+	public void discardRuntime() throws SpRuntimeException {
 		preDiscard();
-		engine.discard();
+		params.discardEngine();
+		params.getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
 		postDiscard();
+	}
+
+	public void bindRuntime() throws SpRuntimeException {
+		params.bindEngine();
+		params.getInputCollectors().forEach(is -> is.registerConsumer(instanceId, params.getEngine()));
+		initRuntime();
 	}
 	
 	public abstract void initRuntime();

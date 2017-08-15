@@ -15,4 +15,6 @@ public interface EventProducer<TP extends TransportProtocol> extends Serializabl
     void publish(byte[] event);
 
     void disconnect() throws SpRuntimeException;
+
+    Boolean isConnected();
 }

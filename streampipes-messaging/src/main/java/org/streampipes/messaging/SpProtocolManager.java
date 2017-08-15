@@ -1,6 +1,5 @@
 package org.streampipes.messaging;
 
-import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.impl.TransportProtocol;
 
 import java.util.ArrayList;
@@ -25,12 +24,10 @@ public enum SpProtocolManager {
     return availableProtocols;
   }
 
-  public <T extends TransportProtocol> SpProtocolDefinition<T> findDefinition(T
-                                                                         transportProtocol)
-          throws
-          SpRuntimeException {
+  public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T
+                                                                         transportProtocol) {
     // TODO add RDF URI for protocol in model
-    Optional<SpProtocolDefinition<T>> matchedProtocol = this.availableProtocols
+    return this.availableProtocols
             .stream()
             .filter
                     (adf -> adf.getTransportFormatRdfUri().equals(transportProtocol.getClass()
@@ -38,11 +35,5 @@ public enum SpProtocolManager {
             .map(s -> (SpProtocolDefinition<T>) s)
             .findFirst();
 
-    if (!matchedProtocol.isPresent()) {
-      throw new SpRuntimeException("Runtime Exception: could not find any supported data" +
-              " protocol");
-    } else {
-      return matchedProtocol.get();
-    }
   }
 }

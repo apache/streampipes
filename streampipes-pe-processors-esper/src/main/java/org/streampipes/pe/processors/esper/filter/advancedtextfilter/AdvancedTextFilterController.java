@@ -12,10 +12,10 @@ import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.container.util.DeclarerUtils;
 
-public class AdvancedTextFilterController extends FlatEventProcessorDeclarer<AdvancedTextFilterParameters> {
+public class AdvancedTextFilterController extends StandaloneEventProcessorDeclarer<AdvancedTextFilterParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

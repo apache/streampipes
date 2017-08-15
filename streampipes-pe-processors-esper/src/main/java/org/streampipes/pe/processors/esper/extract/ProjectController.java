@@ -16,10 +16,10 @@ import org.streampipes.model.impl.output.CustomOutputStrategy;
 import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class ProjectController extends FlatEventProcessorDeclarer<ProjectParameter> {
+public class ProjectController extends StandaloneEventProcessorDeclarer<ProjectParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

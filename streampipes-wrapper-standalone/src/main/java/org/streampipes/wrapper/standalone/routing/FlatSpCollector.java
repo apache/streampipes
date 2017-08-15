@@ -1,25 +1,28 @@
 package org.streampipes.wrapper.standalone.routing;
 
-import org.streampipes.dataformat.SpDataFormatDefinition;
-import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.wrapper.runtime.SpCollector;
+import org.streampipes.model.impl.TransportFormat;
+import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.wrapper.routing.PipelineElementCollector;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class FlatSpCollector implements SpCollector<Map<S>> {
+public abstract class FlatSpCollector<T extends TransportProtocol, C> implements
+        PipelineElementCollector<C> {
 
-  protected Map<String, InternalEventProcessor<Map<String, Object>>> consumers;
-  protected SpDataFormatDefinition dataFormatDefinition;
+  protected Map<String, C> consumers;
 
-  public FlatSpCollector(SpDataFormatDefinition dataFormatDefinition) {
-    this.dataFormatDefinition = dataFormatDefinition;
+  protected T transportProtocol;
+  protected TransportFormat transportFormat;
+
+
+  public FlatSpCollector(T protocol, TransportFormat format) {
+    this.transportProtocol = protocol;
+    this.transportFormat = format;
     this.consumers = new HashMap<>();
-
   }
 
-  public void registerConsumer(String routeId, InternalEventProcessor<Map<String, Object>>
-          consumer) {
+  public void registerConsumer(String routeId, C consumer) {
     consumers.put(routeId, consumer);
   }
 

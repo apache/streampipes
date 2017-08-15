@@ -18,7 +18,7 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
 import org.streampipes.commons.Utils;
 
 import java.net.URI;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BinaryMathController extends FlatEventProcessorDeclarer<BinaryMathParameter> {
+public class BinaryMathController extends StandaloneEventProcessorDeclarer<BinaryMathParameter> {
 
 	@Override
 	public SepaDescription declareModel() {
