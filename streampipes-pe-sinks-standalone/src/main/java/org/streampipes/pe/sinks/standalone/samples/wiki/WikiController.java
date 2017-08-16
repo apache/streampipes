@@ -50,14 +50,5 @@ public class WikiController extends ActionController {
     stopKafkaConsumer();
     return new Response(pipelineId, true);
   }
-    @Override
-  public boolean isVisualizable() {
-    return false;
-  }
-
-  @Override
-  public String getHtml(SecInvocation graph) {
-    return null;
-  }
 
 }

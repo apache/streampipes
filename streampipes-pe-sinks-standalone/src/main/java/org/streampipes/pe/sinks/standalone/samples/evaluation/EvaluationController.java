@@ -1,12 +1,5 @@
 package org.streampipes.pe.sinks.standalone.samples.evaluation;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -23,6 +16,13 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MessageFormat;
 import org.streampipes.model.vocabulary.SO;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.pe.sinks.standalone.samples.ActionController;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EvaluationController extends ActionController {
 
@@ -87,16 +87,5 @@ public class EvaluationController extends ActionController {
 		return new Response(this.elementId, true);
 	}
 
-	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation invocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

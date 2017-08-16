@@ -30,16 +30,6 @@ public class RabbitMqController extends ActionController {
   }
 
   @Override
-  public boolean isVisualizable() {
-    return false;
-  }
-
-  @Override
-  public String getHtml(SecInvocation graph) {
-    return null;
-  }
-
-  @Override
   public Response invokeRuntime(SecInvocation sec) {
 
     DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(sec);

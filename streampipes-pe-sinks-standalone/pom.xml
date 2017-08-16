@@ -46,6 +46,14 @@
             <artifactId>streampipes-messaging-jms</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-dataformat-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-wrapper-standalone</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
             <version>1.8</version>

@@ -1,13 +1,13 @@
 package org.streampipes.pe.sinks.standalone.samples.couchdb;
 
-import java.util.Arrays;
-
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+
+import java.util.Arrays;
 
 public class CouchDbController  implements SemanticEventConsumerDeclarer {
 
@@ -30,16 +30,5 @@ public class CouchDbController  implements SemanticEventConsumerDeclarer {
         return new Response(pipelineId, true);
     }
 
-	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

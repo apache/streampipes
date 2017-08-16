@@ -95,15 +95,5 @@ public class KafkaController extends ActionController {
         return new Response(pipelineId, true);
     }
 
-	@Override
-	public boolean isVisualizable() {
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -1,11 +1,5 @@
 package org.streampipes.pe.sinks.standalone.samples.debs;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.EventSchema;
@@ -17,6 +11,12 @@ import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.pe.sinks.standalone.samples.ActionController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DebsOutputController extends ActionController {
 
@@ -68,16 +68,5 @@ public class DebsOutputController extends ActionController {
         return new Response(pipelineId, true);
     }
 
-	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation invocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

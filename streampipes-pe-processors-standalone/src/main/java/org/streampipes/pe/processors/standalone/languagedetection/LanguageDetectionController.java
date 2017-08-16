@@ -4,7 +4,6 @@ import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -19,6 +18,8 @@ import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.processors.standalone.config.Config;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -66,21 +67,14 @@ public class LanguageDetectionController extends StandaloneEventProcessorDeclare
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-
+	public ConfiguredEventProcessor<LanguageDetectionParameters, EventProcessor<LanguageDetectionParameters>>
+	onInvocation(SepaInvocation sepa) {
 		String textMapping = SepaUtils.getMappingPropertyName(sepa,
-				"text");
-				
+						"text");
+
 		LanguageDetectionParameters staticParam = new LanguageDetectionParameters(sepa, textMapping);
-		
-		try {
-			invokeEPRuntime(staticParam, LanguageDetection::new);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), true);
-		}
-		
+
+		return new ConfiguredEventProcessor<>(staticParam, LanguageDetection::new);
 	}
 
 }

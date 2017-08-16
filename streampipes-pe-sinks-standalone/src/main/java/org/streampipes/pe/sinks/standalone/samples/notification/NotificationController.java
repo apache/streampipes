@@ -24,17 +24,6 @@ import java.util.List;
 public class NotificationController extends ActionController {
 
 	@Override
-	public boolean isVisualizable() {
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public SecDescription declareModel() {
 		SecDescription sec = new SecDescription("notification", "Notification", "Displays a notification in the UI panel", "");
 		sec.setIconUrl(ActionConfig.iconBaseUrl + "/notification_icon.png");

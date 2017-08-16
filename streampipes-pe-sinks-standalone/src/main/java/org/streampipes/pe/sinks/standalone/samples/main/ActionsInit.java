@@ -1,5 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.main;
 
+import org.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.alarm.AlarmLightController;
 import org.streampipes.pe.sinks.standalone.samples.couchdb.CouchDbController;
@@ -31,6 +33,8 @@ public class ActionsInit extends StandaloneModelSubmitter {
 
     DeclarersSingleton.getInstance().setPort(ActionConfig.INSTANCE.getPort());
     DeclarersSingleton.getInstance().setHostName(ActionConfig.INSTANCE.getHost());
+    DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
+    DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
 
     new ActionsInit().init();
 

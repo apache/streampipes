@@ -1,14 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.jms;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.jms.JMSException;
-
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.messaging.jms.ActiveMQConsumer;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.model.impl.EcType;
@@ -22,6 +14,14 @@ import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.pe.sinks.standalone.messaging.jms.ActiveMQConsumer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.jms.JMSException;
 
 public class JMSConsumer implements SemanticEventConsumerDeclarer{
 
@@ -89,15 +89,5 @@ public class JMSConsumer implements SemanticEventConsumerDeclarer{
 		return null;
 	}
 
-	@Override
-	public boolean isVisualizable() {
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -58,16 +58,6 @@ public class DashboardController extends ActionController {
     }
 
     @Override
-    public boolean isVisualizable() {
-        return false;
-    }
-
-    @Override
-    public String getHtml(SecInvocation graph) {
-        return null;
-    }
-
-    @Override
     public Response invokeRuntime(SecInvocation invocationGraph) {
         if (!saveToCouchDB(invocationGraph)) {
             return new Response(invocationGraph.getElementId(), false, "The schema couldn't be stored in the couchDB");

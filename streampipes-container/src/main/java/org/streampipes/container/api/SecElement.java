@@ -1,5 +1,13 @@
 package org.streampipes.container.api;
 
+import org.streampipes.container.declarer.InvocableDeclarer;
+import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.container.init.RunningInstances;
+import org.streampipes.container.util.Util;
+import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.impl.graph.SecInvocation;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -8,14 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.init.RunningInstances;
-import org.streampipes.container.util.Util;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.graph.SecInvocation;
 
 @Path("/sec")
 public class SecElement extends InvocableElement<SecInvocation, SemanticEventConsumerDeclarer> {
@@ -48,8 +48,8 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
             SemanticEventConsumerDeclarer instanceDeclarer = (SemanticEventConsumerDeclarer) runningInstance;
             SecInvocation desctionDeclarer = (SecInvocation) description;
 
-
-            return getResponse(instanceDeclarer.getHtml(desctionDeclarer));
+            // TODO was previous getHtml, do we still need the whole method?
+            return getResponse("HTML removed");
 
 
         } else {

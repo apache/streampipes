@@ -55,16 +55,5 @@ public class FileController extends ActionController {
         return new Response(pipelineId, true);
     }
 
-	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation invocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
