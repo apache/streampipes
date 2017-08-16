@@ -1,5 +1,7 @@
 package org.streampipes.messaging.kafka;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.messaging.EventProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -19,6 +21,8 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     private Producer<String, byte[]> producer;
 
     private Boolean connected;
+
+    private static final Logger LOG = LoggerFactory.getLogger(SpKafkaProducer.class);
 
     public SpKafkaProducer() {
 
@@ -54,6 +58,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     @Override
     public void connect(KafkaTransportProtocol protocolSettings) {
+        LOG.info("Kafka producer: Connecting to " +protocolSettings.getTopicName());
         this.brokerUrl = protocolSettings.getBrokerHostname() +":" +protocolSettings.getKafkaPort();
         this.topic = protocolSettings.getTopicName();
         this.producer = new KafkaProducer<>(getProperties());
@@ -62,12 +67,13 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     @Override
     public void disconnect() {
+        LOG.info("Kafka producer: Disconnecting from " +topic);
         this.producer.close();
         this.connected = false;
     }
 
     @Override
     public Boolean isConnected() {
-        return connected;
+        return connected != null && connected;
     }
 }

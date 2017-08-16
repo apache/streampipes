@@ -20,7 +20,7 @@ import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,7 +30,7 @@ import java.util.List;
 
 
 
-public class TextFilterController extends StandaloneEventProcessorDeclarer<TextFilterParameter> {
+public class TextFilterController extends StandaloneEventProcessorDeclarerSingleton<TextFilterParameter> {
 	
 	@Override
 	public SepaDescription declareModel() {

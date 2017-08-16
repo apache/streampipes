@@ -23,11 +23,11 @@ public abstract class EventProcessorBindingParams extends
 	
 	public EventProcessorBindingParams(SepaInvocation graph)
 	{
-		super(graph);
+		super(new SepaInvocation(graph));
 		this.outEventType = graph.getOutputStream().getEventSchema().toRuntimeMap();
 		outputStream = graph.getOutputStream();
 		EventGrounding outputGrounding = outputStream.getEventGrounding();
-		outName = topicPrefix + outputGrounding.getTransportProtocol().getTopicName();
+		outName = outputGrounding.getTransportProtocol().getTopicName();
 		
 	}
 

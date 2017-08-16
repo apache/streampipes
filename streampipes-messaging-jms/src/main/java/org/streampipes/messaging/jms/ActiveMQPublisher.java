@@ -23,8 +23,8 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 	// TODO backwards compatibility, remove later
 	public ActiveMQPublisher(String url, String topic) {
 		JmsTransportProtocol protocol = new JmsTransportProtocol();
-		protocol.setBrokerHostname(url.split(":")[0]);
-		protocol.setPort(Integer.parseInt(url.split(":")[1]));
+		protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
+		protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":")+1, url.length())));
 		protocol.setTopicName(topic);
 		try {
 			connect(protocol);

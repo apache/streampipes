@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.SpDataFormatDefinition;
-import org.streampipes.model.vocabulary.MessageFormat;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,12 +16,6 @@ public class JsonDataFormatDefinition implements SpDataFormatDefinition {
   public JsonDataFormatDefinition() {
     this.objectMapper = new ObjectMapper();
   }
-
-  @Override
-  public String getTransportFormatRdfUri() {
-    return MessageFormat.Json;
-  }
-
 
   @Override
   public Map<String, Object> toMap(byte[] event) throws SpRuntimeException {

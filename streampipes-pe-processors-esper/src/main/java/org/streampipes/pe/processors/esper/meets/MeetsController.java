@@ -23,10 +23,10 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class MeetsController extends StandaloneEventProcessorDeclarer<MeetsParameters> {
+public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<MeetsParameters> {
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {

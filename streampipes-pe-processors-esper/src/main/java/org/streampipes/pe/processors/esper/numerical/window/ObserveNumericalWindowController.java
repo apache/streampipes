@@ -22,14 +22,14 @@ import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ObserveNumericalWindowController extends StandaloneEventProcessorDeclarer<ObserveNumericalWindowParameters> {
+public class ObserveNumericalWindowController extends StandaloneEventProcessorDeclarerSingleton<ObserveNumericalWindowParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

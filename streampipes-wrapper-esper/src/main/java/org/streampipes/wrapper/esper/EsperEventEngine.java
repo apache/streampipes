@@ -5,7 +5,6 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
-import com.espertech.esper.event.map.MapEventBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +26,10 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	protected EPServiceProvider epService;
 	protected List<EPStatement> epStatements;	
 	
-	private AbstractQueueRunnable<MapEventBean[]> queue;
+	private AbstractQueueRunnable<EventBean[]> queue;
 	private List<String> eventTypeNames = new ArrayList<>();
 	
-	private static int i = 0;
-	private long lastTimestamp = 0;
-	
-	private static final Logger logger = LoggerFactory.getLogger(EsperEventEngine.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(EsperEventEngine.class);
 	
 	@Override
 	public void bind(T parameters, EventProcessorOutputCollector collector) {
@@ -42,14 +38,14 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 			
 		epService = EsperEngineSettings.epService;
 
-		System.out.println("Configuring event types for graph " +parameters.getGraph().getName());
+		LOG.info("Configuring event types for graph " +parameters.getGraph().getName());
 		parameters.getInEventTypes().entrySet().forEach(e -> {
 			Map inTypeMap = e.getValue();
 			checkAndRegisterEventType(e.getKey(), inTypeMap);
 		});
 		
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
-		checkAndRegisterEventType("topic://" +parameters.getGraph().getOutputStream().getEventGrounding()
+		checkAndRegisterEventType(parameters.getGraph().getOutputStream().getEventGrounding()
 						.getTransportProtocol().getTopicName(), parameters.getOutEventType());
 		
 		List<String> statements = statements(parameters);
@@ -83,13 +79,13 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	private void registerEventTypeIfNotExists(String eventTypeName, Map<String, Object> typeMap)
 	{ 	
 		try {
-			System.out.println("Registering event type, " +eventTypeName);
+			LOG.info("Registering event type, " +eventTypeName);
 			epService.getEPAdministrator().getConfiguration().addEventType(eventTypeName, typeMap);
 			eventTypeNames.add(eventTypeName);
 		} catch (ConfigurationException e)
 		{
 			e.printStackTrace();
-			System.out.println("Event type does already exist, " +eventTypeName);
+			LOG.error("Event type does already exist, " +eventTypeName);
 		}
 	}
 	
@@ -100,7 +96,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		queue.start();
 		for(EPStatement epStatement : epStatements)
 		{
-			logger.info("Registering statement " +epStatement.getText());
+			LOG.info("Registering statement " +epStatement.getText());
 			
 			if (epStatement.getText().startsWith("select")) 
 			{
@@ -125,13 +121,12 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		//MapUtils.debugPrint(System.out, "", event);
 		//if (i % 10000 == 0) System.out.println(i +" in Esper.");
-		i++;
 		epService.getEPRuntime().sendEvent(event, sourceInfo);
 	}
 
 	@Override
 	public void discard() {
-		logger.info("Removing existing statements");
+		LOG.info("Removing existing statements");
 		for(EPStatement epStatement : epStatements)
 		{
 			epService.getEPAdministrator().getStatement(epStatement.getName()).removeAllListeners();
@@ -145,21 +140,21 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 					epService.getEPAdministrator().getConfiguration().removeEventType(eventName, false);
 				} catch (ConfigurationException ce)
 				{
-					logger.info("Event type used in another statement which is still running, skipping...");
+					LOG.error("Event type used in another statement which is still running, skipping...");
 				}
 			}
 		
 		queue.interrupt();
 	}
 	
-	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<MapEventBean[]> queue) {
+	private static UpdateListener listenerSendingTo(AbstractQueueRunnable<EventBean[]> queue) {
 		return new UpdateListener() {
 				
 			@Override
 			public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 				try {
-					if (newEvents != null) queue.add((MapEventBean[]) newEvents);
-					else queue.add((MapEventBean[]) oldEvents);
+					if (newEvents != null) queue.add((EventBean[]) newEvents);
+					else queue.add((EventBean[]) oldEvents);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

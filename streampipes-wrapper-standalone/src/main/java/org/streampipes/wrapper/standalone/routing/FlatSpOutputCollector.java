@@ -5,6 +5,7 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class FlatSpOutputCollector<T extends TransportProtocol> extends
   public void disconnect() throws SpRuntimeException {
     if (protocolDefinition.getProducer().isConnected()) {
       protocolDefinition.getProducer().disconnect();
+      ProtocolManager.removeOutputCollector(transportProtocol);
     }
   }
 }

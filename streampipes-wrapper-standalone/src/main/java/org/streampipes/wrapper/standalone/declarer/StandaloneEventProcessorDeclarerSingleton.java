@@ -8,14 +8,14 @@ import org.streampipes.wrapper.standalone.param.StandaloneEventProcessorRuntimeP
 
 import java.util.function.Supplier;
 
-public abstract class StandaloneEventProcessorDeclarer<B extends EventProcessorBindingParams> extends EventProcessorDeclarer<B, StandaloneEventProcessorRuntime> {
+public abstract class StandaloneEventProcessorDeclarerSingleton<B extends EventProcessorBindingParams> extends EventProcessorDeclarer<B, StandaloneEventProcessorRuntime> {
 
   @Override
   public StandaloneEventProcessorRuntime prepareRuntime(B bindingParameters,
                                                         Supplier<EventProcessor<B>> supplier) {
 
     StandaloneEventProcessorRuntimeParams<B> runtimeParams = new StandaloneEventProcessorRuntimeParams<>
-            (supplier, bindingParameters, false);
+            (supplier, bindingParameters, true);
 
     return new StandaloneEventProcessorRuntime(runtimeParams);
   }

@@ -20,14 +20,14 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TopXController extends StandaloneEventProcessorDeclarer<TopXParameter> {
+public class TopXController extends StandaloneEventProcessorDeclarerSingleton<TopXParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

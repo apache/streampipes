@@ -19,7 +19,7 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class MinShuttleTimeController extends StandaloneEventProcessorDeclarer<MinShuttleTimeParameters> {
+public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSingleton<MinShuttleTimeParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

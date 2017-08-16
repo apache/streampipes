@@ -2,6 +2,7 @@ package org.streampipes.dataformat;
 
 import org.streampipes.model.impl.TransportFormat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,13 +10,17 @@ public enum SpDataFormatManager {
 
   INSTANCE;
 
-  private List<SpDataFormatDefinition> availableDataFormats;
+  private List<SpDataFormatFactory> availableDataFormats;
 
-  public void register(SpDataFormatDefinition dataFormatDefinition) {
+  SpDataFormatManager() {
+    this.availableDataFormats = new ArrayList<>();
+  }
+
+  public void register(SpDataFormatFactory dataFormatDefinition) {
     availableDataFormats.add(dataFormatDefinition);
   }
 
-  public List<SpDataFormatDefinition> getAvailableDataFormats() {
+  public List<SpDataFormatFactory> getAvailableDataFormats() {
     return availableDataFormats;
   }
 
@@ -29,6 +34,7 @@ public enum SpDataFormatManager {
                             .stream()
                             .anyMatch(tf -> tf.toString().equals(adf
                                     .getTransportFormatRdfUri())))
+            .map(SpDataFormatFactory::createInstance)
             .findFirst();
 
   }

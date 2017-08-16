@@ -1,15 +1,12 @@
 package org.streampipes.container.init;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.dataformat.SpDataFormatDefinition;
+import org.streampipes.dataformat.SpDataFormatFactory;
 import org.streampipes.dataformat.SpDataFormatManager;
-import org.streampipes.messaging.SpProtocolDefinition;
+import org.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.streampipes.messaging.SpProtocolManager;
 
 import java.util.ArrayList;
@@ -66,11 +63,11 @@ public class DeclarersSingleton {
         return result;
     }
 
-    public void registerProtocol(SpProtocolDefinition<?> protocol) {
+    public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
         SpProtocolManager.INSTANCE.register(protocol);
     }
 
-    public void registerDataFormat(SpDataFormatDefinition dataFormatDefinition) {
+    public void registerDataFormat(SpDataFormatFactory dataFormatDefinition) {
         SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
     }
 

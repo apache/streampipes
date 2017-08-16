@@ -6,6 +6,7 @@ import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.wrapper.routing.EventProcessorInputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 public class FlatSpInputCollector<T extends TransportProtocol> extends
         FlatSpCollector<T, EventProcessor<?>>
@@ -54,6 +55,7 @@ public class FlatSpInputCollector<T extends TransportProtocol> extends
     if (protocolDefinition.getConsumer().isConnected()) {
       if (consumers.size() == 0) {
         protocolDefinition.getConsumer().disconnect();
+        ProtocolManager.removeInputCollector(transportProtocol);
       }
     }
   }

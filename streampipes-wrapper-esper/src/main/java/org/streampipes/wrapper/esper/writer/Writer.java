@@ -1,8 +1,8 @@
 package org.streampipes.wrapper.esper.writer;
 
-import com.espertech.esper.event.map.MapEventBean;
+import com.espertech.esper.client.EventBean;
 
 public interface Writer {
 
-	void onEvent(MapEventBean bean);
+	void onEvent(EventBean bean);
 }

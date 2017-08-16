@@ -18,7 +18,7 @@ public abstract class BindingParams<I extends InvocableSEPAElement> {
     this.graph = graph;
     this.inEventTypes = new HashMap<>();
     graph.getInputStreams().forEach(is ->
-            inEventTypes.put("topic://" +is.getEventGrounding().getTransportProtocol().getTopicName(), is.getEventSchema().toRuntimeMap()));
+            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicName(), is.getEventSchema().toRuntimeMap()));
 
     graph.getInputStreams().forEach(s -> inputStreamParams.add(new InputStreamParams(s)));
   }

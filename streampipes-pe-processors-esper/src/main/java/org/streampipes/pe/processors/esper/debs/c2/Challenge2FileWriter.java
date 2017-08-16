@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.debs.c2;
 
-import com.espertech.esper.event.map.MapEventBean;
+import com.espertech.esper.client.EventBean;
 import com.google.gson.Gson;
 import org.streampipes.pe.processors.esper.debs.c1.DebsOutputParameters;
 import org.streampipes.wrapper.esper.writer.Writer;
@@ -23,7 +23,7 @@ public class Challenge2FileWriter implements Writer {
 	}
 	
 	@Override
-	public void onEvent(MapEventBean bean) {
+	public void onEvent(EventBean bean) {
 		//gson.toJson(bean.getUnderlying());
 		//System.out.println(gson.toJson(bean.getUnderlying()));
 	}

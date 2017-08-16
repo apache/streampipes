@@ -18,14 +18,14 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShuttleTimeController extends StandaloneEventProcessorDeclarer<ShuttleTimeParameters> {
+public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingleton<ShuttleTimeParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

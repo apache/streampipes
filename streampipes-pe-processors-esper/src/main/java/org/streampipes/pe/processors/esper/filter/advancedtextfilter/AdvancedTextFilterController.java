@@ -9,12 +9,12 @@ import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AdvancedTextFilterController extends StandaloneEventProcessorDeclarer<AdvancedTextFilterParameters> {
+public class AdvancedTextFilterController extends StandaloneEventProcessorDeclarerSingleton<AdvancedTextFilterParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

@@ -18,9 +18,8 @@ public abstract class EventProcessorRuntime extends
 	}
 
 	public void discardRuntime() throws SpRuntimeException {
-		preDiscard();
-		params.discardEngine();
 		params.getInputCollectors().forEach(is -> is.unregisterConsumer(instanceId));
+		params.discardEngine();
 		postDiscard();
 	}
 
@@ -31,8 +30,6 @@ public abstract class EventProcessorRuntime extends
 	}
 	
 	public abstract void initRuntime() throws SpRuntimeException;
-	
-	public abstract void preDiscard() throws SpRuntimeException;
 	
 	public abstract void postDiscard() throws SpRuntimeException;
 }

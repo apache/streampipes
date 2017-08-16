@@ -23,18 +23,12 @@ public class StandaloneEventProcessorRuntime extends EventProcessorRuntime {
 	}
 
 	@Override
-	public void preDiscard() throws SpRuntimeException {
+	public void postDiscard() throws SpRuntimeException {
 		for(EventProcessorInputCollector eventProcessorInputCollector : params.getInputCollectors()) {
 			eventProcessorInputCollector.disconnect();
 		}
 
 		params.getOutputCollector().disconnect();
-
-	}
-
-	@Override
-	public void postDiscard() throws SpRuntimeException {
-
 	}
 
 }

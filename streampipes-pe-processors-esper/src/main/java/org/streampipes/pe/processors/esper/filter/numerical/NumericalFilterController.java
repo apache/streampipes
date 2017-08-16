@@ -18,13 +18,13 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NumericalFilterController extends StandaloneEventProcessorDeclarer<NumericalFilterParameter> {
+public class NumericalFilterController extends StandaloneEventProcessorDeclarerSingleton<NumericalFilterParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

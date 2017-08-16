@@ -6,14 +6,14 @@ import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 
-public class EventRateController extends StandaloneEventProcessorDeclarer<EventRateParameter> {
+public class EventRateController extends StandaloneEventProcessorDeclarerSingleton<EventRateParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

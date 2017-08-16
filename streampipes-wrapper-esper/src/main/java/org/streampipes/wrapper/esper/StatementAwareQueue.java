@@ -1,9 +1,9 @@
 package org.streampipes.wrapper.esper;
 
-import com.espertech.esper.event.map.MapEventBean;
+import com.espertech.esper.client.EventBean;
 import org.streampipes.wrapper.esper.writer.Writer;
 
-public class StatementAwareQueue extends AbstractQueueRunnable<MapEventBean[]>{
+public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{
 
 	private int counter = 0;
 	private Writer writer;
@@ -19,7 +19,7 @@ public class StatementAwareQueue extends AbstractQueueRunnable<MapEventBean[]>{
 	}
 
 	@Override
-	protected void doNext(MapEventBean[] newEvents) throws Exception {
+	protected void doNext(EventBean[] newEvents) throws Exception {
 		currentTimestamp = System.currentTimeMillis();
 		counter++;
 		if (counter % 100000 == 0) System.out.println(counter + " Events received.");

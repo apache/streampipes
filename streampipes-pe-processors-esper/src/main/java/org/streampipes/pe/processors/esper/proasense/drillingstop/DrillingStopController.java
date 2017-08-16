@@ -24,9 +24,9 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class DrillingStopController extends StandaloneEventProcessorDeclarer<DrillingStopParameters> {
+public class DrillingStopController extends StandaloneEventProcessorDeclarerSingleton<DrillingStopParameters> {
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {

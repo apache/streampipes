@@ -10,12 +10,12 @@ import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TestCollectionController extends StandaloneEventProcessorDeclarer<TestCollectionParameters> {
+public class TestCollectionController extends StandaloneEventProcessorDeclarerSingleton<TestCollectionParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

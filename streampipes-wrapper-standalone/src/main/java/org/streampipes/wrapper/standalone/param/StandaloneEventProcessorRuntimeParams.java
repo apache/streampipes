@@ -36,7 +36,7 @@ public class StandaloneEventProcessorRuntimeParams<B extends EventProcessorBindi
 
   @Override
   public EventProcessorOutputCollector getOutputCollector() throws SpRuntimeException {
-    return ProtocolManager.makeOutputCollector(bindingParams.getGraph().getOutputStream()
+    return ProtocolManager.findOutputCollector(bindingParams.getGraph().getOutputStream()
             .getEventGrounding().getTransportProtocol(), bindingParams.getGraph().getOutputStream
             ().getEventGrounding().getTransportFormats().get(0));
   }

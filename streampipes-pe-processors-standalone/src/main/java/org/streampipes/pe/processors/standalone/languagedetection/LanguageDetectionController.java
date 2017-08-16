@@ -19,13 +19,13 @@ import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.processors.standalone.config.Config;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LanguageDetectionController extends StandaloneEventProcessorDeclarer<LanguageDetectionParameters> {
+public class LanguageDetectionController extends StandaloneEventProcessorDeclarerSingleton<LanguageDetectionParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

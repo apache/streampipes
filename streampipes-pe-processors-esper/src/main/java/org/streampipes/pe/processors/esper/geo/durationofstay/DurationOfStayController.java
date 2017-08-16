@@ -24,14 +24,14 @@ import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DurationOfStayController extends StandaloneEventProcessorDeclarer<DurationOfStayParameters> {
+public class DurationOfStayController extends StandaloneEventProcessorDeclarerSingleton<DurationOfStayParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

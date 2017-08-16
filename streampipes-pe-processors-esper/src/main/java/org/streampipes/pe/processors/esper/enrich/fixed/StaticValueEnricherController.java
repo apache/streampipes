@@ -22,9 +22,9 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class StaticValueEnricherController extends StandaloneEventProcessorDeclarer<StaticValueEnricherParameters> {
+public class StaticValueEnricherController extends StandaloneEventProcessorDeclarerSingleton<StaticValueEnricherParameters> {
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {

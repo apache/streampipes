@@ -7,18 +7,21 @@ import org.streampipes.model.impl.KafkaTransportProtocol;
 
 public class SpKafkaProtocol implements SpProtocolDefinition<KafkaTransportProtocol> {
 
-  @Override
-  public String getTransportFormatRdfUri() {
-    return KafkaTransportProtocol.class.getCanonicalName();
+  private EventConsumer<KafkaTransportProtocol> kafkaConsumer;
+  private EventProducer<KafkaTransportProtocol> kafkaProducer;
+
+  public SpKafkaProtocol() {
+    this.kafkaConsumer = new SpKafkaConsumer();
+    this.kafkaProducer = new SpKafkaProducer();
   }
 
   @Override
   public EventConsumer<KafkaTransportProtocol> getConsumer() {
-    return new SpKafkaConsumer();
+    return kafkaConsumer;
   }
 
   @Override
   public EventProducer<KafkaTransportProtocol> getProducer() {
-    return new SpKafkaProducer();
+    return kafkaProducer;
   }
 }

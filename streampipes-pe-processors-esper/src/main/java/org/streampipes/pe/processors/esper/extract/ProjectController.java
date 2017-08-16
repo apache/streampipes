@@ -13,14 +13,14 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class ProjectController extends StandaloneEventProcessorDeclarer<ProjectParameter> {
+public class ProjectController extends StandaloneEventProcessorDeclarerSingleton<ProjectParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

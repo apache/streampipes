@@ -19,13 +19,13 @@ import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DebsChallenge2Controller extends StandaloneEventProcessorDeclarer<DebsChallenge2Parameters> {
+public class DebsChallenge2Controller extends StandaloneEventProcessorDeclarerSingleton<DebsChallenge2Parameters> {
 
 	private EventProperty xCellProperty;
 	private EventProperty yCellProperty;

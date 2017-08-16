@@ -19,9 +19,9 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.output.RenameOutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class ComposeController extends StandaloneEventProcessorDeclarer<ComposeParameters> {
+public class ComposeController extends StandaloneEventProcessorDeclarerSingleton<ComposeParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

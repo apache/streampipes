@@ -3,6 +3,8 @@ package org.streampipes.messaging.kafka;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
@@ -23,7 +25,9 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     private String topic;
     private String groupId;
     private InternalEventProcessor<byte[]> eventProcessor;
-    private volatile boolean isRunning = true;
+    private volatile boolean isRunning;
+
+    private static final Logger LOG = LoggerFactory.getLogger(SpKafkaConsumer.class);
 
     public SpKafkaConsumer() {
 
@@ -52,6 +56,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
             for (ConsumerRecord<String, byte[]> record : records)
                 eventProcessor.onEvent(record.value());
         }
+        LOG.info("Closing Kafka Consumer.");
         kafkaConsumer.close();
     }
 
@@ -73,10 +78,12 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     public void connect(KafkaTransportProtocol protocol, InternalEventProcessor<byte[]>
             eventProcessor)
             throws SpRuntimeException {
+        LOG.info("Kafka consumer: Connecting to " +protocol.getTopicName());
         this.eventProcessor = eventProcessor;
         this.kafkaUrl = protocol.getBrokerHostname() +":" +protocol.getKafkaPort();
         this.topic = protocol.getTopicName();
         this.groupId = UUID.randomUUID().toString();
+        this.isRunning = true;
 
         Thread thread = new Thread(this);
         thread.start();
@@ -84,7 +91,9 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
     @Override
     public void disconnect() throws SpRuntimeException {
+        LOG.info("Kafka consumer: Disconnecting from " +topic);
         this.isRunning = false;
+
     }
 
     @Override

@@ -15,13 +15,13 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AbsenceController extends StandaloneEventProcessorDeclarer<AbsenceParameters> {
+public class AbsenceController extends StandaloneEventProcessorDeclarerSingleton<AbsenceParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

@@ -34,10 +34,10 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 
-public class MovementController extends StandaloneEventProcessorDeclarer<MovementParameter> {
+public class MovementController extends StandaloneEventProcessorDeclarerSingleton<MovementParameter> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger("MovementTest");

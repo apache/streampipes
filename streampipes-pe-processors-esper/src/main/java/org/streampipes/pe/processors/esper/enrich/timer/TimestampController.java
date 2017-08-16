@@ -17,13 +17,13 @@ import org.streampipes.model.impl.quality.Frequency;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TimestampController extends StandaloneEventProcessorDeclarer<TimestampParameter> {
+public class TimestampController extends StandaloneEventProcessorDeclarerSingleton<TimestampParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

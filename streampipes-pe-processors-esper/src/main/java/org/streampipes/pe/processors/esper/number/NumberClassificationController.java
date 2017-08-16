@@ -20,7 +20,7 @@ import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NumberClassificationController extends StandaloneEventProcessorDeclarer<NumberClassificationParameters> {
+public class NumberClassificationController extends StandaloneEventProcessorDeclarerSingleton<NumberClassificationParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

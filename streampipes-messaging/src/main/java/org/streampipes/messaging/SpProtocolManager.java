@@ -10,17 +10,17 @@ public enum SpProtocolManager {
 
   INSTANCE;
 
-  private List<SpProtocolDefinition<? extends TransportProtocol>> availableProtocols;
+  private List<SpProtocolDefinitionFactory<? extends TransportProtocol>> availableProtocols;
 
   SpProtocolManager() {
     this.availableProtocols = new ArrayList<>();
   }
 
-  public void register(SpProtocolDefinition<? extends TransportProtocol> protocolDefinition) {
+  public void register(SpProtocolDefinitionFactory<? extends TransportProtocol> protocolDefinition) {
     availableProtocols.add(protocolDefinition);
   }
 
-  public List<SpProtocolDefinition<? extends TransportProtocol>> getAvailableProtocols() {
+  public List<SpProtocolDefinitionFactory<? extends TransportProtocol>> getAvailableProtocols() {
     return availableProtocols;
   }
 
@@ -30,9 +30,10 @@ public enum SpProtocolManager {
     return this.availableProtocols
             .stream()
             .filter
-                    (adf -> adf.getTransportFormatRdfUri().equals(transportProtocol.getClass()
+                    (adf -> adf.getTransportProtocolClass().equals(transportProtocol.getClass()
                             .getCanonicalName()))
-            .map(s -> (SpProtocolDefinition<T>) s)
+            .map(s -> (SpProtocolDefinitionFactory<T>) s)
+            .map(SpProtocolDefinitionFactory::createInstance)
             .findFirst();
 
   }

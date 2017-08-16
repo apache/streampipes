@@ -21,9 +21,9 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class StreamStoppedController extends StandaloneEventProcessorDeclarer<StreamStoppedParameter> {
+public class StreamStoppedController extends StandaloneEventProcessorDeclarerSingleton<StreamStoppedParameter> {
 
 	@Override
 	public SepaDescription declareModel() {

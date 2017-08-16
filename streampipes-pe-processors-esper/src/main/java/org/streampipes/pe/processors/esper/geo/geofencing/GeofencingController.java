@@ -29,9 +29,9 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class GeofencingController extends StandaloneEventProcessorDeclarer<GeofencingParameters> {
+public class GeofencingController extends StandaloneEventProcessorDeclarerSingleton<GeofencingParameters> {
 
 	@Override
 	public SepaDescription declareModel() {

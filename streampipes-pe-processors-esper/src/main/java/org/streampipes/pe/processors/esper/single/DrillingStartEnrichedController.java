@@ -21,7 +21,7 @@ import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DrillingStartEnrichedController extends
-        StandaloneEventProcessorDeclarer<DrillingStartEnrichedParameters> {
+        StandaloneEventProcessorDeclarerSingleton<DrillingStartEnrichedParameters> {
 
 	@Override
 	public Response invokeRuntime(SepaInvocation sepa) {
