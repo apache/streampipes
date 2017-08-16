@@ -4,20 +4,20 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.wrapper.routing.EventProcessorInputCollector;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.routing.SpInputCollector;
+import org.streampipes.wrapper.runtime.PipelineElement;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
-public class FlatSpInputCollector<T extends TransportProtocol> extends
-        FlatSpCollector<T, EventProcessor<?>>
+public class StandaloneSpInputCollector<T extends TransportProtocol> extends
+        StandaloneSpCollector<T, PipelineElement<?>>
         implements
-        InternalEventProcessor<byte[]>, EventProcessorInputCollector {
+        InternalEventProcessor<byte[]>, SpInputCollector {
 
   private Boolean singletonEngine;
 
 
-  public FlatSpInputCollector(T protocol, TransportFormat format,
-                              Boolean singletonEngine) throws SpRuntimeException {
+  public StandaloneSpInputCollector(T protocol, TransportFormat format,
+                                    Boolean singletonEngine) throws SpRuntimeException {
     super(protocol, format);
     this.singletonEngine = singletonEngine;
   }
@@ -33,7 +33,7 @@ public class FlatSpInputCollector<T extends TransportProtocol> extends
     }
   }
 
-  private void send(EventProcessor<?> processor, byte[] event) {
+  private void send(PipelineElement<?> processor, byte[] event) {
     try {
       processor.onEvent(dataFormatDefinition.toMap(event), getTopic());
     } catch (SpRuntimeException e) {

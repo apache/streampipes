@@ -2,7 +2,7 @@ package org.streampipes.wrapper.standalone.engine;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.Map;
@@ -13,10 +13,10 @@ import java.util.Optional;
  */
 public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBindingParams> implements EventProcessor<B> {
 
-  private Optional<EventProcessorOutputCollector> collectorOpt;
+  private Optional<SpOutputCollector> collectorOpt;
 
   @Override
-  public void bind(B parameters, EventProcessorOutputCollector collector) {
+  public void bind(B parameters, SpOutputCollector collector) {
     collectorOpt = Optional.of(collector);
     onInvocation(parameters, parameters.getGraph());
   }
@@ -38,7 +38,7 @@ public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBin
 
   public abstract void onInvocation(B params, SepaInvocation graph);
 
-  public abstract void onEvent(Map<String, Object> event, String sourceInfo, EventProcessorOutputCollector
+  public abstract void onEvent(Map<String, Object> event, String sourceInfo, SpOutputCollector
           collector);
 
   public abstract void onDetach();

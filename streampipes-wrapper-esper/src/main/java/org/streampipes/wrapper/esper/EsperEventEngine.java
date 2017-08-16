@@ -12,7 +12,7 @@ import org.streampipes.commons.Utils;
 import org.streampipes.wrapper.esper.config.EsperEngineConfig;
 import org.streampipes.wrapper.esper.writer.Writer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 	private static final Logger LOG = LoggerFactory.getLogger(EsperEventEngine.class);
 	
 	@Override
-	public void bind(T parameters, EventProcessorOutputCollector collector) {
+	public void bind(T parameters, SpOutputCollector collector) {
 		if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size())
 			throw new IllegalArgumentException("Input parameters do not match!");
 			
@@ -89,7 +89,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		}
 	}
 	
-	private void registerStatements(List<String> statements, EventProcessorOutputCollector collector, T params)
+	private void registerStatements(List<String> statements, SpOutputCollector collector, T params)
 	{
 		toEpStatement(statements);
 		queue = new StatementAwareQueue(getWriter(collector, params), 500000);
@@ -174,7 +174,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		return Utils.createList(statement);
 	}
 		
-	protected Writer getWriter(EventProcessorOutputCollector collector, T params)
+	protected Writer getWriter(SpOutputCollector collector, T params)
 	{
 		return EsperEngineConfig.getDefaultWriter(collector, params);
 	}

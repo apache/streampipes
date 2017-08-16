@@ -5,16 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.wrapper.standalone.routing.FlatSpInputCollector;
-import org.streampipes.wrapper.standalone.routing.FlatSpOutputCollector;
+import org.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
+import org.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProtocolManager {
 
-  public static Map<String, FlatSpInputCollector> consumers = new HashMap<>();
-  public static Map<String, FlatSpOutputCollector> producers = new HashMap<>();
+  public static Map<String, StandaloneSpInputCollector> consumers = new HashMap<>();
+  public static Map<String, StandaloneSpOutputCollector> producers = new HashMap<>();
 
   private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
 
@@ -22,7 +22,7 @@ public class ProtocolManager {
   // be changed by some hashCode implementation in streampipes-model, but this requires changes
   // in empire serializers
 
-  public static <T extends TransportProtocol> FlatSpInputCollector findInputCollector
+  public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector
           (T
                    protocol,
            TransportFormat format, Boolean
@@ -40,7 +40,7 @@ public class ProtocolManager {
 
   }
 
-  public static <T extends TransportProtocol> FlatSpOutputCollector findOutputCollector
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector
           (T
                    protocol,
            TransportFormat format)
@@ -58,19 +58,19 @@ public class ProtocolManager {
 
   }
 
-  private static <T extends TransportProtocol> FlatSpInputCollector makeInputCollector
+  private static <T extends TransportProtocol> StandaloneSpInputCollector makeInputCollector
           (T protocol,
            TransportFormat format, Boolean
                    singletonEngine) throws
           SpRuntimeException {
-    return new FlatSpInputCollector<>(protocol, format, singletonEngine);
+    return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
   }
 
-  public static <T extends TransportProtocol> FlatSpOutputCollector makeOutputCollector(T
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector makeOutputCollector(T
                                                                                                 protocol, TransportFormat format)
           throws
           SpRuntimeException {
-    return new FlatSpOutputCollector<>(protocol, format);
+    return new StandaloneSpOutputCollector<>(protocol, format);
   }
 
 

@@ -11,7 +11,7 @@ import org.streampipes.wrapper.standalone.manager.PManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class FlatSpCollector<T extends TransportProtocol, C> implements
+public abstract class StandaloneSpCollector<T extends TransportProtocol, C> implements
         PipelineElementCollector<C> {
 
   protected Map<String, C> consumers;
@@ -23,7 +23,7 @@ public abstract class FlatSpCollector<T extends TransportProtocol, C> implements
   protected SpDataFormatDefinition dataFormatDefinition;
 
 
-  public FlatSpCollector(T protocol, TransportFormat format) throws SpRuntimeException {
+  public StandaloneSpCollector(T protocol, TransportFormat format) throws SpRuntimeException {
     this.transportProtocol = protocol;
     this.protocolDefinition = PManager.getProtocolDefinition(protocol).orElseThrow(() -> new
             SpRuntimeException("Could not find protocol"));

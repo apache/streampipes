@@ -4,8 +4,8 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
-import org.streampipes.wrapper.routing.EventProcessorInputCollector;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpInputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
@@ -24,8 +24,8 @@ public class StandaloneEventProcessorRuntimeParams<B extends EventProcessorBindi
   }
 
   @Override
-  public List<EventProcessorInputCollector> getInputCollectors() throws SpRuntimeException {
-    List<EventProcessorInputCollector> inputCollectors = new ArrayList<>();
+  public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
+    List<SpInputCollector> inputCollectors = new ArrayList<>();
     for (EventStream is : bindingParams.getGraph().getInputStreams()) {
       inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
               .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
@@ -35,7 +35,7 @@ public class StandaloneEventProcessorRuntimeParams<B extends EventProcessorBindi
   }
 
   @Override
-  public EventProcessorOutputCollector getOutputCollector() throws SpRuntimeException {
+  public SpOutputCollector getOutputCollector() throws SpRuntimeException {
     return ProtocolManager.findOutputCollector(bindingParams.getGraph().getOutputStream()
             .getEventGrounding().getTransportProtocol(), bindingParams.getGraph().getOutputStream
             ().getEventGrounding().getTransportFormats().get(0));

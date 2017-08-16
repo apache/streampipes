@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.distribution;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ public class Distribution implements EventProcessor<DistributionParameters> {
 	private int eventCount = 0;
 	private List<String> queue;
 	
-	private EventProcessorOutputCollector collector;
+	private SpOutputCollector collector;
 
 	private ObjectMapper mapper;
 	
 	
 	@Override
 	public void bind(DistributionParameters parameters,
-			EventProcessorOutputCollector collector) {
+			SpOutputCollector collector) {
 		this.currentDistribution = new HashMap<String, Integer>();
 		this.propertyName = parameters.getMappingProperty();
 		this.batchSize = parameters.getTimeWindow();

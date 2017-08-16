@@ -6,10 +6,8 @@ import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.runtime.EventProcessorRuntime;
 import org.streampipes.wrapper.runtime.EventProcessor;
-
-import java.util.function.Supplier;
+import org.streampipes.wrapper.runtime.EventProcessorRuntime;
 
 public abstract class EventProcessorDeclarer<B extends EventProcessorBindingParams, EPR extends
 				EventProcessorRuntime> extends PipelineElementDeclarer<B, EPR, SepaInvocation,
@@ -17,20 +15,11 @@ public abstract class EventProcessorDeclarer<B extends EventProcessorBindingPara
 				SemanticEventProcessingAgentDeclarer {
 
 	public static final Logger logger = LoggerFactory.getLogger(EventProcessorDeclarer.class.getCanonicalName());
-		
-	public void invokeEPRuntime(B bindingParameters, Supplier<EventProcessor<B>> supplier) throws Exception {
-
-		elementId = bindingParameters.getGraph().getElementId();
-
-		epRuntime = prepareRuntime(bindingParameters, supplier);
-		epRuntime.bindRuntime();
-	}
 
 	@Override
 	protected ProcessingElementParameterExtractor getExtractor(SepaInvocation graph) {
 		return ProcessingElementParameterExtractor.from(graph);
 	}
 
-	public abstract EPR prepareRuntime(B bindingParameters, Supplier<EventProcessor<B>> supplier);
 
 }

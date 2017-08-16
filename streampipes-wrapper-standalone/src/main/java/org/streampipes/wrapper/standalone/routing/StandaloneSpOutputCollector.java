@@ -4,17 +4,17 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 import java.util.Map;
 
-public class FlatSpOutputCollector<T extends TransportProtocol> extends
-        FlatSpCollector<T, InternalEventProcessor<Map<String,
-        Object>>> implements EventProcessorOutputCollector {
+public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
+        StandaloneSpCollector<T, InternalEventProcessor<Map<String,
+                Object>>> implements SpOutputCollector {
 
 
-  public FlatSpOutputCollector(T protocol, TransportFormat format) throws SpRuntimeException {
+  public StandaloneSpOutputCollector(T protocol, TransportFormat format) throws SpRuntimeException {
    super(protocol, format);
   }
 

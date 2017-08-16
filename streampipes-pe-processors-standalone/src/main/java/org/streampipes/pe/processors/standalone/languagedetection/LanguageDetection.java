@@ -5,7 +5,7 @@ import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
 
 import java.io.BufferedReader;
@@ -22,7 +22,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
 
 	private static final String PROFILE_FOLDER = "./profiles";
 	
-	private EventProcessorOutputCollector collector;
+	private SpOutputCollector collector;
 	private Map<String, String> mappingPropertyNames;
 	private String outputPropertyName;
 	
@@ -56,7 +56,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
 	
 	@Override
 	public void bind(LanguageDetectionParameters parameters,
-			EventProcessorOutputCollector collector) {
+			SpOutputCollector collector) {
 		mappingPropertyNames.put(parameters
 				.getInputStreamParams().get(0)
 				.getInName(), 
