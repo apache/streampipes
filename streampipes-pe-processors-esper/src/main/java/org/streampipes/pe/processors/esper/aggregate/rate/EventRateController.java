@@ -1,17 +1,18 @@
 package org.streampipes.pe.processors.esper.aggregate.rate;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 public class EventRateController extends StandaloneEventProcessorDeclarerSingleton<EventRateParameter> {
 
@@ -33,18 +34,17 @@ public class EventRateController extends StandaloneEventProcessorDeclarerSinglet
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-
+	public ConfiguredEventProcessor<EventRateParameter, EventProcessor<EventRateParameter>> onInvocation(SepaInvocation
+																																																								 sepa) {
 		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
-	
+
 		Integer avgRate = extractor.singleValueParameter("rate", Integer.class);
 		Integer outputRate = extractor.singleValueParameter("output", Integer.class);
-	
+
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, avgRate, outputRate
 						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
 
-		return submit(staticParam, EventRate::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, EventRate::new);
 	}
 }

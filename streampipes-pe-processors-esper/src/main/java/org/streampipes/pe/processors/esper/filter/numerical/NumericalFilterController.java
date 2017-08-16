@@ -1,12 +1,8 @@
 package org.streampipes.pe.processors.esper.filter.numerical;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.pe.processors.esper.util.NumericalOperator;
-import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -18,6 +14,11 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.pe.processors.esper.util.NumericalOperator;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -68,26 +69,25 @@ public class NumericalFilterController extends StandaloneEventProcessorDeclarerS
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<NumericalFilterParameter, EventProcessor<NumericalFilterParameter>> onInvocation
+					(SepaInvocation sepa) {
 		String threshold = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "value"))).getValue();
+						.getStaticPropertyByInternalName(sepa, "value"))).getValue();
 		String stringOperation = SepaUtils.getOneOfProperty(sepa,
-				"operation");
-		
+						"operation");
+
 		String operation = "GT";
-		
+
 		if (stringOperation.equals("<=")) operation = "LT";
 		else if (stringOperation.equals("<")) operation="LE";
 		else if (stringOperation.equals(">=")) operation = "GE";
-		else if (stringOperation.equals("==")) operation = "EQ";	
-		
+		else if (stringOperation.equals("==")) operation = "EQ";
+
 		String filterProperty = SepaUtils.getMappingPropertyName(sepa,
-				"number", true);
-		
+						"number", true);
+
 		NumericalFilterParameter staticParam = new NumericalFilterParameter(sepa, Double.parseDouble(threshold), NumericalOperator.valueOf(operation), filterProperty);
 
-		return submit(staticParam, NumericalFilter::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
 	}
 }

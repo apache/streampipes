@@ -3,7 +3,6 @@ package org.streampipes.pe.processors.esper.debs.c1;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyList;
 import org.streampipes.model.impl.eventproperty.EventPropertyNested;
@@ -19,6 +18,8 @@ import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -126,46 +127,45 @@ public class DebsChallenge1Controller extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<DebsChallenge1Parameters, EventProcessor<DebsChallenge1Parameters>> onInvocation
+					(SepaInvocation sepa) {
 		int cellSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "cellSize"))).getValue());
-		
+						.getStaticPropertyByInternalName(sepa, "cellSize"))).getValue());
+
 		double startingLatitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "startingLatitude"))).getValue());
-		
+						.getStaticPropertyByInternalName(sepa, "startingLatitude"))).getValue());
+
 		double startingLongitude = Double.parseDouble(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "startingLongitude"))).getValue());
-		
+						.getStaticPropertyByInternalName(sepa, "startingLongitude"))).getValue());
+
 		String latPropertyName = SepaUtils.getMappingPropertyName(sepa,
-				"latitude");
-		
+						"latitude");
+
 		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa,
-				"longitude");	
-		
+						"longitude");
+
 		String latProperty2Name = SepaUtils.getMappingPropertyName(sepa,
-				"latitude2");
-		
+						"latitude2");
+
 		String lngProperty2Name = SepaUtils.getMappingPropertyName(sepa,
-				"longitude2");	
+						"longitude2");
 
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		DebsChallenge1Parameters staticParam = new DebsChallenge1Parameters(
-				sepa, 
-				startingLatitude, startingLongitude, 
-				cellSize, 
-				latPropertyName, 
-				lngPropertyName,
-				latProperty2Name, 
-				lngProperty2Name,
-				selectProperties);
+						sepa,
+						startingLatitude, startingLongitude,
+						cellSize,
+						latPropertyName,
+						lngPropertyName,
+						latProperty2Name,
+						lngProperty2Name,
+						selectProperties);
 
-		return submit(staticParam, DebsChallenge1::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, DebsChallenge1::new);
 	}
 }

@@ -1,12 +1,10 @@
 package org.streampipes.pe.processors.esper.numerical.value;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -21,9 +19,12 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -79,22 +80,21 @@ public class ObserveNumericalController extends StandaloneEventProcessorDeclarer
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
-
+	public ConfiguredEventProcessor<ObserveNumericalParameters, EventProcessor<ObserveNumericalParameters>>
+	onInvocation(SepaInvocation invocationGraph) {
 		String valueLimit = SepaUtils.getOneOfProperty(invocationGraph, "value-limit");
 
 		String outputProperty = ((AppendOutputStrategy) invocationGraph.getOutputStrategies().get(0)).getEventProperties().get(0).getRuntimeName();
 
 		double threshold = Double.parseDouble(
-				((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "threshold")))
-						.getValue());
+						((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "threshold")))
+										.getValue());
 
 		String value = SepaUtils.getMappingPropertyName(invocationGraph, "number");
-		
+
 		ObserveNumericalParameters params = new ObserveNumericalParameters(invocationGraph, valueLimit, threshold, value, outputProperty);
 
-		return submit(params, ObserveNumerical::new);
-
+		return new ConfiguredEventProcessor<>(params, ObserveNumerical::new);
 	}
 
 }

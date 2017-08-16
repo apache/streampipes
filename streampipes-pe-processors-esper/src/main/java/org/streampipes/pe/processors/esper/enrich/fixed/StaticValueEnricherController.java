@@ -1,16 +1,10 @@
 package org.streampipes.pe.processors.esper.enrich.fixed;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -22,23 +16,30 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.MhWirth;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class StaticValueEnricherController extends StandaloneEventProcessorDeclarerSingleton<StaticValueEnricherParameters> {
 
+
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<StaticValueEnricherParameters, EventProcessor<StaticValueEnricherParameters>>
+	onInvocation(SepaInvocation sepa) {
 		String value = SepaUtils.getFreeTextStaticPropertyValue(sepa, "value");
-		
+
 		StaticValueEnricherParameters staticParam = new StaticValueEnricherParameters(
-				sepa, 
-				"drillingStatus", value);
+						sepa,
+						"drillingStatus", value);
 
-		return submit(staticParam, StaticValueEnricher::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, StaticValueEnricher::new);
 	}
-	
+
 	@Override
 	public SepaDescription declareModel() {
 	

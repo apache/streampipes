@@ -2,6 +2,7 @@ package org.streampipes.wrapper.declarer;
 
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.Response;
+import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.runtime.PipelineElement;
@@ -48,6 +49,8 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
   protected abstract EX getExtractor(I graph);
 
   public abstract EPR prepareRuntime(B bindingParameters, Supplier<PE> supplier);
+
+
 
 
 }

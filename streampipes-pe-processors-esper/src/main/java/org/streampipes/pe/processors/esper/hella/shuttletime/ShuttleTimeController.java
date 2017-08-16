@@ -3,7 +3,6 @@ package org.streampipes.pe.processors.esper.hella.shuttletime;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -18,6 +17,8 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -82,26 +83,20 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingl
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<ShuttleTimeParameters, EventProcessor<ShuttleTimeParameters>> onInvocation
+					(SepaInvocation sepa) {
 		List<String> selectProperties = new ArrayList<>();
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		String locationEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-location");
 		String eventEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-event");
 		String shuttleEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-shuttle");
 		String timestampEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-time");
-			
+
 		ShuttleTimeParameters staticParam = new ShuttleTimeParameters(sepa, selectProperties, locationEventName, eventEventName, shuttleEventName, timestampEventName);
-		
-		try {
-			invokeEPRuntime(staticParam, ShuttleTime::new);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return new ConfiguredEventProcessor<>(staticParam, ShuttleTime::new);
 	}
 }

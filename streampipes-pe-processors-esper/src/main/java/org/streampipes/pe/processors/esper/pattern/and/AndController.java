@@ -1,12 +1,10 @@
 package org.streampipes.pe.processors.esper.pattern.and;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -18,6 +16,9 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class AndController extends StandaloneEventProcessorDeclarerSingleton<And
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
+	public ConfiguredEventProcessor<AndParameters, EventProcessor<AndParameters>> onInvocation(SepaInvocation invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
 		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
 		String matchingOperator = "";
@@ -94,7 +95,7 @@ public class AndController extends StandaloneEventProcessorDeclarerSingleton<And
 		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 
-		return submit(params, And::new);
+		return new ConfiguredEventProcessor<>(params, And::new);
 
 	}
 

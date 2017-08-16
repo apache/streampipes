@@ -5,7 +5,6 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -24,6 +23,8 @@ import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -93,23 +94,23 @@ public class DurationOfStayController extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
-		
+	public ConfiguredEventProcessor<DurationOfStayParameters, EventProcessor<DurationOfStayParameters>> onInvocation
+					(SepaInvocation invocationGraph) {
 		int radius = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "radius"));
-		
+
 		DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(invocationGraph, "location");
 		double latitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(dsp, Geo.lat));
 		double longitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(dsp, Geo.lng));
-		
+
 		GeofencingData geofencingData = new GeofencingData(latitude, longitude, radius);
-		
+
 		String latitudeMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-latitude");
 		String longitudeMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-longitude");
 		String partitionMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-partition");
 		String timestampMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-timestamp");
 		DurationOfStayParameters params = new DurationOfStayParameters(invocationGraph, geofencingData, latitudeMapping, longitudeMapping, partitionMapping, timestampMapping);
 
-		return submit(params, DurationOfStay::new);
+		return new ConfiguredEventProcessor<>(params, DurationOfStay::new);
 	}
 
 }

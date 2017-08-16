@@ -1,10 +1,9 @@
 package org.streampipes.pe.processors.esper.enrich.math;
 
+import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -17,9 +16,11 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.commons.Utils;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -86,40 +87,39 @@ public class MathController extends StandaloneEventProcessorDeclarerSingleton<Ma
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<MathParameter, EventProcessor<MathParameter>> onInvocation(SepaInvocation sepa) {
 		String operation = SepaUtils.getOneOfProperty(sepa,
-				"operation");
-		
+						"operation");
+
 		String leftOperand = SepaUtils.getMappingPropertyName(sepa,
-				"leftOperand");
-		
+						"leftOperand");
+
 		String rightOperand = SepaUtils.getMappingPropertyName(sepa,
-				"rightOperand");
-		
+						"rightOperand");
+
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
-		
+
 		String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "delay");
-	
+
 		Operation arithmeticOperation;
 		if (operation.equals("+")) arithmeticOperation = Operation.ADD;
 		else if (operation.equals("-")) arithmeticOperation = Operation.SUBTRACT;
 		else if (operation.equals("*")) arithmeticOperation = Operation.MULTIPLY;
 		else arithmeticOperation = Operation.DIVIDE;
-		
+
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			selectProperties.add(p.getRuntimeName());
 		}
-		
-		MathParameter staticParam = new MathParameter(sepa,
-				selectProperties, 
-				arithmeticOperation, 
-				leftOperand, 
-				rightOperand,
-				appendPropertyName);	
 
-		return submit(staticParam, Math::new);
+		MathParameter staticParam = new MathParameter(sepa,
+						selectProperties,
+						arithmeticOperation,
+						leftOperand,
+						rightOperand,
+						appendPropertyName);
+
+		return new ConfiguredEventProcessor<>(staticParam, Math::new);
 	}
 }

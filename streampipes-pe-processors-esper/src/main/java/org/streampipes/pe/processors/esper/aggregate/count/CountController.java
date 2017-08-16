@@ -1,19 +1,20 @@
 package org.streampipes.pe.processors.esper.aggregate.count;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,31 +43,30 @@ public class CountController extends StandaloneEventProcessorDeclarerSingleton<C
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {		
-		
+	public ConfiguredEventProcessor<CountParameter, EventProcessor<CountParameter>> onInvocation(SepaInvocation sepa) {
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
-				"groupBy", true);
-		
+						"groupBy", true);
+
 		int timeWindowSize = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
-	
+						.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
+
 		String scale = SepaUtils.getOneOfProperty(sepa,
-				"scale");
-		
+						"scale");
+
 		TimeScale timeScale;
-		
+
 		if (scale.equals("Hours")) timeScale = TimeScale.HOURS;
 		else if (scale.equals("Minutes")) timeScale = TimeScale.MINUTES;
 		else timeScale = TimeScale.SECONDS;
-		
+
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		CountParameter staticParam = new CountParameter(sepa, timeWindowSize, groupBy, timeScale, selectProperties);
 
-		return submit(staticParam, Count::new);
+		return new ConfiguredEventProcessor<>(staticParam, Count::new);
 	}
 }

@@ -1,18 +1,7 @@
 package org.streampipes.pe.processors.esper.enrich.grid;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.StaticProperties;
-import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyNested;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -27,8 +16,20 @@ import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.Geo;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.stream.SchemaBuilder;
+import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSingleton<GridEnrichmentParameter> {
 
@@ -98,34 +99,33 @@ public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {		
-		
+	public ConfiguredEventProcessor<GridEnrichmentParameter, EventProcessor<GridEnrichmentParameter>> onInvocation
+					(SepaInvocation sepa) {
 		int cellSize = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
 		double startingLatitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lat));
 		double startingLongitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lng));
-		
+
 		String latPropertyName = SepaUtils.getMappingPropertyName(sepa, "latitude");
-		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "longitude");	
-			
+		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "longitude");
+
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 		String cellOptionsPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
-	
+
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		GridEnrichmentParameter staticParam = new GridEnrichmentParameter(
-				sepa, 
-				startingLatitude, startingLongitude, 
-				cellSize, 
-				cellOptionsPropertyName, 
-				latPropertyName, 
-				lngPropertyName,
-				selectProperties);
+						sepa,
+						startingLatitude, startingLongitude,
+						cellSize,
+						cellOptionsPropertyName,
+						latPropertyName,
+						lngPropertyName,
+						selectProperties);
 
-		return submit(staticParam, GridEnrichment::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, GridEnrichment::new);
 	}
 }

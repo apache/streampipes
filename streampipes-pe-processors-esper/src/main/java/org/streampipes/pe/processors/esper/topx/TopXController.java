@@ -4,7 +4,6 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -20,6 +19,8 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -75,35 +76,33 @@ public class TopXController extends StandaloneEventProcessorDeclarerSingleton<To
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-				
+	public ConfiguredEventProcessor<TopXParameter, EventProcessor<TopXParameter>> onInvocation(SepaInvocation sepa) {
 		String sortBy = SepaUtils.getMappingPropertyName(sepa,
-				"sortBy", true);
-		
+						"sortBy", true);
+
 		int limit = Integer.parseInt(((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "topx"))).getValue());
-	
+						.getStaticPropertyByInternalName(sepa, "topx"))).getValue());
+
 		String direction = SepaUtils.getOneOfProperty(sepa,
-				"direction");
-		
+						"direction");
+
 		List<String> uniqueProperties = SepaUtils.getMultipleMappingPropertyNames(sepa,
-				"unique", true);
-		
+						"unique", true);
+
 		OrderDirection orderDirection;
-		
+
 		if (direction.equals("Ascending")) orderDirection = OrderDirection.ASCENDING;
 		else orderDirection = OrderDirection.DESCENDING;
-		
-		
+
+
 		List<String> selectProperties = new ArrayList<>();
 		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
 		{
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		TopXParameter staticParam = new TopXParameter(sepa, orderDirection, sortBy, "list", limit, uniqueProperties);
 
-		return submit(staticParam, TopX::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, TopX::new);
 	}
 }

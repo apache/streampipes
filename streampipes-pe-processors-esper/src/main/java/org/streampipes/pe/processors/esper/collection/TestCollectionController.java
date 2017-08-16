@@ -3,13 +3,14 @@ package org.streampipes.pe.processors.esper.collection;
 import com.google.common.io.Resources;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.container.util.DeclarerUtils;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.List;
@@ -29,26 +30,25 @@ public class TestCollectionController extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<TestCollectionParameters, EventProcessor<TestCollectionParameters>> onInvocation
+					(SepaInvocation sepa) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "collection", CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(sepa, "number-mapping");
-		
+
 		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m).collect(Collectors.toList());
-		
-		
+
+
 		List<DataRange> domainConceptData = domainConcepts
-				.stream()
-				.map(m -> new DataRange(
-						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)), 
-						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)), 
-						Integer.parseInt(SepaUtils.getSupportedPropertyValue(m,  SO.Step))))
-				.collect(Collectors.toList());
-		
+						.stream()
+						.map(m -> new DataRange(
+										Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
+										Integer.parseInt(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
+										Integer.parseInt(SepaUtils.getSupportedPropertyValue(m,  SO.Step))))
+						.collect(Collectors.toList());
+
 		TestCollectionParameters staticParam = new TestCollectionParameters(sepa, propertyName, domainConceptData);
 
-		return submit(staticParam, TestCollection::new);
-
+		return new ConfiguredEventProcessor<>(staticParam, TestCollection::new);
 	}
 
 }

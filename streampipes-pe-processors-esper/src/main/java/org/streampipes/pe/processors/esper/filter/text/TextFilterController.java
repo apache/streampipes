@@ -4,7 +4,6 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
@@ -20,6 +19,8 @@ import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -77,23 +78,22 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-			
+	public ConfiguredEventProcessor<TextFilterParameter, EventProcessor<TextFilterParameter>> onInvocation
+					(SepaInvocation sepa) {
 		String keyword = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "keyword"))).getValue();
+						.getStaticPropertyByInternalName(sepa, "keyword"))).getValue();
 		String operation = SepaUtils.getOneOfProperty(sepa,
-				"operation");
+						"operation");
 		String filterProperty = SepaUtils.getMappingPropertyName(sepa,
-				"text");
-		
-		logger.info("Text Property: " +filterProperty);
-	
-		TextFilterParameter staticParam = new TextFilterParameter(sepa, 
-				keyword, 
-				StringOperator.valueOf(operation),
-				filterProperty);
-		
-		return submit(staticParam, TextFilter::new);
+						"text");
 
+		logger.info("Text Property: " +filterProperty);
+
+		TextFilterParameter staticParam = new TextFilterParameter(sepa,
+						keyword,
+						StringOperator.valueOf(operation),
+						filterProperty);
+
+		return new ConfiguredEventProcessor<>(staticParam, TextFilter::new);
 	}
 }

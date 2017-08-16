@@ -3,7 +3,6 @@ package org.streampipes.pe.processors.esper.hella.minshuttletime;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -19,6 +18,8 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -83,28 +84,22 @@ public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		
+	public ConfiguredEventProcessor<MinShuttleTimeParameters, EventProcessor<MinShuttleTimeParameters>> onInvocation
+					(SepaInvocation sepa) {
 		List<String> selectProperties = new ArrayList<>();
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());
 		}
-		
+
 		sepa.getInputStreams().get(0).getEventSchema().getEventProperties().forEach(ep -> System.out.println(ep.getRuntimeName() +", " +((EventPropertyPrimitive)ep).getRuntimeType()));
-		
+
 		String lacqueringLineIdEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-lacqueringLineId");
 		String mouldingMachineIdEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-mouldingMachineId");
 		String shuttleEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-shuttle");
 		String timestampEventName = SepaUtils.getMappingPropertyName(sepa, "mapping-time");
-			
+
 		MinShuttleTimeParameters staticParam = new MinShuttleTimeParameters(sepa, selectProperties, lacqueringLineIdEventName, mouldingMachineIdEventName, shuttleEventName, timestampEventName);
-		
-		try {
-			invokeEPRuntime(staticParam, MinShuttleTime::new);
-			return new Response(sepa.getElementId(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response(sepa.getElementId(), false, e.getMessage());
-		}
+
+		return new ConfiguredEventProcessor<>(staticParam, MinShuttleTime::new);
 	}
 }
