@@ -1,12 +1,12 @@
 package org.streampipes.pe.sinks.standalone.samples.rabbitmq;
 
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
-import org.streampipes.messaging.EventConsumer;
 
 /**
  * Created by riemer on 05.04.2017.
  */
-public class RabbitMqConsumer implements EventConsumer<byte[]> {
+public class RabbitMqConsumer implements InternalEventProcessor<byte[]> {
 
   private String topic;
 

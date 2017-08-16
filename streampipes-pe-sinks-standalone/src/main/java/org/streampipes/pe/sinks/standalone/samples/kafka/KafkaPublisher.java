@@ -1,9 +1,9 @@
 package org.streampipes.pe.sinks.standalone.samples.kafka;
 
-import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
+import org.streampipes.messaging.InternalEventProcessor;
 
-public class KafkaPublisher implements EventConsumer<byte[]> {
+public class KafkaPublisher implements InternalEventProcessor<byte[]> {
 
 	private EventProducer producer;
 	

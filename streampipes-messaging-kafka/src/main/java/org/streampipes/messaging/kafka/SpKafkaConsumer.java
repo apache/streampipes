@@ -25,6 +25,24 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     private InternalEventProcessor<byte[]> eventProcessor;
     private volatile boolean isRunning = true;
 
+    public SpKafkaConsumer() {
+
+    }
+
+    // TODO backwards compatibility, remove later
+    public SpKafkaConsumer(String kafkaUrl, String topic, InternalEventProcessor<byte[]> callback) {
+        KafkaTransportProtocol protocol = new KafkaTransportProtocol();
+        protocol.setKafkaPort(Integer.parseInt(kafkaUrl.split(":")[1]));
+        protocol.setBrokerHostname(kafkaUrl.split(":")[0]);
+        protocol.setTopicName(topic);
+
+        try {
+            this.connect(protocol, callback);
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run() {
         KafkaConsumer<String, byte[]> kafkaConsumer = new KafkaConsumer<>(getProperties());

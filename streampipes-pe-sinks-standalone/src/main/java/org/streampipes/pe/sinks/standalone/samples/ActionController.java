@@ -1,8 +1,9 @@
 package org.streampipes.pe.sinks.standalone.samples;
 
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.streampipes.messaging.EventConsumer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
@@ -17,7 +18,8 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 
 	protected SpKafkaConsumer kafkaConsumer;
 
-	protected void startKafkaConsumer(String kafkaUrl, String topic, EventConsumer<byte[]> eventListener) {
+	protected void startKafkaConsumer(String kafkaUrl, String topic, InternalEventProcessor<byte[]>
+					eventListener) {
 		kafkaConsumer = new SpKafkaConsumer(kafkaUrl, topic, eventListener);
 		Thread thread = new Thread(kafkaConsumer);
 		thread.start();
@@ -25,7 +27,11 @@ public abstract class ActionController implements SemanticEventConsumerDeclarer 
 
 	protected void stopKafkaConsumer() {
 		if (kafkaConsumer != null) {
-			kafkaConsumer.close();
+			try {
+				kafkaConsumer.disconnect();
+			} catch (SpRuntimeException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

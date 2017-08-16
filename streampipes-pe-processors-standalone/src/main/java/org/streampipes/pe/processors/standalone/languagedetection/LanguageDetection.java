@@ -1,5 +1,13 @@
 package org.streampipes.pe.processors.standalone.languagedetection;
 
+import com.cybozu.labs.langdetect.Detector;
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import org.streampipes.wrapper.routing.EventProcessorOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,22 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.cybozu.labs.langdetect.Detector;
-import com.cybozu.labs.langdetect.DetectorFactory;
-import com.cybozu.labs.langdetect.LangDetectException;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.runtime.EventProcessor;
-import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.params.engine.EventProcessorEngineParams;
-
 public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
 	private static final String PROFILE_FOLDER = "./profiles";
 	
-	private OutputCollector collector;
+	private EventProcessorOutputCollector collector;
 	private Map<String, String> mappingPropertyNames;
 	private String outputPropertyName;
 	
@@ -58,14 +55,12 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
 	
 	
 	@Override
-	public void bind(EventProcessorEngineParams<LanguageDetectionParameters> parameters,
-			OutputCollector collector, SepaInvocation graph) {
+	public void bind(LanguageDetectionParameters parameters,
+			EventProcessorOutputCollector collector) {
 		mappingPropertyNames.put(parameters
-				.getBindingParameters()
 				.getInputStreamParams().get(0)
 				.getInName(), 
 				parameters
-				.getBindingParameters()
 				.getMappingPropertyName());
 		this.outputPropertyName = "language";
 		this.collector = collector;
@@ -77,7 +72,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
 		String mappingPropertyName = mappingPropertyNames.get(sourceInfo);
 		String fieldValue = (String) event.get(mappingPropertyName);
 		event.put(outputPropertyName, detectLanguage(fieldValue));
-		collector.send(event);
+		collector.onEvent(event);
 	}
 	
 	private String detectLanguage(String text)

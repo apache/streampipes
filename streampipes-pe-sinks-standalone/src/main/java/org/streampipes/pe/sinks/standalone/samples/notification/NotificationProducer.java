@@ -4,7 +4,7 @@ import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.streampipes.messaging.EventConsumer;
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.util.SepaUtils;
@@ -14,7 +14,7 @@ import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
 import java.util.Date;
 import java.util.HashMap;
 
-public class NotificationProducer implements EventConsumer<byte[]> {
+public class NotificationProducer implements InternalEventProcessor<byte[]> {
 
 	SpKafkaProducer producer;
 	private TSerializer serializer;

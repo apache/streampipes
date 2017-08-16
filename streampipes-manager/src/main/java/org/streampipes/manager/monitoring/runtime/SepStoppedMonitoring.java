@@ -1,17 +1,17 @@
 package org.streampipes.manager.monitoring.runtime;
 
+import org.json.JSONObject;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.messaging.EventConsumer;
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.storage.impl.PipelineStorageImpl;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		return false;
 	}
 
-	private class KafkaCallback implements EventConsumer<byte[]> {
+	private class KafkaCallback implements InternalEventProcessor<byte[]> {
 
 		@Override
 		public void onEvent(byte[] payload) {

@@ -3,9 +3,10 @@ package org.streampipes.pe.sinks.standalone.samples.evaluation;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.messaging.EventConsumer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class EvaluationFileWriter implements Runnable, EventConsumer<byte[]> {
+public class EvaluationFileWriter implements Runnable, InternalEventProcessor<byte[]> {
 
 	EvaluationParameters params;
 	PrintWriter stream;
@@ -82,7 +83,11 @@ public class EvaluationFileWriter implements Runnable, EventConsumer<byte[]> {
 		if (!running)
 		{
 			System.out.println("Stopping");
-			kafkaConsumer.close();
+			try {
+				kafkaConsumer.disconnect();
+			} catch (SpRuntimeException e) {
+				e.printStackTrace();
+			}
 			process();
 		} else
 			input.add(new ReceivedEvent(json, System.currentTimeMillis()));

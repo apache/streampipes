@@ -1,12 +1,7 @@
 package org.streampipes.pe.processors.standalone.languagedetection;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.streampipes.pe.processors.standalone.config.Config;
 import org.streampipes.commons.Utils;
-import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.Response;
@@ -22,8 +17,13 @@ import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.pe.processors.standalone.config.Config;
+import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LanguageDetectionController extends StandaloneEventProcessorDeclarer<LanguageDetectionParameters> {
 
@@ -74,7 +74,7 @@ public class LanguageDetectionController extends StandaloneEventProcessorDeclare
 		LanguageDetectionParameters staticParam = new LanguageDetectionParameters(sepa, textMapping);
 		
 		try {
-			invokeEPRuntime(staticParam, LanguageDetection::new, sepa);
+			invokeEPRuntime(staticParam, LanguageDetection::new);
 			return new Response(sepa.getElementId(), true);
 		} catch (Exception e) {
 			e.printStackTrace();

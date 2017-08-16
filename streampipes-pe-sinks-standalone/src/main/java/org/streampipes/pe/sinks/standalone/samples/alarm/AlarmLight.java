@@ -1,13 +1,10 @@
 package org.streampipes.pe.sinks.standalone.samples.alarm;
 
-import org.streampipes.messaging.EventListener;
-import org.streampipes.messaging.EventConsumer;
+import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 
-import javax.jms.JMSException;
-
-public class AlarmLight implements EventConsumer<byte[]> {
+public class AlarmLight implements InternalEventProcessor<byte[]> {
 
 	private ActiveMQPublisher publisher;
 	private AlarmLightParameters params;
@@ -15,12 +12,7 @@ public class AlarmLight implements EventConsumer<byte[]> {
 	private long sentLastTime;
 	
 	public AlarmLight(AlarmLightParameters params) {
-		try {
-			this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), ".openHAB");
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), ".openHAB");
 		this.params = params;
 		this.sentLastTime = System.currentTimeMillis();
 	}
@@ -29,7 +21,7 @@ public class AlarmLight implements EventConsumer<byte[]> {
 	public void onEvent(byte[] payload) {
 		long currentTime = System.currentTimeMillis();
 		if ((currentTime - sentLastTime) >= 30000) {
-            publisher.publish(getCommand());
+            publisher.publish(getCommand().getBytes());
             sentLastTime = currentTime;
         }
 	}
