@@ -30,7 +30,7 @@ public enum ActionConfig {
 	ActionConfig() {
 		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
 
-       	config.register(HOST, "sinks", "Hostname for the pe sinks");
+       	config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
         config.register(PORT, 8090, "Port for the pe sinks");
       	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
         config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");

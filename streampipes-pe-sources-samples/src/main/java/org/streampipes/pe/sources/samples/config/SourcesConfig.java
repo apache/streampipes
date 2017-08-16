@@ -37,7 +37,7 @@ public enum SourcesConfig {
 
 	SourcesConfig() {
 		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.samples");
-		config.register(HOST, "sources-samples", "Hostname for the pe sources samples");
+		config.register(HOST, "pe-sources-samples", "Hostname for the pe sources samples");
 		config.register(PORT, 8090, "Port for the pe sources samples");
       	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sources samples project");
         config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sources samples project");

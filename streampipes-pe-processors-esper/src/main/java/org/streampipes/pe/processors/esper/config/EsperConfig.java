@@ -15,7 +15,7 @@ public enum EsperConfig {
 
 	EsperConfig() {
 		config = SpConfig.getSpConfig("pe/org.streampipes.pe.processors.esper");
-		config.register(HOST, "esper", "Hostname for the pe esper");
+		config.register(HOST, "pe-esper", "Hostname for the pe esper");
 		config.register(PORT, 8090, "Port for the pe esper");
 	}
 	
