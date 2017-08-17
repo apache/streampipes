@@ -21,12 +21,18 @@ public abstract class EventSinkDeclarer<B extends EventSinkBindingParams, ES ext
 
   @Override
   public Response invokeRuntime(SecInvocation graph) {
-    ConfiguredEventSink<B, EventSink<B>> configuredEngine = onInvocation(graph);
 
-    return submit(configuredEngine.getBindingParams(), configuredEngine.getEngineSupplier());
+    try {
+      ConfiguredEventSink<B, EventSink<B>> configuredEngine = onInvocation(graph);
+      invokeEPRuntime(configuredEngine.getBindingParams(), configuredEngine.getEngineSupplier());
+      return new Response(configuredEngine.getBindingParams().getGraph().getElementId(), true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Response(graph.getElementId(), false, e.getMessage());
+    }
+
   }
 
-  public abstract ConfiguredEventSink<B, EventSink<B>> onInvocation(SecInvocation
-                                                                                      graph);
+  public abstract ConfiguredEventSink<B, EventSink<B>> onInvocation(SecInvocation graph);
 
 }

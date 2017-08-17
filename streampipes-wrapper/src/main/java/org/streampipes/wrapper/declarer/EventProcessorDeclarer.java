@@ -25,9 +25,16 @@ public abstract class EventProcessorDeclarer<B extends EventProcessorBindingPara
 
 	@Override
 	public Response invokeRuntime(SepaInvocation graph) {
-		ConfiguredEventProcessor<B, EventProcessor<B>> configuredEngine = onInvocation(graph);
 
-		return submit(configuredEngine.getBindingParams(), configuredEngine.getEngineSupplier());
+		try {
+			ConfiguredEventProcessor<B, EventProcessor<B>> configuredEngine = onInvocation(graph);
+			invokeEPRuntime(configuredEngine.getBindingParams(), configuredEngine.getEngineSupplier());
+			return new Response(configuredEngine.getBindingParams().getGraph().getElementId(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response(graph.getElementId(), false, e.getMessage());
+		}
+
 	}
 
 	public abstract ConfiguredEventProcessor<B, EventProcessor<B>> onInvocation(SepaInvocation

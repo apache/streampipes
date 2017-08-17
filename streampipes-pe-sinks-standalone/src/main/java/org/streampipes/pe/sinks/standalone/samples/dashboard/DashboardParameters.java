@@ -3,13 +3,15 @@ package org.streampipes.pe.sinks.standalone.samples.dashboard;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class DashboardParameters {
+public class DashboardParameters extends EventSinkBindingParams {
     private String pipelineId;
     private EventSchema schema;
     private String broker;
 
     public DashboardParameters(SecInvocation invocationGraph) {
+        super(invocationGraph);
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();
         this.broker = "ws://" + ActionConfig.INSTANCE.getNginxHost() +":" +ActionConfig.INSTANCE
