@@ -5,7 +5,7 @@ import org.streampipes.config.SpConfig;
 
 public enum ActionConfig {
 
-	INSTANCE;
+  INSTANCE;
 
   private SpConfig config;
   private final static String HOST = "host";
@@ -24,26 +24,13 @@ public enum ActionConfig {
   private final static String NGINX_PORT = "nginx_port";
 
 
-	public final static String serverUrl;
-	public final static String iconBaseUrl;
+  public final static String serverUrl;
+  public final static String iconBaseUrl;
 
-	ActionConfig() {
-		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
+  ActionConfig() {
+    config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
 
-       	config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
-        config.register(PORT, 8090, "Port for the pe sinks");
-      	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
-        config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
-       	config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe sinks project");
-        config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
-		config.register(COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
-		config.register(COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
-  		config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
-        config.register(JMS_PORT, 9092, "Port for pe actions service for active mq");
-   		config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
-        config.register(SIMULATION_MAX_EVENTS,105000, "Maximal number of events for the simulation");
-	}
-    config.register(HOST, "sinks", "Hostname for the pe sinks");
+    config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
     config.register(PORT, 8090, "Port for the pe sinks");
     config.register(NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
             "StreamPipes Nginx");
@@ -60,75 +47,75 @@ public enum ActionConfig {
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
   }
 
+  static {
+    serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
+    iconBaseUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort() + "/img";
+  }
 
-	static {
-		serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
-		iconBaseUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort() +"/img";
-	}
+  public static final String getIconUrl(String pictureName) {
+    return iconBaseUrl + "/" + pictureName + ".png";
+  }
 
-	public static final String getIconUrl(String pictureName) {
-		return iconBaseUrl +"/" +pictureName +".png";
-	}
+  public String getHost() {
+    return config.getString(HOST);
+  }
 
-	public String getHost() {
-		return config.getString(HOST);
-	}
+  public int getPort() {
+    return config.getInteger(PORT);
+  }
 
-	public int getPort() {
-		return config.getInteger(PORT);
-	}
+  public String getKafkaHost() {
+    return config.getString(KAFKA_HOST);
+  }
 
-	public String getKafkaHost() {
-		return config.getString(KAFKA_HOST);
-	}
+  public int getKafkaPort() {
+    return config.getInteger(KAFKA_PORT);
+  }
 
-	public int getKafkaPort() {
-		return config.getInteger(KAFKA_PORT);
-	}
+  public String getKafkaUrl() {
+    return getKafkaHost() + ":" + getKafkaPort();
+  }
 
-	public String getKafkaUrl() {
-		return getKafkaHost() + ":" + getKafkaPort();
-	}
+  public String getZookeeperHost() {
+    return config.getString(ZOOKEEPER_HOST);
+  }
 
-	public String getZookeeperHost() {
-		return config.getString(ZOOKEEPER_HOST);
-	}
+  public int getZookeeperPort() {
+    return config.getInteger(ZOOKEEPER_PORT);
+  }
 
-	public int getZookeeperPort() {
-		return config.getInteger(ZOOKEEPER_PORT);
-	}
+  public String getCouchDbHost() {
+    return config.getString(COUCHDB_HOST);
+  }
 
-	public String getCouchDbHost() {
-		return config.getString(COUCHDB_HOST);
-	}
+  public int getCouchDbPort() {
+    return config.getInteger(COUCHDB_PORT);
+  }
 
-	public int getCouchDbPort() {
-		return config.getInteger(COUCHDB_PORT);
-	}
+  public String getJmsHost() {
+    return config.getString(JMS_HOST);
+  }
 
-    public String getJmsHost() {
-		return config.getString(JMS_HOST);
-	}
+  public int getJmsPort() {
+    return config.getInteger(JMS_PORT);
+  }
 
-	public int getJmsPort() {
-		return config.getInteger(JMS_PORT);
-	}
+  public String getJmsUrl() {
+    return getJmsHost() + ":" + getJmsPort();
+  }
 
-	public String getJmsUrl() {
-		return getJmsHost() + ":" + getJmsPort();
-	}
+  public int getSimulationDelay() {
+    return config.getInteger(SIMULATION_DELAY);
+  }
 
-	public int getSimulationDelay() {
-		return config.getInteger(SIMULATION_DELAY);
-	}
-
-	public int getSimulationMaxEvents() {
-		return config.getInteger(SIMULATION_MAX_EVENTS);
-	}
+  public int getSimulationMaxEvents() {
+    return config.getInteger(SIMULATION_MAX_EVENTS);
+  }
 
   public String getNginxHost() {
     return config.getString(NGINX_HOST);
   }
+
   public Integer getNginxPort() {
     return config.getInteger(NGINX_PORT);
   }
