@@ -21,7 +21,7 @@ public enum FlinkConfig {
 	FlinkConfig() {
 	    config = SpConfig.getSpConfig("pe/org.streampipes.pe.mixed.flink");
 
-       	config.register(HOST, "flink-samples", "Hostname for the pe mixed flink component");
+       	config.register(HOST, "pe-flink-samples", "Hostname for the pe mixed flink component");
         config.register(PORT, 8090, "Port for the pe mixed flink component");
        	config.register(FLINK_HOST, "taskmanager", "Host for the flink cluster");
         config.register(FLINK_PORT, 6123, "Port for the flink cluster");
