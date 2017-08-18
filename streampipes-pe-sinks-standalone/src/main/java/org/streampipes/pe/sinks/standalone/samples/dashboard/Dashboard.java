@@ -5,7 +5,6 @@ import org.lightcouch.CouchDbProperties;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.util.GsonSerializer;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
@@ -26,6 +25,7 @@ public class Dashboard  implements EventSink<DashboardParameters> {
 
     private String visualizationId;
     private String visualizationRev;
+    private String pipelineId;
 
 
     public Dashboard() {
@@ -34,12 +34,13 @@ public class Dashboard  implements EventSink<DashboardParameters> {
     }
 
     @Override
-    public void bind(DashboardParameters parameters) {
+    public void bind(DashboardParameters parameters) throws SpRuntimeException {
         if (!saveToCouchDB(parameters.getGraph())) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }
         this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), parameters.getGraph()
                 .getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName());
+        this.pipelineId = parameters.getPipelineId();
     }
 
     @Override
@@ -73,13 +74,10 @@ public class Dashboard  implements EventSink<DashboardParameters> {
     }
 
     @Override
-    public void discard() {
+    public void discard() throws SpRuntimeException {
         this.publisher.disconnect();
         if (!removeFromCouchDB()) {
-            return new Response(pipelineId, false, "There was an error while deleting pipeline: '" + pipelineId + "'");
-        } else {
-            stopKafkaConsumer();
-            return new Response(pipelineId, true);
+            throw new SpRuntimeException("There was an error while deleting pipeline: '" + pipelineId + "'");
         }
     }
 }

@@ -2,10 +2,8 @@ package org.streampipes.wrapper.params.runtime;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
-import org.streampipes.wrapper.routing.SpInputCollector;
 import org.streampipes.wrapper.runtime.EventSink;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
@@ -20,7 +18,7 @@ public abstract class EventSinkRuntimeParams<B extends EventSinkBindingParams> e
     engine.bind(bindingParams);
   }
 
-  public void discardEngine() {
+  public void discardEngine() throws SpRuntimeException {
     engine.discard();
   }
 

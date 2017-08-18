@@ -20,7 +20,7 @@ public abstract class EventProcessorRuntimeParams<B extends EventProcessorBindin
 		engine.bind(bindingParams, getOutputCollector());
 	}
 
-	public void discardEngine() {
+	public void discardEngine() throws SpRuntimeException {
 		engine.discard();
 	}
 
