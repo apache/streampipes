@@ -1,9 +1,13 @@
-LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$state', '$stateParams', 'restApi'];
+LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$state', '$stateParams', 'restApi', '$window'];
 
-export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, restApi) {
+export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, restApi, $window) {
     $scope.loading = false;
     $scope.authenticationFailed = false;
     $rootScope.title = "ProaSense";
+
+    $scope.openDocumentation = function(){
+        $window.open('/site', '_blank');
+    };
 
     $scope.logIn = function () {
         $scope.authenticationFailed = false;
