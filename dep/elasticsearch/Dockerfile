@@ -1,4 +1,4 @@
-FROM elasticsearch:5.5.1-alpine
+FROM elasticsearch:5.2.2-alpine
 
 ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 
