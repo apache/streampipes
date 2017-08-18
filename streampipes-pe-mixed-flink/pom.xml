@@ -8,7 +8,7 @@
 		<version>0.41.0-SNAPSHOT</version>
 	</parent>
 	<properties>
-		<elasticsearch.version>5.2.2</elasticsearch.version>
+		<elasticsearch.version>5.5.1</elasticsearch.version>
 	</properties>
 	<dependencies>
 		<dependency>
