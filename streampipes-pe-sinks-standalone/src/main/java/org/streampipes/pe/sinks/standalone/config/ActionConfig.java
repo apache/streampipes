@@ -30,10 +30,10 @@ public enum ActionConfig {
   ActionConfig() {
     config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
 
-    config.register(HOST, "sinks", "Hostname for the pe sinks");
+    config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
     config.register(PORT, 8090, "Port for the pe sinks");
     config.register(NGINX_HOST, System.getenv("STREAMPIPES_HOST"), "External hostname of " +
-                    "StreamPipes Nginx");
+            "StreamPipes Nginx");
     config.register(NGINX_PORT, 80, "External port of StreamPipes Nginx");
     config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
     config.register(KAFKA_PORT, 9092, "Port for kafka of the pe sinks project");
@@ -41,12 +41,11 @@ public enum ActionConfig {
     config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
     config.register(COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
     config.register(COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
-    config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
-    config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
+    config.register(JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
+    config.register(JMS_PORT, 9092, "Port for pe actions service for active mq");
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
   }
-
 
   static {
     serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();

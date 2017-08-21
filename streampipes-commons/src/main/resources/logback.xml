@@ -7,7 +7,7 @@
         </layout>
     </appender>
 
-    <logger name="org.streampipes" level="TRACE"/>
+    <logger name="org.streampipes" level="INFO"/>
 
 
     <root level="info">
