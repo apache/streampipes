@@ -99,6 +99,16 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
         return me();
     }
 
+    public BU requiredHtmlInputParameter(Label label) {
+        FreeTextStaticProperty fsp = new FreeTextStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+        fsp.setMultiLine(true);
+        fsp.setHtmlAllowed(true);
+        fsp.setPlaceholdersSupported(true);
+        this.staticProperties.add(fsp);
+
+        return me();
+    }
+
     public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
         FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label.getInternalId(),
                 label.getLabel(),

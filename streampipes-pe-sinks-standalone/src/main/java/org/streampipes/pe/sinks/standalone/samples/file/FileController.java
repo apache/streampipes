@@ -1,59 +1,45 @@
 package org.streampipes.pe.sinks.standalone.samples.file;
 
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.ActionController;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
 import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.wrapper.ConfiguredEventSink;
+import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-public class FileController extends ActionController {
+public class FileController extends StandaloneEventSinkDeclarer<FileParameters> {
 
-	private FileWriter fileWriter;
+  private FileWriter fileWriter;
 
-	@Override
-	public SecDescription declareModel() {
-		 SecDescription desc = DataSinkBuilder
-				.create("file",  "File Output", "Writes the data in a csv file on the host system. The file name must be provided.")
-				 .iconUrl(ActionConfig.iconBaseUrl + "/file_icon.png")
-                 .requiredStaticProperty(new FreeTextStaticProperty("path", "Path", "The path to the file including the file name"))
-                 .setStream1()
-				 .supportedFormats(SupportedFormats.jsonFormat())
-				 .supportedProtocols(SupportedProtocols.jms())
-				.build();
-		
-		return desc;
-	}
+  private static final String PATH_KEY = "path";
 
+  @Override
+  public SecDescription declareModel() {
+    SecDescription desc = DataSinkBuilder
+            .create("file", "File Output", "Writes the data in a csv file on the host system. The file name must be provided.")
+            .iconUrl(ActionConfig.getIconUrl("file_icon"))
+            .requiredStaticProperty(new FreeTextStaticProperty(PATH_KEY, "Path", "The path to the file " +
+                    "including the file name"))
+            .setStream1()
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka())
+            .build();
 
-
-	@Override
-	public Response invokeRuntime(SecInvocation sec) {
-		String brokerUrl = createJmsUri(sec);
-		String inputTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
-		
-		String path = ((FreeTextStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sec, "path"))).getValue();
-		
-		FileParameters fileParameters = new FileParameters(inputTopic, brokerUrl, path);
-
-		fileWriter = new FileWriter(fileParameters);
-		new Thread(fileWriter).start();
-	    String pipelineId = sec.getCorrespondingPipeline();
-        return new Response(pipelineId, true);
-
-	}
+    return desc;
+  }
 
 
-    @Override
-    public Response detachRuntime(String pipelineId) {
-		fileWriter.close();
-        return new Response(pipelineId, true);
-    }
+  @Override
+  public ConfiguredEventSink<FileParameters, EventSink<FileParameters>> onInvocation(SecInvocation graph) {
+    String path = getExtractor(graph).singleValueParameter(PATH_KEY, String.class);
 
+    FileParameters params = new FileParameters(graph, path);
+
+    return new ConfiguredEventSink<>(params, FileWriter::new);
+  }
 
 }

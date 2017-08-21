@@ -1,24 +1,19 @@
 package org.streampipes.pe.sinks.standalone.samples.file;
 
-import org.streampipes.pe.sinks.standalone.samples.ActionParameters;
+import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class FileParameters extends ActionParameters {
+public class FileParameters extends EventSinkBindingParams {
 
-	private String path;
-	
-	public FileParameters(String topic, String url, String path) {
-		super(topic, url);
-		this.path = path;
-	}
+  private String path;
 
-	public String getPath() {
-		return path;
-	}
+  public FileParameters(SecInvocation graph, String path) {
+    super(graph);
+    this.path = path;
+  }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-	
-	
+  public String getPath() {
+    return path;
+  }
 
 }

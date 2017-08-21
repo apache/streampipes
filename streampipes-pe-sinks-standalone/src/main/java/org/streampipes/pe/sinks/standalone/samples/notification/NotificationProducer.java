@@ -4,48 +4,59 @@ import eu.proasense.internal.RecommendationEvent;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.streampipes.messaging.InternalEventProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
+import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
-public class NotificationProducer implements InternalEventProcessor<byte[]> {
+public class NotificationProducer implements EventSink<NotificationParameters> {
 
-	SpKafkaProducer producer;
+	private SpKafkaProducer producer;
 	private TSerializer serializer;
 	private String title;
 	private String content;
 
+	private static final Logger LOG = LoggerFactory.getLogger(NotificationProducer.class);
 	
-	public NotificationProducer(SecInvocation sec)
+	public NotificationProducer()
 	{
-		producer = new SpKafkaProducer(ActionConfig.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
-		this.title = SepaUtils.getFreeTextStaticPropertyValue(sec, "title");
-		this.content = SepaUtils.getFreeTextStaticPropertyValue(sec, "content");
 		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
 	}
-	
+
 	@Override
-	public void onEvent(byte[] json) {
-		RecommendationEvent event = new RecommendationEvent();
-		event.setAction(PlaceholderExtractor.replacePlaceholders(content, new String(json)));
-		event.setActor("Me");
-		event.setEventName(title);
-		event.setRecommendationId("Notification");
-		event.setEventProperties(new HashMap<>());
-		event.setTimestamp(new Date().getTime());
-		
+	public void bind(NotificationParameters parameters) throws SpRuntimeException {
+		this.producer = new SpKafkaProducer(ActionConfig.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
+		this.title = parameters.getTitle();
+		this.content = parameters.getContent();
+	}
+
+	@Override
+	public void onEvent(Map<String, Object> event, String sourceInfo) {
+		// TODO replace ProaSense Thrift format with yet-to-implement Notification model
+		RecommendationEvent outEvent = new RecommendationEvent();
+		outEvent.setAction(PlaceholderExtractor.replacePlaceholders(content, event));
+		outEvent.setActor("Me");
+		outEvent.setEventName(title);
+		outEvent.setRecommendationId("Notification");
+		outEvent.setEventProperties(new HashMap<>());
+		outEvent.setTimestamp(new Date().getTime());
+
 		try {
-			producer.publish(serializer.serialize(event));
+			producer.publish(serializer.serialize(outEvent));
 		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(e.getMessage());
 		}
 	}
 
+	@Override
+	public void discard() throws SpRuntimeException {
+		this.producer.disconnect();
+	}
 }
