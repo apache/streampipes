@@ -12,7 +12,7 @@ import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
 
-public class Dashboard  implements EventSink<DashboardParameters> {
+public class Dashboard implements EventSink<DashboardParameters> {
 
     private ActiveMQPublisher publisher;
     private JsonDataFormatDefinition jsonDataFormatDefinition;
@@ -38,8 +38,7 @@ public class Dashboard  implements EventSink<DashboardParameters> {
         if (!saveToCouchDB(parameters.getGraph())) {
             throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
         }
-        this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), parameters.getGraph()
-                .getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName());
+        this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), parameters.getGraph().getCorrespondingPipeline());
         this.pipelineId = parameters.getPipelineId();
     }
 
@@ -56,7 +55,7 @@ public class Dashboard  implements EventSink<DashboardParameters> {
         CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
         SecInvocation inv = new SecInvocation(invocationGraph);
         dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
-        org.lightcouch.Response res = dbClient.save(new DashboardParameters(inv));
+        org.lightcouch.Response res = dbClient.save(DashboardModel.from(new DashboardParameters(inv)));
 
         if (res.getError() == null) {
             visualizationId = res.getId();

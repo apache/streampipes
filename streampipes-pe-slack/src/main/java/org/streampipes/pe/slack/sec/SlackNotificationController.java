@@ -141,14 +141,5 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
     return desc;
   }
 
-  @Override
-  public boolean isVisualizable() {
-    return false;
-  }
-
-  @Override
-  public String getHtml(SecInvocation graph) {
-    return null;
-  }
 
 }

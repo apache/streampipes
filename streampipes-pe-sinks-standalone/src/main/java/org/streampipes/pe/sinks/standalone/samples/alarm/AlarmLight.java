@@ -1,34 +1,42 @@
 package org.streampipes.pe.sinks.standalone.samples.alarm;
 
-import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.wrapper.runtime.EventSink;
 
-public class AlarmLight implements InternalEventProcessor<byte[]> {
+import java.util.Map;
+
+public class AlarmLight implements EventSink<AlarmLightParameters> {
 
 	private ActiveMQPublisher publisher;
 	private AlarmLightParameters params;
 	
 	private long sentLastTime;
-	
-	public AlarmLight(AlarmLightParameters params) {
+
+	@Override
+	public void bind(AlarmLightParameters parameters) throws SpRuntimeException {
 		this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), ".openHAB");
-		this.params = params;
+		this.params = parameters;
 		this.sentLastTime = System.currentTimeMillis();
 	}
-	
+
 	@Override
-	public void onEvent(byte[] payload) {
+	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		long currentTime = System.currentTimeMillis();
 		if ((currentTime - sentLastTime) >= 30000) {
-            publisher.publish(getCommand().getBytes());
-            sentLastTime = currentTime;
-        }
+			publisher.publish(getCommand().getBytes());
+			sentLastTime = currentTime;
+		}
 	}
-	
+
+	@Override
+	public void discard() throws SpRuntimeException {
+		this.publisher.disconnect();
+	}
+
 	private String getCommand() {
 		if (params.getState().equals("On")) return "1";
 		else return "0";
 	}
-
 }

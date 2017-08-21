@@ -54,19 +54,6 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		return desc;
 	}
 
-
-	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	protected FlinkSecRuntime getRuntime(SecInvocation graph) {
 		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

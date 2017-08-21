@@ -1,21 +1,19 @@
 package org.streampipes.pe.sinks.standalone.samples.wiki;
 
-import org.streampipes.messaging.kafka.SpKafkaProducer;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.ActionController;
 import org.streampipes.sdk.builder.DataSinkBuilder;
-import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.wrapper.ConfiguredEventSink;
+import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 /**
  * Created by riemer on 05.04.2017.
  */
-public class WikiController extends ActionController {
+public class WikiController extends StandaloneEventSinkDeclarer<WikiParameters> {
   @Override
   public SecDescription declareModel() {
     return DataSinkBuilder.create("wikisink", "Wiki Sink", "Store the optimal route in the wiki")
@@ -25,30 +23,9 @@ public class WikiController extends ActionController {
             .build();
   }
 
-
   @Override
-  public Response invokeRuntime(SecInvocation sec) {
-
-    DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(sec);
-
-    String consumerTopic = extractor.inputTopic(0);
-
-    String topic = "org.streampipes.kt2017.wiki";
-
-    String kafkaHost = "ipe-koi15.fzi.de";
-    int kafkaPort = 9092;
-
-    startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
-            new WikiPublisher(new SpKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
-
-    String pipelineId = sec.getCorrespondingPipeline();
-    return new Response(pipelineId, true);
-  }
-
-  @Override
-  public Response detachRuntime(String pipelineId) {
-    stopKafkaConsumer();
-    return new Response(pipelineId, true);
+  public ConfiguredEventSink<WikiParameters, EventSink<WikiParameters>> onInvocation(SecInvocation graph) {
+    return new ConfiguredEventSink<>(new WikiParameters(graph), WikiPublisher::new);
   }
 
 }
