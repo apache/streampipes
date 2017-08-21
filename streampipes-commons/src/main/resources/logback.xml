@@ -7,10 +7,10 @@
         </layout>
     </appender>
 
-    <logger name="org.streampipes" level="TRACE"/>
+    <logger name="org.streampipes" level="INFO"/>
 
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

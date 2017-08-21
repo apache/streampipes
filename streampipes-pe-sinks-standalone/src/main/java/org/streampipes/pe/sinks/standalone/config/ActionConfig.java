@@ -41,7 +41,7 @@ public enum ActionConfig {
     config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
     config.register(COUCHDB_HOST, "couchdb", "Host for couchdb of the pe sinks project");
     config.register(COUCHDB_PORT, 5984, "Port for couchdb of the pe sinks project");
-    config.register(JMS_HOST, "activemq", "Hostname for pe actions service for active mq");
+    config.register(JMS_HOST, "tcp://activemq", "Hostname for pe actions service for active mq");
     config.register(JMS_PORT, 9092, "Port for pe actions service for active mq");
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
