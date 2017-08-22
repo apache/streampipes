@@ -414,7 +414,7 @@
 
     <!-- Environment Settings -->
     <scm>
-        <developerConnection>scm:git:ssh://git@laus.fzi.de:streampipes/streampipes-ce-backend.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
         </developerConnection>
     </scm>
     <repositories>
