@@ -1,0 +1,62 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+  HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
+
+stages:
+  - build
+  - deploy
+#  - build-streampipes-docker
+#  - build-thirdparty-docker
+
+
+build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - mvn clean package
+  artifacts:
+    paths:
+      - **/*.jar
+    expire_in:  1 hour
+
+deploy:
+  image: maven:3-jdk-8
+   stage: build
+   script:
+     - mvn deploy
+   artifacts:
+     paths:
+       - target/*.jar
+     expire_in:  1 hour
+
+#build-streampipes-docker:
+#  image: docker:17.06.0-ce
+#  stage: release
+#  dependencies:
+#    - build
+#  script:
+#    - ls -la target/
+#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+#    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+#    - docker build --pull -t $TEST_IMAGE .
+#    - docker push $TEST_IMAGE
+#    - docker build --pull -t $HARBOR_IMAGE_NAME .
+#    - docker push $HARBOR_IMAGE_NAME
+#
+#build-thirdparty-docker:
+#  image: docker:17.06.0-ce
+#  stage: release
+#  dependencies:
+#    - build
+#  script:
+#    - ls -la target/
+#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+#    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+#    - docker build --pull -t $TEST_IMAGE .
+#    - docker push $TEST_IMAGE
+#    - docker build --pull -t $HARBOR_IMAGE_NAME .
+#    - docker push $HARBOR_IMAGE_NAME
+
+
