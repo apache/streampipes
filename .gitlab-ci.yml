@@ -15,6 +15,7 @@ build:
   image: maven:3-jdk-8
   stage: build
   script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package
   artifacts:
     paths:
@@ -25,6 +26,7 @@ deploy:
   image: maven:3-jdk-8
   stage: deploy
   script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn deploy
   artifacts:
     paths:
