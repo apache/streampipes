@@ -106,7 +106,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>semantic-pe-processors-standalone</artifactId>
+                <artifactId>streampipes-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
