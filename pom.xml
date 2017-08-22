@@ -379,7 +379,7 @@
                     <pullDevelop>true</pullDevelop>
                     <pullMaster>true</pullMaster>
                     <pushReleases>true</pushReleases>
-                    <squash>true</squash>
+                    <squash>false</squash>
                     <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
