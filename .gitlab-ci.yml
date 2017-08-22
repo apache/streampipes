@@ -16,7 +16,7 @@ build:
   stage: build
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package
+    - mvn clean package -DskipTests
   artifacts:
     paths:
       - ./**/*.jar
@@ -27,7 +27,7 @@ deploy:
   stage: deploy
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn deploy
+    - mvn deploy -DskipTests
   artifacts:
     paths:
       - ./**/*.jar
