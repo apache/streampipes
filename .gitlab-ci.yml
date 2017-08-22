@@ -23,7 +23,7 @@ build:
 
 deploy:
   image: maven:3-jdk-8
-   stage: build
+   stage: deploy
    script:
      - mvn deploy
    artifacts:
