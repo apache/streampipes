@@ -1,10 +1,5 @@
-FROM kibana:4.1.2
+FROM elasticsearch:5.2.2-alpine
 
-RUN apt-get update && apt-get install -y netcat
+ADD ./elasticsearch.yml /usr/share/elasticsearch/config/elasticsearch.yml
 
-COPY entrypoint.sh /tmp/entrypoint.sh
-RUN chmod +x /tmp/entrypoint.sh
-
-#RUN kibana plugin --install elastic/sense
-
-CMD ["/tmp/entrypoint.sh"]
+RUN chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/

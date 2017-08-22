@@ -3,15 +3,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- The Basics -->
-    <groupId>de.fzi.cep.sepa</groupId>
-    <artifactId>semantic-epa-parent</artifactId>
-    <version>0.40.3-SNAPSHOT</version>
+    <groupId>org.streampipes</groupId>
+    <artifactId>streampipes-parent</artifactId>
+    <version>0.41.0</version>
     <packaging>pom</packaging>
     <properties>
         <sesame.version>2.7.15</sesame.version>
     </properties>
+    <name>StreamPipes Parent POM</name>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.7.4</version>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -84,204 +95,154 @@
                 <version>${sesame.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-actions-samples</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sinks-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-algorithms-samples</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-client</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-client-container</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-client-standalone</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container-embedded</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-client-osgi</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-container-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-code-generation</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-code-generation</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-commons</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-esper</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-processors-esper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-manager</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-manager</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-model</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-model-client</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-model-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-flink</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-flink</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-flink-samples</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-mixed-flink</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-implementations-slack</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sources</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-implementations-stream-story</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-slack</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-kpi</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-rest</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-runtime</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-runtime-camel</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-backend</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-runtime-flat</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sources-demonstrator</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-samples-embedded</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sources-hella</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-server</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sources-mhwirth</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-sources-samples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources-demonstrator</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources-hella</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-measurement-units</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources-mhwirth</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources-proasense-monitoring</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-sdk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sources-samples</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-kafka</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-storage</artifactId>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-messaging-jms</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-storm-topology</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-storm-topology-sentiment-new</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-units</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-appstore</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-appstore-deployer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-appstore-shared</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-messaging</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-sdk</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-messaging-kafka</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>de.fzi.cep.sepa</groupId>
-                <artifactId>semantic-epa-messaging-jms</artifactId>
-                <version>0.40.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
@@ -308,72 +269,63 @@
                 <artifactId>type-parser</artifactId>
                 <version>0.6.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-esper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-user-management</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>semantic-epa-actions-samples</module>
-        <module>semantic-epa-algorithms-samples</module>
-        <module>semantic-epa-client</module>
-        <module>semantic-epa-client-container</module>
-        <module>semantic-epa-client-standalone</module>
-        <module>semantic-epa-client-osgi</module>
-        <module>semantic-epa-code-generation</module>
-        <module>semantic-epa-commons</module>
-        <module>semantic-epa-esper</module>
-        <module>semantic-epa-manager</module>
-        <module>semantic-epa-model</module>
-        <module>semantic-epa-model-client</module>
-        <module>semantic-epa-flink</module>
-        <module>semantic-epa-flink-samples</module>
-        <module>semantic-epa-implementations-slack</module>
-        <module>semantic-epa-implementations-stream-story</module>
-        <module>semantic-epa-kpi</module>
-        <module>semantic-epa-rest</module>
-        <module>semantic-epa-runtime</module>
-        <module>semantic-epa-runtime-camel</module>
-        <module>semantic-epa-runtime-flat</module>
-        <module>semantic-epa-samples-embedded</module>
-        <module>semantic-epa-server</module>
-        <module>semantic-epa-sources</module>
-        <module>semantic-epa-sources-demonstrator</module>
-        <module>semantic-epa-sources-hella</module>
-        <module>semantic-epa-sources-mhwirth</module>
-        <module>semantic-epa-sources-proasense-monitoring</module>
-        <module>semantic-epa-storage</module>
-        <module>semantic-epa-storm-topology</module>
-        <module>semantic-epa-storm-topology-sentiment-new</module>
-        <module>semantic-epa-sources-samples</module>
-        <module>semantic-epa-units</module>
-        <module>semantic-epa-appstore</module>
-        <module>semantic-epa-appstore-deployer</module>
-        <module>semantic-epa-appstore-shared</module>
-        <module>semantic-epa-messaging-kafka</module>
-        <module>semantic-epa-messaging</module>
-        <module>semantic-epa-messaging-jms</module>
-        <module>semantic-epa-sources-kd2</module>
-        <module>semantic-epa-sdk</module>
-        <module>semantic-epa-sources-mnist</module>
-        <module>semantic-epa-sdk-tutorial</module>
-        <module>semantic-epa-sources-axoom-hmi</module>
+        <module>streampipes-backend</module>
+        <module>streampipes-code-generation</module>
+        <module>streampipes-commons</module>
+        <module>streampipes-config</module>
+        <module>streampipes-container</module>
+        <module>streampipes-container-embedded</module>
+        <module>streampipes-container-standalone</module>
+        <module>streampipes-manager</module>
+        <module>streampipes-measurement-units</module>
+        <module>streampipes-messaging-kafka</module>
+        <module>streampipes-messaging</module>
+        <module>streampipes-messaging-jms</module>
+        <module>streampipes-model</module>
+        <module>streampipes-model-client</module>
+        <module>streampipes-pe-processors-esper</module>
+        <module>streampipes-pe-processors-standalone</module>
+        <module>streampipes-pe-mixed-flink</module>
+        <module>streampipes-pe-sinks-standalone</module>
+        <module>streampipes-pe-slack</module>
+        <module>streampipes-pe-sources-axoom-hmi</module>
+        <module>streampipes-sources</module>
+        <module>streampipes-pe-sources-kd2</module>
+        <module>streampipes-pe-sources-demonstrator</module>
+        <module>streampipes-pe-sources-hella</module>
+        <module>streampipes-pe-sources-mhwirth</module>
+        <module>streampipes-pe-sources-mnist</module>
+        <module>streampipes-pe-sources-samples</module>
+        <module>streampipes-rest</module>
+        <module>streampipes-sdk</module>
+        <module>streampipes-storage</module>
+        <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-flink</module>
+        <module>streampipes-wrapper-standalone</module>
+        <module>streampipes-wrapper-esper</module>
+        <module>streampipes-user-management</module>
     </modules>
 
     <!-- Build Settings -->
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -412,7 +364,7 @@
                     <pullDevelop>true</pullDevelop>
                     <pullMaster>true</pullMaster>
                     <pushReleases>true</pushReleases>
-                    <squash>true</squash>
+                    <squash>false</squash>
                     <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
@@ -429,18 +381,25 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
         </plugins>
 
 
     </build>
 
 
-    <!-- More Project Information -->
-    <name>semantic-epa-parent</name>
-
     <!-- Environment Settings -->
     <scm>
-        <developerConnection>scm:git:ssh://git@laus.fzi.de:streampipes/semantic-epa-parent.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
         </developerConnection>
     </scm>
     <repositories>
@@ -457,28 +416,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>semweb4j</id>
-            <name>semweb4j repo</name>
-            <url>http://mavenrepo.fzi.de/semweb4j.org/repo/</url>
-        </repository>
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.com</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>cumulusrdf-repo</id>
-            <url>http://cumulusrdf.googlecode.com/svn/repository</url>
-        </repository>
-
-        <repository>
             <id>apache</id>
             <url>https://repository.apache.org/content/repositories/releases/</url>
         </repository>
-
         <repository>
             <id>archiva.public</id>
             <name>Nissatech Public Repository</name>

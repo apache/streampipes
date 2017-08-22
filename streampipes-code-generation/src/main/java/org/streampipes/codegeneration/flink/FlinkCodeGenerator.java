@@ -1,0 +1,54 @@
+package org.streampipes.codegeneration.flink;
+
+import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.client.deployment.DeploymentConfiguration;
+import org.streampipes.codegeneration.api.ImplementationCodeGenerator;
+import org.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
+import org.streampipes.codegeneration.utils.DirectoryBuilder;
+import org.streampipes.codegeneration.utils.JFC;
+
+import java.io.File;
+
+public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
+	protected String packageName;
+	protected String name;
+	protected String version;
+	protected String port;
+	
+	protected String src;
+	protected String webInf;
+
+	public FlinkCodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
+		super(config, element);
+		packageName = config.getGroupId() + "." + config.getArtifactId();
+		name = config.getClassNamePrefix();
+		version = "0.40.3-SNAPSHOT";
+		port = Integer.toString(config.getPort());
+		
+		src = getTempDir() + "src" + File.separator + "main" + File.separator + "java" + File.separator;
+		webInf = getTempDir() + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator;
+
+	}
+
+	@Override
+	protected void createDirectoryStructure() {
+		String r = getTempDir(); 
+		String dirs[] = {r + "target/", src, r + "src/api/resources/", r + "src/test/", webInf};
+
+		boolean success = DirectoryBuilder.createDirectories(dirs);
+
+		if (!success) {
+			try {
+				throw new Exception("Couldn't create folder structure");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public String getDeclareModel() {
+		return new FlinkSepaControllerGenerator(element, name, packageName).getDeclareModelCode(JFC.SEPA_DESCRIPTION).build().toString();
+	}
+
+}
