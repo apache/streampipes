@@ -18,7 +18,7 @@ build:
     - mvn clean package
   artifacts:
     paths:
-      - **/*.jar
+      - ./**/*.jar
     expire_in:  1 hour
 
 deploy:
@@ -28,7 +28,7 @@ deploy:
     - mvn deploy
   artifacts:
     paths:
-      - target/*.jar
+      - ./**/*.jar
     expire_in:  1 hour
 
 #build-streampipes-docker:
