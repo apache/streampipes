@@ -28,6 +28,9 @@ deploy:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn deploy -DskipTests
+  only:
+    - dev
+    - master
   artifacts:
     paths:
       - ./**/*.jar
