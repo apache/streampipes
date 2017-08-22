@@ -23,13 +23,13 @@ build:
 
 deploy:
   image: maven:3-jdk-8
-   stage: deploy
-   script:
-     - mvn deploy
-   artifacts:
-     paths:
-       - target/*.jar
-     expire_in:  1 hour
+  stage: deploy
+  script:
+    - mvn deploy
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in:  1 hour
 
 #build-streampipes-docker:
 #  image: docker:17.06.0-ce
