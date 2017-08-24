@@ -8,7 +8,7 @@ variables:
 
 stages:
   - build
-  - deploy
+#  - deploy
   - release
 #  - build-streampipes-docker
 #  - build-thirdparty-docker
@@ -46,9 +46,9 @@ start release:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - git pull origin
     - git checkout master
     - git checkout dev
+    - git pull origin dev
     - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
   only:
     - dev
@@ -60,9 +60,9 @@ finish release:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
-    - git pull origin
     - git checkout master
     - git checkout dev
+    - git pull origin dev
     - git checkout $CI_BUILD_REF_NAME
     - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
   only:
