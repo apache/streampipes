@@ -18,6 +18,7 @@ build:
   image: maven:3-jdk-8
   stage: build
   script:
+    - echo "$MAVEN_CLI_OPTS"
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package -DskipTests
   artifacts:
@@ -45,6 +46,7 @@ start release:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git pull
     - git checkout master
     - git checkout dev
     - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
@@ -58,6 +60,7 @@ finish release:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git pull
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
