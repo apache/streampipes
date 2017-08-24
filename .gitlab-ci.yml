@@ -40,6 +40,7 @@ deploy:
     expire_in:  1 hour
 
 start release:
+  image: maven:3-jdk-8
   stage: release
   script:
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
@@ -51,6 +52,7 @@ start release:
   when: manual
 
 finish release:
+  image: maven:3-jdk-8
   stage: release
   script:
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
