@@ -359,14 +359,14 @@
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
                         <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
-                    <noDeploy>true</noDeploy>
+                    <noDeploy>false</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <pullDevelop>true</pullDevelop>
                     <pullMaster>true</pullMaster>
                     <pushReleases>true</pushReleases>
                     <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
-                    <enableSshAgent>true</enableSshAgent>
+                    <scmCommentPrefix>[RELEASE] </scmCommentPrefix>
+                    <enableSshAgent>false</enableSshAgent>
                 </configuration>
             </plugin>
             <plugin>
