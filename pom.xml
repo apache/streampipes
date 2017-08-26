@@ -5,7 +5,7 @@
     <!-- The Basics -->
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.41.0-SNAPSHOT</version>
+    <version>0.41.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
         <sesame.version>2.7.15</sesame.version>
@@ -106,7 +106,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>semantic-pe-processors-standalone</artifactId>
+                <artifactId>streampipes-pe-processors-standalone</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -221,27 +221,12 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-proasense-monitoring</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-sources-samples</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-storage</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-wrapper-storm</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-processors-storm</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -387,13 +372,12 @@
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
                         <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
-                    <noDeploy>true</noDeploy>
+                    <noDeploy>false</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pullDevelop>true</pullDevelop>
-                    <pullMaster>true</pullMaster>
-                    <pushReleases>true</pushReleases>
-                    <squash>true</squash>
-                    <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
+                    <pushReleases>false</pushReleases>
+                    <localOnly>true</localOnly>
+                    <squash>false</squash>
+                    <scmCommentPrefix>[RELEASE] [skip-ci] </scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
@@ -427,7 +411,7 @@
 
     <!-- Environment Settings -->
     <scm>
-        <developerConnection>scm:git:ssh://git@laus.fzi.de:streampipes/streampipes-ce-backend.git
+        <developerConnection>scm:git:ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
         </developerConnection>
     </scm>
     <repositories>

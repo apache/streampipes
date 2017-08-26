@@ -1,0 +1,103 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  HARBOR_REGISTRY_HOST: laus.fzi.de:8201
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+  HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
+  MAVEN_CLI_OPTS: -DskipTests --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true
+  GIT_REPO_ORIGIN: ssh://git@ipe-wim-gitlab.fzi.de:2222
+  GIT_STRATEGY: clone
+
+stages:
+  - build
+#  - deploy
+  - release
+#  - build-streampipes-docker
+#  - build-thirdparty-docker
+
+
+#build:
+#  image: maven:3-jdk-8
+#  stage: build
+#  script:
+#    - echo "$MAVEN_CLI_OPTS"
+#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+#    - mvn clean package -DskipTests
+#  artifacts:
+#    paths:
+#      - ./**/*.jar
+#    expire_in:  1 hour
+
+#deploy:
+#  image: maven:3-jdk-8
+#  stage: deploy
+#  script:
+#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+#    - mvn deploy -DskipTests
+#  only:
+#    - dev
+#    - master
+#  artifacts:
+#    paths:
+#      - ./**/*.jar
+#    expire_in:  1 hour
+
+start release:
+  image: maven:3-jdk-8
+  stage: release
+  script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git checkout master
+    - git checkout dev
+    - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
+    - git push origin --all
+  only:
+    - dev
+  when: manual
+
+finish release:
+  image: maven:3-jdk-8
+  stage: release
+  script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git checkout master
+    - git checkout develop
+    - git checkout $CI_BUILD_REF_NAME
+    - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
+    - git push origin --all
+    - git push origin --tags
+    - git push origin --delete $CI_BUILD_REF_NAME
+  only:
+    - /^release\/.*$/
+  when: manual
+
+#build-streampipes-docker:
+#  image: docker:17.06.0-ce
+#  stage: release
+#  dependencies:
+#    - build
+#  script:
+#    - ls -la target/
+#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+#    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+#    - docker build --pull -t $TEST_IMAGE .
+#    - docker push $TEST_IMAGE
+#    - docker build --pull -t $HARBOR_IMAGE_NAME .
+#    - docker push $HARBOR_IMAGE_NAME
+#
+#build-thirdparty-docker:
+#  image: docker:17.06.0-ce
+#  stage: release
+#  dependencies:
+#    - build
+#  script:
+#    - ls -la target/
+#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+#    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST
+#    - docker build --pull -t $TEST_IMAGE .
+#    - docker push $TEST_IMAGE
+#    - docker build --pull -t $HARBOR_IMAGE_NAME .
+#    - docker push $HARBOR_IMAGE_NAME
+
+
