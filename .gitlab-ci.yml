@@ -45,7 +45,8 @@ start release:
   stage: release
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-#    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git reset --hard
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - git checkout master
     - git checkout dev
 #    - git pull origin dev
