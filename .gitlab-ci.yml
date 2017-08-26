@@ -5,8 +5,6 @@ variables:
   HARBOR_IMAGE_NAME: $HARBOR_REGISTRY_HOST/$CI_PROJECT_PATH
   GIT_REPO_ORIGIN: https://gitlab-ci-token:$CI_JOB_TOKEN@ipe-wim-gitlab.fzi.de
   MAVEN_CLI_OPTS: -DskipTests -Dgit.user=gitlab-ci-token -Dgit.password=$CI_JOB_TOKEN
-  GIT_STRATEGY: clone
-  GIT_CHECKOUT: false
 
 stages:
   - build
