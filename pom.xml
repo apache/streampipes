@@ -365,10 +365,8 @@
                     <pullMaster>true</pullMaster>
                     <pushReleases>true</pushReleases>
                     <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE] </scmCommentPrefix>
-                    <enableSshAgent>false</enableSshAgent>
-                    <username>${git.user}</username>
-                    <password>${git.password}</password>
+                    <scmCommentPrefix>[RELEASE] [skip-ci] </scmCommentPrefix>
+                    <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
             <plugin>
