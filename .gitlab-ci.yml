@@ -46,7 +46,7 @@ start release:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git reset --hard
-    - git branch -d release-0.41.2
+    - git branch -D release-0.41.2
     - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - git checkout master
     - git checkout dev
