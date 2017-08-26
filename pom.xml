@@ -361,9 +361,8 @@
                     </flowInitContext>
                     <noDeploy>false</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pullDevelop>true</pullDevelop>
-                    <pullMaster>true</pullMaster>
-                    <pushReleases>true</pushReleases>
+                    <pushReleases>false</pushReleases>
+                    <localOnly>true</localOnly>
                     <squash>false</squash>
                     <scmCommentPrefix>[RELEASE] [skip-ci] </scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
