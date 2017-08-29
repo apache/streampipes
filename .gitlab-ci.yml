@@ -45,7 +45,9 @@ before_script:
    - mkdir -p ~/.ssh
    - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
    - chmod 600 ~/.ssh/id_rsa
-   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts 
+   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
+   - git config --global user.email 'zehnder@fzi.de'
+   - git config --global user.name 'zehnder'
 
 start release:
   image: maven:3-jdk-8
