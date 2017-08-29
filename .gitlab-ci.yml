@@ -41,20 +41,26 @@ stages:
 #      - ./**/*.jar
 #    expire_in:  1 hour
 
-before_script:
-   - mkdir -p ~/.ssh
-   - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
-   - chmod 600 ~/.ssh/id_rsa
-   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
-   - git config --global user.email 'zehnder@fzi.de'
-   - git config --global user.name 'zehnder'
+#before_script:
+#   - mkdir -p ~/.ssh
+#   - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
+#   - chmod 600 ~/.ssh/id_rsa
+#   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
+#   - git config --global user.email 'zehnder@fzi.de'
+#   - git config --global user.name 'zehnder'
 
 start release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    - git remote set-url origin ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
     - git checkout master
     - git checkout dev
     - mvn -B jgitflow:release-start $MAVEN_CLI_OPTS
