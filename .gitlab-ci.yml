@@ -57,7 +57,7 @@ start release:
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
     - touch ~/.ssh/known_hosts
-    - ssh-keyscan -t rsa ipe-wim-gitlab.fzi.de:2222 > ~/.ssh/known_hosts
+    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
 #    - ssh-keyscan 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
