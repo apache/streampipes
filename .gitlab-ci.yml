@@ -53,6 +53,7 @@ start release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
 #    - ssh-keyscan 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
