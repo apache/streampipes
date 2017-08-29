@@ -41,6 +41,12 @@ stages:
 #      - ./**/*.jar
 #    expire_in:  1 hour
 
+before_script:
+   - mkdir -p ~/.ssh
+   - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
+   - chmod 600 ~/.ssh/id_rsa
+   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts 
+
 start release:
   image: maven:3-jdk-8
   stage: release
