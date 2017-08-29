@@ -56,7 +56,7 @@ start release:
     - mkdir -p ~/.ssh
     - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
+    - ssh-keyscan -H 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
