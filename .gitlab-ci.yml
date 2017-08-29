@@ -55,6 +55,7 @@ start release:
   script:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
+    - ssh-keyscan -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
 #    - ssh-keyscan 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
