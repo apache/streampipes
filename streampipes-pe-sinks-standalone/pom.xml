@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.41.1-SNAPSHOT</version>
+        <version>0.41.2-SNAPSHOT</version>
     </parent>
     <artifactId>streampipes-pe-sinks-standalone</artifactId>
     <repositories>
