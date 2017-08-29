@@ -53,11 +53,8 @@ start release:
   image: maven:3-jdk-8
   stage: release
   script:
-    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-    - mkdir -p ~/.ssh
-    - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
+    - ssh-add <(echo "$SSH")
+#    - ssh-keyscan 'ipe-wim-gilab.fzi.de' >> ~/.ssh/known_hosts
     - git config --global user.email 'zehnder@fzi.de'
     - git config --global user.name 'zehnder'
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
