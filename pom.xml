@@ -5,7 +5,7 @@
     <!-- The Basics -->
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.41.0</version>
+    <version>0.41.1</version>
     <packaging>pom</packaging>
     <properties>
         <sesame.version>2.7.15</sesame.version>
@@ -359,13 +359,12 @@
                         <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
                         <versionTagPrefix>version-</versionTagPrefix>
                     </flowInitContext>
-                    <noDeploy>true</noDeploy>
+                    <noDeploy>false</noDeploy>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pullDevelop>true</pullDevelop>
-                    <pullMaster>true</pullMaster>
-                    <pushReleases>true</pushReleases>
+                    <pushReleases>false</pushReleases>
+                    <localOnly>true</localOnly>
                     <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE]</scmCommentPrefix>
+                    <scmCommentPrefix>[RELEASE] [skip-ci] </scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
