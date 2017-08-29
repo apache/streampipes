@@ -85,7 +85,7 @@ finish release:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - git remote set-url origin ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
     - git checkout master
-    - git checkout develop
+    - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
     - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
     - git push origin --all
