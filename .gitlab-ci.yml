@@ -27,7 +27,7 @@ build:
     - mvn clean package -DskipTests
   artifacts:
     paths:
-      - target/*.war
+      - ./**/*.war
     expire_in:  1 hour
 
 docker-backend:
@@ -36,7 +36,6 @@ docker-backend:
    dependencies: 
      - build
    script: 
-   - ls -la target/
    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST 
    - docker build --pull -t $IMAGE_NAME ./streampipes-backend/
