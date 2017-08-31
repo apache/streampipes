@@ -1,5 +1,0 @@
-kafka:
-  image: laus.fzi.de:5000/fzi/kafka
-  net: "host"
-  ports:
-    - "9092:9092"
