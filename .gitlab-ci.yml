@@ -9,6 +9,7 @@ variables:
 
 stages:
   - build
+  - docker-backend
 #  - deploy
   - release
 #  - build-streampipes-docker
@@ -29,13 +30,23 @@ build:
   image: maven:3-jdk-8
   stage: build
   script:
-    #- echo "$MAVEN_CLI_OPTS"
-    #- echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package -DskipTests
   artifacts:
     paths:
-      - ./**/*.jar
+      - ./**/*.war
     expire_in:  1 hour
+
+docker-backend:
+   image: docker:17.06.0-ce
+   stage: docker-backend
+   dependencies: 
+     - build
+   script: 
+   - ls -la target/
+   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+   - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST 
+   - docker build --pull -t $IMAGE_NAME ./streampipes-backend/
+   - docker push $TEST_IMAGE
 
 #deploy:
 #  image: maven:3-jdk-8
