@@ -14,18 +14,28 @@ stages:
 #  - build-streampipes-docker
 #  - build-thirdparty-docker
 
+before_script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH")
+    - mkdir ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
+    - git config --global user.email 'zehnder@fzi.de'
+    - git config --global user.name 'zehnder'
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
 
-#build:
-#  image: maven:3-jdk-8
-#  stage: build
-#  script:
-#    - echo "$MAVEN_CLI_OPTS"
-#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-#    - mvn clean package -DskipTests
-#  artifacts:
-#    paths:
-#      - ./**/*.jar
-#    expire_in:  1 hour
+build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    #- echo "$MAVEN_CLI_OPTS"
+    #- echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - ./**/*.jar
+    expire_in:  1 hour
 
 #deploy:
 #  image: maven:3-jdk-8
@@ -41,27 +51,10 @@ stages:
 #      - ./**/*.jar
 #    expire_in:  1 hour
 
-#before_script:
-#   - mkdir -p ~/.ssh
-#   - echo "$SSH" | tr -d '\r' > ~/.ssh/id_rsa
-#   - chmod 600 ~/.ssh/id_rsa
-#   - ssh-keyscan -H 'Git_Domain' >> ~/.ssh/known_hosts
-#   - git config --global user.email 'zehnder@fzi.de'
-#   - git config --global user.name 'zehnder'
-
 start release:
   image: maven:3-jdk-8
   stage: release
   script:
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
     - git fetch
     - git checkout master
     - git checkout dev
@@ -75,15 +68,6 @@ finish release:
   image: maven:3-jdk-8
   stage: release
   script:
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH")
-    - mkdir ~/.ssh
-    - touch ~/.ssh/known_hosts
-    - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
-    - git config --global user.email 'zehnder@fzi.de'
-    - git config --global user.name 'zehnder'
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin ssh://git@ipe-wim-gitlab.fzi.de:2222/streampipes/ce-backend.git
     - git checkout master
     - git checkout dev
     - git checkout $CI_BUILD_REF_NAME
