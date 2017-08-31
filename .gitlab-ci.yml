@@ -40,7 +40,7 @@ docker-backend:
      - ls ./streampipes-backend/target/
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker build --pull -t $IMAGE_NAME/streampipes-backend ./streampipes-backend/
-     - docker push $IMAGE_NAME
+     - docker push $IMAGE_NAME/streampipes-backend
 
 docker-pe-sinks:
    image: docker:17.06.0-ce
@@ -51,7 +51,7 @@ docker-pe-sinks:
      - ls ./streampipes-pe-sinks-standalone/target/
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
      - docker build --pull -t $IMAGE_NAME/streampipes-pe-sinks-standalone ./streampipes-pe-sinks-standalone/
-     - docker push $IMAGE_NAME
+     - docker push $IMAGE_NAME/streampipes-pe-sinks-standalone
     
 #deploy:
 #  image: maven:3-jdk-8
