@@ -27,7 +27,7 @@ build:
     - mvn clean package -DskipTests
   artifacts:
     paths:
-      - ./**/*.war
+      - ./streampipes-backend/target/*.war
     expire_in:  1 hour
 
 docker-backend:
