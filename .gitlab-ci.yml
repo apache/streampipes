@@ -37,9 +37,8 @@ docker-backend:
      - build
    script: 
    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-   - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_REGISTRY_HOST 
    - docker build --pull -t $IMAGE_NAME ./streampipes-backend/
-   - docker push $TEST_IMAGE
+   - docker push $IMAGE_NAME
 
 #deploy:
 #  image: maven:3-jdk-8
