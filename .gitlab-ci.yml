@@ -16,8 +16,9 @@ stages:
 #  - build-thirdparty-docker
 
 before_script:
+    - set -e
     - eval $(ssh-agent -s)
-    - ssh-add <echo "$SSH"
+    - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
     - touch ~/.ssh/known_hosts
     - ssh-keyscan -p 2222 -t rsa ipe-wim-gitlab.fzi.de > ~/.ssh/known_hosts
