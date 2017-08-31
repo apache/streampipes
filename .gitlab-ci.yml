@@ -36,7 +36,7 @@ docker-backend:
    dependencies: 
      - build
    script: 
-   - ls ./streampipes-backend
+   - ls ./streampipes-backend/target/
    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
    - docker build --pull -t $IMAGE_NAME ./streampipes-backend/
    - docker push $IMAGE_NAME
