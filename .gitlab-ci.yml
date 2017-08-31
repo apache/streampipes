@@ -29,6 +29,11 @@ build:
     paths:
       - ./streampipes-backend/target/*.war
       - ./streampipes-pe-sinks-standalone/target/*.jar
+      - ./streampipes-pe-sources-samples/target/*.jar
+      - ./streampipes-pe-processors-esper/target/*.jar
+      - ./streampipes-pe-sources-axoom-hmi/target/*.jar
+      - ./streampipes-pe-sources-mnist/target/*.jar
+      - ./streampipes-pe-mixed-flink/target/*.jar
     expire_in:  1 hour
 
 docker-backend:
