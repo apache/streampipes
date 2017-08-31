@@ -15,14 +15,15 @@ stages:
 #  - build-streampipes-docker
 #  - build-thirdparty-docker
 
-before_script:
-    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
+    #before_script:
+    #- echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    #- git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
 
 build:
   image: maven:3-jdk-8
   stage: build
   script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package -DskipTests
   artifacts:
     paths:
@@ -59,6 +60,8 @@ start release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
@@ -79,6 +82,8 @@ finish release:
   image: maven:3-jdk-8
   stage: release
   script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - git remote set-url origin $GIT_REPO_ORIGIN/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME.git
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH")
     - mkdir ~/.ssh
