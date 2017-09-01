@@ -7,3 +7,11 @@ build:
   script:
     - npm install --unsafe-perm
     - npm run dev-build
+  artifacts:
+    - img/**
+    - css/**
+    - index.html
+    - bundle.js
+    - app/**/*.html
+    - templates/**/*.html
+  expire_in: 1 hour
