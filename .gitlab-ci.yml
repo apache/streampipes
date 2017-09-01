@@ -2,7 +2,7 @@ stages:
    - build
 
 build:
-  image: node:8.4-alpine
+  image: beevelop/nodejs-python
   stage: build
   script:
     - npm install --unsafe-perm
