@@ -2,7 +2,7 @@ stages:
    - build
 
 build:
-  image: noda:8.4-alpine
+  image: node:8.4-alpine
   stage: build
   script:
     - npm install --unsafe-perm
