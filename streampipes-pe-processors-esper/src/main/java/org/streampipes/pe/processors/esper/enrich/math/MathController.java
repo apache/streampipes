@@ -1,125 +1,81 @@
 package org.streampipes.pe.processors.esper.enrich.math;
 
-import org.streampipes.commons.Utils;
-import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.model.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Options;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.wrapper.ConfiguredEventProcessor;
 import org.streampipes.wrapper.runtime.EventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MathController extends StandaloneEventProcessorDeclarerSingleton<MathParameter> {
 
-	@Override
-	public SepaDescription declareModel() {
-		
-		SepaDescription desc = new SepaDescription("math", "Math EPA",
-				"performs simple calculations on event properties");
-		desc.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		desc.setIconUrl(EsperConfig.getIconUrl("math-icon"));
-		try {
-			EventStream stream1 = new EventStream();
+  @Override
+  public SepaDescription declareModel() {
 
-			EventSchema schema1 = new EventSchema();
-			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = EpRequirements.numberReq();
-			EventProperty e2 = EpRequirements.numberReq();
-			eventProperties.add(e1);
-			eventProperties.add(e2);
-			
-			schema1.setEventProperties(eventProperties);
-			stream1.setEventSchema(schema1);
-			stream1.setUri("http://localhost:8090/" + desc.getElementId());
-			desc.addEventStream(stream1);
+    return ProcessingElementBuilder.create("math", "Math EPA",
+            "performs simple calculations on event properties")
+            .iconUrl(EsperConfig.getIconUrl("math-icon"))
+            .category(EpaType.ALGORITHM)
+            .requiredPropertyStream1WithNaryMapping(EpRequirements.numberReq(), "leftOperand", "Select left operand", "")
+            .requiredPropertyStream1WithNaryMapping(EpRequirements.numberReq(), "rightOperand", "Select right operand", "")
+            .outputStrategy(OutputStrategies.append(EpProperties.longEp("result", SO.Number)))
+            .requiredSingleValueSelection("operation", "Select Operation", "", Options.from("+", "-", "/", "*"))
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .build();
+  }
 
-			List<OutputStrategy> outputStrategies = new ArrayList<OutputStrategy>();
-			
-			AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
-			List<EventProperty> appendProperties = new ArrayList<EventProperty>();			
-			
-			EventProperty result = new EventPropertyPrimitive(XSD._long.toString(),
-					"delay", "", Utils.createURI("http://schema.org/Number"));
-		
-			appendProperties.add(result);
+  @Override
+  public ConfiguredEventProcessor<MathParameter, EventProcessor<MathParameter>> onInvocation(SepaInvocation sepa) {
+    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
-			outputStrategy.setEventProperties(appendProperties);
-			outputStrategies.add(outputStrategy);
-			desc.setOutputStrategies(outputStrategies);
-			
-			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-			
-			OneOfStaticProperty operation = new OneOfStaticProperty("operation", "Select Operation", "");
-			operation.addOption(new Option("+"));
-			operation.addOption(new Option("-"));
-			operation.addOption(new Option("/"));
-			operation.addOption(new Option("*"));
-			
-			staticProperties.add(operation);
-			
-			// Mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "leftOperand", "Select left operand", ""));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "rightOperand", "Select right operand", ""));
-			desc.setStaticProperties(staticProperties);
+    String operation = extractor.selectedSingleValue("operation", String.class);
+    String leftOperand = extractor.mappingPropertyValue("leftOperand");
+    String rightOperand = extractor.mappingPropertyValue("rightOperand");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return desc;
-	}
+    AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
-	@Override
-	public ConfiguredEventProcessor<MathParameter, EventProcessor<MathParameter>> onInvocation(SepaInvocation sepa) {
-		String operation = SepaUtils.getOneOfProperty(sepa,
-						"operation");
+    String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "result");
 
-		String leftOperand = SepaUtils.getMappingPropertyName(sepa,
-						"leftOperand");
+    Operation arithmeticOperation;
+    if (operation.equals("+")) {
+      arithmeticOperation = Operation.ADD;
+    } else if (operation.equals("-")) {
+      arithmeticOperation = Operation.SUBTRACT;
+    } else if (operation.equals("*")) {
+      arithmeticOperation = Operation.MULTIPLY;
+    } else {
+      arithmeticOperation = Operation.DIVIDE;
+    }
 
-		String rightOperand = SepaUtils.getMappingPropertyName(sepa,
-						"rightOperand");
+    List<String> selectProperties = new ArrayList<>();
+    for (EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties()) {
+      selectProperties.add(p.getRuntimeName());
+    }
 
-		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
+    MathParameter staticParam = new MathParameter(sepa,
+            selectProperties,
+            arithmeticOperation,
+            leftOperand,
+            rightOperand,
+            appendPropertyName);
 
-		String appendPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "delay");
-
-		Operation arithmeticOperation;
-		if (operation.equals("+")) arithmeticOperation = Operation.ADD;
-		else if (operation.equals("-")) arithmeticOperation = Operation.SUBTRACT;
-		else if (operation.equals("*")) arithmeticOperation = Operation.MULTIPLY;
-		else arithmeticOperation = Operation.DIVIDE;
-
-		List<String> selectProperties = new ArrayList<>();
-		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
-		{
-			selectProperties.add(p.getRuntimeName());
-		}
-
-		MathParameter staticParam = new MathParameter(sepa,
-						selectProperties,
-						arithmeticOperation,
-						leftOperand,
-						rightOperand,
-						appendPropertyName);
-
-		return new ConfiguredEventProcessor<>(staticParam, Math::new);
-	}
+    return new ConfiguredEventProcessor<>(staticParam, Math::new);
+  }
 }

@@ -26,7 +26,7 @@ public class DistributionController extends StandaloneEventProcessorDeclarerSing
 
     return ProcessingElementBuilder.create("distribution", "Distribution", "Computes current " +
             "value distribution")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(), "mapping",
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(), "mapping",
                     "Property Mapping", "")
             .requiredIntegerParameter("batch-window", "Batch Window", "Number of events to keep " +
                     "for calculating the distribution")

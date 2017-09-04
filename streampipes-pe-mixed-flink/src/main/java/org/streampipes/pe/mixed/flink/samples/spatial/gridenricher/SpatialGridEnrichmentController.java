@@ -27,9 +27,9 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("grid", "Spatial Grid Enrichment", "Groups spatial " +
             "events into cells of a given size")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
                     , "mapping-latitude", "Latitude Property", "")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
                     , "mapping-longitude", "Longitude Property", "")
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())

@@ -34,12 +34,12 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
             "Detect peaks in time series data")
             .category(EpaType.ALGORITHM)
             .iconUrl(FlinkConfig.getIconUrl("peak-detection-icon"))
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.timestampReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.timestampReq(),
                     TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),
                     PARTITION_BY, "Group by", "Partition the stream by a given id")
             .requiredIntegerParameter(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
                     "the size of the count window", 60)

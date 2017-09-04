@@ -29,7 +29,7 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
             "aggregation functions")
             .category(EpaType.AGGREGATE)
             .iconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(), "aggregate",
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), "aggregate",
                     "Property Selection", "Specifies the event property from your stream that should be aggregated.")
             .naryMappingPropertyWithoutRequirement("groupBy", "Group by", "Partitions the incoming stream by the selected event " +
                     "properties")

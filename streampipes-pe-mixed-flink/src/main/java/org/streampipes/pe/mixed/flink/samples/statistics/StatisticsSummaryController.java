@@ -35,7 +35,7 @@ public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<Stat
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("statistics-summary", "Statistics Summary", "Calculate" +
             " simple descriptive summary statistics")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.listRequirement(Datatypes
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.listRequirement(Datatypes
                     .Number), listPropertyMappingName, "Property", "Select a list property")
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(MEAN, Statistics
                             .MEAN),

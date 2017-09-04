@@ -84,17 +84,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableSEPAElement>
 
   public String mappingPropertyValue(String staticPropertyName)
   {
-    return mappingPropertyValue(staticPropertyName, false);
+    return mappingPropertyValues(staticPropertyName, false).get(0);
   }
 
-  public String mappingPropertyValue(String staticPropertyName,
+  public List<String> mappingPropertyValues(String staticPropertyName,
                                        boolean completeNames)
   {
     URI propertyURI = getURIFromStaticProperty(staticPropertyName);
     for(EventStream stream : sepaElement.getInputStreams())
     {
       List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
-      if (matchedProperties.size() > 0) return matchedProperties.get(0);
+      if (matchedProperties.size() > 0) return matchedProperties;
     }
     return null;
     //TODO: exceptions
