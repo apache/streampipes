@@ -1,8 +1,0 @@
-version: "2"
-services:
-  burrow:
-    volumes:
-      - ${PWD}/docker-config:/etc/burrow/
-      - ${PWD}/tmp:/var/tmp/burrow
-    ports:
-      - 8000:8000
