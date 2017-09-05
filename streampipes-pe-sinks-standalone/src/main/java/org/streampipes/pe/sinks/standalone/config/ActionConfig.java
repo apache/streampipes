@@ -22,6 +22,8 @@ public enum ActionConfig {
   private final static String SIMULATION_MAX_EVENTS = "simulation_max_events";
   private final static String NGINX_HOST = "nginx_host";
   private final static String NGINX_PORT = "nginx_port";
+  private final static String ICON_HOST = "icon_host";
+  private final static String ICON_PORT = "icon_port";
 
 
   public final static String serverUrl;
@@ -45,11 +47,14 @@ public enum ActionConfig {
     config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
+
+    config.register(ICON_HOST, "backend", "Hostname for the icon host");
+    config.register(ICON_PORT, 80, "Port for the icons in nginx");
   }
 
   static {
     serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
-    iconBaseUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort() + "/img";
+    iconBaseUrl = ActionConfig.INSTANCE.getIconHost() + ":" + ActionConfig.INSTANCE.getIconPort() + "/img";
   }
 
   public static final String getIconUrl(String pictureName) {
@@ -118,6 +123,14 @@ public enum ActionConfig {
 
   public Integer getNginxPort() {
     return config.getInteger(NGINX_PORT);
+  }
+
+  public String getIconHost() {
+    return config.getString(ICON_HOST);
+  }
+
+  public int getIconPort() {
+    return config.getInteger(ICON_PORT);
   }
 
 }

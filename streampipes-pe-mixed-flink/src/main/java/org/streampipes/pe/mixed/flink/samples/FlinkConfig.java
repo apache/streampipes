@@ -17,6 +17,8 @@ public enum FlinkConfig {
   private final static String ELASTIC_HOST = "elasticsearch_host";
   private final static String ELASTIC_PORT = "elasticsearch_port";
 
+  private final static String ICON_HOST = "icon_host";
+  private final static String ICON_PORT = "icon_port";
 
   FlinkConfig() {
     config = SpConfig.getSpConfig("pe/org.streampipes.pe.mixed.flink");
@@ -28,6 +30,8 @@ public enum FlinkConfig {
     config.register(ELASTIC_HOST, "elasticsearch", "Elastic search host address");
     config.register(ELASTIC_PORT, 9200, "Elasitc search port");
 
+    config.register(ICON_HOST, "backend", "Hostname for the icon host");
+    config.register(ICON_PORT, 80, "Port for the icons in nginx");
   }
 
   public String getHost() {
@@ -55,9 +59,17 @@ public enum FlinkConfig {
   }
 
 
-  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getHost() + "/img";
+  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getIconHost() + ":" + FlinkConfig.INSTANCE.getIconPort() + "/img";
 
   public static final String getIconUrl(String pictureName) {
     return iconBaseUrl + "/" + pictureName + ".png";
+  }
+
+  public String getIconHost() {
+    return config.getString(ICON_HOST);
+  }
+
+  public int getIconPort() {
+    return config.getInteger(ICON_PORT);
   }
 }
