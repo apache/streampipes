@@ -1,12 +1,12 @@
 package org.streampipes.pe.processors.esper.absence;
 
+import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
-
-public class AbsenceParameters extends BindingParameters {
+public class AbsenceParameters extends EventProcessorBindingParams {
 
 	private static final long serialVersionUID = 4319341875274736697L;
 	

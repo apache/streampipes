@@ -1,27 +1,26 @@
 package org.streampipes.pe.processors.esper.compose;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openrdf.rio.RDFHandlerException;
-
 import com.clarkparsia.empire.annotation.InvalidRdfException;
-
+import org.openrdf.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.output.RenameOutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ComposeController extends StandaloneEventProcessorDeclarerSingleton<ComposeParameters> {
 
 	@Override
 	public SepaDescription declareModel() {
@@ -49,22 +48,21 @@ public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-	
+	public ConfiguredEventProcessor<ComposeParameters, EventProcessor<ComposeParameters>> onInvocation(SepaInvocation
+																																																							 sepa) {
 		try {
 			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
 		} catch (RDFHandlerException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException
-				| SecurityException | ClassNotFoundException
-				| InvalidRdfException e1) {
+						| IllegalArgumentException | InvocationTargetException
+						| SecurityException | ClassNotFoundException
+						| InvalidRdfException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 
-		return submit(staticParam, Compose::new, sepa);
-
+		return new ConfiguredEventProcessor<>(staticParam, Compose::new);
 	}
 
 }

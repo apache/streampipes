@@ -2,11 +2,11 @@ package org.streampipes.pe.processors.esper.enrich.binarymath;
 
 import org.streampipes.pe.processors.esper.enrich.math.Operation;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.List;
 
-public class BinaryMathParameter extends BindingParameters {
+public class BinaryMathParameter extends EventProcessorBindingParams {
 
 	/**
 	 * 

@@ -21,7 +21,7 @@ public class TestProcessingElementBuilder {
                 .requiredIntegerParameter("requiredInteger", "requiredIntegerLabel", "requiredIntegerDescription")
                 .requiredFloatParameter("requiredFloat", "requiredFloatLabel", "requiredFloatDescription")
                 .requiredPropertyStream1(EpRequirements.numberReq())
-                .stream1PropertyRequirementWithUnaryMapping(EpRequirements.booleanReq(), "internalName", "label", "description")
+                .requiredPropertyStream1WithUnaryMapping(EpRequirements.booleanReq(), "internalName", "label", "description")
                 .requiredPropertyStream1(EpRequirements.domainPropertyReq(MhWirth.DrillingStatus))
                 .requiredPropertyStream2(EpRequirements.booleanReq())
                 .outputStrategy(OutputStrategies.custom())

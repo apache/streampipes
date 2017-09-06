@@ -1,16 +1,9 @@
 package org.streampipes.pe.processors.esper.meets;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -23,14 +16,21 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class MeetsController extends FlatEpDeclarer<MeetsParameters>{
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<MeetsParameters> {
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-		// TODO Auto-generated method stub
+	public ConfiguredEventProcessor<MeetsParameters, EventProcessor<MeetsParameters>> onInvocation(SepaInvocation graph) {
 		return null;
 	}
 

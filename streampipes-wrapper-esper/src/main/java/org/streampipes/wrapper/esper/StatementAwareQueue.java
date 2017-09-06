@@ -1,7 +1,6 @@
 package org.streampipes.wrapper.esper;
 
 import com.espertech.esper.client.EventBean;
-
 import org.streampipes.wrapper.esper.writer.Writer;
 
 public class StatementAwareQueue extends AbstractQueueRunnable<EventBean[]>{

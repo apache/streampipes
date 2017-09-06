@@ -1,16 +1,10 @@
 package org.streampipes.pe.processors.esper.pattern.sequence;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.impl.EpaType;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -23,10 +17,17 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class SequenceController extends StandaloneEventProcessorDeclarerSingleton<SequenceParameters> {
 
 	@Override
 	public SepaDescription declareModel() {
@@ -86,7 +87,8 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
+	public ConfiguredEventProcessor<SequenceParameters, EventProcessor<SequenceParameters>> onInvocation(SepaInvocation
+																																																								 invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
 		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
 		String matchingOperator = "";
@@ -96,8 +98,7 @@ public class SequenceController extends FlatEpDeclarer<SequenceParameters> {
 		List<String> matchingProperties = new ArrayList<>();
 		SequenceParameters params = new SequenceParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 
-		return submit(params, Sequence::new, invocationGraph);
-
+		return new ConfiguredEventProcessor<>(params, Sequence::new);
 	}
 
 }

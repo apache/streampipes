@@ -1,14 +1,14 @@
 package org.streampipes.pe.mixed.flink.samples.statistics.window;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by riemer on 20.04.2017.
  */
-public class StatisticsSummaryParametersWindow extends BindingParameters {
+public class StatisticsSummaryParametersWindow extends EventProcessorBindingParams {
 
   private String valueToObserve;
   private String timestampMapping;

@@ -1,80 +1,73 @@
 package org.streampipes.pe.sinks.standalone.samples.file;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.wrapper.runtime.EventSink;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
+public class FileWriter implements EventSink<FileParameters> {
 
-import org.streampipes.pe.sinks.standalone.messaging.jms.ActiveMQConsumer;
-import org.streampipes.commons.messaging.IMessageListener;
-import org.json.CDL;
-import org.json.JSONArray;
+  private static final Logger LOG = LoggerFactory.getLogger(FileWriter.class);
 
-public class FileWriter implements Runnable, IMessageListener<String> {
+  private FileOutputStream stream;
+  private long counter = 0;
+  private boolean firstEvent;
 
-	FileParameters params;
-	FileOutputStream stream;
-	static long counter = 0;
-	private boolean firstEvent;
-	
-	public FileWriter(FileParameters params)
-	{
-		this.params = params;
-		prepare();
+  private void prepare(String path) {
+    File file = new File(path);
+    try {
+      stream = FileUtils.openOutputStream(file);
+    } catch (IOException e) {
+      LOG.error(e.getMessage());
+    }
 
-	}
-	
-	private void prepare()
-	{
-		File file = new File(params.getPath());
-		try {
-			stream = FileUtils.openOutputStream(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    firstEvent = true;
+  }
 
-		firstEvent = true;
-	}
+  @Override
+  public void bind(FileParameters params) throws SpRuntimeException {
+    prepare(params.getPath());
+  }
 
-	public void close() {
-		try {
-			stream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void run() {
-		ActiveMQConsumer consumer = new ActiveMQConsumer(params.getUrl(), params.getTopic());
-		consumer.setListener(this);
-	}
+  @Override
+  public void onEvent(Map<String, Object> event, String sourceInfo) {
+    counter++;
+    try {
+      if (firstEvent) {
+        stream.write(makeRow(event.keySet()).getBytes());
+        firstEvent = false;
+      }
+      stream.write(makeRow(event.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet())).getBytes());
+      if (counter % 10000 == 0) {
+        LOG.info(counter + " Event processed.");
+      }
+    } catch (Exception e) {
+      LOG.error(e.getMessage());
+    }
+  }
 
-	@Override
-	public void onEvent(String json) {
-		counter++;
-		try {
-			String stringArray = "[" + json + "]";
-			JSONArray j = new JSONArray(stringArray);
-			String csvString = CDL.toString(j);
+  private <T> String makeRow(Set<T> objects) {
+    String result = "";
+    for (Object o : objects) {
+      result = String.valueOf(o) + ",";
+    }
+    return result.substring(0, result.length() - 1) + "\n";
+  }
 
-			String csvWithoutHeader = "";
-
-			if (firstEvent) {
-				csvWithoutHeader = csvString + "\n";
-				firstEvent = false;
-			} else {
-				csvWithoutHeader = csvString.substring(0, csvString.length() - 2).replaceAll(".*\n", "") + "\n";
-			}
-
-			stream.write(csvWithoutHeader.getBytes());
-			if (counter % 10000 == 0) System.out.println(counter + " Event processed.");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+  @Override
+  public void discard() throws SpRuntimeException {
+    try {
+      stream.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

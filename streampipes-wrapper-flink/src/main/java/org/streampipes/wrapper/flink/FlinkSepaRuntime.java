@@ -7,14 +7,14 @@ import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
 
 import java.util.Map;
 
-public abstract class FlinkSepaRuntime<B extends BindingParameters> extends FlinkRuntime<SepaInvocation> {
+public abstract class FlinkSepaRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<SepaInvocation> {
 
 	/**
 	 *
@@ -46,7 +46,7 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 		if (isOutputKafkaProtocol()) applicationLogic
 				.addSink(new FlinkKafkaProducer010<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
 		else applicationLogic
-				.addSink(new FlinkJmsProducer<>(getJmsBrokerAddress(), getOutputTopic(), jmsSerializer));
+				.addSink(new FlinkJmsProducer<>(getJmsProtocol(), jmsSerializer));
 
 		thread = new Thread(this);
 		thread.start();
@@ -63,13 +63,9 @@ public abstract class FlinkSepaRuntime<B extends BindingParameters> extends Flin
 				.getTopicName();
 	}
 
-	private String getJmsBrokerAddress()
+	private JmsTransportProtocol getJmsProtocol()
 	{
-		return ((JmsTransportProtocol) protocol())
-				.getBrokerHostname()
-				+":"
-				+((JmsTransportProtocol) protocol())
-				.getPort();
+		return new JmsTransportProtocol((JmsTransportProtocol) protocol());
 	}
 
 	private boolean isOutputKafkaProtocol()

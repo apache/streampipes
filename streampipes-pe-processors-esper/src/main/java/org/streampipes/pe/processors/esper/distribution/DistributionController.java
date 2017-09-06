@@ -1,31 +1,32 @@
 package org.streampipes.pe.processors.esper.distribution;
 
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyList;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class DistributionController extends FlatEpDeclarer<DistributionParameters> {
+public class DistributionController extends StandaloneEventProcessorDeclarerSingleton<DistributionParameters> {
 
   @Override
   public SepaDescription declareModel() {
 
     return ProcessingElementBuilder.create("distribution", "Distribution", "Computes current " +
             "value distribution")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(), "mapping",
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(), "mapping",
                     "Property Mapping", "")
             .requiredIntegerParameter("batch-window", "Batch Window", "Number of events to keep " +
                     "for calculating the distribution")
@@ -48,7 +49,8 @@ public class DistributionController extends FlatEpDeclarer<DistributionParameter
   }
 
   @Override
-  public Response invokeRuntime(SepaInvocation sepa) {
+  public ConfiguredEventProcessor<DistributionParameters, EventProcessor<DistributionParameters>> onInvocation
+          (SepaInvocation sepa) {
     int timeWindow = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa,
             "batch-window"));
 
@@ -59,8 +61,7 @@ public class DistributionController extends FlatEpDeclarer<DistributionParameter
             timeWindow,
             mapping);
 
-    return submit(staticParam, Distribution::new, sepa);
-
+    return new ConfiguredEventProcessor<>(staticParam, Distribution::new);
   }
 
 }

@@ -47,16 +47,6 @@ public class FileSinkController extends AbstractFlinkConsumerDeclarer {
     }
 
     @Override
-    public boolean isVisualizable() {
-        return false;
-    }
-
-    @Override
-    public String getHtml(SecInvocation graph) {
-        return null;
-    }
-
-    @Override
     protected FlinkSecRuntime getRuntime(SecInvocation graph) {
         return new FileSinkProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));

@@ -1,9 +1,9 @@
 package org.streampipes.pe.sources.samples.enriched;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
@@ -36,7 +36,7 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 
 	@Override
 	public void executeStream() {
-		EventProducer producer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topicName);
+		EventProducer producer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topicName);
 		new Thread(new EnrichedReplay(producer)).start();
 	}
 

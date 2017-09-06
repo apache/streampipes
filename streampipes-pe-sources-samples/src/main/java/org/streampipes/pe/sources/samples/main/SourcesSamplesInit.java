@@ -48,7 +48,6 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
         }
         DeclarersSingleton.getInstance().add(new WunderbarProducer())
                 .add(new WunderbarProducer2());
-
         DeclarersSingleton.getInstance().setPort(SourcesConfig.INSTANCE.getPort());
         DeclarersSingleton.getInstance().setHostName(SourcesConfig.INSTANCE.getHost());
         new SourcesSamplesInit().init();

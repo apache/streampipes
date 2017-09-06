@@ -38,12 +38,12 @@ public class StatisticsSummaryControllerWindow extends
             "Calculate" +
                     " simple descriptive summary statistics based on a configurable time window")
             .iconUrl(FlinkConfig.getIconUrl("statistics-icon"))
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.timestampReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.timestampReq(),
                     TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),
                     PARTITION_BY, "Group by", "Partition the stream by a given id")
             .requiredIntegerParameter(CountAggregateConstants.TIME_WINDOW, "Time Window Size", "Size of the time window")
             .requiredSingleValueSelection(CountAggregateConstants.SCALE, "Time Window Scale", "",

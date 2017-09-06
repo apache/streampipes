@@ -136,6 +136,16 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-processors-esper</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -172,6 +182,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-slack</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-performance-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -292,6 +307,8 @@
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
+        <module>streampipes-dataformat</module>
+        <module>streampipes-dataformat-json</module>
         <module>streampipes-manager</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
@@ -315,11 +332,12 @@
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
         <module>streampipes-storage</module>
+        <module>streampipes-user-management</module>
         <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-wrapper-esper</module>
-        <module>streampipes-user-management</module>
+        <module>streampipes-performance-tests</module>
     </modules>
 
     <!-- Build Settings -->

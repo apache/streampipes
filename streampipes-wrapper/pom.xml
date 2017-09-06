@@ -13,9 +13,12 @@
 			<artifactId>streampipes-container</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>eu.proasense.internal</groupId>
-			<artifactId>thrift-messages</artifactId>
-			<version>0.5</version>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-dataformat</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging</artifactId>
 		</dependency>
 	</dependencies>
 </project>

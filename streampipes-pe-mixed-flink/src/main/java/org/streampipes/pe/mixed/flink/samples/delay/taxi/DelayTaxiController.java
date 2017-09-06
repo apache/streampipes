@@ -29,7 +29,7 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
                 .iconUrl("url")
                 .supportedFormats(StandardTransportFormat.standardFormat())
                 .supportedProtocols(StandardTransportFormat.standardProtocols())
-                .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
+                .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
                         "Label Property", "The property that is selected for the label")
                 .outputStrategy(OutputStrategies.append(
                         EpProperties.integerEp(OUTPUT_LABEL, SO.Number)

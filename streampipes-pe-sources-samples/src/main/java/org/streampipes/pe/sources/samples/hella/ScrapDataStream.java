@@ -1,13 +1,8 @@
 package org.streampipes.pe.sources.samples.hella;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
@@ -22,6 +17,11 @@ import org.streampipes.pe.sources.samples.adapter.LineParser;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.hella.parser.ScrapLineParser;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class ScrapDataStream extends AbstractHellaStream {
@@ -58,7 +58,8 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		EventProducer publisher = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Scrap
+            .topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

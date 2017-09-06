@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.numerical.value;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ObserveNumericalParameters extends BindingParameters {
+public class ObserveNumericalParameters extends EventProcessorBindingParams {
 
 	private String valueLimit;
 	private double threshold;

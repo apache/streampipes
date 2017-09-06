@@ -1,19 +1,19 @@
 package org.streampipes.rest.notifications;
 
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.messaging.EventListener;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
-import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
-import org.streampipes.storage.controller.StorageManager;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
+import org.streampipes.storage.controller.StorageManager;
 
 import java.text.SimpleDateFormat;
 
 /**
  * Created by riemer on 16.10.2016.
  */
-public abstract class AbstractNotificationSubscriber implements EventListener<byte[]>, Runnable {
+public abstract class AbstractNotificationSubscriber implements InternalEventProcessor<byte[]>, Runnable {
 
     protected String topic;
     protected TDeserializer deserializer;
@@ -24,7 +24,8 @@ public abstract class AbstractNotificationSubscriber implements EventListener<by
     }
 
     public void subscribe() {
-        StreamPipesKafkaConsumer kafkaConsumerGroup = new StreamPipesKafkaConsumer(BackendConfig.INSTANCE.getKafkaUrl(), topic,
+        SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(BackendConfig.INSTANCE
+                .getKafkaUrl(), topic,
                 this);
         Thread thread = new Thread(kafkaConsumerGroup);
         thread.start();

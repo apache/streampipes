@@ -1,12 +1,12 @@
 package org.streampipes.pe.mixed.flink.samples.spatial.gridenricher;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 /**
  * Created by riemer on 08.04.2017.
  */
-public class SpatialGridEnrichmentParameters extends BindingParameters {
+public class SpatialGridEnrichmentParameters extends EventProcessorBindingParams {
 
   private EnrichmentSettings enrichmentSettings;
 

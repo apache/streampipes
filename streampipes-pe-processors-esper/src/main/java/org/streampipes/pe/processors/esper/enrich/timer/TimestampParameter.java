@@ -3,9 +3,9 @@ package org.streampipes.pe.processors.esper.enrich.timer;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TimestampParameter extends BindingParameters {
+public class TimestampParameter extends EventProcessorBindingParams {
 
 	private List<String> propertyNames;
 	private String appendTimePropertyName;

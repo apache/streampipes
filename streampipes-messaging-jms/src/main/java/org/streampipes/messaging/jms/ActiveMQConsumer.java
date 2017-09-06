@@ -1,62 +1,75 @@
 package org.streampipes.messaging.jms;
 
-import org.streampipes.messaging.EventListener;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.util.ByteSequence;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.messaging.EventConsumer;
+import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.model.impl.JmsTransportProtocol;
 
-import javax.jms.*;
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.lang.IllegalStateException;
+import javax.jms.BytesMessage;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
 
-public class ActiveMQConsumer extends ActiveMQConnectionProvider implements AutoCloseable {
+public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
+        EventConsumer<JmsTransportProtocol>,
+        AutoCloseable {
 
-	 private final Session session;
-	 private final MessageConsumer consumer;
+  private Session session;
+  private MessageConsumer consumer;
+  private InternalEventProcessor<byte[]> eventProcessor;
 
-	    public ActiveMQConsumer(String url, String topicName) {
-	        try {
-	            session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
-	            consumer = session.createConsumer(session.createTopic(topicName));
-	        } catch (JMSException e) {
-	            throw new AssertionError(e);
-	        }
-	    }
+  private Boolean connected;
 
-	    public void setListener(final EventListener<String> listener) {
-	        try {
-	            consumer.setMessageListener(new MessageListener() {
-	                @Override
-	                public void onMessage(Message message) {
-	                    if (message instanceof TextMessage) {
-	                        try {
-	                            String json = ((TextMessage) message).getText();
-	                            listener.onEvent(json);
-	                        } catch (JMSException e) {
-	                            throw new IllegalStateException(e);
-	                        }
-	                    }
-	                    if (message instanceof BytesMessage) {
-	                        ByteSequence bs = ((ActiveMQBytesMessage) message).getContent();
-	                        try {
-	                            String json = new String(bs.getData(), "UTF-8");
-	                            listener.onEvent(json);
-	                        } catch (UnsupportedEncodingException ex) {
-	                            Logger.getLogger(ActiveMQConsumer.class.getName()).log(Level.SEVERE, null, ex);
-	                        }
-	                    }
+  private void initListener() {
+    try {
+      consumer.setMessageListener(message -> {
+        if (message instanceof BytesMessage) {
+          ByteSequence bs = ((ActiveMQBytesMessage) message).getContent();
+          eventProcessor.onEvent(bs.getData());
+        }
 
-	                }
-	            });
-	        } catch (JMSException e) {
-	            throw new IllegalStateException(e);
-	        }
-	    }
+      });
+    } catch (JMSException e) {
+      e.printStackTrace();
+    }
+  }
 
-	    @Override
-	    public void close() throws JMSException {
-	        consumer.close();
-	        session.close();
-	    }
+  @Override
+  public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
+          eventProcessor) throws SpRuntimeException {
+    String url = protocolSettings.getBrokerHostname() + ":" + protocolSettings.getPort();
+    try {
+      this.eventProcessor = eventProcessor;
+      session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
+      consumer = session.createConsumer(session.createTopic(protocolSettings.getTopicName()));
+      initListener();
+      this.connected = true;
+    } catch (JMSException e) {
+      throw new SpRuntimeException("could not connect to activemq broker");
+    }
+  }
+
+  @Override
+  public void disconnect() throws SpRuntimeException {
+    try {
+      consumer.close();
+      session.close();
+      this.connected = false;
+    } catch (JMSException e) {
+      throw new SpRuntimeException("could not disconnect from activemq broker");
+    }
+
+  }
+
+  @Override
+  public Boolean isConnected() {
+    return connected;
+  }
+
+  @Override
+  public void close() throws Exception {
+    disconnect();
+  }
 }

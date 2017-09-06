@@ -1,16 +1,9 @@
 package org.streampipes.pe.processors.esper.number;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -25,10 +18,18 @@ import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.model.vocabulary.SO;
 import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.commons.Utils;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
-public class NumberClassificationController extends FlatEpDeclarer<NumberClassificationParameters> {
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class NumberClassificationController extends StandaloneEventProcessorDeclarerSingleton<NumberClassificationParameters> {
 
 	@Override
 	public SepaDescription declareModel() {
@@ -75,28 +76,27 @@ public class NumberClassificationController extends FlatEpDeclarer<NumberClassif
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-
+	public ConfiguredEventProcessor<NumberClassificationParameters, EventProcessor<NumberClassificationParameters>>
+	onInvocation(SepaInvocation sepa) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "classification_options",
-				CollectionStaticProperty.class);
+						CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(sepa, "to_classify");
 
 		String outputProperty = ((AppendOutputStrategy) sepa.getOutputStrategies().get(0)).getEventProperties().get(0).getRuntimeName();
 
 		List<DomainStaticProperty> domainConcepts = collection.getMembers().stream().map(m -> (DomainStaticProperty) m)
-				.collect(Collectors.toList());
-		
+						.collect(Collectors.toList());
+
 		List<DataClassification> domainConceptData = domainConcepts.stream()
-				.map(m -> new DataClassification(Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
-						Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
-						SepaUtils.getSupportedPropertyValue(m, SO.Text)))
-				.collect(Collectors.toList());
+						.map(m -> new DataClassification(Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MinValue)),
+										Double.parseDouble(SepaUtils.getSupportedPropertyValue(m, SO.MaxValue)),
+										SepaUtils.getSupportedPropertyValue(m, SO.Text)))
+						.collect(Collectors.toList());
 
 		NumberClassificationParameters staticParam = new NumberClassificationParameters(sepa, propertyName, outputProperty,
-				domainConceptData);
+						domainConceptData);
 
-		return submit(staticParam, NumberClassification::new, sepa);
-
+		return new ConfiguredEventProcessor<>(staticParam, NumberClassification::new);
 	}
 
 }

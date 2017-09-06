@@ -34,7 +34,7 @@ public class DelayController extends AbstractFlinkAgentDeclarer<DelayParameters>
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .requiredIntegerParameter(DELAY_VALUE_NAME, "Delay Value [min]", "Minutes till the correct label is knonwn")
-                .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
+                .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
                         "Label Property", "The property that is selected for the label")
                 .outputStrategy(OutputStrategies.append(new EventPropertyPrimitive(
                         XSD._long.toString(), OUTPUT_LABEL, "",

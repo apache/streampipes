@@ -8,7 +8,7 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.UnsupportedRDFormatException;
 
-import org.streampipes.pe.processors.esper.single.DrillingStartEnrichedController;
+import org.streampipes.pe.processors.esper.proasense.mhwirth.single.DrillingStartEnrichedController;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.storage.util.Transformer;
 

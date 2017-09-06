@@ -3,9 +3,9 @@ package org.streampipes.pe.mixed.flink.samples.enrich.timestamp;
 import java.util.List;
 
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TimestampParameters extends BindingParameters {
+public class TimestampParameters extends EventProcessorBindingParams {
 
 	private String appendTimePropertyName;
 	private List<String> selectProperties;

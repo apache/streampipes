@@ -1,17 +1,17 @@
 package org.streampipes.manager.monitoring.runtime;
 
+import org.json.JSONObject;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;
 import org.streampipes.commons.exceptions.NoMatchingSchemaException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.messaging.EventListener;
-import org.streampipes.messaging.kafka.StreamPipesKafkaConsumer;
+import org.streampipes.messaging.InternalEventProcessor;
+import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.storage.impl.PipelineStorageImpl;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 	private Map<String, List<PipelineObserver>> streamToObserver;
 	private Map<String, Pipeline> streamToStoppedMonitoringPipeline;
-	private StreamPipesKafkaConsumer kafkaConsumerGroup;
+	private SpKafkaConsumer kafkaConsumerGroup;
 
 	@Override
 	public boolean register(PipelineObserver observer) {
@@ -99,7 +99,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		return false;
 	}
 
-	private class KafkaCallback implements EventListener<byte[]> {
+	private class KafkaCallback implements InternalEventProcessor<byte[]> {
 
 		@Override
 		public void onEvent(byte[] payload) {
@@ -123,7 +123,7 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 
 		String topic = "internal.streamepipes.sec.stopped";
 
-		kafkaConsumerGroup = new StreamPipesKafkaConsumer(BackendConfig.INSTANCE.getKafkaUrl(), topic,
+		kafkaConsumerGroup = new SpKafkaConsumer(BackendConfig.INSTANCE.getKafkaUrl(), topic,
 				new KafkaCallback());
 		Thread thread = new Thread(kafkaConsumerGroup);
 		thread.start();

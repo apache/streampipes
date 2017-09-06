@@ -4,7 +4,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
@@ -41,7 +41,7 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 
 	public TwitterSampleStream() throws JMSException {
 		geoPublisher = new ActiveMQPublisher(SourcesConfig.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Twitter.Geo");
-		kafkaProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
+		kafkaProducer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
 
 	@Override

@@ -1,105 +1,97 @@
 package org.streampipes.wrapper.standalone.manager;
 
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.wrapper.standalone.datatype.DatatypeDefinition;
-import org.streampipes.wrapper.standalone.protocol.Consumer;
-import org.streampipes.wrapper.standalone.protocol.Producer;
-import org.streampipes.wrapper.standalone.protocol.jms.JmsConsumer;
-import org.streampipes.wrapper.standalone.protocol.jms.JmsProducer;
-import org.streampipes.wrapper.standalone.protocol.kafka.KafkaConsumer;
-import org.streampipes.wrapper.standalone.protocol.kafka.KafkaProducer;
+import org.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
+import org.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ProtocolManager {
 
-	public static Map<String, Consumer<?>> consumers = new HashMap<>();
-	public static Map<String, Producer> producers = new HashMap<>();
-	
-	private static final String topicPrefix = "topic://";
-	
-	private static Map<String, List<String>> consumerLeaderMap = new HashMap<>();
+  public static Map<String, StandaloneSpInputCollector> consumers = new HashMap<>();
+  public static Map<String, StandaloneSpOutputCollector> producers = new HashMap<>();
 
-	
-	public static void removeFromConsumerMap(String topic, String routeId) {
-		consumerLeaderMap.get(topic).remove(routeId);
-	}
-	
-	public static boolean isTopicLeader(String topic, String routeId) {
-		return consumerLeaderMap.get(topic).get(0).equals(routeId);
-	}
-	
-	public static Consumer<?> findConsumer(TransportProtocol protocol, TransportFormat format, String routeId) {
-		
-		if (consumers.containsKey(topicPrefix +topicName(protocol))) {
-			consumerLeaderMap.get(topicPrefix +topicName(protocol)).add(routeId);
-			return consumers.get(topicPrefix +topicName(protocol));
-		}
-		else {
-			List<String> consumerList = new ArrayList<>();
-			consumerList.add(routeId);
-			consumerLeaderMap.put(topicPrefix +topicName(protocol), consumerList);
-			return makeConsumer(protocol, DatatypeManager.findDatatypeDefinition(format));
-		}
-		
-	}
-	
-	private static Consumer<?> makeConsumer(TransportProtocol protocol, DatatypeDefinition dataType) {
-		if (protocol instanceof KafkaTransportProtocol) {
-			KafkaConsumer kafkaConsumer = new KafkaConsumer(((KafkaTransportProtocol) protocol).getBrokerHostname(), ((KafkaTransportProtocol) protocol).getKafkaPort(), topicName(protocol), dataType);
-			kafkaConsumer.openConsumer();
-			consumers.put(topicPrefix +topicName(protocol), kafkaConsumer); 
-			return kafkaConsumer;
-		} else if (protocol instanceof JmsTransportProtocol) {
-			JmsConsumer jmsConsumer = new JmsConsumer(protocol.getBrokerHostname(), ((JmsTransportProtocol) protocol).getPort(), protocol.getTopicName(), dataType);
-			jmsConsumer.openConsumer();
-			consumers.put(topicPrefix +topicName(protocol), jmsConsumer);
-			return jmsConsumer;
-		}
-		return null;
-	}
+  private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
 
-	public static Producer findProducer(TransportProtocol protocol, TransportFormat format) {
-		if (producers.containsKey(topicPrefix +topicName(protocol))) return producers.get(topicPrefix +topicName(protocol));
-		else return makeProducer(protocol, DatatypeManager.findDatatypeDefinition(format));
-	}
-	
-	private static Producer makeProducer(TransportProtocol protocol, DatatypeDefinition dataType) {
-		if (protocol instanceof KafkaTransportProtocol) {
-			KafkaProducer kafkaProducer = new KafkaProducer(protocol.getBrokerHostname(), ((KafkaTransportProtocol) protocol).getKafkaPort(), topicName(protocol), dataType);
-			kafkaProducer.openProducer();
-			producers.put(topicPrefix +topicName(protocol), kafkaProducer); 
-			
-			return kafkaProducer;
-		} else if (protocol instanceof JmsTransportProtocol) {
-			JmsProducer jmsProducer = new JmsProducer(protocol.getBrokerHostname(), ((JmsTransportProtocol) protocol).getPort(), topicName(protocol), dataType);
-			jmsProducer.openProducer();
-			producers.put(topicPrefix +topicName(protocol), jmsProducer);
-			return jmsProducer;
-		}
-		return null;
-	}
+  // TODO currently only the topic name is used as an identifier for a consumer/producer. Should
+  // be changed by some hashCode implementation in streampipes-model, but this requires changes
+  // in empire serializers
 
-	private static String topicName(TransportProtocol protocol) {
-		return protocol.getTopicName();
-	}
-	
-	public static void removeProducer(String topicWithPrefix) {
-		producers.get(topicWithPrefix).closeProducer();
-		producers.remove(topicWithPrefix);
-	}
-	
-	public static void removeConsumer(String topicWithPrefix) {
-		if (consumers.get(topicWithPrefix).getCurrentListenerCount() == 0) {
-			consumers.get(topicWithPrefix).closeConsumer();
-			consumers.remove(topicWithPrefix);
-		}
-	}
-	
+  public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector
+          (T
+                   protocol,
+           TransportFormat format, Boolean
+                   singletonEngine)
+          throws
+          SpRuntimeException {
+
+    if (consumers.containsKey(topicName(protocol))) {
+      return consumers.get(topicName(protocol));
+    } else {
+      consumers.put(topicName(protocol), makeInputCollector(protocol, format, singletonEngine));
+      LOG.info("Adding new consumer to consumer map (size=" +consumers.size() +"): " +topicName(protocol));
+      return consumers.get(topicName(protocol));
+    }
+
+  }
+
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector
+          (T
+                   protocol,
+           TransportFormat format)
+          throws
+          SpRuntimeException {
+
+    if (producers.containsKey(topicName(protocol))) {
+      return producers.get(topicName(protocol));
+    } else {
+      producers.put(topicName(protocol), makeOutputCollector(protocol, format));
+      LOG.info("Adding new producer to producer map (size=" +producers.size() +"): " +topicName
+              (protocol));
+      return producers.get(topicName(protocol));
+    }
+
+  }
+
+  private static <T extends TransportProtocol> StandaloneSpInputCollector makeInputCollector
+          (T protocol,
+           TransportFormat format, Boolean
+                   singletonEngine) throws
+          SpRuntimeException {
+    return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
+  }
+
+  public static <T extends TransportProtocol> StandaloneSpOutputCollector makeOutputCollector(T
+                                                                                                protocol, TransportFormat format)
+          throws
+          SpRuntimeException {
+    return new StandaloneSpOutputCollector<>(protocol, format);
+  }
+
+
+  private static String topicName(TransportProtocol protocol) {
+    return protocol.getTopicName();
+  }
+
+  public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws
+          SpRuntimeException {
+    consumers.remove(topicName(protocol));
+    LOG.info("Removing consumer from consumer map (size=" +consumers.size() +"): " +topicName
+            (protocol));
+  }
+
+  public static <T extends TransportProtocol> void removeOutputCollector(T protocol) throws
+          SpRuntimeException {
+    producers.remove(topicName(protocol));
+    LOG.info("Removing producer from producer map (size=" +producers.size() +"): " +topicName
+            (protocol));
+  }
+
+
+
 }

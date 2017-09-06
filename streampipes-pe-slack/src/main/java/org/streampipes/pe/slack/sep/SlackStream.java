@@ -8,7 +8,7 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
@@ -72,7 +72,8 @@ public class SlackStream implements EventStreamDeclarer {
     public void executeStream() {
         SlackMessagePostedListener messagePostedListener = new SlackMessagePostedListener()
         {
-            private StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer(SlackConfig.INSTANCE.getKafkaUrl(), topic);
+            private SpKafkaProducer producer = new SpKafkaProducer(SlackConfig.INSTANCE.getKafkaUrl(),
+                    topic);
 
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session)

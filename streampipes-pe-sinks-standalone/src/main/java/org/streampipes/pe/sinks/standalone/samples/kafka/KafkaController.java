@@ -1,109 +1,57 @@
 package org.streampipes.pe.sinks.standalone.samples.kafka;
 
-import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.ActionController;
-import org.streampipes.commons.Utils;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OntologyProperties;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.wrapper.ConfiguredEventSink;
+import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters> {
 
-public class KafkaController extends ActionController {
+	private static final String KAFKA_BROKER_SETTINGS_KEY = "broker-settings";
+	private static final String TOPIC_KEY = "topic";
+
+	private static final String KAFKA_HOST_URI = "http://schema.org/kafkaHost";
+	private static final String KAFKA_PORT_URI = "http://schema.org/kafkaPort";
 
 	@Override
 	public SecDescription declareModel() {
-		
-		EventStream stream1 = new EventStream();
-		EventSchema schema1 = new EventSchema();
-		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		schema1.setEventProperties(eventProperties);
-		stream1.setEventSchema(schema1);
-		
-		SecDescription desc = new SecDescription("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker");
-		desc.setIconUrl(ActionConfig.iconBaseUrl + "/kafka_logo.png");
-		desc.setCategory(Arrays.asList(EcType.FORWARD.name()));
-		stream1.setUri(ActionConfig.serverUrl +"/" +Utils.getRandomString());
-		desc.addEventStream(stream1);
-		
-		
-		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-		
-		SupportedProperty kafkaHost = new SupportedProperty("http://schema.org/kafkaHost", true);
-		SupportedProperty kafkaPort = new SupportedProperty("http://schema.org/kafkaPort", true);
-		
-		List<SupportedProperty> supportedProperties = Arrays.asList(kafkaHost, kafkaPort);
-		DomainStaticProperty dsp = new DomainStaticProperty("kafka-connection", "Kafka Connection Details", "Specifies connection details for the Apache Kafka broker", supportedProperties);
-		
-		staticProperties.add(dsp);
-		
-		FreeTextStaticProperty topic = new FreeTextStaticProperty("topic", "Broker topic", "");
-		staticProperties.add(topic);
-		
-		desc.setStaticProperties(staticProperties);
-		
-		EventGrounding grounding = new EventGrounding();
-
-		grounding.setTransportProtocol(new KafkaTransportProtocol(ActionConfig.INSTANCE.getKafkaHost(),
-				ActionConfig.INSTANCE.getKafkaPort(), "", ActionConfig.INSTANCE.getZookeeperHost(),
-				ActionConfig.INSTANCE.getZookeeperPort()));
-		grounding.setTransportFormats(Arrays.asList(new TransportFormat(MessageFormat.Json)));
-		desc.setSupportedGrounding(grounding);
-		
-		return desc;
+		return DataSinkBuilder.create("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker")
+						.iconUrl(ActionConfig.getIconUrl("kafka_logo"))
+						.requiredPropertyStream1(EpRequirements.anyProperty())
+						.requiredTextParameter(Labels.from(TOPIC_KEY, "Kafka Topic", "Select a Kafka " +
+										"topic"), false, false)
+						.requiredOntologyConcept(Labels.from(KAFKA_BROKER_SETTINGS_KEY, "Kafka Broker Settings", "Provide" +
+														" settings of the Kafka broker to connect with."),
+										OntologyProperties.mandatory(KAFKA_HOST_URI),
+										OntologyProperties.mandatory(KAFKA_PORT_URI))
+						.supportedFormats(SupportedFormats.jsonFormat())
+						.supportedProtocols(SupportedProtocols.kafka())
+						.build();
 	}
 
 	@Override
-	public Response invokeRuntime(SecInvocation sec) {
-			String consumerTopic = sec.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
-			
-			String topic = ((FreeTextStaticProperty)SepaUtils.getStaticPropertyByInternalName(sec, "topic")).getValue();
-		
-			DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(sec, "kafka-connection");
-			String kafkaHost = SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaHost");
-			int kafkaPort = Integer.parseInt(SepaUtils.getSupportedPropertyValue(dsp, "http://schema.org/kafkaPort"));
-			
-			startKafkaConsumer(ActionConfig.INSTANCE.getKafkaUrl(), consumerTopic,
-					new KafkaPublisher(new StreamPipesKafkaProducer(kafkaHost + ":" +kafkaPort, topic)));
+	public ConfiguredEventSink<KafkaParameters, EventSink<KafkaParameters>> onInvocation(SecInvocation graph) {
+		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
+		String topic = extractor.singleValueParameter(TOPIC_KEY,
+						String.class);
 
-			
-			//consumer.setListener(new ProaSenseTopologyPublisher(sec));
-		    String pipelineId = sec.getCorrespondingPipeline();
-            return new Response(pipelineId, true);
-	}
+		String kafkaHost = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_HOST_URI,
+						String.class);
+		Integer kafkaPort = extractor.supportedOntologyPropertyValue(KAFKA_BROKER_SETTINGS_KEY, KAFKA_PORT_URI,
+						Integer.class);
 
+		KafkaParameters params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic);
 
-    @Override
-    public Response detachRuntime(String pipelineId) {
-        stopKafkaConsumer();
-        return new Response(pipelineId, true);
-    }
-
-	@Override
-	public boolean isVisualizable() {
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ConfiguredEventSink<>(params, KafkaPublisher::new);
 	}
 
 }

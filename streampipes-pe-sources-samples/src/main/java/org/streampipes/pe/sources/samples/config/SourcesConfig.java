@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.config;
 import org.streampipes.config.SpConfig;
 
 public enum SourcesConfig {
-	INSTANCE;
+  INSTANCE;
 
 	private SpConfig config;
 	private final static String HOST = "host";

@@ -27,11 +27,11 @@ public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<P
   public SepaDescription declareModel() {
     return ProcessingElementBuilder.create("breakdown-prediction", "Degradation Breakdown",
             "Calculates a breakdown prediction based on degradation predictions")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.domainPropertyReq
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq
                     (ProaSense.PDFTYPE), PdfMapping, "PDF Type", "")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.listRequirement
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.listRequirement
                     (Datatypes.Long), TimestampMapping, "Timestamp Distribution Property", "")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.listRequirement
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.listRequirement
                     (Datatypes.Double), ParamsMapping, "Additional Parameter Mappings", "")
             .outputStrategy(OutputStrategies.keep())
             .supportedFormats(SupportedFormats.jsonFormat())

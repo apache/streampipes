@@ -2,9 +2,9 @@ package org.streampipes.pe.processors.esper.filter.text;
 
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TextFilterParameter extends BindingParameters {
+public class TextFilterParameter extends EventProcessorBindingParams {
 
 	private String keyword;
 	private StringOperator stringOperator;
