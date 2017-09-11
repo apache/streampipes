@@ -1,5 +1,10 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+
 stages:
    - build
+   - docker
 
 build:
   image: beevelop/nodejs-python
@@ -16,3 +21,12 @@ build:
       - app/**/*.html
       - templates/**/*.html
     expire_in: 1 hour
+
+nginx:
+  image: docker:17.06.0-ce
+  stage: docker
+  script:
+    - ls 
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+    - docker build --pull -t $IMAGE_NAME/flink ./flink/
+    - docker push $IMAGE_NAME/flink
