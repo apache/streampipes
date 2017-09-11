@@ -28,5 +28,5 @@ nginx:
   script:
     - ls 
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-    - docker build --pull -t $IMAGE_NAME/flink ./flink/
-    - docker push $IMAGE_NAME/flink
+    - docker build --pull -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
