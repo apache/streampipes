@@ -1,21 +1,20 @@
 package org.streampipes.storage.ontology;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
-
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.model.Value;
 import org.streampipes.model.client.ontology.PrimitiveRange;
 import org.streampipes.model.client.ontology.QuantitativeValueRange;
 import org.streampipes.model.client.ontology.Range;
 import org.streampipes.model.client.ontology.RangeType;
 import org.streampipes.storage.sparql.QueryBuilder;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RangeQueryExecutor extends QueryExecutor {
 
