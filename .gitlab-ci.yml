@@ -36,6 +36,7 @@ nginx:
     - apk add unzip
     - ls -l
     - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o docs.zip "https://ipe-wim-gitlab.fzi.de/streampipes/docs/-/jobs/artifacts/master/download?job=build"'
+    - chmod +wx docs.zip
     - ls -l
     - unzip docs.zip
     - ls -l
