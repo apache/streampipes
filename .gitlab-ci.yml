@@ -31,7 +31,7 @@ nginx:
     - dev
   script:
     - export NODE_PATH=/cache/node_modules
-    - apk add curl
+    - 'apk add curl'
     - ls -l
     - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o docs.zip "https://ipe-wim-gitlab.fzi.de/streampipes/docs/jobs/artifacts/master/download?job=build"'
     - unzip docs.zip
