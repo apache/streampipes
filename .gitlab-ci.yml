@@ -53,7 +53,7 @@ docker-pe-sinks:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-sinks-standalone:SNAPSHOT ./streampipes-pe-sinks-standalone/
+     - docker build --pull -t $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT ./streampipes-pe-sinks-standalone/
      - docker push $IMAGE_NAME/pe-sinks-standalone:SNAPSHOT
     
 docker-pe-sources-samples:
@@ -63,7 +63,7 @@ docker-pe-sources-samples:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-sources-samples:SNAPSHOT ./streampipes-pe-sources-samples/
+     - docker build --pull -t $IMAGE_NAME/pe-sources-samples:SNAPSHOT ./streampipes-pe-sources-samples/
      - docker push $IMAGE_NAME/pe-sources-samples:SNAPSHOT
  
 docker-pe-processors-esper:
@@ -73,7 +73,7 @@ docker-pe-processors-esper:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-processors-esper:SNAPSHOT ./streampipes-pe-processors-esper/
+     - docker build --pull -t $IMAGE_NAME/pe-processors-esper:SNAPSHOT ./streampipes-pe-processors-esper/
      - docker push $IMAGE_NAME/pe-processors-esper:SNAPSHOT
 
 docker-pe-sources-axoom-hmi:
@@ -83,7 +83,7 @@ docker-pe-sources-axoom-hmi:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-sources-axoom-hmi:SNAPSHOT ./streampipes-pe-sources-axoom-hmi/
+     - docker build --pull -t $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT ./streampipes-pe-sources-axoom-hmi/
      - docker push $IMAGE_NAME/pe-sources-axoom-hmi:SNAPSHOT
 
 docker-pe-sources-mnist:
@@ -93,7 +93,7 @@ docker-pe-sources-mnist:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-sources-mnist:SNAPSHOT ./streampipes-pe-sources-mnist/
+     - docker build --pull -t $IMAGE_NAME/pe-sources-mnist:SNAPSHOT ./streampipes-pe-sources-mnist/
      - docker push $IMAGE_NAME/pe-sources-mnist:SNAPSHOT
 
 docker-pe-mixed-flink:
@@ -103,7 +103,7 @@ docker-pe-mixed-flink:
      - build
    script: 
      - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
-     - docker build --pull -t $IMAGE_NAME/streampipes-pe-mixed-flink:SNAPSHOT ./streampipes-pe-mixed-flink/
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-flink:SNAPSHOT ./streampipes-pe-mixed-flink/
      - docker push $IMAGE_NAME/pe-mixed-flink:SNAPSHOT
 
 
