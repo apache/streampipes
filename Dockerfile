@@ -9,6 +9,7 @@ COPY bundle.js /usr/share/nginx/html/streampipes-ui/
 COPY app/**/*.html /usr/share/nginx/html/streampipes-ui/
 COPY templates/*.html /usr/share/nginx/html/streampipes-ui/
 
+COPY site/ /usr/share/nginx/html/streampipes-ui/
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf

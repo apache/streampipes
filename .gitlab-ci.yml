@@ -30,10 +30,17 @@ nginx:
   only: 
     - dev
   script:
-    - ls 
+    - ls -l
+    - curl -k -f -L -H \"PRIVATE-TOKEN: ${API_KEY}\" -o docs.zip 'https://ipe-wim-gitlab.fzi.de/streampipes/docs/jobs/artifacts/master/download?job=build'
+    - unzip docs.zip
+    - ls -l
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
     - docker build --pull -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
+    - rm docs.zip
+    - rm -rf site/
+    - ls -l
+
 
 build_testfeld:
   image: beevelop/nodejs-python
