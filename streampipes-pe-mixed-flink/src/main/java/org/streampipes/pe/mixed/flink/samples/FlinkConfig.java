@@ -28,7 +28,7 @@ public enum FlinkConfig {
     config.register(FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(FLINK_PORT, 6123, "Port for the flink cluster");
     config.register(ELASTIC_HOST, "elasticsearch", "Elastic search host address");
-    config.register(ELASTIC_PORT, 9200, "Elasitc search port");
+    config.register(ELASTIC_PORT, 9300, "Elasitc search port");
 
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
