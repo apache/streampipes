@@ -9,7 +9,8 @@ stages:
 build:
   image: beevelop/nodejs-python
   stage: build
-  only: dev
+  only: 
+    - dev
   script:
     - npm install --unsafe-perm
     - npm run dev-build
@@ -26,7 +27,8 @@ build:
 nginx:
   image: docker:17.06.0-ce
   stage: docker
-  only: dev
+  only: 
+    - dev
   script:
     - ls 
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
@@ -36,7 +38,8 @@ nginx:
 build_testfeld:
   image: beevelop/nodejs-python
   stage: build
-  only: testfeld
+  only: 
+    - testfeld
   script:
     - npm install --unsafe-perm
     - npm run dev-build
@@ -53,7 +56,8 @@ build_testfeld:
 nginx_testfeld:
   image: docker:17.06.0-ce
   stage: docker
-  only: testfeld
+  only: 
+    - testfeld
   script:
     - ls 
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
