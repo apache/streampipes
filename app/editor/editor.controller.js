@@ -65,14 +65,15 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 if (!user.hideTutorial || user.hideTutorial == undefined) {
                     var confirm = $mdDialog.confirm()
                         .title('Welcome to StreamPipes!')
-                        .textContent('We have a short tutorial that guides you through your first steps with StreamPipes.')
+                        .textContent('If you are new to StreamPipes, check out our user guide')
                         .ok('Show tutorial')
                         .cancel('Cancel');
 
                     $mdDialog.show(confirm).then(function () {
                         user.hideTutorial = true;
                         restApi.updateUserDetails(user).success(function (data) {
-                            $state.go("streampipes.tutorial");
+
+														$window.open('/site', '_blank');
                         });
                     }, function () {
 

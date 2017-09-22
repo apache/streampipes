@@ -1,0 +1,67 @@
+variables:
+  REGISTRY_HOST: ipe-wim-gitlab.fzi.de:5000
+  IMAGE_NAME: $REGISTRY_HOST/$CI_PROJECT_PATH
+
+stages:
+   - build
+   - docker
+
+build:
+  image: beevelop/nodejs-python
+  stage: build
+  only: 
+    - dev
+  script:
+    - npm install --unsafe-perm
+    - npm run dev-build
+  artifacts:
+    paths:
+      - img/**
+      - css/**
+      - index.html
+      - bundle.js
+      - app/**/*.html
+      - templates/**/*.html
+    expire_in: 1 hour
+
+nginx:
+  image: docker:17.06.0-ce
+  stage: docker
+  only: 
+    - dev
+  script:
+    - ls 
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+    - docker build --pull -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+
+build_testfeld:
+  image: beevelop/nodejs-python
+  stage: build
+  only: 
+    - testfeld
+  script:
+    - npm install --unsafe-perm
+    - npm run dev-build
+  artifacts:
+    paths:
+      - img/**
+      - css/**
+      - index.html
+      - bundle.js
+      - app/**/*.html
+      - templates/**/*.html
+    expire_in: 1 hour
+
+nginx_testfeld:
+  image: docker:17.06.0-ce
+  stage: docker
+  only: 
+    - testfeld
+  script:
+    - ls 
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+    - docker build --pull -t $IMAGE_NAME/testfeld .
+    - docker push $IMAGE_NAME/testfeld
+
+

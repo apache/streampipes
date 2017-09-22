@@ -1,41 +1,48 @@
-<div flex layout-fill layout="column" class="logo-production">
-<div flex layout-align="center center">
-<!--<div ng-if="appConfig == 'StreamPipes'">-->
-	<!--<div layout="column" flex="100" layout-align="center center" style="padding:30px">-->
-				<!--<div layout-align="center center" layout="row" style="padding:10px;padding-left:40px;padding-right:40px;color:white;" class="sp-darkblue"><img alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon" style="margin-right:10px;"><h1>StreamPipes</h1></div>-->
-	<!--</div>-->
-<!--</div>-->
-<div>
-	<div layout="row" flex="100" layout-align="center center" style="padding:30px;">
-			<div layout-align="center center" layout="row" style="background-color:#ffffff;padding:10px;padding-left:40px;padding-right:40px;color:white;"><img alt="icon" src="img/testfeld_logo.jpg"></div>
-	</div>	
-</div>	
-<div flex layout="row" layout-align="center center">
-	<div flex="40" class="md-whiteframe-z2">
-		<md-content class="md-padding">
-		<div flex layout-align="center center"><h1>Login</h1></div>
-		<div flex-sm="100" layout="column">
-			<form name="loginForm" ng-submit="logIn()" role="form">
-			<div flex layout="column">
-				<md-input-container> <label>Email</label> <input
-					type="email" ng-model="credentials.username" required> </md-input-container>
-				<md-input-container flex> <label>Password:</label>
-				<input type="password" ng-model="credentials.password" required> </md-input-container>
-				<md-input-container flex> <md-checkbox 
-					ng-model="credentials.rememberMe"> Remember me </md-checkbox></md-input-container>
-			</div>
-				<div class="form-actions">
-				<md-button class="md-accent md-raised" type="submit"
-					ng-disabled="loginForm.$pristine || loginForm.$invalid || loading">Login</md-button>
-				<md-progress-circular class="md-accent" md-mode="indeterminate" ng-show="loading"></md-progress-circular>
-					<div class="md-warn" ng-show="authenticationFailed">
-					      <h4>The password you entered is incorrect. Please try again.</h4>
-					</div>
-				</div>
-			</form>
-			<a ui-sref="register">Create new account</a>
-		</div>
-		</md-content>
-	</div>
-</div>
+<div class="md-padding logo-production" layout-xs="column" layout="row" layout-align="center center"
+     style="min-height:100vh !important;">
+    <div flex="40" layout-align="center center">
+        <div layout="column" flex="100" layout-align="center center" style="position:relative;top:-25px;">
+            <div layout-align="center center" layout="row"
+                 style="padding:10px;padding-left:40px;padding-right:40px;color:white;" class="sp-darkblue"><img
+                    alt="icon" src="img/icons/Logo_StreamPipes_BW_small.png" class="toolbar-icon"
+                    style="margin-right:10px;">
+                <h1>StreamPipes</h1></div>
+        </div>
+        <md-card class="card-100-center" style="padding:20px;position:relative;top:-25px;">
+            <div flex layout-align="center center"><h1>Login</h1></div>
+            <div flex-sm="100" layout="column">
+                <form name="loginForm" ng-submit="logIn()" role="form">
+                    <div flex layout="column">
+                        <md-input-container><label>Email</label> <input
+                                type="email" ng-model="credentials.username" required></md-input-container>
+                        <md-input-container flex><label>Password:</label>
+                            <input type="password" ng-model="credentials.password" required>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <md-checkbox
+                                    ng-model="credentials.rememberMe"> Remember me
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
+                    <div class="form-actions">
+                        <md-button class="md-accent md-raised" type="submit"
+                                   ng-disabled="loginForm.$pristine || loginForm.$invalid || loading">Login
+                        </md-button>
+                        <md-progress-circular class="md-accent" md-mode="indeterminate"
+                                              ng-show="loading"></md-progress-circular>
+                        <div class="md-warn" ng-show="authenticationFailed">
+                            <h4>The password you entered is incorrect. Please try again.</h4>
+                        </div>
+                    </div>
+                </form>
+                <!--<a ui-sref="register">Create new account</a>-->
+            </div>
+        </md-card>
+        <div flex="100" layout="column" layout-align="center center">
+            <md-button ng-click="openDocumentation()" class="md-accent md-raised" style="min-width:0px;padding-left:20px;padding-right:20px;font-size:18px;">
+                View Docs
+            </md-button>
+        </div>
+    </div>
+
 </div>

@@ -6,40 +6,19 @@ export default function SetupCtr($scope, $rootScope, $location, restApi, $mdToas
     $scope.installationSuccessful = false;
     $scope.installationResults = [{}];
     $scope.loading = false;
+		$scope.showAdvancedSettings = false;
 
 
     $scope.setup = {
-        couchDbHost: $location.host(),
-        couchDbProtocol: 'http',
-        couchDbPort: 5984,
-        couchDbUserDbName: 'users',
-        couchDbPipelineDbName: 'pipeline',
-        couchDbConnectionDbName: 'connection',
-        couchDbMonitoringDbName: 'monitoring',
-        couchDbNotificationDbName: 'notification',
-        sesameUrl: 'http://' + $location.host() + ':8030/openrdf-sesame',
-        sesameDbName: 'test-6',
-        kafkaProtocol: 'http',
-        kafkaHost: $location.host(),
-        kafkaPort: 9092,
-        zookeeperProtocol: 'http',
-        zookeeperHost: $location.host(),
-        zookeeperPort: 2181,
-        jmsProtocol: 'tcp',
-        jmsHost: $location.host(),
-        jmsPort: 61616,
-        adminUsername: '',
+        couchDbHost: '',
+        sesameHost: '',
+        kafkaHost: '', 
+        zookeeperHost: '',
+        jmsHost: '',
         adminEmail: '',
         adminPassword: '',
-        streamStoryUrl: 'http://' + $location.host() + '/streamstory',
-        panddaUrl: 'http://' + $location.host() + ':90/pandda_v2_2',
-        hippoUrl: 'http://' + $location.host() + '/kpimodeller',
-        humanInspectionReportUrl: '',
-        humanMaintenanceReportUrl: '',
-        appConfig: 'ProaSense',
-        marketplaceUrl: '',
-        podUrls: []
     };
+
 
     $scope.configure = function () {
         $scope.loading = true;
