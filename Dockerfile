@@ -3,7 +3,7 @@ FROM nginx
 #COPY streampipes-ui /usr/share/nginx/html
 
 COPY img/ /usr/share/nginx/html/img/
-COPY lin/ /usr/share/nginx/html/lib/
+COPY lib/ /usr/share/nginx/html/lib/
 COPY css/ /usr/share/nginx/html/css/
 COPY index.html /usr/share/nginx/html/
 COPY bundle.js /usr/share/nginx/html/
