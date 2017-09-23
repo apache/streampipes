@@ -12,12 +12,13 @@ build:
   only: 
     - dev
   script:
+    - export NODE_PATH=/cache/node_modules
     - npm install --unsafe-perm
     - npm run dev-build
   artifacts:
     paths:
-      - img/**
-      - css/**
+      - img/
+      - css/
       - index.html
       - bundle.js
       - app/**/*.html
@@ -30,10 +31,21 @@ nginx:
   only: 
     - dev
   script:
-    - ls 
+    - apk update
+    - apk add curl
+    - apk add unzip
+    - ls -l
+    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o docs.zip "https://ipe-wim-gitlab.fzi.de/streampipes/docs/-/jobs/artifacts/master/download?job=build"'
+    - ls -l
+    - unzip docs.zip
+    - ls -l
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
     - docker build --pull -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
+    - rm docs.zip
+    - rm -rf site/
+    - ls -l
+
 
 build_testfeld:
   image: beevelop/nodejs-python
