@@ -8,12 +8,6 @@ import SettingsCtrl from './settings.controller'
 
 export default angular.module('sp.layout', [spServices, ngCookies])
 	.controller('AppCtrl', AppCtrl)
-    .component('heroDetail', {
-        templateUrl: 'heroDetail.html',
-        bindings: {
-            hero: '='
-        }
-    })
 	.controller('LeftCtrl', LeftCtrl)
 	.controller('SettingsCtrl', SettingsCtrl)
 	.directive('iframeAutoSize', SettingsCtrl)
