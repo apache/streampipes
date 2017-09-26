@@ -8,6 +8,4 @@ import SettingsCtrl from './settings.controller'
 export default angular.module('sp.layout', [spServices, ngCookies])
 	.controller('AppCtrl', AppCtrl)
 	.controller('SettingsCtrl', SettingsCtrl)
-	.directive('ngRightClick', SettingsCtrl)
-	.directive('userAvatar', SettingsCtrl)
 	.name;
