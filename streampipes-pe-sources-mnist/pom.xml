@@ -106,6 +106,7 @@
             </plugin>
         </plugins>
 
+        <finalName>streampipes-pe-sources-mnist</finalName>
 
     </build>
 </project>

@@ -114,6 +114,7 @@
 						</configuration>
 					</plugin>
 				</plugins>
+				<finalName>streampipes-backend</finalName>
 			</build>
 		</profile>
 	</profiles>

@@ -93,5 +93,6 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>streampipes-pe-sources-axoom-hmi</finalName>
     </build>
 </project>
