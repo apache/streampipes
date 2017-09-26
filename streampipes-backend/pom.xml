@@ -59,6 +59,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>streampipes-backend</finalName>
 	</build>
 	<profiles>
 		<profile>
@@ -87,6 +88,7 @@
 						</configuration>
 					</plugin>
 				</plugins>
+				<finalName>streampipes-backend</finalName>
 			</build>
 		</profile>
 		<profile>
@@ -118,4 +120,5 @@
 			</build>
 		</profile>
 	</profiles>
+
 </project>
