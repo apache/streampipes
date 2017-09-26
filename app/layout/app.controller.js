@@ -31,7 +31,7 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     };
 
     $scope.openDocumentation = function(){
-        $window.open('/site', '_blank');
+        $window.open('/docs', '_blank');
     };
 
     $scope.isActivePage = function(path) {
@@ -70,12 +70,6 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
             title: 'Live Dashboard',
             icon: 'editor:ic_insert_chart_24px'
         }
-        //           },
-        //           {
-        //               link : 'streampipes.marketplace',
-        //               title: 'Marketplace',
-        //               icon: 'maps:ic_local_mall_24px'
-        //           }
     ];
     $scope.admin = [
         {
