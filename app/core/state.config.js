@@ -32,8 +32,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 "spNavbar@streampipes": spNavbar,
                 "spIconBar@streampipes" : spIconBar,
                 "spMain@streampipes": {
-                    templateUrl: "app/editor/editor.html",
-                    controller: 'EditorCtrl',
+                    templateUrl: 'app/home/home.html',
+                    controller: 'HomeCtrl',
                     resolve: {
                         'AuthData': function (authService) {
                             return authService.authenticate;
@@ -42,7 +42,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.edit', {
+        .state('streampipes.editor', {
             url: '/editor/:pipeline',
             views: {
                 "spMain@streampipes": {

@@ -10,6 +10,7 @@ import spServices from './services/services.module';
 
 import spAdd from './add/add.module';
 import spCore from './core/core.module';
+import spHome from './home/home.module';
 import spCreate from './create/create.module';
 import spDashboard from './dashboard/dashboard.module';
 import spEditor from './editor/editor.module';
@@ -30,6 +31,7 @@ export default angular
         spServices,
         spAdd,
         spCore,
+        spHome,
         spCreate,
         spDashboard,
         spEditor,

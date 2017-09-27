@@ -57,6 +57,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     $scope.menu = [
         {
             link: 'streampipes',
+            title: 'Home',
+            icon: 'action:ic_home_24px'
+        },
+        {
+            link: 'streampipes.editor',
             title: 'Pipeline Editor',
             icon: 'action:ic_dashboard_24px'
         },
@@ -73,34 +78,14 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     ];
     $scope.admin = [
         {
-            link: 'streampipes.myelements',
-            title: 'My Elements',
-            icon: 'image:ic_portrait_24px'
-        },
-        {
             link: 'streampipes.add',
             title: 'Install Pipeline Elements',
             icon: 'file:ic_cloud_download_24px'
         },
         {
-            link: 'streampipes.sensors',
-            title: 'Pipeline Element Generator',
-            icon: 'content:ic_add_24px'
-        },
-        {
-            link: 'streampipes.ontology',
-            title: 'Knowledge Management',
-            icon: 'social:ic_share_24px'
-        },
-        {
-            link: 'streampipes.applinks',
-            title: 'Application Links',
-            icon: 'action:ic_open_in_new_24px'
-        },
-        {
-            link: 'streampipes.settings',
-            title: 'Settings',
-            icon: 'action:ic_settings_24px'
+            link: 'streampipes.myelements',
+            title: 'My Elements',
+            icon: 'image:ic_portrait_24px'
         }
     ];
 
