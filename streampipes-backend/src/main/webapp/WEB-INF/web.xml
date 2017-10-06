@@ -57,6 +57,10 @@
 			<param-value>org.streampipes.rest.application.StreamPipesApplication</param-value>
 		</init-param>
 		<init-param>
+			<param-name>javax.ws.rs.Application2</param-name>
+			<param-value>org.streampipes.app.file.export.application.AppFileExportApplication</param-value>
+		</init-param>
+		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>
 			<param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
 		</init-param>
