@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
-@Path("/test/")
+@Path("/test")
 public class Elasticsearch implements IElasticsearch {
 
     static String filePath = "files/";
@@ -37,6 +37,8 @@ public class Elasticsearch implements IElasticsearch {
         try {
             client = new PreBuiltTransportClient(Settings.EMPTY)
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("http://ipe-koi05.fzi.de"), 5601));
+
+            //Index given
 
             String[] indices = client.admin()
                     .indices()
@@ -76,12 +78,19 @@ public class Elasticsearch implements IElasticsearch {
         return null;
     }
 
+    @Override
+    public Response getFile(String fileId) {
+        return null;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{fileId}/dowload")
-    @Override
-    public Response getFile(@PathParam("fileId") String fileId) {
-        File file =  new File(filePath + fileId);
+    @Path("/download")
+    //@Path("/{fileId}/download")
+    //public Response getFile(@PathParam("fileId") String fileId) {
+    public Response getFile() {
+        System.out.print("++++++++++++++++++++++++++++++++++++++++++++");
+        File file =  new File(filePath);
         if(file.exists()) {
             return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
                     .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
