@@ -23,6 +23,11 @@
             <artifactId>transport</artifactId>
             <version>5.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.lightcouch</groupId>
+            <artifactId>lightcouch</artifactId>
+            <version>0.1.8</version>
+        </dependency>
     </dependencies>
 
 
