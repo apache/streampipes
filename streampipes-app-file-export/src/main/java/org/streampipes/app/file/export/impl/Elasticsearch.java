@@ -8,8 +8,8 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 import org.streampipes.app.file.export.api.IElasticsearch;
+import org.streampipes.storage.util.Utils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,17 +21,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
-@Path("/elasticsearch")
+@Path("/v1/elasticsearch")
 public class Elasticsearch implements IElasticsearch {
 
     static String mainFilePath = "files/";
-    static String serverPath = "server";
-    static String dbName = "file-export-endpoints-elasticsearch";
-    static int dbPort = 5984;
-    static String dbHost = "localhost";
-    static String dbUser = "";
-    static String dbPassword = "";
-    static String dbProtocol = "http";
+    static String serverPath = "streampipes-backend/api/elasticsearch/";
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,7 +59,6 @@ public class Elasticsearch implements IElasticsearch {
             CouchDbClient couchDbClient = getCouchDbClient();
             couchDbClient.save(endpoint);
 
-            //Filepath
             return Response.ok(endpoint).build();
 
         } catch (UnknownHostException e) {
@@ -77,29 +70,18 @@ public class Elasticsearch implements IElasticsearch {
         return null;
     }
 
-    @Override
-    public Response getFile(String fileName) {
-        return null;
-    }
-
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/download")
-    //@Path("/{fileName}/download")
-    //public Response getFile(@PathParam("fileName") String fileName) {
-    public Response getFile() {
-        String fileName = null;
-        System.out.print("++++++++++++++++++++++++++++++++++++++++++++");
+    @Path("/{fileName}/download")
+    public Response getFile(@PathParam("fileName") String fileName) {
         File file = new File(mainFilePath + fileName);
         if(file.exists()) {
             return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                    .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                    .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
                     .build();
         } else {
             return Response.status(404).entity("File not found").build();
         }
-
     }
 
     @DELETE
@@ -119,23 +101,18 @@ public class Elasticsearch implements IElasticsearch {
     @Path("/endpoints")
     @Override
     public Response getEndpoints() {
-
         CouchDbClient couchDbClient = getCouchDbClient();
-
         List<JsonObject> endpoints = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
-
         return Response.ok(endpoints).build();
     }
 
+    @GET
+    @Path("/test")
+    public Response test() {
+        return Response.ok().build();
+    }
+
     private CouchDbClient getCouchDbClient() {
-        return new CouchDbClient(new CouchDbProperties(
-                dbName,
-                true,
-                dbProtocol,
-                dbHost,
-                dbPort,
-                dbUser,
-                dbPassword
-        ));
+        return Utils.getCouchDbElasticsearchFilesEndppointClient();
     }
 }

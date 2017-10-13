@@ -63,6 +63,10 @@ public class Utils {
 	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
 		return new CouchDbClient(props("pipelinecategories"));
 	}
+
+	public static CouchDbClient getCouchDbElasticsearchFilesEndppointClient() {
+		return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
+	}
 	
 	private static CouchDbProperties props(String dbname)
 	{
