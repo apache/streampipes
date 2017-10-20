@@ -1,19 +1,9 @@
 package org.streampipes.storage.impl;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
 import com.clarkparsia.empire.impl.RdfQuery;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SecDescription;
@@ -24,6 +14,14 @@ import org.streampipes.storage.api.StorageRequests;
 import org.streampipes.storage.controller.StorageManager;
 import org.streampipes.storage.sparql.QueryBuilder;
 import org.streampipes.storage.util.Transformer;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 public class SesameStorageRequests implements StorageRequests {
 

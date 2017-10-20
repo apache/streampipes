@@ -1,20 +1,19 @@
 package org.streampipes.manager.verification.extractor;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import org.openrdf.model.Model;
-import org.openrdf.model.Statement;
-import org.openrdf.model.vocabulary.RDF;
-
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.manager.verification.ElementVerifier;
 import org.streampipes.manager.verification.SecVerifier;
 import org.streampipes.manager.verification.SepVerifier;
 import org.streampipes.manager.verification.SepaVerifier;
 import org.streampipes.model.vocabulary.SEPA;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class TypeExtractor {
 

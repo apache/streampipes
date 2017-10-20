@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.util.Util;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
 
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;

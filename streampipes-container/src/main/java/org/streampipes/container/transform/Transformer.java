@@ -3,10 +3,10 @@ package org.streampipes.container.transform;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.openrdf.model.Graph;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
+import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 

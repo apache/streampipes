@@ -9,12 +9,12 @@ public enum SesameConfig {
     private SpConfig config;
 
     private final static String URI = "uri";
-    private final static String REPOSITORY_ID = "test-6";
+    private final static String REPOSITORY_ID = "streampipes";
 
     SesameConfig() {
         config = SpConfig.getSpConfig("storage/sesame");
 
-        config.register(URI, "http://backend:8030/openrdf-sesame", "URI for the sesame repository");
+        config.register(URI, "http://backend:8030/rdf4j-server", "URI for the sesame repository");
     }
 
     public String getUri() {

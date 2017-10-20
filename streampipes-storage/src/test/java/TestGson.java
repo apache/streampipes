@@ -1,7 +1,7 @@
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import com.clarkparsia.empire.annotation.InvalidRdfException;
 

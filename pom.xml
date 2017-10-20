@@ -343,6 +343,8 @@
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-performance-tests</module>
+        <module>streampipes-storage-rdf4j</module>
+        <module>streampipes-storage-couchdb</module>
     </modules>
 
     <!-- Build Settings -->

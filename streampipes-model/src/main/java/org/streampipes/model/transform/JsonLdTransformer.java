@@ -1,5 +1,22 @@
 package org.streampipes.model.transform;
 
+import com.clarkparsia.empire.annotation.InvalidRdfException;
+import com.clarkparsia.empire.annotation.RdfGenerator;
+import com.clarkparsia.empire.annotation.RdfProperty;
+import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.GraphImpl;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.streampipes.model.AbstractSEPAElement;
+import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.vocabulary.SEPA;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,25 +31,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-
-import com.clarkparsia.empire.annotation.RdfProperty;
-import org.openrdf.rio.RDFFormat;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.openrdf.model.Graph;
-import org.openrdf.model.Model;
-import org.openrdf.model.Statement;
-import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-import com.clarkparsia.empire.annotation.RdfGenerator;
-
-import org.streampipes.model.AbstractSEPAElement;
-import org.streampipes.model.vocabulary.SEPA;
 
 public class JsonLdTransformer implements RdfTransformer {
 

@@ -3,7 +3,7 @@ package org.streampipes.storage.sparql;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 import org.streampipes.model.client.ontology.Concept;
 import org.streampipes.model.client.ontology.Instance;

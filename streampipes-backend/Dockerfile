@@ -48,8 +48,8 @@ RUN set -x \
 EXPOSE 8080
 
 ADD target/streampipes-backend-0.41.2-SNAPSHOT.war /usr/local/tomcat/webapps/streampipes-backend.war
-ADD ./deployment-config/openrdf-sesame.war /usr/local/tomcat/webapps/openrdf-sesame.war
-ADD ./deployment-config/openrdf-workbench.war /usr/local/tomcat/webapps/openrdf-workbench.war
+ADD ./deployment-config/rdf4j-server.war /usr/local/tomcat/webapps/rdf4j-server.war
+ADD ./deployment-config/rdf4j-workbench.war /usr/local/tomcat/webapps/rdf4j-workbench.war
 #ADD ./sources-demonstrator.war /usr/local/tomcat/webapps/sources-demonstrator.war
 #ADD ./org.streampipes/streampipes-pe-slack/0.41.0-SNAPSHOT/streampipes-pe-slack-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/slack.war
 

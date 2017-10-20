@@ -1,12 +1,11 @@
 package org.streampipes.storage.util;
 
-import java.io.IOException;
-
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.model.transform.JsonLdTransformer;
+
+import java.io.IOException;
 
 public class Transformer {
 

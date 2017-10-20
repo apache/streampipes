@@ -2,9 +2,7 @@ package org.streampipes.performance.dataprovider;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import org.apache.commons.lang.RandomStringUtils;
-import org.semarglproject.vocab.XSD;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyList;
@@ -48,18 +46,18 @@ public class JsonDataProvider implements DataProvider<String> {
 
   private JsonElement makeValue(EventProperty property) {
     if (property instanceof EventPropertyPrimitive) {
-      switch (((EventPropertyPrimitive) property).getRuntimeType()) {
-        case XSD.INTEGER:
-          return new JsonPrimitive(getRandomInteger());
-        case XSD.STRING:
-          return new JsonPrimitive(getRandomString());
-        case XSD.LONG:
-          return new JsonPrimitive(getRandomLong());
-        case XSD.DOUBLE:
-          return new JsonPrimitive(getRandomDouble());
-        case XSD.FLOAT:
-          return new JsonPrimitive(getRandomFloat());
-      }
+//      switch (((EventPropertyPrimitive) property).getRuntimeType()) {
+//        case XSD._integer.toString():
+//          return new JsonPrimitive(getRandomInteger());
+//        case XSD._string:
+//          return new JsonPrimitive(getRandomString());
+//        case XSD.LONG:
+//          return new JsonPrimitive(getRandomLong());
+//        case XSD.DOUBLE:
+//          return new JsonPrimitive(getRandomDouble());
+//        case XSD.FLOAT:
+//          return new JsonPrimitive(getRandomFloat());
+//      }
     } else if (property instanceof EventPropertyList) {
       // TODO
       return null;

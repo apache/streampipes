@@ -1,27 +1,20 @@
 package org.streampipes.rest.impl;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-
+import com.clarkparsia.empire.annotation.InvalidRdfException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.streampipes.commons.Utils;
+import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
-import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.transform.JsonLdTransformer;
 import org.streampipes.model.util.GsonSerializer;
 import org.streampipes.rest.http.HttpJsonParser;
@@ -31,7 +24,12 @@ import org.streampipes.storage.controller.StorageManager;
 import org.streampipes.storage.impl.UserStorage;
 import org.streampipes.storage.service.UserService;
 import org.streampipes.storage.util.Transformer;
-import org.streampipes.commons.Utils;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 import javax.ws.rs.core.Response;
 

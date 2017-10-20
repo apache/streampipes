@@ -1,11 +1,5 @@
 package org.streampipes.manager.generation.code;
 
-import java.io.IOException;
-
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.sun.codemodel.JCatchBlock;
@@ -17,12 +11,16 @@ import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.transform.JsonLdTransformer;
+
+import java.io.IOException;
 
 public class ControllerClassGenerator {
 

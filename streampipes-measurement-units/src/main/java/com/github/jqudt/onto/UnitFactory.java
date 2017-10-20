@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.openrdf.model.Model;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.LinkedHashModel;
-import org.openrdf.model.impl.ValueFactoryImpl;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 import com.github.jqudt.Multiplier;
 import com.github.jqudt.Unit;
@@ -61,7 +61,7 @@ public class UnitFactory {
 		if (resource == null) throw new IllegalArgumentException("The URI cannot be null");
 
 		ValueFactory f = ValueFactoryImpl.getInstance();
-		org.openrdf.model.URI uri = f.createURI(resource.toString());
+		org.eclipse.rdf4j.model.URI uri = f.createURI(resource.toString());
 		
 		Unit unit = new Unit();
 		unit.setResource(resource);
@@ -85,8 +85,8 @@ public class UnitFactory {
 					unit.setLabel(statement.getObject().stringValue());
 				} else if (statement.getPredicate().equals(RDF.TYPE)) {
 					Object type = statement.getObject();
-					if (type instanceof org.openrdf.model.URI) {
-						org.openrdf.model.URI typeURI = (org.openrdf.model.URI)type;
+					if (type instanceof org.eclipse.rdf4j.model.URI) {
+						org.eclipse.rdf4j.model.URI typeURI = (org.eclipse.rdf4j.model.URI)type;
 						if (!shouldBeIgnored(typeURI)) {
 							unit.setType(new URI(typeURI.stringValue()));
 						}
@@ -113,8 +113,8 @@ public class UnitFactory {
 		for (Statement statement : statements) {
 			Object type = statement.getSubject();
 			try {
-				if (type instanceof org.openrdf.model.URI) {
-					org.openrdf.model.URI typeURI = (org.openrdf.model.URI)type;
+				if (type instanceof org.eclipse.rdf4j.model.URI) {
+					org.eclipse.rdf4j.model.URI typeURI = (org.eclipse.rdf4j.model.URI)type;
 					foundUnits.add(getUnit(typeURI.toString()));
 				}
 			} catch (Exception exception) {
@@ -138,7 +138,7 @@ public class UnitFactory {
 		if (type == null) throw new IllegalArgumentException("The type cannot be null");
 
 		ValueFactory f = ValueFactoryImpl.getInstance();
-		org.openrdf.model.URI uri = f.createURI(type.toString());
+		org.eclipse.rdf4j.model.URI uri = f.createURI(type.toString());
 		
 		try {
 			Model statements = repos.filter(null, null, uri);
@@ -155,7 +155,7 @@ public class UnitFactory {
 		}
 	}
 
-	private boolean shouldBeIgnored(org.openrdf.model.URI typeURI) {
+	private boolean shouldBeIgnored(org.eclipse.rdf4j.model.URI typeURI) {
 		// accept anything outside the QUDT namespace
 		if (!typeURI.getNamespace().equals(QUDT.namespace)) return false;
 

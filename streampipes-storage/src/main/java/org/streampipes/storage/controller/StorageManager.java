@@ -6,6 +6,10 @@ import com.clarkparsia.empire.config.ConfigKeys;
 import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.streampipes.model.transform.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;
@@ -31,11 +35,6 @@ import org.streampipes.storage.impl.UserStorage;
 import org.streampipes.storage.impl.VisualizationStorageImpl;
 import org.streampipes.storage.service.UserService;
 import org.streampipes.storage.util.SesameConfig;
-import org.streampipes.storage.util.StorageUtils;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.http.HTTPRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -153,7 +152,6 @@ public enum StorageManager {
     }
 
     public StorageRequests getSesameStorage() {
-        StorageUtils.fixEmpire();
         return new SesameStorageRequests();
     }
 

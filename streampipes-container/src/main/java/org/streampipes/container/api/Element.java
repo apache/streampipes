@@ -1,5 +1,20 @@
 package org.streampipes.container.api;
 
+import com.clarkparsia.empire.SupportsRdfId;
+import com.clarkparsia.empire.annotation.InvalidRdfException;
+import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.streampipes.commons.Utils;
+import org.streampipes.container.declarer.Declarer;
+import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.container.transform.Transformer;
+import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.impl.graph.SepaDescription;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.List;
@@ -9,24 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.container.transform.Transformer;
-import org.openrdf.model.Graph;
-import org.openrdf.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
-
-import org.streampipes.commons.Utils;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
 
 public abstract class Element<D extends Declarer> {
     public Element() {
