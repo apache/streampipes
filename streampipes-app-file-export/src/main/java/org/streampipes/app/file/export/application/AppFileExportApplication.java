@@ -1,11 +1,12 @@
 package org.streampipes.app.file.export.application;
 
-import javax.ws.rs.core.Application;
-import javafx.stage.Stage;
 import org.streampipes.app.file.export.impl.Elasticsearch;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.ws.rs.core.Application;
+
 
 public class AppFileExportApplication extends Application{
 
