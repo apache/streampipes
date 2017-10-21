@@ -67,9 +67,15 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean storeSEPA(SepaDescription sepa) {
-		if (exists(sepa)) return false;
+		if (existsSepa(sepa.getElementId())) return false;
 		entityManager.persist(sepa);
 		return true;
+	}
+
+	@Override
+	public boolean existsSepa(String rdfId) {
+		SepaDescription storedSEPA = entityManager.find(SepaDescription.class, rdfId);
+		return storedSEPA != null;
 	}
 
 	@Override

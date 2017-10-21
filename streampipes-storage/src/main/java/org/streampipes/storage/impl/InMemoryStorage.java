@@ -1,14 +1,6 @@
 package org.streampipes.storage.impl;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.rits.cloning.Cloner;
-
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SecDescription;
@@ -16,6 +8,13 @@ import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.storage.api.StorageRequests;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryStorage implements StorageRequests {
 	
@@ -194,6 +193,11 @@ public class InMemoryStorage implements StorageRequests {
 	@Override
 	public boolean exists(SepaDescription sepa) {
 		return inMemorySEPAStorage.containsKey(sepa.getRdfId().toString());
+	}
+
+	@Override
+	public boolean existsSepa(String rdfid) {
+		return inMemoryEventStreamStorage.containsKey(rdfid);
 	}
 
 	@Override

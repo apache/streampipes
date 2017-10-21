@@ -38,7 +38,7 @@ public class SesameDbInstallationStep implements InstallationStep {
 			{
 				msgs.add(Notifications.success("Retrieving Sesame databases..."));
 				RepositoryConfig config = new RepositoryConfig(sesameDbName, "StreamPipes DB");
-				SailImplConfig backendConfig = new MemoryStoreConfig(true);
+				SailImplConfig backendConfig = new MemoryStoreConfig(true, 10000);
 				backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
 				config.setRepositoryImplConfig(new SailRepositoryConfig(backendConfig));
 				manager.addRepositoryConfig(config);

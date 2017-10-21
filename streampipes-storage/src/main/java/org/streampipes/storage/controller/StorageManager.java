@@ -7,7 +7,6 @@ import com.clarkparsia.empire.config.EmpireConfiguration;
 import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
 import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.streampipes.model.transform.CustomAnnotationProvider;
@@ -48,8 +47,6 @@ public enum StorageManager {
 
     private EntityManager storageManager;
 
-    private RepositoryConnection conn;
-
     private Repository repository;
     private Repository bkrepo;
 
@@ -84,7 +81,6 @@ public enum StorageManager {
         try {
             repository = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
                     SesameConfig.INSTANCE.getRepositoryId());
-            conn = repository.getConnection();
 
             initEmpire();
 
@@ -121,10 +117,6 @@ public enum StorageManager {
             return false;
         }
 
-    }
-
-    public RepositoryConnection getConnection() {
-        return conn;
     }
 
     public Repository getRepository() {

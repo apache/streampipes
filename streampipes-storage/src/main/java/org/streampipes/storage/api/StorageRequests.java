@@ -1,15 +1,15 @@
 package org.streampipes.storage.api;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public interface StorageRequests {
 	
@@ -54,6 +54,8 @@ public interface StorageRequests {
 	boolean exists(SepDescription sep);
 	
 	boolean exists(SepaDescription sepa);
+
+	boolean existsSepa(String rdfid);
 	
 	boolean update(SepDescription sep);
 	
