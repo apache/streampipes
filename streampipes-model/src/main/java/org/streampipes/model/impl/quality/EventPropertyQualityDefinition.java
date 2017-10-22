@@ -1,6 +1,6 @@
 package org.streampipes.model.impl.quality;
 
-import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.empire.annotations.RdfsClass;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;

@@ -2,9 +2,8 @@ package org.streampipes.model;
 
 
 import org.apache.commons.lang.RandomStringUtils;
-
-import com.clarkparsia.empire.annotation.RdfId;
-import com.clarkparsia.empire.annotation.RdfProperty;
+import org.streampipes.empire.annotations.RdfId;
+import org.streampipes.empire.annotations.RdfProperty;
 
 /**
  * unnamed SEPA elements (that do not require any readable identifier)

@@ -1,14 +1,14 @@
 package org.streampipes.storage.controller;
 
-import com.clarkparsia.empire.Empire;
-import com.clarkparsia.empire.EmpireOptions;
-import com.clarkparsia.empire.config.ConfigKeys;
-import com.clarkparsia.empire.config.EmpireConfiguration;
-import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
-import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import org.streampipes.empire.core.empire.Empire;
+import org.streampipes.empire.core.empire.EmpireOptions;
+import org.streampipes.empire.core.empire.config.ConfigKeys;
+import org.streampipes.empire.core.empire.config.EmpireConfiguration;
+import org.streampipes.empire.rdf4j.OpenRdfEmpireModule;
+import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
 import org.streampipes.model.transform.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;

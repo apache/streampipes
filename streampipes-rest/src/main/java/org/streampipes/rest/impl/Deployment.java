@@ -1,5 +1,24 @@
 package org.streampipes.rest.impl;
 
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.streampipes.codegeneration.api.CodeGenerator;
+import org.streampipes.commons.Utils;
+import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.client.deployment.DeploymentConfiguration;
+import org.streampipes.model.client.deployment.ElementType;
+import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.storage.controller.StorageManager;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,27 +30,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
-import org.streampipes.commons.Utils;
-import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.client.deployment.DeploymentConfiguration;
-import org.streampipes.model.client.deployment.ElementType;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.model.util.GsonSerializer;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.codegeneration.api.CodeGenerator;
 
 
 @Path("/v2/users/{username}/deploy")

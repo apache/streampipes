@@ -1,16 +1,15 @@
 package org.streampipes.manager.matching.output;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.clarkparsia.empire.SupportsRdfId.URIKey;
-
+import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.output.CustomOutputStrategy;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomOutputSchemaGenerator implements OutputSchemaGenerator<CustomOutputStrategy> {
 
@@ -28,7 +27,7 @@ public class CustomOutputSchemaGenerator implements OutputSchemaGenerator<Custom
 				if (newCustomProperties.stream().anyMatch(nc -> nc.getRuntimeName().equals(prop.getRuntimeName()))) {
 					EventPropertyPrimitive newp = new EventPropertyPrimitive(prop);
 					newp.setRuntimeName(prop.getRuntimeName() +"1");
-					newp.setRdfId(new URIKey(URI.create(prop.getElementId() +"1")));
+					newp.setRdfId(new SupportsRdfId.URIKey(URI.create(prop.getElementId() +"1")));
 					newCustomProperties.add(newp);
 				}
 				else

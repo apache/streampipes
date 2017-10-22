@@ -1,8 +1,9 @@
 package org.streampipes.model;
 
-import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
+
+import org.streampipes.empire.core.empire.SupportsRdfId;
+import org.streampipes.empire.core.empire.annotation.SupportsRdfIdImpl;
+import org.streampipes.empire.annotations.Namespaces;
 
 import java.io.Serializable;
 

@@ -1,16 +1,17 @@
 package org.streampipes.model;
 
 
-import com.clarkparsia.empire.annotation.RdfId;
-import com.clarkparsia.empire.annotation.RdfProperty;
+import org.streampipes.empire.annotations.RdfId;
+import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.model.impl.ApplicationLink;
 import org.streampipes.model.util.Cloner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * named SEPA elements, can be accessed via the URI provided in @RdfId

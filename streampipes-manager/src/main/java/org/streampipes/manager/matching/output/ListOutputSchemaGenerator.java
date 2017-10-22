@@ -1,16 +1,15 @@
 package org.streampipes.manager.matching.output;
 
-import java.net.URI;
-import java.util.List;
-
-import com.clarkparsia.empire.SupportsRdfId.URIKey;
-
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
+import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.impl.eventproperty.EventPropertyList;
 import org.streampipes.model.impl.output.ListOutputStrategy;
+
+import java.net.URI;
+import java.util.List;
 
 public class ListOutputSchemaGenerator implements OutputSchemaGenerator<ListOutputStrategy> {
 
@@ -36,7 +35,7 @@ public class ListOutputSchemaGenerator implements OutputSchemaGenerator<ListOutp
 		EventPropertyList list = new EventPropertyList();
 		list.setEventProperties(schemaProperties);
 		list.setRuntimeName(propertyName);
-		list.setRdfId(new URIKey(URI.create(schemaProperties.get(0).getRdfId()+"-list")));
+		list.setRdfId(new SupportsRdfId.URIKey(URI.create(schemaProperties.get(0).getRdfId()+"-list")));
 		EventSchema schema = new EventSchema();
 		schema.setEventProperties(Utils.createList(list));
 		return schema;

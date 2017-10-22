@@ -1,15 +1,9 @@
 package org.streampipes.manager.matching.v2;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.clarkparsia.empire.SupportsRdfId;
-
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.JmsTransportProtocol;
@@ -20,6 +14,11 @@ import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.vocabulary.MessageFormat;
+
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestUtils {
 

@@ -1,9 +1,9 @@
 package org.streampipes.storage.impl;
 
-import com.clarkparsia.empire.impl.RdfQuery;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.streampipes.empire.core.empire.impl.RdfQuery;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SecDescription;

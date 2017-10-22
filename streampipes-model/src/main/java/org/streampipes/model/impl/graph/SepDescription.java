@@ -1,7 +1,7 @@
 package org.streampipes.model.impl.graph;
 
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.impl.EventSource;
 import org.streampipes.model.impl.EventStream;

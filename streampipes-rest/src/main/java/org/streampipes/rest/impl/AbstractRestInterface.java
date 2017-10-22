@@ -1,6 +1,5 @@
 package org.streampipes.rest.impl;
 
-import com.clarkparsia.empire.annotation.InvalidRdfException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -9,6 +8,7 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.Utils;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;

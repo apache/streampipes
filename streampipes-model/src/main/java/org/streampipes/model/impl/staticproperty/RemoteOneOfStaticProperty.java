@@ -1,8 +1,8 @@
 package org.streampipes.model.impl.staticproperty;
 
 
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;

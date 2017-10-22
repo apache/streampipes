@@ -124,9 +124,9 @@
 			<artifactId>rdf4j-queryrender</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.clarkparsia.empire.sp</groupId>
-			<artifactId>rdf4j</artifactId>
-			<version>1.6-SNAPSHOT</version>
+			<groupId>org.streampipes.empire</groupId>
+			<artifactId>streampipes-empire-rdf4j</artifactId>
+			<version>1.8-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>tools</artifactId>

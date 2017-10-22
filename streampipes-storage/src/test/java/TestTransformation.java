@@ -1,21 +1,17 @@
-
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
 import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
 import org.streampipes.commons.Utils;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.transform.JsonLdTransformer;
 import org.streampipes.storage.controller.StorageManager;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class TestTransformation {
 

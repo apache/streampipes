@@ -1,7 +1,7 @@
 package org.streampipes.model.impl.quality;
 
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.UnnamedSEPAElement;
 
 import javax.persistence.CascadeType;

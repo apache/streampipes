@@ -1,7 +1,5 @@
 package org.streampipes.container.api;
 
-import com.clarkparsia.empire.SupportsRdfId;
-import com.clarkparsia.empire.annotation.InvalidRdfException;
 import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
@@ -10,6 +8,8 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.transform.Transformer;
+import org.streampipes.empire.core.empire.SupportsRdfId;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SepDescription;

@@ -1,8 +1,5 @@
 package org.streampipes.model.transform;
 
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-import com.clarkparsia.empire.annotation.RdfGenerator;
-import com.clarkparsia.empire.annotation.RdfProperty;
 import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
@@ -13,6 +10,9 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.empire.core.empire.annotation.RdfGenerator;
 import org.streampipes.model.AbstractSEPAElement;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.vocabulary.SEPA;
@@ -75,7 +75,7 @@ public class JsonLdTransformer implements RdfTransformer {
                                 && !m.getReturnType()
                                 .getCanonicalName()
                                 .startsWith(
-                                        "com.clarkparsia.empire.")
+                                        "org.streampipes.empire.")
 
                                 && !m.getName().equals("getUntypedRuntimeFormat")
                                 && !m.getName().equals("getRuntimeFormat")
@@ -85,7 +85,7 @@ public class JsonLdTransformer implements RdfTransformer {
                                 && isRdfPropertyAnnotated(m, Class.forName(fixedClassName))
                                 ) {
                             toJsonLd(graph,
-                                    (AbstractSEPAElement) m.invoke(element));
+                                    m.invoke(element));
                         }
                     }
                 }

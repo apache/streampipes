@@ -1,6 +1,6 @@
 package org.streampipes.model;
 
-import com.clarkparsia.empire.annotation.RdfProperty;
+import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.model.impl.ElementStatusInfoSettings;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;

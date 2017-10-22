@@ -1,6 +1,6 @@
 package org.streampipes.model.impl.eventproperty;
 
-import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.UnnamedSEPAElement;
 
 import javax.persistence.Entity;

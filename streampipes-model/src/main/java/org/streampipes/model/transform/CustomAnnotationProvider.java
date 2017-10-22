@@ -1,6 +1,6 @@
 package org.streampipes.model.transform;
 
-import com.clarkparsia.empire.util.EmpireAnnotationProvider;
+import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
 import org.streampipes.model.impl.ApplicationLink;
 import org.streampipes.model.impl.EcType;
 import org.streampipes.model.impl.ElementStatusInfoSettings;

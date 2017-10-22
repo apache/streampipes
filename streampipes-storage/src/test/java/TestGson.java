@@ -1,15 +1,13 @@
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
 import org.streampipes.commons.Utils;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.transform.JsonLdTransformer;
 import org.streampipes.model.util.GsonSerializer;
 import org.streampipes.storage.controller.StorageManager;
+
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 
 
 public class TestGson {
