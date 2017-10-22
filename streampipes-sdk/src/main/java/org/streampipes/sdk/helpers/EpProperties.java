@@ -1,10 +1,7 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.eventproperty.QuantitativeValue;
+import org.streampipes.model.impl.eventproperty.*;
 import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -15,14 +12,14 @@ import java.util.List;
 
 public class EpProperties {
 
-	public static EventPropertyNested nestedEp(String runtimeName, EventPropertyPrimitive...
+	public static EventPropertyNested nestedEp(String runtimeName, EventProperty...
 					eventProperties) {
 		EventPropertyNested nestedProperty = new EventPropertyNested(runtimeName);
 		nestedProperty.setEventProperties(new ArrayList<>(Arrays.asList(eventProperties)));
 		return nestedProperty;
 	}
 
-	public EventPropertyList listNestedEp(String runtimeName, EventPropertyPrimitive...
+	public EventPropertyList listNestedEp(String runtimeName, EventProperty...
 					nestedProperties) {
 		EventPropertyList list = new EventPropertyList();
 		list.setRuntimeName(runtimeName);

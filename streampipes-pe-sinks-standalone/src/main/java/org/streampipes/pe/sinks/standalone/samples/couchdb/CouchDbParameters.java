@@ -8,12 +8,16 @@ public class CouchDbParameters extends EventSinkBindingParams {
   private String couchDbHost;
   private Integer couchDbPort;
   private String databaseName;
+  private String user;
+  private String password;
 
-  public CouchDbParameters(SecInvocation graph, String couchDbHost, Integer couchDbPort, String databaseName) {
+  public CouchDbParameters(SecInvocation graph, String couchDbHost, Integer couchDbPort, String databaseName, String user, String password) {
     super(graph);
     this.couchDbHost = couchDbHost;
     this.couchDbPort = couchDbPort;
     this.databaseName = databaseName;
+    this.user = user;
+    this.password = password;
   }
 
   public String getCouchDbHost() {
@@ -26,5 +30,13 @@ public class CouchDbParameters extends EventSinkBindingParams {
 
   public String getDatabaseName() {
     return databaseName;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  public String getPassword() {
+    return password;
   }
 }

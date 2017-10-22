@@ -56,6 +56,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<finalName>slack</finalName>
+		<finalName>streampipes-pe-slack</finalName>
 	</build>
 </project>

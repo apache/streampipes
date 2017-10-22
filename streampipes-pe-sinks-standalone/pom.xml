@@ -138,5 +138,6 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>streampipes-pe-sinks-standalone</finalName>
     </build>
 </project>

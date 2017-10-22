@@ -18,9 +18,11 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
   private static final String DATABASE_NAME_KEY = "db_name";
+  private static final String DATABASE_USER_KEY = "db_user";
+  private static final String DATABASE_PASSORD_KEY = "db_password";
 
-	@Override
-	public SecDescription declareModel() {
+  @Override
+  public SecDescription declareModel() {
     return DataSinkBuilder.create("couchdb", "CouchDB", "Stores events in a couchdb database.")
             .category(EcType.STORAGE)
             .iconUrl(ActionConfig.getIconUrl("couchdb_icon"))
@@ -31,8 +33,11 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
             .requiredIntegerParameter(DATABASE_PORT_KEY, "Port", "The port of the CouchDB instance")
             .requiredTextParameter(DATABASE_NAME_KEY, "Database Name", "The name of the database where events will " +
                     "be stored")
+            //TODO: add optinal parameters
+            //optinal textparameter DATABASE_USER_KEY
+            //optinal textparameter DATABASE_PASSORD_KEY
             .build();
-	}
+  }
 
 
   @Override
@@ -43,11 +48,16 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
 
-    CouchDbParameters params = new CouchDbParameters(graph, hostname, port, dbName);
+    //TODO: Use this after optinal parameters implementation
+    //String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
+    //String password = extractor.singleValueParameter(DATABASE_PASSORD_KEY, String.class);
+
+    String user = null;
+    String password = null;
+
+    CouchDbParameters params = new CouchDbParameters(graph, hostname, port, dbName, user, password);
 
     return new ConfiguredEventSink<>(params, CouchDb::new);
   }
-
-
 
 }

@@ -42,6 +42,7 @@ public class XSD {
 
 	public static final URI _anyType = toURI("anyType");
 
+	public static final URI _sequence = toURI("sequence");
 	/**
 	 * As discussed in
 	 * http://www.w3.org/2001/sw/BestPractices/XSCH/xsch-sw-20050127
@@ -117,8 +118,9 @@ public class XSD {
 	
 	public static final URI _negativeInteger = toURI("negativeInteger");
 	
-	public static final URI _long = toURI("long");
-	
+	public static final URI _long = toURI("loxs:booleanng");
+
+
 	/**
 	 * http://www.w3.org/TR/xmlschema-2/datatypes.html#int
 	 * 
@@ -154,7 +156,7 @@ public class XSD {
 	        _IDREFS, _ENTITIES, _NMTOKEN, _NMTOKENS, _Name, _NCName, _ID, _IDREF, _ENTITY,
 	        _integer, _nonPositiveInteger, _negativeInteger, _long, _int, _short, _byte,
 	        _nonNegativeInteger, _unsignedLong, _unsignedInt, _unsignedShort, _unsignedByte,
-	        _positiveInteger, _anyType
+	        _positiveInteger, _anyType, _sequence
 
 	};
 	

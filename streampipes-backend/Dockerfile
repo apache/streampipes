@@ -47,11 +47,11 @@ RUN set -x \
 
 EXPOSE 8080
 
-ADD target/streampipes-backend-0.41.2-SNAPSHOT.war /usr/local/tomcat/webapps/streampipes-backend.war
+ADD target/streampipes-backend.war /usr/local/tomcat/webapps/streampipes-backend.war
 ADD ./deployment-config/rdf4j-server.war /usr/local/tomcat/webapps/rdf4j-server.war
 ADD ./deployment-config/rdf4j-workbench.war /usr/local/tomcat/webapps/rdf4j-workbench.war
 #ADD ./sources-demonstrator.war /usr/local/tomcat/webapps/sources-demonstrator.war
-#ADD ./org.streampipes/streampipes-pe-slack/0.41.0-SNAPSHOT/streampipes-pe-slack-0.41.0-SNAPSHOT.war /usr/local/tomcat/webapps/slack.war
+#ADD ./org.streampipes/streampipes-pe-slack/streampipes-pe-slack.war /usr/local/tomcat/webapps/slack.war
 
 ADD ./deployment-config/catalina.properties /usr/local/tomcat/conf/catalina.properties
 ADD ./deployment-config/server.xml /usr/local/tomcat/conf/server.xml

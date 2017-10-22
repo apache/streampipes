@@ -154,6 +154,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>streampipes-pe-sources-samples</finalName>
 
 
     </build>
