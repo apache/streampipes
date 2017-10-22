@@ -1,15 +1,12 @@
 package org.streampipes.model.impl.staticproperty;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+
 import java.net.URI;
 
 import javax.persistence.Entity;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:MappingPropertyUnary")
 @Entity
 public class MappingPropertyUnary extends MappingProperty{

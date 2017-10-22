@@ -1,5 +1,9 @@
 package org.streampipes.model.impl.staticproperty;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.util.Cloner;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -7,14 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import org.streampipes.model.util.Cloner;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:CollectionStaticProperty")
 @Entity
 public class CollectionStaticProperty extends StaticProperty {

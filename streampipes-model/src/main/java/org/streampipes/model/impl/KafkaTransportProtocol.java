@@ -1,13 +1,10 @@
 package org.streampipes.model.impl;
 
-import javax.persistence.Entity;
-
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
+import javax.persistence.Entity;
+
 @RdfsClass("sepa:KafkaTransportProtocol")
 @Entity
 public class KafkaTransportProtocol extends TransportProtocol {

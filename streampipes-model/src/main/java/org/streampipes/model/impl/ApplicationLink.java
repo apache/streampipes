@@ -1,6 +1,5 @@
 package org.streampipes.model.impl;
 
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 import org.streampipes.model.UnnamedSEPAElement;
@@ -10,8 +9,6 @@ import javax.persistence.Entity;
 /**
  * Created by riemer on 11.10.2016.
  */
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-        "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:ApplicationLink")
 @Entity
 public class ApplicationLink extends UnnamedSEPAElement{

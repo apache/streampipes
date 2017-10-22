@@ -1,18 +1,15 @@
 package org.streampipes.model.impl.staticproperty;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.impl.eventproperty.EventProperty;
+
 import java.net.URI;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:MappingProperty")
 @MappedSuperclass
 @Entity

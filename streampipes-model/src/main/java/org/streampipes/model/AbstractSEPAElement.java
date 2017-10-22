@@ -1,14 +1,18 @@
 package org.streampipes.model;
 
-import java.io.Serializable;
-
 import com.clarkparsia.empire.SupportsRdfId;
+import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.SupportsRdfIdImpl;
+
+import java.io.Serializable;
 
 
 /**
  * top-level SEPA element 	
  */
+
+@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
+				"dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "so", "http://schema.org/"})
 public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 
 	private static final long serialVersionUID = -8593749314663582071L;

@@ -1,5 +1,10 @@
 package org.streampipes.model.impl.output;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.util.Cloner;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,15 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.util.Cloner;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:AppendOutputStrategy")
 @Entity
 public class AppendOutputStrategy extends OutputStrategy {
@@ -31,7 +27,7 @@ public class AppendOutputStrategy extends OutputStrategy {
 	public AppendOutputStrategy()
 	{
 		super();
-		eventProperties = new ArrayList<EventProperty>();
+		eventProperties = new ArrayList<>();
 	}
 	
 	public AppendOutputStrategy(AppendOutputStrategy other)

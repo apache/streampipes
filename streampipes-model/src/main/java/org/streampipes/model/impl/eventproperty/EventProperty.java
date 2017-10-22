@@ -1,6 +1,5 @@
 package org.streampipes.model.impl.eventproperty;
 
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 import org.streampipes.model.UnnamedSEPAElement;
@@ -8,15 +7,18 @@ import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.impl.quality.EventPropertyQualityRequirement;
 import org.streampipes.model.util.Cloner;
 
-import javax.persistence.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+
 @RdfsClass("sepa:EventProperty")
 @MappedSuperclass
 @Entity

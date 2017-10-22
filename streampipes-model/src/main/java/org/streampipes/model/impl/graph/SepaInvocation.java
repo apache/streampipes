@@ -1,5 +1,13 @@
 package org.streampipes.model.impl.graph;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.impl.output.OutputStrategy;
+import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.util.Cloner;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +18,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.util.Cloner;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:SEPAInvocationGraph")
 @Entity
 public class SepaInvocation extends InvocableSEPAElement implements Serializable {

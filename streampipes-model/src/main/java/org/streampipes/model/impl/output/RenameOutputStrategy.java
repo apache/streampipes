@@ -1,13 +1,10 @@
 package org.streampipes.model.impl.output;
 
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
 
 import javax.persistence.Entity;
 
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:RenameOutputStrategy")
 @Entity
 public class RenameOutputStrategy extends OutputStrategy {

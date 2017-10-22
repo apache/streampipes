@@ -1,5 +1,9 @@
 package org.streampipes.model.impl;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.UnnamedSEPAElement;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import org.streampipes.model.UnnamedSEPAElement;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:TransportFormat")
 @Entity
 public class TransportFormat extends UnnamedSEPAElement {

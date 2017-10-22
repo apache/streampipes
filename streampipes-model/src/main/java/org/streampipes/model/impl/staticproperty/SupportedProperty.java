@@ -1,15 +1,11 @@
 package org.streampipes.model.impl.staticproperty;
 
-import javax.persistence.Entity;
-
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfProperty;
 import com.clarkparsia.empire.annotation.RdfsClass;
-
 import org.streampipes.model.UnnamedSEPAElement;
 
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/", "so", "http://schema.org/"})
+import javax.persistence.Entity;
+
 @RdfsClass("sepa:SupportedProperty")
 @Entity
 public class SupportedProperty extends UnnamedSEPAElement {

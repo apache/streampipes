@@ -1,14 +1,10 @@
 package org.streampipes.model.impl.quality;
 
-import javax.persistence.Entity;
-
-import com.clarkparsia.empire.annotation.Namespaces;
 import com.clarkparsia.empire.annotation.RdfsClass;
-
 import org.streampipes.model.UnnamedSEPAElement;
 
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "ssn",   "http://purl.oclc.org/NET/ssnx/ssn#"})
+import javax.persistence.Entity;
+
 @RdfsClass("ssn:MeasurementProperty")
 @Entity
 public class MeasurementProperty extends UnnamedSEPAElement {

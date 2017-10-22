@@ -1,16 +1,12 @@
 package org.streampipes.model.impl.output;
 
+import com.clarkparsia.empire.annotation.RdfProperty;
+import com.clarkparsia.empire.annotation.RdfsClass;
+import org.streampipes.model.UnnamedSEPAElement;
+
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 
-import com.clarkparsia.empire.annotation.Namespaces;
-import com.clarkparsia.empire.annotation.RdfProperty;
-import com.clarkparsia.empire.annotation.RdfsClass;
-
-import org.streampipes.model.UnnamedSEPAElement;
-
-@Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-	 "dc",   "http://purl.org/dc/terms/"})
 @RdfsClass("sepa:OutputStrategy")
 @MappedSuperclass
 @Entity
