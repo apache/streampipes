@@ -16,23 +16,31 @@ export default function gaugeWidget(WidgetInstances) {
 						$scope.widgetConfig = data.visualisation.schema.config;
                         $scope.min = data.visualisation.config.min;
                         $scope.max = data.visualisation.config.max;
+                        console.log(data);
+                        console.log($scope.min);
+                        console.log($scope.max);
 					})
             $scope.lineData = [];
+            $scope.myChart = null;
+
         },
         link: function postLink(scope, element) {
-            var myChart = element.epoch({
-                type: 'time.gauge',
-                value: 0.0,
-                fps: 10,
-                format: function (v) {
-                    return v.toFixed(2);
-                },
-                domain: [scope.min, scope.max]
-            });
 
             scope.$watch('data', function (data) {
                 if (data) {
-                    myChart.update(data[scope.widgetConfig.selectedNumberMapping.properties.runtimeName]);
+                    if (scope.myChart == null) {
+                        scope.myChart = element.epoch({
+                            type: 'time.gauge',
+                            value: 0.0,
+                            fps: 10,
+                            format: function (v) {
+                                return v.toFixed(2);
+                            },
+                            domain: [scope.min, scope.max]
+                        });
+                    } else {
+                        scope.myChart.update(data[scope.widgetConfig.selectedNumberMapping.properties.runtimeName]);
+                    }
                 }
             });
         }
