@@ -27,22 +27,23 @@ import java.util.Map;
 @Path("/v1/elasticsearch")
 public class Elasticsearch implements IElasticsearch {
 
-    static String mainFilePath = "_elasticSearchFiles\\";
+    static String mainFilePath = ElasticsearchConfig.INSTANCE.getDataLocation();
+
     Logger LOG = LoggerFactory.getLogger(Elasticsearch.class);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/createfile")
+    @Path("/file")
     @Override
     public Response createFiles(ElasticsearchAppData data) {
         String index = data.getIndex();
         long timestampFrom = data.getTimestampFrom();
-        long timeStampTo = data.getTimeStampTo();
+        long timeStampTo = data.getTimestampTo();
 
+        String url = ElasticsearchConfig.INSTANCE.getElasticsearchURL() + "/" + index +"/_search";
         try {
-            HttpResponse<JsonNode> jsonResponse = Unirest.post(ElasticsearchConfig.INSTANCE.getElasticsearchURL()
-                    +"/" + index +"/_search")
+            HttpResponse<JsonNode> jsonResponse = Unirest.post(url)
                     .header("accept", "application/json")
                     .body("{\"query\": {\"range\" : {\"timestamp\" : {\"gte\" : " + timestampFrom + ",\"lte\" : " + timeStampTo + "}}}}")
                     .asJson();
@@ -67,7 +68,7 @@ public class Elasticsearch implements IElasticsearch {
 
             LOG.info("Created file: " + fileName);
 
-            return Response.ok(fileName).build();
+            return Response.ok().build();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,7 +83,7 @@ public class Elasticsearch implements IElasticsearch {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{fileName}")
+    @Path("/file/{fileName}")
     public Response getFile(@PathParam("fileName") String fileName) {
         File file = new File(mainFilePath + fileName);
         if(file.exists()) {
@@ -97,7 +98,7 @@ public class Elasticsearch implements IElasticsearch {
     }
 
     @DELETE
-    @Path("/{fileName}")
+    @Path("/file/{fileName}")
     @Override
     public Response deleteFile(@PathParam("fileName") String fileName) {
         CouchDbClient couchDbClient = getCouchDbClient();
