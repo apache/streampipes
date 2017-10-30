@@ -1,4 +1,4 @@
-package org.streampipes.storage.util;
+package org.streampipes.app.file.export;
 
 import org.streampipes.config.SpConfig;
 

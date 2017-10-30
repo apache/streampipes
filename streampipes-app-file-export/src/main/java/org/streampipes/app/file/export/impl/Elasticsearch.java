@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.app.file.export.ElasticsearchAppData;
 import org.streampipes.app.file.export.api.IElasticsearch;
-import org.streampipes.storage.util.ElasticsearchConfig;
+import org.streampipes.app.file.export.ElasticsearchConfig;
 import org.streampipes.storage.util.Utils;
 
 import javax.ws.rs.*;
