@@ -6,42 +6,33 @@
         </div>
     </div>
 
-    <!--<div flex layout="row" layout-align="center center">-->
-        <!--<div flex="80">-->
-            <!--<md-content class="md-padding">-->
-                <!--<h2>Application Links</h2>-->
+    <div class="container-fluid">
+        <div>
+            <md-content layout-padding>
+                <md-list>
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>Export File</h4>
+                    </div>
+                    <div class="sp-blue-border">
+                        <div layout="row" layout-align="center center">
+                            <h5>TODO add here the form to create new files</h5>
+                        </div>
+                    </div>
 
-                <!--<div flex="100" layout="row" layout-align="start center"-->
-                     <!--style="border:1px solid darkblue;margin-bottom:10px;" ng-repeat="applink in applicationLinks">-->
-
-                    <!--<div flex="20" layout="row" layout-align="center center" style="margin:10px;">-->
-                        <!--<img class="md-card-image" ng-src="{{applink.applicationIconUrl}}"/>-->
-                    <!--</div>-->
-                    <!--<div flex="80" layout="row" layout-align="start center" style="margin:10px;">-->
-                        <!--<div flex="100" layout="column">-->
-                            <!--<div layout="column">-->
-                                <!--<div flex layout="column">-->
-                                    <!--<h2 class="md-title">{{applink.applicationName}}</h2>-->
-                                    <!--<p>{{applink.applicationDescription}}</p>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <!--<div flex layout="row" layout-align="end end">-->
-                                <!--<div flex layout="row" layout-align="end end">-->
-						<!--<span flex flex-order="1" layout="row" layout-align="end end">-->
-							<!--<md-button aria-label="As Favorite" class="md-accent"-->
-                                       <!--ng-click="openApp(applink.applicationUrl)">-->
-								<!--&nbsp;&nbsp;Open Application&nbsp;&nbsp;-->
-							<!--</md-button>-->
-						<!--</span>-->
-
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</md-content>-->
-        <!--</div>-->
-    <!--</div>-->
-
+                    <div class="assemblyOptions sp-blue-bg">
+                        <h4>All Files</h4>
+                    </div>
+                    <div class="sp-blue-border">
+                        <div layout="column"
+                             ng-repeat="file in allFiles">
+                            <file-details></file-details>
+                        </div>
+                        <div layout="row" layout-align="center center" ng-if="allFiles.length == 0">
+                            <h5>(no files available)</h5>
+                        </div>
+                    </div>
+                </md-list>
+            </md-content>
+        </div>
+    </div>
 </div>

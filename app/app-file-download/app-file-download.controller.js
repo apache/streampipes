@@ -2,8 +2,28 @@ AppFileDownloadCtrl.$inject = ['$scope', 'appFileDownloadRestService', '$window'
 
 export default function AppFileDownloadCtrl($scope, appFileDownloadRestService, $window) {
 
-    $scope.allFiles = appFileDownloadRestService.getAll();
+    $scope.allFiles = [];
 
+    $scope.deleteFile = function (fileName) {
+        appFileDownloadRestService.removeFile(fileName);
+    }
+
+    $scope.downloadFile = function (fileName) {
+        appFileDownloadRestService.getFile(fileName);
+    }
+
+    $scope.getFiles = function () {
+        appFileDownloadRestService.getAll()
+            .success(function (allFiles) {
+                $scope.allFiles = allFiles;
+            })
+            .error(function (msg) {
+                console.log(msg);
+            });
+
+    };
+
+    $scope.getFiles();
 
     // $scope.res = appFileDownloadRestService.createFile("testfeld",1506416708, 1506418628);
 

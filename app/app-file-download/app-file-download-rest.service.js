@@ -1,6 +1,6 @@
-appFileDownloadRestApi.$inject = ['$rootScope', '$http', 'apiConstants'];
+appFileDownloadRestApi.$inject = ['$rootScope', '$http', 'apiConstants', '$window'];
 
-export default function appFileDownloadRestApi($rootScope, $http, apiConstants) {
+export default function appFileDownloadRestApi($rootScope, $http, apiConstants, $window) {
 
     var restApi = {};
 
@@ -14,7 +14,8 @@ export default function appFileDownloadRestApi($rootScope, $http, apiConstants) 
     }
 
     restApi.getFile = function (fileName) {
-        return $http.get(getServerUrl() + '/file/' + fileName);
+        $window.open(getServerUrl() + '/file/' + fileName);
+        // return $http.get(getServerUrl() + '/file/' + fileName);
     }
 
     restApi.removeFile = function (fileName) {
