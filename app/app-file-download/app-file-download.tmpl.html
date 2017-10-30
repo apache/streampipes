@@ -14,13 +14,27 @@
                         <h4>Export File</h4>
                     </div>
                     <div class="sp-blue-border">
-                        <div layout="row" layout-align="center center">
-                            <h5>TODO add here the form to create new files</h5>
-
-                            <input datetime-picker ng-model="model" />
-
+                        <div layout="row">
+                            <md-input-container>
+                                <label>Index</label>
+                                <input ng-model="newFile.index">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Start date</label>
+                                <input datetime-picker ng-model="newFile.timestampFrom" />
+                            </md-input-container>
+                            <md-input-container>
+                                <label>End date</label>
+                                <input datetime-picker ng-model="newFile.timestampTo" />
+                            </md-input-container>
+                            <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                                <md-button ng-click="createNewFile(newFile)" class="md-raised md-primary">Create File</md-button>
+                            </section>
                         </div>
+
+
                     </div>
+
 
                     <div class="assemblyOptions sp-blue-bg">
                         <h4>All Files</h4>

@@ -50,15 +50,6 @@ export default function HomeCtrl($scope, $window) {
             }
         },
         {
-            name: "File Download",
-            description: "Create Files from historic data and download those files",
-            imageUrl: "img/notification_icon.png",
-            link: {
-                newWindow: false,
-                value: "streampipes.appfiledownload"
-            }
-        },
-        {
             name: "ElasticSearch",
             description: "Offline visual analytics of Testfeld data",
             imageUrl: "img/home/elastic.png",
@@ -67,6 +58,15 @@ export default function HomeCtrl($scope, $window) {
                 value: "http://ipe-koi05.fzi.de:5601"
             }
         },
+        {
+            name: "File Download",
+            description: "Create Files from historic data and download those files",
+            imageUrl: "img/home/filedownload.png",
+            link: {
+                newWindow: false,
+                value: "streampipes.appfiledownload"
+            }
+        }
 
     ]
 
