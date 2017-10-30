@@ -74,6 +74,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
             link: 'streampipes.dashboard',
             title: 'Live Dashboard',
             icon: 'editor:ic_insert_chart_24px'
+        },
+        {
+            link: 'streampipes.appfiledownload',
+            title: 'File Download',
+            icon: 'action:ic_get_app_24px'
         }
     ];
     $scope.admin = [

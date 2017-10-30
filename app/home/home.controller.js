@@ -50,6 +50,15 @@ export default function HomeCtrl($scope, $window) {
             }
         },
         {
+            name: "File Download",
+            description: "Create Files from historic data and download those files",
+            imageUrl: "img/notification_icon.png",
+            link: {
+                newWindow: false,
+                value: "streampipes.appfiledownload"
+            }
+        },
+        {
             name: "ElasticSearch",
             description: "Offline visual analytics of Testfeld data",
             imageUrl: "img/home/elastic.png",

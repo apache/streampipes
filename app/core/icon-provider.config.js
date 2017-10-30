@@ -24,5 +24,6 @@ export default function iconProviderConfig($mdIconProvider, apiConstants) {
 		.iconSet('toggle', 'img/svg/svg-sprite-toggle.svg', 24)
 		.iconSet('avatars', 'img/svg/avatar-icons.svg', 24)
         .iconSet('home', 'img/svg/ic_home_white_24px.svg', 24)
+        .iconSet('download', 'img/svg/ic_file_download_white_24px.svg', 24)
 		.defaultIconSet('img/svg/svg-sprite-action.svg', 24);
 };

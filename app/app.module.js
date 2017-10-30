@@ -22,6 +22,7 @@ import spOntology from './ontology/ontology.module';
 import spPipelines from './pipelines/pipelines.module';
 import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
+import spAppFileDownload from './app-file-download/app-file-download.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module'
 
 const MODULE_NAME = 'streamPipesApp';
@@ -43,6 +44,7 @@ export default angular
         spPipelines,
         spSensors,
         spAppLinks,
+        spAppFileDownload,
         spPipelineDetails,
         uiRouter,
     ])
