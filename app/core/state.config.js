@@ -128,7 +128,7 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
             views: {
                 "spMain@streampipes": {
                     templateUrl: 'app/app-file-download/app-file-download.tmpl.html',
-                    controller: 'AppFileDownload'
+                    controller: 'AppFileDownloadCtrl'
                 }
             }
         })

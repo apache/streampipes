@@ -78,7 +78,7 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
         {
             link: 'streampipes.appfiledownload',
             title: 'File Download',
-            icon: 'action:ic_get_app_24px'
+            icon: 'file:ic_file_download_24px'
         }
     ];
     $scope.admin = [

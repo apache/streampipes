@@ -1,6 +1,11 @@
-AppFileDownloadCtrl.$inject = ['$scope', 'restApi', '$window'];
+AppFileDownloadCtrl.$inject = ['$scope', 'appFileDownloadRestService', '$window'];
 
-export default function AppFileDownloadCtrl($scope, restApi, $window) {
+export default function AppFileDownloadCtrl($scope, appFileDownloadRestService, $window) {
+
+    $scope.allFiles = appFileDownloadRestService.getAll();
+
+
+    // $scope.res = appFileDownloadRestService.createFile("testfeld",1506416708, 1506418628);
 
     // $scope.applicationLinks = [];
 
