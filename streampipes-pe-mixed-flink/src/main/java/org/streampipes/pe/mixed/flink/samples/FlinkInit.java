@@ -1,6 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples;
 
 
+import com.orbitz.consul.NotRegisteredException;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
@@ -23,6 +24,7 @@ import org.streampipes.pe.mixed.flink.samples.spatial.gridenricher.SpatialGridEn
 import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
 import org.streampipes.pe.mixed.flink.samples.statistics.window.StatisticsSummaryControllerWindow;
 import org.streampipes.pe.mixed.flink.samples.timetofailure.TimeToFailureController;
+import org.streampipes.storage.util.Utils;
 
 public class FlinkInit extends StandaloneModelSubmitter {
 
@@ -56,6 +58,13 @@ public class FlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .setPort(FlinkConfig.INSTANCE.getPort());
             ;
+
+    try {
+      Utils.RegisterService(DeclarersSingleton.getInstance().getBaseUri(), FlinkConfig.INSTANCE.getHost());
+    } catch (NotRegisteredException e) {
+      e.printStackTrace();
+    }
+
     new FlinkInit().init();
   }
 
