@@ -314,6 +314,11 @@
                 <artifactId>streampipes-user-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-app-file-export</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
         </dependencies>
@@ -360,6 +365,7 @@
         <module>streampipes-performance-tests</module>
         <module>streampipes-storage-rdf4j</module>
         <module>streampipes-storage-couchdb</module>
+        <module>streampipes-app-file-export</module>
     </modules>
 
     <!-- Build Settings -->
