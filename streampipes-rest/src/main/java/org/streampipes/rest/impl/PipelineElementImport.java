@@ -1,5 +1,18 @@
 package org.streampipes.rest.impl;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.messages.Notification;
+import org.streampipes.model.client.messages.NotificationType;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.service.UserService;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -16,21 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.manager.operations.Operations;
-
-import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.messages.Notification;
-import org.streampipes.model.client.messages.NotificationType;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.storage.api.StorageRequests;
-import org.streampipes.storage.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @Path("/v2/users/{username}/element")
 public class PipelineElementImport extends AbstractRestInterface {

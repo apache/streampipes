@@ -1,25 +1,16 @@
 package org.streampipes.model.util;
 
-import java.io.IOException;
-
-import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
 import org.streampipes.model.impl.EcType;
 
-public class EcTypeAdapter extends TypeAdapter<EcType> {
+import java.io.IOException;
+
+public class EcTypeAdapter extends PeTypeAdapter<EcType> {
 
 	@Override
 	public void write(JsonWriter out, EcType value) throws IOException {
-		out.beginObject();
-		out.name("type");
-		out.value(value.name());
-		out.name("label");
-		out.value(value.getLabel());
-		out.name("description");
-		out.value(value.getDescription());
-		out.endObject();
+		write(out, value.getLabel(), value.getDescription(), value.name());
 	}
 
 	@Override

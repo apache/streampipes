@@ -47,20 +47,21 @@ public class InMemoryStorage implements StorageRequests {
 	private void initializeSECStorage()	{
 		inMemorySECStorage.clear();
 		List<SecDescription> secs = sesameStorage.getAllSECs();
-		secs.forEach(sec -> inMemorySECStorage.put(sec.getRdfId().toString(), sec));
+		secs.forEach(sec -> inMemorySECStorage.put(sec.getElementId().toString(), sec));
 	}
 	
 	private void initializeSEPAStorage() {
 		inMemorySEPAStorage.clear();
 		List<SepaDescription> sepas = sesameStorage.getAllSEPAs();
-		sepas.forEach(sepa -> inMemorySEPAStorage.put(sepa.getRdfId().toString(), sepa));
+		sepas.forEach(sepa -> inMemorySEPAStorage.put(sepa.getElementId().toString(), sepa));
 	}
 	
 	private void initializeSEPStorage() {
 		inMemorySEPStorage.clear();
 		List<SepDescription> seps = sesameStorage.getAllSEPs();
-		seps.forEach(sep -> inMemorySEPStorage.put(sep.getRdfId().toString(), sep));
-		seps.forEach(sep -> sep.getEventStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getRdfId().toString(), eventStream)));
+		seps.forEach(sep -> inMemorySEPStorage.put(sep.getElementId(), sep));
+		seps.forEach(sep -> sep.getEventStreams().forEach(eventStream -> inMemoryEventStreamStorage.put(eventStream.getElementId(),
+						eventStream)));
 	}
 
 	@Override
@@ -187,12 +188,12 @@ public class InMemoryStorage implements StorageRequests {
 
 	@Override
 	public boolean exists(SepDescription sep) {
-		return inMemorySEPStorage.containsKey(sep.getRdfId().toString());
+		return inMemorySEPStorage.containsKey(sep.getElementId());
 	}
 
 	@Override
 	public boolean exists(SepaDescription sepa) {
-		return inMemorySEPAStorage.containsKey(sepa.getRdfId().toString());
+		return inMemorySEPAStorage.containsKey(sepa.getElementId());
 	}
 
 	@Override
@@ -216,7 +217,7 @@ public class InMemoryStorage implements StorageRequests {
 
 	@Override
 	public boolean exists(SecDescription sec) {
-		return inMemorySECStorage.containsKey(sec.getRdfId().toString());
+		return inMemorySECStorage.containsKey(sec.getElementId());
 	}
 
 	@Override

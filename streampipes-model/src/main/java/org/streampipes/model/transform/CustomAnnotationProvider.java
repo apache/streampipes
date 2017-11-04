@@ -69,14 +69,14 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
   @Override
   public Collection<Class<?>> getClassesWithAnnotation(
           Class<? extends Annotation> arg0) {
-    if (arg0.getName().equals("com.clarkparsia.empire.annotation.RdfsClass")) {
-      return CustomAnnotationProvider.getAnnotatedClasses();
+    if (arg0.getName().equals("org.streampipes.empire.annotations.RdfsClass")) {
+      return getAnnotatedClasses();
     } else {
       return Collections.emptyList();
     }
   }
 
-  public static List<Class<?>> getAnnotatedClasses() {
+  private List<Class<?>> getAnnotatedClasses() {
     return Arrays.asList(
             ListOutputStrategy.class,
             CustomOutputStrategy.class,
@@ -135,13 +135,4 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             ElementStatusInfoSettings.class
     );
   }
-
-  public static String getAnnotatedClassesAsString() {
-    String result = "";
-    for (Class<?> clazz : getAnnotatedClasses()) {
-      result += clazz.getCanonicalName();
-    }
-    return result;
-  }
-
 }

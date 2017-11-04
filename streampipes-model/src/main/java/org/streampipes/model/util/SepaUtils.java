@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 public class SepaUtils {
 
+	// TODO move this to SDK (extractors)
+
 	public static String getSupportedPropertyValue(DomainStaticProperty dsp, String propertyId)
 	{
 		Optional<SupportedProperty> matchedProperty = dsp.getSupportedProperties().stream().filter(sp -> sp.getPropertyId().equals(propertyId)).findFirst();
