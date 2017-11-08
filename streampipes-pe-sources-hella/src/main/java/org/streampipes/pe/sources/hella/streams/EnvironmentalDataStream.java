@@ -7,8 +7,8 @@ import org.streampipes.commons.Utils;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.hella.main.AbstractHellaStream;
 
 public abstract class EnvironmentalDataStream extends AbstractHellaStream {

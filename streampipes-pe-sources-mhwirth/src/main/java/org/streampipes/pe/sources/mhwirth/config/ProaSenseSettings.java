@@ -2,7 +2,6 @@ package org.streampipes.pe.sources.mhwirth.config;
 
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.vocabulary.SO;
 
 public class ProaSenseSettings {
 

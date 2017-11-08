@@ -3,10 +3,10 @@ package org.streampipes.pe.sources.samples.twitter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.vocabulary.FOAF;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.FOAF;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.model.impl.EventGrounding;

@@ -13,8 +13,8 @@ import org.streampipes.model.impl.quality.Accuracy;
 import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.impl.quality.EventStreamQualityDefinition;
 import org.streampipes.model.impl.quality.Frequency;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 

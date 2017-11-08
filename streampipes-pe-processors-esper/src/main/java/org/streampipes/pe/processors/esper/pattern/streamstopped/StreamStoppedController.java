@@ -13,7 +13,7 @@ import org.streampipes.model.impl.output.FixedOutputStrategy;
 import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.wrapper.ConfiguredEventProcessor;

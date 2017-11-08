@@ -11,7 +11,7 @@ import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 
 public class TestPrimitivePropertyMatch extends TestCase {
 

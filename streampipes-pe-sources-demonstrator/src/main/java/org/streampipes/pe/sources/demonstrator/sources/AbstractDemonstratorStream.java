@@ -5,7 +5,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.demonstrator.config.DemonstratorVariables;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.demonstrator.config.ProaSenseSettings;

@@ -3,12 +3,11 @@ package org.streampipes.storage.sparql;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.repository.RepositoryException;
-
 import org.streampipes.model.client.ontology.ElementHeader;
 import org.streampipes.model.client.ontology.PrimitiveRange;
 import org.streampipes.model.client.ontology.Property;
-import org.streampipes.model.vocabulary.XSD;
 import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.vocabulary.XSD;
 
 public class TestPropertyDetails {
 

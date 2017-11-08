@@ -1,9 +1,8 @@
 package org.streampipes.sdk.utils;
 
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
-import javax.xml.crypto.Data;
 import java.net.URI;
 
 /**

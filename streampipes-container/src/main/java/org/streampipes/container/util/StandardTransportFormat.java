@@ -5,7 +5,7 @@ import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 import java.util.ArrayList;
 import java.util.List;

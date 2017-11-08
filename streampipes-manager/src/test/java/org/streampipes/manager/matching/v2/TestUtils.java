@@ -13,7 +13,7 @@ import org.streampipes.model.impl.TransportProtocol;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 import java.net.URI;
 import java.util.Arrays;

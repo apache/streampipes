@@ -15,7 +15,7 @@ import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.ConfiguredEventProcessor;

@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 public class RandomNumberStreamJson extends RandomNumberStream {
 

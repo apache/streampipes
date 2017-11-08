@@ -3,9 +3,9 @@ package org.streampipes.pe.sources.samples.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.MhWirth;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MhWirth;
+import org.streampipes.vocabulary.XSD;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

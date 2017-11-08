@@ -9,7 +9,7 @@ import org.streampipes.empire.core.empire.config.ConfigKeys;
 import org.streampipes.empire.core.empire.config.EmpireConfiguration;
 import org.streampipes.empire.rdf4j.OpenRdfEmpireModule;
 import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
-import org.streampipes.model.transform.CustomAnnotationProvider;
+import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;
 import org.streampipes.storage.api.ContextStorage;

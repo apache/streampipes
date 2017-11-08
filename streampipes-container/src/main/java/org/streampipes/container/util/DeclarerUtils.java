@@ -11,7 +11,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
 public class DeclarerUtils {
 

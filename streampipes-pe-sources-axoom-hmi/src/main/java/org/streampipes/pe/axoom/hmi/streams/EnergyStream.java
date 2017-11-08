@@ -5,7 +5,7 @@ import org.streampipes.pe.axoom.hmi.config.SourceConfig;
 import org.streampipes.pe.axoom.hmi.vocabulary.AxoomVocabulary;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;

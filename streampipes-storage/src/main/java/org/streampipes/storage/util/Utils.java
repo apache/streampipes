@@ -1,6 +1,6 @@
 package org.streampipes.storage.util;
 
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 

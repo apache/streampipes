@@ -3,8 +3,6 @@ package org.streampipes.model.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.rdf4j.model.Graph;
-import org.eclipse.rdf4j.model.URI;
-import org.eclipse.rdf4j.model.impl.ValueFactoryImpl;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.Rio;
@@ -14,14 +12,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ModelUtils {
-
-	public static URI createRandomUri(String ns)
-	{
-		return ValueFactoryImpl.getInstance().createURI(ns + UUID.randomUUID());
-	}
 	
 	public static Gson getGson()
 	{

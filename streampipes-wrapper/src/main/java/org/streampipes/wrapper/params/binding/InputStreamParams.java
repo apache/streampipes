@@ -3,6 +3,7 @@ package org.streampipes.wrapper.params.binding;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -33,7 +34,7 @@ public class InputStreamParams implements Serializable {
 	}
 	
 	public List<String> getAllProperties() {
-		return eventSchema.toPropertyList();
+		return SchemaUtils.toPropertyList(eventSchema.getEventProperties());
 	}
 	
 }

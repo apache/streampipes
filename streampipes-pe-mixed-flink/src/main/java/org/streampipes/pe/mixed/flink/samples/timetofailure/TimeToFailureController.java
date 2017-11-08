@@ -21,7 +21,7 @@ import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.MhWirth;
+import org.streampipes.vocabulary.MhWirth;
 
 import java.net.URI;
 import java.util.ArrayList;

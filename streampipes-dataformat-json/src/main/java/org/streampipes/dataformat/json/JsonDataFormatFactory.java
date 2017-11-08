@@ -2,7 +2,7 @@ package org.streampipes.dataformat.json;
 
 import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.dataformat.SpDataFormatFactory;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 public class JsonDataFormatFactory extends SpDataFormatFactory {
 

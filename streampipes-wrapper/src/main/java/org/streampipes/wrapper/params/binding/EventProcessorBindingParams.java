@@ -3,6 +3,7 @@ package org.streampipes.wrapper.params.binding;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class EventProcessorBindingParams extends
 	public EventProcessorBindingParams(SepaInvocation graph)
 	{
 		super(new SepaInvocation(graph));
-		this.outEventType = graph.getOutputStream().getEventSchema().toRuntimeMap();
+		this.outEventType = SchemaUtils.toRuntimeMap(graph.getOutputStream().getEventSchema().getEventProperties());
 		outputStream = graph.getOutputStream();
 		EventGrounding outputGrounding = outputStream.getEventGrounding();
 		outName = outputGrounding.getTransportProtocol().getTopicName();
@@ -42,7 +43,7 @@ public abstract class EventProcessorBindingParams extends
 
 	public List<String> getOutputProperties()
 	{
-		return outputStream.getEventSchema().toPropertyList();
+		return SchemaUtils.toPropertyList(outputStream.getEventSchema().getEventProperties());
 	}
 	
 }

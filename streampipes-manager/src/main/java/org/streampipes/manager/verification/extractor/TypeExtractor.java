@@ -8,7 +8,7 @@ import org.streampipes.manager.verification.ElementVerifier;
 import org.streampipes.manager.verification.SecVerifier;
 import org.streampipes.manager.verification.SepVerifier;
 import org.streampipes.manager.verification.SepaVerifier;
-import org.streampipes.model.vocabulary.SEPA;
+import org.streampipes.vocabulary.SEPA;
 
 import java.util.List;
 import java.util.Optional;

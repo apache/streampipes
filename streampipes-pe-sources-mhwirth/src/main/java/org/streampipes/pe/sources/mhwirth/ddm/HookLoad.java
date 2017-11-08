@@ -3,9 +3,9 @@ package org.streampipes.pe.sources.mhwirth.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.eventproperty.EventProperty;

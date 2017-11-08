@@ -15,8 +15,8 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.controller.StorageManager;
 
 import java.io.File;

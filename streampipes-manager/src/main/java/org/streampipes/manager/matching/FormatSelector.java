@@ -4,7 +4,7 @@ import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.NamedSEPAElement;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 import java.util.List;
 import java.util.Set;

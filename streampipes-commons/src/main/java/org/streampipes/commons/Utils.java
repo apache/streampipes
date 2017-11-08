@@ -6,6 +6,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 
@@ -75,6 +76,7 @@ public class Utils {
 
 		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
 
 		return writer;
 	}

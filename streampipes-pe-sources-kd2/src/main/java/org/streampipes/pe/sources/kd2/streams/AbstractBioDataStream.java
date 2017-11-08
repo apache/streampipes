@@ -6,7 +6,7 @@ import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.kd2.config.KafkaSettings;
 import org.streampipes.pe.sources.kd2.vocabulary.Kd2;

@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.InvocableSEPAElement;
 import org.streampipes.model.client.pipeline.PipelineElementStatus;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;

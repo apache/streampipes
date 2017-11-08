@@ -13,9 +13,9 @@ import org.streampipes.model.impl.JmsTransportProtocol;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
 
 public class ProveItLocationStream  implements EventStreamDeclarer {
 	    

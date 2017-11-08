@@ -14,7 +14,7 @@ import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.StorageRequests;
 import org.streampipes.storage.controller.StorageManager;
 import org.streampipes.storage.service.UserService;

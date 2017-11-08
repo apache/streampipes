@@ -6,7 +6,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.wrapper.runtime.EventSink;
 

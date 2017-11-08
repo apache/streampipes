@@ -7,9 +7,7 @@ import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -35,7 +33,7 @@ public class EventSchema extends UnnamedSEPAElement{
 	public EventSchema()
 	{
 		super();
-		this.eventProperties = new ArrayList<EventProperty>();
+		this.eventProperties = new ArrayList<>();
 	}
 
 	public EventSchema(EventSchema other) {
@@ -56,33 +54,5 @@ public class EventSchema extends UnnamedSEPAElement{
 	{
 		return eventProperties.add(p);
 	}
-	
-	public Map<String, Object> toRuntimeMap()
-	{
-		return toUntypedRuntimeMap();
-	}
-	
-	public Map<String, Object> toUntypedRuntimeMap()
-	{
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
-		
-		for(EventProperty p : this.getEventProperties())
-		{
-			propertyMap.putAll(p.getUntypedRuntimeFormat());
-		}	
-		return propertyMap;
-	}
-	
-	public List<String> toPropertyList()
-	{
-		List<String> properties = new ArrayList<String>();
-		
-		for(EventProperty p : this.getEventProperties())
-		{
-			properties.addAll(p.getFullPropertyName(""));
-		}
-		return properties;
-	}
-	
 	
 }

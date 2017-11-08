@@ -14,7 +14,7 @@ import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.sources.samples.adapter.CsvPublisher;
 import org.streampipes.pe.sources.samples.adapter.CsvReadingTask;
 import org.streampipes.pe.sources.samples.adapter.FolderReadingTask;

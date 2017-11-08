@@ -6,7 +6,7 @@ import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.controller.StorageManager;
 
 import java.io.IOException;

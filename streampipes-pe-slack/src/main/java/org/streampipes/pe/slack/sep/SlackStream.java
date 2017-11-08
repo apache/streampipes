@@ -17,9 +17,9 @@ import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.json.JSONObject;
 import org.streampipes.pe.slack.config.SlackConfig;
 

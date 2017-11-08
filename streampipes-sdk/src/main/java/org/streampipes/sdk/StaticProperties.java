@@ -4,7 +4,7 @@ import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 
 import java.net.URI;
 

@@ -6,7 +6,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 import org.streampipes.pe.sources.samples.adapter.csv.CsvReaderSettings;
 import org.streampipes.pe.sources.samples.adapter.csv.CsvReplayTask;

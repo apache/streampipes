@@ -1,7 +1,7 @@
 package org.streampipes.sdk.builder;
 
 import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.vocabulary.MhWirth;
+import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Groundings;
 import org.streampipes.sdk.utils.Datatypes;

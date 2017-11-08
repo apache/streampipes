@@ -10,7 +10,7 @@ import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyNested;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

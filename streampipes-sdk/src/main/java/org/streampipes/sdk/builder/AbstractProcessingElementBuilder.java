@@ -18,7 +18,7 @@ import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.StreamIdentifier;
 

@@ -1,7 +1,7 @@
 package org.streampipes.rest.impl;
 
 import org.streampipes.model.client.messages.NotificationType;
-import org.streampipes.model.client.util.Utils;
+import org.streampipes.serializers.json.Utils;
 import org.streampipes.rest.api.IVirtualSensor;
 
 import javax.ws.rs.*;

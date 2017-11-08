@@ -6,7 +6,7 @@ import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.output.AppendOutputStrategy;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;

@@ -5,8 +5,8 @@ import java.util.List;
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
 public class DatatypeMatch extends AbstractMatcher<String, String> {
 

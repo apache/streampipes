@@ -18,7 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-model</artifactId>
+            <artifactId>streampipes-vocabulary</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,7 +1,7 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 
 /**
  * Created by riemer on 28.01.2017.

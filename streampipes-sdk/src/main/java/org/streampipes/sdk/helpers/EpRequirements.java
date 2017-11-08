@@ -3,8 +3,8 @@ package org.streampipes.sdk.helpers;
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.eventproperty.EventPropertyList;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
 public class EpRequirements {

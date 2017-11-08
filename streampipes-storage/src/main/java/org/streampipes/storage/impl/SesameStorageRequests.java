@@ -154,7 +154,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean exists(SepDescription sep) {
-		SepDescription storedSEP = entityManager.find(SepDescription.class, sep.getRdfId());
+		SepDescription storedSEP = entityManager.find(SepDescription.class, sep.getElementId());
 		return storedSEP != null ? true : false;
 	}
 
@@ -214,7 +214,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean exists(SecDescription sec) {
-		SecDescription storedSEC = entityManager.find(SecDescription.class, sec.getRdfId());
+		SecDescription storedSEC = entityManager.find(SecDescription.class, sec.getElementId());
 		return storedSEC != null ? true : false;
 	}
 

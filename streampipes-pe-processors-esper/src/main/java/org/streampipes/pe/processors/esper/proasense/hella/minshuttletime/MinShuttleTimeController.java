@@ -12,7 +12,7 @@ import org.streampipes.model.impl.output.OutputStrategy;
 import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;

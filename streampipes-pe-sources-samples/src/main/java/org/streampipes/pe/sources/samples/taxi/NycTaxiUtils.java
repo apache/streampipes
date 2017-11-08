@@ -5,9 +5,9 @@ import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 import java.util.ArrayList;

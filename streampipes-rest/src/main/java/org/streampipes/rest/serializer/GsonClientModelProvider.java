@@ -2,7 +2,7 @@ package org.streampipes.rest.serializer;
 
 import com.google.gson.Gson;
 import org.streampipes.rest.annotation.GsonClientModel;
-import org.streampipes.model.client.util.Utils;
+import org.streampipes.serializers.json.Utils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;

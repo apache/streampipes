@@ -3,13 +3,9 @@ package org.streampipes.model.impl.eventproperty;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.util.ModelUtils;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -85,23 +81,4 @@ public class EventPropertyPrimitive extends EventProperty {
 		this.valueSpecification = valueSpecification;
 	}
 
-	@Override
-	public Map<String, Object> getRuntimeFormat() {
-		return getUntypedRuntimeFormat();
-	}
-
-	@Override
-	public Map<String, Object> getUntypedRuntimeFormat() {
-		Map<String, Object> result = new HashMap<>();
-		result.put(runtimeName, ModelUtils.getPrimitiveClass(runtimeType));
-		return result;
-	}
-
-	@Override
-	public List<String> getFullPropertyName(String prefix) {
-		List<String> result = new ArrayList<String>();
-		result.add(prefix + runtimeName);
-		return result;
-	}
-	
 }

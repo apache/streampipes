@@ -10,7 +10,6 @@ import org.streampipes.model.util.Cloner;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -171,11 +170,5 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 	public static String getPrefix() {
 		return prefix;
 	}
-
-	public abstract Map<String, Object> getRuntimeFormat();
-	
-	public abstract Map<String, Object> getUntypedRuntimeFormat();
-	
-	public abstract List<String> getFullPropertyName(String prefix);
 	
 }

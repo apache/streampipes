@@ -9,7 +9,7 @@ import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.impl.output.AppendOutputStrategy;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;

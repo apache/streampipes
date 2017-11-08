@@ -4,7 +4,7 @@ import org.streampipes.model.impl.EventSchema;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.eventproperty.EventProperty;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.pe.sources.hella.config.HellaVariables;
 import org.streampipes.pe.sources.hella.main.AbstractHellaStream;

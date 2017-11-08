@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.client.util.Utils;
+import org.streampipes.serializers.json.Utils;
 
 import java.io.IOException;
 import java.net.URL;

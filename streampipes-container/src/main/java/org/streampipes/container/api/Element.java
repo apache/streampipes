@@ -11,6 +11,7 @@ import org.streampipes.container.transform.Transformer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
@@ -87,6 +88,14 @@ public abstract class Element<D extends Declarer> {
             String uri = DeclarersSingleton.getInstance().getBaseUri()+ type + desc.getUri();
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
+
+            if (desc instanceof SepDescription) {
+                for(EventStream stream : ((SepDescription) desc).getEventStreams()) {
+                    String baseUri = DeclarersSingleton.getInstance().getBaseUri() + type +stream.getUri();
+                    stream.setUri(baseUri);
+                    stream.setRdfId(new SupportsRdfId.URIKey(URI.create(baseUri)));
+                }
+            }
         }
 
         return desc;

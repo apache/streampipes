@@ -5,9 +5,7 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -48,11 +46,6 @@ public class EventPropertyNested extends EventProperty {
 	
 	}
 
-	@Override
-	public Map<String, Object> getRuntimeFormat() {
-		return getUntypedRuntimeFormat();
-	}
-
 	public List<EventProperty> getEventProperties() {
 		return eventProperties;
 	}
@@ -61,27 +54,4 @@ public class EventPropertyNested extends EventProperty {
 		this.eventProperties = eventProperties;
 	}
 
-	@Override
-	public Map<String, Object> getUntypedRuntimeFormat() {
-		
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
-		Map<String, Object> subTypes = new HashMap<String, Object>();
-		for(EventProperty p : eventProperties)
-		{
-			subTypes.putAll(p.getUntypedRuntimeFormat());
-		}	
-		propertyMap.put(runtimeName, subTypes);
-		return propertyMap;
-	}
-
-	@Override
-	public List<String> getFullPropertyName(String prefix) {
-		
-		List<String> result = new ArrayList<String>();
-		for(EventProperty p : eventProperties)
-		{
-			result.addAll(p.getFullPropertyName(runtimeName +"."));
-		}
-		return result;
-	}
 }

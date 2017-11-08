@@ -2,7 +2,7 @@ package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.model.impl.eventproperty.*;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;

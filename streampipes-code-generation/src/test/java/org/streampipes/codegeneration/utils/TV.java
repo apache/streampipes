@@ -1,30 +1,5 @@
 package org.streampipes.codegeneration.utils;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.XSD;
-
 /**
  * Test Variables (TV)
  * 

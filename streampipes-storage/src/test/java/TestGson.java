@@ -2,8 +2,8 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.controller.StorageManager;
 
 import java.lang.reflect.InvocationTargetException;

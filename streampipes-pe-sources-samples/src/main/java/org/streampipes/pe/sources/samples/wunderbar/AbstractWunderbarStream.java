@@ -13,8 +13,8 @@ import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.quality.MeasurementCapability;
 import org.streampipes.model.impl.quality.MeasurementObject;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 
 public abstract class AbstractWunderbarStream implements EventStreamDeclarer {

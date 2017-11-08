@@ -15,7 +15,7 @@ import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.impl.staticproperty.Option;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.enrich.math.Operation;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.ConfiguredEventProcessor;

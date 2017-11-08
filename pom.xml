@@ -66,6 +66,11 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-model</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-rio-datatypes</artifactId>
                 <version>${rdf4j.version}</version>
             </dependency>
@@ -319,6 +324,21 @@
                 <artifactId>streampipes-app-file-export</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-vocabulary</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-serializers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes.empire</groupId>
+                <artifactId>streampipes-empire-rdf4j</artifactId>
+                <version>1.9.2-SNAPSHOT</version>
+            </dependency>
 
 
         </dependencies>
@@ -366,6 +386,8 @@
         <module>streampipes-storage-rdf4j</module>
         <module>streampipes-storage-couchdb</module>
         <module>streampipes-app-file-export</module>
+        <module>streampipes-vocabulary</module>
+        <module>streampipes-serializers</module>
     </modules>
 
     <!-- Build Settings -->

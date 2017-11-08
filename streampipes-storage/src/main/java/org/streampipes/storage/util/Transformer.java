@@ -3,7 +3,7 @@ package org.streampipes.storage.util;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;
 

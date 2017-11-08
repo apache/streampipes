@@ -13,13 +13,17 @@
 			<artifactId>streampipes-commons</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-vocabulary</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes.empire</groupId>
 			<artifactId>streampipes-empire-pinto</artifactId>
-			<version>1.9.1-SNAPSHOT</version>
+			<version>1.9.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

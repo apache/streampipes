@@ -9,7 +9,7 @@ import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryContro
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Statistics;
+import org.streampipes.vocabulary.Statistics;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;

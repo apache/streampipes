@@ -21,7 +21,7 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.impl.graph.SecDescription;
 import org.streampipes.model.impl.graph.SepDescription;
 import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IOntologyPipelineElement;
 import org.streampipes.storage.controller.StorageManager;

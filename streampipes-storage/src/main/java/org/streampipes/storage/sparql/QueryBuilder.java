@@ -1,10 +1,7 @@
 package org.streampipes.storage.sparql;
 
-import java.util.List;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.eclipse.rdf4j.repository.RepositoryException;
-
 import org.streampipes.model.client.ontology.Concept;
 import org.streampipes.model.client.ontology.Instance;
 import org.streampipes.model.client.ontology.OntologyQueryItem;
@@ -12,8 +9,10 @@ import org.streampipes.model.client.ontology.PrimitiveRange;
 import org.streampipes.model.client.ontology.Property;
 import org.streampipes.model.client.ontology.QuantitativeValueRange;
 import org.streampipes.model.client.ontology.RangeType;
-import org.streampipes.model.vocabulary.SO;
 import org.streampipes.storage.util.BackgroundKnowledgeUtils;
+import org.streampipes.vocabulary.SO;
+
+import java.util.List;
 
 public class QueryBuilder {
 
@@ -165,7 +164,7 @@ public class QueryBuilder {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() + " select ?minValue ?maxValue ?unitCode where {"
 				+"<" +rangeId +"> <" +RDF_TYPE +"> " + " <http://schema.org/QuantitativeValue> ."
-				+"<" +rangeId +"> <" +SO.MinValue +"> " + " ?minValue ."
+				+"<" +rangeId +"> <" + SO.MinValue +"> " + " ?minValue ."
 				+"<" +rangeId +"> <" +SO.MaxValue +"> " + " ?maxValue ."
 				+"<" +rangeId +"> <" +SO.UnitCode +"> " + " ?unitCode ."
 				+ "}");

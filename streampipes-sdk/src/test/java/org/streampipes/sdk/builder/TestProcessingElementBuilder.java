@@ -1,7 +1,7 @@
 package org.streampipes.sdk.builder;
 
 import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.vocabulary.MhWirth;
+import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.junit.Test;

@@ -1,6 +1,7 @@
 package org.streampipes.wrapper.params.binding;
 
 import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.util.SchemaUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public abstract class BindingParams<I extends InvocableSEPAElement> {
     this.graph = graph;
     this.inEventTypes = new HashMap<>();
     graph.getInputStreams().forEach(is ->
-            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicName(), is.getEventSchema().toRuntimeMap()));
+            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicName(), SchemaUtils.toRuntimeMap
+                    (is.getEventSchema().getEventProperties())));
 
     graph.getInputStreams().forEach(s -> inputStreamParams.add(new InputStreamParams(s)));
   }

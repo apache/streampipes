@@ -13,14 +13,13 @@ import java.io.Serializable;
  */
 
 @Namespaces({"sepa", "http://sepa.event-processing.org/sepa#",
-				"dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "so", "http://schema.org/"})
+				"dc",   "http://purl.org/dc/terms/", "rdfs", "http://www.w3.org/2000/01/rdf-schema#", "rdf", "http://www" +
+				".w3.org/1999/02/22-rdf-syntax-ns#", "so", "http://schema.org/", "ssn", "http://purl.oclc.org/NET/ssnx/ssn#"})
 public class AbstractSEPAElement implements SupportsRdfId, Serializable {
 
 	private static final long serialVersionUID = -8593749314663582071L;
 
 	private transient SupportsRdfIdImpl myId;
-	
-	protected RdfKey<String> rdfId;
 	
 	public AbstractSEPAElement()
 	{

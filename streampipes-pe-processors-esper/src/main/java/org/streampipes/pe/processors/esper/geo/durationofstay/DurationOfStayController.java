@@ -17,7 +17,7 @@ import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 import org.streampipes.model.impl.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.sdk.StaticProperties;

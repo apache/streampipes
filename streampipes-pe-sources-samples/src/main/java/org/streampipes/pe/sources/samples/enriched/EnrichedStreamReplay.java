@@ -8,7 +8,7 @@ import org.streampipes.model.impl.EventGrounding;
 import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.TransportFormat;
 import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;

@@ -18,7 +18,7 @@ import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.model.impl.Response;
 import org.streampipes.model.impl.graph.SepaDescription;
 import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
 import java.io.IOException;
 
