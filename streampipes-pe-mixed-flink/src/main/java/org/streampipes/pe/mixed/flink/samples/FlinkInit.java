@@ -4,6 +4,7 @@ package org.streampipes.pe.mixed.flink.samples;
 import com.orbitz.consul.NotRegisteredException;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.container.util.ConsulServiceDiscovery;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
@@ -24,7 +25,6 @@ import org.streampipes.pe.mixed.flink.samples.spatial.gridenricher.SpatialGridEn
 import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
 import org.streampipes.pe.mixed.flink.samples.statistics.window.StatisticsSummaryControllerWindow;
 import org.streampipes.pe.mixed.flink.samples.timetofailure.TimeToFailureController;
-import org.streampipes.storage.util.Utils;
 
 public class FlinkInit extends StandaloneModelSubmitter {
 
@@ -59,11 +59,13 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .setPort(FlinkConfig.INSTANCE.getPort());
             ;
 
-    try {
-      Utils.RegisterService(DeclarersSingleton.getInstance().getBaseUri(), FlinkConfig.INSTANCE.getHost());
-    } catch (NotRegisteredException e) {
-      e.printStackTrace();
-    }
+    ConsulServiceDiscovery.registerPeService(FlinkConfig.INSTANCE.getHost(),
+                                              FlinkConfig.INSTANCE.getHost(),
+                                          //TODO
+                                          //  "http://" + FlinkConfig.INSTANCE.getHost(),
+                                          "http://141.21.14.94",
+                                            FlinkConfig.INSTANCE.getPort());
+
 
     new FlinkInit().init();
   }

@@ -78,23 +78,4 @@ public class Utils {
 		return new CouchDbProperties(dbname, true, CouchDbConfig.INSTANCE.getProtocol(),
 				CouchDbConfig.INSTANCE.getHost(), CouchDbConfig.INSTANCE.getPort(), null, null);
 	}
-
-
-	public static void RegisterService(String serviceName, String serviceID) throws NotRegisteredException {
-		AgentClient agentClient = GetConsulAgentClient();
-		agentClient.register(8500, 3L, serviceName, serviceID);
-		//TODO Register Check
-		agentClient.pass(serviceID);
-	}
-
-	public static AgentClient GetConsulAgentClient() throws NotRegisteredException {
-		//TODO: url
-		String url = "http://localhost:8500";
-
-		Consul consul = Consul.builder().withUrl(url).build();
-		AgentClient agentClient = consul.agentClient();
-
-		return agentClient;
-
-	}
 }
