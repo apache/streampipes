@@ -17,30 +17,30 @@ public class FreeTextStaticProperty extends StaticProperty {
 	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("sepa:hasValue")
-	protected String value;
+	private String value;
 	
 	@RdfProperty("sepa:requiresDatatype")
-	protected URI requiredDatatype; 
+	private URI requiredDatatype;
 	
 	@RdfProperty("sepa:requiresDomainProperty")
-	protected URI requiredDomainProperty;
+	private URI requiredDomainProperty;
 	
 	@RdfProperty("sepa:mapsTo")
-	protected URI mapsTo;
+	private URI mapsTo;
 
 	@RdfProperty("sepa:multiLine")
-	protected boolean multiLine;
+	private boolean multiLine;
 
 	@RdfProperty("sepa:htmlAllowed")
-	protected boolean htmlAllowed;
+	private boolean htmlAllowed;
 
 	@RdfProperty("sepa:placeholdersSupported")
-	protected boolean placeholdersSupported;
+	private boolean placeholdersSupported;
 	
 	@OneToOne(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasValueSpecification")
-	protected PropertyValueSpecification valueSpecification;
+	private PropertyValueSpecification valueSpecification;
 	
 	public FreeTextStaticProperty() {
 		super(StaticPropertyType.FreeTextStaticProperty);
@@ -135,5 +135,13 @@ public class FreeTextStaticProperty extends StaticProperty {
 
 	public void setPlaceholdersSupported(boolean placeholdersSupported) {
 		this.placeholdersSupported = placeholdersSupported;
+	}
+
+	public URI getMapsTo() {
+		return mapsTo;
+	}
+
+	public void setMapsTo(URI mapsTo) {
+		this.mapsTo = mapsTo;
 	}
 }

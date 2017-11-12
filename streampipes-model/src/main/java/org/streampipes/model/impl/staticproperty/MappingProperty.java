@@ -22,7 +22,7 @@ public abstract class MappingProperty extends StaticProperty {
 
 	private List<EventProperty> mapsFromOptions;
 	
-	protected MappingProperty()
+	public MappingProperty()
 	{
 		super();
 	}

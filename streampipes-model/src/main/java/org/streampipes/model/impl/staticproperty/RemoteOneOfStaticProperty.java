@@ -22,7 +22,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 	@OneToMany(fetch = FetchType.EAGER,
 			cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOption")
-	List<Option> options;
+	private List<Option> options;
 
 	@RdfProperty("sepa:remoteUrl")
 	private String remoteUrl;
@@ -38,7 +38,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 
 	public RemoteOneOfStaticProperty() {
 		super(StaticPropertyType.OneOfStaticProperty);
-		this.options = new ArrayList<Option>();
+		this.options = new ArrayList<>();
 	}
 
 	public RemoteOneOfStaticProperty(String internalName, String label, String description, String remoteUrl, String valueFieldName, String labelFieldName, String descriptionFieldName, boolean valueRequired) {
@@ -48,7 +48,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 		this.labelFieldName = labelFieldName;
 		this.descriptionFieldName = descriptionFieldName;
 		this.valueRequired = valueRequired;
-		this.options = new ArrayList<Option>();
+		this.options = new ArrayList<>();
 	}
 
 
@@ -58,7 +58,7 @@ public class RemoteOneOfStaticProperty extends StaticProperty {
 		this.valueFieldName = valueFieldName;
 		this.labelFieldName = labelFieldName;
 		this.descriptionFieldName = descriptionFieldName;
-		this.options = new ArrayList<Option>();
+		this.options = new ArrayList<>();
 	}
 
 	public RemoteOneOfStaticProperty(RemoteOneOfStaticProperty other) {

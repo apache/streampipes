@@ -12,10 +12,10 @@ public class MeasurementRange extends EventPropertyQualityDefinition {
 	private static final long serialVersionUID = 4853190183770515968L;
 
 	@RdfProperty("sepa:hasMeasurementPropertyMinValue")
-	float minValue;
+	private float minValue;
 
 	@RdfProperty("sepa:hasMeasurementPropertyMaxValue")
-	float maxValue;
+	private float maxValue;
 	
 	public MeasurementRange() {
 		super();
@@ -48,20 +48,5 @@ public class MeasurementRange extends EventPropertyQualityDefinition {
 	public void setMaxValue(float maxValue) {
 		this.maxValue = maxValue;
 	}
-	
-
-	//@Override
-	public int compareTo(EventPropertyQualityDefinition o) {
-		MeasurementRange other = (MeasurementRange) o;
-		
-		//TODO not sure if this is correct
-		if (this.minValue <= other.minValue && this.maxValue >= other.maxValue) {
-			return 0;
-		} else {
-			return 1;
-		}
-
-	}
-
 
 }

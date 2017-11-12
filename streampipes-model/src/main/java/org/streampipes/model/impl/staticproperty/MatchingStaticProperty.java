@@ -14,10 +14,10 @@ public class MatchingStaticProperty extends StaticProperty{
 	private static final long serialVersionUID = -6033310221105761979L;
 
 	@RdfProperty("sepa:matchLeft")
-	URI matchLeft;
+	private URI matchLeft;
 	
 	@RdfProperty("sepa:matchRight")
-	URI matchRight;
+	private URI matchRight;
 
 	public MatchingStaticProperty()
 	{
@@ -56,9 +56,4 @@ public class MatchingStaticProperty extends StaticProperty{
 	public void setMatchRight(URI matchRight) {
 		this.matchRight = matchRight;
 	}
-	
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}	
-	
 }

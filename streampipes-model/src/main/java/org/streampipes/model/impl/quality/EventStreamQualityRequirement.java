@@ -18,17 +18,16 @@ public class EventStreamQualityRequirement extends UnnamedSEPAElement {
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventStreamQuality")
-	transient EventStreamQualityDefinition minimumStreamQuality;
+	private transient EventStreamQualityDefinition minimumStreamQuality;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:maximumEventStreamQuality")
-	transient EventStreamQualityDefinition maximumStreamQuality;
+	private transient EventStreamQualityDefinition maximumStreamQuality;
 
 	public EventStreamQualityRequirement(EventStreamQualityDefinition minimumStreamQuality,
 			EventStreamQualityDefinition maximumStreamQuality) {
 		super();
 		//TODO check that minimum and maximum have the same type
-
 		this.minimumStreamQuality = minimumStreamQuality;
 		this.maximumStreamQuality = maximumStreamQuality;
 	}

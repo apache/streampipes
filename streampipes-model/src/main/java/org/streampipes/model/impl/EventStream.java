@@ -31,29 +31,29 @@ public class EventStream extends NamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventStreamQualityDefinition")
-	transient List<EventStreamQualityDefinition> hasEventStreamQualities;
+	private transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventStreamQualityRequirement")
-	transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
+	private transient List<EventStreamQualityRequirement> requiresEventStreamQualities;
 
 	@OneToOne(fetch = FetchType.EAGER,
 		   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasGrounding")
-	EventGrounding eventGrounding;
+	private EventGrounding eventGrounding;
 	
 	@OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasSchema")
-	EventSchema eventSchema;
+	private EventSchema eventSchema;
 	
 	@RdfProperty("sepa:measurementCapability")
 	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-	protected List<MeasurementCapability> measurementCapability;
+	private List<MeasurementCapability> measurementCapability;
 	
 	@RdfProperty("sepa:measurementObject")
 	@OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
-	protected List<MeasurementObject> measurementObject;
+	private List<MeasurementObject> measurementObject;
 
 	protected List<String> category;
 
@@ -74,9 +74,6 @@ public class EventStream extends NamedSEPAElement {
 
 	public EventStream() {
 		super(prefix +RandomStringUtils.randomAlphabetic(6));
-//		this.eventGrounding = new EventGrounding();
-//		this.hasEventStreamQualities = new ArrayList<EventStreamQualityDefinition>();
-//		this.requiresEventStreamQualities = new ArrayList<EventStreamQualityRequirement>();
 	}
 
 
@@ -95,61 +92,49 @@ public class EventStream extends NamedSEPAElement {
 		return hasEventStreamQualities;
 	}
 
-
 	public void setHasEventStreamQualities(
 			List<EventStreamQualityDefinition> hasEventStreamQualities) {
 		this.hasEventStreamQualities = hasEventStreamQualities;
 	}
 	
-	
 
-	
 	public List<EventStreamQualityRequirement> getRequiresEventStreamQualities() {
 		return requiresEventStreamQualities;
 	}
-
 
 	public void setRequiresEventStreamQualities(
 			List<EventStreamQualityRequirement> requiresEventStreamQualities) {
 		this.requiresEventStreamQualities = requiresEventStreamQualities;
 	}
 
-
 	public EventSchema getEventSchema() {
 		return eventSchema;
 	}
-
 
 	public void setEventSchema(EventSchema eventSchema) {
 		this.eventSchema = eventSchema;
 	}
 
-
 	public EventGrounding getEventGrounding() {
 		return eventGrounding;
 	}
-
 
 	public void setEventGrounding(EventGrounding eventGrounding) {
 		this.eventGrounding = eventGrounding;
 	}
 
-
 	public List<MeasurementCapability> getMeasurementCapability() {
 		return measurementCapability;
 	}
-
 
 	public void setMeasurementCapability(
 			List<MeasurementCapability> measurementCapability) {
 		this.measurementCapability = measurementCapability;
 	}
 
-
 	public List<MeasurementObject> getMeasurementObject() {
 		return measurementObject;
 	}
-
 
 	public void setMeasurementObject(List<MeasurementObject> measurementObject) {
 		this.measurementObject = measurementObject;

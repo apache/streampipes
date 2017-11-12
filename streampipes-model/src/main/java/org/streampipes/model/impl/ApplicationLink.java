@@ -14,19 +14,19 @@ import javax.persistence.Entity;
 public class ApplicationLink extends UnnamedSEPAElement{
 
     @RdfProperty("sepa:hasName")
-    protected String applicationName;
+    private String applicationName;
 
     @RdfProperty("sepa:hasDescription")
-    protected String applicationDescription;
+    private String applicationDescription;
 
     @RdfProperty("sepa:applicationUrl")
-    protected String applicationUrl;
+    private String applicationUrl;
 
     @RdfProperty("sepa:hasIcon")
-    protected String applicationIconUrl;
+    private String applicationIconUrl;
 
     @RdfProperty("sepa:applicationLinkType")
-    protected String applicationLinkType;
+    private String applicationLinkType;
 
     public ApplicationLink() {
         super();

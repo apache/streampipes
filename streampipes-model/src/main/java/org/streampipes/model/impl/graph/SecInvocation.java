@@ -3,7 +3,6 @@ package org.streampipes.model.impl.graph;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
 import org.streampipes.model.impl.staticproperty.StaticProperty;
 
 import java.util.ArrayList;
@@ -23,12 +22,11 @@ public class SecInvocation extends InvocableSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:ecType")
-	protected List<String> category;
+	private List<String> category;
 
 	public SecInvocation(SecInvocation sec) {
 		super(sec);
 		this.category = sec.getCategory();
-
 	}
 
 	public SecInvocation(SecDescription sec)
@@ -55,7 +53,7 @@ public class SecInvocation extends InvocableSEPAElement {
 	public SecInvocation()
 	{
 		super();
-		inputStreams = new ArrayList<EventStream>();
+		inputStreams = new ArrayList<>();
 	}
 	
 	public List<StaticProperty> getStaticProperties() {

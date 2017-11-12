@@ -12,7 +12,7 @@ public class Latency extends EventStreamQualityDefinition {
 	private static final long serialVersionUID = -9211064635743833555L;
 	
 	@RdfProperty("sepa:hasQuantityValue")
-	float quantityValue;
+	private float quantityValue;
 
 	public Latency() {
 		super();

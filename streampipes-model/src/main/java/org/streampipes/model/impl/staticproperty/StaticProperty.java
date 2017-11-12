@@ -15,13 +15,13 @@ public abstract class StaticProperty extends UnnamedSEPAElement {
 	private static final long serialVersionUID = 2509153122084646025L;
 
 	@RdfProperty("rdfs:label")
-	protected String label;
+	private String label;
 	
 	@RdfProperty("rdfs:description")
-	protected String description;
+	private String description;
 	
 	@RdfProperty("sepa:internalName")
-	protected String internalName;
+	private String internalName;
 	
 	@RdfProperty("so:valueRequired")
 	protected boolean valueRequired;

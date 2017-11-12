@@ -15,7 +15,7 @@ public abstract class OutputStrategy extends UnnamedSEPAElement {
 	private static final long serialVersionUID = 1953204905003864143L;
 	
 	@RdfProperty("sepa:hasName")
-	protected String name;
+	private String name;
 	
 	public OutputStrategy()
 	{

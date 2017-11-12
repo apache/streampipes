@@ -10,9 +10,6 @@ import javax.persistence.Entity;
 @Entity
 public class SupportedProperty extends UnnamedSEPAElement {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("sepa:requiresProperty")

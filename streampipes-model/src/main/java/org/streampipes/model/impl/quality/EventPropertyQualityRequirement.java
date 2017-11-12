@@ -18,11 +18,11 @@ public class EventPropertyQualityRequirement extends UnnamedSEPAElement {
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:minimumEventPropertyQuality")
-	transient EventPropertyQualityDefinition minimumPropertyQuality;
+	private transient EventPropertyQualityDefinition minimumPropertyQuality;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:maximumEventPropertyQuality")
-	transient EventPropertyQualityDefinition maximumPropertyQuality;
+	private transient EventPropertyQualityDefinition maximumPropertyQuality;
 	
 	public EventPropertyQualityRequirement() {
 		super();

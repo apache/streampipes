@@ -22,10 +22,10 @@ public class CustomOutputStrategy extends OutputStrategy {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:producesProperty")
-	List<EventProperty> eventProperties;
+	private List<EventProperty> eventProperties;
 
 	@RdfProperty("sepa:outputRight")
-	protected boolean outputRight;
+	private boolean outputRight;
 
     private List<EventProperty> providesProperties;
 	

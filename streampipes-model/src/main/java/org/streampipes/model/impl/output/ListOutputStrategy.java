@@ -12,7 +12,7 @@ public class ListOutputStrategy extends OutputStrategy {
 	private static final long serialVersionUID = -6400256021072543325L;
 	
 	@RdfProperty("sepa:listPropertyName")
-	String propertyName;
+	private String propertyName;
 	
 	public ListOutputStrategy() {
 		super();

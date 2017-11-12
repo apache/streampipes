@@ -27,34 +27,34 @@ public abstract class EventProperty extends UnnamedSEPAElement {
 
 	protected static final String prefix = "urn:fzi.de:sepa:";
 	
-	String propertyId;
+	private String propertyId;
 	
 	@RdfProperty("rdfs:label")
-	protected String label;
+	private String label;
 	
 	@RdfProperty("rdfs:description")
-	protected String description;
+	private String description;
 	
 	@RdfProperty("sepa:hasRuntimeName")
-	protected String runtimeName;
+	private String runtimeName;
 	
 	@RdfProperty("sepa:required")
-	protected boolean required;
+	private boolean required;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:domainProperty")
-	protected List<URI> domainProperties;
+	private List<URI> domainProperties;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventPropertyQualityDefinition")
-	protected List<EventPropertyQualityDefinition> eventPropertyQualities;
+	private List<EventPropertyQualityDefinition> eventPropertyQualities;
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@RdfProperty("sepa:hasEventPropertyQualityRequirement")
-	protected List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
+	private List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
 	public EventProperty()
 	{

@@ -21,12 +21,12 @@ public class OneOfStaticProperty extends StaticProperty {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOption")
-	List<Option> options;
+	private List<Option> options;
 	
 	
 	public OneOfStaticProperty() {
 		super(StaticPropertyType.OneOfStaticProperty);
-		options = new ArrayList<Option>();
+		options = new ArrayList<>();
 	}
 	
 	public OneOfStaticProperty(OneOfStaticProperty other) {
@@ -36,7 +36,7 @@ public class OneOfStaticProperty extends StaticProperty {
 
 	public OneOfStaticProperty(String internalName, String label, String description) {
 		super(StaticPropertyType.OneOfStaticProperty, internalName, label, description);
-		options = new ArrayList<Option>();
+		options = new ArrayList<>();
 	}
 
 	public List<Option> getOptions() {
@@ -51,8 +51,5 @@ public class OneOfStaticProperty extends StaticProperty {
 	{
 		return options.add(option);
 	}
-	
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}	
+
 }

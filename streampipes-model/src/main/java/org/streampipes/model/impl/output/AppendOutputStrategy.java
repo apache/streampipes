@@ -22,7 +22,7 @@ public class AppendOutputStrategy extends OutputStrategy {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:appendsProperty")
-	List<EventProperty> eventProperties;
+	private List<EventProperty> eventProperties;
 	
 	public AppendOutputStrategy()
 	{

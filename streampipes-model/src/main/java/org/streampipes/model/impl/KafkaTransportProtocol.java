@@ -65,9 +65,4 @@ public class KafkaTransportProtocol extends TransportProtocol {
 		this.kafkaPort = kafkaPort;
 	}
 
-	@Override
-	public String toString() {
-		return getBrokerHostname() + ":" + getKafkaPort();
-	}
-	
 }

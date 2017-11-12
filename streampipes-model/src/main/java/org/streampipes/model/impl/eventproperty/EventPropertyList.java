@@ -23,7 +23,7 @@ public class EventPropertyList extends EventProperty {
 	@RdfProperty("sepa:hasEventProperty")
 	@OneToOne (fetch = FetchType.EAGER,
 	   cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	protected List<EventProperty> eventProperties;
+	private List<EventProperty> eventProperties;
 	
 	public EventPropertyList()
 	{

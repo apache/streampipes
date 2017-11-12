@@ -20,12 +20,11 @@ public class AnyStaticProperty extends StaticProperty {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOption")
-	List<Option> options;
+	private List<Option> options;
 	
 	
 	public AnyStaticProperty() {
 		super(StaticPropertyType.AnyStaticProperty);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public AnyStaticProperty(AnyStaticProperty other) {
@@ -35,7 +34,6 @@ public class AnyStaticProperty extends StaticProperty {
 
 	public AnyStaticProperty(String internalName, String label, String description) {
 		super(StaticPropertyType.AnyStaticProperty, internalName, label, description);
-		// TODO Auto-generated constructor stub
 	}
 
 	public List<Option> getOptions() {
@@ -46,7 +44,4 @@ public class AnyStaticProperty extends StaticProperty {
 		this.options = options;
 	}
 
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}	
 }

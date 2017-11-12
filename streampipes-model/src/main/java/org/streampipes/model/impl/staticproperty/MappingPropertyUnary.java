@@ -14,7 +14,7 @@ public class MappingPropertyUnary extends MappingProperty{
 	private static final long serialVersionUID = 2903529966128844426L;
 	
 	@RdfProperty("sepa:mapsTo")
-	URI mapsTo;
+	private URI mapsTo;
 	
 	public MappingPropertyUnary()
 	{
@@ -44,8 +44,5 @@ public class MappingPropertyUnary extends MappingProperty{
 	public void setMapsTo(URI mapsTo) {
 		this.mapsTo = mapsTo;
 	}
-	
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}	
+
 }

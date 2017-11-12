@@ -15,7 +15,7 @@ public class MeasurementCapability extends UnnamedSEPAElement {
 	private static final long serialVersionUID = -7561544835976781403L;
 	
 	@RdfProperty("sepa:hasCapability")
-	URI capability;
+	private URI capability;
 	
 	public MeasurementCapability() {
 		super();

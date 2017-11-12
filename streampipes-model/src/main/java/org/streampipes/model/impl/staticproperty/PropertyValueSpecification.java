@@ -10,9 +10,6 @@ import javax.persistence.Entity;
 @Entity
 public class PropertyValueSpecification extends UnnamedSEPAElement {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@RdfProperty("so:minValue")

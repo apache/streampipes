@@ -23,7 +23,7 @@ public class EventSchema extends UnnamedSEPAElement{
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasEventProperty")
-	List<EventProperty> eventProperties;
+	private List<EventProperty> eventProperties;
 	
 	public EventSchema(List<EventProperty> eventProperties) {
 		super();

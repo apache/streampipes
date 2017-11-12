@@ -12,7 +12,7 @@ public class Resolution extends EventPropertyQualityDefinition {
 	private static final long serialVersionUID = -8794648771727880619L;
 	
 	@RdfProperty("sepa:hasQuantityValue")
-	float quantityValue;
+	private float quantityValue;
 
 	public Resolution() {
 		super();
@@ -34,17 +34,5 @@ public class Resolution extends EventPropertyQualityDefinition {
 	public void setQuantityValue(float quantityValue) {
 		this.quantityValue = quantityValue;
 	}
-	
-	//@Override
-	public int compareTo(EventPropertyQualityDefinition o) {
-		Resolution other = (Resolution) o;
-		if (other.getQuantityValue() == this.getQuantityValue()) {
-			return 0;
-			
-		} else if ((other).getQuantityValue() > this.getQuantityValue()) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
+
 }

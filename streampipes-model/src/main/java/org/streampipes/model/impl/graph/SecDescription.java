@@ -22,7 +22,7 @@ public class SecDescription extends ConsumableSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:ecType")
-	protected List<String> category;
+	private List<String> category;
 	
 	public SecDescription(String uri, String name, String description, String iconUrl)
 	{

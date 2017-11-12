@@ -21,8 +21,7 @@ public class FixedOutputStrategy extends OutputStrategy {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:producesProperty")
-	List<EventProperty> eventProperties;
-
+	private List<EventProperty> eventProperties;
 
 	public FixedOutputStrategy()
 	{

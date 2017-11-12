@@ -29,13 +29,13 @@ public class SepDescription extends NamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:produces")
-	List<EventStream> eventStreams;
+	private List<EventStream> eventStreams;
 	
-	EventSource eventSource;
+	private EventSource eventSource;
 		
 	public SepDescription() {
 		super();
-		eventStreams = new ArrayList<EventStream>();
+		eventStreams = new ArrayList<>();
 	}
 	
 	public SepDescription(SepDescription other)

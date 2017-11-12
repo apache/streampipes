@@ -7,6 +7,7 @@ import org.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -58,7 +59,7 @@ public class EventGrounding extends UnnamedSEPAElement {
 	}
 
 	public void setTransportProtocol(TransportProtocol transportProtocol) {
-		this.transportProtocols = Arrays.asList(transportProtocol);
+		this.transportProtocols = Collections.singletonList(transportProtocol);
 	}
 	
 	public TransportProtocol getTransportProtocol() {

@@ -18,15 +18,15 @@ public class Enumeration extends ValueSpecification {
 	private static final long serialVersionUID = 1L;
 	
 	@RdfProperty("rdfs:label")
-	protected String label;
+	private String label;
 	
 	@RdfProperty("rdfs:description")
-	protected String description;
+	private String description;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasRuntimeValue")
-	List<String> runtimeValues;
+	private List<String> runtimeValues;
 
 	public Enumeration() {
 		super();

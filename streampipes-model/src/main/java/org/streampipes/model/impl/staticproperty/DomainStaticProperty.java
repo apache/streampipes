@@ -15,14 +15,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class DomainStaticProperty extends StaticProperty {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@RdfProperty("sepa:requiredClass")
 	private String requiredClass;
-	
 
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})

@@ -22,12 +22,18 @@ public class TransportFormat extends UnnamedSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("rdf:type")
-	protected List<URI> rdfType;
+	private List<URI> rdfType;
+
+	public TransportFormat()
+	{
+		super();
+		this.rdfType = new ArrayList<>();
+	}
 
 	public TransportFormat(String transportFormatType)
 	{
 		super();
-		this.rdfType = new ArrayList<URI>();
+		this.rdfType = new ArrayList<>();
 		this.rdfType.add(URI.create(transportFormatType));
 	}
 	
@@ -35,12 +41,6 @@ public class TransportFormat extends UnnamedSEPAElement {
 	{
 		super(other);
 		this.rdfType = other.getRdfType();
-	}
-	
-	public TransportFormat()
-	{
-		super();
-		this.rdfType = new ArrayList<>();
 	}
 
 	public List<URI> getRdfType() {

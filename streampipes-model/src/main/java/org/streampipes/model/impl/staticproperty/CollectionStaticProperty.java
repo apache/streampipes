@@ -14,10 +14,7 @@ import javax.persistence.OneToMany;
 @RdfsClass("sepa:CollectionStaticProperty")
 @Entity
 public class CollectionStaticProperty extends StaticProperty {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@OneToMany(fetch = FetchType.EAGER,

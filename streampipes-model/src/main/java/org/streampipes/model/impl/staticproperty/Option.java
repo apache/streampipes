@@ -13,10 +13,10 @@ public class Option extends UnnamedSEPAElement {
 	private static final long serialVersionUID = 8536995294188662931L;
 
 	@RdfProperty("sepa:hasName")
-	String name;
+	private String name;
 	
 	@RdfProperty("sepa:isSelected")
-	boolean selected;
+	private boolean selected;
 	
 	public Option()
 	{

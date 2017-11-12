@@ -25,14 +25,14 @@ public class SepaDescription extends ConsumableSEPAElement {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasOutputStrategy")
-	List<OutputStrategy> outputStrategies;
+	private List<OutputStrategy> outputStrategies;
 	
-	String pathName;
+	private String pathName;
 	
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:epaType")
-	protected List<String> category;
+	private List<String> category;
 
 	public SepaDescription(SepaDescription other)
 	{
@@ -62,16 +62,16 @@ public class SepaDescription extends ConsumableSEPAElement {
 	{
 		super(pathName, name, description, iconUrl);
 		this.pathName = pathName;
-		eventStreams = new ArrayList<EventStream>();
-		staticProperties = new ArrayList<StaticProperty>();
+		eventStreams = new ArrayList<>();
+		staticProperties = new ArrayList<>();
 	}
 	
 	public SepaDescription(String pathName, String name, String description)
 	{
 		super(pathName, name, description, "");
 		this.pathName = pathName;
-		eventStreams = new ArrayList<EventStream>();
-		staticProperties = new ArrayList<StaticProperty>();
+		eventStreams = new ArrayList<>();
+		staticProperties = new ArrayList<>();
 	}
 
 	

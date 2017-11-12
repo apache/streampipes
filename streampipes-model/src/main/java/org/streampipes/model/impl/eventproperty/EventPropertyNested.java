@@ -21,7 +21,7 @@ public class EventPropertyNested extends EventProperty {
 	@OneToMany(fetch = FetchType.EAGER,
 			   cascade = {CascadeType.ALL})
 	@RdfProperty("sepa:hasEventProperty")
-	List<EventProperty> eventProperties;
+	private List<EventProperty> eventProperties;
 	
 	public EventPropertyNested()
 	{
