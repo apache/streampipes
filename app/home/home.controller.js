@@ -24,7 +24,7 @@ export default function HomeCtrl($scope, $window) {
         },
         {
             name: "Live Dashboard",
-            description: "The live dashboard visualizes Testfeld data in real-time",
+            description: "The live dashboard visualizes data in real-time",
             imageUrl: "img/home/dashboard.png",
             link: {
                 newWindow: false,
@@ -51,7 +51,7 @@ export default function HomeCtrl($scope, $window) {
         },
         {
             name: "ElasticSearch",
-            description: "Offline visual analytics of Testfeld data",
+            description: "Offline visual analytics of data",
             imageUrl: "img/home/elastic.png",
             link: {
                 newWindow: true,
