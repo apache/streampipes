@@ -43,7 +43,7 @@ export default function HomeCtrl($scope, $window) {
         {
             name: "Notifications",
             description: "Integrated notification manager",
-            imageUrl: "img/notification_icon.png",
+            imageUrl: "img/pe_icons/notification_icon.png",
             link: {
                 newWindow: false,
                 value: "streampipes.notifications"
