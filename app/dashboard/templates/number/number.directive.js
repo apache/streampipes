@@ -23,6 +23,14 @@ export default function numberWidget(WidgetInstances, $filter) {
                         .domainProperties
                         .indexOf('http://test.de/timestamp') > -1;
             });
+
+            $scope.getRandomColor = function() {
+                var random = Math.floor(Math.random() * 6);
+                var colors = ["darkblue", "#2196F3", "#3F51B5", "#00BCD4", "#03A9F4", "#673AB7"];
+                return colors[random];
+            }
+
+            $scope.color = $scope.getRandomColor();
         },
         link: function postLink(scope) {
             scope.$watch('data', function (data) {
