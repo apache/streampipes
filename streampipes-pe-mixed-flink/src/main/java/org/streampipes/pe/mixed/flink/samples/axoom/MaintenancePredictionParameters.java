@@ -1,6 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.axoom;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 /**
@@ -8,7 +8,7 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
  */
 public class MaintenancePredictionParameters extends EventProcessorBindingParams {
 
-  public MaintenancePredictionParameters(SepaInvocation graph) {
+  public MaintenancePredictionParameters(DataProcessorInvocation graph) {
     super(graph);
   }
 }

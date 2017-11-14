@@ -3,8 +3,8 @@ package org.streampipes.pe.sources.samples.friction;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 /**
@@ -17,7 +17,7 @@ public class FrictionCoefficientSwivel extends FrictionCoefficient implements Ev
     }
 
     @Override
-    public EventStream declareModel(SepDescription sep) {
+    public SpDataStream declareModel(DataSourceDescription sep) {
         return prepareStream(sep);
     }
 

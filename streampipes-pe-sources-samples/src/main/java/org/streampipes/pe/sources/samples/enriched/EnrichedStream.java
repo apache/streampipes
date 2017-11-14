@@ -4,10 +4,10 @@ import java.util.Random;
 import com.google.gson.JsonObject;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
@@ -45,9 +45,9 @@ public class EnrichedStream implements EventStreamDeclarer{
 	
 	
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));

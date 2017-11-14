@@ -1,6 +1,6 @@
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
@@ -14,7 +14,7 @@ public class TestProcessingElementBuilder {
     @Test
     public void testProcessingElementBuilderGeneration() {
 
-        SepaDescription testDescription = ProcessingElementBuilder
+        DataProcessorDescription testDescription = ProcessingElementBuilder
                 .create("test-element", "title", "description")
                 .iconUrl("url")
                 .requiredTextParameter("requiredText", "requiredTextLabel", "requiredTextDescription")

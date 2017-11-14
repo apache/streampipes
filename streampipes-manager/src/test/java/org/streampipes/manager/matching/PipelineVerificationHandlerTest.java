@@ -2,11 +2,11 @@ package org.streampipes.manager.matching;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.Response;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.junit.Rule;
 
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ public class PipelineVerificationHandlerTest {
     private class TestSepa implements SemanticEventProcessingAgentDeclarer {
 
         @Override
-        public SepaDescription declareModel() {
-            SepaDescription desc = new SepaDescription("TestSepa", "",
+        public DataProcessorDescription declareModel() {
+            DataProcessorDescription desc = new DataProcessorDescription("TestSepa", "",
                     "");
 
             List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -59,7 +59,7 @@ public class PipelineVerificationHandlerTest {
         }
 
         @Override
-        public Response invokeRuntime(SepaInvocation invocationGraph) {
+        public Response invokeRuntime(DataProcessorInvocation invocationGraph) {
             return null;
         }
 

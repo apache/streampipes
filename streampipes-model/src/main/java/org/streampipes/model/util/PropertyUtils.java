@@ -1,9 +1,9 @@
 package org.streampipes.model.util;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
 import java.util.HashMap;

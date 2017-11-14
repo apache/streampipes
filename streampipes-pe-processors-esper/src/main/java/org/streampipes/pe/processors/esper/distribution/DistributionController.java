@@ -1,10 +1,11 @@
 package org.streampipes.pe.processors.esper.distribution;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -22,7 +23,7 @@ import java.util.List;
 public class DistributionController extends StandaloneEventProcessorDeclarerSingleton<DistributionParameters> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
     return ProcessingElementBuilder.create("distribution", "Distribution", "Computes current " +
             "value distribution")
@@ -40,8 +41,8 @@ public class DistributionController extends StandaloneEventProcessorDeclarerSing
     EventPropertyList listProperty = new EventPropertyList();
     listProperty.setRuntimeName("rows");
 
-    EventProperty key = EpProperties.stringEp("key", SO.Text);
-    EventProperty value = EpProperties.integerEp("value", SO.Text);
+    EventProperty key = EpProperties.stringEp(Labels.empty(), "key", SO.Text);
+    EventProperty value = EpProperties.integerEp(Labels.empty(), "value", SO.Text);
 
     listProperty.setEventProperties(Arrays.asList(key, value));
 
@@ -50,7 +51,7 @@ public class DistributionController extends StandaloneEventProcessorDeclarerSing
 
   @Override
   public ConfiguredEventProcessor<DistributionParameters, EventProcessor<DistributionParameters>> onInvocation
-          (SepaInvocation sepa) {
+          (DataProcessorInvocation sepa) {
     int timeWindow = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa,
             "batch-window"));
 

@@ -2,12 +2,12 @@ package org.streampipes.manager.matching;
 
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.manager.util.TopicGenerator;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
 import java.util.Set;
@@ -19,14 +19,14 @@ public class ProtocolSelector extends GroundingSelector {
 
     private String outputTopic;
 
-    public ProtocolSelector(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
+    public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
         this.outputTopic = TopicGenerator.generateRandomTopic();
     }
 
     public TransportProtocol getPreferredProtocol() {
-        if (source instanceof EventStream) {
-            return ((EventStream) source)
+        if (source instanceof SpDataStream) {
+            return ((SpDataStream) source)
                     .getEventGrounding()
                     .getTransportProtocol();
         } else {
@@ -51,7 +51,7 @@ public class ProtocolSelector extends GroundingSelector {
 
 
     public <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
-        List<InvocableSEPAElement> elements = buildInvocables();
+        List<InvocableStreamPipesEntity> elements = buildInvocables();
 
         return elements
                 .stream()

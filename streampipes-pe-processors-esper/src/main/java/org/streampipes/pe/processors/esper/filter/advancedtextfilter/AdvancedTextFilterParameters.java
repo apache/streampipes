@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.filter.advancedtextfilter;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class AdvancedTextFilterParameters extends EventProcessorBindingParams {
@@ -11,7 +11,7 @@ public class AdvancedTextFilterParameters extends EventProcessorBindingParams {
 	private String propertyName;
 	private List<String> keywords;
 	
-	public AdvancedTextFilterParameters(SepaInvocation graph, String operation, String propertyName, List<String> keywords) {
+	public AdvancedTextFilterParameters(DataProcessorInvocation graph, String operation, String propertyName, List<String> keywords) {
 		super(graph);
 		this.operation = operation;
 		this.propertyName = propertyName;

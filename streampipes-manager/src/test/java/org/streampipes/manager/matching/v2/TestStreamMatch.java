@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.pe.processors.esper.extract.ProjectController;
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
 
@@ -20,10 +20,10 @@ public class TestStreamMatch extends TestCase {
 	@Test
 	public void testPositiveStreamMatchWithIgnoredGrounding() {
 
-		SepaDescription requiredSepa = new AggregationController().declareModel();
-		EventStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
+		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
+		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 		
-		EventStream requiredStream = requiredSepa.getEventStreams().get(0);
+		SpDataStream requiredStream = requiredSepa.getSpDataStreams().get(0);
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		
@@ -34,10 +34,10 @@ public class TestStreamMatch extends TestCase {
 	@Test
 	public void testPositiveStreamMatchWithoutRequirementsIgnoredGrounding() {
 
-		SepaDescription requiredSepa = new ProjectController().declareModel();
-		EventStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
+		DataProcessorDescription requiredSepa = new ProjectController().declareModel();
+		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 		
-		EventStream requiredStream = requiredSepa.getEventStreams().get(0);
+		SpDataStream requiredStream = requiredSepa.getSpDataStreams().get(0);
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		

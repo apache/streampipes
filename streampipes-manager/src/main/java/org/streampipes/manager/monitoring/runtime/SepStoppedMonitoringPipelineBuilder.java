@@ -1,5 +1,26 @@
 package org.streampipes.manager.monitoring.runtime;
 
+import org.streampipes.commons.exceptions.NoMatchingFormatException;
+import org.streampipes.commons.exceptions.NoMatchingProtocolException;
+import org.streampipes.commons.exceptions.NoMatchingSchemaException;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.matching.PipelineVerificationHandler;
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineModificationMessage;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.storage.controller.StorageManager;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -7,28 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.streampipes.commons.exceptions.NoMatchingFormatException;
-import org.streampipes.commons.exceptions.NoMatchingProtocolException;
-import org.streampipes.commons.exceptions.NoMatchingSchemaException;
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.manager.matching.PipelineVerificationHandler;
-import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.client.pipeline.PipelineModificationMessage;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.client.pipeline.Pipeline;
-
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.storage.controller.StorageManager;
 
 public class SepStoppedMonitoringPipelineBuilder {
 
@@ -40,32 +39,32 @@ public class SepStoppedMonitoringPipelineBuilder {
 	private final String KAFKA_SEC_URI = "http://ipe-koi04.perimeter.fzi.de:8091/kafka";
 	private final String OUTPUT_TOPIC = "internal.streamepipes.sec.stopped";
 
-	private EventStream stream;
+	private SpDataStream stream;
 	private final String outputTopic;
 
-	private SepDescription sepDescription;
+	private DataSourceDescription dataSourceDescription;
 
-	private SepaDescription streamStoppedSepaDescription;
-	private SecDescription kafkaSecDescription;
+	private DataProcessorDescription streamStoppedDataProcessorDescription;
+	private DataSinkDescription kafkaDataSinkDescription;
 	private String streamUri;
 
 	public SepStoppedMonitoringPipelineBuilder(String sepUri, String streamUri) throws URISyntaxException {
 		this.outputTopic = OUTPUT_TOPIC;
 		this.streamUri = streamUri;
-		SepDescription desc = StorageManager.INSTANCE.getStorageAPI().getSEPById(sepUri);
+		DataSourceDescription desc = StorageManager.INSTANCE.getStorageAPI().getSEPById(sepUri);
 		this.stream = StorageManager.INSTANCE.getStorageAPI().getEventStreamById(streamUri);
-		this.sepDescription = desc;
-		this.streamStoppedSepaDescription = getStreamStoppedEpa();
-		this.kafkaSecDescription = getKafkaPublisherEc();
+		this.dataSourceDescription = desc;
+		this.streamStoppedDataProcessorDescription = getStreamStoppedEpa();
+		this.kafkaDataSinkDescription = getKafkaPublisherEc();
 	}
 
 	public Pipeline buildPipeline()
 			throws NoMatchingFormatException, NoMatchingSchemaException, NoMatchingProtocolException, Exception {
-		SepaInvocation rateSepaClient = new SepaInvocation(streamStoppedSepaDescription);
-		EventStream streamClient = new EventStream(stream);
-		SecInvocation kafkaActionClient = new SecInvocation(kafkaSecDescription);
+		DataProcessorInvocation rateSepaClient = new DataProcessorInvocation(streamStoppedDataProcessorDescription);
+		SpDataStream streamClient = new SpDataStream(stream);
+		DataSinkInvocation kafkaActionClient = new DataSinkInvocation(kafkaDataSinkDescription);
 
-		List<NamedSEPAElement> elements = new ArrayList<>();
+		List<NamedStreamPipesEntity> elements = new ArrayList<>();
 		elements.add(streamClient);
 
 		rateSepaClient.setConnectedTo(Arrays.asList("stream"));
@@ -81,7 +80,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 		PipelineModificationMessage message = new PipelineVerificationHandler(pipeline).validateConnection()
 				.computeMappingProperties().getPipelineModificationMessage();
 
-		SepaInvocation updatedSepa = updateStreamStoppedSepa(rateSepaClient, message);
+		DataProcessorInvocation updatedSepa = updateStreamStoppedSepa(rateSepaClient, message);
 		pipeline.setSepas(Arrays.asList(updatedSepa));
 
 		kafkaActionClient.setConnectedTo(Arrays.asList("rate"));
@@ -98,15 +97,15 @@ public class SepStoppedMonitoringPipelineBuilder {
 		return pipeline;
 	}
 
-	private SecDescription getKafkaPublisherEc() throws URISyntaxException {
+	private DataSinkDescription getKafkaPublisherEc() throws URISyntaxException {
 		return StorageManager.INSTANCE.getStorageAPI().getSECById(KAFKA_SEC_URI);
 	}
 
-	private SepaDescription getStreamStoppedEpa() throws URISyntaxException {
+	private DataProcessorDescription getStreamStoppedEpa() throws URISyntaxException {
 		return StorageManager.INSTANCE.getStorageAPI().getSEPAById(RATE_SEPA_URI);
 	}
 
-	private SecInvocation updateKafkaSec(SecInvocation actionClient, PipelineModificationMessage message) {
+	private DataSinkInvocation updateKafkaSec(DataSinkInvocation actionClient, PipelineModificationMessage message) {
 		List<StaticProperty> properties = message.getPipelineModifications().get(0).getStaticProperties();
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {
@@ -133,7 +132,7 @@ public class SepStoppedMonitoringPipelineBuilder {
 		return actionClient;
 	}
 
-	private SepaInvocation updateStreamStoppedSepa(SepaInvocation newSEPA, PipelineModificationMessage message) {
+	private DataProcessorInvocation updateStreamStoppedSepa(DataProcessorInvocation newSEPA, PipelineModificationMessage message) {
 		List<StaticProperty> properties = message.getPipelineModifications().get(0).getStaticProperties();
 		List<StaticProperty> newStaticProperties = new ArrayList<>();
 		for (StaticProperty p : properties) {

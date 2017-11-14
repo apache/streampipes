@@ -1,7 +1,7 @@
 package org.streampipes.sdk.helpers;
 
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 /**
  * Created by riemer on 28.01.2017.

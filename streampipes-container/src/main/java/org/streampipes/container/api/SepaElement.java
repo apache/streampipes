@@ -7,14 +7,14 @@ import javax.ws.rs.Path;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.Util;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 @Path("/sepa")
-public class SepaElement extends InvocableElement<SepaInvocation, SemanticEventProcessingAgentDeclarer> {
+public class SepaElement extends InvocableElement<DataProcessorInvocation, SemanticEventProcessingAgentDeclarer> {
 
     public SepaElement() {
 
-        super(SepaInvocation.class);
+        super(DataProcessorInvocation.class);
     }
 
     @Override

@@ -1,18 +1,18 @@
 package org.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Created by riemer on 20.03.2017.
  */
-public abstract class AbstractParameterExtractor<T extends InvocableSEPAElement> {
+public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> {
 
   protected T sepaElement;
   private TypeParser typeParser;
@@ -91,7 +91,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableSEPAElement>
                                        boolean completeNames)
   {
     URI propertyURI = getURIFromStaticProperty(staticPropertyName);
-    for(EventStream stream : sepaElement.getInputStreams())
+    for(SpDataStream stream : sepaElement.getInputStreams())
     {
       List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
       if (matchedProperties.size() > 0) return matchedProperties;

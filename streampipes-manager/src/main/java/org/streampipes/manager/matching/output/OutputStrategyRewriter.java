@@ -1,8 +1,8 @@
 package org.streampipes.manager.matching.output;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
 
 public class OutputStrategyRewriter {
 

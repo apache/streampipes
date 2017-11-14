@@ -10,11 +10,11 @@ import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.transform.Transformer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -36,12 +36,11 @@ public abstract class Element<D extends Declarer> {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getDescription(@PathParam("id") String elementId) {
-        List<D> declarers = getElementDeclarers();
         return getJsonLd(elementId);
     }
 
     protected String getJsonLd(String id) {
-        NamedSEPAElement elem = getById(id);
+        NamedStreamPipesEntity elem = getById(id);
         return toJsonLd(elem);
     }
 
@@ -54,13 +53,13 @@ public abstract class Element<D extends Declarer> {
         return null;
     }
 
-    protected NamedSEPAElement getById(String id) {
-        NamedSEPAElement desc = null;
+    protected NamedStreamPipesEntity getById(String id) {
+        NamedStreamPipesEntity desc = null;
         for (Declarer declarer : getElementDeclarers()) {
             if (declarer.declareModel().getUri().equals(id)) {
                 //TODO find a better solution to add the event streams to the SepDescription
                 if (declarer instanceof SemanticEventProducerDeclarer) {
-                    SepDescription secDesc = ((SemanticEventProducerDeclarer) declarer).declareModel();
+                    DataSourceDescription secDesc = ((SemanticEventProducerDeclarer) declarer).declareModel();
                     List<EventStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
                     for (EventStreamDeclarer esd : eventStreamDeclarers) {
                         secDesc.addEventStream(esd.declareModel(secDesc));
@@ -77,11 +76,11 @@ public abstract class Element<D extends Declarer> {
         if (desc != null) {
             String type = "";
 
-            if (desc instanceof SepaDescription) {
+            if (desc instanceof DataProcessorDescription) {
                 type = "sepa/";
-            } else if (desc instanceof SepDescription) {
+            } else if (desc instanceof DataSourceDescription) {
                 type = "sep/";
-            } else if (desc instanceof SecDescription) {
+            } else if (desc instanceof DataSinkDescription) {
                 type = "sec/";
             }
 
@@ -89,8 +88,8 @@ public abstract class Element<D extends Declarer> {
             desc.setUri(uri);
             desc.setRdfId(new SupportsRdfId.URIKey(URI.create(uri)));
 
-            if (desc instanceof SepDescription) {
-                for(EventStream stream : ((SepDescription) desc).getEventStreams()) {
+            if (desc instanceof DataSourceDescription) {
+                for(SpDataStream stream : ((DataSourceDescription) desc).getSpDataStreams()) {
                     String baseUri = DeclarersSingleton.getInstance().getBaseUri() + type +stream.getUri();
                     stream.setUri(baseUri);
                     stream.setRdfId(new SupportsRdfId.URIKey(URI.create(baseUri)));
@@ -101,7 +100,7 @@ public abstract class Element<D extends Declarer> {
         return desc;
     }
 
-    protected String toJsonLd(NamedSEPAElement namedElement) {
+    protected String toJsonLd(NamedStreamPipesEntity namedElement) {
         if (namedElement != null) {
             Graph rdfGraph;
             try {

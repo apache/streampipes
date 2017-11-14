@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.proasense.mhwirth.drillingstop;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class DrillingStopParameters extends EventProcessorBindingParams {
@@ -11,7 +11,7 @@ public class DrillingStopParameters extends EventProcessorBindingParams {
 	private String rpmPropertyName;
 	private String torquePropertyName;
 	
-	public DrillingStopParameters(SepaInvocation graph, int minRpm, int minTorque, String rpmPropertyName, String torquePropertyName) {
+	public DrillingStopParameters(DataProcessorInvocation graph, int minRpm, int minTorque, String rpmPropertyName, String torquePropertyName) {
 		super(graph);
 		this.minRpm = minRpm;
 		this.minTorque = minTorque;

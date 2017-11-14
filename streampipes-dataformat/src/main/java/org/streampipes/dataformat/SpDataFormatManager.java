@@ -1,6 +1,6 @@
 package org.streampipes.dataformat;
 
-import org.streampipes.model.impl.TransportFormat;
+import org.streampipes.model.grounding.TransportFormat;
 
 import java.util.ArrayList;
 import java.util.List;

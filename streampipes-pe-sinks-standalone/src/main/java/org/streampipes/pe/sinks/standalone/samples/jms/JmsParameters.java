@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.jms;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class JmsParameters extends EventSinkBindingParams {
@@ -9,7 +9,7 @@ public class JmsParameters extends EventSinkBindingParams {
   private Integer jmsPort;
   private String topic;
 
-  public JmsParameters(SecInvocation graph, String jmsHost, Integer jmsPort, String topic) {
+  public JmsParameters(DataSinkInvocation graph, String jmsHost, Integer jmsPort, String topic) {
     super(graph);
     this.jmsHost = jmsHost;
     this.jmsPort = jmsPort;

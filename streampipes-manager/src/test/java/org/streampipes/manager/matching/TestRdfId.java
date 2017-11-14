@@ -2,9 +2,9 @@ package org.streampipes.manager.matching;
 
 import org.streampipes.pe.processors.esper.extract.ProjectController;
 import org.streampipes.manager.matching.v2.TestUtils;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
 import org.junit.Test;
@@ -19,10 +19,10 @@ public class TestRdfId {
     @Test
     public void testGraphIdAfterClone() {
 
-        SepaInvocation invocation = TestUtils.makeSepa(new ProjectController(), "A", "B");
-        EventStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "B");
+        DataProcessorInvocation invocation = TestUtils.makeSepa(new ProjectController(), "A", "B");
+        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "B");
 
-        EventStream clonedStream = new EventStream(stream);
+        SpDataStream clonedStream = new SpDataStream(stream);
 
         assertEquals(stream.getElementId(), clonedStream.getElementId());
 
@@ -31,7 +31,7 @@ public class TestRdfId {
 
         assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(), strategy.getEventProperties().get(0).getElementId());
 
-        SepaInvocation invocation2 = new SepaInvocation(invocation);
+        DataProcessorInvocation invocation2 = new DataProcessorInvocation(invocation);
 
         CustomOutputStrategy strategy2 = (CustomOutputStrategy) invocation2.getOutputStrategies().get(0);
 

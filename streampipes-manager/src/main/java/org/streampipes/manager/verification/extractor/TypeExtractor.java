@@ -8,7 +8,7 @@ import org.streampipes.manager.verification.ElementVerifier;
 import org.streampipes.manager.verification.SecVerifier;
 import org.streampipes.manager.verification.SepVerifier;
 import org.streampipes.manager.verification.SepaVerifier;
-import org.streampipes.vocabulary.SEPA;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,17 +55,17 @@ public class TypeExtractor {
 	
 	private static final String ep()
 	{
-		return SEPA.SEMANTICEVENTPRODUCER.toSesameURI().toString();
+		return StreamPipes.DATA_SOURCE_DESCRIPTION;
 	}
 	
 	private static final String epa()
 	{
-		return SEPA.SEMANTICEVENTPROCESSINGAGENT.toSesameURI().toString();
+		return StreamPipes.DATA_PROCESSOR_DESCRIPTION;
 	}
 	
 	private static final String ec()
 	{
-		return SEPA.SEMANTICEVENTCONSUMER.toSesameURI().toString();
+		return StreamPipes.DATA_SINK_DESCRIPTION;
 	}
 	
 }

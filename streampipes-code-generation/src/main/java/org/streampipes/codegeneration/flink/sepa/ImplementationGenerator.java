@@ -8,13 +8,13 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 
 public class ImplementationGenerator extends Generator {
 
-	public ImplementationGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public ImplementationGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 	}
 

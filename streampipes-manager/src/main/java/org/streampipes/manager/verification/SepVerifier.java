@@ -1,13 +1,13 @@
 package org.streampipes.manager.verification;
 
 import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
-public class SepVerifier extends ElementVerifier<SepDescription>{
+public class SepVerifier extends ElementVerifier<DataSourceDescription>{
 
 	public SepVerifier(String graphData)
 			throws SepaParseException {
-		super(graphData, SepDescription.class);
+		super(graphData, DataSourceDescription.class);
 		// TODO Auto-generated constructor stub
 	}
 

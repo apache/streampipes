@@ -2,10 +2,11 @@ package org.streampipes.pe.sources.kd2.streams;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.kd2.config.KafkaSettings;
@@ -19,9 +20,9 @@ import java.util.List;
  */
 public abstract class AbstractBioDataStream extends AbstractAlreadyExistingStream {
 
-    public EventStream prepareStream(String topic) {
+    public SpDataStream prepareStream(String topic) {
 
-        EventStream stream = new EventStream();
+        SpDataStream stream = new SpDataStream();
 
         EventGrounding grounding = new EventGrounding();
         grounding.setTransportProtocol(KafkaSettings.standardProtocol(topic));
@@ -34,10 +35,10 @@ public abstract class AbstractBioDataStream extends AbstractAlreadyExistingStrea
 
     public List<EventProperty> getPreparedProperties() {
         List<EventProperty> eventProperties = new ArrayList<>();
-        eventProperties.add(EpProperties.longEp("receiveTime", Utils.createURI("http://schema.org/DateTime")));
-        eventProperties.add(EpProperties.longEp("sampleTime", Utils.createURI("http://schema.org/DateTime")));
-        eventProperties.add(EpProperties.integerEp("plugSeqNo", Kd2.plugSeqNo));
-        eventProperties.add(EpProperties.stringEp("clientId", Kd2.clientId));
+        eventProperties.add(EpProperties.longEp(Labels.empty(), "receiveTime", Utils.createURI("http://schema.org/DateTime")));
+        eventProperties.add(EpProperties.longEp(Labels.empty(), "sampleTime", Utils.createURI("http://schema.org/DateTime")));
+        eventProperties.add(EpProperties.integerEp(Labels.empty(), "plugSeqNo", Kd2.plugSeqNo));
+        eventProperties.add(EpProperties.stringEp(Labels.empty(), "clientId", Kd2.clientId));
 
         return eventProperties;
 

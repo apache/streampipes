@@ -2,18 +2,18 @@ package org.streampipes.pe.sources.samples.hella;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 
 
 public abstract class AbstractHellaStream implements EventStreamDeclarer {
 
-	public EventStream prepareStream(String topic) {
+	public SpDataStream prepareStream(String topic) {
 		
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(topic));

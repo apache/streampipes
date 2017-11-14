@@ -1,39 +1,39 @@
 package org.streampipes.model.util;
 
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.ListOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
-import org.streampipes.model.impl.output.ReplaceOutputStrategy;
-import org.streampipes.model.impl.output.UriPropertyMapping;
-import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.impl.quality.EventPropertyQualityRequirement;
-import org.streampipes.model.impl.quality.MeasurementCapability;
-import org.streampipes.model.impl.quality.MeasurementObject;
-import org.streampipes.model.impl.ApplicationLink;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.staticproperty.AnyStaticProperty;
-import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.ReplaceOutputStrategy;
+import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.quality.EventPropertyQualityRequirement;
+import org.streampipes.model.quality.MeasurementCapability;
+import org.streampipes.model.quality.MeasurementObject;
+import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class Cloner {
 
 	public OutputStrategy outputStrategy(OutputStrategy other)
 	{
-		if (other instanceof RenameOutputStrategy) return new RenameOutputStrategy((RenameOutputStrategy) other);
+		if (other instanceof KeepOutputStrategy) return new KeepOutputStrategy((KeepOutputStrategy) other);
 		else if (other instanceof FixedOutputStrategy) return new FixedOutputStrategy((FixedOutputStrategy) other);
 		else if (other instanceof ListOutputStrategy) return new ListOutputStrategy((ListOutputStrategy) other);
 		else if (other instanceof CustomOutputStrategy) return new CustomOutputStrategy((CustomOutputStrategy) other);
@@ -89,12 +89,12 @@ public class Cloner {
 		return null;
 	}
 
-	public List<EventStream> streams(List<EventStream> eventStreams) {
-		return eventStreams.stream().map(s -> new EventStream(s)).collect(Collectors.toList());
+	public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
+		return spDataStreams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList());
 	}
 	
-	public EventStream stream(EventStream other) {
-		return new EventStream(other);
+	public SpDataStream stream(SpDataStream other) {
+		return new SpDataStream(other);
 	}
 
 	public List<OutputStrategy> strategies(List<OutputStrategy> outputStrategies) {

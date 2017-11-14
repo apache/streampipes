@@ -1,5 +1,14 @@
 package org.streampipes.rest.impl;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.streampipes.model.client.messages.Notification;
+import org.streampipes.model.client.messages.NotificationType;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.rest.annotation.GsonWithIds;
+import org.streampipes.rest.api.IPipelineElement;
+import org.streampipes.storage.filter.Filter;
+
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,16 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.streampipes.rest.annotation.GsonWithIds;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-
-import org.streampipes.model.client.messages.Notification;
-import org.streampipes.model.client.messages.NotificationType;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.rest.api.IPipelineElement;
-import org.streampipes.storage.filter.Filter;
-
 @Path("/v2/users/{username}/sources")
 public class SemanticEventProducer extends AbstractRestInterface implements IPipelineElement {
 
@@ -34,7 +33,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	public Response getStreamsBySource(@PathParam("username") String username, @PathParam("sourceId") String sourceId)
 	{
 		try {
-			return ok(new SepDescription(getPipelineElementRdfStorage().getSEPById(sourceId)));
+			return ok(new DataSourceDescription(getPipelineElementRdfStorage().getSEPById(sourceId)));
 		} catch (URISyntaxException e) {
 			return constructErrorMessage(new Notification(NotificationType.URIOFFLINE.title(),
 					NotificationType.URIOFFLINE.description(), e.getMessage()));
@@ -53,7 +52,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
 				getUserService().getAvailableSourceUris(username));
 		return ok(seps);
 	}
@@ -65,7 +64,7 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
 				getUserService().getFavoriteSourceUris(username));
 		return ok(seps);
 	}
@@ -77,9 +76,9 @@ public class SemanticEventProducer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SepDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
+		List<DataSourceDescription> seps = Filter.byUri(getPipelineElementRdfStorage().getAllSEPs(),
 				getUserService().getOwnSourceUris(username));
-		List<SepDescription> si = seps.stream().map(s -> new SepDescription(s)).collect(Collectors.toList());
+		List<DataSourceDescription> si = seps.stream().map(s -> new DataSourceDescription(s)).collect(Collectors.toList());
 
 		return ok(si);
 	}

@@ -2,17 +2,17 @@ package org.streampipes.pe.processors.standalone.languagedetection;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
@@ -29,7 +29,7 @@ import java.util.List;
 public class LanguageDetectionController extends StandaloneEventProcessorDeclarerSingleton<LanguageDetectionParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		EventPropertyPrimitive e1 = EpRequirements.stringReq();
@@ -38,10 +38,10 @@ public class LanguageDetectionController extends StandaloneEventProcessorDeclare
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("sepa/langdetect", "Language Detection", "Detects the language of a textual property");
+		DataProcessorDescription desc = new DataProcessorDescription("sepa/langdetect", "Language Detection", "Detects the language of a textual property");
 		desc.setIconUrl(Config.iconBaseUrl + "/Language_Detection_Icon_HQ.png");
 		//TODO check if needed
 		stream1.setUri(Config.serverUrl +desc.getElementId());
@@ -68,7 +68,7 @@ public class LanguageDetectionController extends StandaloneEventProcessorDeclare
 
 	@Override
 	public ConfiguredEventProcessor<LanguageDetectionParameters, EventProcessor<LanguageDetectionParameters>>
-	onInvocation(SepaInvocation sepa) {
+	onInvocation(DataProcessorInvocation sepa) {
 		String textMapping = SepaUtils.getMappingPropertyName(sepa,
 						"text");
 

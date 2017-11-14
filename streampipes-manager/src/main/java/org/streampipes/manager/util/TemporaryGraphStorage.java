@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 public class TemporaryGraphStorage {
 
-	public static Map<String, List<InvocableSEPAElement>> graphStorage = new HashMap<>();
+	public static Map<String, List<InvocableStreamPipesEntity>> graphStorage = new HashMap<>();
 	
 }

@@ -1,10 +1,10 @@
 package org.streampipes.container.util;
 
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.vocabulary.MessageFormat;
 
 import java.util.ArrayList;

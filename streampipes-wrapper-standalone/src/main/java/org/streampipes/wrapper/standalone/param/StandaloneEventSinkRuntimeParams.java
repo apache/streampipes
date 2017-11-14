@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.standalone.param;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.streampipes.wrapper.routing.SpInputCollector;
@@ -26,7 +26,7 @@ public class StandaloneEventSinkRuntimeParams<B extends EventSinkBindingParams> 
   @Override
   public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
     List<SpInputCollector> inputCollectors = new ArrayList<>();
-    for (EventStream is : bindingParams.getGraph().getInputStreams()) {
+    for (SpDataStream is : bindingParams.getGraph().getInputStreams()) {
       inputCollectors.add(ProtocolManager.findInputCollector(is.getEventGrounding()
                       .getTransportProtocol(), is.getEventGrounding().getTransportFormats().get(0),
               singletonEngine));

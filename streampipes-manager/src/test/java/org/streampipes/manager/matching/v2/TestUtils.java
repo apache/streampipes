@@ -5,14 +5,14 @@ import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.empire.core.empire.SupportsRdfId;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.vocabulary.MessageFormat;
 
 import java.net.URI;
@@ -39,17 +39,17 @@ public class TestUtils {
 	}
 	
 	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
-		SepDescription sepDescription = new SepDescription(producer.declareModel());
-		sepDescription.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test1")));
-		EventStream offer = stream.declareModel(sepDescription);
+		DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
+		dataSourceDescription.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test1")));
+		SpDataStream offer = stream.declareModel(dataSourceDescription);
 		offer.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test2")));
-		SepaDescription requirement = (agent.declareModel());
+		DataProcessorDescription requirement = (agent.declareModel());
 		requirement.setRdfId(new SupportsRdfId.URIKey(URI.create("http://www.schema.org/test3")));
 		Pipeline pipeline = new Pipeline();
-		EventStream offeredClientModel = offer;
+		SpDataStream offeredClientModel = offer;
 		offeredClientModel.setDOM("A");
 
-		SepaInvocation requiredClientModel = new SepaInvocation(requirement);
+		DataProcessorInvocation requiredClientModel = new DataProcessorInvocation(requirement);
 		requiredClientModel.setDOM("B");
 		requiredClientModel.setConnectedTo(Arrays.asList("A"));
 		
@@ -60,24 +60,24 @@ public class TestUtils {
 		return pipeline;
 	}
 
-	public static Pipeline makePipeline(List<EventStream> streams, List<SepaInvocation> epas) {
+	public static Pipeline makePipeline(List<SpDataStream> streams, List<DataProcessorInvocation> epas) {
 		Pipeline pipeline = new Pipeline();
 
-		pipeline.setStreams(streams.stream().map(s -> new EventStream(s)).collect(Collectors.toList()));
-		pipeline.setSepas(epas.stream().map(s -> new SepaInvocation(s)).collect(Collectors.toList()));
+		pipeline.setStreams(streams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList()));
+		pipeline.setSepas(epas.stream().map(s -> new DataProcessorInvocation(s)).collect(Collectors.toList()));
 
 		return pipeline;
 	}
 
-    public static SepaInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId, String... connectedTo) {
-        SepaInvocation invocation = new SepaInvocation(declarer.declareModel());
+    public static DataProcessorInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId, String... connectedTo) {
+        DataProcessorInvocation invocation = new DataProcessorInvocation(declarer.declareModel());
         invocation.setDOM(domId);
         invocation.setConnectedTo(Arrays.asList(connectedTo));
         return invocation;
     }
 
-    public static EventStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
-        EventStream stream = new EventStream(streamDec.declareModel(declarer.declareModel()));
+    public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
+        SpDataStream stream = new SpDataStream(streamDec.declareModel(declarer.declareModel()));
         stream.setDOM(domId);
         return stream;
     }

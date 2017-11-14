@@ -1,9 +1,9 @@
 package org.streampipes.pe.sources.mhwirth.enriched;
 
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.mhwirth.config.AkerVariables;
@@ -13,9 +13,9 @@ import org.streampipes.commons.Utils;
 public class EnrichedStream extends AbstractAlreadyExistingStream {
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(AkerVariables.Enriched.topic()));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));

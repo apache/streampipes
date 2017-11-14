@@ -3,16 +3,16 @@ package org.streampipes.manager.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 public class TreeUtils {
 
@@ -24,13 +24,13 @@ public class TreeUtils {
 	 * @return a SEPA-client element
 	 */
 	
-	public static NamedSEPAElement findSEPAElement(String id, List<SepaInvocation> sepas, List<EventStream> streams)
+	public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream> streams)
 	{ 
-		List<NamedSEPAElement> allElements = new ArrayList<>();
+		List<NamedStreamPipesEntity> allElements = new ArrayList<>();
 		allElements.addAll(sepas);
 		allElements.addAll(streams);
 		
-		for(NamedSEPAElement element : allElements)
+		for(NamedStreamPipesEntity element : allElements)
 		{
 			if (id.equals(element.getDOM())) return element;
 		}
@@ -44,9 +44,9 @@ public class TreeUtils {
 	 * @param graphs list of invocation graphs
 	 * @return an invocation graph with a given DOM Id
 	 */
-	public static InvocableSEPAElement findByDomId(String id, List<InvocableSEPAElement> graphs)
+	public static InvocableStreamPipesEntity findByDomId(String id, List<InvocableStreamPipesEntity> graphs)
 	{
-		for(InvocableSEPAElement graph : graphs)
+		for(InvocableStreamPipesEntity graph : graphs)
 		{
 			if (graph.getDOM().equals(id))
 				{
@@ -57,9 +57,9 @@ public class TreeUtils {
 		return null;
 	}
 	
-	public static EventProperty findEventProperty(String uri, List<EventStream> streams)
+	public static EventProperty findEventProperty(String uri, List<SpDataStream> streams)
 	{
-		for(EventStream stream : streams)
+		for(SpDataStream stream : streams)
 		{
 			for(EventProperty p : stream.getEventSchema().getEventProperties())
 			{
@@ -77,7 +77,7 @@ public class TreeUtils {
 		return null;
 	}
 	
-	public static MappingProperty findMappingProperty(String elementId, ConsumableSEPAElement sepa)
+	public static MappingProperty findMappingProperty(String elementId, ConsumableStreamPipesEntity sepa)
 	{
 		for(StaticProperty sp : sepa.getStaticProperties())
 		{
@@ -86,7 +86,7 @@ public class TreeUtils {
 		return null;
 	}
 	
-	public static MatchingStaticProperty findMatchingProperty(String elementId, ConsumableSEPAElement sepa)
+	public static MatchingStaticProperty findMatchingProperty(String elementId, ConsumableStreamPipesEntity sepa)
 	{
 		for(StaticProperty sp : sepa.getStaticProperties())
 		{
@@ -96,7 +96,7 @@ public class TreeUtils {
 	}
 
 	public static MappingProperty findMappingProperty(String elementId,
-			SepaInvocation sepa) {
+			DataProcessorInvocation sepa) {
 		for(StaticProperty sp : sepa.getStaticProperties())
 		{
 			if (sp.getRdfId().toString().equals(elementId)) return (MappingProperty) sp;

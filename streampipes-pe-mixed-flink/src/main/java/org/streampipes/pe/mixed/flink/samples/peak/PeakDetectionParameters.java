@@ -1,6 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.peak;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.io.Serializable;
@@ -18,11 +18,11 @@ public class PeakDetectionParameters extends EventProcessorBindingParams impleme
   private Double influence;
   private Integer countWindowSize;
 
-  public PeakDetectionParameters(SepaInvocation graph) {
+  public PeakDetectionParameters(DataProcessorInvocation graph) {
     super(graph);
   }
 
-  public PeakDetectionParameters(SepaInvocation graph, String valueToObserve, String
+  public PeakDetectionParameters(DataProcessorInvocation graph, String valueToObserve, String
           timestampMapping, String groupBy, Integer countWindowSize, Integer lag, Double
           threshold, Double
           influence) {

@@ -1,7 +1,7 @@
 package org.streampipes.manager.matching.v2;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyList;
 
 import java.util.List;
 

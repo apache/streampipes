@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.pattern.streamstopped;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class StreamStoppedParameter extends EventProcessorBindingParams {
@@ -12,7 +12,7 @@ public class StreamStoppedParameter extends EventProcessorBindingParams {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public StreamStoppedParameter(SepaInvocation graph, String topic) {
+	public StreamStoppedParameter(DataProcessorInvocation graph, String topic) {
 		super(graph);
 		this.topic = topic;
 	}

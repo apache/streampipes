@@ -2,20 +2,20 @@ package org.streampipes.pe.processors.esper.pattern.sequence;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.wrapper.ConfiguredEventProcessor;
@@ -30,16 +30,16 @@ import java.util.List;
 public class SequenceController extends StandaloneEventProcessorDeclarerSingleton<SequenceParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
-		EventStream stream1 = new EventStream();
-		EventStream stream2 = new EventStream();
+	public DataProcessorDescription declareModel() {
+		SpDataStream stream1 = new SpDataStream();
+		SpDataStream stream2 = new SpDataStream();
 		
 		EventProperty e1 = new EventPropertyPrimitive();
 		EventProperty e2 = new EventPropertyPrimitive();
 		
-		SepaDescription desc = new SepaDescription("sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
+		DataProcessorDescription desc = new DataProcessorDescription("sequence", "Sequence", "Detects a sequence of events in the following form: Event A followed by Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Sequence_Icon_HQ.png");
-		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
@@ -87,7 +87,7 @@ public class SequenceController extends StandaloneEventProcessorDeclarerSingleto
 	}
 
 	@Override
-	public ConfiguredEventProcessor<SequenceParameters, EventProcessor<SequenceParameters>> onInvocation(SepaInvocation
+	public ConfiguredEventProcessor<SequenceParameters, EventProcessor<SequenceParameters>> onInvocation(DataProcessorInvocation
 																																																								 invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
 		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");

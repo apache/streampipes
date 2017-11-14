@@ -9,11 +9,11 @@ import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.codegeneration.ControllerGenerator;
 import org.streampipes.codegeneration.utils.JFC;
 
@@ -23,7 +23,7 @@ public class FlinkSepaControllerGenerator extends ControllerGenerator {
 	private ClassName program;
 	private ClassName config;
 
-	public FlinkSepaControllerGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public FlinkSepaControllerGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 		parameters = ClassName.get(packageName, name + "Parameters");
 		program = ClassName.get(packageName, name + "Program");
@@ -32,7 +32,7 @@ public class FlinkSepaControllerGenerator extends ControllerGenerator {
 
 	public Builder getRuntime() {
 		Builder b = MethodSpec.methodBuilder("getRuntime").addAnnotation(Override.class)
-				.addModifiers(Modifier.PROTECTED).addParameter(SepaInvocation.class, "graph")
+				.addModifiers(Modifier.PROTECTED).addParameter(DataProcessorInvocation.class, "graph")
 				.returns(ParameterizedTypeName.get(JFC.FLINK_SEPA_RUNTIME, parameters));
 
 		

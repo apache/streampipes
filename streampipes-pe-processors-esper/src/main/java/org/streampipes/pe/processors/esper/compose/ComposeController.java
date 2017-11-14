@@ -2,12 +2,12 @@ package org.streampipes.pe.processors.esper.compose;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.wrapper.ConfiguredEventProcessor;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -19,12 +19,12 @@ import java.util.List;
 public class ComposeController extends StandaloneEventProcessorDeclarerSingleton<ComposeParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		EventStream stream1 = new EventStream();
-		EventStream stream2 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
+		SpDataStream stream2 = new SpDataStream();
 		
-		SepaDescription desc = new SepaDescription("compose", "Compose EPA", "");
+		DataProcessorDescription desc = new DataProcessorDescription("compose", "Compose EPA", "");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
@@ -32,7 +32,7 @@ public class ComposeController extends StandaloneEventProcessorDeclarerSingleton
 		desc.addEventStream(stream2);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new RenameOutputStrategy());
+		strategies.add(new KeepOutputStrategy());
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -44,7 +44,7 @@ public class ComposeController extends StandaloneEventProcessorDeclarerSingleton
 	}
 
 	@Override
-	public ConfiguredEventProcessor<ComposeParameters, EventProcessor<ComposeParameters>> onInvocation(SepaInvocation
+	public ConfiguredEventProcessor<ComposeParameters, EventProcessor<ComposeParameters>> onInvocation(DataProcessorInvocation
 																																																							 sepa) {
 
 		ComposeParameters staticParam = new ComposeParameters(sepa);

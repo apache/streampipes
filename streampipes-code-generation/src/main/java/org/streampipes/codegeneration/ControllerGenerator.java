@@ -3,13 +3,13 @@ package org.streampipes.codegeneration;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.codegeneration.utils.JFC;
 
 import java.util.List;
@@ -17,16 +17,16 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 
 public abstract class ControllerGenerator extends Generator {
-	public ControllerGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public ControllerGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 	}
 
-	public Builder getEventStream(Builder b, EventStream eventStream, int n) {
-		b = getEventProperties(b, eventStream.getEventSchema().getEventProperties(), n);
+	public Builder getEventStream(Builder b, SpDataStream spDataStream, int n) {
+		b = getEventProperties(b, spDataStream.getEventSchema().getEventProperties(), n);
 		b.addStatement(
 				"$T stream$L = $T.createStream($S, $S, $S).schema($T.create().properties(eventProperties$L).build()).build()",
-				JFC.EVENT_STREAM, n, JFC.STREAM_BUILDER, eventStream.getName(), eventStream.getDescription(),
-				eventStream.getUri(), JFC.SCHEMA_BUILDER, n);
+				JFC.EVENT_STREAM, n, JFC.STREAM_BUILDER, spDataStream.getName(), spDataStream.getDescription(),
+				spDataStream.getUri(), JFC.SCHEMA_BUILDER, n);
 
 		return b;
 	}
@@ -96,15 +96,15 @@ public abstract class ControllerGenerator extends Generator {
 		b.addStatement("$T desc = new $T($S, $S, $S)", desc, desc, element.getUri(),
 				element.getName(), element.getDescription());
 
-		for (int i = 0; i < element.getEventStreams().size(); i++) {
+		for (int i = 0; i < element.getSpDataStreams().size(); i++) {
 			// TODO
-			b = getEventStream(b, element.getEventStreams().get(i), i);
+			b = getEventStream(b, element.getSpDataStreams().get(i), i);
 			b.addStatement("desc.addEventStream(stream$L)", i);
 		}
 
 		//TODO find better solution
-		if (element instanceof SepaDescription) {
-			b = getOutputStrategies(b, ((SepaDescription) element).getOutputStrategies());
+		if (element instanceof DataProcessorDescription) {
+			b = getOutputStrategies(b, ((DataProcessorDescription) element).getOutputStrategies());
 			b.addStatement("desc.setOutputStrategies(strategies)");
 		}
 

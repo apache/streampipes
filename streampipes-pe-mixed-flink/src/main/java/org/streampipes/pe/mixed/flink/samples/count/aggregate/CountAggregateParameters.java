@@ -1,6 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.count.aggregate;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
@@ -12,7 +12,7 @@ public class CountAggregateParameters extends EventProcessorBindingParams {
 	private Time slideWindowSize;
 	private List<String> groupBy;
 
-	public CountAggregateParameters(SepaInvocation graph, Time timeWindowSize, Time slideWindowSize
+	public CountAggregateParameters(DataProcessorInvocation graph, Time timeWindowSize, Time slideWindowSize
 			, List<String> groupBy) {
 		super(graph);
 		this.groupBy = groupBy;

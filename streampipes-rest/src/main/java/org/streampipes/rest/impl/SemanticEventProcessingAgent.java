@@ -14,13 +14,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.api.IPipelineElement;
 import org.streampipes.storage.filter.Filter;
 
@@ -34,7 +34,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
 				getUserService().getAvailableSepaUris(username));
 		return ok(sepas);
 	}
@@ -46,7 +46,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
 				getUserService().getFavoriteSepaUris(username));
 		return ok(sepas);
 	}
@@ -58,9 +58,9 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SepaDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
+		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllSEPAs(),
 				getUserService().getOwnSepaUris(username));
-		List<SepaInvocation> si = sepas.stream().map(s -> new SepaInvocation(new SepaInvocation(s))).collect(Collectors.toList());
+		List<DataProcessorInvocation> si = sepas.stream().map(s -> new DataProcessorInvocation(new DataProcessorInvocation(s))).collect(Collectors.toList());
 
 		return ok(si);
 	}
@@ -123,7 +123,7 @@ public class SemanticEventProcessingAgent extends AbstractRestInterface implemen
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		try {
-			return ok(new SepaInvocation(new SepaInvocation(getPipelineElementRdfStorage().getSEPAById(elementUri))));
+			return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getSEPAById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

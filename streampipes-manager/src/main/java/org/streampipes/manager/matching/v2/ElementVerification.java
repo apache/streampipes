@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 public class ElementVerification {
 
@@ -16,14 +16,14 @@ public class ElementVerification {
 		this.errorLog = new ArrayList<>();
 	}
 		
-	public boolean verify(SepaInvocation offer, InvocableSEPAElement requirement) {
+	public boolean verify(DataProcessorInvocation offer, InvocableStreamPipesEntity requirement) {
 		return new StreamMatch()
 			.matchIgnoreGrounding(offer.getOutputStream(), 
 					requirement.getStreamRequirements().get(0), errorLog) &&
 			new GroundingMatch().match(offer.getSupportedGrounding(), requirement.getSupportedGrounding(), errorLog);
 	}
 
-	public boolean verify(EventStream offer, InvocableSEPAElement requirement) {
+	public boolean verify(SpDataStream offer, InvocableStreamPipesEntity requirement) {
 		return new StreamMatch().matchIgnoreGrounding(offer, requirement.getStreamRequirements().get(0), errorLog) &&
 			new GroundingMatch().match(offer.getEventGrounding(), requirement.getSupportedGrounding(), errorLog);
 	}

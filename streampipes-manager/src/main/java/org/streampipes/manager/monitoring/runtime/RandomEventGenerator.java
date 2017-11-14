@@ -3,10 +3,10 @@ package org.streampipes.manager.monitoring.runtime;
 import java.util.List;
 import java.util.Map;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 public class RandomEventGenerator extends EventGenerator {
 

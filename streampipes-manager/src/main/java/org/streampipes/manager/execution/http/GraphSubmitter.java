@@ -3,15 +3,15 @@ package org.streampipes.manager.execution.http;
 import java.util.List;
 
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 
 public class GraphSubmitter {
 
-	private List<InvocableSEPAElement> graphs;
+	private List<InvocableStreamPipesEntity> graphs;
 	private String pipelineId;
 	private String pipelineName;
 	
-	public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableSEPAElement> graphs)
+	public GraphSubmitter(String pipelineId, String pipelineName, List<InvocableStreamPipesEntity> graphs)
 	{
 		this.graphs = graphs;
 		this.pipelineId = pipelineId;

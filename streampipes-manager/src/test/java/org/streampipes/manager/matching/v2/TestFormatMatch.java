@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.impl.TransportFormat;
+import org.streampipes.model.grounding.TransportFormat;
 
 public class TestFormatMatch extends TestCase {
 

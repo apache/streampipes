@@ -5,7 +5,7 @@ import org.apache.activemq.util.ByteSequence;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.model.impl.JmsTransportProtocol;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;

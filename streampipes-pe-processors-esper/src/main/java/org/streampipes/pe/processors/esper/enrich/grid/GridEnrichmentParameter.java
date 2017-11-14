@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.enrich.grid;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class GridEnrichmentParameter extends EventProcessorBindingParams {
@@ -18,7 +18,7 @@ public class GridEnrichmentParameter extends EventProcessorBindingParams {
 	private String lngPropertyName;
 	private List<String> selectProperties;
 	
-	public GridEnrichmentParameter(SepaInvocation graph, double latitudeStart, double longitudeStart, int cellSize, String cellOptionsPropertyName, String latPropertyName, String lngPropertyName, List<String> selectProperties) {
+	public GridEnrichmentParameter(DataProcessorInvocation graph, double latitudeStart, double longitudeStart, int cellSize, String cellOptionsPropertyName, String latPropertyName, String lngPropertyName, List<String> selectProperties) {
 		super(graph);
 		this.latitudeStart = latitudeStart;
 		this.longitudeStart = longitudeStart;

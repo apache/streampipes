@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.model.impl.EventSchema;
+import org.streampipes.model.schema.EventSchema;
 
 public class DashboardModel {
 

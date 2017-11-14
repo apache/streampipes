@@ -1,13 +1,13 @@
 package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 
 public class RandomTextStream implements EventStreamDeclarer {
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		// TODO Auto-generated method stub
 		return null;
 	}

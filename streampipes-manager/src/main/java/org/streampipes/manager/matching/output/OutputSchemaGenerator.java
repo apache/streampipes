@@ -1,14 +1,14 @@
 package org.streampipes.manager.matching.output;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.output.OutputStrategy;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.output.OutputStrategy;
 
 public interface OutputSchemaGenerator<T extends OutputStrategy> {
 
-	EventSchema buildFromOneStream(EventStream stream);
+	EventSchema buildFromOneStream(SpDataStream stream);
 	
-	EventSchema buildFromTwoStreams(EventStream stream1, EventStream stream2);
+	EventSchema buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2);
 	
 	OutputStrategy getModifiedOutputStrategy(T outputStrategy);
 }

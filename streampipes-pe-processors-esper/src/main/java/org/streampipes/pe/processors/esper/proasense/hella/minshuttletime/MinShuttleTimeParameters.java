@@ -1,11 +1,11 @@
 package org.streampipes.pe.processors.esper.proasense.hella.minshuttletime;
 
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.pe.processors.esper.proasense.hella.shuttletime.MouldingMachine;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.streampipes.pe.processors.esper.proasense.hella.shuttletime.MouldingMachine;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class MinShuttleTimeParameters extends EventProcessorBindingParams {
 
@@ -20,7 +20,7 @@ private static final long serialVersionUID = 4319341875274736697L;
 	private String mouldingMachineIdEventName;
 	private String timestampEventName;
 	
-	public MinShuttleTimeParameters(SepaInvocation graph, List<String> selectProperties, String lacqueringLineIdEventName, String mouldingMachineIdEventName, String shuttleIdEventName, String timestampEventName) {
+	public MinShuttleTimeParameters(DataProcessorInvocation graph, List<String> selectProperties, String lacqueringLineIdEventName, String mouldingMachineIdEventName, String shuttleIdEventName, String timestampEventName) {
 		super(graph);
 		this.selectProperties = selectProperties;
 		

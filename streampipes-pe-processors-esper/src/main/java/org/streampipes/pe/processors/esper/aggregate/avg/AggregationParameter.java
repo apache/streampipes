@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.aggregate.avg;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class AggregationParameter extends EventProcessorBindingParams {
@@ -14,7 +14,7 @@ public class AggregationParameter extends EventProcessorBindingParams {
 	private List<String> groupBy;
 	private List<String> selectProperties;
 	
-	public AggregationParameter(SepaInvocation graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize, List<String> selectProperties) {
+	public AggregationParameter(DataProcessorInvocation graph, AggregationType aggregationType, int outputEvery, List<String> groupBy, String aggregate, int timeWindowSize, List<String> selectProperties) {
 		super(graph);
 		this.aggregationType = aggregationType;
 		this.outputEvery = outputEvery;

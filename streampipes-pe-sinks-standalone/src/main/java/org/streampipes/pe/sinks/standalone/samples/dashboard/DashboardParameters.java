@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
@@ -10,7 +10,7 @@ public class DashboardParameters extends EventSinkBindingParams {
     private EventSchema schema;
     private String broker;
 
-    public DashboardParameters(SecInvocation invocationGraph) {
+    public DashboardParameters(DataSinkInvocation invocationGraph) {
         super(invocationGraph);
         this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
         this.pipelineId = invocationGraph.getCorrespondingPipeline();

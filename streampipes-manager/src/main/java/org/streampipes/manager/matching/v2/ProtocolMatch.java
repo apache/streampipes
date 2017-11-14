@@ -5,7 +5,7 @@ import java.util.List;
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 public class ProtocolMatch extends AbstractMatcher<TransportProtocol, TransportProtocol>{
 

@@ -19,11 +19,11 @@ import org.streampipes.container.html.model.Description;
 import org.streampipes.container.html.model.SemanticEventProducerDescription;
 import org.streampipes.container.html.page.WelcomePageGenerator;
 import org.streampipes.container.html.page.WelcomePageGeneratorImpl;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.Response;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 public class WelcomePageGeneratorImplTest {
 
@@ -69,7 +69,7 @@ public class WelcomePageGeneratorImplTest {
     private SemanticEventProcessingAgentDeclarer getSepaDeclarer() {
         return new SemanticEventProcessingAgentDeclarer() {
             @Override
-            public Response invokeRuntime(SepaInvocation invocationGraph) {
+            public Response invokeRuntime(DataProcessorInvocation invocationGraph) {
                 return null;
             }
 
@@ -79,8 +79,8 @@ public class WelcomePageGeneratorImplTest {
             }
 
             @Override
-            public SepaDescription declareModel() {
-                return new SepaDescription("sepapathName", "sepaname", "sepadescription", "iconUrl");
+            public DataProcessorDescription declareModel() {
+                return new DataProcessorDescription("sepapathName", "sepaname", "sepadescription", "iconUrl");
             }
         };
     }
@@ -91,8 +91,8 @@ public class WelcomePageGeneratorImplTest {
             public List<EventStreamDeclarer> getEventStreams() {
                 return Arrays.asList(new EventStreamDeclarer() {
                     @Override
-                    public EventStream declareModel(SepDescription sep) {
-                        return new EventStream("streampathName", "streamname", "streamdescription", null);
+                    public SpDataStream declareModel(DataSourceDescription sep) {
+                        return new SpDataStream("streampathName", "streamname", "streamdescription", null);
                     }
 
                     @Override
@@ -108,8 +108,8 @@ public class WelcomePageGeneratorImplTest {
             }
 
             @Override
-            public SepDescription declareModel() {
-                return new SepDescription("seppathName", "sepname", "sepdescription", "sepiconUrl");
+            public DataSourceDescription declareModel() {
+                return new DataSourceDescription("seppathName", "sepname", "sepdescription", "sepiconUrl");
             }
         };
     }

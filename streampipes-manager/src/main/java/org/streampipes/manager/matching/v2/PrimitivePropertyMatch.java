@@ -3,7 +3,7 @@ package org.streampipes.manager.matching.v2;
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.net.URI;
 import java.util.List;

@@ -2,28 +2,28 @@ package org.streampipes.serializers.json;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import org.streampipes.model.impl.EpaType;
+import org.streampipes.model.DataProcessorType;
 
 import java.io.IOException;
 
-public class EpaTypeAdapter extends PeTypeAdapter<EpaType> {
+public class EpaTypeAdapter extends PeTypeAdapter<DataProcessorType> {
 
 	@Override
-	public void write(JsonWriter out, EpaType value) throws IOException {
+	public void write(JsonWriter out, DataProcessorType value) throws IOException {
 		write(out, value.getLabel(), value.getDescription(), value.name());
 	}
 
 	@Override
-	public EpaType read(JsonReader in) throws IOException {
-		EpaType epaType = null;
+	public DataProcessorType read(JsonReader in) throws IOException {
+		DataProcessorType dataProcessorType = null;
 		in.beginObject();
 		while(in.hasNext()) {
 			String name = in.nextName();
 			if (name.equals("type"))
-				epaType = EpaType.valueOf(in.nextString());
+				dataProcessorType = DataProcessorType.valueOf(in.nextString());
 		}
 		in.endObject();
-		if (epaType != null) return epaType;
+		if (dataProcessorType != null) return dataProcessorType;
 		else throw new IOException();
 	}
 

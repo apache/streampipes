@@ -1,6 +1,6 @@
 package org.streampipes.codegeneration.flink;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.streampipes.codegeneration.api.ImplementationCodeGenerator;
 import org.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
@@ -18,7 +18,7 @@ public abstract class FlinkCodeGenerator extends ImplementationCodeGenerator {
 	protected String src;
 	protected String webInf;
 
-	public FlinkCodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
+	public FlinkCodeGenerator(DeploymentConfiguration config, ConsumableStreamPipesEntity element) {
 		super(config, element);
 		packageName = config.getGroupId() + "." + config.getArtifactId();
 		name = config.getClassNamePrefix();

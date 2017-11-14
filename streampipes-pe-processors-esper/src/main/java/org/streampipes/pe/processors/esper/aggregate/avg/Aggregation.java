@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.aggregate.avg;
 
-import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.List;

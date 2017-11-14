@@ -20,10 +20,10 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.transform.Transformer;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.Response;
 
-public abstract class InvocableElement<I extends InvocableSEPAElement, D extends Declarer> extends Element<D> {
+public abstract class InvocableElement<I extends InvocableStreamPipesEntity, D extends Declarer> extends Element<D> {
 
     protected abstract List<D> getElementDeclarers();
     protected abstract String getInstanceId(String uri, String elementId);

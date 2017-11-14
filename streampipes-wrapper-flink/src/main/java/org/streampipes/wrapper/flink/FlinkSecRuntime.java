@@ -1,23 +1,23 @@
 package org.streampipes.wrapper.flink;
 
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.model.graph.DataSinkInvocation;
+
 import java.util.Map;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 
-import org.streampipes.model.impl.graph.SecInvocation;
-
-public abstract class FlinkSecRuntime extends FlinkRuntime<SecInvocation>{
+public abstract class FlinkSecRuntime extends FlinkRuntime<DataSinkInvocation>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FlinkSecRuntime(SecInvocation graph) {
+	public FlinkSecRuntime(DataSinkInvocation graph) {
 		super(graph);
 	}
 	
-	public FlinkSecRuntime(SecInvocation graph, FlinkDeploymentConfig config) {
+	public FlinkSecRuntime(DataSinkInvocation graph, FlinkDeploymentConfig config) {
 		super(graph, config);
 	}
 

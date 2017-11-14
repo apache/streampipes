@@ -6,7 +6,7 @@ import org.streampipes.messaging.EventProducer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;
 import java.util.Properties;

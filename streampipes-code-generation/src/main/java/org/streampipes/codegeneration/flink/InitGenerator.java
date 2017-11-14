@@ -8,14 +8,14 @@ import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.*;
 import com.squareup.javapoet.MethodSpec.Builder;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 
 public class InitGenerator extends Generator {
 
 	private boolean standalone;
-	public InitGenerator(ConsumableSEPAElement sepa, String name, String packageName, boolean standalone) {
+	public InitGenerator(ConsumableStreamPipesEntity sepa, String name, String packageName, boolean standalone) {
 		super(sepa, name, packageName);
 
 		this.standalone = standalone;

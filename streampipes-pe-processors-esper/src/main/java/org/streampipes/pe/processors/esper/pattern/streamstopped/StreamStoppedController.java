@@ -2,16 +2,16 @@ package org.streampipes.pe.processors.esper.pattern.streamstopped;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
@@ -27,18 +27,18 @@ import java.util.List;
 public class StreamStoppedController extends StandaloneEventProcessorDeclarerSingleton<StreamStoppedParameter> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();	
 		
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
-		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("streamStopped", "Stream Stopped Detector", "Detects when the stream stopped");
+		desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
 		
 		//TODO check if needed
 		stream1.setUri(EsperConfig.serverUrl +desc.getElementId());
@@ -66,7 +66,7 @@ public class StreamStoppedController extends StandaloneEventProcessorDeclarerSin
 
 	@Override
 	public ConfiguredEventProcessor<StreamStoppedParameter, EventProcessor<StreamStoppedParameter>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		String topic = SepaUtils.getFreeTextStaticPropertyValue(sepa, "topic");
 		StreamStoppedParameter staticParam = new StreamStoppedParameter(sepa, topic);
 

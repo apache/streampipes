@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 public class RamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
-	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source-ram", "Ram", "Ram");
+	public DataSourceDescription declareModel() {
+		DataSourceDescription sep = new DataSourceDescription("source-ram", "Ram", "Ram");
 		return sep;
 	}
 

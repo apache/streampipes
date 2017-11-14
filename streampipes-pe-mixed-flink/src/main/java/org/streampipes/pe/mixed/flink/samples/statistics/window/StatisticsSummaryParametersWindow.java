@@ -1,6 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.statistics.window;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.concurrent.TimeUnit;
@@ -18,11 +18,11 @@ public class StatisticsSummaryParametersWindow extends EventProcessorBindingPara
 
 
 
-  public StatisticsSummaryParametersWindow(SepaInvocation graph) {
+  public StatisticsSummaryParametersWindow(DataProcessorInvocation graph) {
     super(graph);
   }
 
-  public StatisticsSummaryParametersWindow(SepaInvocation graph, String valueToObserve,
+  public StatisticsSummaryParametersWindow(DataProcessorInvocation graph, String valueToObserve,
                                            String timestampMapping, String groupBy, Long
                                                    timeWindowSize, TimeUnit timeUnit) {
     super(graph);

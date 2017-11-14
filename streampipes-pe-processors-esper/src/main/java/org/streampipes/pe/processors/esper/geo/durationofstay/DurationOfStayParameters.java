@@ -1,7 +1,7 @@
 package org.streampipes.pe.processors.esper.geo.durationofstay;
 
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class DurationOfStayParameters extends EventProcessorBindingParams {
@@ -13,7 +13,7 @@ public class DurationOfStayParameters extends EventProcessorBindingParams {
 	private String partitionMapping;
 	private String timestampMapping;
 
-	public DurationOfStayParameters(SepaInvocation invocationGraph,
+	public DurationOfStayParameters(DataProcessorInvocation invocationGraph,
 			GeofencingData geofencingData, String latitudeMapping, String longitudeMapping, String partitionMapping, String timestampMapping) {
 		super(invocationGraph);
 		this.geofencingData = geofencingData;

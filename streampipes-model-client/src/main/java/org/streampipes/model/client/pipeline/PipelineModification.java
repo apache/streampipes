@@ -1,8 +1,8 @@
 package org.streampipes.model.client.pipeline;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class PipelineModification {
 	List<PipelineModificationErrorDescription> errorDescriptions;
 	List<StaticProperty> staticProperties;
 	List<OutputStrategy> outputStrategies;
-	List<EventStream> inputStreams;
+	List<SpDataStream> inputStreams;
 	
 	public PipelineModification(String domId, String elementId,
 			List<StaticProperty> staticProperties) {
@@ -63,15 +63,15 @@ public class PipelineModification {
 		this.outputStrategies = outputStrategies;
 	}
 
-	public List<EventStream> getInputStreams() {
+	public List<SpDataStream> getInputStreams() {
 		return inputStreams;
 	}
 
-	public void setInputStreams(List<EventStream> inputStreams) {
+	public void setInputStreams(List<SpDataStream> inputStreams) {
 		this.inputStreams = inputStreams;
 	}
 
-	public void addInputStream(EventStream inputStream) {
+	public void addInputStream(SpDataStream inputStream) {
 		this.inputStreams.add(inputStream);
 	}
 }

@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.pe.processors.esper.compose.ComposeController;
 import org.streampipes.storage.util.Transformer;
 
@@ -19,7 +19,7 @@ public class TestCompose {
 	
 	public static void main(String[] args) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException
 	{
-		SepaInvocation graph = Transformer.fromJsonLd(SepaInvocation.class, FileUtils.readFileToString(new File("src/test/resources/TestCompose.jsonld"), "UTF-8"));
+		DataProcessorInvocation graph = Transformer.fromJsonLd(DataProcessorInvocation.class, FileUtils.readFileToString(new File("src/test/resources/TestCompose.jsonld"), "UTF-8"));
 		new ComposeController().invokeRuntime(graph);
 	}
 

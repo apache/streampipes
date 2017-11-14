@@ -3,10 +3,10 @@ package org.streampipes.manager.matching.output;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.output.AppendOutputStrategy;
 
 public class AppendOutputSchemaGenerator implements OutputSchemaGenerator<AppendOutputStrategy> {
 
@@ -21,15 +21,15 @@ public class AppendOutputSchemaGenerator implements OutputSchemaGenerator<Append
 	}
 	
 	@Override
-	public EventSchema buildFromOneStream(EventStream stream) {
+	public EventSchema buildFromOneStream(SpDataStream stream) {
 		properties.addAll(stream.getEventSchema().getEventProperties());
 		properties.addAll(renameDuplicates(stream.getEventSchema().getEventProperties()));
 		return new EventSchema(properties);
 	}
 
 	@Override
-	public EventSchema buildFromTwoStreams(EventStream stream1,
-			EventStream stream2) {
+	public EventSchema buildFromTwoStreams(SpDataStream stream1,
+			SpDataStream stream2) {
 		properties.addAll(renameDuplicates(stream1.getEventSchema().getEventProperties()));
 		properties.addAll(renameDuplicates(stream2.getEventSchema().getEventProperties()));
 		return new EventSchema(properties);

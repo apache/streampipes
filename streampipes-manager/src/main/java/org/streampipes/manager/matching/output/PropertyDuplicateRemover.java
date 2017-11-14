@@ -1,9 +1,9 @@
 package org.streampipes.manager.matching.output;
 
 import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.net.URI;
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
 package org.streampipes.pe.sources.kd2.streams;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.kd2.config.Kd2Variables;
 import org.streampipes.pe.sources.kd2.utils.BiodataUtils;
 
@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class HeartRateStream extends AbstractBioDataStream {
     @Override
-    public EventStream declareModel(SepDescription sep) {
-        EventStream stream = prepareStream(Kd2Variables.HeartRate.topic());
+    public SpDataStream declareModel(DataSourceDescription sep) {
+        SpDataStream stream = prepareStream(Kd2Variables.HeartRate.topic());
 
         EventSchema schema = new EventSchema();
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();

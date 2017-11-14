@@ -1,8 +1,8 @@
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 
-public interface SemanticEventConsumerDeclarer extends InvocableDeclarer<SecDescription, SecInvocation> {
+public interface SemanticEventConsumerDeclarer extends InvocableDeclarer<DataSinkDescription, DataSinkInvocation> {
 
 }

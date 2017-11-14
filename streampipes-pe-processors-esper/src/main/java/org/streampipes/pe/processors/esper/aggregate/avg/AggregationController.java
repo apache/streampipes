@@ -1,16 +1,17 @@
 package org.streampipes.pe.processors.esper.aggregate.avg;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.wrapper.ConfiguredEventProcessor;
@@ -23,17 +24,17 @@ import java.util.List;
 public class AggregationController extends StandaloneEventProcessorDeclarerSingleton<AggregationParameter> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
     return ProcessingElementBuilder.create("aggregation", "Aggregation", "Performs different " +
             "aggregation functions")
-            .category(EpaType.AGGREGATE)
+            .category(DataProcessorType.AGGREGATE)
             .iconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
             .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), "aggregate",
                     "Property Selection", "Specifies the event property from your stream that should be aggregated.")
             .naryMappingPropertyWithoutRequirement("groupBy", "Group by", "Partitions the incoming stream by the selected event " +
                     "properties")
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp("aggregatedValue",
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), "aggregatedValue",
                     "http://schema.org/Number")))
             .requiredIntegerParameter("outputEvery", "Output Frequency", "Output values every " +
                     "(seconds")
@@ -49,7 +50,7 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
 
   @Override
   public ConfiguredEventProcessor<AggregationParameter, EventProcessor<AggregationParameter>> onInvocation
-          (SepaInvocation sepa) {
+          (DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa, "groupBy", true);

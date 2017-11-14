@@ -1,13 +1,12 @@
 package org.streampipes.pe.sources.samples.random;
 
-import java.util.Optional;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.MessageFormat;
+
+import java.util.Optional;
 
 public class RandomNumberStreamJson extends RandomNumberStream {
 
@@ -18,8 +17,8 @@ public class RandomNumberStreamJson extends RandomNumberStream {
 	}
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
-		EventStream stream = prepareStream(TOPIC, MessageFormat.Json);
+	public SpDataStream declareModel(DataSourceDescription sep) {
+		SpDataStream stream = prepareStream(TOPIC, MessageFormat.Json);
 		stream.setName("Random Number Stream (JSON)");
 		stream.setDescription("Random Number Stream Description");
 		stream.setUri(sep.getUri() + "/numberjson");

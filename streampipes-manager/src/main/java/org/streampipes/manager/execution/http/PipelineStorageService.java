@@ -3,10 +3,10 @@ package org.streampipes.manager.execution.http;
 import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphBuilder;
 import org.streampipes.manager.matching.InvocationGraphBuilder;
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.storage.controller.StorageManager;
 
 import java.util.List;
@@ -26,10 +26,10 @@ public class PipelineStorageService {
     public void addPipeline() {
         PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
         InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
-        List<InvocableSEPAElement> graphs = builder.buildGraphs();
+        List<InvocableStreamPipesEntity> graphs = builder.buildGraphs();
 
-        List<SecInvocation> secs = filter(graphs, SecInvocation.class);
-        List<SepaInvocation> sepas = filter(graphs, SepaInvocation.class);
+        List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
+        List<DataProcessorInvocation> sepas = filter(graphs, DataProcessorInvocation.class);
 
         pipeline.setSepas(sepas);
         pipeline.setActions(secs);
@@ -37,7 +37,7 @@ public class PipelineStorageService {
         StorageManager.INSTANCE.getPipelineStorageAPI().store(pipeline);
     }
 
-    private <T> List<T> filter(List<InvocableSEPAElement> graphs, Class<T> clazz) {
+    private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {
         return graphs
                 .stream()
                 .filter(graph -> clazz.isInstance(graph))

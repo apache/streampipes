@@ -1,16 +1,17 @@
 package org.streampipes.pe.processors.esper.proasense.hella.shuttletime;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
@@ -29,10 +30,10 @@ import java.util.List;
 public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingleton<ShuttleTimeParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("shuttletime", "Shuttle Time", "Calculates the time a shuttle needs between the lacquering line and each moulding machine.");
-		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("shuttletime", "Shuttle Time", "Calculates the time a shuttle needs between the lacquering line and each moulding machine.");
+		desc.setCategory(Arrays.asList(DataProcessorType.ALGORITHM.name()));
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#montracEvent").build();
 		EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#shuttleId").build();
@@ -43,7 +44,7 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingl
 		eventProperties.add(e3);
 		eventProperties.add(e4);
 		
-		EventStream stream1 = StreamBuilder
+		SpDataStream stream1 = StreamBuilder
 				.createStreamRestriction(EsperConfig.serverUrl +"/" + desc.getElementId())
 				.schema(
 						SchemaBuilder.create()
@@ -53,10 +54,12 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingl
 		desc.addEventStream(stream1);
 		
 		FixedOutputStrategy strategy = new FixedOutputStrategy();
-		EventProperty p1 = EpProperties.stringEp("lacqueringLineId", "http://hella.de/hella#lacqueringLineId");
-		EventProperty p2 = EpProperties.stringEp("mouldingMachineId", "http://hella.de/hella#mouldingMachineId");
-		EventProperty p3 = EpProperties.stringEp("shuttleId", "http://hella.de/hella#shuttleId");
-		EventProperty p4 = EpProperties.longEp("timeDifference", SO.Number);
+		EventProperty p1 = EpProperties.stringEp(Labels.empty(), "lacqueringLineId", "http://hella" +
+						".de/hella#lacqueringLineId");
+		EventProperty p2 = EpProperties.stringEp(Labels.empty(), "mouldingMachineId", "http://hella" +
+						".de/hella#mouldingMachineId");
+		EventProperty p3 = EpProperties.stringEp(Labels.empty(), "shuttleId", "http://hella.de/hella#shuttleId");
+		EventProperty p4 = EpProperties.longEp(Labels.empty(), "timeDifference", SO.Number);
 		
 		List<EventProperty> properties = Arrays.asList(p1, p2, p3, p4);
 		
@@ -84,7 +87,7 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingl
 
 	@Override
 	public ConfiguredEventProcessor<ShuttleTimeParameters, EventProcessor<ShuttleTimeParameters>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		List<String> selectProperties = new ArrayList<>();
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());

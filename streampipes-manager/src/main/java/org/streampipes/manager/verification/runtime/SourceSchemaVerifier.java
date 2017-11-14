@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.streampipes.manager.verification.messages.VerificationResult;
 import org.streampipes.manager.verification.structure.Verifier;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 public class SourceSchemaVerifier implements Verifier {
 
-	private SepDescription sep;
+	private DataSourceDescription sep;
 	
-	public SourceSchemaVerifier(SepDescription sep) {
+	public SourceSchemaVerifier(DataSourceDescription sep) {
 		this.sep = sep;
 	}
 	

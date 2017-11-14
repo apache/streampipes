@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;
 import java.util.Collections;

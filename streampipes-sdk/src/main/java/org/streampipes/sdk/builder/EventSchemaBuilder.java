@@ -1,7 +1,7 @@
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.EventProperty;
 
 import java.util.ArrayList;
 import java.util.List;

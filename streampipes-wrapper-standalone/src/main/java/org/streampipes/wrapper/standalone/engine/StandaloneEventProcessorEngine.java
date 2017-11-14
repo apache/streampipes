@@ -1,6 +1,6 @@
 package org.streampipes.wrapper.standalone.engine;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.routing.SpOutputCollector;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -36,7 +36,7 @@ public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBin
     onDetach();
   }
 
-  public abstract void onInvocation(B params, SepaInvocation graph);
+  public abstract void onInvocation(B params, DataProcessorInvocation graph);
 
   public abstract void onEvent(Map<String, Object> event, String sourceInfo, SpOutputCollector
           collector);

@@ -1,8 +1,8 @@
 package org.streampipes.wrapper.params.binding;
 
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.util.SchemaUtils;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class InputStreamParams implements Serializable {
 	
 	private static String topicPrefix = "topic://";
 	
-	public InputStreamParams(EventStream inputStream) {
+	public InputStreamParams(SpDataStream inputStream) {
 		super();
 		this.eventGrounding = inputStream.getEventGrounding();
 		this.inName = eventGrounding.getTransportProtocol().getTopicName();

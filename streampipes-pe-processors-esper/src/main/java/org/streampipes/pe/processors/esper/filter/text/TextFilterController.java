@@ -1,8 +1,8 @@
 package org.streampipes.pe.processors.esper.filter.text;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.StringOperator;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -21,10 +21,10 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDecla
 public class TextFilterController extends StandaloneEventProcessorDeclarerSingleton<TextFilterParameter> {
 	
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("textfilter", "Text Filter", "Text Filter Description")
 						.iconUrl(EsperConfig.getIconUrl("Textual_Filter_Icon_HQ"))
-						.category(EpaType.FILTER)
+						.category(DataProcessorType.FILTER)
 						.requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),"text", "Select Text Property", "")
 						.requiredSingleValueSelection("operation", "Select Operation", "", Options.from("MATCHES", "CONTAINS"))
 						.requiredTextParameter("keyword", "Select Keyword", "")
@@ -36,7 +36,7 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 
 	@Override
 	public ConfiguredEventProcessor<TextFilterParameter, EventProcessor<TextFilterParameter>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
 
 		String keyword = extractor.singleValueParameter("keyword", String.class);

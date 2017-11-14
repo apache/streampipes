@@ -9,13 +9,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 
 public class FlinkSecProgramGenerator extends Generator {
 
-	public FlinkSecProgramGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public FlinkSecProgramGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 	}
 

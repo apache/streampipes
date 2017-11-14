@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.proximity;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class ProximityParameters extends EventProcessorBindingParams {
@@ -14,7 +14,7 @@ public class ProximityParameters extends EventProcessorBindingParams {
 	private String lngProperty;
 	
 	
-	public ProximityParameters(SepaInvocation graph, List<Location> proximityLocations, double distance, String latProperty, String lngProperty) {
+	public ProximityParameters(DataProcessorInvocation graph, List<Location> proximityLocations, double distance, String latProperty, String lngProperty) {
 		super(graph);
 		this.proximityLocations = proximityLocations;
 		this.distance = distance;

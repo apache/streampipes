@@ -2,15 +2,15 @@ package org.streampipes.pe.processors.esper.absence;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
@@ -25,13 +25,13 @@ import java.util.List;
 public class AbsenceController extends StandaloneEventProcessorDeclarerSingleton<AbsenceParameters> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
-    EventStream stream1 = new EventStream();
-    EventStream stream2 = new EventStream();
+    SpDataStream stream1 = new SpDataStream();
+    SpDataStream stream2 = new SpDataStream();
 
-    SepaDescription desc = new SepaDescription("absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
-    desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+    DataProcessorDescription desc = new DataProcessorDescription("absence", "Absence", "Detects whether an event does not arrive within a specified time after the occurrence of another event.");
+    desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
 
     stream1.setUri(EsperConfig.serverUrl + "/" + Utils.getRandomString());
     stream2.setUri(EsperConfig.serverUrl + "/" + Utils.getRandomString());
@@ -51,7 +51,7 @@ public class AbsenceController extends StandaloneEventProcessorDeclarerSingleton
   }
 
   @Override
-  public ConfiguredEventProcessor<AbsenceParameters, EventProcessor<AbsenceParameters>> onInvocation(SepaInvocation sepa) {
+  public ConfiguredEventProcessor<AbsenceParameters, EventProcessor<AbsenceParameters>> onInvocation(DataProcessorInvocation sepa) {
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {

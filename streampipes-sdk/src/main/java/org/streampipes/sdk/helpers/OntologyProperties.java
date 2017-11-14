@@ -1,6 +1,6 @@
 package org.streampipes.sdk.helpers;
 
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 
 public class OntologyProperties {
 

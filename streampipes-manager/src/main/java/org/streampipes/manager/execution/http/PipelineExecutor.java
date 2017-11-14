@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.lightcouch.DocumentConflictException;
 
 import org.streampipes.manager.execution.status.PipelineStatusManager;
@@ -14,9 +14,9 @@ import org.streampipes.manager.util.TemporaryGraphStorage;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.model.client.pipeline.PipelineStatusMessage;
 import org.streampipes.model.client.pipeline.PipelineStatusMessageType;
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.storage.controller.StorageManager;
 
 public class PipelineExecutor {
@@ -37,10 +37,10 @@ public class PipelineExecutor {
 	public PipelineOperationStatus startPipeline()
 	{
 
-		List<SepaInvocation> sepas = pipeline.getSepas();
-		List<SecInvocation> secs = pipeline.getActions();
+		List<DataProcessorInvocation> sepas = pipeline.getSepas();
+		List<DataSinkInvocation> secs = pipeline.getActions();
 
-		List<InvocableSEPAElement> graphs = new ArrayList<>();
+		List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
 		graphs.addAll(sepas);
 		graphs.addAll(secs);
 
@@ -64,7 +64,7 @@ public class PipelineExecutor {
 	
 	public PipelineOperationStatus stopPipeline()
 	{
-		List<InvocableSEPAElement> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
+		List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
 		PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs).detachGraphs();
 		
 		if (status.isSuccess())
@@ -97,7 +97,7 @@ public class PipelineExecutor {
 		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
 	}
 	
-	private void storeInvocationGraphs(String pipelineId, List<InvocableSEPAElement> graphs)
+	private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs)
 	{
 		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
 	}

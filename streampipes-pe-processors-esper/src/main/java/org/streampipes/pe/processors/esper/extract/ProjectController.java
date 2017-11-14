@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.extract;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -21,9 +21,9 @@ import java.util.List;
 public class ProjectController extends StandaloneEventProcessorDeclarerSingleton<ProjectParameter> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("project", "Projection", "Outputs a selectable subset of an input event type")
-            .category(EpaType.TRANSFORM)
+            .category(DataProcessorType.TRANSFORM)
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .outputStrategy(OutputStrategies.custom())
             .supportedFormats(SupportedFormats.jsonFormat())
@@ -33,7 +33,7 @@ public class ProjectController extends StandaloneEventProcessorDeclarerSingleton
 
   @Override
   public ConfiguredEventProcessor<ProjectParameter, EventProcessor<ProjectParameter>>
-  onInvocation(SepaInvocation sepa) {
+  onInvocation(DataProcessorInvocation sepa) {
     List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 
     for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {

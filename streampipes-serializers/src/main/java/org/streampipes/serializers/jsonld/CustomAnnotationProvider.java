@@ -1,55 +1,54 @@
 package org.streampipes.serializers.jsonld;
 
 import org.streampipes.empire.core.empire.util.EmpireAnnotationProvider;
-import org.streampipes.model.impl.ApplicationLink;
-import org.streampipes.model.impl.ElementStatusInfoSettings;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.eventproperty.Enumeration;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.eventproperty.QuantitativeValue;
-import org.streampipes.model.impl.eventproperty.ValueSpecification;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.ListOutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
-import org.streampipes.model.impl.output.ReplaceOutputStrategy;
-import org.streampipes.model.impl.output.UriPropertyMapping;
-import org.streampipes.model.impl.quality.Accuracy;
-import org.streampipes.model.impl.quality.EventPropertyQualityRequirement;
-import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
-import org.streampipes.model.impl.quality.Frequency;
-import org.streampipes.model.impl.quality.Latency;
-import org.streampipes.model.impl.quality.MeasurementCapability;
-import org.streampipes.model.impl.quality.MeasurementObject;
-import org.streampipes.model.impl.quality.MeasurementProperty;
-import org.streampipes.model.impl.quality.MeasurementRange;
-import org.streampipes.model.impl.quality.Precision;
-import org.streampipes.model.impl.quality.Resolution;
-import org.streampipes.model.impl.staticproperty.AnyStaticProperty;
-import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.output.ReplaceOutputStrategy;
+import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.quality.Accuracy;
+import org.streampipes.model.quality.EventPropertyQualityRequirement;
+import org.streampipes.model.quality.EventStreamQualityRequirement;
+import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.quality.Latency;
+import org.streampipes.model.quality.MeasurementCapability;
+import org.streampipes.model.quality.MeasurementObject;
+import org.streampipes.model.quality.MeasurementProperty;
+import org.streampipes.model.quality.MeasurementRange;
+import org.streampipes.model.quality.Precision;
+import org.streampipes.model.quality.Resolution;
+import org.streampipes.model.schema.Enumeration;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.QuantitativeValue;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -80,11 +79,11 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             EventPropertyNested.class,
             EventPropertyPrimitive.class,
             MatchingStaticProperty.class,
-            SecDescription.class,
-            SepaInvocation.class,
+            DataSinkDescription.class,
+            DataProcessorInvocation.class,
             FixedOutputStrategy.class,
             AppendOutputStrategy.class,
-            EventStream.class,
+            SpDataStream.class,
             Accuracy.class,
             EventPropertyQualityRequirement.class,
             EventStreamQualityRequirement.class,
@@ -95,16 +94,16 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             Precision.class,
             Resolution.class,
             EventGrounding.class,
-            SepDescription.class,
-            SepaDescription.class,
-            RenameOutputStrategy.class,
+            DataSourceDescription.class,
+            DataProcessorDescription.class,
+            KeepOutputStrategy.class,
             OneOfStaticProperty.class,
             RemoteOneOfStaticProperty.class,
             AnyStaticProperty.class,
             FreeTextStaticProperty.class,
             Option.class,
             MappingProperty.class,
-            SecInvocation.class,
+            DataSinkInvocation.class,
             TransportFormat.class,
             JmsTransportProtocol.class,
             KafkaTransportProtocol.class,
@@ -118,7 +117,6 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             UriPropertyMapping.class,
             MeasurementCapability.class,
             MeasurementObject.class,
-            ValueSpecification.class,
             Enumeration.class,
             QuantitativeValue.class,
             ApplicationLink.class,

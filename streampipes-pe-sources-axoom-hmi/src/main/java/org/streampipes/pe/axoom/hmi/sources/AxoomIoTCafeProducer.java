@@ -6,7 +6,7 @@ import org.streampipes.pe.axoom.hmi.streams.MaintenanceStream;
 import org.streampipes.pe.axoom.hmi.streams.OrderStream;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sdk.builder.DataSourceBuilder;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
 public class AxoomIoTCafeProducer implements SemanticEventProducerDeclarer {
 
   @Override
-  public SepDescription declareModel() {
+  public DataSourceDescription declareModel() {
     return DataSourceBuilder.create("axoom-hmi-cafe", "Axoom IoT Cafeteria", "Source that " +
             "provides " +
             "data " +

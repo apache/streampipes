@@ -5,8 +5,8 @@ import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.RunningInstances;
 import org.streampipes.container.util.Util;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.graph.DataSinkInvocation;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/sec")
-public class SecElement extends InvocableElement<SecInvocation, SemanticEventConsumerDeclarer> {
+public class SecElement extends InvocableElement<DataSinkInvocation, SemanticEventConsumerDeclarer> {
 
     public SecElement() {
-        super(SecInvocation.class);
+        super(DataSinkInvocation.class);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class SecElement extends InvocableElement<SecInvocation, SemanticEventCon
     public Response getHtml(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
 
         InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
-        NamedSEPAElement description = RunningInstances.INSTANCE.getDescription(runningInstanceId);
+        NamedStreamPipesEntity description = RunningInstances.INSTANCE.getDescription(runningInstanceId);
 
         if (runningInstance != null && runningInstance instanceof SemanticEventConsumerDeclarer && description != null
-                && description instanceof SecInvocation) {
+                && description instanceof DataSinkInvocation) {
 
             SemanticEventConsumerDeclarer instanceDeclarer = (SemanticEventConsumerDeclarer) runningInstance;
-            SecInvocation desctionDeclarer = (SecInvocation) description;
+            DataSinkInvocation desctionDeclarer = (DataSinkInvocation) description;
 
             // TODO was previous getHtml, do we still need the whole method?
             return getResponse("HTML removed");

@@ -3,7 +3,7 @@ package org.streampipes.messaging.jms;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.streampipes.model.impl.JmsTransportProtocol;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 
 import javax.jms.*;
 

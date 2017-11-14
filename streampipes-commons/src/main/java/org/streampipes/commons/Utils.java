@@ -68,11 +68,11 @@ public class Utils {
 	{
 		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 
-		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+		writer.handleNamespace("sp", "https://streampipes.org/vocabulary/v1/");
 		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
 		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
 		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+		writer.handleNamespace("spi", "urn:streampipes.org:spi:");
 
 		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);

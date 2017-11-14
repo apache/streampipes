@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 
 public class PipelineVerificationUtils {
@@ -17,13 +17,13 @@ public class PipelineVerificationUtils {
 	 * @throws Exception
 	 */
 
-	public static InvocableSEPAElement getRootNode(Pipeline pipeline) throws NoSepaInPipelineException
+	public static InvocableStreamPipesEntity getRootNode(Pipeline pipeline) throws NoSepaInPipelineException
 	{
-		List<InvocableSEPAElement> elements = new ArrayList<>();
+		List<InvocableStreamPipesEntity> elements = new ArrayList<>();
 		elements.addAll(pipeline.getSepas());
 		elements.addAll(pipeline.getActions());
 
-		List<InvocableSEPAElement> unconfiguredElements = elements
+		List<InvocableStreamPipesEntity> unconfiguredElements = elements
 				.stream()
 				.filter(e -> !e.isConfigured())
 				.collect(Collectors.toList());

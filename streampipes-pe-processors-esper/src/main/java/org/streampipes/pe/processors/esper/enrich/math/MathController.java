@@ -1,11 +1,12 @@
 package org.streampipes.pe.processors.esper.enrich.math;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -26,15 +27,15 @@ import java.util.List;
 public class MathController extends StandaloneEventProcessorDeclarerSingleton<MathParameter> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
     return ProcessingElementBuilder.create("math", "Math EPA",
             "performs simple calculations on event properties")
             .iconUrl(EsperConfig.getIconUrl("math-icon"))
-            .category(EpaType.ALGORITHM)
+            .category(DataProcessorType.ALGORITHM)
             .requiredPropertyStream1WithNaryMapping(EpRequirements.numberReq(), "leftOperand", "Select left operand", "")
             .requiredPropertyStream1WithNaryMapping(EpRequirements.numberReq(), "rightOperand", "Select right operand", "")
-            .outputStrategy(OutputStrategies.append(EpProperties.longEp("result", SO.Number)))
+            .outputStrategy(OutputStrategies.append(EpProperties.longEp(Labels.empty(), "result", SO.Number)))
             .requiredSingleValueSelection("operation", "Select Operation", "", Options.from("+", "-", "/", "*"))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
@@ -42,7 +43,7 @@ public class MathController extends StandaloneEventProcessorDeclarerSingleton<Ma
   }
 
   @Override
-  public ConfiguredEventProcessor<MathParameter, EventProcessor<MathParameter>> onInvocation(SepaInvocation sepa) {
+  public ConfiguredEventProcessor<MathParameter, EventProcessor<MathParameter>> onInvocation(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String operation = extractor.selectedSingleValue("operation", String.class);

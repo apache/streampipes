@@ -2,8 +2,8 @@ package org.streampipes.wrapper.standalone.routing;
 
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.routing.SpInputCollector;
 import org.streampipes.wrapper.runtime.PipelineElement;
 import org.streampipes.wrapper.standalone.manager.ProtocolManager;

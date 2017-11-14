@@ -3,10 +3,10 @@ package org.streampipes.performance.dataprovider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang.RandomStringUtils;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;

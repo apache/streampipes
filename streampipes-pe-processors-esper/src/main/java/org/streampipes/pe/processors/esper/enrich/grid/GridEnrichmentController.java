@@ -1,10 +1,10 @@
 package org.streampipes.pe.processors.esper.enrich.grid;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -26,23 +26,24 @@ import java.util.List;
 public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSingleton<GridEnrichmentParameter> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
     return ProcessingElementBuilder.create("grid", "Grid Cell Grouping",
             "Groups location-based events into cells of a given size")
-            .category(EpaType.ENRICH)
+            .category(DataProcessorType.ENRICH)
             .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat), "latitude", "Select Latitude Mapping", "")
             .requiredPropertyStream1WithNaryMapping(EpRequirements.domainPropertyReq(Geo.lng), "longitude", "Select Longitude Mapping", "")
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
-            .outputStrategy(OutputStrategies.append(EpProperties.nestedEp("cellOptions", EpProperties.integerEp
-                            ("cellX", "http://schema.org/Number"),
-                    EpProperties.integerEp("cellY", "http://schema.org/Number"),
-                    EpProperties.doubleEp("latitudeNW", "http://test.de/latitude"),
-                    EpProperties.doubleEp("longitudeNW", "http://test.de/longitude"),
-                    EpProperties.doubleEp("latitudeSE", "http://test.de/latitude"),
-                    EpProperties.doubleEp("longitudeSE", "http://test.de/longitude"),
-                    EpProperties.integerEp("cellSize", "http://schema.org/Number"))))
+            .outputStrategy(OutputStrategies.append(EpProperties.nestedEp(Labels.empty(), "cellOptions", EpProperties
+                            .integerEp
+                            (Labels.empty(), "cellX", "http://schema.org/Number"),
+                    EpProperties.integerEp(Labels.empty(), "cellY", "http://schema.org/Number"),
+                    EpProperties.doubleEp(Labels.empty(), "latitudeNW", "http://test.de/latitude"),
+                    EpProperties.doubleEp(Labels.empty(), "longitudeNW", "http://test.de/longitude"),
+                    EpProperties.doubleEp(Labels.empty(), "latitudeSE", "http://test.de/latitude"),
+                    EpProperties.doubleEp(Labels.empty(), "longitudeSE", "http://test.de/longitude"),
+                    EpProperties.integerEp(Labels.empty(), "cellSize", "http://schema.org/Number"))))
             .requiredIntegerParameter("cellSize", "The size of a cell in meters", "", 0, 10000, 100)
             .requiredOntologyConcept(Labels.from("startingCell", "Starting cell (upper left corner)", "Select a " +
                     "valid location."), OntologyProperties.mandatory(Geo.lat), OntologyProperties.mandatory(Geo.lng))
@@ -52,7 +53,7 @@ public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSi
 
   @Override
   public ConfiguredEventProcessor<GridEnrichmentParameter, EventProcessor<GridEnrichmentParameter>> onInvocation
-          (SepaInvocation sepa) {
+          (DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     Integer cellSize =extractor.singleValueParameter("cellSize", Integer.class);

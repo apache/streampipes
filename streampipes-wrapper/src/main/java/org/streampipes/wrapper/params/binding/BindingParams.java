@@ -1,6 +1,6 @@
 package org.streampipes.wrapper.params.binding;
 
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.util.SchemaUtils;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BindingParams<I extends InvocableSEPAElement> {
+public abstract class BindingParams<I extends InvocableStreamPipesEntity> {
 
   protected I graph;
   private List<InputStreamParams> inputStreamParams = new ArrayList<>();

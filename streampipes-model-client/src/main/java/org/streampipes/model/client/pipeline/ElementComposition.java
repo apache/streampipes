@@ -1,7 +1,7 @@
 package org.streampipes.model.client.pipeline;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
@@ -12,10 +12,10 @@ import java.util.List;
 public abstract class ElementComposition {
 
 	@OneToMany(cascade=CascadeType.ALL)
-	protected List<SepaInvocation> sepas;
+	protected List<DataProcessorInvocation> sepas;
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	protected List<EventStream> streams;
+	protected List<SpDataStream> streams;
 	
 	protected String name;
 	protected String description;
@@ -25,19 +25,19 @@ public abstract class ElementComposition {
 		this.streams = new ArrayList<>();
 	}
 
-	public List<SepaInvocation> getSepas() {
+	public List<DataProcessorInvocation> getSepas() {
 		return sepas;
 	}
 
-	public void setSepas(List<SepaInvocation> sepas) {
+	public void setSepas(List<DataProcessorInvocation> sepas) {
 		this.sepas = sepas;
 	}
 
-	public List<EventStream> getStreams() {
+	public List<SpDataStream> getStreams() {
 		return streams;
 	}
 
-	public void setStreams(List<EventStream> streams) {
+	public void setStreams(List<SpDataStream> streams) {
 		this.streams = streams;
 	}
 	

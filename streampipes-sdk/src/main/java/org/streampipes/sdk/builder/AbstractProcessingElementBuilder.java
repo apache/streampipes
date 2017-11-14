@@ -1,23 +1,23 @@
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.staticproperty.AnyStaticProperty;
-import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.StreamIdentifier;
@@ -30,10 +30,10 @@ import java.util.List;
 /**
  * Created by riemer on 04.12.2016.
  */
-public abstract class AbstractProcessingElementBuilder<BU extends AbstractProcessingElementBuilder<BU, T>, T extends ConsumableSEPAElement> extends AbstractPipelineElementBuilder<BU, T> {
+public abstract class AbstractProcessingElementBuilder<BU extends AbstractProcessingElementBuilder<BU, T>, T extends ConsumableStreamPipesEntity> extends AbstractPipelineElementBuilder<BU, T> {
 
   protected List<StaticProperty> staticProperties;
-  protected List<EventStream> streamRequirements;
+  protected List<SpDataStream> streamRequirements;
 
   protected List<EventProperty> stream1Properties;
   protected List<EventProperty> stream2Properties;
@@ -53,7 +53,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     this.supportedGrounding = new EventGrounding();
   }
 
-  public BU requiredStream(EventStream stream) {
+  public BU requiredStream(SpDataStream stream) {
     this.streamRequirements.add(stream);
     return me();
   }
@@ -335,12 +335,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     }
 
     this.elementDescription.setSupportedGrounding(supportedGrounding);
-    this.elementDescription.setEventStreams(streamRequirements);
+    this.elementDescription.setSpDataStreams(streamRequirements);
 
   }
 
-  private EventStream buildStream(List<EventProperty> streamProperties) {
-    EventStream stream = new EventStream();
+  private SpDataStream buildStream(List<EventProperty> streamProperties) {
+    SpDataStream stream = new SpDataStream();
     stream.setEventSchema(new EventSchema(streamProperties));
     return stream;
   }

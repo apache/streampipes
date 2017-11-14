@@ -3,10 +3,10 @@ package org.streampipes.pe.processors.esper.filter.advancedtextfilter;
 import com.google.common.io.Resources;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.container.util.DeclarerUtils;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.wrapper.ConfiguredEventProcessor;
 import org.streampipes.wrapper.runtime.EventProcessor;
@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class AdvancedTextFilterController extends StandaloneEventProcessorDeclarerSingleton<AdvancedTextFilterParameters> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
 
     try {
-      return DeclarerUtils.descriptionFromResources(Resources.getResource("advancedtextfilter.jsonld"), SepaDescription.class);
+      return DeclarerUtils.descriptionFromResources(Resources.getResource("advancedtextfilter.jsonld"), DataProcessorDescription.class);
     } catch (SepaParseException e) {
       e.printStackTrace();
       return null;
@@ -31,7 +31,7 @@ public class AdvancedTextFilterController extends StandaloneEventProcessorDeclar
 
   @Override
   public ConfiguredEventProcessor<AdvancedTextFilterParameters, EventProcessor<AdvancedTextFilterParameters>>
-  onInvocation(SepaInvocation sepa) {
+  onInvocation(DataProcessorInvocation sepa) {
     String operation = SepaUtils.getOneOfProperty(sepa, "operatoin");
     CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "collection", CollectionStaticProperty.class);
     String propertyName = SepaUtils.getMappingPropertyName(sepa, "text-mapping");

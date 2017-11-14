@@ -5,7 +5,7 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.controller.StorageManager;
 
@@ -17,14 +17,14 @@ public class TestTransformation {
 
 	public static void main(String[] args)
 	{
-		List<SepaDescription> sepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
+		List<DataProcessorDescription> sepas = StorageManager.INSTANCE.getStorageAPI().getAllSEPAs();
 		
 		Graph graph;
 		try {
 			graph = new JsonLdTransformer().toJsonLd(sepas.get(0));
 			System.out.println(Utils.asString(graph));
 			
-			SepaDescription sepa = new JsonLdTransformer().fromJsonLd(Utils.asString(graph), SepaDescription.class);
+			DataProcessorDescription sepa = new JsonLdTransformer().fromJsonLd(Utils.asString(graph), DataProcessorDescription.class);
 			System.out.println(sepa.getElementId());
 			
 		} catch (IllegalAccessException e) {

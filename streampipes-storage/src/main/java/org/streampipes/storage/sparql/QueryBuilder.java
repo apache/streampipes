@@ -11,6 +11,7 @@ import org.streampipes.model.client.ontology.QuantitativeValueRange;
 import org.streampipes.model.client.ontology.RangeType;
 import org.streampipes.storage.util.BackgroundKnowledgeUtils;
 import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.List;
 
@@ -23,21 +24,21 @@ public class QueryBuilder {
 	public static final String RDFS_DESCRIPTION = "http://www.w3.org/2000/01/rdf-schema#description";
 	public static final String RDFS_RANGE = "http://www.w3.org/2000/01/rdf-schema#range";
 	public static final String RDFS_DOMAIN = "http://www.w3.org/2000/01/rdf-schema#domain";
-	public static final String SEPA = "http://sepa.event-processing.org/sepa#";
+	public static final String SP = StreamPipes.NS;
 	
 	public static final String SO_DOMAIN_INCLUDES = "http://schema.org/domainIncludes";
 	public static final String SO_RANGE_INCLUDES = "http://schema.org/rangeIncludes";
 	
 	public static String buildListSEPQuery() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("where { ?result rdf:type sepa:SemanticEventProducer }");
+		builder.append("where { ?result rdf:type sp:DataSourceDescription. }");
 
 		return builder.toString();
 	}
 
 	private static String getPrefix() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX sepa:<http://sepa.event-processing.org/sepa#>\n")
+		builder.append("PREFIX sp:<https://streampipes.org/vocabulary/v1/>\n")
 				.append("PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n");
 
 		return builder.toString();
@@ -46,7 +47,8 @@ public class QueryBuilder {
 	public static String getMatching() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix())
-				.append("select ?d where {?a rdf:type sepa:EventProperty. ?b rdf:type sepa:EventSchema. ?b sepa:hasEventProperty ?a. ?a sepa:hasPropertyName ?d}");
+				.append("select ?d where {?a rdf:type sp:EventProperty. ?b rdf:type sp:EventSchema. ?b " +
+								"sp:hasEventProperty ?a. ?a sp:hasPropertyName ?d}");
 		return builder.toString();
 	}
 
@@ -59,7 +61,7 @@ public class QueryBuilder {
 
 	public static String buildSEPByDomainQuery(String domain) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("where { ?result rdf:type sepa:SemanticEventProducer. ?result sepa:hasDomain '"
+		builder.append("where { ?result rdf:type sp:DataSourceDescription. ?result sp:hasDomain '"
 				+ domain + "'^^xsd:string }");
 
 		return builder.toString();
@@ -67,7 +69,7 @@ public class QueryBuilder {
 
 	public static String buildSEPAByDomainQuery(String domain) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("where { ?result rdf:type sepa:SemanticEventProcessingAgent. ?result sepa:hasDomain '"
+		builder.append("where { ?result rdf:type sp:DataProcessorDescription. ?result sp:hasDomain '"
 				+ domain + "'^^xsd:string }");
 
 		return builder.toString();
@@ -75,14 +77,14 @@ public class QueryBuilder {
 
 	public static String buildListSEPAQuery() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("where { ?result rdf:type sepa:SemanticEventProcessingAgent }");
+		builder.append("where { ?result rdf:type sp:DataProcessorDescription. }");
 
 		return builder.toString();
 	}
 
 	public static String buildListSECQuery() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("where { ?result rdf:type sepa:SemanticEventConsumer }");
+		builder.append("where { ?result rdf:type sp:DataSinkDescription }");
 
 		return builder.toString();
 	}
@@ -331,7 +333,7 @@ public class QueryBuilder {
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrefix() +" INSERT DATA {"
-				+ "sepa:domainProperty <" +RDFS_RANGE +"> " +"rdf:Property ."
+				+ "sp:domainProperty <" +RDFS_RANGE +"> " +"rdf:Property ."
 				+ " }");
 		return builder.toString();
 	}

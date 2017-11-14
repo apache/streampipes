@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.file;
 
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -18,8 +18,8 @@ public class FileController extends StandaloneEventSinkDeclarer<FileParameters> 
   private static final String PATH_KEY = "path";
 
   @Override
-  public SecDescription declareModel() {
-    SecDescription desc = DataSinkBuilder
+  public DataSinkDescription declareModel() {
+    DataSinkDescription desc = DataSinkBuilder
             .create("file", "File Output", "Writes the data in a csv file on the host system. The file name must be provided.")
             .iconUrl(ActionConfig.getIconUrl("file_icon"))
             .requiredStaticProperty(new FreeTextStaticProperty(PATH_KEY, "Path", "The path to the file " +
@@ -34,7 +34,7 @@ public class FileController extends StandaloneEventSinkDeclarer<FileParameters> 
 
 
   @Override
-  public ConfiguredEventSink<FileParameters, EventSink<FileParameters>> onInvocation(SecInvocation graph) {
+  public ConfiguredEventSink<FileParameters, EventSink<FileParameters>> onInvocation(DataSinkInvocation graph) {
     String path = getExtractor(graph).singleValueParameter(PATH_KEY, String.class);
 
     FileParameters params = new FileParameters(graph, path);

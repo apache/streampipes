@@ -1,22 +1,22 @@
 package org.streampipes.container.util;
 
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
 public class ElementInfo {
-    private NamedSEPAElement description;
+    private NamedStreamPipesEntity description;
     private InvocableDeclarer invocation;
 
-    public ElementInfo(NamedSEPAElement description, InvocableDeclarer invocation) {
+    public ElementInfo(NamedStreamPipesEntity description, InvocableDeclarer invocation) {
         this.description = description;
         this.invocation = invocation;
     }
 
-    public NamedSEPAElement getDescription() {
+    public NamedStreamPipesEntity getDescription() {
         return description;
     }
 
-    public void setDescription(NamedSEPAElement description) {
+    public void setDescription(NamedStreamPipesEntity description) {
         this.description = description;
     }
 

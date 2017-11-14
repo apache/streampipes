@@ -1,6 +1,6 @@
 package org.streampipes.messaging;
 
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.EventSchema;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;

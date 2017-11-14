@@ -4,8 +4,8 @@ import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.StaticProperties;
@@ -24,7 +24,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<SpatialGridEnrichmentParameters> {
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("grid", "Spatial Grid Enrichment", "Groups spatial " +
             "events into cells of a given size")
             .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
@@ -34,13 +34,13 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .outputStrategy(OutputStrategies.append(
-                    EpProperties.integerEp(SpatialGridConstants.GRID_X_KEY, SO.Number),
-                    EpProperties.integerEp(SpatialGridConstants.GRID_Y_KEY, SO.Number),
-                    EpProperties.doubleEp(SpatialGridConstants.GRID_LAT_NW_KEY, Geo.lat),
-                    EpProperties.doubleEp(SpatialGridConstants.GRID_LON_NW_KEY, Geo.lng),
-                    EpProperties.doubleEp(SpatialGridConstants.GRID_LAT_SE_KEY, Geo.lat),
-                    EpProperties.doubleEp(SpatialGridConstants.GRID_LON_SE_KEY, Geo.lng),
-                    EpProperties.integerEp(SpatialGridConstants.GRID_CELLSIZE_KEY, SO.Number)))
+                    EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_X_KEY, SO.Number),
+                    EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_Y_KEY, SO.Number),
+                    EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_NW_KEY, Geo.lat),
+                    EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_NW_KEY, Geo.lng),
+                    EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LAT_SE_KEY, Geo.lat),
+                    EpProperties.doubleEp(Labels.empty(), SpatialGridConstants.GRID_LON_SE_KEY, Geo.lng),
+                    EpProperties.integerEp(Labels.empty(), SpatialGridConstants.GRID_CELLSIZE_KEY, SO.Number)))
             .requiredIntegerParameter("cellsize", "Cell Size", "The size of a cell in meters",
                     100, 10000, 100)
             .requiredOntologyConcept(Labels.from("starting-cell", "Starting Location", "The " +
@@ -51,7 +51,7 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
   }
 
   @Override
-  protected FlinkSepaRuntime<SpatialGridEnrichmentParameters> getRuntime(SepaInvocation graph) {
+  protected FlinkSepaRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
 
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 

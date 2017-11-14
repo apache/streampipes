@@ -1,11 +1,11 @@
 package org.streampipes.storage.api;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,66 +13,66 @@ import java.util.List;
 
 public interface StorageRequests {
 	
-	boolean storeInvocableSEPAElement(InvocableSEPAElement element);
+	boolean storeInvocableSEPAElement(InvocableStreamPipesEntity element);
 
-	boolean storeSEP(SepDescription sep);
+	boolean storeSEP(DataSourceDescription sep);
 	
 	boolean storeSEP(String jsonld);
 	
-	boolean storeSEPA(SepaDescription sepa);
+	boolean storeSEPA(DataProcessorDescription sepa);
 	
 	boolean storeSEPA(String jsonld);
 	
-	SepDescription getSEPById(URI rdfId);
+	DataSourceDescription getSEPById(URI rdfId);
 	
-	SepDescription getSEPById(String rdfId) throws URISyntaxException;
+	DataSourceDescription getSEPById(String rdfId) throws URISyntaxException;
 	
-	SepaDescription getSEPAById(String rdfId) throws URISyntaxException;
+	DataProcessorDescription getSEPAById(String rdfId) throws URISyntaxException;
 	
-	SepaDescription getSEPAById(URI rdfId);
+	DataProcessorDescription getSEPAById(URI rdfId);
 	
-	SecDescription getSECById(String rdfId) throws URISyntaxException;
+	DataSinkDescription getSECById(String rdfId) throws URISyntaxException;
 	
-	SecDescription getSECById(URI rdfId);
+	DataSinkDescription getSECById(URI rdfId);
 	
-	List<SepDescription> getAllSEPs();
+	List<DataSourceDescription> getAllSEPs();
 	
-	List<SepaDescription> getAllSEPAs();
+	List<DataProcessorDescription> getAllSEPAs();
 	
-	List<SepDescription> getSEPsByDomain(String domain);
+	List<DataSourceDescription> getSEPsByDomain(String domain);
 	
-	List<SepaDescription> getSEPAsByDomain(String domain);
+	List<DataProcessorDescription> getSEPAsByDomain(String domain);
 	
-	boolean deleteSEP(SepDescription sep);
+	boolean deleteSEP(DataSourceDescription sep);
 	
 	boolean deleteSEP(String rdfId);
 	
-	boolean deleteSEPA(SepaDescription sepa);
+	boolean deleteSEPA(DataProcessorDescription sepa);
 	
 	boolean deleteSEPA(String rdfId);
 	
-	boolean exists(SepDescription sep);
+	boolean exists(DataSourceDescription sep);
 	
-	boolean exists(SepaDescription sepa);
+	boolean exists(DataProcessorDescription sepa);
 
 	boolean existsSepa(String rdfid);
 	
-	boolean update(SepDescription sep);
+	boolean update(DataSourceDescription sep);
 	
-	boolean update(SepaDescription sepa);
+	boolean update(DataProcessorDescription sepa);
 
-	boolean exists(SecDescription sec);
+	boolean exists(DataSinkDescription sec);
 
-	boolean update(SecDescription sec);
+	boolean update(DataSinkDescription sec);
 
-	boolean deleteSEC(SecDescription sec);
+	boolean deleteSEC(DataSinkDescription sec);
 	
-	boolean storeSEC(SecDescription sec);
+	boolean storeSEC(DataSinkDescription sec);
 
-	List<SecDescription> getAllSECs();
+	List<DataSinkDescription> getAllSECs();
 	
 	StaticProperty getStaticPropertyById(String rdfId);
 	
-	EventStream getEventStreamById(String rdfId);
+	SpDataStream getEventStreamById(String rdfId);
 	
 }

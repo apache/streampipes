@@ -7,17 +7,17 @@ import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.container.util.DeclarerUtils;
 
 public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		try {
 			return DeclarerUtils.descriptionFromResources(Resources.getResource("wordcount.jsonld"),
-					SepaDescription.class);
+					DataProcessorDescription.class);
 		} catch (SepaParseException e) {
 			e.printStackTrace();
 			return null;
@@ -25,7 +25,7 @@ public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountPar
 	}
 
 	@Override
-	protected FlinkSepaRuntime<WordCountParameters> getRuntime(SepaInvocation graph) {
+	protected FlinkSepaRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph) {
 		return new WordCountProgram(new WordCountParameters(graph),
 				new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
 		// return new WordCountProgram(new WordCountParameters(graph));

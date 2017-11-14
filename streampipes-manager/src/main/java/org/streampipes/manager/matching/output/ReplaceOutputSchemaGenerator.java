@@ -3,13 +3,13 @@ package org.streampipes.manager.matching.output;
 import java.net.URI;
 import java.util.List;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.output.ReplaceOutputStrategy;
-import org.streampipes.model.impl.output.UriPropertyMapping;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.ReplaceOutputStrategy;
+import org.streampipes.model.output.UriPropertyMapping;
 
 public class ReplaceOutputSchemaGenerator implements OutputSchemaGenerator<ReplaceOutputStrategy>{
 
@@ -20,7 +20,7 @@ public class ReplaceOutputSchemaGenerator implements OutputSchemaGenerator<Repla
 	}
 	
 	@Override
-	public EventSchema buildFromOneStream(EventStream stream) {
+	public EventSchema buildFromOneStream(SpDataStream stream) {
 		List<EventProperty> properties = stream.getEventSchema().getEventProperties();
 		
 		for(UriPropertyMapping replaceProperty : strategy.getReplaceProperties()) {
@@ -50,8 +50,8 @@ public class ReplaceOutputSchemaGenerator implements OutputSchemaGenerator<Repla
 	}
 
 	@Override
-	public EventSchema buildFromTwoStreams(EventStream stream1,
-			EventStream stream2) {
+	public EventSchema buildFromTwoStreams(SpDataStream stream1,
+			SpDataStream stream2) {
 		// TODO Auto-generated method stub
 		return null;
 	}

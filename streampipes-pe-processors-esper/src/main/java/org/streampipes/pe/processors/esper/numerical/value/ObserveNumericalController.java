@@ -2,21 +2,21 @@ package org.streampipes.pe.processors.esper.numerical.value;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
@@ -34,7 +34,7 @@ import java.util.List;
 public class ObserveNumericalController extends StandaloneEventProcessorDeclarerSingleton<ObserveNumericalParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventPropertyPrimitive e1 = EpRequirements.numberReq();
 		eventProperties.add(e1);
@@ -42,12 +42,12 @@ public class ObserveNumericalController extends StandaloneEventProcessorDeclarer
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 
-		SepaDescription desc = new SepaDescription("observenumerical", "Observe Numerical",
+		DataProcessorDescription desc = new DataProcessorDescription("observenumerical", "Observe Numerical",
 				"Throws an alert when value exceeds a threshold value");
-		desc.setCategory(Arrays.asList(EpaType.FILTER.name()));
+		desc.setCategory(Arrays.asList(DataProcessorType.FILTER.name()));
 		desc.setIconUrl(EsperConfig.getIconUrl("observe-numerical-icon"));
 
 		desc.addEventStream(stream1);
@@ -81,7 +81,7 @@ public class ObserveNumericalController extends StandaloneEventProcessorDeclarer
 
 	@Override
 	public ConfiguredEventProcessor<ObserveNumericalParameters, EventProcessor<ObserveNumericalParameters>>
-	onInvocation(SepaInvocation invocationGraph) {
+	onInvocation(DataProcessorInvocation invocationGraph) {
 		String valueLimit = SepaUtils.getOneOfProperty(invocationGraph, "value-limit");
 
 		String outputProperty = ((AppendOutputStrategy) invocationGraph.getOutputStrategies().get(0)).getEventProperties().get(0).getRuntimeName();

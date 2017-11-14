@@ -6,15 +6,15 @@ import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.util.PipelineVerificationUtils;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineElementRecommendation;
 import org.streampipes.model.client.pipeline.PipelineElementRecommendationMessage;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.storage.controller.StorageManager;
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -40,7 +40,7 @@ public class ElementRecommender {
         String connectedTo;
         String rootNodeElementId;
         try {
-            InvocableSEPAElement sepaElement = getRootNode();
+            InvocableStreamPipesEntity sepaElement = getRootNode();
             sepaElement.setConfigured(true);
             rootNodeElementId = sepaElement.getBelongsTo();
             connectedTo = sepaElement.getDOM();
@@ -97,8 +97,8 @@ public class ElementRecommender {
         return filter(elementId).getDescription();
     }
 
-    private NamedSEPAElement filter(String elementId) {
-        List<NamedSEPAElement> allElements = getAll();
+    private NamedStreamPipesEntity filter(String elementId) {
+        List<NamedStreamPipesEntity> allElements = getAll();
         return allElements
                 .stream()
                 .filter(a -> a.getElementId().equals(elementId))
@@ -111,11 +111,11 @@ public class ElementRecommender {
     }
 
     private void validateSepas(String connectedTo) {
-        List<SepaDescription> sepas = getAllSepas();
-        for (SepaDescription sepa : sepas) {
-            sepa = new SepaDescription(sepa);
+        List<DataProcessorDescription> sepas = getAllSepas();
+        for (DataProcessorDescription sepa : sepas) {
+            sepa = new DataProcessorDescription(sepa);
             Pipeline tempPipeline = cloner.deepClone(pipeline);
-            SepaInvocation newSepa = generateSepa(sepa, connectedTo);
+            DataProcessorInvocation newSepa = generateSepa(sepa, connectedTo);
             tempPipeline.getSepas().add(newSepa);
             validateConnection(tempPipeline, sepa);
             tempPipeline.setSepas(new ArrayList<>());
@@ -123,18 +123,18 @@ public class ElementRecommender {
     }
 
     private void validateSecs(String connectedTo) {
-        List<SecDescription> secs = getAllSecs();
-        for (SecDescription sec : secs) {
-            sec = new SecDescription(sec);
+        List<DataSinkDescription> secs = getAllSecs();
+        for (DataSinkDescription sec : secs) {
+            sec = new DataSinkDescription(sec);
             Pipeline tempPipeline = cloner.deepClone(pipeline);
-            SecInvocation newSec = generateSec(sec, connectedTo);
+            DataSinkInvocation newSec = generateSec(sec, connectedTo);
             tempPipeline.getActions().add(newSec);
             validateConnection(tempPipeline, sec);
             tempPipeline.setSepas(new ArrayList<>());
         }
     }
 
-    private void validateConnection(Pipeline tempPipeline, NamedSEPAElement currentElement) {
+    private void validateConnection(Pipeline tempPipeline, NamedStreamPipesEntity currentElement) {
         try {
             new PipelineVerificationHandler(tempPipeline)
                     .validateConnection()
@@ -145,25 +145,25 @@ public class ElementRecommender {
         }
     }
 
-    private SepaInvocation generateSepa(SepaDescription sepa, String connectedTo) {
-        SepaInvocation invocation = new SepaInvocation(sepa);
+    private DataProcessorInvocation generateSepa(DataProcessorDescription sepa, String connectedTo) {
+        DataProcessorInvocation invocation = new DataProcessorInvocation(sepa);
         invocation.setConnectedTo(Utils.createList(connectedTo));
         invocation.setDOM(RandomStringUtils.randomAlphanumeric(5));
         return invocation;
     }
 
-    private SecInvocation generateSec(SecDescription sec, String connectedTo) {
-        SecInvocation invocation = new SecInvocation(sec);
+    private DataSinkInvocation generateSec(DataSinkDescription sec, String connectedTo) {
+        DataSinkInvocation invocation = new DataSinkInvocation(sec);
         invocation.setConnectedTo(Utils.createList(connectedTo));
         invocation.setDOM(RandomStringUtils.randomAlphanumeric(5));
         return invocation;
     }
 
-    private void addPossibleElements(NamedSEPAElement sepa) {
+    private void addPossibleElements(NamedStreamPipesEntity sepa) {
         recommendationMessage.addPossibleElement(new PipelineElementRecommendation(sepa.getElementId().toString(), sepa.getName(), sepa.getDescription()));
     }
 
-    private List<SepaDescription> getAllSepas() {
+    private List<DataProcessorDescription> getAllSepas() {
         List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnSepaUris(email);
         return StorageManager
                 .INSTANCE
@@ -174,7 +174,7 @@ public class ElementRecommender {
                 .collect(Collectors.toList());
     }
 
-    private List<SecDescription> getAllSecs() {
+    private List<DataSinkDescription> getAllSecs() {
         List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnActionUris(email);
         return StorageManager
                 .INSTANCE
@@ -185,14 +185,14 @@ public class ElementRecommender {
             .collect(Collectors.toList());
     }
 
-    private List<NamedSEPAElement> getAll() {
-        List<NamedSEPAElement> allElements = new ArrayList<>();
+    private List<NamedStreamPipesEntity> getAll() {
+        List<NamedStreamPipesEntity> allElements = new ArrayList<>();
         allElements.addAll(getAllSepas());
         allElements.addAll(getAllSecs());
         return allElements;
     }
 
-    private InvocableSEPAElement getRootNode() throws NoSepaInPipelineException {
+    private InvocableStreamPipesEntity getRootNode() throws NoSepaInPipelineException {
         return PipelineVerificationUtils.getRootNode(pipeline);
     }
 }

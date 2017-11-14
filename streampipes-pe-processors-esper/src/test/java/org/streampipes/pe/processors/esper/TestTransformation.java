@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 
 public class TestTransformation {
@@ -25,7 +25,7 @@ public class TestTransformation {
 			
 			//System.out.println(Utils.asString(graph));
 			
-			SepaDescription sepa = new JsonLdTransformer().fromJsonLd(test, SepaDescription.class);
+			DataProcessorDescription sepa = new JsonLdTransformer().fromJsonLd(test, DataProcessorDescription.class);
 			System.out.println(sepa.getElementId());
 			
 		} catch (IllegalArgumentException e) {

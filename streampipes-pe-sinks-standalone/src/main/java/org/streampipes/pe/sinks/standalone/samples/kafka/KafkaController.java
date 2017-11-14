@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.kafka;
 
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -23,7 +23,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 	private static final String KAFKA_PORT_URI = "http://schema.org/kafkaPort";
 
 	@Override
-	public SecDescription declareModel() {
+	public DataSinkDescription declareModel() {
 		return DataSinkBuilder.create("kafka", "Kafka Publisher", "Forwards an event to a Kafka Broker")
 						.iconUrl(ActionConfig.getIconUrl("kafka_logo"))
 						.requiredPropertyStream1(EpRequirements.anyProperty())
@@ -39,7 +39,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 	}
 
 	@Override
-	public ConfiguredEventSink<KafkaParameters, EventSink<KafkaParameters>> onInvocation(SecInvocation graph) {
+	public ConfiguredEventSink<KafkaParameters, EventSink<KafkaParameters>> onInvocation(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
 		String topic = extractor.singleValueParameter(TOPIC_KEY,
 						String.class);

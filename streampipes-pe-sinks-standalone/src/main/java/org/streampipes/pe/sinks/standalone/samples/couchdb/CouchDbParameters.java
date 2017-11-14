@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.couchdb;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class CouchDbParameters extends EventSinkBindingParams {
@@ -11,7 +11,7 @@ public class CouchDbParameters extends EventSinkBindingParams {
   private String user;
   private String password;
 
-  public CouchDbParameters(SecInvocation graph, String couchDbHost, Integer couchDbPort, String databaseName, String user, String password) {
+  public CouchDbParameters(DataSinkInvocation graph, String couchDbHost, Integer couchDbPort, String databaseName, String user, String password) {
     super(graph);
     this.couchDbHost = couchDbHost;
     this.couchDbPort = couchDbPort;

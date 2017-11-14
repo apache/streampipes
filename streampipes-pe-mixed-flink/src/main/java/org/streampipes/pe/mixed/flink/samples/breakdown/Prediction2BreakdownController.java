@@ -4,8 +4,8 @@ import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.vocabulary.ProaSense;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -24,7 +24,7 @@ public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<P
   private static final String ParamsMapping = "params-mapping";
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("breakdown-prediction", "Degradation Breakdown",
             "Calculates a breakdown prediction based on degradation predictions")
             .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq
@@ -40,7 +40,7 @@ public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<P
   }
 
   @Override
-  protected FlinkSepaRuntime<Prediction2BreakdownParameters> getRuntime(SepaInvocation graph) {
+  protected FlinkSepaRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
     Prediction2BreakdownParameters params = new Prediction2BreakdownParameters(graph);
 
     return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

@@ -2,21 +2,22 @@ package org.streampipes.pe.processors.esper.geo.durationofstay;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
@@ -35,8 +36,8 @@ import java.util.List;
 public class DurationOfStayController extends StandaloneEventProcessorDeclarerSingleton<DurationOfStayParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
-		EventStream stream1 = new EventStream();
+	public DataProcessorDescription declareModel() {
+		SpDataStream stream1 = new SpDataStream();
 		EventSchema schema = new EventSchema();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
 		EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
@@ -45,8 +46,8 @@ public class DurationOfStayController extends StandaloneEventProcessorDeclarerSi
 		
 		schema.setEventProperties(Arrays.asList(e1, e2, e3, e4));
 		
-		SepaDescription desc = new SepaDescription("durationofstay", "Duration of Stay", "Calculates the duration of stay of a location-based object within a specified radius around a specified point-based coordinate.");
-		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("durationofstay", "Duration of Stay", "Calculates the duration of stay of a location-based object within a specified radius around a specified point-based coordinate.");
+		desc.setCategory(Arrays.asList(DataProcessorType.GEO.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema);
@@ -55,8 +56,8 @@ public class DurationOfStayController extends StandaloneEventProcessorDeclarerSi
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		List<EventProperty> additionalProperties = new ArrayList<>();
-		additionalProperties.add(EpProperties.longEp("departureTime", "http://schema.org/DateTime"));
-		additionalProperties.add(EpProperties.longEp("durationOfStay", "http://schema.org/Number"));
+		additionalProperties.add(EpProperties.longEp(Labels.empty(), "departureTime", "http://schema.org/DateTime"));
+		additionalProperties.add(EpProperties.longEp(Labels.empty(), "durationOfStay", "http://schema.org/Number"));
 		AppendOutputStrategy appendOutput = new AppendOutputStrategy();
 		appendOutput.setEventProperties(additionalProperties);
 		strategies.add(appendOutput);
@@ -95,7 +96,7 @@ public class DurationOfStayController extends StandaloneEventProcessorDeclarerSi
 
 	@Override
 	public ConfiguredEventProcessor<DurationOfStayParameters, EventProcessor<DurationOfStayParameters>> onInvocation
-					(SepaInvocation invocationGraph) {
+					(DataProcessorInvocation invocationGraph) {
 		int radius = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "radius"));
 
 		DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(invocationGraph, "location");

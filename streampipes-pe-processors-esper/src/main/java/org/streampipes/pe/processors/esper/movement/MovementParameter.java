@@ -2,7 +2,7 @@ package org.streampipes.pe.processors.esper.movement;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class MovementParameter extends EventProcessorBindingParams {
@@ -17,7 +17,7 @@ public class MovementParameter extends EventProcessorBindingParams {
 	
 	private final List<String> partitionProperties;
 
-	public MovementParameter(SepaInvocation graph,
+	public MovementParameter(DataProcessorInvocation graph,
 		List<String> partitionProperties, String positionCrs, String timestampProperty, String xProperty, String yProperty,
 		long maxInterval) {
 		super(graph);

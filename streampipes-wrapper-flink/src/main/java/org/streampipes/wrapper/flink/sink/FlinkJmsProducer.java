@@ -4,7 +4,7 @@ import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
-import org.streampipes.model.impl.JmsTransportProtocol;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 
 
 public class FlinkJmsProducer<IN> extends RichSinkFunction<IN>  { 

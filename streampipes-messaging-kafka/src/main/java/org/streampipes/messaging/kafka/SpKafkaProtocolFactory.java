@@ -2,7 +2,7 @@ package org.streampipes.messaging.kafka;
 
 import org.streampipes.messaging.SpProtocolDefinition;
 import org.streampipes.messaging.SpProtocolDefinitionFactory;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 public class SpKafkaProtocolFactory extends SpProtocolDefinitionFactory<KafkaTransportProtocol> {
 

@@ -1,8 +1,8 @@
 package org.streampipes.pe.processors.esper.filter.numerical;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.util.NumericalOperator;
@@ -20,9 +20,9 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDecla
 public class NumericalFilterController extends StandaloneEventProcessorDeclarerSingleton<NumericalFilterParameter> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("numericalfilter", "Numerical Filter", "Numerical Filter Description")
-						.category(EpaType.FILTER)
+						.category(DataProcessorType.FILTER)
 						.iconUrl(EsperConfig.getIconUrl("Numerical_Filter_Icon_HQ"))
 						.requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), "number", "Specifies the field name where the filter operation should be applied on.", "")
 						.outputStrategy(OutputStrategies.keep())
@@ -37,7 +37,7 @@ public class NumericalFilterController extends StandaloneEventProcessorDeclarerS
 
 	@Override
 	public ConfiguredEventProcessor<NumericalFilterParameter, EventProcessor<NumericalFilterParameter>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
 		Double threshold = extractor.singleValueParameter("value", Double.class);

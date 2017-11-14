@@ -11,10 +11,10 @@ import org.junit.Test;
 
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.Response;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 public class ElementTest {;
     @Test
@@ -24,7 +24,7 @@ public class ElementTest {;
         TestElementImpl elem = new TestElementImpl();
         elem.setDeclarers(declarers);
 
-        NamedSEPAElement namedSEPAElement = elem.getById(id);
+        NamedStreamPipesEntity namedSEPAElement = elem.getById(id);
 
         assertEquals("sepaname", namedSEPAElement.getName());
         assertEquals("sepadescription", namedSEPAElement.getDescription());
@@ -35,7 +35,7 @@ public class ElementTest {;
         TestElementImpl elem = new TestElementImpl();
         elem.setDeclarers(new ArrayList<Declarer>());
 
-        NamedSEPAElement actual = elem.getById("");
+        NamedStreamPipesEntity actual = elem.getById("");
         assertNull(actual);
     }
 
@@ -51,7 +51,7 @@ public class ElementTest {;
     }
 
 
-    private class DeclarerImpl implements InvocableDeclarer<SepaDescription, SepaInvocation> {
+    private class DeclarerImpl implements InvocableDeclarer<DataProcessorDescription, DataProcessorInvocation> {
         private String id;
 
         public DeclarerImpl(String id) {
@@ -59,7 +59,7 @@ public class ElementTest {;
         }
 
         @Override
-        public Response invokeRuntime(SepaInvocation invocationGraph) {
+        public Response invokeRuntime(DataProcessorInvocation invocationGraph) {
             return null;
         }
 
@@ -69,8 +69,8 @@ public class ElementTest {;
         }
 
         @Override
-        public SepaDescription declareModel() {
-            return new SepaDescription(id, "sepaname", "sepadescription", "sepaiconUrl");
+        public DataProcessorDescription declareModel() {
+            return new DataProcessorDescription(id, "sepaname", "sepadescription", "sepaiconUrl");
         }
     }
 

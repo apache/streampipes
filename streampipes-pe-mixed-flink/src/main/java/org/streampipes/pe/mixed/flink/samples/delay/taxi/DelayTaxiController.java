@@ -1,12 +1,13 @@
 package org.streampipes.pe.mixed.flink.samples.delay.taxi;
 
 import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -22,8 +23,8 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
 
 
     @Override
-    public SepaDescription declareModel() {
-        SepaDescription delayDescription = ProcessingElementBuilder
+    public DataProcessorDescription declareModel() {
+        DataProcessorDescription delayDescription = ProcessingElementBuilder
                 .create("delay_taxi", "Delay Taxi", "Waits a configured time and adds the labeld to the correspondig grid cell to " +
                         "the event")
                 .iconUrl("url")
@@ -32,7 +33,7 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
                 .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), LABEL_PROPERTY_NAME,
                         "Label Property", "The property that is selected for the label")
                 .outputStrategy(OutputStrategies.append(
-                        EpProperties.integerEp(OUTPUT_LABEL, SO.Number)
+                        EpProperties.integerEp(Labels.empty(), OUTPUT_LABEL, SO.Number)
                 ))
                 .build();
 
@@ -40,7 +41,7 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
     }
 
     @Override
-    protected FlinkSepaRuntime<DelayTaxiParameters> getRuntime(SepaInvocation graph) {
+    protected FlinkSepaRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
 
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 

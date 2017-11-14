@@ -8,8 +8,8 @@ import com.espertech.esper.client.soda.PatternExpr;
 import com.espertech.esper.client.soda.PatternStream;
 import com.espertech.esper.client.soda.Patterns;
 import com.espertech.esper.client.soda.SelectClause;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.wrapper.params.binding.InputStreamParams;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
@@ -60,10 +60,10 @@ public class And extends EsperEventEngine<AndParameters> {
 		return selectClause;
 	}
 
-	private String findNewRuntimeName(List<EventStream> inputStreams, String rdfId) {
+	private String findNewRuntimeName(List<SpDataStream> inputStreams, String rdfId) {
 		String matchedProperty = null;
 		for(int i = 0; i < inputStreams.size(); i++) {
-			EventStream stream = inputStreams.get(i);		
+			SpDataStream stream = inputStreams.get(i);
 			for(int j = 0; j < stream.getEventSchema().getEventProperties().size(); j++) {
 				EventProperty p = stream.getEventSchema().getEventProperties().get(j);
 				if (p.getRdfId().toString().equals(rdfId)) matchedProperty = getPrefix(i) +p.getRuntimeName();

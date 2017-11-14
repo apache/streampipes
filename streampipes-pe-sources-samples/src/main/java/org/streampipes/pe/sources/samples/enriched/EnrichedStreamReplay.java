@@ -4,10 +4,10 @@ import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
@@ -18,8 +18,8 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 	private String topicName;
 	
 	@Override
-	public EventStream declareModel(SepDescription sep) {
-		EventStream stream = new EventStream();
+	public SpDataStream declareModel(DataSourceDescription sep) {
+		SpDataStream stream = new SpDataStream();
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol("FZI.SEPA.SEP.Enriched.Replay"));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));

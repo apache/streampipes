@@ -8,19 +8,19 @@ import org.streampipes.commons.Utils;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.Response;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.slack.config.SlackConfig;
@@ -40,7 +40,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
   SlackNotification slackNotification;
 
   @Override
-  public Response invokeRuntime(SecInvocation invocationGraph) {
+  public Response invokeRuntime(DataSinkInvocation invocationGraph) {
 //        String authToken = ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(invocationGraph, "auth_token"))).getValue();
     String authToken = SlackConfig.INSTANCE.getSlackToken();
 
@@ -109,10 +109,10 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
   }
 
   @Override
-  public SecDescription declareModel() {
-    EventStream stream = StreamBuilder.createStream("", "", "").schema(SchemaBuilder.create().build()).build();
-    SecDescription desc = new SecDescription("slack_sink", "Slack Notification", "Slack bot to send notifications directly into your slack");
-    desc.setCategory(Arrays.asList(EcType.ACTUATOR.name()));
+  public DataSinkDescription declareModel() {
+    SpDataStream stream = StreamBuilder.createStream("", "", "").schema(SchemaBuilder.create().build()).build();
+    DataSinkDescription desc = new DataSinkDescription("slack_sink", "Slack Notification", "Slack bot to send notifications directly into your slack");
+    desc.setCategory(Arrays.asList(DataSinkType.ACTUATOR.name()));
     desc.setIconUrl(SlackConfig.iconBaseUrl + "/slack_icon.png");
     stream.setUri(SlackConfig.serverUrl + "/" + Utils.getRandomString());
     desc.addEventStream(stream);

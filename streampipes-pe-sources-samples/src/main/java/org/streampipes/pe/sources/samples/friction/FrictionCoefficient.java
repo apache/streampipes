@@ -2,12 +2,13 @@ package org.streampipes.pe.sources.samples.friction;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.SO;
@@ -30,20 +31,20 @@ public class FrictionCoefficient  {
         this.variable = variable;
     }
 
-    public EventStream prepareStream(SepDescription sep) {
+    public SpDataStream prepareStream(DataSourceDescription sep) {
 
-        EventStream stream = new EventStream();
+        SpDataStream stream = new SpDataStream();
         stream.setName(variable.label());
         stream.setDescription(variable.description());
         stream.setUri(sep.getUri() + variable.path());
 
         EventSchema schema = new EventSchema();
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-        eventProperties.add(EpProperties.stringEp("timestamp", "http://schema.org/DateTime"));
-        eventProperties.add(EpProperties.stringEp("eventId", SO.Text));
-        eventProperties.add(EpProperties.doubleEp("zScore", MhWirth.zScore));
-        eventProperties.add(EpProperties.doubleEp("value", MhWirth.FrictionValue));
-        eventProperties.add(EpProperties.doubleEp("std", MhWirth.Stddev));
+        eventProperties.add(EpProperties.stringEp(Labels.empty(), "timestamp", "http://schema.org/DateTime"));
+        eventProperties.add(EpProperties.stringEp(Labels.empty(), "eventId", SO.Text));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "zScore", MhWirth.zScore));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "value", MhWirth.FrictionValue));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "std", MhWirth.Stddev));
 
         schema.setEventProperties(eventProperties);
         stream.setEventSchema(schema);

@@ -8,7 +8,7 @@ import org.streampipes.manager.verification.messages.VerificationError;
 import org.streampipes.manager.verification.messages.VerificationResult;
 import org.streampipes.manager.verification.structure.GeneralVerifier;
 import org.streampipes.manager.verification.structure.Verifier;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class ElementVerifier<T extends NamedSEPAElement> {
+public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
 	protected static final Logger logger = Logger.getAnonymousLogger();
 	

@@ -1,7 +1,7 @@
 package org.streampipes.codegeneration.flink.sepa;
 
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.codegeneration.flink.ConfigGenerator;
 import org.streampipes.codegeneration.flink.FlinkCodeGenerator;
 import org.streampipes.codegeneration.flink.InitGenerator;
@@ -13,7 +13,7 @@ public class FlinkSepaCodeGenerator extends FlinkCodeGenerator {
 	private boolean standalone;
 
 
-	public FlinkSepaCodeGenerator(DeploymentConfiguration config, SepaDescription element, boolean standalone) {
+	public FlinkSepaCodeGenerator(DeploymentConfiguration config, DataProcessorDescription element, boolean standalone) {
 		super(config, element);
 		this.standalone = standalone;
 	}

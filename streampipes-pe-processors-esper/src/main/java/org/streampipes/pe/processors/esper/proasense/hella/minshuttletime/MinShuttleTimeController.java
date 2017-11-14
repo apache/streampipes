@@ -1,17 +1,18 @@
 package org.streampipes.pe.processors.esper.proasense.hella.minshuttletime;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
@@ -31,10 +32,10 @@ import java.util.List;
 public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSingleton<MinShuttleTimeParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("minshuttletime", "Minimum Shuttle Time", "Issues an alert if the minimum shuttle time is reached.");
-		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("minshuttletime", "Minimum Shuttle Time", "Issues an alert if the minimum shuttle time is reached.");
+		desc.setCategory(Arrays.asList(DataProcessorType.ALGORITHM.name()));
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#lacqueringLineId").build();
 		EventProperty e2 = PrimitivePropertyBuilder.createPropertyRestriction("http://hella.de/hella#shuttleId").build();
@@ -45,7 +46,7 @@ public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSi
 		eventProperties.add(e3);
 		eventProperties.add(e4);
 		
-		EventStream stream1 = StreamBuilder
+		SpDataStream stream1 = StreamBuilder
 				.createStreamRestriction(EsperConfig.serverUrl +"/" + desc.getElementId())
 				.schema(
 						SchemaBuilder.create()
@@ -55,9 +56,10 @@ public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSi
 		desc.addEventStream(stream1);
 		
 		FixedOutputStrategy strategy = new FixedOutputStrategy();
-		EventProperty p1 = EpProperties.integerEp("lacqueringLineId", "http://hella.de/hella#lacqueringLineId");
-		EventProperty p2 = EpProperties.integerEp("mouldingMachineId", "http://hella.de/hella#mouldingMachineId");
-		EventProperty p4 = EpProperties.integerEp("timeDifference", SO.Number);
+		EventProperty p1 = EpProperties.integerEp(Labels.empty(), "lacqueringLineId", "http://hella" +
+						".de/hella#lacqueringLineId");
+		EventProperty p2 = EpProperties.integerEp(Labels.empty(), "mouldingMachineId", "http://hella.de/hella#mouldingMachineId");
+		EventProperty p4 = EpProperties.integerEp(Labels.empty(), "timeDifference", SO.Number);
 		
 		List<EventProperty> properties = Arrays.asList(p1, p2, p4);
 		
@@ -85,7 +87,7 @@ public class MinShuttleTimeController extends StandaloneEventProcessorDeclarerSi
 
 	@Override
 	public ConfiguredEventProcessor<MinShuttleTimeParameters, EventProcessor<MinShuttleTimeParameters>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		List<String> selectProperties = new ArrayList<>();
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());

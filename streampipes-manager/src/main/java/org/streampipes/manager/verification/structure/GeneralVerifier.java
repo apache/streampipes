@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.streampipes.manager.verification.messages.VerificationResult;
 import org.streampipes.model.client.messages.NotificationType;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
-public class GeneralVerifier<T extends NamedSEPAElement> extends AbstractVerifier {
+public class GeneralVerifier<T extends NamedStreamPipesEntity> extends AbstractVerifier {
 
 	private T description;
 	

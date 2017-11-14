@@ -1,9 +1,5 @@
 package org.streampipes.wrapper.flink;
 
-import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.KafkaTransportProtocol;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.JobID;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -12,11 +8,19 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
-public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Runnable, Serializable {
+public abstract class FlinkRuntime<I extends InvocableStreamPipesEntity> implements Runnable, Serializable {
 
 	/**
 	 *
@@ -186,7 +190,7 @@ public abstract class FlinkRuntime<I extends InvocableSEPAElement> implements Ru
 	private SourceFunction<String> getStreamSource(int i) {
 		if (graph.getInputStreams().size() - 1 >= i) {
 
-			EventStream stream = graph.getInputStreams().get(i);
+			SpDataStream stream = graph.getInputStreams().get(i);
 			if (stream != null) {
 				KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 

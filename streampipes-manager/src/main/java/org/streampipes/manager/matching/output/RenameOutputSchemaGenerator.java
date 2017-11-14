@@ -1,29 +1,29 @@
 package org.streampipes.manager.matching.output;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.output.KeepOutputStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<RenameOutputStrategy> {
+public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<KeepOutputStrategy> {
 
-	private RenameOutputStrategy strategy;
+	private KeepOutputStrategy strategy;
 
-	public RenameOutputSchemaGenerator(RenameOutputStrategy strategy) {
+	public RenameOutputSchemaGenerator(KeepOutputStrategy strategy) {
 		this.strategy = strategy;
 	}
 
 	@Override
-	public EventSchema buildFromOneStream(EventStream stream) {
+	public EventSchema buildFromOneStream(SpDataStream stream) {
 		return stream.getEventSchema();
 	}
 
 	@Override
-	public EventSchema buildFromTwoStreams(EventStream stream1,
-			EventStream stream2) {
+	public EventSchema buildFromTwoStreams(SpDataStream stream1,
+			SpDataStream stream2) {
 		EventSchema resultSchema = new EventSchema();
 		List<EventProperty> properties = new ArrayList<>();
 		properties.addAll(stream1.getEventSchema().getEventProperties());
@@ -37,8 +37,8 @@ public class RenameOutputSchemaGenerator implements OutputSchemaGenerator<Rename
 	}
 
 	@Override
-	public RenameOutputStrategy getModifiedOutputStrategy(
-			RenameOutputStrategy strategy) {
+	public KeepOutputStrategy getModifiedOutputStrategy(
+			KeepOutputStrategy strategy) {
 		return strategy;
 	}
 

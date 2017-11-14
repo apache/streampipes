@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.kafka;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class KafkaParameters extends EventSinkBindingParams {
@@ -9,7 +9,7 @@ public class KafkaParameters extends EventSinkBindingParams {
   private Integer kafkaPort;
   private String topic;
 
-  public KafkaParameters(SecInvocation graph, String kafkaHost, Integer kafkaPort, String topic) {
+  public KafkaParameters(DataSinkInvocation graph, String kafkaHost, Integer kafkaPort, String topic) {
     super(graph);
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;

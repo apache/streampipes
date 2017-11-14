@@ -1,6 +1,6 @@
 package org.streampipes.sdk.stream;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.schema.EventProperty;
 
 public abstract class PropertyBuilder {
 

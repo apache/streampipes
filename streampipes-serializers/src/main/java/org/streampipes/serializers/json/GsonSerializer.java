@@ -5,16 +5,16 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.impl.quality.EventStreamQualityDefinition;
-import org.streampipes.model.impl.quality.Frequency;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.quality.EventStreamQualityDefinition;
+import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
 
@@ -42,8 +42,8 @@ public class GsonSerializer {
 		builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
 		//builder.registerTypeAdapter(MeasurementProperty.class, new JsonLdSerializer<MeasurementProperty>());
 		builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
-		builder.registerTypeAdapter(EcType.class, new EcTypeAdapter());
-		builder.registerTypeAdapter(EpaType.class, new EpaTypeAdapter());
+		builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
+		builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
 		builder.registerTypeAdapter(URI.class, new UriSerializer());
         builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
         builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());

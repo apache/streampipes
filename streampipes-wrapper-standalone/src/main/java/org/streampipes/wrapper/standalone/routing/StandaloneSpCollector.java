@@ -3,8 +3,8 @@ package org.streampipes.wrapper.standalone.routing;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.messaging.SpProtocolDefinition;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.routing.PipelineElementCollector;
 import org.streampipes.wrapper.standalone.manager.PManager;
 

@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.aggregate.rate;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class EventRateParameter extends EventProcessorBindingParams {
@@ -9,7 +9,7 @@ public class EventRateParameter extends EventProcessorBindingParams {
 	int outputRate;
 	String outputName; 
 	
-	public EventRateParameter(SepaInvocation graph, int avgRate, int outputRate, String outputName) {
+	public EventRateParameter(DataProcessorInvocation graph, int avgRate, int outputRate, String outputName) {
 		super(graph);
 		this.avgRate = avgRate;
 		this.outputRate = outputRate;

@@ -6,27 +6,27 @@ import org.lightcouch.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.storage.api.SepaInvocationStorage;
 import org.streampipes.storage.util.Utils;
 
-public class SepaInvocationStorageImpl extends Storage<SepaInvocation> implements SepaInvocationStorage {
+public class SepaInvocationStorageImpl extends Storage<DataProcessorInvocation> implements SepaInvocationStorage {
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     public SepaInvocationStorageImpl() {
-        super(SepaInvocation.class);
+        super(DataProcessorInvocation.class);
     }
 
     @Override
-    public Response storeSepaInvocation(SepaInvocation sepaInvocation) {
+    public Response storeSepaInvocation(DataProcessorInvocation dataProcessorInvocation) {
         CouchDbClient dbClient = getCouchDbClient();
-        Response response = dbClient.save(sepaInvocation);
+        Response response = dbClient.save(dataProcessorInvocation);
         dbClient.shutdown();
         return response;
     }
 
     @Override
-    public SepaInvocation getSepaInvovation(String sepaInvocationId) {
+    public DataProcessorInvocation getSepaInvovation(String sepaInvocationId) {
         // TODO return optional instead of null
         return getWithNullIfEmpty(sepaInvocationId);
     }

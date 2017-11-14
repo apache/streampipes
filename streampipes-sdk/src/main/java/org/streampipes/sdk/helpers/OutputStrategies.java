@@ -1,11 +1,11 @@
 package org.streampipes.sdk.helpers;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.ListOutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.ListOutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,12 +39,12 @@ public class OutputStrategies {
         return new FixedOutputStrategy(appendProperties);
     }
 
-    public static RenameOutputStrategy keep() {
-        return new RenameOutputStrategy();
+    public static KeepOutputStrategy keep() {
+        return new KeepOutputStrategy();
     }
 
-    public static RenameOutputStrategy keep(boolean mergeInputStreams) {
-        return new RenameOutputStrategy("Rename", mergeInputStreams);
+    public static KeepOutputStrategy keep(boolean mergeInputStreams) {
+        return new KeepOutputStrategy("Rename", mergeInputStreams);
     }
 
     public static ListOutputStrategy list(String propertyRuntimeName) {

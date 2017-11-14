@@ -7,7 +7,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.streampipes.codegeneration.ZipFileGenerator;
 
@@ -15,7 +15,7 @@ public abstract class ImplementationCodeGenerator extends CodeGenerator {
 
 	protected String tempFolder;
 
-	public ImplementationCodeGenerator(DeploymentConfiguration config, ConsumableSEPAElement element) {
+	public ImplementationCodeGenerator(DeploymentConfiguration config, ConsumableStreamPipesEntity element) {
 		super(config, element);
 		this.tempFolder = RandomStringUtils.randomAlphabetic(8) + config.getArtifactId();
 	}

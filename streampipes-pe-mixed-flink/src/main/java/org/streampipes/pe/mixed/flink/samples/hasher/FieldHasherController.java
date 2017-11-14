@@ -5,17 +5,17 @@ import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 
 import java.util.ArrayList;
@@ -24,15 +24,15 @@ import java.util.List;
 public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHasherParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 		
-		SepaDescription desc = new SepaDescription("fieldhasher", "Field Hasher", "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.");
+		DataProcessorDescription desc = new DataProcessorDescription("fieldhasher", "Field Hasher", "The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values.");
 		desc.setIconUrl(FlinkConfig.getIconUrl("field-hasher-icon"));
 		desc.addEventStream(stream1);
 		
@@ -46,7 +46,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 		desc.setStaticProperties(staticProperties);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		RenameOutputStrategy keepOutput = new RenameOutputStrategy();
+		KeepOutputStrategy keepOutput = new KeepOutputStrategy();
 		
 		strategies.add(keepOutput);
 		desc.setOutputStrategies(strategies);
@@ -57,7 +57,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 
 	@Override
 	protected FlinkSepaRuntime<FieldHasherParameters> getRuntime(
-			SepaInvocation graph) {
+			DataProcessorInvocation graph) {
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "property-mapping");
 		
 		HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(SepaUtils.getOneOfProperty(graph, "hash-algorithm"));

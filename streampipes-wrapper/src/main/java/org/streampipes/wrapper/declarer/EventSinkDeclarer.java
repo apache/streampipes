@@ -1,8 +1,8 @@
 package org.streampipes.wrapper.declarer;
 
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.Response;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.wrapper.ConfiguredEventSink;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
@@ -11,16 +11,16 @@ import org.streampipes.wrapper.runtime.EventSinkRuntime;
 
 public abstract class EventSinkDeclarer<B extends EventSinkBindingParams, ES extends
         EventSinkRuntime>
-        extends PipelineElementDeclarer<B, ES, SecInvocation,
+        extends PipelineElementDeclarer<B, ES, DataSinkInvocation,
                 DataSinkParameterExtractor, EventSink<B>> implements SemanticEventConsumerDeclarer {
 
   @Override
-  protected DataSinkParameterExtractor getExtractor(SecInvocation graph) {
+  protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
     return DataSinkParameterExtractor.from(graph);
   }
 
   @Override
-  public Response invokeRuntime(SecInvocation graph) {
+  public Response invokeRuntime(DataSinkInvocation graph) {
 
     try {
       ConfiguredEventSink<B, EventSink<B>> configuredEngine = onInvocation(graph);
@@ -33,6 +33,6 @@ public abstract class EventSinkDeclarer<B extends EventSinkBindingParams, ES ext
 
   }
 
-  public abstract ConfiguredEventSink<B, EventSink<B>> onInvocation(SecInvocation graph);
+  public abstract ConfiguredEventSink<B, EventSink<B>> onInvocation(DataSinkInvocation graph);
 
 }

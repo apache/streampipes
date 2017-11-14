@@ -1,18 +1,18 @@
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 /**
  * Created by riemer on 04.12.2016.
  */
-public class DataSourceBuilder extends AbstractPipelineElementBuilder<DataSourceBuilder, SepDescription> {
+public class DataSourceBuilder extends AbstractPipelineElementBuilder<DataSourceBuilder, DataSourceDescription> {
 
   public static DataSourceBuilder create(String id, String label, String description) {
     return new DataSourceBuilder(id, label, description);
   }
 
   protected DataSourceBuilder(String id, String label, String description) {
-    super(id, label, description, new SepDescription());
+    super(id, label, description, new DataSourceDescription());
   }
 
   @Override

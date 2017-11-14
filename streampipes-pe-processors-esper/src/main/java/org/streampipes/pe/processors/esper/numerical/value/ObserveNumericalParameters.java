@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.numerical.value;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class ObserveNumericalParameters extends EventProcessorBindingParams {
@@ -10,7 +10,7 @@ public class ObserveNumericalParameters extends EventProcessorBindingParams {
 	private String number;
 	private String outputProperty;
 	
-	public ObserveNumericalParameters(SepaInvocation graph, String valueLimit, double threshold, String number, String outputProperty) {
+	public ObserveNumericalParameters(DataProcessorInvocation graph, String valueLimit, double threshold, String number, String outputProperty) {
 		super(graph);
 		this.valueLimit = valueLimit;
 		this.threshold = threshold;

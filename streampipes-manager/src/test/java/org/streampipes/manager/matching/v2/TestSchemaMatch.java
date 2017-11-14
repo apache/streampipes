@@ -1,32 +1,31 @@
 package org.streampipes.manager.matching.v2;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.matching.MatchingResultMessage;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
+import org.streampipes.pe.sources.samples.random.RandomDataProducer;
+import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.Geo;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
-import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
-import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.vocabulary.Geo;
-import org.streampipes.pe.sources.samples.random.RandomDataProducer;
-import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
 
 public class TestSchemaMatch extends TestCase {
 
 	@Test
 	public void testPositiveSchemaMatch() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp("timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp("timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
 		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
@@ -43,8 +42,8 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testNegativeSchemaMatch() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp("timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp("timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
 		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
@@ -61,8 +60,8 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testNegativeSchemaMatchDomain() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp("timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp("timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.lat);
 		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
@@ -79,8 +78,8 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testPositiveSchemaMatchDomain() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp("timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp("timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.lat);
 		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
@@ -97,11 +96,11 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testPositiveSchemaMatchWithRealSchema() {
 
-		SepaDescription requiredSepa = new AggregationController().declareModel();
-		EventStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
+		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
+		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
 		
 		EventSchema offeredSchema =  offeredStream.getEventSchema();
-		EventSchema requiredSchema = requiredSepa.getEventStreams().get(0).getEventSchema();
+		EventSchema requiredSchema = requiredSepa.getSpDataStreams().get(0).getEventSchema();
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		

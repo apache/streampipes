@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.jms;
 
 
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -24,7 +24,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	private static final String JMS_PORT_URI = "http://schema.org/jmsPort";
 	
 	@Override
-	public SecDescription declareModel() {
+	public DataSinkDescription declareModel() {
 		return DataSinkBuilder.create("jms", "JMS Publisher", "Publishes events to a JMS topic")
 						.iconUrl(ActionConfig.getIconUrl("jms_logo"))
 						.requiredPropertyStream1(EpRequirements.anyProperty())
@@ -40,7 +40,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	}
 
 	@Override
-	public ConfiguredEventSink<JmsParameters, EventSink<JmsParameters>> onInvocation(SecInvocation graph) {
+	public ConfiguredEventSink<JmsParameters, EventSink<JmsParameters>> onInvocation(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
 
 		String topic = extractor.singleValueParameter(TOPIC_KEY,

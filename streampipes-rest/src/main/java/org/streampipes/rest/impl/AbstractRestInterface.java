@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
@@ -72,7 +72,7 @@ public abstract class AbstractRestInterface {
 		return HttpJsonParser.getContentFromUrl(uri, mediaType);
 	}
 	
-	protected <T extends NamedSEPAElement> T parseObjectContent(Class<T> clazz, String payload) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException
+	protected <T extends NamedStreamPipesEntity> T parseObjectContent(Class<T> clazz, String payload) throws RDFParseException, UnsupportedRDFormatException, RepositoryException, IOException
 	{
 		return Transformer.fromJsonLd(clazz, payload);
 	}

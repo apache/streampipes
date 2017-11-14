@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.couchdb;
 
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -22,9 +22,9 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
   private static final String DATABASE_PASSORD_KEY = "db_password";
 
   @Override
-  public SecDescription declareModel() {
+  public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("couchdb", "CouchDB", "Stores events in a couchdb database.")
-            .category(EcType.STORAGE)
+            .category(DataSinkType.STORAGE)
             .iconUrl(ActionConfig.getIconUrl("couchdb_icon"))
             .requiredPropertyStream1(EpRequirements.anyProperty())
             .supportedFormats(SupportedFormats.jsonFormat())
@@ -41,7 +41,7 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
 
 
   @Override
-  public ConfiguredEventSink<CouchDbParameters, EventSink<CouchDbParameters>> onInvocation(SecInvocation graph) {
+  public ConfiguredEventSink<CouchDbParameters, EventSink<CouchDbParameters>> onInvocation(DataSinkInvocation graph) {
     DataSinkParameterExtractor extractor = getExtractor(graph);
 
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);

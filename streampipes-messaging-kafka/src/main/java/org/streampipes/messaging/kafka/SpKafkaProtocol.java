@@ -3,7 +3,7 @@ package org.streampipes.messaging.kafka;
 import org.streampipes.messaging.EventConsumer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.SpProtocolDefinition;
-import org.streampipes.model.impl.KafkaTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
 
 public class SpKafkaProtocol implements SpProtocolDefinition<KafkaTransportProtocol> {
 

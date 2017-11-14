@@ -1,6 +1,6 @@
 package org.streampipes.model.util;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.schema.EventProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;

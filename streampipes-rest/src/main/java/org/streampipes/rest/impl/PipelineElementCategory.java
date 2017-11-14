@@ -8,10 +8,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.EpaType;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.client.Category;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.rest.api.IPipelineElementCategory;
 import org.streampipes.storage.controller.StorageManager;
 
@@ -31,7 +31,7 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Produces("application/json")
 	@Override
 	public Response getEpaCategories() {
-		return ok(EpaType.values());
+		return ok(DataProcessorType.values());
 	}
 
 	@GET
@@ -39,10 +39,10 @@ public class PipelineElementCategory extends AbstractRestInterface implements IP
 	@Produces("application/json")
 	@Override
 	public Response getEcCategories() {
-		return ok(EcType.values());
+		return ok(DataSinkType.values());
 	}
 	
-	private List<Category> makeCategories(List<SepDescription> producers) {
+	private List<Category> makeCategories(List<DataSourceDescription> producers) {
 		return producers
 				.stream()
 				.map(p -> new Category(p.getRdfId().toString(), p.getName(), p.getDescription()))

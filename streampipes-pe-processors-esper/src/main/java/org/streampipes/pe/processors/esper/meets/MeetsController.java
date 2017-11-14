@@ -2,19 +2,19 @@ package org.streampipes.pe.processors.esper.meets;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -30,15 +30,15 @@ import java.util.List;
 public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<MeetsParameters> {
 
 	@Override
-	public ConfiguredEventProcessor<MeetsParameters, EventProcessor<MeetsParameters>> onInvocation(SepaInvocation graph) {
+	public ConfiguredEventProcessor<MeetsParameters, EventProcessor<MeetsParameters>> onInvocation(DataProcessorInvocation graph) {
 		return null;
 	}
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
 		// 1st location-based stream
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		EventSchema schema1 = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
@@ -49,7 +49,7 @@ public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<M
 		stream1.setEventSchema(schema1);
 		
 		
-		EventStream stream2 = new EventStream();
+		SpDataStream stream2 = new SpDataStream();
 		EventSchema schema2 = new EventSchema();
 		List<EventProperty> eventProperties2 = new ArrayList<EventProperty>();
 		EventProperty e3 = new EventPropertyPrimitive(Utils.createURI(
@@ -61,7 +61,7 @@ public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<M
 		schema2.setEventProperties(eventProperties2);
 		stream2.setEventSchema(schema2);
 		
-		SepaDescription desc = new SepaDescription("meets", "Geospatial distance", "Detects two location-based streams within a given distance");
+		DataProcessorDescription desc = new DataProcessorDescription("meets", "Geospatial distance", "Detects two location-based streams within a given distance");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
 		
 		

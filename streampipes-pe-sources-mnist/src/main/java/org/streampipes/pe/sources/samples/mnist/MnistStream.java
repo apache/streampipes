@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 import org.streampipes.pe.sources.samples.adapter.csv.CsvReaderSettings;
 import org.streampipes.pe.sources.samples.adapter.csv.CsvReplayTask;
@@ -15,6 +15,7 @@ import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Groundings;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,17 +47,17 @@ public class MnistStream implements EventStreamDeclarer {
     }
 
     @Override
-    public EventStream declareModel(SepDescription sep) {
+    public SpDataStream declareModel(DataSourceDescription sep) {
 
         //TODO extend the Builder Pattern for List Properites in the SDK
-        EventProperty ep1 = EpProperties.doubleEp("pixel", "http://de.fzi.cep.blackwhite");
+        EventProperty ep1 = EpProperties.doubleEp(Labels.empty(), "pixel", "http://de.fzi.cep.blackwhite");
         EventProperty image = new EventPropertyList("image", ep1);
 
-        EventStream stream = DataStreamBuilder
+        SpDataStream stream = DataStreamBuilder
                 .create(name, name, "Produces a replay of the mnist dataset")
                 .format(Groundings.jsonFormat())
                 .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
-                .property(EpProperties.integerEp("label", "http://de.fzi.cep.label"))
+                .property(EpProperties.integerEp(Labels.empty(), "label", "http://de.fzi.cep.label"))
                 .property(image)
                 .build();
 

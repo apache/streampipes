@@ -1,8 +1,8 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;

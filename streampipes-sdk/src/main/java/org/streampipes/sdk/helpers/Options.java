@@ -1,6 +1,6 @@
 package org.streampipes.sdk.helpers;
 
-import org.streampipes.model.impl.staticproperty.Option;
+import org.streampipes.model.staticproperty.Option;
 
 import java.util.Arrays;
 import java.util.List;

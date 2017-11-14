@@ -5,8 +5,8 @@ import org.streampipes.dataformat.SpDataFormatDefinition;
 import org.streampipes.dataformat.SpDataFormatManager;
 import org.streampipes.messaging.SpProtocolDefinition;
 import org.streampipes.messaging.SpProtocolManager;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Optional;
 

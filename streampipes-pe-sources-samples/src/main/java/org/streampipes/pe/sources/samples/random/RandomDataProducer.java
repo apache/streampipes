@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.random;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
 public class RandomDataProducer implements SemanticEventProducerDeclarer {
 	
 	@Override
-	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source_random", "Random", "Random Event Producer");		
+	public DataSourceDescription declareModel() {
+		DataSourceDescription sep = new DataSourceDescription("source_random", "Random", "Random Event Producer");
 		return sep;
 	}
 
@@ -24,6 +24,7 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 		//streams.add(new RandomTextStream());
 		streams.add(new RandomNumberStreamJson());
 		streams.add(new RandomNumberStreamList());
+		streams.add(new ComplexRandomStream());
 		//streams.add(new RandomNumberStreamThrift());
 		//streams.add(new NestedListRandomNumberStream());
 		//streams.add(new NestedRandomNumberStream());

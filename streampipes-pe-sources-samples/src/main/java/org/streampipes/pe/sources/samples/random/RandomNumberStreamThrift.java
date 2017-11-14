@@ -8,8 +8,8 @@ import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.vocabulary.MessageFormat;
 import eu.proasense.internal.ComplexValue;
 import eu.proasense.internal.SimpleEvent;
@@ -27,9 +27,9 @@ public class RandomNumberStreamThrift extends RandomNumberStream {
 	}
 	
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		
-		EventStream stream = prepareStream(TOPIC, MessageFormat.Thrift);
+		SpDataStream stream = prepareStream(TOPIC, MessageFormat.Thrift);
 		stream.setName("Random Number Stream (Thrift)");
 		stream.setDescription("Random Number Stream Description");
 		stream.setUri(sep.getUri() + "/numberthrift");

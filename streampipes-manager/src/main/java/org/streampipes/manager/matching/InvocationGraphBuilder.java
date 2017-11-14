@@ -5,13 +5,13 @@ import org.streampipes.manager.data.PipelineGraph;
 import org.streampipes.manager.data.PipelineGraphHelpers;
 import org.streampipes.manager.matching.output.OutputSchemaFactory;
 import org.streampipes.manager.matching.output.OutputSchemaGenerator;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.ElementStatusInfoSettings;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.monitoring.ElementStatusInfoSettings;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class InvocationGraphBuilder {
     private PipelineGraph pipelineGraph;
     private String pipelineId;
 
-    List<InvocableSEPAElement> graphs;
+    List<InvocableStreamPipesEntity> graphs;
 
     public InvocationGraphBuilder(PipelineGraph pipelineGraph, String pipelineId) {
         this.graphs = new ArrayList<>();
@@ -33,51 +33,51 @@ public class InvocationGraphBuilder {
         this.pipelineId = pipelineId;
     }
 
-    public List<InvocableSEPAElement> buildGraphs() {
+    public List<InvocableStreamPipesEntity> buildGraphs() {
 
-        List<EventStream> streams = PipelineGraphHelpers.findStreams(pipelineGraph);
+        List<SpDataStream> streams = PipelineGraphHelpers.findStreams(pipelineGraph);
 
-        for (EventStream stream : streams) {
-            Set<InvocableSEPAElement> connectedElements = getConnections(stream);
+        for (SpDataStream stream : streams) {
+            Set<InvocableStreamPipesEntity> connectedElements = getConnections(stream);
             configure(stream, connectedElements);
         }
 
         return graphs;
     }
 
-    public void configure(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
+    public void configure(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
 
         EventGrounding inputGrounding = new GroundingBuilder(source, targets)
                 .getEventGrounding();
 
-        if (source instanceof InvocableSEPAElement) {
-            if (source instanceof SepaInvocation) {
+        if (source instanceof InvocableStreamPipesEntity) {
+            if (source instanceof DataProcessorInvocation) {
 
-                SepaInvocation sepaInvocation = (SepaInvocation) source;
+                DataProcessorInvocation dataProcessorInvocation = (DataProcessorInvocation) source;
                 EventSchema outputSchema = new EventSchema();
-                OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(sepaInvocation
+                OutputSchemaGenerator schemaGenerator = new OutputSchemaFactory(dataProcessorInvocation
                         .getOutputStrategies()).getOuputSchemaGenerator();
 
-                if (((SepaInvocation) source).getInputStreams().size() == 1)
-                    outputSchema = schemaGenerator.buildFromOneStream(sepaInvocation.getInputStreams().get(0));
-                else if (graphExists(sepaInvocation.getDOM())) {
-                    SepaInvocation existingInvocation = (SepaInvocation) find(sepaInvocation.getDOM());
+                if (((DataProcessorInvocation) source).getInputStreams().size() == 1)
+                    outputSchema = schemaGenerator.buildFromOneStream(dataProcessorInvocation.getInputStreams().get(0));
+                else if (graphExists(dataProcessorInvocation.getDOM())) {
+                    DataProcessorInvocation existingInvocation = (DataProcessorInvocation) find(dataProcessorInvocation.getDOM());
 
-                    outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation.getInputStreams().get(0), sepaInvocation.getInputStreams().get(1));
+                    outputSchema = schemaGenerator.buildFromTwoStreams(existingInvocation.getInputStreams().get(0), dataProcessorInvocation.getInputStreams().get(1));
                     graphs.remove(existingInvocation);
                 }
 
-                sepaInvocation.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(sepaInvocation.getOutputStrategies().get(0))));
+                dataProcessorInvocation.setOutputStrategies(Arrays.asList(schemaGenerator.getModifiedOutputStrategy(dataProcessorInvocation.getOutputStrategies().get(0))));
 
-                EventStream outputStream = new EventStream();
+                SpDataStream outputStream = new SpDataStream();
                 outputStream.setEventSchema(outputSchema);
                 outputStream.setEventGrounding(inputGrounding);
 
-                ((SepaInvocation) source).setOutputStream(outputStream);
+                ((DataProcessorInvocation) source).setOutputStream(outputStream);
             }
 
             if (!graphExists(source.getDOM())) {
-                graphs.add((InvocableSEPAElement) source);
+                graphs.add((InvocableStreamPipesEntity) source);
             }
         }
 
@@ -120,11 +120,11 @@ public class InvocationGraphBuilder {
                 RandomStringUtils.randomAlphabetic(5);
     }
 
-    private EventSchema getInputSchema(NamedSEPAElement source, Integer index) {
-        if (source instanceof EventStream) {
-            return ((EventStream) source).getEventSchema();
-        } else if (source instanceof SepaInvocation) {
-            return ((SepaInvocation) source)
+    private EventSchema getInputSchema(NamedStreamPipesEntity source, Integer index) {
+        if (source instanceof SpDataStream) {
+            return ((SpDataStream) source).getEventSchema();
+        } else if (source instanceof DataProcessorInvocation) {
+            return ((DataProcessorInvocation) source)
                     .getOutputStream()
                     .getEventSchema();
         } else {
@@ -132,17 +132,17 @@ public class InvocationGraphBuilder {
         }
     }
 
-    private Set<InvocableSEPAElement> getConnections(NamedSEPAElement source) {
+    private Set<InvocableStreamPipesEntity> getConnections(NamedStreamPipesEntity source) {
         Set<String> outgoingEdges = pipelineGraph.outgoingEdgesOf(source);
         return outgoingEdges
                 .stream()
                 .map(o -> pipelineGraph.getEdgeTarget(o))
-                .map(g -> (InvocableSEPAElement) g)
+                .map(g -> (InvocableStreamPipesEntity) g)
                 .collect(Collectors.toSet());
 
     }
 
-    private Integer getIndex(InvocableSEPAElement element) {
+    private Integer getIndex(InvocableStreamPipesEntity element) {
         if (element.getStreamRequirements().size() == 1) return 0;
         else return graphExists(element.getDOM()) ? 1 : 0;
     }
@@ -153,7 +153,7 @@ public class InvocationGraphBuilder {
                 .anyMatch(g -> g.getDOM().equals(domId));
     }
 
-    private InvocableSEPAElement find(String domId) {
+    private InvocableStreamPipesEntity find(String domId) {
         return graphs
                 .stream()
                 .filter(g -> g.getDOM().equals(domId))

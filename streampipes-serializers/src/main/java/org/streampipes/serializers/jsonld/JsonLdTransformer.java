@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleNamespace;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -14,13 +15,15 @@ import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.empire.pinto.MappingOptions;
 import org.streampipes.empire.pinto.RDFMapper;
 import org.streampipes.empire.pinto.UriSerializationStrategy;
-import org.streampipes.vocabulary.SEPA;
+import org.streampipes.model.base.Namespaces;
+import org.streampipes.vocabulary.StreamPipes;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class JsonLdTransformer implements RdfTransformer {
@@ -49,6 +52,8 @@ public class JsonLdTransformer implements RdfTransformer {
             .set(MappingOptions.REQUIRE_IDS, true)
             .set(MappingOptions.USE_PROVIDED_CLASSES, new CustomAnnotationProvider())
             .set(MappingOptions.URI_SERIALIZATION_STRATEGY, UriSerializationStrategy.INSTANCE)
+            .set(MappingOptions.REGISTER_ADDITIONAL_NAMESPACES, Arrays.asList(new SimpleNamespace("sp",
+                    Namespaces.SP), new SimpleNamespace("so", Namespaces.SO)))
             .build();
 
   }
@@ -68,18 +73,18 @@ public class JsonLdTransformer implements RdfTransformer {
   }
 
   private boolean isRootElement(Statement s)  {
-    return hasObject(s, SEPA.SEMANTICEVENTPROCESSINGAGENT) ||
-            hasObject(s, SEPA.SEMANTICEVENTPRODUCER) ||
-            hasObject(s, SEPA.SEMANTICEVENTCONSUMER) ||
-            hasObject(s, SEPA.SEPAINVOCATIONGRAPH) ||
-            hasObject(s, SEPA.SECINVOCATIONGRAPH);
+    return hasObject(s, StreamPipes.DATA_PROCESSOR_DESCRIPTION) ||
+            hasObject(s, StreamPipes.DATA_SOURCE_DESCRIPTION) ||
+            hasObject(s, StreamPipes.DATA_SINK_DESCRIPTION) ||
+            hasObject(s, StreamPipes.DATA_PROCESSOR_INVOCATION) ||
+            hasObject(s, StreamPipes.DATA_SINK_INVOCATION);
   }
 
-  private boolean hasObject(Statement statement, SEPA voc) {
+  private boolean hasObject(Statement statement, String voc) {
     return statement
             .getObject()
             .stringValue()
-            .equals(voc.toSesameURI().toString());
+            .equals(voc);
   }
 
 }

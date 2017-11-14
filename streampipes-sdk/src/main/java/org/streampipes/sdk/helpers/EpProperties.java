@@ -1,7 +1,7 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.*;
+import org.streampipes.model.schema.*;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
@@ -12,16 +12,16 @@ import java.util.List;
 
 public class EpProperties {
 
-	public static EventPropertyNested nestedEp(String runtimeName, EventProperty...
+	public static EventPropertyNested nestedEp(Label label, String runtimeName, EventProperty...
 					eventProperties) {
-		EventPropertyNested nestedProperty = new EventPropertyNested(runtimeName);
+		EventPropertyNested nestedProperty = getPreparedProperty(label, new EventPropertyNested(runtimeName));
 		nestedProperty.setEventProperties(new ArrayList<>(Arrays.asList(eventProperties)));
 		return nestedProperty;
 	}
 
-	public EventPropertyList listNestedEp(String runtimeName, EventProperty...
+	public EventPropertyList listNestedEp(Label label, String runtimeName, EventProperty...
 					nestedProperties) {
-		EventPropertyList list = new EventPropertyList();
+		EventPropertyList list = getPreparedProperty(label, new EventPropertyList());
 		list.setRuntimeName(runtimeName);
 
 		EventPropertyNested nested = new EventPropertyNested();
@@ -33,97 +33,110 @@ public class EpProperties {
 
 	public static EventPropertyPrimitive timestampProperty(String runtimeName) {
 		// TODO we need a real timestamp property!
-		return ep(XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
+		return ep(Labels.from("", "Timestamp", "The current timestamp value"), XSD._long.toString(), runtimeName, "http://schema.org/DateTime");
 	}
 
-	public static EventPropertyList listIntegerEp(String runtimeName, String domainProperty) {
-		return listEp(runtimeName, Datatypes.Integer, domainProperty);
+	public static EventPropertyList listIntegerEp(Label label, String runtimeName, String domainProperty) {
+		return listEp(label, runtimeName, Datatypes.Integer, domainProperty);
 	}
 
-	public static EventPropertyList listLongEp(String runtimeName, String domainProperty) {
-		return listEp(runtimeName, Datatypes.Long, domainProperty);
+	public static EventPropertyList listLongEp(Label label, String runtimeName, String domainProperty) {
+		return listEp(label, runtimeName, Datatypes.Long, domainProperty);
 	}
 
-	public static EventPropertyList listDoubleEp(String runtimeName, String domainProperty) {
-		return listEp(runtimeName, Datatypes.Double, domainProperty);
+	public static EventPropertyList listDoubleEp(Label label, String runtimeName, String domainProperty) {
+		return listEp(label, runtimeName, Datatypes.Double, domainProperty);
 	}
 
-	public static EventPropertyList listStringEp(String runtimeName, String domainProperty) {
-		return listEp(runtimeName, Datatypes.String, domainProperty);
+	public static EventPropertyList listStringEp(Label label, String runtimeName, String domainProperty) {
+		return listEp(label, runtimeName, Datatypes.String, domainProperty);
 	}
 
-	public static EventPropertyList listBooleanEp(String runtimeName, String domainProperty) {
-		return listEp(runtimeName, Datatypes.Boolean, domainProperty);
+	public static EventPropertyList listBooleanEp(Label label, String runtimeName, String domainProperty) {
+		return listEp(label, runtimeName, Datatypes.Boolean, domainProperty);
 	}
 
-	public static EventPropertyList listEp(String runtimeName, Datatypes runtimeType, String
+	public static EventPropertyList listEp(Label label, String runtimeName, Datatypes runtimeType, String
 					domainProperty) {
-		return new EventPropertyList(runtimeName, ep(runtimeType.toString(),
+		return getPreparedProperty(label, new EventPropertyList(runtimeName, ep(Labels.empty(), runtimeType
+										.toString(),
 						runtimeName,
-						domainProperty));
+						domainProperty)));
 	}
 
-	public static EventPropertyPrimitive booleanEp(String runtimeName, String domainProperty)
-	{
-		return ep(XSD._boolean.toString(), runtimeName, domainProperty);
+	public static EventPropertyPrimitive booleanEp(Label label, String runtimeName, String domainProperty) {
+		return ep(label, XSD._boolean.toString(), runtimeName, domainProperty);
 	}
 	
-	public static EventPropertyPrimitive stringEp(String runtimeName, String domainProperty)
-	{
-		return ep(XSD._string.toString(), runtimeName, domainProperty);
+	public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty) {
+		return ep(label, XSD._string.toString(), runtimeName, domainProperty);
+	}
+
+	public static EventPropertyPrimitive stringEp(Label label, String runtimeName, String domainProperty, Enumeration
+																								enumeration) {
+		EventPropertyPrimitive ep = ep(label, XSD._string.toString(), runtimeName, domainProperty);
+		ep.setValueSpecification(enumeration);
+		return ep;
 	}
 	
-	public static EventPropertyPrimitive stringEp(String runtimeName, List<URI> domainProperties)
-	{
-		return ep(XSD._string.toString(), runtimeName, domainProperties);
+	public static EventPropertyPrimitive stringEp(Label label, String runtimeName, List<URI> domainProperties) {
+		return ep(label, XSD._string.toString(), runtimeName, domainProperties);
 	}
 	
-	public static EventPropertyPrimitive integerEp(String runtimeName, String domainProperty)
-	{
-		return ep(XSD._integer.toString(), runtimeName, domainProperty);
+	public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty) {
+		return ep(label, XSD._integer.toString(), runtimeName, domainProperty);
 	}
 	
-	public static EventPropertyPrimitive integerEp(String runtimeName, List<URI> domainProperties)
-	{
-		return ep(XSD._integer.toString(), runtimeName, domainProperties);
+	public static EventPropertyPrimitive integerEp(Label label, String runtimeName, List<URI> domainProperties) {
+		return ep(label, XSD._integer.toString(), runtimeName, domainProperties);
 	}
 	
-	public static EventPropertyPrimitive longEp(String runtimeName, String domainProperty)
-	{
-		return ep(XSD._long.toString(), runtimeName, domainProperty);
+	public static EventPropertyPrimitive longEp(Label label, String runtimeName, String domainProperty) {
+		return ep(label, XSD._long.toString(), runtimeName, domainProperty);
 	}
 	
-	public static EventPropertyPrimitive longEp(String runtimeName, List<URI> domainProperties)
-	{
-		return ep(XSD._long.toString(), runtimeName, domainProperties);
+	public static EventPropertyPrimitive longEp(Label label, String runtimeName, List<URI> domainProperties) {
+		return ep(label, XSD._long.toString(), runtimeName, domainProperties);
 	}
 	
-	public static EventPropertyPrimitive integerEp(String runtimeName, String domainProperty, Float minValue, Float maxValue, Float step)
-	{
-		EventPropertyPrimitive ep =  ep(XSD._integer.toString(), runtimeName, domainProperty);
+	public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty, Float
+					minValue, Float maxValue, Float step) {
+		return integerEp(label, runtimeName, domainProperty, new QuantitativeValue(minValue, maxValue, step));
+	}
+
+	public static EventPropertyPrimitive integerEp(Label label, String runtimeName, String domainProperty,
+																								 QuantitativeValue valueSpecification) {
+		EventPropertyPrimitive ep =  ep(label, XSD._integer.toString(), runtimeName, domainProperty);
+		ep.setValueSpecification(valueSpecification);
+		return ep;
+	}
+	
+	public static EventPropertyPrimitive doubleEp(Label label, String runtimeName, String domainProperty) {
+		return ep(label, XSD._double.toString(), runtimeName, domainProperty);
+	}
+	
+	public static EventPropertyPrimitive doubleEp(Label label, String runtimeName, String domainProperty, Float minValue,
+																								Float maxValue, Float step) {
+		EventPropertyPrimitive ep =  ep(label, XSD._double.toString(), runtimeName, domainProperty);
 		ep.setValueSpecification(new QuantitativeValue(minValue, maxValue, step));
 		return ep;
 	}
 	
-	public static EventPropertyPrimitive doubleEp(String runtimeName, String domainProperty)
+	private static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, String domainProperty)
 	{
-		return ep(XSD._double.toString(), runtimeName, domainProperty);
+		return getPreparedProperty(label, new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI
+					(domainProperty)));
 	}
 	
-	public static EventPropertyPrimitive doubleEp(String runtimeName, String domainProperty, Float minValue, Float maxValue, Float step)
+	private static EventPropertyPrimitive ep(Label label, String runtimeType, String runtimeName, List<URI>
+					domainProperties)
 	{
-		EventPropertyPrimitive ep =  ep(XSD._double.toString(), runtimeName, domainProperty);
-		ep.setValueSpecification(new QuantitativeValue(minValue, maxValue, step));
-		return ep;
+		return getPreparedProperty(label, new EventPropertyPrimitive(runtimeType, runtimeName, "", domainProperties));
 	}
-	
-	private static EventPropertyPrimitive ep(String runtimeType, String runtimeName, String domainProperty)
-	{
-		return new EventPropertyPrimitive(runtimeType, runtimeName, "", Utils.createURI(domainProperty));
-	}
-	
-	private static EventPropertyPrimitive ep(String runtimeType, String runtimeName, List<URI> domainProperties)
-	{
-		return new EventPropertyPrimitive(runtimeType, runtimeName, "", domainProperties);
+
+	private static <T extends EventProperty> T getPreparedProperty(Label label, T eventProperty) {
+		eventProperty.setLabel(label.getLabel());
+		eventProperty.setDescription(label.getDescription());
+		return eventProperty;
 	}
 }

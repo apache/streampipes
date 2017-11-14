@@ -6,7 +6,7 @@ import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.html.model.Description;
 import org.streampipes.container.html.model.SemanticEventProducerDescription;
-import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 
@@ -51,7 +51,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
     }
 
     private String getType(Declarer declarer) {
-        if (declarer.declareModel() instanceof SecDescription) return "action";
+        if (declarer.declareModel() instanceof DataSinkDescription) return "action";
         else return "sepa";
     }
 

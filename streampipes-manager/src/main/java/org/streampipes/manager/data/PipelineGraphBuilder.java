@@ -1,7 +1,7 @@
 package org.streampipes.manager.data;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class PipelineGraphBuilder {
 
     private Pipeline pipeline;
-    private List<NamedSEPAElement> allPipelineElements;
-    private List<InvocableSEPAElement> invocableElements;
+    private List<NamedStreamPipesEntity> allPipelineElements;
+    private List<InvocableStreamPipesEntity> invocableElements;
 
     public PipelineGraphBuilder(Pipeline pipeline) {
         this.pipeline = pipeline;
@@ -23,15 +23,15 @@ public class PipelineGraphBuilder {
         this.invocableElements = addInvocable();
     }
 
-    private List<NamedSEPAElement> addAll() {
-        List<NamedSEPAElement> allElements = new ArrayList<>();
+    private List<NamedStreamPipesEntity> addAll() {
+        List<NamedStreamPipesEntity> allElements = new ArrayList<>();
         allElements.addAll(pipeline.getStreams());
         allElements.addAll(addInvocable());
         return allElements;
     }
 
-    private List<InvocableSEPAElement> addInvocable() {
-        List<InvocableSEPAElement> allElements = new ArrayList<>();
+    private List<InvocableStreamPipesEntity> addInvocable() {
+        List<InvocableStreamPipesEntity> allElements = new ArrayList<>();
         allElements.addAll(pipeline.getSepas());
         allElements.addAll(pipeline.getActions());
         return allElements;
@@ -42,15 +42,15 @@ public class PipelineGraphBuilder {
         PipelineGraph pipelineGraph = new PipelineGraph();
         allPipelineElements.forEach(p -> pipelineGraph.addVertex(p));
 
-        for(NamedSEPAElement source : allPipelineElements) {
-            List<InvocableSEPAElement> targets = findTargets(source.getDOM());
+        for(NamedStreamPipesEntity source : allPipelineElements) {
+            List<InvocableStreamPipesEntity> targets = findTargets(source.getDOM());
             targets.forEach(t -> pipelineGraph.addEdge(source, t));
         }
 
         return pipelineGraph;
     }
 
-    private List<InvocableSEPAElement> findTargets(String domId) {
+    private List<InvocableStreamPipesEntity> findTargets(String domId) {
         return invocableElements
                 .stream()
                 .filter(i -> i.getConnectedTo().contains(domId))

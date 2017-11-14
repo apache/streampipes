@@ -3,62 +3,62 @@ package org.streampipes.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 
 
 public enum SEPAManager {
 	
 	INSTANCE;
 
-	List<SepaDescription> storedSEPAs;
-	List<SepDescription> storedSEPs;
-	List<EventStream> storedEventStreams;
+	List<DataProcessorDescription> storedSEPAs;
+	List<DataSourceDescription> storedSEPs;
+	List<SpDataStream> storedSpDataStreams;
 	
 	
 	SEPAManager()
 	{
-		this.storedSEPAs = new ArrayList<SepaDescription>();
-		this.storedSEPs = new ArrayList<SepDescription>();
-		this.storedEventStreams = new ArrayList<EventStream>();
+		this.storedSEPAs = new ArrayList<DataProcessorDescription>();
+		this.storedSEPs = new ArrayList<DataSourceDescription>();
+		this.storedSpDataStreams = new ArrayList<SpDataStream>();
 	}
 	
-	public List<SepaDescription> getStoredSEPAs() {
+	public List<DataProcessorDescription> getStoredSEPAs() {
 		return storedSEPAs;
 	}
-	public void setStoredSEPAs(List<SepaDescription> storedSEPAs) {
+	public void setStoredSEPAs(List<DataProcessorDescription> storedSEPAs) {
 		this.storedSEPAs = storedSEPAs;
 	}
-	public List<SepDescription> getStoredSEPs() {
+	public List<DataSourceDescription> getStoredSEPs() {
 		return storedSEPs;
 	}
-	public void setStoredSEPs(List<SepDescription> storedSEPs) {
+	public void setStoredSEPs(List<DataSourceDescription> storedSEPs) {
 		this.storedSEPs = storedSEPs;
 	}
 	
-	public boolean addSEPA(SepaDescription SEPA)
+	public boolean addSEPA(DataProcessorDescription SEPA)
 	{
 		return storedSEPAs.add(SEPA);
 	}
 	
-	public boolean addSEP(SepDescription SEP)
+	public boolean addSEP(DataSourceDescription SEP)
 	{
 		return storedSEPs.add(SEP);
 	}
 
-	public List<EventStream> getStoredEventStreams() {
-		return storedEventStreams;
+	public List<SpDataStream> getStoredSpDataStreams() {
+		return storedSpDataStreams;
 	}
 
-	public void setStoredEventStreams(List<EventStream> storedEventStreams) {
-		this.storedEventStreams = storedEventStreams;
+	public void setStoredSpDataStreams(List<SpDataStream> storedSpDataStreams) {
+		this.storedSpDataStreams = storedSpDataStreams;
 	}
 	
-	public List<SepDescription> getSEPById(String id)
+	public List<DataSourceDescription> getSEPById(String id)
 	{
-		List<SepDescription> result = new ArrayList<SepDescription>();
-		for(SepDescription s : storedSEPs)
+		List<DataSourceDescription> result = new ArrayList<DataSourceDescription>();
+		for(DataSourceDescription s : storedSEPs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);
@@ -66,10 +66,10 @@ public enum SEPAManager {
 		return result;
 	}
 	
-	public List<SepaDescription> getSEPAById(String id)
+	public List<DataProcessorDescription> getSEPAById(String id)
 	{
-		List<SepaDescription> result = new ArrayList<SepaDescription>();
-		for(SepaDescription s : storedSEPAs)
+		List<DataProcessorDescription> result = new ArrayList<DataProcessorDescription>();
+		for(DataProcessorDescription s : storedSEPAs)
 		{
 			if (s.getElementId().equals(id))
 				result.add(s);

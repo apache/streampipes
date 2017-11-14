@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.notification;
 
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -20,9 +20,9 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 	private static final String CONTENT_KEY = "content";
 
 	@Override
-	public SecDescription declareModel() {
+	public DataSinkDescription declareModel() {
 		return DataSinkBuilder.create("notification", "Notification", "Displays a notification in the UI panel")
-						.category(EcType.NOTIFICATION)
+						.category(DataSinkType.NOTIFICATION)
 						.iconUrl(ActionConfig.getIconUrl("notification_icon.png"))
 						.requiredPropertyStream1(EpRequirements.anyProperty())
 						.supportedFormats(SupportedFormats.jsonFormat())
@@ -34,7 +34,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 	}
 
 	@Override
-	public ConfiguredEventSink<NotificationParameters, EventSink<NotificationParameters>> onInvocation(SecInvocation graph) {
+	public ConfiguredEventSink<NotificationParameters, EventSink<NotificationParameters>> onInvocation(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = getExtractor(graph);
 
 		String title = extractor.singleValueParameter(TITLE_KEY, String.class);

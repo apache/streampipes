@@ -9,8 +9,8 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.storage.impl.PipelineStorageImpl;
 
 import java.io.BufferedReader;
@@ -27,7 +27,7 @@ import java.util.Map;
  * 
  *  
  */
-public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>, Runnable {
+public class SepStoppedMonitoring implements EpRuntimeMonitoring<DataSourceDescription>, Runnable {
 
 	private Map<String, List<PipelineObserver>> streamToObserver;
 	private Map<String, Pipeline> streamToStoppedMonitoringPipeline;
@@ -39,10 +39,10 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 		try {
 			Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
 
-			List<EventStream> allStreams = new ArrayList<>();
+			List<SpDataStream> allStreams = new ArrayList<>();
 			pipeline.getStreams().forEach((s) -> allStreams.add(s));
 
-			for (EventStream s : allStreams) {
+			for (SpDataStream s : allStreams) {
 				if (streamToObserver.get(s.getElementId()) == null) {
 					List<PipelineObserver> po = new ArrayList<>();
 					po.add(observer);
@@ -80,9 +80,9 @@ public class SepStoppedMonitoring implements EpRuntimeMonitoring<SepDescription>
 	public boolean remove(PipelineObserver observer) {
 
 		Pipeline pipeline = new PipelineStorageImpl().getPipeline(observer.getPipelineId());
-		List<EventStream> streams = pipeline.getStreams();
+		List<SpDataStream> streams = pipeline.getStreams();
 
-		for (EventStream sc : streams) {
+		for (SpDataStream sc : streams) {
 			String streamId = sc.getElementId();
 			List<PipelineObserver> po = streamToObserver.get(streamId);
 			if (po.size() == 1) {

@@ -4,8 +4,8 @@ import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.manager.matching.v2.TestUtils;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class TestPipelineModification {
     @Test
     public void testPipelineModificationMessagePresent() {
 
-        SepaInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
-        EventStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
+        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
+        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 
         Pipeline pipeline =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
 
@@ -47,8 +47,8 @@ public class TestPipelineModification {
     @Test
     public void testPipelineMappingProperties() {
 
-        SepaInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
-        EventStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
+        DataProcessorInvocation invocation = TestUtils.makeSepa(new AggregationController(), "B", "A");
+        SpDataStream stream = TestUtils.makeStream(new RandomDataProducer(), new RandomNumberStreamJson(), "A");
 
         Pipeline pipeline =TestUtils.makePipeline(Arrays.asList(stream), Arrays.asList(invocation));
 

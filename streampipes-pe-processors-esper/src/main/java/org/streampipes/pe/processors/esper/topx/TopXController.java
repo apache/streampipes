@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.topx;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -18,9 +18,9 @@ import java.util.List;
 public class TopXController extends StandaloneEventProcessorDeclarerSingleton<TopXParameter> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("topX", "Top-X", "Aggregates an event stream and outputs a list of events order by a given property")
-						.category(EpaType.TRANSFORM)
+						.category(DataProcessorType.TRANSFORM)
 						.requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), "sortBy", "Sort by: ", "")
 						.naryMappingPropertyWithoutRequirement("unique", "Unique properties: ", "")
 						.outputStrategy(OutputStrategies.list("list"))
@@ -33,7 +33,7 @@ public class TopXController extends StandaloneEventProcessorDeclarerSingleton<To
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TopXParameter, EventProcessor<TopXParameter>> onInvocation(SepaInvocation sepa) {
+	public ConfiguredEventProcessor<TopXParameter, EventProcessor<TopXParameter>> onInvocation(DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
 		String sortBy = extractor.mappingPropertyValue("sortBy");

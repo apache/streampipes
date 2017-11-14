@@ -3,7 +3,7 @@ package org.streampipes.manager.execution.http;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.streampipes.commons.Utils;
-import org.streampipes.model.InvocableSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.PipelineElementStatus;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.apache.http.client.ClientProtocolException;
@@ -15,9 +15,9 @@ import java.io.IOException;
 
 public class HttpRequestBuilder {
 
-	private InvocableSEPAElement payload;
+	private InvocableStreamPipesEntity payload;
 	
-	public HttpRequestBuilder(InvocableSEPAElement payload)
+	public HttpRequestBuilder(InvocableStreamPipesEntity payload)
 	{
 		this.payload = payload;
 	}
@@ -52,7 +52,7 @@ public class HttpRequestBuilder {
 	private PipelineElementStatus handleResponse(Response httpResp) throws JsonSyntaxException, ClientProtocolException, IOException
 	{
 		String resp = httpResp.returnContent().asString();
-		org.streampipes.model.impl.Response streamPipesResp = new Gson().fromJson(resp, org.streampipes.model.impl.Response.class);
+		org.streampipes.model.Response streamPipesResp = new Gson().fromJson(resp, org.streampipes.model.Response.class);
 		return convert(streamPipesResp);
 	}
 	
@@ -61,7 +61,7 @@ public class HttpRequestBuilder {
 		return Utils.asString(new JsonLdTransformer().toJsonLd(payload));
 	}
 	
-	private PipelineElementStatus convert(org.streampipes.model.impl.Response response)
+	private PipelineElementStatus convert(org.streampipes.model.Response response)
 	{
 		return new PipelineElementStatus(payload.getBelongsTo(), payload.getName(), response.isSuccess(), response.getOptionalMessage());
 	}

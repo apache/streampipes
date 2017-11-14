@@ -1,8 +1,8 @@
 package org.streampipes.performance.dataprovider;
 
-import org.streampipes.model.impl.EventStream;
+import org.streampipes.model.SpDataStream;
 
 public interface StreamProvider {
 
-  EventStream getStreamDescription();
+  SpDataStream getStreamDescription();
 }

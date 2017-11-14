@@ -2,18 +2,18 @@ package org.streampipes.pe.processors.esper.proasense.mhwirth.drillingstop;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.XSD;
@@ -31,7 +31,7 @@ public class DrillingStopController extends StandaloneEventProcessorDeclarerSing
 
 	@Override
 	public ConfiguredEventProcessor<DrillingStopParameters, EventProcessor<DrillingStopParameters>> onInvocation
-					(SepaInvocation sepa) {
+					(DataProcessorInvocation sepa) {
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
 
@@ -50,10 +50,10 @@ public class DrillingStopController extends StandaloneEventProcessorDeclarerSing
 	}
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 	
-		EventStream stream1 = new EventStream();
-		EventStream stream2 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
+		SpDataStream stream2 = new SpDataStream();
 		
 		EventSchema schema1 = new EventSchema();
 		EventPropertyPrimitive p1 = new EventPropertyPrimitive(Utils.createURI(MhWirth.Rpm));
@@ -64,9 +64,9 @@ public class DrillingStopController extends StandaloneEventProcessorDeclarerSing
 		schema2.addEventProperty(p2);
 		
 		
-		SepaDescription desc = new SepaDescription("drillingstop", "Driling Stop", "Detects stop of a drilling process");
+		DataProcessorDescription desc = new DataProcessorDescription("drillingstop", "Driling Stop", "Detects stop of a drilling process");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Drilling_Stop_HQ.png");
-		desc.setCategory(Arrays.asList(EpaType.ALGORITHM.name()));
+		desc.setCategory(Arrays.asList(DataProcessorType.ALGORITHM.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());

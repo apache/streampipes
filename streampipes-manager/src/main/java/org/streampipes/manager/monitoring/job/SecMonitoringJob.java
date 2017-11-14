@@ -1,11 +1,11 @@
 package org.streampipes.manager.monitoring.job;
 
-import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 
-public class SecMonitoringJob extends MonitoringJob<SecDescription>{
+public class SecMonitoringJob extends MonitoringJob<DataSinkDescription>{
 
-	public SecMonitoringJob(SecDescription secDescription) {
-		super(secDescription);
+	public SecMonitoringJob(DataSinkDescription dataSinkDescription) {
+		super(dataSinkDescription);
 		// TODO Auto-generated constructor stub
 	}
 

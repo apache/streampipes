@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.vocabulary.XSD;
 
 public class RandomDataGenerator {

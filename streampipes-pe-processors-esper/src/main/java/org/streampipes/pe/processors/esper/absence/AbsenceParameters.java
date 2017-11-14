@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.absence;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class AbsenceParameters extends EventProcessorBindingParams {
 	private List<String> selectProperties = new ArrayList<>();
 	private int timeWindowSize;
 	
-	public AbsenceParameters(SepaInvocation graph, List<String> selectProperties, int timeWindowSize) {
+	public AbsenceParameters(DataProcessorInvocation graph, List<String> selectProperties, int timeWindowSize) {
 		super(graph);
 		this.selectProperties = selectProperties;
 		this.timeWindowSize = timeWindowSize;

@@ -1,20 +1,20 @@
 package org.streampipes.wrapper.flink;
 
-import org.streampipes.wrapper.flink.serializer.SimpleJmsSerializer;
-import org.streampipes.wrapper.flink.serializer.SimpleKafkaSerializer;
-import org.streampipes.wrapper.flink.sink.FlinkJmsProducer;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportProtocol;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.wrapper.flink.serializer.SimpleJmsSerializer;
+import org.streampipes.wrapper.flink.serializer.SimpleKafkaSerializer;
+import org.streampipes.wrapper.flink.sink.FlinkJmsProducer;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.Map;
 
-public abstract class FlinkSepaRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<SepaInvocation> {
+public abstract class FlinkSepaRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<DataProcessorInvocation> {
 
 	/**
 	 *

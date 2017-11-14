@@ -1,7 +1,7 @@
 package org.streampipes.pe.sinks.standalone.samples.rabbitmq;
 
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -29,7 +29,7 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
   private static final String EXCHANGE_NAME_URI = "http://schema.org/exchangeName";
 
   @Override
-  public SecDescription declareModel() {
+  public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("rabbitmq", "RabbitMQ Publisher", "Forwards events to a " +
             "RabbitMQ broker")
             .iconUrl(ActionConfig.getIconUrl("rabbitmq-icon"))
@@ -49,7 +49,7 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
   }
 
   @Override
-  public ConfiguredEventSink<RabbitMqParameters, EventSink<RabbitMqParameters>> onInvocation(SecInvocation graph) {
+  public ConfiguredEventSink<RabbitMqParameters, EventSink<RabbitMqParameters>> onInvocation(DataSinkInvocation graph) {
     DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
     String publisherTopic = extractor.singleValueParameter(TOPIC_KEY,
             String.class);

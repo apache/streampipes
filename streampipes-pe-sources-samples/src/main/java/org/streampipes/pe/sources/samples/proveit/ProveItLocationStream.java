@@ -1,28 +1,29 @@
 package org.streampipes.pe.sources.samples.proveit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.vocabulary.SO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProveItLocationStream  implements EventStreamDeclarer {
 	    
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		stream.setName("Vehicle Position");
 		stream.setDescription("Receives vehicle location data from the ProveIT app");
 		stream.setUri(sep.getUri() + "location");
@@ -37,13 +38,13 @@ public class ProveItLocationStream  implements EventStreamDeclarer {
 		EventSchema schema = new EventSchema();
 		List<EventProperty> properties = new ArrayList<>();
 		
-		properties.add(EpProperties.longEp("timestamp", "http://schema.org/DateTime"));
-		properties.add(EpProperties.doubleEp("latitude", Geo.lat));
-		properties.add(EpProperties.doubleEp("longitude", Geo.lng));
-		properties.add(EpProperties.doubleEp("altitude", Geo.alt));
-		properties.add(EpProperties.doubleEp("minAccuracy", SO.Number));
-		properties.add(EpProperties.stringEp("deviceId", SO.Text));
-		properties.add(EpProperties.doubleEp("accuracy", SO.Number));
+		properties.add(EpProperties.longEp(Labels.empty(), "timestamp", "http://schema.org/DateTime"));
+		properties.add(EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat));
+		properties.add(EpProperties.doubleEp(Labels.empty(), "longitude", Geo.lng));
+		properties.add(EpProperties.doubleEp(Labels.empty(), "altitude", Geo.alt));
+		properties.add(EpProperties.doubleEp(Labels.empty(), "minAccuracy", SO.Number));
+		properties.add(EpProperties.stringEp(Labels.empty(), "deviceId", SO.Text));
+		properties.add(EpProperties.doubleEp(Labels.empty(), "accuracy", SO.Number));
 		
 		schema.setEventProperties(properties);
 		stream.setEventSchema(schema);

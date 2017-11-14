@@ -1,7 +1,7 @@
 package org.streampipes.wrapper.declarer;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.Response;
 import org.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.runtime.PipelineElement;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public abstract class PipelineElementDeclarer<B extends BindingParams, EPR extends
         PipelineElementRuntime, I
-        extends InvocableSEPAElement, EX extends AbstractParameterExtractor<I>, PE extends
+        extends InvocableStreamPipesEntity, EX extends AbstractParameterExtractor<I>, PE extends
         PipelineElement<B>> {
 
   protected EPR epRuntime;

@@ -1,17 +1,17 @@
 package org.streampipes.sdk.extractor;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 /**
  * Created by riemer on 20.03.2017.
  */
-public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<SepaInvocation> {
+public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation> {
 
-  public static ProcessingElementParameterExtractor from(SepaInvocation sepaElement) {
+  public static ProcessingElementParameterExtractor from(DataProcessorInvocation sepaElement) {
     return new ProcessingElementParameterExtractor(sepaElement);
   }
 
-  public ProcessingElementParameterExtractor(SepaInvocation sepaElement) {
+  public ProcessingElementParameterExtractor(DataProcessorInvocation sepaElement) {
     super(sepaElement);
   }
 

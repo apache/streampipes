@@ -1,6 +1,6 @@
 package org.streampipes.pe.sinks.standalone.samples.rabbitmq;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class RabbitMqParameters extends EventSinkBindingParams {
@@ -12,7 +12,7 @@ public class RabbitMqParameters extends EventSinkBindingParams {
   private String rabbitMqPassword;
   private String exchangeName;
 
-  public RabbitMqParameters(SecInvocation graph, String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic,
+  public RabbitMqParameters(DataSinkInvocation graph, String rabbitMqHost, Integer rabbitMqPort, String rabbitMqTopic,
                             String rabbitMqUser, String rabbitMqPassword, String exchangeName) {
     super(graph);
     this.rabbitMqHost = rabbitMqHost;

@@ -7,14 +7,14 @@ import org.streampipes.commons.Utils;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.streampipes.model.client.deployment.ElementType;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.storage.controller.StorageManager;
@@ -42,7 +42,7 @@ public class Deployment extends AbstractRestInterface {
     public Response getFile(@FormDataParam("config") String config, @FormDataParam("model") String model) {
         DeploymentConfiguration deploymentConfig = fromJson(config);
 
-        NamedSEPAElement element = getElement(deploymentConfig, model);
+        NamedStreamPipesEntity element = getElement(deploymentConfig, model);
 
         if (element == null) {
             throw new WebApplicationException(500);
@@ -59,14 +59,14 @@ public class Deployment extends AbstractRestInterface {
                         "attachment; filename=" + f.getName()).build();
     }
 
-    public static NamedSEPAElement getElement(DeploymentConfiguration config, String model) {
+    public static NamedStreamPipesEntity getElement(DeploymentConfiguration config, String model) {
 
         if (config.getElementType() == ElementType.SEP) {
-            return GsonSerializer.getGsonWithIds().fromJson(model, SepDescription.class);
+            return GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class);
         } else if (config.getElementType() == ElementType.SEPA) {
-            return GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
+            return GsonSerializer.getGsonWithIds().fromJson(model, DataProcessorDescription.class);
         } else if (config.getElementType() == ElementType.SEC) {
-            return GsonSerializer.getGsonWithIds().fromJson(model, SecDescription.class);
+            return GsonSerializer.getGsonWithIds().fromJson(model, DataSinkDescription.class);
         } else {
             return null;
         }
@@ -78,7 +78,7 @@ public class Deployment extends AbstractRestInterface {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response directImport(@PathParam("username") String username, @FormDataParam("config") String config, @FormDataParam("model") String model) {
 
-        SepDescription sep = new SepDescription(GsonSerializer.getGsonWithIds().fromJson(model, SepDescription.class));
+        DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
         try {
             Message message = Operations.verifyAndAddElement(Utils.asString(new JsonLdTransformer().toJsonLd(sep)), username, true);
             return ok(message);
@@ -102,11 +102,11 @@ public class Deployment extends AbstractRestInterface {
         boolean success;
 
         if (deploymentConfig.getElementType().equals("Sepa")) {
-            SepaDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, SepaDescription.class);
+            DataProcessorDescription sepa = GsonSerializer.getGsonWithIds().fromJson(model, DataProcessorDescription.class);
             success = StorageManager.INSTANCE.getStorageAPI().deleteSEPA(sepa.getElementId());
             StorageManager.INSTANCE.getStorageAPI().storeSEPA(sepa);
         } else {
-            SecDescription sec = new SecDescription(GsonSerializer.getGsonWithIds().fromJson(model, SecDescription.class));
+            DataSinkDescription sec = new DataSinkDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSinkDescription.class));
             success = StorageManager.INSTANCE.getStorageAPI().update(sec);
         }
 
@@ -123,7 +123,7 @@ public class Deployment extends AbstractRestInterface {
 
         DeploymentConfiguration deploymentConfig = fromJson(config);
 
-        NamedSEPAElement element = getElement(deploymentConfig, model);
+        NamedStreamPipesEntity element = getElement(deploymentConfig, model);
 
         String java = CodeGenerator.getCodeGenerator(deploymentConfig, element).getDeclareModel();
 
@@ -144,7 +144,7 @@ public class Deployment extends AbstractRestInterface {
 
         DeploymentConfiguration deploymentConfig = fromJson(config);
 
-        NamedSEPAElement element = getElement(deploymentConfig, model);
+        NamedStreamPipesEntity element = getElement(deploymentConfig, model);
 
         try {
             return Response.ok(Utils.asString(new JsonLdTransformer().toJsonLd(element))).build();

@@ -5,7 +5,7 @@ import org.lightcouch.CouchDbProperties;
 import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.wrapper.runtime.EventSink;
@@ -51,9 +51,9 @@ public class Dashboard implements EventSink<DashboardParameters> {
         }
     }
 
-    private boolean saveToCouchDB(SecInvocation invocationGraph) {
+    private boolean saveToCouchDB(DataSinkInvocation invocationGraph) {
         CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
-        SecInvocation inv = new SecInvocation(invocationGraph);
+        DataSinkInvocation inv = new DataSinkInvocation(invocationGraph);
         dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
         org.lightcouch.Response res = dbClient.save(DashboardModel.from(new DashboardParameters(inv)));
 

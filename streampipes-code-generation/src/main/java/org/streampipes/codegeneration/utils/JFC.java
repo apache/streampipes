@@ -1,32 +1,31 @@
 package org.streampipes.codegeneration.utils;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.squareup.javapoet.ClassName;
-
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.stream.SchemaBuilder;
+import org.streampipes.sdk.stream.StreamBuilder;
 import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
 import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkSecRuntime;
 import org.streampipes.wrapper.flink.FlinkSepaRuntime;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.util.SepaUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Java File Classes (JFC)
@@ -49,12 +48,12 @@ public abstract class JFC {
 	public static ClassName FLAT_MAP_FUNCTION = ClassName.get("org.apache.flink.api.common.functions", "FlatMapFunction");
 	public static ClassName COLLECTOR = ClassName.get("org.apache.flink.util", "Collector");
 
-	public static ClassName SEPA_DESCRIPTION = ClassName.get(SepaDescription.class);
-	public static ClassName SEC_DESCRIPTION = ClassName.get(SecDescription.class);
-	public static ClassName SEPA_INVOCATION = ClassName.get(SepaInvocation.class);
-	public static ClassName SEC_INVOCATION = ClassName.get(SecInvocation.class);
+	public static ClassName SEPA_DESCRIPTION = ClassName.get(DataProcessorDescription.class);
+	public static ClassName SEC_DESCRIPTION = ClassName.get(DataSinkDescription.class);
+	public static ClassName SEPA_INVOCATION = ClassName.get(DataProcessorInvocation.class);
+	public static ClassName SEC_INVOCATION = ClassName.get(DataSinkInvocation.class);
 	public static ClassName SEPA_UTILS = ClassName.get(SepaUtils.class);
-	public static ClassName EVENT_STREAM = ClassName.get(EventStream.class);
+	public static ClassName EVENT_STREAM = ClassName.get(SpDataStream.class);
 	public static ClassName STREAM_BUILDER = ClassName.get(StreamBuilder.class);
 	public static ClassName SCHEMA_BUILDER = ClassName.get(SchemaBuilder.class);
 	public static ClassName EVENT_PROPERTY = ClassName.get(EventProperty.class);

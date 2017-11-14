@@ -3,8 +3,8 @@ package org.streampipes.wrapper.standalone.manager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
 import org.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
 

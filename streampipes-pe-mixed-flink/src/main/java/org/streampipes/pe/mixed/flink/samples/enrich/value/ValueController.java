@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.value;
 
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -15,12 +15,12 @@ public class ValueController extends AbstractFlinkAgentDeclarer<ValueParameters>
 
 
     @Override
-    public SepaDescription declareModel() {
+    public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("enrich_value", "Flink Value Enrichment",
                 "Appends a static value to the event payload using Flink")
                 .requiredPropertyStream1(EpRequirements.anyProperty())
                 .outputStrategy(OutputStrategies.append(
-                        EpProperties.stringEp("value", SO.Text)
+                        EpProperties.stringEp(Labels.empty(), "value", SO.Text)
                 ))
                 .requiredTextParameter("valueName", "Key name", "The name of the key")
                 .requiredTextParameter("value", "The Value", "")
@@ -32,7 +32,7 @@ public class ValueController extends AbstractFlinkAgentDeclarer<ValueParameters>
 
 
     @Override
-    protected FlinkSepaRuntime<ValueParameters> getRuntime(SepaInvocation sepa) {
+    protected FlinkSepaRuntime<ValueParameters> getRuntime(DataProcessorInvocation sepa) {
         ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
         String valueName = extractor.singleValueParameter("valueName", String.class);

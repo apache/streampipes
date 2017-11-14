@@ -1,6 +1,6 @@
 package org.streampipes.pe.processors.esper.compose;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.wrapper.esper.EsperEventEngine;
 
 import java.util.ArrayList;

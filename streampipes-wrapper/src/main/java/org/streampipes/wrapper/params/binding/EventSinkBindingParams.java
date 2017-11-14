@@ -1,10 +1,10 @@
 package org.streampipes.wrapper.params.binding;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 
-public class EventSinkBindingParams extends BindingParams<SecInvocation> {
+public class EventSinkBindingParams extends BindingParams<DataSinkInvocation> {
 
-  public EventSinkBindingParams(SecInvocation graph) {
-    super(new SecInvocation(graph));
+  public EventSinkBindingParams(DataSinkInvocation graph) {
+    super(new DataSinkInvocation(graph));
   }
 }

@@ -1,21 +1,21 @@
 package org.streampipes.sdk.stream;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.net.URI;
 
 public class StreamBuilder {
 
-	private EventStream stream;
+	private SpDataStream stream;
 	private EventSchema schema;
 
 	private StreamBuilder(String name, String description, String uri)
 	{
-		stream = new EventStream();
+		stream = new SpDataStream();
 		stream.setName(name);
 		stream.setDescription(description);
 		stream.setUri(uri);
@@ -23,7 +23,7 @@ public class StreamBuilder {
 	
 	private StreamBuilder(String uri)
 	{
-		stream = new EventStream();
+		stream = new SpDataStream();
 		stream.setUri(uri);
 		schema = new EventSchema();
 	}
@@ -62,7 +62,7 @@ public class StreamBuilder {
 		return this;
 	}
 	
-	public EventStream build()
+	public SpDataStream build()
 	{
 		return stream;
 	}

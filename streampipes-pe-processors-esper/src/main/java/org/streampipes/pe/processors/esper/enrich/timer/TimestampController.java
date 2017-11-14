@@ -1,11 +1,12 @@
 package org.streampipes.pe.processors.esper.enrich.timer;
 
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -24,19 +25,19 @@ import java.util.List;
 public class TimestampController extends StandaloneEventProcessorDeclarerSingleton<TimestampParameter> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("enrich_timestamp", "Timestamp Enrichment", "Appends the current time in ms to the event payload")
 						.iconUrl(EsperConfig.getIconUrl("Timer_Icon_HQ"))
-						.category(EpaType.ENRICH)
+						.category(DataProcessorType.ENRICH)
 						.requiredPropertyStream1(EpRequirements.anyProperty())
-						.outputStrategy(OutputStrategies.append(EpProperties.longEp("appendedTime", SO.DateTime)))
+						.outputStrategy(OutputStrategies.append(EpProperties.longEp(Labels.empty(), "appendedTime", SO.DateTime)))
 						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.build();
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TimestampParameter, EventProcessor<TimestampParameter>> onInvocation(SepaInvocation
+	public ConfiguredEventProcessor<TimestampParameter, EventProcessor<TimestampParameter>> onInvocation(DataProcessorInvocation
 																																																								 sepa) {
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 

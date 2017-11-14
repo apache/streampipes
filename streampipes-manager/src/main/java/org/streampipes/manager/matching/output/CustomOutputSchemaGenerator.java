@@ -1,11 +1,11 @@
 package org.streampipes.manager.matching.output;
 
 import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.output.CustomOutputStrategy;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -41,13 +41,13 @@ public class CustomOutputSchemaGenerator implements OutputSchemaGenerator<Custom
 	}
 
 	@Override
-	public EventSchema buildFromOneStream(EventStream stream) {
+	public EventSchema buildFromOneStream(SpDataStream stream) {
 		return new EventSchema(customProperties);
 	}
 
 	@Override
-	public EventSchema buildFromTwoStreams(EventStream stream1,
-			EventStream stream2) {
+	public EventSchema buildFromTwoStreams(SpDataStream stream1,
+			SpDataStream stream2) {
 		return buildFromOneStream(stream1);
 	}
 

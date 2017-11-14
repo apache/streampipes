@@ -1,8 +1,8 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.model.impl.EcType;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.DataSinkType;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -15,11 +15,11 @@ import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 public class DashboardController extends StandaloneEventSinkDeclarer<DashboardParameters> {
 
     @Override
-    public SecDescription declareModel() {
+    public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("dashboard_sink", "Dashboard Sink", "This sink will be used to visualize data" +
                 " " +
                 "streams in the StreamPipes dashboard")
-                .category(EcType.VISUALIZATION_CHART)
+                .category(DataSinkType.VISUALIZATION_CHART)
                 .requiredPropertyStream1(EpRequirements.anyProperty())
                 .iconUrl(ActionConfig.getIconUrl("dashboard-icon"))
                 .supportedFormats(SupportedFormats.jsonFormat())
@@ -28,7 +28,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
     }
 
     @Override
-    public ConfiguredEventSink<DashboardParameters, EventSink<DashboardParameters>> onInvocation(SecInvocation invocationGraph) {
+    public ConfiguredEventSink<DashboardParameters, EventSink<DashboardParameters>> onInvocation(DataSinkInvocation invocationGraph) {
          return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph), Dashboard::new);
     }
 
