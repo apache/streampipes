@@ -68,7 +68,7 @@ public enum SourcesConfig {
 
 	static {
 		serverUrl = SourcesConfig.INSTANCE.getHost() + ":" + SourcesConfig.INSTANCE.getPort();
-		iconBaseUrl = SourcesConfig.INSTANCE.getIconHost() + ":" + SourcesConfig.INSTANCE.getIconPort() +"/img";
+		iconBaseUrl = SourcesConfig.INSTANCE.getIconHost() + ":" + SourcesConfig.INSTANCE.getIconPort() +"/img/pe_icons";
 		eventReplayURI = "http://89.216.116.44:8084";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";

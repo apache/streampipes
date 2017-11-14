@@ -32,7 +32,7 @@ public enum SourcesConfig {
 	
 	static {
     	serverUrl = SourcesConfig.INSTANCE.getHost() + ":" + SourcesConfig.INSTANCE.getPort();
-		iconBaseUrl = SourcesConfig.INSTANCE.getHost() + ":" + SourcesConfig.INSTANCE.getPort() +"/img";
+		iconBaseUrl = SourcesConfig.INSTANCE.getHost() + ":" + SourcesConfig.INSTANCE.getPort() +"/img/pe_icons";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}

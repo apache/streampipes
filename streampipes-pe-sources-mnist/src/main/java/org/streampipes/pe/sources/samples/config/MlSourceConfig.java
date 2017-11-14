@@ -40,7 +40,7 @@ public enum MlSourceConfig {
 
 	static {
 		serverUrl = MlSourceConfig.INSTANCE.getHost() + ":" + MlSourceConfig.INSTANCE.getPort();
-		iconBaseUrl = MlSourceConfig.INSTANCE.getHost() + ":" + MlSourceConfig.INSTANCE.getPort() + "/img";
+		iconBaseUrl = MlSourceConfig.INSTANCE.getHost() + ":" + MlSourceConfig.INSTANCE.getPort() + "/img/pe_icons";
 		eventReplayURI = "http://89.216.116.44:8084";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";

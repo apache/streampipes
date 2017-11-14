@@ -19,7 +19,7 @@ public enum Config {
 	}
 	static {
 		serverUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort();
-		iconBaseUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort() +"/img";
+		iconBaseUrl = Config.INSTANCE.getHost() + ":" + Config.INSTANCE.getPort() +"/img/pe_icons";
 	}
 
 	public String getHost() {

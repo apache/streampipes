@@ -25,7 +25,7 @@ public enum SourceConfig {
     }
 
     static {
-		iconUrl = SourceConfig.INSTANCE.getHost() + ":" + SourceConfig.INSTANCE.getPort() +"/img";
+		iconUrl = SourceConfig.INSTANCE.getHost() + ":" + SourceConfig.INSTANCE.getPort() +"/img/pe_icons";
 	}
 
     public static final String getIconUrl(String pictureName) {
