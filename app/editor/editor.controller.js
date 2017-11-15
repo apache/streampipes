@@ -58,33 +58,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     var jsplumbConfig = jsplumbConfigService.getEditorConfig();
 
-    if ($rootScope.email != undefined) {
-        restApi
-            .getUserDetails()
-            .success(function (user) {
-                if (!user.hideTutorial || user.hideTutorial == undefined) {
-                    var confirm = $mdDialog.confirm()
-                        .title('Welcome to StreamPipes!')
-                        .textContent('If you are new to StreamPipes, check out our user guide')
-                        .ok('Show tutorial')
-                        .cancel('Cancel');
-
-                    $mdDialog.show(confirm).then(function () {
-                        user.hideTutorial = true;
-                        restApi.updateUserDetails(user).success(function (data) {
-
-														$window.open('/site', '_blank');
-                        });
-                    }, function () {
-
-                    });
-                }
-            })
-            .error(function (msg) {
-                console.log(msg);
-            });
-    }
-
     $scope.isValidPipeline = function () {
         return $scope.isStreamInAssembly && $scope.isActionInAssembly;
     }
