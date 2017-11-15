@@ -91,6 +91,11 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
             link: 'streampipes.myelements',
             title: 'My Elements',
             icon: 'image:ic_portrait_24px'
+        },
+        {
+            link: 'streampipes.consulconfiguration',
+            title: 'Consul Configuration',
+            icon: 'action:ic_settings_24px'
         }
     ];
 
