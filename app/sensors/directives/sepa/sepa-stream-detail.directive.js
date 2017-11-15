@@ -28,7 +28,7 @@ export default function sepaStreamDetail() {
 			}
 
 			$scope.addProperty = function(properties) {
-				properties.push({"type" : "org.streampipes.model.impl.eventproperty.EventPropertyPrimitive", "properties" : {"runtimeName" : "", "runtimeType" : "", "domainProperties" : []}});
+				properties.push({"type" : "org.streampipes.model.schema.EventPropertyPrimitive", "properties" : {"runtimeName" : "", "runtimeType" : "", "domainProperties" : []}});
 			}
 
 			$scope.removeProperty = function(index, properties) {

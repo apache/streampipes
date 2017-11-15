@@ -1,4 +1,4 @@
-<div ng-if="!staticProperty.properties.valueSpecification">
+<div ng-if="!staticProperty.properties.valueSpecification && !staticProperty.properties.mapsTo">
     <div flex="100" layout="column" ng-if="staticProperty.properties.placeholdersSupported">
         <h5>{{staticProperty.properties.description}}</h5>
         <h5>Possible placeholders: </h5>
@@ -26,5 +26,31 @@
             <input name="{{staticProperty.properties.elementName}}"
                    ng-model="staticProperty.properties.value">
         </md-input-container>
+    </div>
+</div>
+<div ng-if="!staticProperty.properties.valueSpecification && staticProperty.properties.mapsTo" style="margin-top:20px;">
+    <div layout="column">
+        <span>{{staticProperty.properties.description}}</span>
+        <div ng-if="!selectedEventProperty.properties.valueSpecification">
+            <md-input-container flex="100" layout="column">
+                <input name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"/>
+            </md-input-container>
+        </div>
+        <div ng-if="selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.QuantitativeValue'">
+            <md-slider md-discrete flex min="{{selectedEventProperty.properties.valueSpecification.properties.minValue}}"
+                       max="{{selectedEventProperty.properties.valueSpecification.properties.maxValue}}"
+                       step="{{selectedEventProperty.properties.valueSpecification.properties.step}}"
+                       ng-model="staticProperty.properties.value">
+            </md-slider>
+            <md-input-container flex="100">
+                <input name="{{staticProperty.properties.elementName}}"
+                       ng-model="staticProperty.properties.value">
+            </md-input-container>
+        </div>
+        <div ng-if="selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.Enumeration'">
+            <md-autocomplete md-no-cache="true" md-selected-item="staticProperty.properties.value" md-items="item in selectedEventProperty.properties.valueSpecification.properties.runtimeValues" md-search-text="searchText" md-item-text="item" placeholder="Enter value">
+                <span>{{ item }}</span>
+            </md-autocomplete>
+        </div>
     </div>
 </div>

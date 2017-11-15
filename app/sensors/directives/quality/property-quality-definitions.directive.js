@@ -9,9 +9,9 @@ export default function propertyQualityDefinitions() {
 		},
 		controller: function($scope, $element)  {
 
-			$scope.qualities = [{label : "Accuracy", "description" : "", "type" : "org.streampipes.model.impl.quality.Accuracy"},
-				{label : "Precision", "description" : "", "type" : "org.streampipes.model.impl.quality.Precision"},
-				{label : "Resolution", "description" : "", "type" : "org.streampipes.model.impl.quality.Resolution"}];
+			$scope.qualities = [{label : "Accuracy", "description" : "", "type" : "org.streampipes.model.quality.Accuracy"},
+				{label : "Precision", "description" : "", "type" : "org.streampipes.model.quality.Precision"},
+				{label : "Resolution", "description" : "", "type" : "org.streampipes.model.quality.Resolution"}];
 
 
 

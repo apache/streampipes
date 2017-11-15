@@ -9,8 +9,8 @@ export default function streamQualityDefinitions() {
 		},
 		controller: function($scope, $element)  {
 
-			$scope.qualities = [{label : "Frequency", "description" : "", "type" : "org.streampipes.model.impl.quality.Frequency"},
-				{label : "Latency", "description" : "", "type" : "org.streampipes.model.impl.quality.Latency"}];
+			$scope.qualities = [{label : "Frequency", "description" : "", "type" : "org.streampipes.model.quality.Frequency"},
+				{label : "Latency", "description" : "", "type" : "org.streampipes.model.quality.Latency"}];
 
 
 

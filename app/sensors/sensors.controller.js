@@ -116,20 +116,20 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	}
 
 	$scope.addNewSepa = function() {
-		$scope.selectedSepa = {"eventStreams" : [], "name" : "", "staticProperties" : []};
+		$scope.selectedSepa = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
 		$scope.sepaSelected = true;
 		$scope.editingDisabled = false;
 	}
 
 	$scope.addNewAction = function() {
-		$scope.selectedAction = {"eventStreams" : [], "name" : "", "staticProperties" : []};
+		$scope.selectedAction = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
 		$scope.actionSelected = true;
 		$scope.editingDisabled = false;
 	}
 
 	$scope.addNewSource = function() {
 		$scope.selectedSource = undefined;
-		$scope.selectedSource = {"eventStreams" : [], "name" : ""};
+		$scope.selectedSource = {"spDataStreams" : [], "name" : ""};
 		$scope.sourceSelected = true;
 		$scope.streamSelected = false;
 		$scope.selectedStream = "";
@@ -196,7 +196,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 				$scope.sourceSelected = true;
 				$scope.selectedSource = source;
 				$scope.selectedSource.uri = "";		
-				angular.forEach($scope.selectedSource.eventStreams, function(stream, key) {
+				angular.forEach($scope.selectedSource.spDataStreams, function(stream, key) {
 					stream.uri = "";
 				});
 			})

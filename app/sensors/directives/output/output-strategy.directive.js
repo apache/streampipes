@@ -11,11 +11,11 @@ export default function outputStrategy() {
 		},
 		link: function($scope, element, attrs) {
 
-			$scope.outputStrategyTypes = [{label : "Append", "type" : "org.streampipes.model.impl.output.AppendOutputStrategy"},
-				{label : "Custom", "type" : "org.streampipes.model.impl.output.CustomOutputStrategy"},
-				{label : "Fixed", "type" : "org.streampipes.model.impl.output.FixedOutputStrategy"},
-				{label : "List", "type" : "org.streampipes.model.impl.output.ListOutputStrategy"},
-				{label : "Keep", "type" : "org.streampipes.model.impl.output.RenameOutputStrategy"}];
+			$scope.outputStrategyTypes = [{label : "Append", "type" : "org.streampipes.model.output.AppendOutputStrategy"},
+				{label : "Custom", "type" : "org.streampipes.model.output.CustomOutputStrategy"},
+				{label : "Fixed", "type" : "org.streampipes.model.output.FixedOutputStrategy"},
+				{label : "List", "type" : "org.streampipes.model.output.ListOutputStrategy"},
+				{label : "Keep", "type" : "org.streampipes.model.output.RenameOutputStrategy"}];
 
 			$scope.selectedOutputStrategy = $scope.outputStrategyTypes[0].type;
 

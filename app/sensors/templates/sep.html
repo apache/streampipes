@@ -25,9 +25,9 @@
     </collapsible>
     <collapsible title-label="'Streams'" disabled="disabled" removable="false" collapsible="false"
                  ng-if="isProducerTabSelected('streams')">
-        <sepa-streams element="selectedSource.eventStreams" disabled="editingDisabled"></sepa-streams>
+        <sepa-streams element="selectedSource.spDataStreams" disabled="editingDisabled"></sepa-streams>
         <div class="md-padding">
-            <md-list-item class="md-3-line" ng-repeat="(key, stream) in selectedSource.eventStreams track by $index">
+            <md-list-item class="md-3-line" ng-repeat="(key, stream) in selectedSource.spDataStreams track by $index">
                 <img ng-src="{{stream.iconUrl}}" class="md-avatar" alt="{{Icon}}"
                      ng-show="stream.iconUrl != undefined"/>
                 <div flex="50" layout="row" layout-align="start center">
@@ -38,18 +38,18 @@
                 </div>
                 <div flex="50" layout="row" layout-align="start center">
                     <md-button class="md-accent" ng-click="loadStreamDetails(stream, editingDisabled)">View</md-button>
-                    <md-button class="md-accent" ng-click="cloneStream(selectedSource.eventStreams, stream)">Clone
+                    <md-button class="md-accent" ng-click="cloneStream(selectedSource.spDataStreams, stream)">Clone
                     </md-button>
                     <md-button class="md-accent" ng-click="loadStreamDetails(stream, editingDisabled)"
                                ng-disabled="editingDisabled">Modify
                     </md-button>
-                    <md-button class="md-accent" ng-click="removeStream(selectedSource.eventStreams, stream)"
+                    <md-button class="md-accent" ng-click="removeStream(selectedSource.spDataStreams, stream)"
                                ng-disabled="editingDisabled">Delete
                     </md-button>
                 </div>
             </md-list-item>
-            <div ng-if="selectedSource.eventStreams.length == 0">No streams configured yet.</div>
-            <md-button class="md-accent" ng-click="addStream(selectedSource.eventStreams)">Add Stream</md-button>
+            <div ng-if="selectedSource.spDataStreams.length == 0">No streams configured yet.</div>
+            <md-button class="md-accent" ng-click="addStream(selectedSource.spDataStreams)">Add Stream</md-button>
             <md-divider></md-divider>
             <div ng-show="streamSelected">
                 <div flex="none" layout-wrap layout="row">

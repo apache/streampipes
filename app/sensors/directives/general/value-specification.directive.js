@@ -13,8 +13,8 @@ export default function valueSpecification() {
 		controller: function($scope, $element)  {
 
 			$scope.valueSpecifications = [{label : "None", "type" : undefined},
-				{label : "Quantitative Value", "type" : "org.streampipes.model.impl.eventproperty.QuantitativeValue"},
-				{label : "Enumeration", "type" : "org.streampipes.model.impl.eventproperty.Enumeration"}];
+				{label : "Quantitative Value", "type" : "org.streampipes.model.schema.QuantitativeValue"},
+				{label : "Enumeration", "type" : "org.streampipes.model.schema.Enumeration"}];
 
 
 			$scope.isDisallowed = function(type) {

@@ -26,10 +26,10 @@
 		<sepa-basics element="selectedAction" disabled="editingDisabled"></sepa-basics>
 	</collapsible> 
 	<collapsible title-label="'Stream Requirements'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('streams')">	
-		<stream-restriction element="selectedAction.eventStreams" disabled="editingDisabled"></stream-restriction>
+		<stream-restriction element="selectedAction.spDataStreams" disabled="editingDisabled"></stream-restriction>
 	</collapsible>
 	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('staticProperties')">	
-		<static-properties element="selectedAction.staticProperties" streams="selectedAction.eventStreams" disabled="editingDisabled"></static-properties>	 
+		<static-properties element="selectedAction.staticProperties" streams="selectedAction.spDataStreams" disabled="editingDisabled"></static-properties>
 	</collapsible>		
 	<collapsible title-label="'Supported Grounding'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('supportedGrounding')">	
 		<supported-grounding grounding="selectedAction.supportedGrounding" disabled="editingDisabled"></supported-grounding> 

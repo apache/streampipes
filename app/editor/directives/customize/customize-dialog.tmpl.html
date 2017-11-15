@@ -3,7 +3,7 @@
 </div>
 <div ng-if="staticProperty.properties.staticPropertyType == 'FreeTextStaticProperty'">
     <freetext input-streams="selectedElement.inputStreams"
-              static-property="staticProperty"></freetext>
+              static-property="staticProperty" mapping-property="getMappingProperty(staticProperty.properties.mapsTo)"></freetext>
 </div>
 <div ng-if="staticProperty.properties.staticPropertyType == 'AnyStaticProperty'">
     <any static-property="staticProperty"></any>

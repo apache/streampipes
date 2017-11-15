@@ -385,7 +385,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         restApi.getOwnSources()
             .then(function (sources) {
                 sources.data.forEach(function (source, i, sources) {
-                    source.eventStreams.forEach(function (stream) {
+                    source.spDataStreams.forEach(function (stream) {
                         stream.type = 'stream';
                         tempStreams = tempStreams.concat(stream);
                     });

@@ -95,21 +95,21 @@ export default function CreateCtrl($rootScope, $scope, restApi, $mdToast) {
 	            	   "title" : "Event Streams",
 	            	   "type" : "array",
 	            	   "add" : "Add Event Stream",
-	            	   "key": "eventStreams",
+	            	   "key": "spDataStreams",
 	            	   "items": [
-	            	             "eventStreams[].name",
-	            	             "eventStreams[].description",
-	            	             "eventStreams[].iconUrl",
+	            	             "spDataStreams[].name",
+	            	             "spDataStreams[].description",
+	            	             "spDataStreams[].iconUrl",
 	            	            
 	            	             {
 	            	            	 "title" : "Event Grounding",
 	            	            	 "type": "array",
-	            	            	 "key" : "eventStreams[].eventGrounding",
+	            	            	 "key" : "spDataStreams[].eventGrounding",
 	            	            	 "add": "Add Event Grounding",
 	            	                 "remove": "Remove Event Grounding",
 	            	            	 "items" : [
 	            	            	           
-	            	            	            	         "eventStreams[].eventGrounding[].elementName"
+	            	            	            	         "spDataStreams[].eventGrounding[].elementName"
 	            	            	            	         
 	            	            	           ]
 	            	            
@@ -118,12 +118,12 @@ export default function CreateCtrl($rootScope, $scope, restApi, $mdToast) {
 	    		               {
 	            	            	 "title" : "Event Properties",
 	            	            	 "type": "array",
-	            	            	 "key" : "eventStreams[].eventSchema.eventProperties",
+	            	            	 "key" : "spDataStreams[].eventSchema.eventProperties",
 	            	            	 "add": "Add Event Properties",
 	            	                 "remove": "Remove Event Property",
 	            	            	 "items" : [
 	            	            	           
-	            	            	            	         "eventStreams[].eventSchema.eventProperties[].propertyType"
+	            	            	            	         "spDataStreams[].eventSchema.eventProperties[].propertyType"
 
 	            	            	           ]
 	            	                         

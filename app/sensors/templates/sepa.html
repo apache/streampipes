@@ -45,11 +45,11 @@
     </collapsible>
     <collapsible title-label="'Stream Requirements'" disabled="disabled" removable="false" collapsible="false"
                  layout-fill ng-if="isEpaTabSelected('streams')">
-        <stream-restriction element="selectedSepa.eventStreams" disabled="editingDisabled"></stream-restriction>
+        <stream-restriction element="selectedSepa.spDataStreams" disabled="editingDisabled"></stream-restriction>
     </collapsible>
     <collapsible title-label="'Static Properties'" disabled="disabled" removable="false" collapsible="false" layout-fill
                  ng-if="isEpaTabSelected('staticProperties')">
-        <static-properties element="selectedSepa.staticProperties" streams="selectedSepa.eventStreams"
+        <static-properties element="selectedSepa.staticProperties" streams="selectedSepa.spDataStreams"
                            disabled="editingDisabled"></static-properties>
     </collapsible>
     <collapsible title-label="'Output Strategy'" disabled="disabled" removable="false" collapsible="false" layout-fill

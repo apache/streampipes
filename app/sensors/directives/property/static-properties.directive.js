@@ -13,13 +13,13 @@ export default function staticProperties(restApi) {
 			$scope.range = function(count){
 				return new Array(+count);
 			};
-			$scope.staticPropertyTypes = [{label : "Text Input", "type" : "org.streampipes.model.impl.staticproperty.FreeTextStaticProperty"},
-				{label : "Single-Value Selection", "type" : "org.streampipes.model.impl.staticproperty.OneOfStaticProperty"},
-				{label : "Multi-Value Selection", "type" : "org.streampipes.model.impl.staticproperty.AnyStaticProperty"},
-				{label : "Domain Concept", "type" : "org.streampipes.model.impl.staticproperty.DomainStaticProperty"},
-				{label : "Single-Value Mapping Property", "type" : "org.streampipes.model.impl.staticproperty.MappingPropertyUnary"},
-				{label : "Multi-Value Mapping Property", "type" : "org.streampipes.model.impl.staticproperty.MappingPropertyNary"},
-				{label : "Collection", "type" : "org.streampipes.model.impl.staticproperty.CollectionStaticProperty"}];
+			$scope.staticPropertyTypes = [{label : "Text Input", "type" : "org.streampipes.model.staticproperty.FreeTextStaticProperty"},
+				{label : "Single-Value Selection", "type" : "org.streampipes.model.staticproperty.OneOfStaticProperty"},
+				{label : "Multi-Value Selection", "type" : "org.streampipes.model.staticproperty.AnyStaticProperty"},
+				{label : "Domain Concept", "type" : "org.streampipes.model.staticproperty.DomainStaticProperty"},
+				{label : "Single-Value Mapping Property", "type" : "org.streampipes.model.staticproperty.MappingPropertyUnary"},
+				{label : "Multi-Value Mapping Property", "type" : "org.streampipes.model.staticproperty.MappingPropertyNary"},
+				{label : "Collection", "type" : "org.streampipes.model.staticproperty.CollectionStaticProperty"}];
 
 			$scope.newStaticPropertyType = $scope.staticPropertyTypes[0].type;
 			$scope.memberTypeSelected = false;

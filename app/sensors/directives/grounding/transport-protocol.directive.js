@@ -11,9 +11,9 @@ export default function transportProtocol() {
 
 		controller: function($scope, $element) {
 
-			$scope.availableTransportProtocols = [{"id" : "kafka", "name" : "Apache Kafka", "type" : "org.streampipes.model.impl.KafkaTransportProtocol"},
-				{"id": "jms", "name" : "JMS", "type" : "org.streampipes.model.impl.JmsTransportProtocol"},
-				{"id": "mqtt", "name" : "MQTT", "type" : "org.streampipes.model.impl.MqttTransportProtocol"}];
+			$scope.availableTransportProtocols = [{"id" : "kafka", "name" : "Apache Kafka", "type" : "org.streampipes.model.grounding.KafkaTransportProtocol"},
+				{"id": "jms", "name" : "JMS", "type" : "org.streampipes.model.grounding.JmsTransportProtocol"},
+				{"id": "mqtt", "name" : "MQTT", "type" : "org.streampipes.model.grounding.MqttTransportProtocol"}];
 			$scope.selectedTransportProtocol = "";
 
 			$scope.addTransportProtocol = function(transportProtocols) {
