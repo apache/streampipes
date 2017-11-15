@@ -1,12 +1,12 @@
 package org.streampipes.sdk.builder;
 
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventSchema;
-import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -18,9 +18,9 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
-import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.StreamIdentifier;
+import org.streampipes.vocabulary.XSD;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -100,6 +100,18 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  public BU requiredTextParameter(String internalId, String label, String description, String
+          linkedMappingPropertyInternalName) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+            label,
+            description,
+            XSD._string.toString());
+
+    fsp.setMapsTo(linkedMappingPropertyInternalName);
+    this.staticProperties.add(fsp);
+    return me();
+  }
+
   public BU requiredHtmlInputParameter(Label label) {
     FreeTextStaticProperty fsp = new FreeTextStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     fsp.setMultiLine(true);
@@ -135,6 +147,18 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  public BU requiredIntegerParameter(String internalId, String label, String description, String
+          linkedMappingPropertyInternalName) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+            label,
+            description,
+            XSD._integer.toString());
+
+    fsp.setMapsTo(linkedMappingPropertyInternalName);
+    this.staticProperties.add(fsp);
+    return me();
+  }
+
   public BU requiredIntegerParameter(String internalId, String label, String description,
                                      Integer defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
@@ -152,6 +176,18 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
             description,
             XSD._double.toString()));
 
+    return me();
+  }
+
+  public BU requiredFloatParameter(String internalId, String label, String description, String
+          linkedMappingPropertyInternalName) {
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
+            label,
+            description,
+            XSD._double.toString());
+
+    fsp.setMapsTo(linkedMappingPropertyInternalName);
+    this.staticProperties.add(fsp);
     return me();
   }
 

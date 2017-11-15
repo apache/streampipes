@@ -173,6 +173,13 @@ public class InMemoryStorage implements StorageRequests {
 	}
 
 	@Override
+	public boolean deleteSEC(String rdfId) {
+		boolean success = sesameStorage.deleteSEC(rdfId);
+		initializeSECStorage();
+		return success;
+	}
+
+	@Override
 	public boolean deleteSEPA(DataProcessorDescription sepa) {
 		boolean success = sesameStorage.deleteSEPA(sepa);
 		initializeSEPAStorage();

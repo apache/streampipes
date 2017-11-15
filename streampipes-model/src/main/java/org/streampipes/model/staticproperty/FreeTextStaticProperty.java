@@ -27,7 +27,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 	private URI requiredDomainProperty;
 	
 	@RdfProperty(StreamPipes.MAPS_TO)
-	private URI mapsTo;
+	private String mapsTo;
 
 	@RdfProperty(StreamPipes.MULTI_LINE)
 	private boolean multiLine;
@@ -56,6 +56,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.htmlAllowed = other.isHtmlAllowed();
 		this.multiLine = other.isMultiLine();
 		this.placeholdersSupported = other.isPlaceholdersSupported();
+		this.mapsTo = other.getMapsTo();
 	}
 	
 	public FreeTextStaticProperty(String internalName, String label, String description)
@@ -69,7 +70,7 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.requiredDomainProperty = type;
 	}
 	
-	public FreeTextStaticProperty(String internalName, String label, String description, URI type, URI mapsTo)
+	public FreeTextStaticProperty(String internalName, String label, String description, URI type, String mapsTo)
 	{
 		super(StaticPropertyType.FreeTextStaticProperty, internalName, label, description);
 		this.mapsTo = mapsTo;
@@ -138,11 +139,11 @@ public class FreeTextStaticProperty extends StaticProperty {
 		this.placeholdersSupported = placeholdersSupported;
 	}
 
-	public URI getMapsTo() {
+	public String getMapsTo() {
 		return mapsTo;
 	}
 
-	public void setMapsTo(URI mapsTo) {
+	public void setMapsTo(String mapsTo) {
 		this.mapsTo = mapsTo;
 	}
 }

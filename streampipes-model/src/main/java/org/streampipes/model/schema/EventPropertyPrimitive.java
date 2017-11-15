@@ -3,6 +3,7 @@ package org.streampipes.model.schema;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.net.URI;
@@ -39,6 +40,10 @@ public class EventPropertyPrimitive extends EventProperty {
 		super(other);
 		this.runtimeType = other.getRuntimeType();
 		this.measurementUnit = other.getMeasurementUnit();
+		if (other.getValueSpecification() != null) {
+			this.valueSpecification = new Cloner().valueSpecification(other
+							.getValueSpecification());
+		}
 	}
 	
 	public EventPropertyPrimitive(List<URI> subClassOf)

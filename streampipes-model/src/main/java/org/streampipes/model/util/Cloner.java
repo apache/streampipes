@@ -3,6 +3,7 @@ package org.streampipes.model.util;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.Enumeration;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
@@ -22,6 +23,8 @@ import org.streampipes.model.ApplicationLink;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.schema.QuantitativeValue;
+import org.streampipes.model.schema.ValueSpecification;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -77,6 +80,14 @@ public class Cloner {
 		if (o instanceof EventPropertyPrimitive) return new EventPropertyPrimitive((EventPropertyPrimitive) o);
 		else if (o instanceof EventPropertyList) return new EventPropertyList((EventPropertyList) o);
 		else return new EventPropertyNested((EventPropertyNested) o);
+	}
+
+	public ValueSpecification valueSpecification(ValueSpecification o) {
+		if (o instanceof QuantitativeValue) {
+			return new QuantitativeValue((QuantitativeValue) o);
+		} else {
+			return new Enumeration((Enumeration) o);
+		}
 	}
 
 	public EventPropertyQualityRequirement qualityreq(EventPropertyQualityRequirement o) {

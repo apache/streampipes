@@ -27,7 +27,7 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 						.category(DataProcessorType.FILTER)
 						.requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),"text", "Select Text Property", "")
 						.requiredSingleValueSelection("operation", "Select Operation", "", Options.from("MATCHES", "CONTAINS"))
-						.requiredTextParameter("keyword", "Select Keyword", "")
+						.requiredTextParameter("keyword", "Select Keyword", "", "text")
 						.outputStrategy(OutputStrategies.keep())
 						.supportedFormats(SupportedFormats.jsonFormat())
 						.supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())

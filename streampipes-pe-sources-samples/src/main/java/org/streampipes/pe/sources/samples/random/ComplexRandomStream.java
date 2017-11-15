@@ -26,8 +26,12 @@ public class ComplexRandomStream implements EventStreamDeclarer {
             .property(EpProperties.timestampProperty("timestamp"))
             .property(EpProperties.stringEp(Labels.withTitle("string", "string description"), "testString",
                     "http://test.de", ValueSpecifications.from("A", "B", "C")))
-            .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
+            .property(EpProperties.stringEp(Labels.withTitle("string2", "string description"), "testString2",
+                    "http://test.de", ValueSpecifications.from("A", "B", "C", "D")))
+            .property(EpProperties.integerEp(Labels.withTitle("integer2", "integerDescription"), "testInteger2",
                     SO.Number, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
+            .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
+                    SO.Number, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
             .build();
   }
 

@@ -128,8 +128,7 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean deleteSEP(DataSourceDescription sep) {
-		entityManager.remove(sep);
-		
+		deleteSEP(sep.getElementId());
 		return true;
 	}
 
@@ -142,14 +141,15 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean deleteSEPA(DataProcessorDescription sepa) {
-		entityManager.remove(sepa);
+		deleteSEPA(sepa.getElementId());
 		return true;
 	}
 
 	@Override
 	public boolean deleteSEPA(String rdfId) {
 		DataProcessorDescription sepa = entityManager.find(DataProcessorDescription.class, rdfId);
-		return deleteSEPA(sepa);
+		entityManager.remove(sepa);
+		return true;
 	}
 
 	@Override
@@ -226,6 +226,12 @@ public class SesameStorageRequests implements StorageRequests {
 
 	@Override
 	public boolean deleteSEC(DataSinkDescription sec) {
+		return deleteSEC(sec.getElementId());
+	}
+
+	@Override
+	public boolean deleteSEC(String rdfId) {
+		DataSinkDescription sec = entityManager.find(DataSinkDescription.class, rdfId);
 		entityManager.remove(sec);
 		return true;
 	}

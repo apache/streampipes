@@ -66,6 +66,8 @@ public interface StorageRequests {
 	boolean update(DataSinkDescription sec);
 
 	boolean deleteSEC(DataSinkDescription sec);
+
+	boolean deleteSEC(String rdfId);
 	
 	boolean storeSEC(DataSinkDescription sec);
 
