@@ -240,7 +240,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
 
 
     function showPipelineInEditor(id) {
-        $rootScope.go("streampipes.edit", {pipeline: id});
+        $rootScope.go("streampipes.editor", {pipeline: id});
     }
 
     $scope.showPipelineDetails = function(id) {

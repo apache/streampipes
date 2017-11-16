@@ -1,4 +1,14 @@
-<div class="customize-item-content" ng-repeat="sp in staticProperty.properties.members track by $index">
+<div class="customize-item-content sp-blue-border-nopadding"
+     ng-repeat="sp in staticProperty.properties.members track by $index">
+    <div flex="100" layout="row" layout-align="end center">
+        <md-button ng-click="removeMember(staticProperty, $index)" class="md-icon-button"
+                   ng-disabled="staticProperty.properties.members.length == 1">
+            <i class="material-icons">clear</i>
+            <md-tooltip md-direction="top">
+                Remove
+            </md-tooltip>
+        </md-button>
+    </div>
     <div ng-if="sp.properties.staticPropertyType == 'OneOfStaticProperty'">
         <oneof static-property="sp"></oneof>
     </div>
@@ -24,11 +34,9 @@
     <div ng-if="sp.properties.staticPropertyType == 'CollectionStaticProperty'">
         <collection-property static-property="sp"></collection-property>
     </div>
-    <hr/>
-    <md-button ng-click="removeMember(staticProperty, $index)" ng-disabled="staticProperty.properties.members.size == 0">
-        Remove
+</div>
+<div flex="100" layout="row" layout-align="end center">
+    <md-button ng-click="addMember(staticProperty)">
+        Add
     </md-button>
 </div>
-<md-button ng-click="addMember(staticProperty)">
-   Add
-</md-button>
