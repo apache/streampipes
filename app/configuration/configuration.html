@@ -1,6 +1,23 @@
 <div flex class="page-container page-container-padding">
-    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-        <h2>Configuration</h2>
+    <div layout="row" layout-wrap layout-align="start stretch">
+        <div ng-repeat="service in services" flex="33">
+            <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
+                <h4>{{service.name}}</h4>
+                <span style="color:green" ng-if="service.status">online</span>
+                <span style="color:red" ng-if="!service.status">offline</span>
+            </div>
+            <div class="sp-blue-border">
+                <div layout="column">
+                    <md-input-container ng-repeat="configuration in service.configurations">
+                        <label>{{configuration.key}}</label>
+                        <input ng-value="configuration.value">
+                        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description"
+                                 aria-label="configuration.description"></md-icon>
+                    </md-input-container>
+                    <md-button ng-click="createNewFile(newFile)" class="md-raised md-primary">Update</md-button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
