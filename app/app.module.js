@@ -9,7 +9,7 @@ import uiRouter from 'npm/angular-ui-router';
 import spServices from './services/services.module';
 
 import spAdd from './add/add.module';
-import spConsulConfiguration from './consul-configuration/consul-configuration.module';
+import spConfiguration from './configuration/configuration.module';
 import spCore from './core/core.module';
 import spHome from './home/home.module';
 import spCreate from './create/create.module';
@@ -32,7 +32,7 @@ export default angular
     .module(MODULE_NAME, [
         spServices,
         spAdd,
-        spConsulConfiguration,
+        spConfiguration,
         spCore,
         spHome,
         spCreate,

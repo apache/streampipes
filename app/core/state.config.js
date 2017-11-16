@@ -114,12 +114,12 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.consulconfiguration', {
-            url: '/consulconfiguration',
+        .state('streampipes.configuration', {
+            url: '/configuration',
             views: {
                 "spMain@streampipes": {
-                    templateUrl: 'app/consul-configuration/consul-configuration.html',
-                    controller: 'ConsulConfigurationCtrl'
+                    templateUrl: 'app/configuration/configuration.html',
+                    controller: 'ConfigurationCtrl'
                 }
             }
         })
