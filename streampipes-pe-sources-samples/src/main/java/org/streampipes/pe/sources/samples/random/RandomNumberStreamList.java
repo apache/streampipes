@@ -86,7 +86,7 @@ public class RandomNumberStreamList implements EventStreamDeclarer {
     Random random = new Random();
     List<Integer> result = new ArrayList<>();
     for(int i = 0; i <= 20; i++) {
-      result.add(random.nextInt());
+      result.add(random.nextInt(20));
     }
     return result;
   }

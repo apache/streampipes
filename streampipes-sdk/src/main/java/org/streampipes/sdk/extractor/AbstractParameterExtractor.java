@@ -1,12 +1,13 @@
 package org.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
@@ -55,7 +56,17 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
               .findFirst()
               .get()
               .getName(), targetClass);
+  }
 
+  public <V> List<V> singleValueParameterFromCollection(String internalName, Class<V> targetClass) {
+    CollectionStaticProperty collection = getStaticPropertyByName(internalName, CollectionStaticProperty.class);
+    return collection
+            .getMembers()
+            .stream()
+            .map(sp -> (FreeTextStaticProperty) sp)
+            .map(FreeTextStaticProperty::getValue)
+            .map(v -> typeParser.parse(v, targetClass))
+            .collect(Collectors.toList());
   }
 
   public <V> List<V> selectedMultiValues(String internalName, Class<V> targetClass) {
@@ -85,6 +96,33 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String mappingPropertyValue(String staticPropertyName)
   {
     return mappingPropertyValues(staticPropertyName, false).get(0);
+  }
+
+  public String propertyDatatype(String runtimeName) {
+    List<EventProperty> eventProperties = new ArrayList<>();
+    for(SpDataStream is : sepaElement.getInputStreams()) {
+      eventProperties.addAll(is.getEventSchema().getEventProperties());
+    }
+
+    Optional<EventProperty> matchedProperty = eventProperties
+            .stream()
+            .filter(ep -> ep.getRuntimeName().equals
+            (runtimeName))
+            .findFirst();
+
+    if (matchedProperty.isPresent()) {
+      EventProperty p = matchedProperty.get();
+      if (p instanceof EventPropertyPrimitive) {
+        return ((EventPropertyPrimitive) p).getRuntimeType();
+      } else if (p instanceof EventPropertyList) {
+        EventProperty listProperty = ((EventPropertyList) p).getEventProperties().get(0);
+        if (listProperty instanceof EventPropertyPrimitive) {
+          return ((EventPropertyPrimitive) listProperty).getRuntimeType();
+        }
+      }
+    }
+    // TODO exceptions
+    return null;
   }
 
   public List<String> mappingPropertyValues(String staticPropertyName,

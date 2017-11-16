@@ -14,6 +14,7 @@ import org.streampipes.pe.mixed.flink.samples.elasticsearch.ElasticSearchControl
 import org.streampipes.pe.mixed.flink.samples.enrich.timestamp.TimestampController;
 import org.streampipes.pe.mixed.flink.samples.enrich.value.ValueController;
 import org.streampipes.pe.mixed.flink.samples.file.FileSinkController;
+import org.streampipes.pe.mixed.flink.samples.filter.numericallist.ListFilterController;
 import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
@@ -48,7 +49,8 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new MaintenancePredictionController())
             .add(new StatisticsSummaryControllerWindow())
             .add(new PeakDetectionController())
-            .add(new ValueController());
+            .add(new ValueController())
+            .add(new ListFilterController());
 
 
     DeclarersSingleton.getInstance()

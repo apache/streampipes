@@ -129,7 +129,7 @@ public class SepaUtils {
 		{
 			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
 			{	
-				if (p.getRdfId().toString().equals(propertyURI.toString())) 
+				if (p.getElementId().equals(propertyURI.toString()))
 					{
 						if (!completeNames) result.add(p.getRuntimeName());
 						else 
