@@ -1,5 +1,11 @@
 package org.streampipes.manager.matching;
 
+import org.apache.http.HttpVersion;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
 import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
@@ -9,6 +15,7 @@ import org.streampipes.manager.matching.v2.ElementVerification;
 import org.streampipes.manager.matching.v2.mapping.MappingPropertyCalculator;
 import org.streampipes.manager.util.PipelineVerificationUtils;
 import org.streampipes.manager.util.TreeUtils;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.connection.Connection;
@@ -16,26 +23,19 @@ import org.streampipes.model.client.exception.InvalidConnectionException;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.pipeline.PipelineModification;
 import org.streampipes.model.client.pipeline.PipelineModificationMessage;
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyList;
-import org.streampipes.model.schema.EventPropertyNested;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.output.ReplaceOutputStrategy;
 import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.controller.StorageManager;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -173,7 +173,6 @@ public class PipelineVerificationHandler {
                     try {
 
                         MappingProperty mappingProperty = (MappingProperty) property;
-
                         if (mappingProperty.getMapsFrom() != null) {
                             if (inStream(rdfRootElement.getStreamRequirements().get(count), mappingProperty.getMapsFrom())) {
                                 mappingProperty.setMapsFromOptions(new ArrayList<>());
@@ -258,8 +257,6 @@ public class PipelineVerificationHandler {
 
     }
 
-
-
     private boolean inStream(SpDataStream stream, URI mapsFrom) {
         return stream
                 .getEventSchema()
@@ -268,10 +265,14 @@ public class PipelineVerificationHandler {
     }
 
     private List<EventProperty> findSupportedEventProperties(SpDataStream streamOffer, List<SpDataStream> streamRequirements, URI mapsFrom) {
-        EventProperty mapsFromProperty = TreeUtils
-                .findEventProperty(mapsFrom.toString(), rdfRootElement.getStreamRequirements());
+        EventProperty mapsFromProperty = findPropertyRequirement(mapsFrom);
 
         return new MappingPropertyCalculator().matchesProperties(streamOffer.getEventSchema().getEventProperties(), mapsFromProperty);
+    }
+
+    private EventProperty findPropertyRequirement(URI mapsFrom) {
+      return TreeUtils
+              .findEventProperty(mapsFrom.toString(), rdfRootElement.getStreamRequirements());
     }
 
     private void updateOutputStrategy(SpDataStream stream, Integer count) {

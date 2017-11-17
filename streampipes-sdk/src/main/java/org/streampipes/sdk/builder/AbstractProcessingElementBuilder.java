@@ -7,6 +7,7 @@ import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
@@ -269,6 +270,13 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  public BU naryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
+    MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label.getLabel(), label.getDescription());
+    mp.setPropertyScope(propertyScope.name());
+    this.staticProperties.add(mp);
+    return me();
+  }
+
   public BU unaryMappingPropertyWithoutRequirement(String internalName, String label, String
           description) {
     this.staticProperties.add(new MappingPropertyUnary(internalName, label, description));
@@ -301,6 +309,26 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
   public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
     this.stream1Properties.add(propertyRequirement);
     this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
+    return me();
+  }
+
+  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
+          propertyScope) {
+    this.stream1Properties.add(propertyRequirement);
+    MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()),
+            label.getInternalId(), label.getLabel(), label.getDescription());
+    mp.setPropertyScope(propertyScope.name());
+    this.staticProperties.add(mp);
+    return me();
+  }
+
+  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
+          propertyScope) {
+    this.stream1Properties.add(propertyRequirement);
+    MappingPropertyNary mp = new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), label
+            .getInternalId(), label.getLabel(), label.getDescription());
+    mp.setPropertyScope(propertyScope.name());
+    this.staticProperties.add(mp);
     return me();
   }
 

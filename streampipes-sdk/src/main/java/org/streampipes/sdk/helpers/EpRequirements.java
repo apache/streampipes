@@ -52,7 +52,6 @@ public class EpRequirements {
 	    return new EventPropertyPrimitive();
     }
 
-
 	public static EventPropertyPrimitive booleanReq(String domainProperty)
 	{
 		return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);

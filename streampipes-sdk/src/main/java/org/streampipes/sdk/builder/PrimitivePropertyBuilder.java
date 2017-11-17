@@ -2,6 +2,7 @@ package org.streampipes.sdk.builder;
 
 import org.streampipes.model.schema.Enumeration;
 import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.schema.QuantitativeValue;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
@@ -71,6 +72,11 @@ public class PrimitivePropertyBuilder {
     public PrimitivePropertyBuilder resolution(Float resolution, URI measurementUnit) {
         // TODO extend event property
         this.qualityDefinitions.add(new Resolution(resolution));
+        return this;
+    }
+
+    public PrimitivePropertyBuilder scope(PropertyScope propertyScope) {
+        this.eventProperty.setPropertyScope(propertyScope.name());
         return this;
     }
 

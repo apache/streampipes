@@ -5,6 +5,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -30,10 +31,12 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
             "aggregation functions")
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), "aggregate",
-                    "Property Selection", "Specifies the event property from your stream that should be aggregated.")
-            .naryMappingPropertyWithoutRequirement("groupBy", "Group by", "Partitions the incoming stream by the selected event " +
-                    "properties")
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
+                    "Property Selection", "Specifies the event property from your stream that should be aggregated" +
+                            "."), PropertyScope.MEASUREMENT_PROPERTY)
+            .naryMappingPropertyWithoutRequirement(Labels.from("groupBy", "Group by", "Partitions the incoming stream" +
+                    " by the selected event " +
+                    "properties"), PropertyScope.DIMENSION_PROPERTY)
             .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), "aggregatedValue",
                     "http://schema.org/Number")))
             .requiredIntegerParameter("outputEvery", "Output Frequency", "Output values every " +

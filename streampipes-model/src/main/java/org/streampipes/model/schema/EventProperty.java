@@ -19,6 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.EVENT_PROPERTY)
 @MappedSuperclass
@@ -58,6 +59,11 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 	@RdfProperty(StreamPipes.HAS_EVENT_PROPERTY_QUALITY_REQUIREMENT)
 	private List<EventPropertyQualityRequirement> requiresEventPropertyQualities;
 
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = {CascadeType.ALL})
+	@RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
+	private String propertyScope;
+
 	public EventProperty()
 	{
 		super(prefix + UUID.randomUUID().toString());
@@ -77,6 +83,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 		this.runtimeName = other.getRuntimeName();
 		this.eventPropertyQualities = new Cloner().provEpQualities(other.getEventPropertyQualities());
 		this.domainProperties = other.getDomainProperties();
+		this.propertyScope = other.getPropertyScope();
 	}
 	
 	public EventProperty(List<URI> subClassOf)
@@ -167,6 +174,14 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 	public void setEventPropertyQualities(
 			List<EventPropertyQualityDefinition> eventPropertyQualities) {
 		this.eventPropertyQualities = eventPropertyQualities;
+	}
+
+	public String getPropertyScope() {
+		return propertyScope;
+	}
+
+	public void setPropertyScope(String propertyScope) {
+		this.propertyScope = propertyScope;
 	}
 
 	public static String getPrefix() {

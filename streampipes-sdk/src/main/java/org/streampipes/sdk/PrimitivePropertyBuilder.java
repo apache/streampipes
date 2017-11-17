@@ -5,6 +5,7 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.net.URI;
 
+@Deprecated
 public class PrimitivePropertyBuilder {
 
 	EventPropertyPrimitive primitive;

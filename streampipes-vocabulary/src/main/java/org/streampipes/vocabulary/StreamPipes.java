@@ -187,4 +187,5 @@ public class StreamPipes {
   public static final String HAS_MEASUREMENT_CAPABILTIY = NS + "hasMeasurementCapability";
   public static final String HAS_MEASUREMENT_OBJECT = NS + "hasMeasurementObject";
 
+  public static final String HAS_PROPERTY_SCOPE = NS + "hasPropertyScope";
 }

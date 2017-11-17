@@ -8,8 +8,11 @@ import org.streampipes.vocabulary.StreamPipes;
 import java.net.URI;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.MAPPING_PROPERTY)
 @MappedSuperclass
@@ -22,6 +25,11 @@ public abstract class MappingProperty extends StaticProperty {
 	protected URI mapsFrom;
 
 	private List<EventProperty> mapsFromOptions;
+
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = {CascadeType.ALL})
+	@RdfProperty(StreamPipes.HAS_PROPERTY_SCOPE)
+	private String propertyScope;
 	
 	public MappingProperty()
 	{
@@ -36,6 +44,7 @@ public abstract class MappingProperty extends StaticProperty {
 	{
 		super(other);
 		this.mapsFrom = other.getMapsFrom();
+		this.propertyScope = other.getPropertyScope();
         //this.mapsFromOptions = other.getMapsFromOptions();
 	}
 	
@@ -64,5 +73,13 @@ public abstract class MappingProperty extends StaticProperty {
 
 	public void setMapsFromOptions(List<EventProperty> mapsFromOptions) {
 		this.mapsFromOptions = mapsFromOptions;
+	}
+
+	public String getPropertyScope() {
+		return propertyScope;
+	}
+
+	public void setPropertyScope(String propertyScope) {
+		this.propertyScope = propertyScope;
 	}
 }
