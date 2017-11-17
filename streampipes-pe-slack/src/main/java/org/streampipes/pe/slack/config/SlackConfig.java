@@ -35,7 +35,7 @@ public enum SlackConfig {
 
     static {
 		serverUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort();
-		iconBaseUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort() +"/img";
+		iconBaseUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort() +"/img/pe_icons";
 	}
 
     public String getHost() {

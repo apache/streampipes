@@ -59,7 +59,7 @@ public enum FlinkConfig {
   }
 
 
-  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getIconHost() + ":" + FlinkConfig.INSTANCE.getIconPort() + "/img";
+  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getIconHost() + ":" + FlinkConfig.INSTANCE.getIconPort() + "/img/pe_icons";
 
   public static final String getIconUrl(String pictureName) {
     return iconBaseUrl + "/" + pictureName + ".png";

@@ -38,7 +38,7 @@ public enum DemonstratorConfig {
 	static {
 		serverUrl = DemonstratorConfig.INSTANCE.getHost() + ":" + DemonstratorConfig.INSTANCE.getPort();
 
-		iconBaseUrl = DemonstratorConfig.INSTANCE.getIconHost() + ":" + DemonstratorConfig.INSTANCE.getIconPort() + "/img";
+		iconBaseUrl = DemonstratorConfig.INSTANCE.getIconHost() + ":" + DemonstratorConfig.INSTANCE.getIconPort() + "/img/pe_icons";
 		eventReplayURI = "http://89.216.116.44:8084";
 		topicPrefixDdm = "SEPA.SEP.DDM.";
 		topicPrefixRam = "SEPA.SEP.Ram";

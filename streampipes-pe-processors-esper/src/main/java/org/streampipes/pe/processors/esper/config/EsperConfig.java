@@ -27,7 +27,7 @@ public enum EsperConfig {
 	
 	static {
 		serverUrl = EsperConfig.INSTANCE.getHost() + ":" + EsperConfig.INSTANCE.getPort();
-		iconBaseUrl = EsperConfig.INSTANCE.getIconHost() + ":" + EsperConfig.INSTANCE.getIconPort() +"/img";
+		iconBaseUrl = EsperConfig.INSTANCE.getIconHost() + ":" + EsperConfig.INSTANCE.getIconPort() +"/img/pe_icons";
 	}
 
 	public static final String getIconUrl(String pictureName) {

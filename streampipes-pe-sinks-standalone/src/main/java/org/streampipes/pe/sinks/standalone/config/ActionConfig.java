@@ -54,7 +54,7 @@ public enum ActionConfig {
 
   static {
     serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
-    iconBaseUrl = ActionConfig.INSTANCE.getIconHost() + ":" + ActionConfig.INSTANCE.getIconPort() + "/img";
+    iconBaseUrl = ActionConfig.INSTANCE.getIconHost() + ":" + ActionConfig.INSTANCE.getIconPort() + "/img/pe_icons";
   }
 
   public static final String getIconUrl(String pictureName) {
