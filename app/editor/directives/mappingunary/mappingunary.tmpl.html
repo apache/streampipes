@@ -1,5 +1,5 @@
 <md-select ng-model="staticProperty.properties.mapsTo"  placeholder="{{staticProperty.properties.description}}">
-    <md-option ng-repeat="option in staticProperty.properties.mapsFromOptions" ng-value="option.properties.elementName" ng-selected="selected(option, staticProperty)">
+    <md-option ng-repeat="option in staticProperty.properties.mapsFromOptions | displayRecommendedFilter: staticProperty.properties.propertyScope:displayRecommended" ng-value="option.properties.elementName" ng-selected="selected(option, staticProperty)">
         <b>{{option.properties.runtimeName}}</b><br/>
     </md-option>
 </md-select>

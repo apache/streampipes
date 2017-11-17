@@ -12,6 +12,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
     $scope.currentStaticProperty;
     $scope.validationErrors = [];
     $scope.configVisible = false;
+    $scope.displayRecommended = false;
 
     $scope.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
         {"id": "http://www.w3.org/2001/XMLSchema#boolean"},

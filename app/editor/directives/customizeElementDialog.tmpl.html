@@ -10,25 +10,32 @@
     </md-toolbar>
 
     <md-dialog-content flex="100" class="md-dialog-content" ng-if="configVisible">
-        <div layout="column" class="customize-item-main-help">
-            <div class="customize-item-title-help" flex="100" layout="row">
-                <div flex="70" layout="row" layout-align="start center" ng-click="toggleHelpDialog()">
-                    <i class="material-icons" style="color: white;">help</i> &nbsp;What's this component doing?
+        <div flex="100" layout="column" layout-align="end end">
+            <md-switch ng-model="displayRecommended" aria-label="Switch 1">
+                Show only recommended settings
+            </md-switch>
+        </div>
+        <div flex="100" layout="column">
+            <div layout="column" class="customize-item-main-help">
+                <div class="customize-item-title-help" flex="100" layout="row">
+                    <div flex="70" layout="row" layout-align="start center" ng-click="toggleHelpDialog()">
+                        <i class="material-icons" style="color: white;">help</i> &nbsp;What's this component doing?
+                    </div>
+                    <div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
+                        <md-button class="md-icon-button" ng-if="helpDialogVisible" ng-click="toggleHelpDialog()">
+                            <i class="material-icons" style="color: white;">arrow_drop_up</i>
+                        </md-button>
+                        <md-button class="md-icon-button" ng-if="!helpDialogVisible" ng-click="toggleHelpDialog()">
+                            <i class="material-icons" style="color: white;">arrow_drop_down</i>
+                        </md-button>
+                    </div>
                 </div>
-                <div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
-                    <md-button class="md-icon-button" ng-if="helpDialogVisible" ng-click="toggleHelpDialog()">
-                        <i class="material-icons" style="color: white;">arrow_drop_up</i>
-                    </md-button>
-                    <md-button class="md-icon-button" ng-if="!helpDialogVisible" ng-click="toggleHelpDialog()">
-                        <i class="material-icons" style="color: white;">arrow_drop_down</i>
-                    </md-button>
-                </div>
-            </div>
-            <div class="customize-item-content" ng-if="helpDialogVisible">
-                The <i>{{sepaName}}</i> component performs the following operation:<br/>
-                <i>{{selectedElement.description}}</i>
-                <div ng-show="elementData.description == ''">(Sorry, no further description available)</div>
+                <div class="customize-item-content" ng-if="helpDialogVisible">
+                    The <i>{{sepaName}}</i> component performs the following operation:<br/>
+                    <i>{{selectedElement.description}}</i>
+                    <div ng-show="elementData.description == ''">(Sorry, no further description available)</div>
 
+                </div>
             </div>
         </div>
         <div ng-repeat="staticProperty in selectedElement.staticProperties">
@@ -44,7 +51,8 @@
                     </div>
                 </div>
                 <div class="customize-item-content">
-                    <customize-dialog selected-element="selectedElement" static-property="staticProperty"></customize-dialog>
+                    <customize-dialog selected-element="selectedElement"
+                                      static-property="staticProperty" display-recommended="displayRecommended"></customize-dialog>
                 </div>
             </div>
         </div>

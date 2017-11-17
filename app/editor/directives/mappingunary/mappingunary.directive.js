@@ -6,7 +6,8 @@ export default function mappingPropertyUnary() {
         restrict: 'E',
         templateUrl: 'app/editor/directives/mappingunary/mappingunary.tmpl.html',
         scope: {
-            staticProperty: "="
+            staticProperty: "=",
+            displayRecommended: "="
         },
         link: function (scope) {
             scope.selected = function(option, staticProperty) {

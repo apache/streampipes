@@ -13,6 +13,7 @@ import EditorCtrl from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
 import capitalize from './capitalize.filter';
+import displayRecommendedFilter from './display-recommended.filter';
 import objectProvider from '../services/object-provider.service';
 
 import any from './directives/any/any.directive';
@@ -36,6 +37,7 @@ export default angular.module('sp.editor', [spServices])
     .directive('imageBind', imageBind)
     .directive('objectProvider', objectProvider)
     .filter('capitalize', objectProvider)
+    .filter('displayRecommendedFilter', displayRecommendedFilter)
     .directive('any', any)
     .directive('customOutput', customOutput)
     .directive('domainConceptInput', domainConceptInput)

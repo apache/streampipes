@@ -7,7 +7,8 @@ export default function customizeDialog() {
         templateUrl: 'app/editor/directives/customize/customize-dialog.tmpl.html',
         scope: {
             staticProperty: "=",
-            selectedElement: "="
+            selectedElement: "=",
+            displayRecommended: "="
         },
         link: function (scope) {
             scope.getMappingProperty = function(mapsTo) {

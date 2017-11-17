@@ -6,7 +6,8 @@ export default function mappingPropertyNary() {
 		restrict : 'E',
 		templateUrl : 'app/editor/directives/mappingnary/mappingnary.tmpl.html',
 		scope : {
-			staticProperty : "="
+			staticProperty : "=",
+			displayRecommended: "="
 		},
 		link: function (scope) {
 
