@@ -1,10 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples;
 
 
-import com.orbitz.consul.NotRegisteredException;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.container.util.ConsulServiceDiscovery;
+import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
@@ -59,7 +58,9 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .setPort(FlinkConfig.INSTANCE.getPort());
             ;
 
-    ConsulServiceDiscovery.registerPeService(FlinkConfig.INSTANCE.getHost(),
+
+            //TODO: service Id
+            ConsulUtil.registerPeService("pe/org.streampipes.pe.mixed.flink",
                                           //TODO
                                           //  "http://" + FlinkConfig.INSTANCE.getHost(),
                                           "http://141.21.14.37",
