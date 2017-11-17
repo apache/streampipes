@@ -60,10 +60,9 @@ public class FlinkInit extends StandaloneModelSubmitter {
             ;
 
     ConsulServiceDiscovery.registerPeService(FlinkConfig.INSTANCE.getHost(),
-                                              FlinkConfig.INSTANCE.getHost(),
                                           //TODO
                                           //  "http://" + FlinkConfig.INSTANCE.getHost(),
-                                          "http://141.21.14.94",
+                                          "http://141.21.14.37",
                                             FlinkConfig.INSTANCE.getPort());
 
 

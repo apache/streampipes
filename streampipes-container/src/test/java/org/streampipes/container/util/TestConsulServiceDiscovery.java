@@ -16,5 +16,7 @@ public class TestConsulServiceDiscovery {
                                                         */
          //getActivePEServicesRdfEndPoints();
          subcribeHealthService();
-    }
+         while(true) ;
+
+     }
 }

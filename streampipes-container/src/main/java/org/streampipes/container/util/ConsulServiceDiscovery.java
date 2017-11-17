@@ -22,6 +22,7 @@ public class ConsulServiceDiscovery {
 
     private static final String HEALTH_CHECK_INTERVAL = "10s";
     //private static final String HEALTH_CHECK_TTL = "15s";
+    private static final String PE_SERVICE_NAME = "PE";
 
 
     //TODO: Change URL
@@ -32,12 +33,12 @@ public class ConsulServiceDiscovery {
     static Logger LOG = LoggerFactory.getLogger(ConsulServiceDiscovery.class);
 
 
-    public static void registerPeService(String serviceName, String serviceID, String url, int port) {
-        registerService(serviceID, serviceName, url, port, "PE");
+    public static void registerPeService(String serviceID, String url, int port) {
+        registerService(PE_SERVICE_NAME, serviceID, url, port, "PE");
     }
 
     public static void registerService(String serviceName, String serviceID, String url, int port, String tag) {
-        String body = createServiceRegisterBody(serviceID, serviceName, url, port, tag);
+        String body = createServiceRegisterBody(serviceName, serviceID, url, port, tag);
         try {
             registerServiceHttpClient(body);
         } catch (UnirestException e) {
@@ -50,7 +51,7 @@ public class ConsulServiceDiscovery {
         HealthClient healthClient = consul.healthClient();
         Agent agent = consul.agentClient().getAgent();
 
-        String serviceName = "pe-flink-samples";
+        String serviceName = "PE";
 
         ServiceHealthCache svHealth = ServiceHealthCache.newCache(healthClient, serviceName);
 
@@ -79,7 +80,7 @@ public class ConsulServiceDiscovery {
         return jsonResponse.getStatus();
     }
 
-    private static String createServiceRegisterBody(String id, String name, String url, int port, String tag) {
+    private static String createServiceRegisterBody(String name, String id, String url, int port, String tag) {
         String healthCheckURL = url + ":" + port;
 
         return "{" +
