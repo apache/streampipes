@@ -1,5 +1,9 @@
 package org.streampipes.storage.util;
 
+import com.orbitz.consul.AgentClient;
+import com.orbitz.consul.Consul;
+import com.orbitz.consul.NotRegisteredException;
+import org.streampipes.config.consul.ConsulSpConfig;
 import org.streampipes.model.util.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
@@ -30,6 +34,7 @@ public class Utils {
 		return dbClient;
 	}
 
+	//TODO: Remove??
 	public static CouchDbClient getCouchDbRdfEndpointClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("rdfendpoint"));
 		return dbClient;
