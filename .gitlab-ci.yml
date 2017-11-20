@@ -34,6 +34,7 @@ build:
       - ./streampipes-pe-sources-axoom-hmi/target/*.jar
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
+      - ./streampipes-pe-sources-demonstrator/target/*.war
     expire_in:  1 hour
 
 docker-backend:
