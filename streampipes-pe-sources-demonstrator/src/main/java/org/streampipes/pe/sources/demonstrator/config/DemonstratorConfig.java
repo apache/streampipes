@@ -24,8 +24,8 @@ public enum DemonstratorConfig {
 
 	DemonstratorConfig() {
 		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.demonstrator");
-		config.register(HOST, "slack", "Hostname for the pe slack integration");
-		config.register(PORT, 8090, "Port for the pe slack integration");
+		config.register(HOST, "backend", "Hostname for the pe slack integration");
+		config.register(PORT, 8030, "Port for the pe slack integration");
 		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe demonstrator project");
 		config.register(KAFKA_PORT, 9092, "Port for kafka of the pe demonstrator project");
 		config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe demonstrator project");
