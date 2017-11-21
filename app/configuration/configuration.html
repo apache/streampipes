@@ -1,18 +1,23 @@
 <div flex class="page-container page-container-padding">
-    <div layout="row" layout-wrap layout-align="start stretch">
-        <div ng-repeat="service in services" flex="33">
+    <div layout="row" layout-wrap layout-align="start stretch" style="padding:5px">
+        <div ng-repeat="service in services" flex="20" style="margin:5px">
             <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
                 <h4>{{service.name}}</h4>
-                <span style="color:green" ng-if="service.status">online</span>
-                <span style="color:red" ng-if="!service.status">offline</span>
+                <span ng-if="service.status">
+                    <md-icon style="color:green" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+                </span>
+                <span ng-if="!service.status">
+                    <md-icon style="color:red" md-svg-icon="content:ic_remove_circle_24px"></md-icon>
+                </span>
             </div>
-            <div class="sp-blue-border">
+            <div class="sp-blue-border" style="padding:5px">
                 <div layout="column">
                     <md-input-container ng-repeat="configuration in service.configurations">
                         <label>{{configuration.key}}</label>
                         <input ng-value="configuration.value">
-                        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description"
-                                 aria-label="configuration.description"></md-icon>
+                        <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
+                            <md-tooltip md-direction="left">{{configuration.description}}</md-tooltip>
+                        </md-icon>
                     </md-input-container>
                     <md-button ng-click="createNewFile(newFile)" class="md-raised md-primary">Update</md-button>
                 </div>
