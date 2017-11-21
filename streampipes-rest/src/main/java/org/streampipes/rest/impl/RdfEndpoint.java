@@ -23,6 +23,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     @GsonWithIds
     @Override
     public Response getAllEndpoints() {
+        //TODO: return the endpoint of passing services
         return ok(StorageManager
                 .INSTANCE
                 .getRdfEndpointStorage()

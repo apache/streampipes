@@ -3,6 +3,7 @@ package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
@@ -58,6 +59,16 @@ public class FlinkInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance()
             .setPort(FlinkConfig.INSTANCE.getPort());
             ;
+
+
+            //TODO: service Id
+            ConsulUtil.registerPeService("pe/org.streampipes.pe.mixed.flink",
+                                          //TODO
+                                          //  "http://" + FlinkConfig.INSTANCE.getHost(),
+                                          "http://141.21.14.37",
+                                            FlinkConfig.INSTANCE.getPort());
+
+
     new FlinkInit().init();
   }
 

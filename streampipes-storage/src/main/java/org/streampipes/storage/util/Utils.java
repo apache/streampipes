@@ -30,6 +30,7 @@ public class Utils {
 		return dbClient;
 	}
 
+	//TODO: Remove??
 	public static CouchDbClient getCouchDbRdfEndpointClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("rdfendpoint"));
 		return dbClient;
