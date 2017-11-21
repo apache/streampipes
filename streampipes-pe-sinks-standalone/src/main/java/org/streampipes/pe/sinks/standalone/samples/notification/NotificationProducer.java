@@ -1,62 +1,52 @@
 package org.streampipes.pe.sinks.standalone.samples.notification;
 
-import eu.proasense.internal.RecommendationEvent;
-import org.apache.thrift.TException;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
 import org.streampipes.commons.exceptions.SpRuntimeException;
-import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.model.Notification;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationProducer implements EventSink<NotificationParameters> {
 
-	private SpKafkaProducer producer;
-	private TSerializer serializer;
-	private String title;
-	private String content;
+  private String title;
+  private String content;
 
-	private static final Logger LOG = LoggerFactory.getLogger(NotificationProducer.class);
-	
-	public NotificationProducer()
-	{
-		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
-	}
+  private ActiveMQPublisher publisher;
+  private Gson gson;
 
-	@Override
-	public void bind(NotificationParameters parameters) throws SpRuntimeException {
-		this.producer = new SpKafkaProducer(ActionConfig.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
-		this.title = parameters.getTitle();
-		this.content = parameters.getContent();
-	}
 
-	@Override
-	public void onEvent(Map<String, Object> event, String sourceInfo) {
-		// TODO replace ProaSense Thrift format with yet-to-implement Notification model
-		RecommendationEvent outEvent = new RecommendationEvent();
-		outEvent.setAction(PlaceholderExtractor.replacePlaceholders(content, event));
-		outEvent.setActor("Me");
-		outEvent.setEventName(title);
-		outEvent.setRecommendationId("Notification");
-		outEvent.setEventProperties(new HashMap<>());
-		outEvent.setTimestamp(new Date().getTime());
+  public NotificationProducer() {
 
-		try {
-			producer.publish(serializer.serialize(outEvent));
-		} catch (TException e) {
-			LOG.error(e.getMessage());
-		}
-	}
+  }
 
-	@Override
-	public void discard() throws SpRuntimeException {
-		this.producer.disconnect();
-	}
+  @Override
+  public void bind(NotificationParameters parameters) throws SpRuntimeException {
+    this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsHost() + ":" + ActionConfig.INSTANCE.getJmsPort(),
+            "org.streampipes.notifications");
+    this.gson = new Gson();
+    this.title = parameters.getTitle();
+    this.content = parameters.getContent();
+  }
+
+  @Override
+  public void onEvent(Map<String, Object> event, String sourceInfo) {
+    Notification notification = new Notification();
+    notification.setTitle(title);
+    notification.setMessage(content);
+    notification.setCreatedAt(new Date());
+
+    // TODO add targeted user to notification object
+
+    publisher.publish(gson.toJson(notification).getBytes());
+  }
+
+  @Override
+  public void discard() throws SpRuntimeException {
+    this.publisher.disconnect();
+  }
 }

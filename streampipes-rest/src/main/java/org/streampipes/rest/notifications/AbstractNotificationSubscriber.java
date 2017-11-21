@@ -1,11 +1,12 @@
 package org.streampipes.rest.notifications;
 
-import org.apache.thrift.TDeserializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
+import com.google.gson.Gson;
+import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.config.backend.BackendConfig;
 import org.streampipes.messaging.InternalEventProcessor;
-import org.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
+import org.streampipes.messaging.jms.ActiveMQConsumer;
+import org.streampipes.model.Notification;
+import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.storage.controller.StorageManager;
 
 import java.text.SimpleDateFormat;
@@ -16,27 +17,37 @@ import java.text.SimpleDateFormat;
 public abstract class AbstractNotificationSubscriber implements InternalEventProcessor<byte[]>, Runnable {
 
     protected String topic;
-    protected TDeserializer deserializer;
+    protected Gson gson;
 
     public AbstractNotificationSubscriber(String topic) {
         this.topic = topic;
-        this.deserializer = new TDeserializer(new TBinaryProtocol.Factory());
+        this.gson = new Gson();
     }
 
-    public void subscribe() {
-        SpKafkaConsumer kafkaConsumerGroup = new SpKafkaConsumer(BackendConfig.INSTANCE
-                .getKafkaUrl(), topic,
-                this);
-        Thread thread = new Thread(kafkaConsumerGroup);
-        thread.start();
+    public void subscribe() throws SpRuntimeException {
+        ActiveMQConsumer consumer = new ActiveMQConsumer();
+        consumer.connect(getConsumerSettings(), this);
+    }
+
+    private JmsTransportProtocol getConsumerSettings() {
+        JmsTransportProtocol protocol = new JmsTransportProtocol();
+        protocol.setPort(BackendConfig.INSTANCE.getJmsPort());
+        protocol.setBrokerHostname("tcp://" +BackendConfig.INSTANCE.getJmsHost());
+        protocol.setTopicName(topic);
+
+        return protocol;
     }
 
     @Override
     public void run() {
-        subscribe();
+        try {
+            subscribe();
+        } catch (SpRuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
-    protected void storeNotification(ProaSenseNotificationMessage message) {
+    protected void storeNotification(Notification message) {
         StorageManager
                 .INSTANCE
                 .getNotificationStorageApi()

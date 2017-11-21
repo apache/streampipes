@@ -7,7 +7,7 @@ import javax.servlet.ServletContextListener;
 
 public class NotificationListener implements ServletContextListener {
 
-	private static final String internalNotificationTopic = "de.fzi.cep.sepa.notifications";
+	private static final String internalNotificationTopic = "org.streampipes.notifications";
 	
 
 	@Override

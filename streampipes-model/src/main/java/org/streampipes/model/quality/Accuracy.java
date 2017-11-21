@@ -27,7 +27,7 @@ public class Accuracy extends EventPropertyQualityDefinition {
 	}
 	
 	@RdfProperty(StreamPipes.HAS_QUANTITY_VALUE)
-	float quantityValue;
+	private float quantityValue;
 
 	public float getQuantityValue() {
 		return quantityValue;

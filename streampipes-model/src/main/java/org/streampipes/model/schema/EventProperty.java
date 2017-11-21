@@ -79,9 +79,16 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 		this.description = other.getDescription();
 		this.propertyId = other.getPropertyId();
 		this.required = other.isRequired();
-		this.requiresEventPropertyQualities = new Cloner().reqEpQualitities(other.getRequiresEventPropertyQualities());
+		if (other.getRequiresEventPropertyQualities() != null) {
+			this.requiresEventPropertyQualities = new Cloner()
+							.reqEpQualitities(other
+											.getRequiresEventPropertyQualities());
+		}
 		this.runtimeName = other.getRuntimeName();
-		this.eventPropertyQualities = new Cloner().provEpQualities(other.getEventPropertyQualities());
+		if (other.getEventPropertyQualities() != null) {
+			this.eventPropertyQualities = new Cloner().provEpQualities(other
+							.getEventPropertyQualities());
+		}
 		this.domainProperties = other.getDomainProperties();
 		this.propertyScope = other.getPropertyScope();
 	}

@@ -3,6 +3,9 @@ package org.streampipes.model.util;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
 import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.quality.Accuracy;
+import org.streampipes.model.quality.Precision;
+import org.streampipes.model.quality.Resolution;
 import org.streampipes.model.schema.Enumeration;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
@@ -96,8 +99,13 @@ public class Cloner {
 	}
 
 	public EventPropertyQualityDefinition qualitydef(EventPropertyQualityDefinition o) {
-		// TODO Auto-generated method stub
-		return null;
+		if (o instanceof Accuracy) {
+			return new Accuracy((Accuracy) o);
+		} else if (o instanceof Precision) {
+			return new Precision((Precision) o);
+		} else {
+			return new Resolution((Resolution) o);
+		}
 	}
 
 	public List<SpDataStream> streams(List<SpDataStream> spDataStreams) {
