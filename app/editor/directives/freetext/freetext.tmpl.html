@@ -2,16 +2,31 @@
     <div flex="100" layout="column" ng-if="staticProperty.properties.placeholdersSupported">
         <h5>{{staticProperty.properties.description}}</h5>
         <h5>Possible placeholders: </h5>
-        <span ng-repeat="property in inputStreams[0].eventSchema.eventProperties">#{{property.properties.runtimeName}}#&nbsp;</span>
+        <div flex="100" layout="row" style="background:white;">
+            <div class="sp-accent-bg" style="color:white;padding:5px;margin:5px;"
+                 ng-repeat="property in inputStreams[0].eventSchema.eventProperties">
+                #{{property.properties.runtimeName}}#
+            </div>
+        </div>
+        &nbsp;&nbsp;
     </div>
     <md-input-container ng-if="!staticProperty.properties.multiLine" flex="100" layout="column"><label>{{staticProperty.properties.description}}</label>
         <input name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"/>
     </md-input-container>
     <div ng-if="staticProperty.properties.multiLine">
-        <md-input-container flex="100" layout="column">
-            <textarea name="{{staticProperty.properties.elementName}}" ng-model="staticProperty.properties.value"
-                      md-maxlength="1500" rows="10"></textarea>
-        </md-input-container>
+        <trix-editor ng-if="true" ng-model-options="{ updateOn: 'blur' }"
+                     spellcheck="false" class="trix-content"
+                     ng-model="staticProperty.properties.value"
+                     angular-trix
+                     trix-initialize="trixInitialize(e, editor);"
+                     trix-change="trixChange(e, editor);"
+                     trix-selection-change="trixSelectionChange(e, editor);"
+                     trix-focus="trixFocus(e, editor);"
+                     trix-blur="trixBlur(e, editor);"
+                     trix-file-accept="trixFileAccept(e, editor);"
+                     trix-attachment-add="trixAttachmentAdd(e, editor);"
+                     trix-attachment-remove="trixAttachmentRemove(e, editor);"
+                     placeholder="Write something.."></trix-editor>
     </div>
 </div>
 <div ng-if="staticProperty.properties.valueSpecification" style="margin-top:20px;">
@@ -37,7 +52,8 @@
             </md-input-container>
         </div>
         <div ng-if="selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.QuantitativeValue'">
-            <md-slider md-discrete flex min="{{selectedEventProperty.properties.valueSpecification.properties.minValue}}"
+            <md-slider md-discrete flex
+                       min="{{selectedEventProperty.properties.valueSpecification.properties.minValue}}"
                        max="{{selectedEventProperty.properties.valueSpecification.properties.maxValue}}"
                        step="{{selectedEventProperty.properties.valueSpecification.properties.step}}"
                        ng-model="staticProperty.properties.value">
@@ -48,7 +64,9 @@
             </md-input-container>
         </div>
         <div ng-if="selectedEventProperty.properties.valueSpecification.type=='org.streampipes.model.schema.Enumeration'">
-            <md-autocomplete md-no-cache="true" md-selected-item="staticProperty.properties.value" md-items="item in selectedEventProperty.properties.valueSpecification.properties.runtimeValues" md-search-text="searchText" md-item-text="item" placeholder="Enter value">
+            <md-autocomplete md-no-cache="true" md-selected-item="staticProperty.properties.value"
+                             md-items="item in selectedEventProperty.properties.valueSpecification.properties.runtimeValues"
+                             md-search-text="searchText" md-item-text="item" placeholder="Enter value">
                 <span>{{ item }}</span>
             </md-autocomplete>
         </div>

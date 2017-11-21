@@ -8,6 +8,7 @@ import jqueryPanzoom from 'npm/jquery.panzoom';
 import bootstrap from 'npm/bootstrap';
 import angulerUiSortable from 'npm/angular-ui-sortable';
 import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
+import 'npm/angular-trix';
 
 import EditorCtrl from './editor.controller';
 import myDataBind from './my-data-bind.directive';
@@ -31,7 +32,8 @@ import collectionStaticProperty from './directives/collection/collection.directi
 import customizeDialog from './directives/customize/customize-dialog.directive';
 
 
-export default angular.module('sp.editor', [spServices])
+
+export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)

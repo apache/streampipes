@@ -10,6 +10,11 @@
     border: 1px solid #304269;
 }
 
+.sp-blue-100-border {
+    border: 2px solid rgb(63,81,181);
+}
+
+
 .sp-gray-border {
     border: 1px solid #cccccc;
 }

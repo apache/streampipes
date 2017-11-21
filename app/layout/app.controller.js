@@ -1,14 +1,34 @@
-AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state', '$window'];
+AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state', '$window', '$location'];
 
-export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state, $window) {
+export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state, $window, $location) {
 
     $rootScope.unreadNotifications = [];
     $rootScope.title = "StreamPipes";
+
+    $scope.notificationCount = 0;
 
     $scope.toggleLeft = buildToggler('left');
     $rootScope.userInfo = {
         Name: "D",
         Avatar: null
+    };
+
+    $rootScope.updateUnreadNotifications = function(){
+        restApi.getNotifications()
+            .success(function(notifications){
+                var notificationCount = 0;
+                angular.forEach(notifications, function(value, key) {
+                    if (!value.read) {
+                        notificationCount++;
+                    }
+                });
+                $scope.notificationCount = notificationCount;
+                console.log("count");
+                console.log($scope.notificationCount);
+            })
+            .error(function(msg){
+                console.log(msg);
+            });
     };
 
     $rootScope.go = function (path) {
@@ -103,5 +123,27 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
         }, 300);
         return debounceFn;
     }
+
+    var connectToBroker = function() {
+        console.log("connecting");
+        var login = 'admin';
+        var passcode = 'admin';
+        var brokerUrl = 'ws://' +$location.host() +":" +$location.port() +"/streampipes/ws";
+        var inputTopic = '/topic/org.streampipes.notifications';
+
+        var client = Stomp.client(brokerUrl + inputTopic);
+
+        var onConnect = function (frame) {
+
+            client.subscribe(inputTopic, function (message) {
+                $scope.notificationCount++;
+            });
+        };
+
+        client.connect(login, passcode, onConnect);
+    }
+
+    $rootScope.updateUnreadNotifications();
+    connectToBroker();
 };
 

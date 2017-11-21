@@ -101,6 +101,8 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
                 if (!anyOccurrence) valid = false;
             } else if (staticProperty.properties.staticPropertyType === 'FreeTextStaticProperty') {
                 if (!staticProperty.properties.value) {
+                    console.log(staticProperty.properties.value);
+                    console.log("VALUE");
                     valid = false;
                 }
                 if (staticProperty.properties.requiredDatatype) {

@@ -17,6 +17,37 @@ body {
 	background-attachment: fixed;	
 }
 
+.angular-notifications-container {
+	left:-7px !important;
+}
+
+.angular-notifications-icon {
+	right:-7px !important;
+	top:-7px !important;
+	background: rgb(255,64,129) !important;
+}
+
+.speech-bubble {
+	position: relative;
+	margin-top:20px;
+	padding:20px;
+}
+
+.speech-bubble:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0%;
+	width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-bottom-color: rgb(63,81,181);
+	border-top: 0;
+	border-left: 0;
+	margin-left: -10px;
+	margin-top: -20px;
+}
+
 .button-margin-iconbar {
 	padding:0px !important;
 	margin:0px !important;
