@@ -1,21 +1,24 @@
 <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
-    <h4>{{service.name}}</h4>
-    <span ng-if="service.status" style="background-color:#fff; border-radius:50%">
-                    <md-icon style="color:green" md-svg-icon="action:ic_check_circle_24px"></md-icon>
-                </span>
-    <span ng-if="!service.status" style="background-color:#fff; border-radius:50%">
-                    <md-icon style="color:red" md-svg-icon="content:ic_remove_circle_24px"></md-icon>
-                </span>
+    <h4>{{serviceDetails.name}}</h4>
+    <span ng-if="serviceDetails.meta.status === 'passing'" style="background-color:black; border-radius:50%">
+        <md-icon style="color:green" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+    </span>
+    <span ng-if="serviceDetails.meta.status === 'warning'" style="background-color:black; border-radius:50%">
+        <md-icon style="color:yellow" md-svg-icon="alert:ic_error_24px"></md-icon>
+    </span>
+    <span ng-if="serviceDetails.meta.status === 'critical'" style="background-color:black; border-radius:50%">
+        <md-icon style="color:red" md-svg-icon="navigation:ic_cancel_24px"></md-icon>
+    </span>
 </div>
 <div class="sp-blue-border" style="padding:5px">
     <div layout="column">
-        <md-input-container ng-repeat="configuration in service.configurations">
+        <md-input-container ng-repeat="configuration in serviceDetails.configs">
             <label>{{configuration.key}}</label>
-            <input ng-value="configuration.value">
+            <input ng-value="configuration.value" ng-model="configuration.value">
             <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
                 <md-tooltip md-direction="left">{{configuration.description}}</md-tooltip>
             </md-icon>
         </md-input-container>
-        <md-button ng-click="createNewFile(newFile)" class="md-raised md-primary">Update</md-button>
+        <md-button ng-click="updateConfiguration()" class="md-raised md-primary">Update</md-button>
     </div>
 </div>

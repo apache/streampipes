@@ -1,5 +1,6 @@
 <div flex class="page-container page-container-padding">
     <div layout="row" layout-wrap layout-align="start stretch">
-        <consul-service ng-repeat="service in services" flex="25" style="padding:5px" configurations="service"></consul-service>
+        <consul-service ng-repeat="service in services" flex="50" style="padding:5px" service-details="service"
+                        on-update="updateConfiguration(serviceDetails)"></consul-service>
     </div>
 </div>
