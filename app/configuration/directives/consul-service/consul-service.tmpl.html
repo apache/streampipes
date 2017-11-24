@@ -1,5 +1,5 @@
 <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
-    <span ng-if="serviceDetails.meta.status === 'passing'" style="background-color:black; border-radius:50%">
+    <span ng-if="$ctrl.serviceDetails.meta.status === 'passing'">
         <md-icon style="color: #4CAF50" md-svg-icon="image:ic_brightness_1_24px"></md-icon>
     </span>
     <span ng-if="$ctrl.serviceDetails.meta.status === 'critical'">
@@ -17,11 +17,16 @@
     <div layout="column">
         <md-input-container ng-repeat="configuration in $ctrl.serviceDetails.configs">
             <label>{{configuration.key}}</label>
-            <input ng-value="configuration.value" ng-model="configuration.value">
+            <input ng-if="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
+                   ng-value="configuration.value" ng-model="configuration.value" type="number">
+            <input ng-if="configuration.valueType == 'xs:string'" ng-value="configuration.value"
+                   ng-model="configuration.value" type="text">
+            <input ng-if="configuration.valueType == 'xs:boolean'" ng-value="configuration.value"
+                   ng-model="configuration.value" type="checkbox">
             <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
                 <md-tooltip md-direction="left">{{configuration.description}}</md-tooltip>
             </md-icon>
         </md-input-container>
-        <md-button ng-click="updateConfiguration()" class="md-raised md-primary">Update</md-button>
+        <md-button ng-click="$ctrl.updateConfiguration()" class="md-raised md-primary">Update</md-button>
     </div>
 </div>

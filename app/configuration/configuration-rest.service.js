@@ -4,7 +4,7 @@ export default function configurationRestApi($rootScope, $http, apiConstants, $w
 
     var restApi = {};
 
-    var getServerUrl = function() {
+    var getServerUrl = function () {
         return apiConstants.contextPath;
     }
 

@@ -6,14 +6,14 @@ export default function ConfigurationCtrl($scope, ConfigurationRestService) {
 
     var ctrl = this;
 
-    $scope.getConfigurations = function() {
-        ConfigurationRestService.get().then(function(services) {
+    $scope.getConfigurations = function () {
+        ConfigurationRestService.get().then(function (services) {
             $scope.services = services.data
         });
     }
 
-    $scope.updateConfiguration = function(serviceDetails) {
-        ConfigurationRestService.update(serviceDetails).then(function(response) {
+    $scope.updateConfiguration = function (serviceDetails) {
+        ConfigurationRestService.update(serviceDetails).then(function (response) {
 
         });
     }
