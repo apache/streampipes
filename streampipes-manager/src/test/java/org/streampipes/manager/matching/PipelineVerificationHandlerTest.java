@@ -19,7 +19,7 @@ public class PipelineVerificationHandlerTest {
     public WireMockRule wireMockRule = new WireMockRule(WIREMOCK_PORT);
 
     //TODO fix test
-//    @Test
+//    @consul
 //    public void updateRemoteOneOfStaticProperty() throws NoSepaInPipelineException, NoMatchingJsonSchemaException, RemoteServerNotAccessibleException {
 //
 //
@@ -41,7 +41,7 @@ public class PipelineVerificationHandlerTest {
 
 
     /**
-     * Test class with the properties needed for the test
+     * consul class with the properties needed for the test
      */
     private class TestSepa implements SemanticEventProcessingAgentDeclarer {
 

@@ -81,13 +81,11 @@ public class EsperInit extends StandaloneModelSubmitter {
             .add(new StreamStoppedController())
             .add(new BinaryMathController());
 
-    DeclarersSingleton.getInstance().setPort(EsperConfig.INSTANCE.getPort());
-    DeclarersSingleton.getInstance().setHostName(EsperConfig.INSTANCE.getHost());
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
 
     new Thread(new EsperEngineSettings()).start();
-    new EsperInit().init();
+    new EsperInit().init(EsperConfig.INSTANCE);
 
   }
 }

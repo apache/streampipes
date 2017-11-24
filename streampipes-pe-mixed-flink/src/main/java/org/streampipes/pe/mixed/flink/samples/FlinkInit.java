@@ -51,23 +51,7 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new PeakDetectionController())
             .add(new ValueController());
 
-
-    DeclarersSingleton.getInstance()
-            .setHostName(FlinkConfig.INSTANCE.getHost());
-    DeclarersSingleton.getInstance()
-            .setPort(FlinkConfig.INSTANCE.getPort());
-            ;
-
-
-            //TODO: service Id
-            ConsulUtil.registerPeService("pe/org.streampipes.pe.mixed.flink",
-                                          //TODO
-                                          //  "http://" + FlinkConfig.INSTANCE.getHost(),
-                                          "http://141.21.14.37",
-                                            FlinkConfig.INSTANCE.getPort());
-
-
-    new FlinkInit().init();
+    new FlinkInit().init(FlinkConfig.INSTANCE);
   }
 
 }

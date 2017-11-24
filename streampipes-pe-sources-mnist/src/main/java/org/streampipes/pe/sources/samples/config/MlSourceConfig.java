@@ -1,8 +1,9 @@
 package org.streampipes.pe.sources.samples.config;
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum MlSourceConfig {
+public enum MlSourceConfig implements PeConfig {
 	INSTANCE;
 
 	private SpConfig config;
@@ -23,8 +24,11 @@ public enum MlSourceConfig {
 	public final static String topicPrefixDdm;
 	public final static String topicPrefixRam;
 
+	private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.samples";
+	private final static String SERVICE_NAME = "service_name";
+
 	MlSourceConfig() {
-		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.samples");
+		config = SpConfig.getSpConfig(SERVICE_ID);
 		config.register(HOST, "pe-mnist", "Hostname for the pe sources samples");
 		config.register(PORT, 8090, "Port for the pe sources samples");
 		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sources samples project");
@@ -35,6 +39,9 @@ public enum MlSourceConfig {
 		config.register(JMS_PORT, 9092, "Port for pe sources samples service for active mq");
 		config.register(DATA_LOCATION,"/home/user/", "Folder with the data for the replay of streams");
 		config.register(WITH_LABEL, false, "When true the data is replayed with a label, when false the label is ignored");
+
+		config.register(SERVICE_NAME, "Sources mnist", "The name of the service");
+
 	}
 
 
@@ -46,10 +53,12 @@ public enum MlSourceConfig {
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
 
+	@Override
 	public String getHost() {
 		return config.getString(HOST);
 	}
 
+	@Override
 	public int getPort() {
 		return config.getInteger(PORT);
 	}
@@ -88,6 +97,16 @@ public enum MlSourceConfig {
 
 	public boolean isWithLabel() {
 		return config.getBoolean(WITH_LABEL);
+	}
+
+	@Override
+	public String getId() {
+		return SERVICE_ID;
+	}
+
+	@Override
+	public String getName() {
+		return config.getString(SERVICE_NAME);
 	}
 }
 

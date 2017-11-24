@@ -2,8 +2,9 @@ package org.streampipes.pe.sinks.standalone.config;
 
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum ActionConfig {
+public enum ActionConfig implements PeConfig {
 
   INSTANCE;
 
@@ -29,8 +30,12 @@ public enum ActionConfig {
   public final static String serverUrl;
   public final static String iconBaseUrl;
 
+
+  private final static String SERVICE_ID= "pe/org.streampipes.pe.sinks.standalone";
+  private final static String SERVICE_NAME = "service_name";
+
   ActionConfig() {
-    config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
+    config = SpConfig.getSpConfig(SERVICE_ID);
 
     config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
     config.register(PORT, 8090, "Port for the pe sinks");
@@ -50,6 +55,9 @@ public enum ActionConfig {
 
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
+
+    config.register(SERVICE_NAME, "Sinks standalone", "The name of the service");
+
   }
 
   static {
@@ -61,10 +69,12 @@ public enum ActionConfig {
     return iconBaseUrl + "/" + pictureName + ".png";
   }
 
+  @Override
   public String getHost() {
     return config.getString(HOST);
   }
 
+  @Override
   public int getPort() {
     return config.getInteger(PORT);
   }
@@ -131,6 +141,16 @@ public enum ActionConfig {
 
   public int getIconPort() {
     return config.getInteger(ICON_PORT);
+  }
+
+  @Override
+  public String getId() {
+    return SERVICE_ID;
+  }
+
+  @Override
+  public String getName() {
+    return config.getString(SERVICE_NAME);
   }
 
 }

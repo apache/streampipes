@@ -2,6 +2,7 @@ package org.streampipes.pe.sources.hella.main;
 
 import org.streampipes.container.embedded.init.ContainerModelSubmitter;
 import org.streampipes.container.init.DeclarersSingleton;
+import org.streampipes.pe.sources.hella.config.SourcesConfig;
 import org.streampipes.pe.sources.hella.sources.EnrichedEventProducer;
 import org.streampipes.pe.sources.hella.sources.EnvironmentalDataProducer;
 import org.streampipes.pe.sources.hella.sources.HumanSensorDataProducer;
@@ -21,6 +22,8 @@ import org.streampipes.pe.sources.hella.sources.VisualInspectionProducer;
                 .add(new VisualInspectionProducer())
                 .add(new EnrichedEventProducer())
                 .add(new EnvironmentalDataProducer());
+
+        new SourcesHellaInit().init(SourcesConfig.INSTANCE);
 
     }
 

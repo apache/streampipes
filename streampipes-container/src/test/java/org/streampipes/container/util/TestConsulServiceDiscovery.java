@@ -21,19 +21,6 @@ public class TestConsulServiceDiscovery {
                                                         8090);
                                                         */
          //getActivePEServicesRdfEndPoints();
-        // subcribeHealthService();
-        // while(true) ;
-          getPEServices();
-
-          Consul consul = ConsulUtil.consulInstance();
-
-          KeyValueClient keyValueClient = consul.keyValueClient();
-         // List<String> keys = keyValueClient.getKeys("sp/v1/pe/org.streampipes.pe.mixed.flink/elasticsearch_host");;
-          ConsulResponse<List<Value>> consulResponseWithValues = keyValueClient.getConsulResponseWithValues("pe/org.streampipes.pe.mixed.flink");
-//          String valueAsString = consulResponseWithValues.getResponse().get(1).getValueAsString().get();
-
-         // List<String> valuesAsString = keyValueClient.getValuesAsString("sp/v1/pe/org.streampipes.pe.mixed.flink/elasticsearch_host");
-        //  System.out.println("asd");
 
      }
 }
