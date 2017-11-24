@@ -19,7 +19,7 @@ public abstract class ContainerModelSubmitter extends ModelSubmitter implements 
 
     public void init(PeConfig peConfig) {
         ConsulUtil.registerPeService(
-                peConfig.getServiceName(),
+                peConfig.getId(),
                 peConfig.getHost(),
                 peConfig.getPort()
         );
