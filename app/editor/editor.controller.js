@@ -85,6 +85,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             });
     }
 
+
     $scope.isValidPipeline = function () {
         return $scope.isStreamInAssembly && $scope.isActionInAssembly;
     }
