@@ -2,8 +2,9 @@ package org.streampipes.pe.sources.hella.config;
 
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum SourcesConfig {
+public enum SourcesConfig implements PeConfig {
     INSTANCE;
 
     private SpConfig config;
@@ -19,15 +20,21 @@ public enum SourcesConfig {
 	public final static String topicPrefixDdm;
 	public final static String topicPrefixRam;
 
+    private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.hella";
+    private final static String SERVICE_NAME = "service_name";
+
 	SourcesConfig() {
-		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.hella");
+		config = SpConfig.getSpConfig(SERVICE_ID);
 		config.register(HOST, "sources-hella", "Hostname for the pe sources hella");
 		config.register(PORT, 8090, "Port for the pe sources hella");
        	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe hella project");
         config.register(KAFKA_PORT, 9092, "Port for kafka of the pe hella project");
        	config.register(ZOOKEEPER_HOST, "zookeeper", "Host for zookeeper of the pe hella project");
         config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe hella project");
-	}
+
+        config.register(SERVICE_NAME, "Sources hella", "The name of the service");
+
+    }
 
 
 	static {
@@ -38,10 +45,12 @@ public enum SourcesConfig {
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
 
+	@Override
     public String getHost() {
         return config.getString(HOST);
     }
 
+    @Override
     public int getPort() {
         return config.getInteger(PORT);
     }
@@ -64,6 +73,16 @@ public enum SourcesConfig {
 
     public int getZookeeperPort() {
         return config.getInteger(ZOOKEEPER_PORT);
+    }
+
+    @Override
+    public String getId() {
+        return SERVICE_ID;
+    }
+
+    @Override
+    public String getName() {
+        return config.getString(SERVICE_NAME);
     }
 
 }

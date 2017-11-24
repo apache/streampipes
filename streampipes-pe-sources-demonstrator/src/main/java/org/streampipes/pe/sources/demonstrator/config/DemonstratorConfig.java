@@ -1,8 +1,9 @@
 package org.streampipes.pe.sources.demonstrator.config;
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum DemonstratorConfig {
+public enum DemonstratorConfig implements PeConfig {
 	INSTANCE;
 
 	private SpConfig config;
@@ -22,8 +23,11 @@ public enum DemonstratorConfig {
 	public final static String topicPrefixDdm;
 	public final static String topicPrefixRam;
 
+	private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.demonstrator";
+	private final static String SERVICE_NAME = "service_name";
+
 	DemonstratorConfig() {
-		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.demonstrator");
+		config = SpConfig.getSpConfig(SERVICE_ID);
 		config.register(HOST, "backend", "Hostname for the pe slack integration");
 		config.register(PORT, 8030, "Port for the pe slack integration");
 		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe demonstrator project");
@@ -33,7 +37,11 @@ public enum DemonstratorConfig {
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ICON_PORT, 80, "Port for the icons in nginx");
-	}
+
+        config.register(SERVICE_NAME, "Source demonstrator", "The name of the service");
+
+
+    }
 
 	static {
 		serverUrl = DemonstratorConfig.INSTANCE.getHost() + ":" + DemonstratorConfig.INSTANCE.getPort();
@@ -44,10 +52,12 @@ public enum DemonstratorConfig {
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
 
+	@Override
 	public String getHost() {
 		return config.getString(HOST);
 	}
 
+	@Override
 	public int getPort() {
 		return config.getInteger(PORT);
 	}
@@ -79,5 +89,15 @@ public enum DemonstratorConfig {
 	public int getIconPort() {
 		return config.getInteger(ICON_PORT);
 	}
+
+    @Override
+    public String getId() {
+        return SERVICE_ID;
+    }
+
+    @Override
+    public String getName() {
+        return config.getString(SERVICE_NAME);
+    }
 
 }

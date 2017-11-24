@@ -32,7 +32,7 @@ public class ActionsInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance().registerDataFormat(new JsonDataFormatFactory());
     DeclarersSingleton.getInstance().registerProtocol(new SpKafkaProtocolFactory());
 
-    new ActionsInit().init();
+    new ActionsInit().init(ActionConfig.INSTANCE);
 
   }
 

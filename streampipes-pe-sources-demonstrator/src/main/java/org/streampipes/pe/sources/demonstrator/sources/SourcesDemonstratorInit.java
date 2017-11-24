@@ -7,7 +7,6 @@ import org.streampipes.pe.sources.demonstrator.config.DemonstratorConfig;
 
 public class SourcesDemonstratorInit extends ContainerModelSubmitter {
 
-    @Override
     public void init() {
         DeclarersSingleton.getInstance().setRoute("sources-demonstrator");
         DeclarersSingleton.getInstance()
@@ -17,6 +16,8 @@ public class SourcesDemonstratorInit extends ContainerModelSubmitter {
 
         DeclarersSingleton.getInstance().setPort(DemonstratorConfig.INSTANCE.getPort());
         DeclarersSingleton.getInstance().setHostName(DemonstratorConfig.INSTANCE.getHost());
+
+        new SourcesDemonstratorInit().init(DemonstratorConfig.INSTANCE);
 
     }
 

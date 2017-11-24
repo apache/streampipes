@@ -5,17 +5,10 @@ import java.util.Map;
 
 public class PeConfig {
 
+    String mainKey;
     String name;
     List<ConfigItem> configs;
     Map<String, String> meta;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<ConfigItem> getConfigs() {
         return configs;
@@ -31,5 +24,21 @@ public class PeConfig {
 
     public void setMeta(Map<String, String> meta) {
         this.meta = meta;
+    }
+
+    public String getMainKey() {
+        return mainKey;
+    }
+
+    public void setMainKey(String mainKey) {
+        this.mainKey = mainKey;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

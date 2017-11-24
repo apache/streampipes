@@ -1,9 +1,12 @@
 package org.streampipes.pe.sources.samples.config;
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum SourcesConfig {
-  INSTANCE;
+import javax.ws.rs.PathParam;
+
+public enum SourcesConfig implements PeConfig {
+	INSTANCE;
 
 	private SpConfig config;
 	private final static String HOST = "host";
@@ -37,8 +40,11 @@ public enum SourcesConfig {
 	public final static String topicPrefixDdm;
 	public final static String topicPrefixRam;
 
+    private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.samples";
+    private final static String SERVICE_NAME = "service_name";
+
 	SourcesConfig() {
-		config = SpConfig.getSpConfig("pe/org.streampipes.pe.sources.samples");
+		config = SpConfig.getSpConfig(SERVICE_ID);
 		config.register(HOST, "pe-sources-samples", "Hostname for the pe sources samples");
 		config.register(PORT, 8090, "Port for the pe sources samples");
 		config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sources samples project");
@@ -63,7 +69,10 @@ public enum SourcesConfig {
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ICON_PORT, 80, "Port for the icons in nginx");
-	}
+
+        config.register(SERVICE_NAME, "Sources samples", "The name of the service");
+
+    }
 
 
 	static {
@@ -74,10 +83,12 @@ public enum SourcesConfig {
 		topicPrefixRam = "SEPA.SEP.Ram";
 	}
 
+	@Override
 	public String getHost() {
 		return config.getString(HOST);
 	}
 
+	@Override
 	public int getPort() {
 		return config.getInteger(PORT);
 	}
@@ -166,5 +177,15 @@ public enum SourcesConfig {
 	public int getIconPort() {
 		return config.getInteger(ICON_PORT);
 	}
+
+    @Override
+    public String getId() {
+        return SERVICE_ID;
+    }
+
+    @Override
+    public String getName() {
+        return config.getString(SERVICE_NAME);
+    }
 
 }

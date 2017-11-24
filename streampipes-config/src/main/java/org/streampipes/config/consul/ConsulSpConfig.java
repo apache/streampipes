@@ -18,7 +18,7 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
 //public class ConsulSpConfig extends SpConfig {
     private static final String CONSUL_ENV_LOCATION = "CONSUL_LOCATION";
-    private static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
+    public static final String SERVICE_ROUTE_PREFIX = "sp/v1/";
     private String serviceName;
     private  KeyValueClient kvClient;
 
@@ -81,28 +81,33 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public void register(String key, boolean defaultValue, String description) {
-        register(key, Boolean.toString(defaultValue), description);
+        register(key, Boolean.toString(defaultValue), "xs:boolean", description);
     }
 
     @Override
     public void register(String key, int defaultValue, String description) {
-        register(key, Integer.toString(defaultValue), description);
+        register(key, Integer.toString(defaultValue), "xs:integer", description);
     }
 
     @Override
     public void register(String key, double defaultValue, String description) {
-        register(key, Double.toString(defaultValue), description);
+        register(key, Double.toString(defaultValue), "xs:double", description);
 
     }
 
     @Override
     public void register(String key, String defaultValue, String description) {
+        register(key, defaultValue, "xs:string", description);
+    }
+
+    private void register(String key, String defaultValue, String valueType, String description) {
 
         Optional<String> i = kvClient.getValueAsString(addSn(key));
         // TODO this check does not work
         if (!i.isPresent()) {
             kvClient.putValue(addSn(key), defaultValue);
             kvClient.putValue(addSn(key) + "_description", description);
+            kvClient.putValue(addSn(key) + "_type", valueType);
         }
 
         if (configProps != null) {

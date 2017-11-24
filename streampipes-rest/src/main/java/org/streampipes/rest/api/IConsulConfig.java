@@ -9,4 +9,6 @@ public interface IConsulConfig {
     Response getAllServiceConfigs();
 
     Response saveServiceConfig(PeConfig peConfig);
+
+    Response deleteService(String serviceName);
 }

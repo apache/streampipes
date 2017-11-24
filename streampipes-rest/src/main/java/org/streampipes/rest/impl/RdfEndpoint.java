@@ -1,5 +1,6 @@
 package org.streampipes.rest.impl;
 
+import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.rest.annotation.GsonWithIds;
@@ -10,7 +11,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by riemer on 05.10.2016.
@@ -24,10 +29,25 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     @Override
     public Response getAllEndpoints() {
         //TODO: return the endpoint of passing services
-        return ok(StorageManager
+        List<String> endpoints = ConsulUtil.getActivePEServicesEndPoints();
+        List<org.streampipes.model.client.endpoint.RdfEndpoint> servicerdRdfEndpoints = new LinkedList<>();
+
+        for(String endpoint: endpoints ) {
+            org.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint =
+                    new org.streampipes.model.client.endpoint.RdfEndpoint(endpoint);
+            servicerdRdfEndpoints.add(rdfEndpoint);
+        }
+        List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = StorageManager
                 .INSTANCE
                 .getRdfEndpointStorage()
-                .getRdfEndpoints());
+                .getRdfEndpoints();
+
+        List<org.streampipes.model.client.endpoint.RdfEndpoint> concatList =
+                Stream.of(databasedRdfEndpoints, servicerdRdfEndpoints)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        return ok(concatList);
     }
 
     @POST

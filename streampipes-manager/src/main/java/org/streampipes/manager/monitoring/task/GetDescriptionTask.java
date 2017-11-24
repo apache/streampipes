@@ -12,7 +12,7 @@ public class GetDescriptionTask extends TaskDefinition {
 	
 	private ConsumableStreamPipesEntity element;
 	
-	private static final String TASK_NAME = "HTTP Get Availability Test";
+	private static final String TASK_NAME = "HTTP Get Availability consul";
 	
 	public GetDescriptionTask(ConsumableStreamPipesEntity element)
 	{
