@@ -1,18 +1,21 @@
 <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
-    <h4>{{serviceDetails.name}}</h4>
     <span ng-if="serviceDetails.meta.status === 'passing'" style="background-color:black; border-radius:50%">
-        <md-icon style="color:green" md-svg-icon="action:ic_check_circle_24px"></md-icon>
+        <md-icon style="color: #4CAF50" md-svg-icon="image:ic_brightness_1_24px"></md-icon>
     </span>
-    <span ng-if="serviceDetails.meta.status === 'warning'" style="background-color:black; border-radius:50%">
-        <md-icon style="color:yellow" md-svg-icon="alert:ic_error_24px"></md-icon>
+    <span ng-if="$ctrl.serviceDetails.meta.status === 'critical'">
+        <md-icon style="color: #F44336;" md-svg-icon="image:ic_brightness_1_24px"></md-icon>
     </span>
-    <span ng-if="serviceDetails.meta.status === 'critical'" style="background-color:black; border-radius:50%">
-        <md-icon style="color:red" md-svg-icon="navigation:ic_cancel_24px"></md-icon>
+    <h4>{{$ctrl.serviceDetails.name}}</h4>
+    <span ng-if="$ctrl.showConfiguration">
+        <md-icon ng-click="$ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_less_24px"></md-icon>
+    </span>
+    <span ng-if="!$ctrl.showConfiguration">
+        <md-icon ng-click="$ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_more_24px"></md-icon>
     </span>
 </div>
-<div class="sp-blue-border" style="padding:5px">
+<div class="sp-blue-border" ng-show="$ctrl.showConfiguration" style="padding:5px">
     <div layout="column">
-        <md-input-container ng-repeat="configuration in serviceDetails.configs">
+        <md-input-container ng-repeat="configuration in $ctrl.serviceDetails.configs">
             <label>{{configuration.key}}</label>
             <input ng-value="configuration.value" ng-model="configuration.value">
             <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">

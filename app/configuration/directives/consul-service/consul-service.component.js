@@ -10,9 +10,12 @@ export default function consulService() {
         },
         controller: function ($scope) {
             var ctrl = this;
-            $scope.serviceDetails = ctrl.serviceDetails;
-            $scope.updateConfiguration = function() {
-                ctrl.onUpdate({serviceDetails: $scope.serviceDetails});
+            ctrl.showConfiguration = false;
+            ctrl.updateConfiguration = function() {
+                ctrl.onUpdate({serviceDetails: this.serviceDetails});
+            }
+            ctrl.toggleConfiguration = function() {
+                ctrl.showConfiguration = !ctrl.showConfiguration;
             }
         }
     }
