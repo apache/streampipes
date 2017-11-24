@@ -25,6 +25,12 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
 
     public void init(PeConfig peConfig) {
+
+        DeclarersSingleton.getInstance()
+                .setHostName(peConfig.getHost());
+        DeclarersSingleton.getInstance()
+                .setPort(peConfig.getPort());
+
         URI baseUri = UriBuilder
                 .fromUri(DeclarersSingleton.getInstance().getBaseUri())
                 .build();
@@ -37,10 +43,6 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
                 peConfig.getPort()
         );
 
-        DeclarersSingleton.getInstance()
-                .setHostName(peConfig.getHost());
-        DeclarersSingleton.getInstance()
-                .setPort(peConfig.getPort());
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
     }

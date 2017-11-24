@@ -8,7 +8,7 @@ import org.streampipes.container.util.ConsulUtil;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-public abstract class ContainerModelSubmitter extends ModelSubmitter implements ServletContextListener {
+public abstract class ContainerModelSubmitter extends ModelSubmitter {
 
 //
 //    /**
@@ -23,16 +23,5 @@ public abstract class ContainerModelSubmitter extends ModelSubmitter implements 
                 peConfig.getHost(),
                 peConfig.getPort()
         );
-    }
-
-    public void contextInitialized(ServletContextEvent arg) {
-        DeclarersSingleton.getInstance().setPort(8030);
-        //TODO: Check if ServletContextListener is used
-        //init();
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-
     }
 }
