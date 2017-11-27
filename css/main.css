@@ -11,10 +11,62 @@ body {
 	background: linear-gradient(to bottom,  #ffffff 0%,#ccc 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ccc',GradientType=0 ); /* IE6-9 */
 	
-	font-family: 'Doppio One', sans-serif;
+	font-family: 'Arial', sans-serif !important;
 	height: auto !important;
 	width: 100%;
 	background-attachment: fixed;	
+}
+
+.md-button {
+	line-height:0px !important;
+	font-family: "Arial Black", Arial !important;
+	font-weight: bold !important;
+	text-transform: none !important;
+	min-height: 30px !important;
+}
+
+.md-button.md-raised {
+	background-color: #39b54a !important;
+	border: 2px solid #39b54a;
+	box-shadow: none !important;
+	border-radius: 2px !important;
+	text-transform: none !important;
+}
+
+.md-list-item-text {
+	font-family: Arial !important;
+}
+
+.btn-6a {
+	border: 4px solid #226fbe;
+}
+
+.btn-6 {
+	color: #fff;
+	background: #226fbe;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
+}
+
+.btn-t {
+	border: none;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	cursor: pointer;
+	padding: 25px 80px;
+	display: inline-block;
+	margin: 15px 30px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 700;
+	outline: none;
+	position: relative;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
 }
 
 .angular-notifications-container {
@@ -24,7 +76,7 @@ body {
 .angular-notifications-icon {
 	right:-7px !important;
 	top:-7px !important;
-	background: rgb(255,64,129) !important;
+	background: #39b54a !important;
 }
 
 .speech-bubble {
@@ -73,18 +125,18 @@ md-content {
 }
 
 .current-nav-page-content::before {
-	border: .1em solid #fff;
 	content: ''; /* To generate the box */
 	position: absolute;
 	top: 0; right: 0; bottom: .5em; left: 0;
 	z-index: -1;
-	border-bottom: none;
 	border-radius: 10px 10px 0 0;
 	background: #fff;
 	box-shadow: 0 2px #fff inset;
-	transform: perspective(6px) rotateX(2deg);
+	transform: perspective(4px) rotateX(1deg);
 	transform-origin: bottom;
 	height: calc(100% - 20px);
+	border: 5px solid #39b54a;
+	border-bottom: .1em none #fff;
 }
 
 .current-nav-page {
@@ -120,6 +172,7 @@ md-toolbar.top-nav {
 
 .top-nav {
 	height:50px !important;
+	border-bottom: 5px solid #39b54a;
 }
 
 md-list-item > .md-button {
@@ -480,6 +533,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 	display: inline-block;
 	height: 50px;
 	width: 50px;
+	min-width: 50px;
 	line-height: 50px;
 	box-shadow: 1px 1px 2px #555;
 	text-align: center;

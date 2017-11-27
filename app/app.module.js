@@ -104,12 +104,12 @@ export default angular
             '500': '304269',
             '600': '304269',
             '700': '003B3D',
-            '800': '304269',
-            '900': '50FFBF',
-            'A100': '304269',
-            'A200': '304269',
-            'A400': '304269',
-            'A700': '304269',
+            '800': '0A3F54',
+            '900': '0A3F54',
+            'A100': '0A3F54',
+            'A200': '0A3F54',
+            'A400': '0A3F54',
+            'A700': '0A3F54',
             'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
                                                 // on this palette should be dark or light
 
@@ -122,16 +122,16 @@ export default angular
             '100': 'DF5A49',
             '200': '007F54',
             '300': '007F54',
-            '400': '007F54',
-            '500': '007F54',
-            '600': 'CC2800',
-            '700': 'CC2800',
-            '800': 'CC2800',
-            '900': 'CC2800',
-            'A100': 'CC2800',
-            'A200': 'CC2800',
-            'A400': 'CC2800',
-            'A700': 'CC2800',
+            '400': '39B54A',
+            '500': '45DA59',
+            '600': '45DA59',
+            '700': '45DA59',
+            '800': '45DA59',
+            '900': '39B54A',
+            'A100': '39b54a',
+            'A200': '39b54a',
+            'A400': '39B54A',
+            'A700': '39B54A',
             'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
                                                 // on this palette should be dark or light
 
@@ -141,6 +141,6 @@ export default angular
 
         $mdThemingProvider.theme('default')
             .primaryPalette('streamPipesPrimary')
-            //.accentPalette('streamPipesAccent')
+            .accentPalette('streamPipesAccent')
 
     });

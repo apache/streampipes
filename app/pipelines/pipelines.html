@@ -1,10 +1,10 @@
 <div flex class="page-container page-container-padding">
-    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6;">
         <div flex="none" layout-wrap layout="row" layout-align="start center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <md-button class="md-accent" ng-click="showPipelineCategoriesDialog()">Manage Categories</md-button>
+            <md-button ng-click="showPipelineCategoriesDialog()" class="md-accent">Manage Categories</md-button>
         </div>
-        <div layout-fill>
+        <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="All Pipelines" md-on-select="setSelectedTab('')"></md-tab>
                 <md-tab label="{{pipelineCategory.categoryName}}" md-on-select="setSelectedTab(pipelineCategory._id)"
@@ -18,9 +18,9 @@
         <div>
             <md-content layout-padding>
                 <div flayout="row">
-                    <md-button ng-click="startAllPipelines(true)" ng-disabled="checkCurrentSelectionStatus(false)" type="button" class="md-accent">Start all pipelines
+                    <md-button ng-click="startAllPipelines(true)" ng-disabled="checkCurrentSelectionStatus(false)" type="button" class="md-raised md-accent">Start all pipelines
                     </md-button>
-                    <md-button ng-click="startAllPipelines(false)" ng-disabled="checkCurrentSelectionStatus(true)" type="button" class="md-accent">Stop all pipelines
+                    <md-button ng-click="startAllPipelines(false)" ng-disabled="checkCurrentSelectionStatus(true)" type="button" class="md-raised md-accent">Stop all pipelines
                     </md-button>
                 </div>
                 <md-list>
