@@ -1,10 +1,1 @@
-<div flex class="page-container page-container-padding">
-	<div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
-	</div>
-
-	<div flex layout-align="center center" style="padding:10px;">
-		<div ng-if="rerender" dashboard-layouts="layoutOptions" template-url="app/dashboard/dashboard-layout-frame.html"></div>
-
-		<!--<div ng-if="rerender" flex dashboard="dashboardOptions" template-url="app/dashboard/dashboard-frame.html"></div>-->
-	</div>
-</div>
+<div ng-if="rerender" dashboard-layouts="layoutOptions" template-url="app/dashboard/dashboard-layout-frame.html"></div>

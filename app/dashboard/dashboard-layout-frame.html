@@ -1,20 +1,25 @@
-<ul ui-sortable="sortableOptions" ng-model="layouts" class="nav nav-tabs layout-tabs">
-	<li ng-repeat="layout in layouts" ng-class="{ active: layout.active }">
-		<a ng-click="makeLayoutActive(layout)">
-			<!--<span ng-dblclick="editTitle(layout)" ng-show="!layout.editingTitle">{{layout.title}}</span>-->
-			<span ng-show="!layout.editingTitle">{{layout.title}}</span>
-			<!--<form action="" class="layout-title" ng-show="layout.editingTitle" ng-submit="saveTitleEdit(layout)">-->
-				<!--<input type="text" ng-model="layout.title" class="form-control" data-layout="{{layout.id}}">-->
-			<!--</form>-->
-			<!--<span ng-if="!layout.locked" ng-click="removeLayout(layout)" class="glyphicon glyphicon-remove remove-layout-icon"></span>-->
-			 <!--<span class="glyphicon glyphicon-pencil"></span> -->
-			 <!--<span class="glyphicon glyphicon-remove"></span> -->
-		</a>
-	</li>
-	<li>
-		<!--<a ng-click="createNewLayout()">-->
-			<!--<span class="glyphicon glyphicon-plus"></span>-->
-		<!--</a>-->
-	</li>
-</ul>
-<div ng-repeat="layout in layouts | filter:isActive" dashboard="layout.dashboard" template-url="app/dashboard/dashboard-frame.html"></div>
+<div flex class="page-container page-container-padding">
+    <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6;">
+        <div flex="none" layout-wrap layout="row" layout-align="start center"
+             style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
+            <md-button class="md-accent">Manage Layouts</md-button>
+        </div>
+        <div layout-fill style="line-height:24px;border-bottom:1px solid #ccc">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{layout.title}}" md-on-select="makeLayoutActive(layout)"
+                        ng-repeat="layout in layouts"></md-tab>
+            </md-tabs>
+        </div>
+
+    </div>
+
+    <div class="container-fluid">
+        <div>
+            <md-content layout-padding>
+                <div ng-repeat="layout in layouts | filter:isActive" dashboard="layout.dashboard"
+                     template-url="app/dashboard/dashboard-frame.html"></div>
+            </md-content>
+        </div>
+    </div>
+</div>
+
