@@ -54,8 +54,8 @@
 
                         <md-grid-tile class="gray" ng-repeat="opt in possibleVisualisationTypes">
                             <div ng-class="getSelectedVisTypeCss(opt.name)" ng-click="selectVisType(opt.name)">
-                                <div ng-if="opt.icon == ''" style="color:rgb(255,64,129);">{{iconText(opt.label)}}</div>
-                                <div ng-if="opt.icon != ''"><i class="material-icons" style="font-size:48px;color:rgb(255,64,129);">{{opt.icon}}</i></div>
+                                <div ng-if="opt.icon == ''" style="color:#39b54a;">{{iconText(opt.label)}}</div>
+                                <div ng-if="opt.icon != ''"><i class="material-icons" style="font-size:48px;color:#39b54a;">{{opt.icon}}</i></div>
                                 <h5>{{opt.label}}</h5>
                             </div>
                         </md-grid-tile>

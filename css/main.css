@@ -17,6 +17,10 @@ body {
 	background-attachment: fixed;	
 }
 
+md-toolbar:not(.md-menu-toolbar) {
+	background: #0A3F54;
+}
+
 .md-button {
 	line-height:0px !important;
 	font-family: "Arial Black", Arial !important;
@@ -193,7 +197,7 @@ md-list-item._md-button-wrap>div.md-button:first-child {
 .wizard-preview {
 	height: 150px !important;
 	width: 150px !important;
-	box-shadow: 0 0 2px rgb(255,64,129);
+	box-shadow: 0 0 2px #39b54a;
 	display: inline-block;
 	vertical-align: middle;
 	background-color: white;
@@ -208,7 +212,7 @@ md-list-item._md-button-wrap>div.md-button:first-child {
 }
 
 .wizard-preview-selected {
-	border: 5px solid rgb(255,64,129);
+	border: 5px solid #39b54a;
 }
 
 .letter-circle {
@@ -292,14 +296,14 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 .wizard-inactive {
 	background-color: white !important;
     color: black !important;
-    border: 2px solid rgb(255,64,129) !important;
+    border: 2px solid #39b54a !important;
 }
 
 .jsplumb-endpoint {
 	z-index:1;
 }
 .popover {
- border: 1px solid rgb(255,64,129);
+ border: 1px solid #39b54a;
  box-shadow: 0 0px 0px;
  -webkit-bow-shadow: none;
  border-radius:0px;
@@ -307,11 +311,11 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .arrow {
-	color: rgb(255,64,129);
+	color: #39b54a;
 }
 
 .popover-title {
-	background-color: rgb(255,64,129);
+	background-color: #39b54a;
 	color:white;
 	border-radius:0px 0px 0 0;
 }
@@ -363,13 +367,13 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .customize-item-main-help {
-	border: 1px solid rgb(255,64,129);
+	border: 1px solid #39b54a;
 	border-radius: 0px;
 	margin:5px;
 }
 
 .customize-item-title-help {
-	background: rgb(255,64,129);
+	background: #39b54a;
 	color:white;
 	font-size: 12pt;
 	padding:  5px;
@@ -472,7 +476,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   right: 16px;
   top: 25px;
   color: #ffffff;
-  background-color: rgb(255,64,129);
+  background-color: #39b54a;
   vertical-align:middle;
   }
   
@@ -759,7 +763,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 	cursor: move;
 	height: 150px !important;
 	width: 150px !important;
-	box-shadow: 0 0 2px rgb(255,64,129);
+	box-shadow: 0 0 2px #39b54a;
 	display: inline-block;
 	vertical-align: middle;
 	background-color: white;
