@@ -1,6 +1,2 @@
-men:
-  - Bob
-  - Hans
-women:
-  - Alice
-  - Margret
+loginBackgroundImage: 'deployment/build-configs/img/background.jpg'
+logo: 'deployment/build-configs/img/logo.png'
