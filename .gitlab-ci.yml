@@ -10,7 +10,7 @@ variables:
 stages:
   - build
   - docker
-#  - deploy
+  - deploy
   - release
 #  - build-streampipes-docker
 #  - build-thirdparty-docker
@@ -109,19 +109,18 @@ docker-pe-mixed-flink:
 
 
 
-#deploy:
-#  image: maven:3-jdk-8
-#  stage: deploy
-#  script:
-#    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-#    - mvn deploy -DskipTests
-#  only:
-#    - dev
-#    - master
-#  artifacts:
-#    paths:
-#      - ./**/*.jar
-#    expire_in:  1 hour
+deploy:
+  image: maven:3-jdk-8
+  stage: deploy
+  script:
+    - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
+    - mvn deploy -DskipTests
+  only:
+    - dev
+  artifacts:
+    paths:
+      - ./**/*.jar
+    expire_in:  1 hour
 
 start release:
   image: maven:3-jdk-8
