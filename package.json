@@ -12,7 +12,7 @@
     "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
   },
   "scripts": {
-    "dev-build": "webpack -d --display-modules --progress",
+    "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
     "dist-build": "webpack -p --display-modules --progress"
   },
   "dependencies": {
@@ -41,22 +41,23 @@
     "bootstrap": "3.3.4",
     "angular-markdown-directive": "0.3.1",
     "lodash": "3.10.1",
-    "ngmap" : "1.18.0",
+    "ngmap": "1.18.0",
     "d3": "3.4.13",
     "epoch-charting": "0.8.4",
     "slick-carousel": "1.6.0",
     "angularjs-datetime-picker": "0.1.16",
-    "dagre" : "0.7.4",
-    "angular-trix" : "1.0.2",
-    "angular-notification-icons" : "0.4.4"
+    "dagre": "0.7.4",
+    "angular-trix": "1.0.2",
+    "angular-notification-icons": "0.4.4"
   },
   "devDependencies": {
     "babel": "^6.5.2",
-    "babel-loader": "^6.2.5",
     "babel-core": "^6.2.5",
+    "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.2.5",
     "bower-webpack-plugin": "^0.1.9",
     "clean-webpack-plugin": "^0.1.10",
+    "js-yaml": "^3.10.0",
     "ng-annotate-webpack-plugin": "^0.1.3",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.15.1"

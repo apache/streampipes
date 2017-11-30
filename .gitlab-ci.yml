@@ -22,6 +22,8 @@ build:
       - app/**/*.html
       - templates/**/*.html
     expire_in: 1 hour
+  variables:
+    BRANCH_NAME: $CI_COMMIT_REF_NAME
 
 nginx:
   image: docker:17.06.0-ce
