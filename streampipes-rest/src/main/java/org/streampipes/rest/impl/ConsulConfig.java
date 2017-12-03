@@ -76,7 +76,7 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
             String value = configItem.getValue();
             switch (configItem.getValueType()) {
                 case "xs:boolean":
-                    if(!Boolean.parseBoolean(value)) {
+                    if(!("true".equals(value) || "false".equals(value))) {
                         LOG.error(value + " is not from the type: xs:boolean");
                         return Response.status(Response.Status.BAD_REQUEST)
                                 .entity(value + " is not from the type: xs:boolean").build();
