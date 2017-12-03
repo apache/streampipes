@@ -9,6 +9,7 @@ import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -31,6 +32,12 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
             "aggregation functions")
             .category(DataProcessorType.AGGREGATE)
             .iconUrl(EsperConfig.iconBaseUrl + "/Aggregation_Icon_HQ.png")
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
+                            "Property Selection", "Specifies the event property from your stream that should be aggregated" +
+                                    "."), PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
             .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
                     "Property Selection", "Specifies the event property from your stream that should be aggregated" +
                             "."), PropertyScope.MEASUREMENT_PROPERTY)

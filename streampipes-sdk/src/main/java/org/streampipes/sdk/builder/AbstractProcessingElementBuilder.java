@@ -19,6 +19,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.streampipes.sdk.helpers.Label;
 import org.streampipes.sdk.helpers.StreamIdentifier;
 import org.streampipes.vocabulary.XSD;
@@ -54,16 +55,142 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     this.supportedGrounding = new EventGrounding();
   }
 
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
   public BU requiredStream(SpDataStream stream) {
     this.streamRequirements.add(stream);
     return me();
   }
 
+  /**
+   * Set a new stream requirement by adding restrictions on this stream. Use
+   * {@link StreamRequirementsBuilder} to create requirements for a single stream.
+   * @param streamRequirements: A bundle of collected {@link CollectedStreamRequirements}
+   * @return this
+   */
+  public BU requiredStream(CollectedStreamRequirements streamRequirements) {
+    this.streamRequirements.add(streamRequirements.getStreamRequirements());
+    this.staticProperties.addAll(streamRequirements.getMappingProperties());
+
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
+          propertyScope) {
+    this.stream1Properties.add(propertyRequirement);
+    MappingPropertyNary mp = new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), label
+            .getInternalId(), label.getLabel(), label.getDescription());
+    mp.setPropertyScope(propertyScope.name());
+    this.staticProperties.add(mp);
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream2(EventProperty propertyRequirement) {
+    this.stream2Properties.add(propertyRequirement);
+
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream2WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
+    this.stream2Properties.add(propertyRequirement);
+    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream2WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
+    this.stream2Properties.add(propertyRequirement);
+    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream1(EventProperty propertyRequirement) {
+    this.stream1Properties.add(propertyRequirement);
+
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
+    this.stream1Properties.add(propertyRequirement);
+    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
+    return me();
+  }
+
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
+    this.stream1Properties.add(propertyRequirement);
+    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
+    return me();
+  }
+
+  /**
+   * Set a new event property requirement linked to a unary mapping.
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
+  @Deprecated
+  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
+          propertyScope) {
+    this.stream1Properties.add(propertyRequirement);
+    MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()),
+            label.getInternalId(), label.getLabel(), label.getDescription());
+    mp.setPropertyScope(propertyScope.name());
+    this.staticProperties.add(mp);
+    return me();
+  }
+
+
+  /**
+   *
+   * @param staticProperty: The required static property (e.g., user input as shown in the StreamPipes UI
+   * @return BU
+   */
   public BU requiredStaticProperty(StaticProperty staticProperty) {
     this.staticProperties.add(staticProperty);
     return me();
   }
 
+  /**
+   *
+   * @param label: A human-readable label that describes the required static property.
+   * @param supportedOntologyProperties: All RDF properties any instance in the knowledge base must provide
+   * @return
+   */
   public BU requiredOntologyConcept(Label label, SupportedProperty...
           supportedOntologyProperties) {
     DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
@@ -73,6 +200,14 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  /**
+   *
+   * @param label: A human-readable label that describes the required static property.
+   * @param requiredConceptUri: Limits the search for matching instance in the knowledge base to an instance of this
+   *                          concept.
+   * @param supportedOntologyProperties: All RDF properties any instance of the provided concept must provide.
+   * @return
+   */
   public BU requiredOntologyConcept(Label label, String requiredConceptUri, SupportedProperty...
           supportedOntologyProperties) {
     DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
@@ -83,11 +218,34 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  /**
+   *
+   * @param label: A human-readable label that describes the required static property.
+   * @param staticProperty
+   * @return
+   */
   public BU requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
     CollectionStaticProperty collection = prepareStaticProperty(label, new
             CollectionStaticProperty());
     collection.setMembers(Arrays.asList(staticProperty));
     this.staticProperties.add(collection);
+
+    return me();
+  }
+
+  public BU unaryMappingProperty(StreamIdentifier streamIdentifier, Integer propertyIndex, Label label) {
+    EventProperty propertyRequirement;
+
+    // TODO we need proper exception handling for the sdk
+    if (streamIdentifier == StreamIdentifier.Stream0) {
+      propertyRequirement = this.stream1Properties.get(propertyIndex);
+
+    } else {
+      propertyRequirement = this.stream2Properties.get(propertyIndex);
+    }
+
+    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), label
+            .getInternalId(), label.getLabel(), label.getDescription()));
 
     return me();
   }
@@ -258,12 +416,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
-  public BU requiredPropertyStream1(EventProperty propertyRequirement) {
-    this.stream1Properties.add(propertyRequirement);
-
-    return me();
-  }
-
   public BU naryMappingPropertyWithoutRequirement(String internalName, String label, String
           description) {
     this.staticProperties.add(new MappingPropertyNary(internalName, label, description));
@@ -283,72 +435,6 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
-  public BU unaryMappingProperty(StreamIdentifier streamIdentifier, Integer propertyIndex, Label label) {
-    EventProperty propertyRequirement;
-
-    // TODO we need proper exception handling for the sdk
-    if (streamIdentifier == StreamIdentifier.Stream0) {
-      propertyRequirement = this.stream1Properties.get(propertyIndex);
-
-    } else {
-      propertyRequirement = this.stream2Properties.get(propertyIndex);
-    }
-
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), label
-            .getInternalId(), label.getLabel(), label.getDescription()));
-
-    return me();
-  }
-
-  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream1Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream1Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  public BU requiredPropertyStream1WithUnaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
-          propertyScope) {
-    this.stream1Properties.add(propertyRequirement);
-    MappingPropertyUnary mp = new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()),
-            label.getInternalId(), label.getLabel(), label.getDescription());
-    mp.setPropertyScope(propertyScope.name());
-    this.staticProperties.add(mp);
-    return me();
-  }
-
-  public BU requiredPropertyStream1WithNaryMapping(EventProperty propertyRequirement, Label label, PropertyScope
-          propertyScope) {
-    this.stream1Properties.add(propertyRequirement);
-    MappingPropertyNary mp = new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), label
-            .getInternalId(), label.getLabel(), label.getDescription());
-    mp.setPropertyScope(propertyScope.name());
-    this.staticProperties.add(mp);
-    return me();
-  }
-
-  public BU requiredPropertyStream2(EventProperty propertyRequirement) {
-    this.stream2Properties.add(propertyRequirement);
-
-    return me();
-  }
-
-  public BU requiredPropertyStream2WithUnaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream2Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyUnary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
-
-  public BU requiredPropertyStream2WithNaryMapping(EventProperty propertyRequirement, String internalName, String label, String description) {
-    this.stream2Properties.add(propertyRequirement);
-    this.staticProperties.add(new MappingPropertyNary(URI.create(propertyRequirement.getElementId()), internalName, label, description));
-    return me();
-  }
 
   public BU supportedFormats(TransportFormat... format) {
     return supportedFormats(Arrays.asList(format));
@@ -368,11 +454,19 @@ public abstract class AbstractProcessingElementBuilder<BU extends AbstractProces
     return me();
   }
 
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
   public BU setStream1() {
     stream1 = true;
     return me();
   }
 
+  /**
+   *
+   * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
+   */
   public BU setStream2() {
     stream2 = true;
     return me();
