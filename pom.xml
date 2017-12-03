@@ -388,6 +388,7 @@
         <module>streampipes-app-file-export</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-serializers</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-standalone</module>
     </modules>
 
     <!-- Build Settings -->

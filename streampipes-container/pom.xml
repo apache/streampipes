@@ -71,11 +71,6 @@
 		<dependency>
 			<groupId>com.orbitz.consul</groupId>
 			<artifactId>consul-client</artifactId>
-			<version>0.17.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.orbitz.consul</groupId>
-			<artifactId>consul-client</artifactId>
 			<version>0.16.4</version>
 		</dependency>
 		<dependency>
