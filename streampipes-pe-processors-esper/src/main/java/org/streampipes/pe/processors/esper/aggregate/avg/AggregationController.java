@@ -38,9 +38,6 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
                             "Property Selection", "Specifies the event property from your stream that should be aggregated" +
                                     "."), PropertyScope.MEASUREMENT_PROPERTY)
                     .build())
-            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(), Labels.from("aggregate",
-                    "Property Selection", "Specifies the event property from your stream that should be aggregated" +
-                            "."), PropertyScope.MEASUREMENT_PROPERTY)
             .naryMappingPropertyWithoutRequirement(Labels.from("groupBy", "Group by", "Partitions the incoming stream" +
                     " by the selected event " +
                     "properties"), PropertyScope.DIMENSION_PROPERTY)
