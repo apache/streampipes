@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.batchstream;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by philippzehnder on 16.02.17.
  */
-public class FirstBatchThenStreamProgram extends FlinkSepaRuntime<FirstBatchThenStreamParameters> implements Serializable {
+public class FirstBatchThenStreamProgram extends FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> implements Serializable {
 
     public FirstBatchThenStreamProgram(FirstBatchThenStreamParameters params) {
         super(params);

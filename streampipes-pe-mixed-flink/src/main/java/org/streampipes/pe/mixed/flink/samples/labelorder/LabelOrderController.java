@@ -1,8 +1,8 @@
 package org.streampipes.pe.mixed.flink.samples.labelorder;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -14,7 +14,7 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.commons.Utils;
 
-public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderParameters> {
+public class LabelOrderController extends FlinkDataProcessorDeclarer<LabelOrderParameters> {
 
     @Override
     public DataProcessorDescription declareModel() {
@@ -37,7 +37,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
     }
 
     @Override
-    protected FlinkSepaRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
+    protected FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 

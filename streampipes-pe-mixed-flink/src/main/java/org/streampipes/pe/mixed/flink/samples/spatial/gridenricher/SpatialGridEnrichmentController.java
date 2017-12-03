@@ -1,8 +1,8 @@
 package org.streampipes.pe.mixed.flink.samples.spatial.gridenricher;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -21,7 +21,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 /**
  * Created by riemer on 08.04.2017.
  */
-public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<SpatialGridEnrichmentParameters> {
+public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<SpatialGridEnrichmentParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -51,7 +51,7 @@ public class SpatialGridEnrichmentController extends AbstractFlinkAgentDeclarer<
   }
 
   @Override
-  protected FlinkSepaRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
+  protected FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
 
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 

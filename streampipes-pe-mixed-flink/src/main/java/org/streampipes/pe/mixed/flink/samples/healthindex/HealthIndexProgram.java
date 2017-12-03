@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.healthindex;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by riemer on 17.10.2016.
  */
-public class HealthIndexProgram extends FlinkSepaRuntime<HealthIndexParameters> {
+public class HealthIndexProgram extends FlinkDataProcessorRuntime<HealthIndexParameters> {
 
     public HealthIndexProgram(HealthIndexParameters params) {
         super(params);

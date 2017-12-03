@@ -2,9 +2,9 @@ package org.streampipes.pe.mixed.flink.samples.count.aggregate;
 
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -21,7 +21,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 
 import java.util.List;
 
-public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAggregateParameters>{
+public class CountAggregateController extends FlinkDataProcessorDeclarer<CountAggregateParameters> {
 
 
 	@Override
@@ -75,7 +75,7 @@ public class CountAggregateController extends AbstractFlinkAgentDeclarer<CountAg
 	}
 
 	@Override
-	protected FlinkSepaRuntime<CountAggregateParameters> getRuntime(
+	protected FlinkDataProcessorRuntime<CountAggregateParameters> getRuntime(
 			DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 

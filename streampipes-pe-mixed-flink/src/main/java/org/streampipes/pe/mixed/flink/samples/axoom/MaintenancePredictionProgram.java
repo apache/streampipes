@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.axoom;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.extensions.SlidingEventTimeWindow;
 import org.streampipes.pe.mixed.flink.extensions.TimestampMappingFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by riemer on 12.04.2017.
  */
-public class MaintenancePredictionProgram extends FlinkSepaRuntime<MaintenancePredictionParameters> {
+public class MaintenancePredictionProgram extends FlinkDataProcessorRuntime<MaintenancePredictionParameters> {
 
   public MaintenancePredictionProgram(MaintenancePredictionParameters params) {
     super(params);

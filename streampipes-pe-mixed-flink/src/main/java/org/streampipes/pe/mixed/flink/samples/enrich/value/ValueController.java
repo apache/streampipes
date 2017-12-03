@@ -7,11 +7,11 @@ import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.*;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-public class ValueController extends AbstractFlinkAgentDeclarer<ValueParameters> {
+public class ValueController extends FlinkDataProcessorDeclarer<ValueParameters> {
 
 
     @Override
@@ -32,7 +32,7 @@ public class ValueController extends AbstractFlinkAgentDeclarer<ValueParameters>
 
 
     @Override
-    protected FlinkSepaRuntime<ValueParameters> getRuntime(DataProcessorInvocation sepa) {
+    protected FlinkDataProcessorRuntime<ValueParameters> getRuntime(DataProcessorInvocation sepa) {
         ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
         String valueName = extractor.singleValueParameter("valueName", String.class);

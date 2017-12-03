@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -21,7 +21,7 @@ import org.streampipes.model.output.UriPropertyMapping;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.container.util.StandardTransportFormat;
 
-public class FieldRenamerController extends AbstractFlinkAgentDeclarer<FieldRenamerParameters>{
+public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRenamerParameters> {
 
 	@Override
 	public DataProcessorDescription declareModel() {
@@ -58,7 +58,7 @@ public class FieldRenamerController extends AbstractFlinkAgentDeclarer<FieldRena
 	}
 
 	@Override
-	protected FlinkSepaRuntime<FieldRenamerParameters> getRuntime(
+	protected FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
 			DataProcessorInvocation graph) {
 		ReplaceOutputStrategy ros = (ReplaceOutputStrategy) graph.getOutputStrategies().get(0);
 		EventProperty oldProperty = SepaUtils.getEventPropertyById(graph, ros.getReplaceProperties().get(0).getReplaceTo());

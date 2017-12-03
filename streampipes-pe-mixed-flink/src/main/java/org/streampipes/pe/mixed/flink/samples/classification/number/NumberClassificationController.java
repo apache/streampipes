@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.classification.number;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NumberClassificationController extends AbstractFlinkAgentDeclarer<NumberClassificationParameters> {
+public class NumberClassificationController extends FlinkDataProcessorDeclarer<NumberClassificationParameters> {
 
 	@Override
 	public DataProcessorDescription declareModel() {
@@ -77,7 +77,7 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 	}
 
 	@Override
-	protected FlinkSepaRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
+	protected FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(graph, "classification_options",
 				CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "to_classify");

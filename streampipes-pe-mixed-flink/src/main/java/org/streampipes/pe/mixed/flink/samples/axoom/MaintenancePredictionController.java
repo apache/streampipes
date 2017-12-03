@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.axoom;
 
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -19,7 +19,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 /**
  * Created by riemer on 12.04.2017.
  */
-public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<MaintenancePredictionParameters> {
+public class MaintenancePredictionController extends FlinkDataProcessorDeclarer<MaintenancePredictionParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -38,7 +38,7 @@ public class MaintenancePredictionController extends AbstractFlinkAgentDeclarer<
   }
 
   @Override
-  protected FlinkSepaRuntime<MaintenancePredictionParameters> getRuntime(DataProcessorInvocation graph) {
+  protected FlinkDataProcessorRuntime<MaintenancePredictionParameters> getRuntime(DataProcessorInvocation graph) {
     MaintenancePredictionParameters params = new MaintenancePredictionParameters(graph);
 
     return new MaintenancePredictionProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

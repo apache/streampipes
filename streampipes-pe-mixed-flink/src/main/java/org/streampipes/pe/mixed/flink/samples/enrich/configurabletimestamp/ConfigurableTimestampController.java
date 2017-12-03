@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.configurabletimestamp;
 
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -17,7 +17,7 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
-public class ConfigurableTimestampController extends AbstractFlinkAgentDeclarer<ConfigurableTimestampParameters> {
+public class ConfigurableTimestampController extends FlinkDataProcessorDeclarer<ConfigurableTimestampParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -36,7 +36,7 @@ public class ConfigurableTimestampController extends AbstractFlinkAgentDeclarer<
   }
 
   @Override
-  protected FlinkSepaRuntime<ConfigurableTimestampParameters> getRuntime(
+  protected FlinkDataProcessorRuntime<ConfigurableTimestampParameters> getRuntime(
           DataProcessorInvocation graph) {
 
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);

@@ -14,13 +14,13 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Datatypes;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.List;
 
-public class ListFilterController extends AbstractFlinkAgentDeclarer<ListFilterParameters> {
+public class ListFilterController extends FlinkDataProcessorDeclarer<ListFilterParameters> {
 
   private static final String ALL_VALUES = "All values satisfy filter condition";
   private static final String ANY_VALUE = "At least one value satisfies filter condition";
@@ -51,7 +51,7 @@ public class ListFilterController extends AbstractFlinkAgentDeclarer<ListFilterP
   }
 
   @Override
-  protected FlinkSepaRuntime<ListFilterParameters> getRuntime(DataProcessorInvocation graph) {
+  protected FlinkDataProcessorRuntime<ListFilterParameters> getRuntime(DataProcessorInvocation graph) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 
     List<Double> filterKeywords = extractor.singleValueParameterFromCollection("value", Double.class);

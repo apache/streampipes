@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.breakdown;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by riemer on 12.02.2017.
  */
-public class Prediction2BreakdownProgram extends FlinkSepaRuntime<Prediction2BreakdownParameters> {
+public class Prediction2BreakdownProgram extends FlinkDataProcessorRuntime<Prediction2BreakdownParameters> {
 
   public Prediction2BreakdownProgram(Prediction2BreakdownParameters params) {
     super(params);

@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.file;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by riemer on 13.11.2016.
  */
-public class FileSinkController extends AbstractFlinkConsumerDeclarer {
+public class FileSinkController extends FlinkDataSinkDeclarer {
 
 
     @Override
@@ -47,7 +47,7 @@ public class FileSinkController extends AbstractFlinkConsumerDeclarer {
     }
 
     @Override
-    protected FlinkSecRuntime getRuntime(DataSinkInvocation graph) {
+    protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
         return new FileSinkProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
     }

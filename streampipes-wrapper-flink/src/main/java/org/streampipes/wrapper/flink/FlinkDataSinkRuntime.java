@@ -6,18 +6,18 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import java.util.Map;
 
 
-public abstract class FlinkSecRuntime extends FlinkRuntime<DataSinkInvocation>{
+public abstract class FlinkDataSinkRuntime extends FlinkRuntime<DataSinkInvocation>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FlinkSecRuntime(DataSinkInvocation graph) {
+	public FlinkDataSinkRuntime(DataSinkInvocation graph) {
 		super(graph);
 	}
 	
-	public FlinkSecRuntime(DataSinkInvocation graph, FlinkDeploymentConfig config) {
+	public FlinkDataSinkRuntime(DataSinkInvocation graph, FlinkDeploymentConfig config) {
 		super(graph, config);
 	}
 

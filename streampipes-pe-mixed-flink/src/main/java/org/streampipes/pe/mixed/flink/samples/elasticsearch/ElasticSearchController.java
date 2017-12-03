@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.elasticsearch;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.model.ApplicationLink;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
+public class ElasticSearchController extends FlinkDataSinkDeclarer {
 
 	@Override
 	public DataSinkDescription declareModel() {
@@ -55,7 +55,7 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 	}
 
 	@Override
-	protected FlinkSecRuntime getRuntime(DataSinkInvocation graph) {
+	protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
 		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
 				FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
 //		return new ElasticSearchProgram(graph);

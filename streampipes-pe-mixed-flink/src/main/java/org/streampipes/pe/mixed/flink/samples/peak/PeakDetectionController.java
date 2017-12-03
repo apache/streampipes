@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.peak;
 
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -19,7 +19,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDetectionParameters> {
+public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDetectionParameters> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
   private static final String PARTITION_BY = "partition-by";
@@ -59,7 +59,7 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
   }
 
   @Override
-  protected FlinkSepaRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa) {
+  protected FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);

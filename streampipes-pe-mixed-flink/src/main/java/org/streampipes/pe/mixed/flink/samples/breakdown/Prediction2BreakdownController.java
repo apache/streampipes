@@ -1,8 +1,8 @@
 package org.streampipes.pe.mixed.flink.samples.breakdown;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -17,7 +17,7 @@ import org.streampipes.sdk.utils.Datatypes;
 /**
  * Created by riemer on 12.02.2017.
  */
-public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<Prediction2BreakdownParameters> {
+public class Prediction2BreakdownController extends FlinkDataProcessorDeclarer<Prediction2BreakdownParameters> {
 
   private static final String PdfMapping = "pdf-Mapping";
   private static final String TimestampMapping = "timestamp-mapping";
@@ -40,7 +40,7 @@ public class Prediction2BreakdownController extends AbstractFlinkAgentDeclarer<P
   }
 
   @Override
-  protected FlinkSepaRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
+  protected FlinkDataProcessorRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
     Prediction2BreakdownParameters params = new Prediction2BreakdownParameters(graph);
 
     return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

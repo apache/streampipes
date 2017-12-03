@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.count.aggregate;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class CountAggregateProgram extends FlinkSepaRuntime<CountAggregateParameters> {
+public class CountAggregateProgram extends FlinkDataProcessorRuntime<CountAggregateParameters> {
 
 	private static String AGGREGATE_COUNT = "aggregate_taxi_count";
 	public CountAggregateProgram(CountAggregateParameters params) {

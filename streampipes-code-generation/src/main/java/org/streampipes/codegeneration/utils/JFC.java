@@ -17,11 +17,11 @@ import org.streampipes.sdk.PrimitivePropertyBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.stream.SchemaBuilder;
 import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
-import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +73,8 @@ public abstract class JFC {
 
 
 	public static ClassName FLINK_DEPLOYMENT_CONFIG = ClassName.get(FlinkDeploymentConfig.class);
-	public static ClassName FLINK_SEPA_RUNTIME = ClassName.get(FlinkSepaRuntime.class);
-	public static ClassName FLINK_SEC_RUNTIME = ClassName.get(FlinkSecRuntime.class);
-	public static ClassName ABSTRACT_FLINK_AGENT_DECLARER = ClassName.get(AbstractFlinkAgentDeclarer.class);
-	public static ClassName ABSTRACT_FLINK_CONSUMER_DECLARER = ClassName.get(AbstractFlinkConsumerDeclarer.class); 
+	public static ClassName FLINK_SEPA_RUNTIME = ClassName.get(FlinkDataProcessorRuntime.class);
+	public static ClassName FLINK_SEC_RUNTIME = ClassName.get(FlinkDataSinkRuntime.class);
+	public static ClassName ABSTRACT_FLINK_AGENT_DECLARER = ClassName.get(FlinkDataProcessorDeclarer.class);
+	public static ClassName ABSTRACT_FLINK_CONSUMER_DECLARER = ClassName.get(FlinkDataSinkDeclarer.class);
 }

@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.statistics;
 
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -20,7 +20,7 @@ import org.streampipes.sdk.utils.Datatypes;
 /**
  * Created by riemer on 29.01.2017.
  */
-public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<StatisticsSummaryParameters> {
+public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<StatisticsSummaryParameters> {
 
   private static final String listPropertyMappingName = "list-property";
 
@@ -52,7 +52,7 @@ public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<Stat
   }
 
   @Override
-  protected FlinkSepaRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
+  protected FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
     String listPropertyMapping = SepaUtils.getMappingPropertyName(graph, listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);

@@ -2,9 +2,9 @@ package org.streampipes.pe.mixed.flink.samples.delay.taxi;
 
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
@@ -15,7 +15,7 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 
-public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiParameters> {
+public class DelayTaxiController extends FlinkDataProcessorDeclarer<DelayTaxiParameters> {
 
     public static String OUTPUT_LABEL = "delay_label";
     private static String DELAY_VALUE_NAME = "delay_value";
@@ -41,7 +41,7 @@ public class DelayTaxiController extends AbstractFlinkAgentDeclarer<DelayTaxiPar
     }
 
     @Override
-    protected FlinkSepaRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
+    protected FlinkDataProcessorRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
 
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 

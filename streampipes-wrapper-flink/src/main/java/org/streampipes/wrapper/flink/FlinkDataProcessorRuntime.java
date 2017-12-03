@@ -14,7 +14,7 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.Map;
 
-public abstract class FlinkSepaRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<DataProcessorInvocation> {
+public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<DataProcessorInvocation> {
 
 	/**
 	 *
@@ -23,13 +23,13 @@ public abstract class FlinkSepaRuntime<B extends EventProcessorBindingParams> ex
 	protected B params;
 
 
-	public FlinkSepaRuntime(B params)
+	public FlinkDataProcessorRuntime(B params)
 	{
 		super(params.getGraph());
 		this.params = params;
 	}
 
-	public FlinkSepaRuntime(B params, FlinkDeploymentConfig config)
+	public FlinkDataProcessorRuntime(B params, FlinkDeploymentConfig config)
 	{
 		super(params.getGraph(), config);
 		this.params = params;

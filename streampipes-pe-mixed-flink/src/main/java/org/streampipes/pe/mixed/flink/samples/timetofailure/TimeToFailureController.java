@@ -2,9 +2,9 @@ package org.streampipes.pe.mixed.flink.samples.timetofailure;
 
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by riemer on 26.10.2016.
  */
-public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFailureParameters> {
+public class TimeToFailureController extends FlinkDataProcessorDeclarer<TimeToFailureParameters> {
 
     private final String healthIndexMappingName = "healthIndexMappingName";
     private final String mtbf = "mtbf";
@@ -81,7 +81,7 @@ public class TimeToFailureController extends AbstractFlinkAgentDeclarer<TimeToFa
     }
 
     @Override
-    protected FlinkSepaRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph) {
+    protected FlinkDataProcessorRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph) {
         String healthIndexMapping = SepaUtils.getMappingPropertyName(graph, healthIndexMappingName);
         Integer mtbfValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf));
 

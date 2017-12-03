@@ -5,9 +5,9 @@ import java.util.Map;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-public class FieldRenamerProgram extends FlinkSepaRuntime<FieldRenamerParameters> {
+public class FieldRenamerProgram extends FlinkDataProcessorRuntime<FieldRenamerParameters> {
 
 	public FieldRenamerProgram(FieldRenamerParameters params,
 			FlinkDeploymentConfig config) {

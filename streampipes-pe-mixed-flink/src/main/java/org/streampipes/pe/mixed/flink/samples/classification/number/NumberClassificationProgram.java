@@ -6,9 +6,9 @@ import java.util.Map;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-public class NumberClassificationProgram extends FlinkSepaRuntime<NumberClassificationParameters>
+public class NumberClassificationProgram extends FlinkDataProcessorRuntime<NumberClassificationParameters>
 		implements Serializable {
 
 	public NumberClassificationProgram(NumberClassificationParameters params) {

@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.hasher;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -21,7 +21,7 @@ import org.streampipes.model.util.SepaUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHasherParameters> {
+public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHasherParameters> {
 
 	@Override
 	public DataProcessorDescription declareModel() {
@@ -56,7 +56,7 @@ public class FieldHasherController extends AbstractFlinkAgentDeclarer<FieldHashe
 	}
 
 	@Override
-	protected FlinkSepaRuntime<FieldHasherParameters> getRuntime(
+	protected FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
 			DataProcessorInvocation graph) {
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "property-mapping");
 		

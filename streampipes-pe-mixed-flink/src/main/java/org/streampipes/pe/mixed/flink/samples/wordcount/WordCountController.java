@@ -3,15 +3,15 @@ package org.streampipes.pe.mixed.flink.samples.wordcount;
 import com.google.common.io.Resources;
 
 import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.container.util.DeclarerUtils;
 
-public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountParameters> {
+public class WordCountController extends FlinkDataProcessorDeclarer<WordCountParameters> {
 
 	@Override
 	public DataProcessorDescription declareModel() {
@@ -25,7 +25,7 @@ public class WordCountController extends AbstractFlinkAgentDeclarer<WordCountPar
 	}
 
 	@Override
-	protected FlinkSepaRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph) {
+	protected FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph) {
 		return new WordCountProgram(new WordCountParameters(graph),
 				new FlinkDeploymentConfig(FlinkConfig.JAR_FILE, FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
 		// return new WordCountProgram(new WordCountParameters(graph));

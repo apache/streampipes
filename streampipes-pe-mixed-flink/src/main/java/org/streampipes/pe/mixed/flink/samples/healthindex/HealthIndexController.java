@@ -2,9 +2,9 @@ package org.streampipes.pe.mixed.flink.samples.healthindex;
 
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by riemer on 17.10.2016.
  */
-public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthIndexParameters> {
+public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthIndexParameters> {
 
     private final String frictionCoefficientNominal = "frictionCoefficientNominal";
     private final String frictionCoefficientStdDev = "frictionCoefficientStdDev";
@@ -126,7 +126,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
     }
 
     @Override
-    protected FlinkSepaRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
+    protected FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
 
         String frictionMapping = SepaUtils.getMappingPropertyName(graph, frictionMappingName);
         String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);

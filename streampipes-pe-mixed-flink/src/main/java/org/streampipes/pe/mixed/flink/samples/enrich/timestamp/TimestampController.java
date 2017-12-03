@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.timestamp;
 
 import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
@@ -21,7 +21,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampParameters> {
+public class TimestampController extends FlinkDataProcessorDeclarer<TimestampParameters> {
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -37,7 +37,7 @@ public class TimestampController extends AbstractFlinkAgentDeclarer<TimestampPar
   }
 
   @Override
-  protected FlinkSepaRuntime<TimestampParameters> getRuntime(
+  protected FlinkDataProcessorRuntime<TimestampParameters> getRuntime(
           DataProcessorInvocation graph) {
     System.out.println(FlinkConfig.JAR_FILE);
     AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
