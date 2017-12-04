@@ -39,21 +39,9 @@
 			<artifactId>streampipes-measurement-units</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.imgscalr</groupId>
-			<artifactId>imgscalr-lib</artifactId>
-			<version>4.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
 			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
@@ -87,11 +75,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.lightcouch</groupId>
-			<artifactId>lightcouch</artifactId>
-			<version>0.1.8</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
@@ -105,7 +88,5 @@
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-messaging-jms</artifactId>
 		</dependency>
-
-
 	</dependencies>
 </project>

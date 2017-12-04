@@ -39,11 +39,6 @@
             <artifactId>streampipes-wrapper-standalone</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.rendersnake</groupId>
-            <artifactId>rendersnake</artifactId>
-            <version>1.8</version>
-        </dependency>
-        <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container-standalone</artifactId>
         </dependency>
@@ -60,11 +55,6 @@
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
             <version>4.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20160810</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>

@@ -41,18 +41,11 @@
 			<artifactId>rendersnake</artifactId>
 			<version>1.8</version>
 		</dependency>
-	<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
@@ -71,18 +64,6 @@
 		<dependency>
 			<groupId>com.orbitz.consul</groupId>
 			<artifactId>consul-client</artifactId>
-			<version>0.16.4</version>
 		</dependency>
-		<dependency>
-			<groupId>com.orbitz.consul</groupId>
-			<artifactId>consul-client</artifactId>
-			<version>0.16.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.orbitz.consul</groupId>
-			<artifactId>consul-client</artifactId>
-			<version>0.16.4</version>
-		</dependency>
-
 	</dependencies>
 </project>

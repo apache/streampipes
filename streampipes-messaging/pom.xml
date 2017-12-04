@@ -9,12 +9,10 @@
 
     <artifactId>streampipes-messaging</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
         </dependency>
-
     </dependencies>
 </project>
