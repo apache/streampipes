@@ -14,19 +14,19 @@
     </span>
 </div>
 <div class="sp-blue-border" ng-show="$ctrl.showConfiguration" style="padding:5px">
-    <div layout="column">
+    <form ng-submit="$ctrl.updateConfiguration()" layout="column">
         <md-input-container ng-repeat="configuration in $ctrl.serviceDetails.configs">
-            <label>{{configuration.key}}</label>
+            <label ng-if="configuration.valueType != 'xs:boolean'">{{configuration.key}}</label>
             <input ng-if="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
-                   ng-value="configuration.value" ng-model="configuration.value" type="number">
-            <input ng-if="configuration.valueType == 'xs:string'" ng-value="configuration.value"
-                   ng-model="configuration.value" type="text">
-            <input ng-if="configuration.valueType == 'xs:boolean'" ng-value="configuration.value"
-                   ng-model="configuration.value" type="checkbox">
+                   ng-model="configuration.value" type="number">
+            <input ng-if="configuration.valueType == 'xs:string'" ng-model="configuration.value" type="text">
+            <md-checkbox ng-if="configuration.valueType == 'xs:boolean'" ng-model="configuration.value" type="checkbox">
+                {{configuration.key}}
+            </md-checkbox>
             <md-icon md-svg-icon="action:ic_help_24px" aria-label="Description">
                 <md-tooltip md-direction="left">{{configuration.description}}</md-tooltip>
             </md-icon>
         </md-input-container>
-        <md-button ng-click="$ctrl.updateConfiguration()" class="md-raised md-primary">Update</md-button>
-    </div>
+        <md-button type="submit" class="md-raised md-primary">Update</md-button>
+    </form>
 </div>
