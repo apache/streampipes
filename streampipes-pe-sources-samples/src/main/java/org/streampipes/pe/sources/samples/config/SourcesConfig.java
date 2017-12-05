@@ -34,6 +34,8 @@ public enum SourcesConfig implements PeConfig {
 	private final static String ICON_HOST = "icon_host";
 	private final static String ICON_PORT = "icon_port";
 
+	private final static String STREAM_CONNECT_TOPIC = "streamconnect_topic";
+
 	public final static String serverUrl;
 	public final static String iconBaseUrl;
 	public final static String eventReplayURI;
@@ -69,6 +71,8 @@ public enum SourcesConfig implements PeConfig {
 
 		config.register(ICON_HOST, "backend", "Hostname for the icon host");
 		config.register(ICON_PORT, 80, "Port for the icons in nginx");
+
+		config.register(STREAM_CONNECT_TOPIC, "org.streampipes.streamconnect", "Topic for the StreamConnect adapters");
 
         config.register(SERVICE_NAME, "Sources samples", "The name of the service");
 
@@ -176,6 +180,10 @@ public enum SourcesConfig implements PeConfig {
 
 	public int getIconPort() {
 		return config.getInteger(ICON_PORT);
+	}
+
+	public String getStreamConnectTopic() {
+		return config.getString(STREAM_CONNECT_TOPIC);
 	}
 
     @Override
