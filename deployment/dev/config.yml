@@ -1,3 +1,11 @@
 login:
   backgroundImage: 'deployment/build-configs/img/background.jpg'
   logo: 'deployment/build-configs/img/logo.png'
+modules:
+  - spEditor
+  - spPipelines
+  - spDashboard
+  - spAppFileDownload
+  - spAdd
+  - spMyElements
+  - spConfiguration

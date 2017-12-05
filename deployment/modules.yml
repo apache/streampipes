@@ -1,0 +1,63 @@
+spEditor:
+  path: './editor/editor.module'
+  templateUrl: 'app/editor/editor.html'
+  controller: 'EditorCtrl'
+  link: 'streampipes.editor'
+  url: '/editor/:pipeline'
+  title: 'Pipeline Editor'
+  icon: 'action:ic_dashboard_24px'
+  admin: False
+spPipelines:
+  path: './pipelines/pipelines.module'
+  templateUrl: 'app/pipelines/pipelines.html'
+  controller: 'PipelineCtrl'
+  link: 'streampipes.pipelines'
+  url: '/pipelines/:pipeline'
+  title: 'Pipelines'
+  icon: 'av:ic_play_arrow_24px'
+  admin: False
+spDashboard:
+  path: './dashboard/dashboard.module'
+  templateUrl: 'app/dashboard/dashboard.html'
+  controller: 'DashboardCtrl'
+  link: 'streampipes.dashboard'
+  url: '/dashboard'
+  title: 'Live Dashboard'
+  icon: 'editor:ic_insert_chart_24px'
+  admin: False
+spAppFileDownload:
+  path: './app-file-download/app-file-download.module'
+  templateUrl: 'app/app-file-download/app-file-download.tmpl.html'
+  controller: 'AppFileDownloadCtrl'
+  link: 'streampipes.appfiledownload'
+  url: '/appfiledownload'
+  title: 'File Download'
+  icon: 'file:ic_file_download_24px'
+  admin: False
+spAdd:
+  path: './add/add.module'
+  templateUrl: 'app/add/add.html'
+  controller: 'AddCtrl'
+  link: 'streampipes.add'
+  url: '/add'
+  title: 'Install Pipeline Elements'
+  icon: 'file:ic_cloud_download_24px'
+  admin: True
+spMyElements:
+  path: './myelements/my-elements.module'
+  templateUrl: 'app/myelements/myelements.html'
+  controller: 'MyElementsCtrl'
+  link: 'streampipes.myelements'
+  url: '/myelements'
+  title: 'My Elements'
+  icon: 'image:ic_portrait_24px'
+  admin: True
+spConfiguration:
+  path: './configuration/configuration.module'
+  templateUrl: 'app/configuration/configuration.html'
+  controller: 'ConfigurationCtrl'
+  link: 'streampipes.configuration'
+  url: '/configuration'
+  title: 'Configuration'
+  icon: 'action:ic_settings_24px'
+  admin: True
