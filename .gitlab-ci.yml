@@ -12,7 +12,7 @@ build:
   script:
     - export NODE_PATH=/cache/node_modules
     - npm install --unsafe-perm
-    - npm run dev-build
+    - npm run dist-build
   artifacts:
     paths:
       - img/

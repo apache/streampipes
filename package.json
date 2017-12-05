@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
-    "dist-build": "webpack -p --display-modules --progress"
+    "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress"
   },
   "dependencies": {
     "angular": "1.5.11",
