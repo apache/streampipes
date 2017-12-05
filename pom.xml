@@ -9,45 +9,98 @@
     <packaging>pom</packaging>
     <properties>
         <rdf4j.version>2.2.2</rdf4j.version>
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <logback-classic.version>1.1.9</logback-classic.version>
+        <jackson.version>2.7.4</jackson.version>
+        <type-parser.version>0.6.0</type-parser.version>
+        <simple-slack-api.version>0.5.1</simple-slack-api.version>
+        <consul-client.version>0.16.4</consul-client.version>
+        <persistence-api.version>1.0.2</persistence-api.version>
+        <junit.version>4.12</junit.version>
+        <kafka.version>0.10.0.1</kafka.version>
+        <shiro.version>1.2.3</shiro.version>
     </properties>
-    <name>StreamPipes Parent POM</name>
+
+    <name>StreamPipes Parent Pom</name>
+    <description>StreamPipes </description>
+    <url>https://streampipes.org</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>3.19.0-GA</version>
-            </dependency>
-            <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>0.9.10</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.7.4</version>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.drapostolos</groupId>
+                <artifactId>type-parser</artifactId>
+                <version>${type-parser.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Ullink</groupId>
+                <artifactId>simple-slack-api</artifactId>
+                <version>${simple-slack-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.7.4</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-                <scope>test</scope>
+                <groupId>com.orbitz.consul</groupId>
+                <artifactId>consul-client</artifactId>
+                <version>${consul-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
+                <version>${persistence-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka_2.10</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+                <version>${shiro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-web</artifactId>
+                <version>${shiro.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
@@ -118,6 +171,16 @@
                 <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-queryresultio-sparqljson</artifactId>
                 <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
@@ -285,31 +348,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka_2.10</artifactId>
-                <version>0.10.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>0.10.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.Ullink</groupId>
-                <artifactId>simple-slack-api</artifactId>
-                <version>0.5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.1.9</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.drapostolos</groupId>
-                <artifactId>type-parser</artifactId>
-                <version>0.6.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-wrapper-esper</artifactId>
                 <version>${project.version}</version>
@@ -339,8 +377,11 @@
                 <artifactId>streampipes-empire-rdf4j</artifactId>
                 <version>1.9.3-SNAPSHOT</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>org.streampipes.empire</groupId>
+                <artifactId>streampipes-empire-pinto</artifactId>
+                <version>1.9.3-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -486,11 +527,6 @@
         <repository>
             <id>apache</id>
             <url>https://repository.apache.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>archiva.public</id>
-            <name>Nissatech Public Repository</name>
-            <url>http://maven.nissatech.com/repository/public/</url>
         </repository>
     </repositories>
 
