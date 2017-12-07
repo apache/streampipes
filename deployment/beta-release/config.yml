@@ -1,0 +1,12 @@
+login:
+  backgroundImage: 'deployment/beta-release/img/background.png'
+  logo: 'deployment/beta-release/img/logo.png'
+  logo-right: 'deployment/beta-release/img/sp-logo-right-white.png'
+modules:
+  - spEditor
+  - spPipelines
+  - spDashboard
+  - spAppFileDownload
+  - spAdd
+  - spMyElements
+  - spConfiguration

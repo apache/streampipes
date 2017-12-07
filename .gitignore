@@ -3,3 +3,6 @@ node_modules/
 bundle.js
 bundle.js.map
 */.DS_Store
+app/app.module.js
+app/layout/app.controller.js
+app/core/state.config.js

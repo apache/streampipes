@@ -66,5 +66,7 @@ fs.writeFileSync('img/login/background.png', fs.readFileSync(config['login']['ba
 console.log('Moved: background.png');
 fs.writeFileSync('img/login/logo.png', fs.readFileSync(config['login']['logo']));
 console.log('Moved: logo.png');
+fs.writeFileSync('img/sp/sp-logo-right-white.png', fs.readFileSync(config['login']['logo-right']));
+console.log('Moved: sp-logo-right-white.png');
 
 console.log('Pre-Build finished.');

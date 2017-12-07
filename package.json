@@ -12,6 +12,7 @@
     "url": "https://laus.fzi.de/gitlab/streampipes/streampipes-ui"
   },
   "scripts": {
+    "start": "node deployment/prebuild.js && webpack-dev-server",
     "dev-build": "node deployment/prebuild.js && webpack -d --display-modules --progress",
     "dist-build": "node deployment/prebuild.js && webpack -p --display-modules --progress"
   },

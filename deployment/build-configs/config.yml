@@ -1,6 +1,7 @@
 login:
   backgroundImage: 'deployment/build-configs/img/background.jpg'
   logo: 'deployment/build-configs/img/logo.png'
+  logo-right: 'deployment/build-configs/img/sp-logo-right-white.png'
 modules:
   - spEditor
   - spPipelines
