@@ -2,7 +2,7 @@
 
 // import Webpack plugins
 const cleanPlugin = require('clean-webpack-plugin');
-const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+//const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 const webpack = require('webpack');
 const BowerWebpackPlugin = require("bower-webpack-plugin");
 var path = require('path');
@@ -68,9 +68,9 @@ let config = {
     },
     plugins: [
         new cleanPlugin(['dist']),
-        new ngAnnotatePlugin({
+        /*new ngAnnotatePlugin({
             add: true
-        }),
+        }),*/
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
