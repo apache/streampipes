@@ -1,0 +1,11 @@
+login:
+  backgroundImage: 'deployment/0.5.0/img/background.png'
+  logo: 'deployment/0.5.0/img/logo.png'
+  logo-right: 'deployment/0.5.0/img/StreamPipes-Logo-rechts-white-beta.png'
+modules:
+  - spEditor
+  - spPipelines
+  - spDashboard
+  - spAdd
+  - spMyElements
+  - spConfiguration
