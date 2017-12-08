@@ -37,14 +37,14 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
         ResourceConfig config = new ResourceConfig(getApiClasses());
 
+        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+
         ConsulUtil.registerPeService(
                 peConfig.getId(),
                 peConfig.getHost(),
                 peConfig.getPort()
         );
 
-
-        Server server = JettyHttpContainerFactory.createServer(baseUri, config);
     }
 
     private Set<Class<?>> getApiClasses() {
