@@ -7,6 +7,8 @@ modules:
   - spPipelines
   - spDashboard
   - spAppFileDownload
+  - spOntology
+  - spSensors
   - spAdd
   - spMyElements
   - spConfiguration

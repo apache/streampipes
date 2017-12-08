@@ -14,8 +14,6 @@ import spCreate from './create/create.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spNotifications from './notifications/notifications.module';
-import spOntology from './ontology/ontology.module';
-import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
 import spPipelineDetails from './pipeline-details/pipeline-details.module';
 {{#modulesActive}}
@@ -33,8 +31,6 @@ export default angular
         spLayout,
         spLogin,
         spNotifications,
-        spOntology,
-        spSensors,
         spAppLinks,
         spPipelineDetails,
         uiRouter,

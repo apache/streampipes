@@ -60,24 +60,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.ontology', {
-            url: '/ontology',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/ontology/ontology.html',
-                    controller: 'OntologyCtrl'
-                }
-            }
-        })
-        .state('streampipes.sensors', {
-            url: '/sensors',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'app/sensors/sensors.html',
-                    controller: 'SensorsCtrl'
-                }
-            }
-        })
         .state('streampipes.applinks', {
             url: '/applinks',
             views: {

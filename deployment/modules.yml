@@ -34,6 +34,22 @@ spAppFileDownload:
   title: 'File Download'
   icon: 'file:ic_file_download_24px'
   admin: False
+spOntology:
+  path: './ontology/ontology.module'
+  templateUrl: 'app/ontology/ontology.html'
+  controller: 'OntologyCtrl'
+  link: 'streampipes.ontology'
+  title: 'Knowledge Management'
+  icon: 'social:ic_share_24px'
+  admin: False
+spSensors:
+  path: './sensors/sensors.module'
+  templateUrl: 'app/sensors/sensors.html'
+  controller: 'SensorsCtrl'
+  link: 'streampipes.sensors'
+  title: 'Pipeline Element Generator'
+  icon: 'content:ic_add_24px'
+  admin: False
 spAdd:
   path: './add/add.module'
   templateUrl: 'app/add/add.html'
