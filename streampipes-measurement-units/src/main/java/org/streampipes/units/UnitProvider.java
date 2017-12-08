@@ -33,4 +33,11 @@ public enum UnitProvider {
 	public Unit getUnit(String resourceUri) {
 		return factory.getUnit(resourceUri);
 	}
+
+	public Unit getUnitByLabel(String label) {
+		return availableUnits.stream()
+				.filter(unit -> unit.getLabel().equals(label))
+				.findFirst()
+				.get();
+	}
 }

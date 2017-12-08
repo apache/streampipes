@@ -18,6 +18,6 @@ public class MeasurementUnitConverterProgram extends FlinkSepaRuntime<Measuremen
 
     @Override
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
-        return dataStreams[0].flatMap(new MeasurementUnitConverter());
+        return dataStreams[0].flatMap(new MeasurementUnitConverter(params));
     }
 }
