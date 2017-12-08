@@ -8,47 +8,39 @@ import uiRouter from 'npm/angular-ui-router';
 
 import spServices from './services/services.module';
 
-import spAdd from './add/add.module';
-import spConfiguration from './configuration/configuration.module';
 import spCore from './core/core.module';
 import spHome from './home/home.module';
 import spCreate from './create/create.module';
-import spDashboard from './dashboard/dashboard.module';
-import spEditor from './editor/editor.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
-import spMyElements from './myelements/my-elements.module';
 import spNotifications from './notifications/notifications.module';
 import spOntology from './ontology/ontology.module';
-import spPipelines from './pipelines/pipelines.module';
 import spSensors from './sensors/sensors.module';
 import spAppLinks from './applinks/applinks.module';
-import spAppFileDownload from './app-file-download/app-file-download.module';
-import spPipelineDetails from './pipeline-details/pipeline-details.module'
+import spPipelineDetails from './pipeline-details/pipeline-details.module';
+{{#modulesActive}}
+import {{module}} from '{{{path}}}';
+{{/modulesActive}}
 
 const MODULE_NAME = 'streamPipesApp';
 
 export default angular
     .module(MODULE_NAME, [
         spServices,
-        spAdd,
-        spConfiguration,
         spCore,
         spHome,
         spCreate,
-        spDashboard,
-        spEditor,
         spLayout,
         spLogin,
-        spMyElements,
         spNotifications,
         spOntology,
-        spPipelines,
         spSensors,
         spAppLinks,
-        spAppFileDownload,
         spPipelineDetails,
         uiRouter,
+        {{#modulesActive}}
+        {{module}},
+        {{/modulesActive}}
     ])
     .run(function ($rootScope, $location, restApi, authService, $state, $urlRouter, objectProvider) {
         var bypass;

@@ -1,0 +1,12 @@
+login:
+  backgroundImage: 'deployment/testfeld/img/background.jpg'
+  logo: 'deployment/testfeld/img/logo.png'
+  logo-right: 'deployment/testfeld/img/sp-logo-right-white.png'
+modules:
+  - spEditor
+  - spPipelines
+  - spDashboard
+  - spAppFileDownload
+  - spAdd
+  - spMyElements
+  - spConfiguration
