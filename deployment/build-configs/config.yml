@@ -6,7 +6,6 @@ modules:
   - spEditor
   - spPipelines
   - spDashboard
-  - spAppFileDownload
   - spAdd
   - spMyElements
   - spConfiguration
