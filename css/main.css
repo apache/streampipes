@@ -29,12 +29,21 @@ md-toolbar:not(.md-menu-toolbar) {
 	min-height: 30px !important;
 }
 
-.md-button.md-raised {
+.md-button.md-raised:not[disabled] {
 	background-color: #39b54a !important;
 	border: 2px solid #39b54a;
 	box-shadow: none !important;
 	border-radius: 2px !important;
 	text-transform: none !important;
+}
+
+.md-button.md-raised[disabled] {
+	background-color: lightgrey !important;
+	border: 2px solid lightgrey;
+	box-shadow: none !important;
+	border-radius: 2px !important;
+	text-transform: none !important;
+	color:white;
 }
 
 .md-list-item-text {
@@ -139,7 +148,7 @@ md-content {
 	transform: perspective(4px) rotateX(1deg);
 	transform-origin: bottom;
 	height: calc(100% - 20px);
-	border: 5px solid #39b54a;
+	border: 0px solid #39b54a;
 	border-bottom: .1em none #fff;
 }
 
@@ -176,7 +185,7 @@ md-toolbar.top-nav {
 
 .top-nav {
 	height:50px !important;
-	border-bottom: 5px solid #39b54a;
+	border-bottom: 0px solid #39b54a;
 }
 
 md-list-item > .md-button {

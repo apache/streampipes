@@ -36,7 +36,7 @@
   -o-transition: width 350ms;
   transition: width 350ms;
 
-  background: rgb(255,64,129);
+  background: #39b54a;
   position: fixed;
   z-index: 10002;
   top: 0px;
@@ -77,8 +77,8 @@
   height: 14px;
 
   border:  solid 2px transparent;
-  border-top-color:  rgb(255,64,129);
-  border-left-color: rgb(255,64,129);
+  border-top-color:  #39b54a;
+  border-left-color: #39b54a;
   border-radius: 50%;
 
   -webkit-animation: loading-bar-spinner 400ms linear infinite;
