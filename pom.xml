@@ -20,6 +20,8 @@
         <junit.version>4.12</junit.version>
         <kafka.version>0.10.0.1</kafka.version>
         <shiro.version>1.2.3</shiro.version>
+        <streampipes-empire.version>1.9.4</streampipes-empire.version>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
 
     <name>StreamPipes Parent Pom</name>
@@ -375,12 +377,12 @@
             <dependency>
                 <groupId>org.streampipes.empire</groupId>
                 <artifactId>streampipes-empire-rdf4j</artifactId>
-                <version>1.9.3-SNAPSHOT</version>
+                <version>${streampipes-empire.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes.empire</groupId>
                 <artifactId>streampipes-empire-pinto</artifactId>
-                <version>1.9.3-SNAPSHOT</version>
+                <version>${streampipes-empire.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -434,15 +436,6 @@
 
     <!-- Build Settings -->
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -501,9 +494,20 @@
                 </configuration>
             </plugin>
         </plugins>
-
-
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 
     <!-- Environment Settings -->
