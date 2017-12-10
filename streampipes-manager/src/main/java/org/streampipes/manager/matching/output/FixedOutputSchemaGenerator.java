@@ -2,10 +2,10 @@ package org.streampipes.manager.matching.output;
 
 import java.util.List;
 
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.output.FixedOutputStrategy;
 
 public class FixedOutputSchemaGenerator implements OutputSchemaGenerator<FixedOutputStrategy> {
 
@@ -16,13 +16,13 @@ public class FixedOutputSchemaGenerator implements OutputSchemaGenerator<FixedOu
 	}
 	
 	@Override
-	public EventSchema buildFromOneStream(EventStream stream) {
+	public EventSchema buildFromOneStream(SpDataStream stream) {
 		return new EventSchema(fixedProperties);
 	}
 
 	@Override
-	public EventSchema buildFromTwoStreams(EventStream stream1,
-			EventStream stream2) {
+	public EventSchema buildFromTwoStreams(SpDataStream stream1,
+			SpDataStream stream2) {
 		return buildFromOneStream(stream1);
 	}
 

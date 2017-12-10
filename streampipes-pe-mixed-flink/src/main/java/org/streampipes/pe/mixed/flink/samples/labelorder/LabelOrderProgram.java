@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.labelorder;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import java.io.Serializable;
 import java.util.Map;
 
-public class LabelOrderProgram extends FlinkSepaRuntime<LabelOrderParameters> implements Serializable {
+public class LabelOrderProgram extends FlinkDataProcessorRuntime<LabelOrderParameters> implements Serializable {
 
     public LabelOrderProgram(LabelOrderParameters params) {
         super(params);

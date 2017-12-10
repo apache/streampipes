@@ -1,7 +1,7 @@
 package org.streampipes.sdk.utils;
 
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
 import java.net.URI;
 
@@ -16,7 +16,8 @@ public enum Datatypes {
     Boolean(XSD._boolean),
     String(XSD._string),
     Double(XSD._double),
-    Number(URI.create(SO.Number));
+    Number(URI.create(SO.Number)),
+    Sequence(XSD._sequence);
 
     private URI uri;
 

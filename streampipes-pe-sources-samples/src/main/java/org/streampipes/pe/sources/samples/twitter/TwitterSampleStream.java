@@ -1,38 +1,38 @@
 package org.streampipes.pe.sources.samples.twitter;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.commons.Utils;
+import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.impl.quality.EventStreamQualityDefinition;
-import org.streampipes.model.impl.quality.Frequency;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.quality.EventStreamQualityDefinition;
+import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
-import eu.proasense.internal.ComplexValue;
-import eu.proasense.internal.SimpleEvent;
-import eu.proasense.internal.VariableType;
-import org.codehaus.jettison.json.JSONObject;
-import twitter4j.*;
+import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.jms.JMSException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.jms.JMSException;
 
 public class TwitterSampleStream implements EventStreamDeclarer {
 
@@ -41,13 +41,13 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 
 	public TwitterSampleStream() throws JMSException {
 		geoPublisher = new ActiveMQPublisher(SourcesConfig.INSTANCE.getJmsHost() + ":61616", "SEPA.SEP.Twitter.Geo");
-		kafkaProducer = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
+		kafkaProducer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), "SEPA.SEP.Twitter.Sample");
 	}
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		EventSchema schema = new EventSchema();
 
 		List<EventPropertyQualityDefinition> timestampQualities = new ArrayList<EventPropertyQualityDefinition>();
@@ -182,33 +182,6 @@ public class TwitterSampleStream implements EventStreamDeclarer {
 		}
 
 		return json;
-	}
-	
-	private SimpleEvent buildSimpleEvent(long timestamp, String username, int follower, String content) {
-		Map<String, ComplexValue> map = new HashMap<String, ComplexValue>();
-		ComplexValue value = new ComplexValue();
-		value.setType(VariableType.LONG);
-		value.setValue(String.valueOf(timestamp));
-
-		ComplexValue value2 = new ComplexValue();
-		value2.setType(VariableType.STRING);
-		value2.setValue(String.valueOf(username));
-
-		ComplexValue value3 = new ComplexValue();
-		value3.setType(VariableType.LONG);
-		value3.setValue(String.valueOf(follower));
-		
-		ComplexValue value4 = new ComplexValue();
-		value4.setType(VariableType.STRING);
-		value4.setValue(String.valueOf(content));
-
-		map.put("timestamp", value);
-		map.put("username", value2);
-		map.put("follower", value3);
-		map.put("content", value3);
-		SimpleEvent simpleEvent = new SimpleEvent(timestamp, "SampleStream", map);
-		simpleEvent.setSensorId("SampleStream");
-		return simpleEvent;
 	}
 
 	@Override

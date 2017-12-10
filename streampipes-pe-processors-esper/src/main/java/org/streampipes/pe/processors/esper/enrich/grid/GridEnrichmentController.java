@@ -1,131 +1,85 @@
 package org.streampipes.pe.processors.esper.enrich.grid;
 
-import java.net.URI;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.util.SepaUtils;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.sdk.helpers.OntologyProperties;
+import org.streampipes.sdk.helpers.OutputStrategies;
+import org.streampipes.sdk.helpers.SupportedFormats;
+import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.StaticProperties;
-import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
+public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSingleton<GridEnrichmentParameter> {
 
-public class GridEnrichmentController extends FlatEpDeclarer<GridEnrichmentParameter> {
+  @Override
+  public DataProcessorDescription declareModel() {
 
-	@Override
-	public SepaDescription declareModel() {
-		
-		SepaDescription sepa = new SepaDescription("grid", "Grid Cell Grouping",
-				"Groups location-based events into cells of a given size");
-		sepa.setSupportedGrounding(StandardTransportFormat.getSupportedGrounding());
-		try {	
-			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-			EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
-			EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
-			eventProperties.add(e1);
-			eventProperties.add(e2);
-			
-			EventStream stream1 = StreamBuilder
-					.createStreamRestriction(EsperConfig.serverUrl +"/" + sepa.getElementId())
-					.schema(
-							SchemaBuilder.create()
-								.properties(eventProperties)
-								.build()
-							).build();
-			sepa.addEventStream(stream1);
+    return ProcessingElementBuilder.create("grid", "Grid Cell Grouping",
+            "Groups location-based events into cells of a given size")
+            .category(DataProcessorType.ENRICH)
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat), "latitude", "Select Latitude Mapping", "")
+            .requiredPropertyStream1WithNaryMapping(EpRequirements.domainPropertyReq(Geo.lng), "longitude", "Select Longitude Mapping", "")
+            .supportedFormats(SupportedFormats.jsonFormat())
+            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())
+            .outputStrategy(OutputStrategies.append(EpProperties.nestedEp(Labels.empty(), "cellOptions", EpProperties
+                            .integerEp
+                            (Labels.empty(), "cellX", "http://schema.org/Number"),
+                    EpProperties.integerEp(Labels.empty(), "cellY", "http://schema.org/Number"),
+                    EpProperties.doubleEp(Labels.empty(), "latitudeNW", "http://test.de/latitude"),
+                    EpProperties.doubleEp(Labels.empty(), "longitudeNW", "http://test.de/longitude"),
+                    EpProperties.doubleEp(Labels.empty(), "latitudeSE", "http://test.de/latitude"),
+                    EpProperties.doubleEp(Labels.empty(), "longitudeSE", "http://test.de/longitude"),
+                    EpProperties.integerEp(Labels.empty(), "cellSize", "http://schema.org/Number"))))
+            .requiredIntegerParameter("cellSize", "The size of a cell in meters", "", 0, 10000, 100)
+            .requiredOntologyConcept(Labels.from("startingCell", "Starting cell (upper left corner)", "Select a " +
+                    "valid location."), OntologyProperties.mandatory(Geo.lat), OntologyProperties.mandatory(Geo.lng))
 
-			List<OutputStrategy> outputStrategies = new ArrayList<OutputStrategy>();
-			
-			AppendOutputStrategy outputStrategy = new AppendOutputStrategy();
+            .build();
+  }
 
-			List<EventProperty> appendProperties = new ArrayList<EventProperty>();			
-			List<EventProperty> nestedProperties = new ArrayList<>();
-			
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellX", "http://schema.org/Number").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellY", "http://schema.org/Number").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeNW", "http://test.de/latitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeNW", "http://test.de/longitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "latitudeSE", "http://test.de/latitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._double, "longitudeSE", "http://test.de/longitude").build());
-			nestedProperties.add(PrimitivePropertyBuilder.createProperty(XSD._integer, "cellSize", "http://schema.org/Number").build());
-		
-			EventProperty cellProperties = new EventPropertyNested("cellOptions", nestedProperties);
-			appendProperties.add(cellProperties);
+  @Override
+  public ConfiguredEventProcessor<GridEnrichmentParameter, EventProcessor<GridEnrichmentParameter>> onInvocation
+          (DataProcessorInvocation sepa) {
+    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
-			outputStrategy.setEventProperties(appendProperties);
-			outputStrategies.add(outputStrategy);
-			sepa.setOutputStrategies(outputStrategies);
-			
-			List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
-			
-			staticProperties.add(StaticProperties.integerFreeTextProperty("cellSize", "The size of a cell in meters", "", new PropertyValueSpecification(0, 10000, 100)));
-			
-			SupportedProperty sp1 = new SupportedProperty(Geo.lat, true);
-			SupportedProperty sp2 = new SupportedProperty(Geo.lng, true);
-			DomainStaticProperty sp = new DomainStaticProperty("startingCell", "Starting cell (upper left corner)", "Select a valid location.", Arrays.asList(sp1, sp2));
-			staticProperties.add(sp);
-			
-			// Mapping properties
-			staticProperties.add(new MappingPropertyUnary(new URI(e1.getElementName()), "latitude", "Select Latitude Mapping", ""));
-			staticProperties.add(new MappingPropertyUnary(new URI(e2.getElementName()), "longitude", "Select Longitude Mapping", ""));
-			sepa.setStaticProperties(staticProperties);
+    Integer cellSize =extractor.singleValueParameter("cellSize", Integer.class);
+    Double startingLatitude = extractor.supportedOntologyPropertyValue("startingCell", Geo.lat, Double.class);
+    Double startingLongitude = extractor.supportedOntologyPropertyValue("startingCell", Geo.lng, Double.class);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return sepa;
-	}
+    String latPropertyName = extractor.mappingPropertyValue("latitude");
+    String lngPropertyName = extractor.mappingPropertyValue("longitude");
 
-	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {		
-		
-		int cellSize = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(sepa, "cellSize"));
-		double startingLatitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lat));
-		double startingLongitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(SepaUtils.getDomainStaticPropertyBy(sepa, "startingCell"), Geo.lng));
-		
-		String latPropertyName = SepaUtils.getMappingPropertyName(sepa, "latitude");
-		String lngPropertyName = SepaUtils.getMappingPropertyName(sepa, "longitude");	
-			
-		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
-		String cellOptionsPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
-	
-		List<String> selectProperties = new ArrayList<>();
-		for(EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties())
-		{
-			selectProperties.add(p.getRuntimeName());
-		}
-		
-		GridEnrichmentParameter staticParam = new GridEnrichmentParameter(
-				sepa, 
-				startingLatitude, startingLongitude, 
-				cellSize, 
-				cellOptionsPropertyName, 
-				latPropertyName, 
-				lngPropertyName,
-				selectProperties);
+    AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
+    String cellOptionsPropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "cellOptions");
 
-		return submit(staticParam, GridEnrichment::new, sepa);
+    List<String> selectProperties = new ArrayList<>();
+    for (EventProperty p : sepa.getInputStreams().get(0).getEventSchema().getEventProperties()) {
+      selectProperties.add(p.getRuntimeName());
+    }
 
-	}
+    GridEnrichmentParameter staticParam = new GridEnrichmentParameter(
+            sepa,
+            startingLatitude, startingLongitude,
+            cellSize,
+            cellOptionsPropertyName,
+            latPropertyName,
+            lngPropertyName,
+            selectProperties);
+
+    return new ConfiguredEventProcessor<>(staticParam, GridEnrichment::new);
+  }
 }

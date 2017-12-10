@@ -1,45 +1,46 @@
 package org.streampipes.pe.processors.esper.pattern.increase;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
+public class IncreaseController extends StandaloneEventProcessorDeclarerSingleton<IncreaseParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		EventSchema schema = new EventSchema();
 		EventProperty e1 = EpRequirements.numberReq();
 		schema.setEventProperties(Arrays.asList(e1));
 		
-		SepaDescription desc = new SepaDescription("increase", "Increase", "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.");
-		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("increase", "Increase", "Detects the increase of a numerical field over a customizable time window. Example: A temperature value increases by 10 percent within 5 minutes.");
+		desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
 		desc.setIconUrl(EsperConfig.getIconUrl("increase-icon"));
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
@@ -72,7 +73,8 @@ public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
+	public ConfiguredEventProcessor<IncreaseParameters, EventProcessor<IncreaseParameters>> onInvocation(DataProcessorInvocation
+																																																								 invocationGraph) {
 		String operation = SepaUtils.getOneOfProperty(invocationGraph, "operation");
 		System.out.println(operation);
 		int increase = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "increase"));
@@ -80,10 +82,9 @@ public class IncreaseController extends FlatEpDeclarer<IncreaseParameters> {
 		String mapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping");
 		IncreaseParameters params = new IncreaseParameters(invocationGraph, getOperation(operation), increase, duration, mapping);
 
-		return submit(params, Increase::new, invocationGraph);
-
+		return new ConfiguredEventProcessor<>(params, Increase::new);
 	}
-	
+
 	private Operation getOperation(String operation) {
 		if (operation.equals("Increase")) return Operation.INCREASE;
 		else return Operation.DECREASE;

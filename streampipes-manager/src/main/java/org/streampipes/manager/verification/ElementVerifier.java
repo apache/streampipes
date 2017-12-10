@@ -1,31 +1,30 @@
 package org.streampipes.manager.verification;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.UnsupportedRDFormatException;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.manager.verification.messages.VerificationError;
 import org.streampipes.manager.verification.messages.VerificationResult;
 import org.streampipes.manager.verification.structure.GeneralVerifier;
 import org.streampipes.manager.verification.structure.Verifier;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.transform.JsonLdTransformer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.StorageRequests;
 import org.streampipes.storage.controller.StorageManager;
 import org.streampipes.storage.service.UserService;
 
-public abstract class ElementVerifier<T extends NamedSEPAElement> {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
 	protected static final Logger logger = Logger.getAnonymousLogger();
 	

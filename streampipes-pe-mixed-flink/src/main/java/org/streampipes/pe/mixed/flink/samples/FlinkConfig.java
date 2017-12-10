@@ -1,8 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum FlinkConfig {
+public enum FlinkConfig implements PeConfig {
   INSTANCE;
 
   private SpConfig config;
@@ -17,23 +18,35 @@ public enum FlinkConfig {
   private final static String ELASTIC_HOST = "elasticsearch_host";
   private final static String ELASTIC_PORT = "elasticsearch_port";
 
+  private final static String ICON_HOST = "icon_host";
+  private final static String ICON_PORT = "icon_port";
+
+  private final static String SERVICE_ID = "pe/org.streampipes.pe.mixed.flink";
+  private final static String SERVICE_NAME = "service_name";
 
   FlinkConfig() {
-    config = SpConfig.getSpConfig("pe/org.streampipes.pe.mixed.flink");
+    config = SpConfig.getSpConfig(SERVICE_ID);
 
     config.register(HOST, "pe-flink-samples", "Hostname for the pe mixed flink component");
     config.register(PORT, 8090, "Port for the pe mixed flink component");
     config.register(FLINK_HOST, "jobmanager", "Host for the flink cluster");
     config.register(FLINK_PORT, 6123, "Port for the flink cluster");
     config.register(ELASTIC_HOST, "elasticsearch", "Elastic search host address");
-    config.register(ELASTIC_PORT, 9200, "Elasitc search port");
+    config.register(ELASTIC_PORT, 9300, "Elasitc search port");
+
+    config.register(ICON_HOST, "backend", "Hostname for the icon host");
+    config.register(ICON_PORT, 80, "Port for the icons in nginx");
+
+    config.register(SERVICE_NAME, "Mixed flink", "The name of the service");
 
   }
 
+  @Override
   public String getHost() {
     return config.getString(HOST);
   }
 
+  @Override
   public int getPort() {
     return config.getInteger(PORT);
   }
@@ -55,9 +68,27 @@ public enum FlinkConfig {
   }
 
 
-  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getHost() + "/img";
+  public static final String iconBaseUrl = FlinkConfig.INSTANCE.getIconHost() + ":" + FlinkConfig.INSTANCE.getIconPort() + "/img/pe_icons";
 
   public static final String getIconUrl(String pictureName) {
     return iconBaseUrl + "/" + pictureName + ".png";
+  }
+
+  public String getIconHost() {
+    return config.getString(ICON_HOST);
+  }
+
+  public int getIconPort() {
+    return config.getInteger(ICON_PORT);
+  }
+
+  @Override
+  public String getId() {
+    return SERVICE_ID;
+  }
+
+  @Override
+  public String getName() {
+    return config.getString(SERVICE_NAME);
   }
 }

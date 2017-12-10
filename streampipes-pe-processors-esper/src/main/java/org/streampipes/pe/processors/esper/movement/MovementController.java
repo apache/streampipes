@@ -1,55 +1,56 @@
 package org.streampipes.pe.processors.esper.movement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.streampipes.commons.Utils;
+import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.quality.Accuracy;
+import org.streampipes.model.quality.EventPropertyQualityRequirement;
+import org.streampipes.model.quality.EventStreamQualityRequirement;
+import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.util.SepaUtils;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.vocabulary.XSD;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.container.util.StandardTransportFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.quality.Accuracy;
-import org.streampipes.model.impl.quality.EventPropertyQualityRequirement;
-import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
-import org.streampipes.model.impl.quality.Frequency;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.commons.Utils;
-
-public class MovementController extends FlatEpDeclarer<MovementParameter> {
+public class MovementController extends StandaloneEventProcessorDeclarerSingleton<MovementParameter> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger("MovementTest");
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		SepaDescription desc = new SepaDescription("movement", "Movement Analysis",
+		DataProcessorDescription desc = new DataProcessorDescription("movement", "Movement Analysis",
 				"Movement Analysis Enricher");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/Movement_Analysis_Icon_1_HQ.png");
-		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
+		desc.setCategory(Arrays.asList(DataProcessorType.GEO.name()));
 		try {
-			EventStream stream1 = new EventStream();
+			SpDataStream stream1 = new SpDataStream();
 
 			EventSchema schema1 = new EventSchema();
 			List<EventProperty> eventProperties = new ArrayList<EventProperty>();
@@ -116,25 +117,25 @@ public class MovementController extends FlatEpDeclarer<MovementParameter> {
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-					
+	public ConfiguredEventProcessor<MovementParameter, EventProcessor<MovementParameter>> onInvocation(DataProcessorInvocation
+																																																							 sepa) {
 		String epsgProperty = null;
 		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
-				.getStaticPropertyByInternalName(sepa, "epsg")));
+						.getStaticPropertyByInternalName(sepa, "epsg")));
 		for(Option option : osp.getOptions())
 			if (option.isSelected()) epsgProperty = option.getName();
-		
+
 		String xProperty = SepaUtils.getMappingPropertyName(sepa,
-				"latitude");
+						"latitude");
 		String yProperty = SepaUtils.getMappingPropertyName(sepa,
-				"longitude");
+						"longitude");
 
 		MovementParameter staticParam = new MovementParameter(
-				sepa,
-				Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
-				yProperty, 8000L); // TODO reduce param overhead
+						sepa,
+						Arrays.asList("userName"), epsgProperty, "timestamp", xProperty,
+						yProperty, 8000L); // TODO reduce param overhead
 
-		return submit(staticParam, MovementAnalysis::new, sepa);
+		return new ConfiguredEventProcessor<>(staticParam, MovementAnalysis::new);
 
 	}
 }

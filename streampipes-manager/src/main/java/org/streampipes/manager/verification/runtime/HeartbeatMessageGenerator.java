@@ -1,12 +1,12 @@
 package org.streampipes.manager.verification.runtime;
 
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 
 public class HeartbeatMessageGenerator {
 
-	private SepaDescription description;
+	private DataProcessorDescription description;
 	
-	public HeartbeatMessageGenerator(SepaDescription description)
+	public HeartbeatMessageGenerator(DataProcessorDescription description)
 	{
 		this.description = description;
 	}

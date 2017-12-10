@@ -1,11 +1,10 @@
 package org.streampipes.storage.ontology;
 
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
-
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.UpdateExecutionException;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.streampipes.model.client.ontology.Concept;
 import org.streampipes.storage.sparql.QueryBuilder;
 
@@ -20,8 +19,8 @@ public class ConceptUpdateExecutor extends UpdateExecutor {
 
 	@Override
 	public void deleteExistingTriples() throws RepositoryException,
-			QueryEvaluationException, MalformedQueryException,
-			UpdateExecutionException {
+					QueryEvaluationException, MalformedQueryException,
+					UpdateExecutionException {
 		executeUpdate(QueryBuilder.deleteConceptDetails(concept.getElementHeader().getId()));
 	}
 

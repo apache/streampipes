@@ -1,47 +1,48 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class DashboardParameters {
-  private String pipelineId;
-  private EventSchema schema;
-  private String broker;
+public class DashboardParameters extends EventSinkBindingParams {
+    private String pipelineId;
+    private EventSchema schema;
+    private String broker;
 
-  public DashboardParameters(SecInvocation invocationGraph) {
-    this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
-    this.pipelineId = invocationGraph.getCorrespondingPipeline();
-    this.broker = "ws://" + ActionConfig.INSTANCE.getNginxHost() + ":" + ActionConfig.INSTANCE
-            .getNginxPort()
-            + "/streampipes/ws";
-  }
+    public DashboardParameters(DataSinkInvocation invocationGraph) {
+        super(invocationGraph);
+        this.schema = invocationGraph.getInputStreams().get(0).getEventSchema();
+        this.pipelineId = invocationGraph.getCorrespondingPipeline();
+        this.broker = "ws://" + ActionConfig.INSTANCE.getNginxHost() +":" +ActionConfig.INSTANCE
+                .getNginxPort()
+                +"/streampipes/ws";
+    }
 
-  private String removeProtocol(String url) {
-    return url.replaceFirst("^(tcp://|ws://)", "");
-  }
+    private String removeProtocol(String url) {
+       return url.replaceFirst("^(tcp://|ws://)","");
+    }
+    public String getPipelineId() {
+        return pipelineId;
+    }
 
-  public String getPipelineId() {
-    return pipelineId;
-  }
+    public void setPipelineId(String pipelineId) {
+        this.pipelineId = pipelineId;
+    }
 
-  public void setPipelineId(String pipelineId) {
-    this.pipelineId = pipelineId;
-  }
+    public EventSchema getSchema() {
+        return schema;
+    }
 
-  public EventSchema getSchema() {
-    return schema;
-  }
+    public void setSchema(EventSchema schema) {
+        this.schema = schema;
+    }
 
-  public void setSchema(EventSchema schema) {
-    this.schema = schema;
-  }
+    public String getBroker() {
+        return broker;
+    }
 
-  public String getBroker() {
-    return broker;
-  }
-
-  public void setBroker(String broker) {
-    this.broker = broker;
-  }
+    public void setBroker(String broker) {
+        this.broker = broker;
+    }
 }

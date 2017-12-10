@@ -6,11 +6,11 @@ import java.util.Map;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.wrapper.flink.converter.ObjectToMapConverter;
 import org.streampipes.model.util.SepaUtils;
 
-public class WordCountProgram extends FlinkSepaRuntime<WordCountParameters> implements Serializable {
+public class WordCountProgram extends FlinkDataProcessorRuntime<WordCountParameters> implements Serializable {
 
 	public WordCountProgram(WordCountParameters params)
 	{

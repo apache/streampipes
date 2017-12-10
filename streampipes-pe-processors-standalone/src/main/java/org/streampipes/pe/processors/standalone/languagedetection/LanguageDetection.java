@@ -1,5 +1,13 @@
 package org.streampipes.pe.processors.standalone.languagedetection;
 
+import com.cybozu.labs.langdetect.Detector;
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import org.streampipes.wrapper.routing.SpOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,22 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.cybozu.labs.langdetect.Detector;
-import com.cybozu.labs.langdetect.DetectorFactory;
-import com.cybozu.labs.langdetect.LangDetectException;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
-import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.EngineParameters;
-
-public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
+public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
 	private static final String PROFILE_FOLDER = "./profiles";
 	
-	private OutputCollector collector;
+	private SpOutputCollector collector;
 	private Map<String, String> mappingPropertyNames;
 	private String outputPropertyName;
 	
@@ -58,14 +55,12 @@ public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 	
 	
 	@Override
-	public void bind(EngineParameters<LanguageDetectionParameters> parameters,
-			OutputCollector collector, SepaInvocation graph) {
+	public void bind(LanguageDetectionParameters parameters,
+			SpOutputCollector collector) {
 		mappingPropertyNames.put(parameters
-				.getStaticProperty()
 				.getInputStreamParams().get(0)
 				.getInName(), 
 				parameters
-				.getStaticProperty()
 				.getMappingPropertyName());
 		this.outputPropertyName = "language";
 		this.collector = collector;
@@ -77,7 +72,7 @@ public class LanguageDetection implements EPEngine<LanguageDetectionParameters>{
 		String mappingPropertyName = mappingPropertyNames.get(sourceInfo);
 		String fieldValue = (String) event.get(mappingPropertyName);
 		event.put(outputPropertyName, detectLanguage(fieldValue));
-		collector.send(event);
+		collector.onEvent(event);
 	}
 	
 	private String detectLanguage(String text)

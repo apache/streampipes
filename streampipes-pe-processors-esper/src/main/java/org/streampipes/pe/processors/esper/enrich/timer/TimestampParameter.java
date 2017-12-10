@@ -2,15 +2,15 @@ package org.streampipes.pe.processors.esper.enrich.timer;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TimestampParameter extends BindingParameters {
+public class TimestampParameter extends EventProcessorBindingParams {
 
 	private List<String> propertyNames;
 	private String appendTimePropertyName;
 	
-	public TimestampParameter(SepaInvocation graph, String appendTimePropertyName, List<String> propertyNames) {
+	public TimestampParameter(DataProcessorInvocation graph, String appendTimePropertyName, List<String> propertyNames) {
 		super(graph);
 		this.appendTimePropertyName = appendTimePropertyName;
 		this.propertyNames = propertyNames;

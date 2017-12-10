@@ -9,4 +9,16 @@ public class Labels {
     return new Label(internalId, label, description);
   }
 
+  public static Label withId(String internalId) {
+    return new Label(internalId, "", "");
+  }
+
+  public static Label withTitle(String label, String description) {
+    return new Label("", label, description);
+  }
+
+  public static Label empty() {
+    return new Label("", "", "");
+  }
+
 }

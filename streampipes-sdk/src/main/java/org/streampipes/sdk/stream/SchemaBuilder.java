@@ -1,9 +1,9 @@
 package org.streampipes.sdk.stream;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;

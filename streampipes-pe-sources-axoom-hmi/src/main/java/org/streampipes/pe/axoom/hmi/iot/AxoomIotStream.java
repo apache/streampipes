@@ -1,7 +1,7 @@
 package org.streampipes.pe.axoom.hmi.iot;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 
 /**
@@ -9,7 +9,7 @@ import org.streampipes.sources.AbstractAlreadyExistingStream;
  */
 public class AxoomIotStream extends AbstractAlreadyExistingStream {
   @Override
-  public EventStream declareModel(SepDescription sep) {
+  public SpDataStream declareModel(DataSourceDescription sep) {
     return null;
   }
 

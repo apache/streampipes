@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.hella.streams.ProductionPlanStream;
 import org.streampipes.pe.sources.hella.streams.RawMaterialCertificateStream;
 import org.streampipes.pe.sources.hella.streams.RawMaterialChangeStream;
@@ -13,9 +13,9 @@ import org.streampipes.pe.sources.hella.streams.RawMaterialChangeStream;
 public class HumanSensorDataProducer implements SemanticEventProducerDeclarer {
 
 	@Override
-	public SepDescription declareModel() {
+	public DataSourceDescription declareModel() {
 		
-		SepDescription sep = new SepDescription("source-human", "Human Sensor", "Provides streams generated manually by humans");
+		DataSourceDescription sep = new DataSourceDescription("source-human", "Human Sensor", "Provides streams generated manually by humans");
 		
 		return sep;
 	}

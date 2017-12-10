@@ -1,16 +1,16 @@
 package org.streampipes.pe.processors.esper.distribution;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.streampipes.wrapper.routing.SpOutputCollector;
+import org.streampipes.wrapper.runtime.EventProcessor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.EPEngine;
-import org.streampipes.wrapper.OutputCollector;
-import org.streampipes.wrapper.EngineParameters;
-
-public class Distribution implements EPEngine<DistributionParameters>{
+public class Distribution implements EventProcessor<DistributionParameters> {
 
 	private Map<String, Integer> currentDistribution;
 	private String propertyName;
@@ -18,24 +18,28 @@ public class Distribution implements EPEngine<DistributionParameters>{
 	private int eventCount = 0;
 	private List<String> queue;
 	
-	private OutputCollector collector;
+	private SpOutputCollector collector;
+
+	private ObjectMapper mapper;
 	
 	
 	@Override
-	public void bind(EngineParameters<DistributionParameters> parameters,
-			OutputCollector collector, SepaInvocation graph) {
+	public void bind(DistributionParameters parameters,
+			SpOutputCollector collector) {
 		this.currentDistribution = new HashMap<String, Integer>();
-		this.propertyName = parameters.getStaticProperty().getMappingProperty();
-		this.batchSize = parameters.getStaticProperty().getTimeWindow();
+		this.propertyName = parameters.getMappingProperty();
+		this.batchSize = parameters.getTimeWindow();
 		this.queue = new ArrayList<>();		
 		this.collector = collector;
+		mapper = new ObjectMapper();
+
 	}
 
 	@Override
 	public void onEvent(Map<String, Object> event, String sourceInfo) {
 		updateDistribution(event);
 		System.out.println(toOutputFormat());
-		collector.send(toOutputFormat());
+		collector.onEvent(mapper.convertValue(toOutputFormat(), new TypeReference<Map<String, Object>>() {}));
 	}
 	
 	private void updateDistribution(Map<String, Object> event) {

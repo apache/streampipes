@@ -1,38 +1,25 @@
 package org.streampipes.pe.sources.samples.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.json.JSONObject;
 
-import org.streampipes.model.impl.Domain;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
 
 public class Utils {
 	
 	public static final String QUOTATIONMARK = "\"";
 	public static final String COMMA = ",";
 	public static final String COLON = ":";
-	
-	public static List<String> createDomain(Domain...domains)
-	{
-		ArrayList<String> domainList = new ArrayList<String>();
-		for(Domain d : domains)
-			domainList.add(d.toString());
-			
-		return domainList;
-	}
 
     /**
      * Performs a request to

@@ -1,7 +1,0 @@
-sources:
-  image: laus.fzi.de:5000/fzi/semantic-epa-sources-samples
-  net: "host"
-  ports:
-    - "8089:8089"
-  volumes:
-    - "./config:/root/.streampipes"

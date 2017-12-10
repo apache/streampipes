@@ -3,7 +3,7 @@ package org.streampipes.codegeneration.flink;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 
@@ -11,7 +11,7 @@ import javax.lang.model.element.Modifier;
 
 public class ConfigGenerator extends Generator {
 
-	public ConfigGenerator(ConsumableSEPAElement sepa, String name, String packageName) {
+	public ConfigGenerator(ConsumableStreamPipesEntity sepa, String name, String packageName) {
 		super(sepa, name, packageName);
 	}
 

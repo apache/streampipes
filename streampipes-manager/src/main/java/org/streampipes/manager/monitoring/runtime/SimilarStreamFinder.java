@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.quality.MeasurementCapability;
-import org.streampipes.model.impl.quality.MeasurementObject;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.quality.MeasurementCapability;
+import org.streampipes.model.quality.MeasurementObject;
 import org.streampipes.storage.controller.StorageManager;
 
 public class SimilarStreamFinder {
 
 	private Pipeline pipeline;
 	
-	private List<EventStream> similarStreams;
+	private List<SpDataStream> similarStreams;
 	
 	public SimilarStreamFinder(String pipelineId) {
 		this.pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
@@ -30,14 +30,14 @@ public class SimilarStreamFinder {
 
 	private boolean isSimilarStreamAvailable() {
 		
-		List<SepDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
-		List<EventStream> streams = getEventStreams(seps);
+		List<DataSourceDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
+		List<SpDataStream> streams = getEventStreams(seps);
 		
-		EventStream pipelineInputStream = getStream();
+		SpDataStream pipelineInputStream = getStream();
 		List<MeasurementCapability> pipelineInputStreamCapabilities = pipelineInputStream.getMeasurementCapability();
 		List<MeasurementObject> pipelineInputStreamMeasurementObject = pipelineInputStream.getMeasurementObject();
 		
-		for(EventStream stream : streams) {
+		for(SpDataStream stream : streams) {
 			if (!stream.getElementId().equals(pipelineInputStream.getElementId())) {
 				if (matchesStream(pipelineInputStreamCapabilities, pipelineInputStreamMeasurementObject, stream.getMeasurementCapability(), stream.getMeasurementObject())) {
 					similarStreams.add(stream);
@@ -71,21 +71,21 @@ public class SimilarStreamFinder {
 		else return pipelineInputStreamCapabilities.stream().allMatch(p -> measurementCapability.stream().anyMatch(mc -> mc.getCapability().toString().equals(p.getCapability().toString())));
 	}
 
-	private EventStream getStream() {
+	private SpDataStream getStream() {
 		String streamId = pipeline.getStreams().get(0).getElementId();
 		
 		return StorageManager.INSTANCE.getStorageAPI().getEventStreamById(streamId);
 	}
 	
-	private List<EventStream> getEventStreams(List<SepDescription> seps) {
-		List<EventStream> result = new ArrayList<>();
-		for(SepDescription sep : seps) {
-			result.addAll(sep.getEventStreams());
+	private List<SpDataStream> getEventStreams(List<DataSourceDescription> seps) {
+		List<SpDataStream> result = new ArrayList<>();
+		for(DataSourceDescription sep : seps) {
+			result.addAll(sep.getSpDataStreams());
 		}
 		return result;
 	}
 
-	public List<EventStream> getSimilarStreams() {
+	public List<SpDataStream> getSimilarStreams() {
 		return similarStreams;
 	}
 	

@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.kd2.sources;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.kd2.streams.BiodataStream;
 import org.streampipes.pe.sources.kd2.streams.EmotionalArousalStream;
 import org.streampipes.pe.sources.kd2.streams.HeartRateStream;
@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class BiodataSource implements SemanticEventProducerDeclarer {
     @Override
-    public SepDescription declareModel() {
-        SepDescription sep = new SepDescription("source-biodata", "Biodata", "KD2 Biodata Events");
+    public DataSourceDescription declareModel() {
+        DataSourceDescription sep = new DataSourceDescription("source-biodata", "Biodata", "KD2 Biodata Events");
         return sep;
     }
 

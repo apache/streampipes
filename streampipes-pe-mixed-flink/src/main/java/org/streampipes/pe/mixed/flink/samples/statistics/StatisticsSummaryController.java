@@ -1,13 +1,14 @@
 package org.streampipes.pe.mixed.flink.samples.statistics;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Statistics;
+import org.streampipes.vocabulary.Statistics;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -19,7 +20,7 @@ import org.streampipes.sdk.utils.Datatypes;
 /**
  * Created by riemer on 29.01.2017.
  */
-public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<StatisticsSummaryParameters> {
+public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<StatisticsSummaryParameters> {
 
   private static final String listPropertyMappingName = "list-property";
 
@@ -32,26 +33,26 @@ public class StatisticsSummaryController extends AbstractFlinkAgentDeclarer<Stat
   public static final String N = "n";
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("statistics-summary", "Statistics Summary", "Calculate" +
             " simple descriptive summary statistics")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.listRequirement(Datatypes
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.listRequirement(Datatypes
                     .Number), listPropertyMappingName, "Property", "Select a list property")
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(MEAN, Statistics
+            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), MEAN, Statistics
                             .MEAN),
-                    EpProperties.doubleEp(MIN, Statistics.MIN),
-                    EpProperties.doubleEp(MAX, Statistics.MAX),
-                    EpProperties.doubleEp(SUM, Statistics.SUM),
-                    EpProperties.doubleEp(STDDEV, Statistics.STDDEV),
-                    EpProperties.doubleEp(VARIANCE, Statistics.VARIANCE),
-                    EpProperties.doubleEp(N, Statistics.N)))
+                    EpProperties.doubleEp(Labels.empty(), MIN, Statistics.MIN),
+                    EpProperties.doubleEp(Labels.empty(), MAX, Statistics.MAX),
+                    EpProperties.doubleEp(Labels.empty(), SUM, Statistics.SUM),
+                    EpProperties.doubleEp(Labels.empty(), STDDEV, Statistics.STDDEV),
+                    EpProperties.doubleEp(Labels.empty(), VARIANCE, Statistics.VARIANCE),
+                    EpProperties.doubleEp(Labels.empty(), N, Statistics.N)))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
   }
 
   @Override
-  protected FlinkSepaRuntime<StatisticsSummaryParameters> getRuntime(SepaInvocation graph) {
+  protected FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
     String listPropertyMapping = SepaUtils.getMappingPropertyName(graph, listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);

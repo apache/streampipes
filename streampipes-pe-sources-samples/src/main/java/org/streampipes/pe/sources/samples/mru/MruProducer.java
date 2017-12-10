@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 public class MruProducer implements SemanticEventProducerDeclarer{
 
 	@Override
-	public SepDescription declareModel() {
+	public DataSourceDescription declareModel() {
 		// TODO Auto-generated method stub
 		return null;
 	}

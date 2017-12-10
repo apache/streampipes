@@ -1,14 +1,14 @@
 package org.streampipes.manager.verification;
 
 import org.streampipes.commons.exceptions.SepaParseException;
-import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 
-public class SecVerifier extends ElementVerifier<SecDescription> {
+public class SecVerifier extends ElementVerifier<DataSinkDescription> {
 
 	
 	public SecVerifier(String graphData)
 			throws SepaParseException {
-		super(graphData, SecDescription.class);
+		super(graphData, DataSinkDescription.class);
 	}
 
 

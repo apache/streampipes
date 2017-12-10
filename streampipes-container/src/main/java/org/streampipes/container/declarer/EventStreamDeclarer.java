@@ -1,12 +1,12 @@
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 
 
 public interface EventStreamDeclarer {
 
-	EventStream declareModel(SepDescription sep);
+	SpDataStream declareModel(DataSourceDescription sep);
 	
 	void executeStream();
 	

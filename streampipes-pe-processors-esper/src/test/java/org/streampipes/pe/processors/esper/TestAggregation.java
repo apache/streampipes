@@ -1,29 +1,5 @@
 package org.streampipes.pe.processors.esper;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.clarkparsia.empire.SupportsRdfId.URIKey;
-
-import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.JmsTransportProtocol;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.storage.controller.StorageManager;
-
 public class TestAggregation {
 
 //	public static void main(String[] args)

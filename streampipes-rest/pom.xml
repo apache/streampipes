@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.41.1</version>
+		<version>0.41.2</version>
 	</parent>
 	<name>StreamPipes REST API</name>
 	<artifactId>streampipes-rest</artifactId>
@@ -12,10 +12,6 @@
 		<jersey.version>2.22.1</jersey.version>
 	</properties>
 	<dependencies>
-		<!--<dependency>-->
-			<!--<groupId>org.streampipes</groupId>-->
-			<!--<artifactId>streampipes-manager</artifactId>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-storage</artifactId>
@@ -38,34 +34,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.streampipes</groupId>-->
-			<!--<artifactId>streampipes-manager</artifactId>-->
-		<!--</dependency>-->
-		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-messaging-kafka</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-measurement-units</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.imgscalr</groupId>
-			<artifactId>imgscalr-lib</artifactId>
-			<version>4.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-servlet</artifactId>
 			<version>${jersey.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
@@ -99,32 +75,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.lightcouch</groupId>
-			<artifactId>lightcouch</artifactId>
-			<version>0.1.8</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>eu.proasense.internal</groupId>
-			<artifactId>thrift-messages</artifactId>
-			<version>0.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-manager</artifactId>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-jms</artifactId>
+		</dependency>
 	</dependencies>
 </project>

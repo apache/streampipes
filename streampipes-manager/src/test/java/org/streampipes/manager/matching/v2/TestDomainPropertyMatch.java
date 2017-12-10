@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.vocabulary.Geo;
+import org.streampipes.vocabulary.Geo;
 
 public class TestDomainPropertyMatch extends TestCase {
 

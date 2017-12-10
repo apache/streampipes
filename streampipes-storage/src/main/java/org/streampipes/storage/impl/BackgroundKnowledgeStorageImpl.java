@@ -1,25 +1,20 @@
 package org.streampipes.storage.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.Update;
-import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
-
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.Update;
+import org.eclipse.rdf4j.query.UpdateExecutionException;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.streampipes.model.client.ontology.Concept;
 import org.streampipes.model.client.ontology.ElementHeader;
 import org.streampipes.model.client.ontology.Instance;
@@ -41,6 +36,10 @@ import org.streampipes.storage.ontology.QueryExecutor;
 import org.streampipes.storage.ontology.RangeQueryExecutor;
 import org.streampipes.storage.sparql.QueryBuilder;
 import org.streampipes.storage.util.BackgroundKnowledgeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class BackgroundKnowledgeStorageImpl implements
 		BackgroundKnowledgeStorage {
@@ -180,11 +179,11 @@ public class BackgroundKnowledgeStorageImpl implements
 	public List<Namespace> getNamespaces() throws RepositoryException {
 		
 		List<Namespace> result = new ArrayList<>();
-		RepositoryResult<org.openrdf.model.Namespace> namespaces = repo.getConnection().getNamespaces();
+		RepositoryResult<org.eclipse.rdf4j.model.Namespace> namespaces = repo.getConnection().getNamespaces();
 		
 		while(namespaces.hasNext())
 		{
-			org.openrdf.model.Namespace ns = namespaces.next();
+			org.eclipse.rdf4j.model.Namespace ns = namespaces.next();
 			result.add(new Namespace(ns.getPrefix(), ns.getName()));
 		}
 		return result;
@@ -244,7 +243,7 @@ public class BackgroundKnowledgeStorageImpl implements
 			RepositoryConnection conn = repo.getConnection();
 			ValueFactory factory = conn.getValueFactory();
 			String elementName = resource.getElementName().replaceAll(" ", "_");
-			org.openrdf.model.Statement st;
+			org.eclipse.rdf4j.model.Statement st;
 			
 			if (resource.getInstanceOf() != null ) st = factory.createStatement(factory.createURI(resource.getNamespace() +elementName), RDF.TYPE, factory.createURI(resource.getInstanceOf()));
 			else st = factory.createStatement(factory.createURI(resource.getNamespace() +elementName), RDF.TYPE, RDFS.RESOURCE);
@@ -257,13 +256,14 @@ public class BackgroundKnowledgeStorageImpl implements
 		}
 	}
 	
-	private boolean addResource(Resource resource, org.openrdf.model.URI object)
+	private boolean addResource(Resource resource, org.eclipse.rdf4j.model.URI object)
 	{
 		try {
 			RepositoryConnection conn = repo.getConnection();
 			ValueFactory factory = conn.getValueFactory();
 			String elementName = resource.getElementName().replaceAll(" ", "_");
-			org.openrdf.model.Statement st = factory.createStatement(factory.createURI(resource.getNamespace()+elementName), RDF.TYPE, object);
+			org.eclipse.rdf4j.model.Statement st = factory.createStatement(factory.createURI(resource.getNamespace()
+							+elementName),	RDF.TYPE, object);
 			conn.add(st);
 			conn.close();
 			return true;

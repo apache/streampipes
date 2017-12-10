@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.pattern.increase;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class IncreaseParameters extends BindingParameters {
+public class IncreaseParameters extends EventProcessorBindingParams {
 
 	private Operation operation;
 	private int increase;
@@ -12,7 +12,7 @@ public class IncreaseParameters extends BindingParameters {
 	private String mapping;
 
 
-	public IncreaseParameters(SepaInvocation invocationGraph,
+	public IncreaseParameters(DataProcessorInvocation invocationGraph,
 			Operation operation, int increase, int duration,
 			String mapping) {
 		super(invocationGraph);

@@ -2,10 +2,10 @@ package org.streampipes.pe.processors.esper.topx;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class TopXParameter extends BindingParameters{
+public class TopXParameter extends EventProcessorBindingParams {
 
 	OrderDirection orderDirection;
 	String orderByPropertyName;
@@ -13,7 +13,7 @@ public class TopXParameter extends BindingParameters{
 	int limit;
 	List<String> uniqueProperties;	
 	
-	public TopXParameter(SepaInvocation graph, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit, List<String> uniqueProperties) {
+	public TopXParameter(DataProcessorInvocation graph, OrderDirection orderDirection, String orderByPropertyName, String outputPropertyName, int limit, List<String> uniqueProperties) {
 		super(graph);
 		this.orderDirection = orderDirection;
 		this.orderByPropertyName = orderByPropertyName;

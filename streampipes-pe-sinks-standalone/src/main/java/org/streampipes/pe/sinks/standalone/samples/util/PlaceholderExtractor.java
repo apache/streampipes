@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,22 @@ public class PlaceholderExtractor {
     }
 
     return content;
+  }
+
+  public static String replacePlaceholders(String content, Map<String, Object> event) {
+    List<String> placeholders = getPlaceholders(content);
+
+    for(String placeholder : placeholders) {
+      String replacedValue = getPropertyValue(event, placeholder);
+      content = content.replaceAll(placeholder, replacedValue);
+    }
+
+    return content;
+  }
+
+  private static String getPropertyValue(Map<String, Object> event, String placeholder) {
+    String key = placeholder.replaceAll("#", "");
+    return String.valueOf(event.get(key));
   }
 
   private static String getPropertyValue(JsonObject jsonObject, String placeholder) {

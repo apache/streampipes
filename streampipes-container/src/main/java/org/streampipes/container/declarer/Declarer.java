@@ -1,9 +1,9 @@
 package org.streampipes.container.declarer;
 
 
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
-public interface Declarer<D extends NamedSEPAElement> {
+public interface Declarer<D extends NamedStreamPipesEntity> {
 
 	D declareModel();
 

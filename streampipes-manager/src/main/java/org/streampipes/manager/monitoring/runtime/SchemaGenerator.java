@@ -1,9 +1,9 @@
 package org.streampipes.manager.monitoring.runtime;
 
 import org.streampipes.manager.monitoring.job.MonitoringUtils;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 public class SchemaGenerator {
 

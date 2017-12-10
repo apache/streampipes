@@ -1,15 +1,16 @@
 package org.streampipes.pe.mixed.flink.samples.statistics.window;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.pe.mixed.flink.samples.count.aggregate.CountAggregateConstants;
 import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Statistics;
+import org.streampipes.vocabulary.Statistics;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -25,46 +26,46 @@ import java.util.concurrent.TimeUnit;
  * Created by riemer on 20.04.2017.
  */
 public class StatisticsSummaryControllerWindow extends
-        AbstractFlinkAgentDeclarer<StatisticsSummaryParametersWindow> {
+        FlinkDataProcessorDeclarer<StatisticsSummaryParametersWindow> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
   private static final String PARTITION_BY = "partition-by";
   private static final String TIMESTAMP_MAPPING = "timestamp-mapping";
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("statistics-summary-window", "Sliding Descriptive " +
                     "Statistics",
             "Calculate" +
                     " simple descriptive summary statistics based on a configurable time window")
             .iconUrl(FlinkConfig.getIconUrl("statistics-icon"))
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.timestampReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.timestampReq(),
                     TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),
                     PARTITION_BY, "Group by", "Partition the stream by a given id")
             .requiredIntegerParameter(CountAggregateConstants.TIME_WINDOW, "Time Window Size", "Size of the time window")
             .requiredSingleValueSelection(CountAggregateConstants.SCALE, "Time Window Scale", "",
                     Options.from("Hours", "Minutes", "Seconds"))
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp("id", "http://schema.org/id"),
-                    EpProperties.doubleEp(StatisticsSummaryController.MEAN, Statistics.MEAN),
-                    EpProperties.doubleEp(StatisticsSummaryController.MIN, Statistics.MIN),
-                    EpProperties.doubleEp(StatisticsSummaryController.MAX, Statistics.MAX),
-                    EpProperties.doubleEp(StatisticsSummaryController.SUM, Statistics.SUM),
-                    EpProperties.doubleEp(StatisticsSummaryController.STDDEV, Statistics.STDDEV),
-                    EpProperties.doubleEp(StatisticsSummaryController.VARIANCE, Statistics.VARIANCE),
-                    EpProperties.doubleEp(StatisticsSummaryController.N, Statistics.N)))
+                    EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MEAN, Statistics.MEAN),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MIN, Statistics.MIN),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MAX, Statistics.MAX),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.SUM, Statistics.SUM),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.STDDEV, Statistics.STDDEV),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.VARIANCE, Statistics.VARIANCE),
+                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.N, Statistics.N)))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
   }
 
   @Override
-  protected FlinkSepaRuntime<StatisticsSummaryParametersWindow> getRuntime(SepaInvocation sepa) {
+  protected FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);

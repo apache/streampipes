@@ -1,10 +1,10 @@
 package org.streampipes.container.declarer;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.Response;
 
-public interface InvocableDeclarer<D extends NamedSEPAElement, I extends InvocableSEPAElement> extends Declarer<D> {
+public interface InvocableDeclarer<D extends NamedStreamPipesEntity, I extends InvocableStreamPipesEntity> extends Declarer<D> {
 
     Response invokeRuntime(I invocationGraph);
 

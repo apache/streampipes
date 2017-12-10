@@ -1,21 +1,22 @@
 package org.streampipes.wrapper.esper.writer;
 
 import com.espertech.esper.client.EventBean;
+import org.streampipes.wrapper.routing.SpOutputCollector;
 
-import org.streampipes.wrapper.OutputCollector;
+import java.util.Map;
 
 public class SEPAWriter implements Writer {
 
-	private OutputCollector collector;
+	private SpOutputCollector collector;
 	
-	public SEPAWriter(OutputCollector collector) {
+	public SEPAWriter(SpOutputCollector collector) {
 		this.collector = collector;
 	}
 	
 	@Override
 	public void onEvent(EventBean bean) {
 		//System.out.println(new Gson().toJson(bean.getUnderlying()));
-		collector.send(bean.getUnderlying());
+		collector.onEvent((Map<String, Object>) bean.getUnderlying());
 	}
 
 }

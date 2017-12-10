@@ -1,22 +1,21 @@
 package org.streampipes.manager.setup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfig;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.manager.RemoteRepositoryManager;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
-import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
-import org.openrdf.sail.memory.config.MemoryStoreConfig;
-
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfig;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
+import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
+import org.eclipse.rdf4j.sail.config.SailImplConfig;
+import org.eclipse.rdf4j.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
+import org.eclipse.rdf4j.sail.memory.config.MemoryStoreConfig;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.controller.StorageManager;
 import org.streampipes.storage.util.SesameConfig;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SesameDbInstallationStep implements InstallationStep {
 
@@ -39,7 +38,7 @@ public class SesameDbInstallationStep implements InstallationStep {
 			{
 				msgs.add(Notifications.success("Retrieving Sesame databases..."));
 				RepositoryConfig config = new RepositoryConfig(sesameDbName, "StreamPipes DB");
-				SailImplConfig backendConfig = new MemoryStoreConfig(true);
+				SailImplConfig backendConfig = new MemoryStoreConfig(true, 10000);
 				backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);
 				config.setRepositoryImplConfig(new SailRepositoryConfig(backendConfig));
 				manager.addRepositoryConfig(config);

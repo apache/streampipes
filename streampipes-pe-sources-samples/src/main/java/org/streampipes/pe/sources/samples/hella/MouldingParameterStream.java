@@ -7,14 +7,14 @@ import java.util.List;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.adapter.CsvPublisher;
 import org.streampipes.pe.sources.samples.adapter.CsvReadingTask;
 import org.streampipes.pe.sources.samples.adapter.FolderReadingTask;
@@ -31,9 +31,9 @@ public class MouldingParameterStream extends AbstractHellaStream {
 
 	
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		
-		EventStream stream = prepareStream(HellaVariables.IMM.topic());
+		SpDataStream stream = prepareStream(HellaVariables.IMM.topic());
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
@@ -61,7 +61,8 @@ public class MouldingParameterStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.IMM.topic());
+		EventProducer publisher = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.IMM
+            .topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

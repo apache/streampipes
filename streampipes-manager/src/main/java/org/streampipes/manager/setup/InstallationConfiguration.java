@@ -32,7 +32,7 @@ public class InstallationConfiguration {
 		   CouchDbConfig.INSTANCE.setHost(s.getCouchDbHost());
 	   }
 	   if (!"".equals(s.getSesameHost())) {
-		   SesameConfig.INSTANCE.setUri("http://" + s.getSesameHost() + ":8030/openrdf-sesame");
+		   SesameConfig.INSTANCE.setUri("http://" + s.getSesameHost() + ":8030/rdf4j-server");
 	   }
 	   if (!"".equals(s.getKafkaHost())) {
 		   BackendConfig.INSTANCE.setKafkaHost(s.getKafkaHost());

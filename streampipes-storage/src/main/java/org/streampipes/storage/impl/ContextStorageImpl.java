@@ -1,25 +1,24 @@
 package org.streampipes.storage.impl;
 
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.StatementCollector;
+import org.streampipes.model.client.ontology.Context;
+import org.streampipes.model.client.ontology.RdfFormat;
+import org.streampipes.storage.api.ContextStorage;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.StatementCollector;
-
-import org.streampipes.model.client.ontology.Context;
-import org.streampipes.model.client.ontology.RdfFormat;
-import org.streampipes.storage.api.ContextStorage;
 
 public class ContextStorageImpl implements ContextStorage {
 
@@ -45,7 +44,7 @@ public class ContextStorageImpl implements ContextStorage {
 				Iterator<Statement> it = col.iterator();
 
 				while(it.hasNext()) {
-					org.openrdf.model.Statement statement = it.next();
+					org.eclipse.rdf4j.model.Statement statement = it.next();
 					conn.add(statement, vf.createURI(context.getContextId()));
 				}
 			}

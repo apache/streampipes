@@ -22,6 +22,8 @@ public class SourcesMhwirthInit extends ContainerModelSubmitter {
             .add(new DrillBitProducer())
             .add(new EnrichedEventProducer())
             .add(new RamProducer());
+
+        new SourcesMhwirthInit().init(SourcesConfig.INSTANCE);
     }
 
 }

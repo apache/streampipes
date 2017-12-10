@@ -2,8 +2,8 @@ package org.streampipes.container.declarer;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
-public interface SemanticEventProducerDeclarer extends Declarer<SepDescription> {
+public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
 	List<EventStreamDeclarer> getEventStreams();
 }

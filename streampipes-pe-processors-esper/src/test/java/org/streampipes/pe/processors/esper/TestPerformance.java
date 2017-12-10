@@ -6,20 +6,20 @@ import com.google.common.io.Resources;
 
 import org.streampipes.commons.exceptions.SepaParseException;
 import org.streampipes.pe.processors.esper.extract.ProjectController;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.container.util.DeclarerUtils;
 
 public class TestPerformance {
 
 	public static void main(String[] args) throws InterruptedException
 	{
-		SepaInvocation invocation;
+		DataProcessorInvocation invocation;
 		try {
 			ProjectController controller = new ProjectController();
-			invocation = DeclarerUtils.descriptionFromResources(Resources.getResource("test-invocation.jsonLd"), SepaInvocation.class);
+			invocation = DeclarerUtils.descriptionFromResources(Resources.getResource("test-invocation.jsonLd"), DataProcessorInvocation.class);
 			controller.invokeRuntime(invocation);
 			
-			SepaInvocation invocation2 = new SepaInvocation(invocation);
+			DataProcessorInvocation invocation2 = new DataProcessorInvocation(invocation);
 			invocation2.getOutputStream().getEventGrounding().getTransportProtocol().setTopicName(RandomStringUtils.randomAlphabetic(8));
 			
 			controller.invokeRuntime(invocation2);

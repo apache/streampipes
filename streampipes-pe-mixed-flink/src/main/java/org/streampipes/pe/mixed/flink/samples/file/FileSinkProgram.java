@@ -1,8 +1,8 @@
 package org.streampipes.pe.mixed.flink.samples.file;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.fs.DateTimeBucketer;
 import org.apache.flink.streaming.connectors.fs.RollingSink;
@@ -13,13 +13,13 @@ import java.util.Map;
 /**
  * Created by riemer on 13.11.2016.
  */
-public class FileSinkProgram extends FlinkSecRuntime implements Serializable {
+public class FileSinkProgram extends FlinkDataSinkRuntime implements Serializable {
 
-    public FileSinkProgram(SecInvocation graph, FlinkDeploymentConfig config) {
+    public FileSinkProgram(DataSinkInvocation graph, FlinkDeploymentConfig config) {
         super(graph, config);
     }
 
-    public FileSinkProgram(SecInvocation graph) {
+    public FileSinkProgram(DataSinkInvocation graph) {
         super(graph);
     }
 

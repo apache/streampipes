@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.numerical.window;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class ObserveNumericalWindowParameters extends BindingParameters {
+public class ObserveNumericalWindowParameters extends EventProcessorBindingParams {
 
 	private String valueLimit;
 	private double threshold;
@@ -14,8 +14,8 @@ public class ObserveNumericalWindowParameters extends BindingParameters {
 	private String averageName;
 	private String messageName;
 
-	public ObserveNumericalWindowParameters(SepaInvocation graph, String valueLimit, double threshold, String toObserve,
-			String windowType, int windowTime, String groupBy, String messageName, String averageName) {
+	public ObserveNumericalWindowParameters(DataProcessorInvocation graph, String valueLimit, double threshold, String toObserve,
+                                          String windowType, int windowTime, String groupBy, String messageName, String averageName) {
 		super(graph);
 		this.valueLimit = valueLimit;
 		this.threshold = threshold;

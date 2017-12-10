@@ -1,12 +1,12 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.configurabletimestamp;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-public class ConfigurableTimestampProgram extends FlinkSepaRuntime<ConfigurableTimestampParameters> {
+public class ConfigurableTimestampProgram extends FlinkDataProcessorRuntime<ConfigurableTimestampParameters> {
 
 	public ConfigurableTimestampProgram(ConfigurableTimestampParameters params) {
 		super(params);

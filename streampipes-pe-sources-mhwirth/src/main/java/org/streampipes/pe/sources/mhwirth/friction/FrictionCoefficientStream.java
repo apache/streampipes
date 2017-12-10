@@ -1,15 +1,16 @@
 package org.streampipes.pe.sources.mhwirth.friction;
 
 import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.MhWirth;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.MhWirth;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.mhwirth.config.AkerVariables;
 import org.streampipes.pe.sources.mhwirth.config.ProaSenseSettings;
@@ -23,16 +24,16 @@ import java.util.List;
  */
 public abstract class FrictionCoefficientStream extends AbstractAlreadyExistingStream {
 
-    protected EventStream getPreparedEventStream(SepDescription sep, AkerVariables variable, String pathName, String topic) {
-        EventStream stream = new EventStream();
+    protected SpDataStream getPreparedEventStream(DataSourceDescription sep, AkerVariables variable, String pathName, String topic) {
+        SpDataStream stream = new SpDataStream();
 
         EventSchema schema = new EventSchema();
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-        eventProperties.add(EpProperties.stringEp("timestamp", "http://schema.org/DateTime"));
-        eventProperties.add(EpProperties.stringEp("eventId", SO.Text));
-        eventProperties.add(EpProperties.doubleEp("zScore", MhWirth.zScore));
-        eventProperties.add(EpProperties.doubleEp("value", MhWirth.FrictionValue));
-        eventProperties.add(EpProperties.doubleEp("std", MhWirth.Stddev));
+        eventProperties.add(EpProperties.stringEp(Labels.empty(), "timestamp", "http://schema.org/DateTime"));
+        eventProperties.add(EpProperties.stringEp(Labels.empty(), "eventId", SO.Text));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "zScore", MhWirth.zScore));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "value", MhWirth.FrictionValue));
+        eventProperties.add(EpProperties.doubleEp(Labels.empty(), "std", MhWirth.Stddev));
 
         EventGrounding grounding = new EventGrounding();
         grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(topic));

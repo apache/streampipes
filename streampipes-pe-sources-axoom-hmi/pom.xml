@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.41.1</version>
+        <version>0.41.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -93,5 +93,6 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>streampipes-pe-sources-axoom-hmi</finalName>
     </build>
 </project>

@@ -1,25 +1,26 @@
 package org.streampipes.pe.mixed.flink.samples.healthindex;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.FixedOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.FixedOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.MhWirth;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.vocabulary.MhWirth;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Created by riemer on 17.10.2016.
  */
-public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthIndexParameters> {
+public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthIndexParameters> {
 
     private final String frictionCoefficientNominal = "frictionCoefficientNominal";
     private final String frictionCoefficientStdDev = "frictionCoefficientStdDev";
@@ -49,7 +50,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
 
 
     @Override
-    public SepaDescription declareModel() {
+    public DataProcessorDescription declareModel() {
         List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 
         EventProperty frictionPropertyRequirement = EpRequirements.domainPropertyReq(MhWirth.FrictionValue);
@@ -64,10 +65,10 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
         EventSchema schema1 = new EventSchema();
         schema1.setEventProperties(eventProperties);
 
-        EventStream stream1 = new EventStream();
+        SpDataStream stream1 = new SpDataStream();
         stream1.setEventSchema(schema1);
 
-        SepaDescription desc = new SepaDescription("health_index", "Health Index", "Calculates the health index based on swivel or gearbox friction coefficients.");
+        DataProcessorDescription desc = new DataProcessorDescription("health_index", "Health Index", "Calculates the health index based on swivel or gearbox friction coefficients.");
 
         desc.addEventStream(stream1);
 
@@ -112,9 +113,9 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
         FixedOutputStrategy outputStrategy = new FixedOutputStrategy();
 
         List<EventProperty> outputProperties = new ArrayList<EventProperty>();
-        outputProperties.add(EpProperties.doubleEp("healthIndex", MhWirth.HealthIndex));
-        outputProperties.add(EpProperties.longEp("timestamp", "http://schema.org/DateTime"));
-        outputProperties.add(EpProperties.stringEp("machineId", MhWirth.MachineId));
+        outputProperties.add(EpProperties.doubleEp(Labels.empty(), "healthIndex", MhWirth.HealthIndex));
+        outputProperties.add(EpProperties.longEp(Labels.empty(), "timestamp", "http://schema.org/DateTime"));
+        outputProperties.add(EpProperties.stringEp(Labels.empty(), "machineId", MhWirth.MachineId));
 
         outputStrategy.setEventProperties(outputProperties);
         strategies.add(outputStrategy);
@@ -125,7 +126,7 @@ public class HealthIndexController extends AbstractFlinkAgentDeclarer<HealthInde
     }
 
     @Override
-    protected FlinkSepaRuntime<HealthIndexParameters> getRuntime(SepaInvocation graph) {
+    protected FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
 
         String frictionMapping = SepaUtils.getMappingPropertyName(graph, frictionMappingName);
         String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);

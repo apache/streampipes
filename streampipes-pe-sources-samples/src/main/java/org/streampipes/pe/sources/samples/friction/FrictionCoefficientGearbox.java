@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.samples.friction;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 
 /**
@@ -14,7 +14,7 @@ public class FrictionCoefficientGearbox extends FrictionCoefficient implements E
     }
 
     @Override
-    public EventStream declareModel(SepDescription sep) {
+    public SpDataStream declareModel(DataSourceDescription sep) {
         return prepareStream(sep);
     }
 

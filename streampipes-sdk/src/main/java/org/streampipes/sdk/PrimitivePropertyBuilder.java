@@ -1,10 +1,11 @@
 package org.streampipes.sdk;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventPropertyPrimitive;
 
 import java.net.URI;
 
+@Deprecated
 public class PrimitivePropertyBuilder {
 
 	EventPropertyPrimitive primitive;

@@ -1,10 +1,10 @@
 package org.streampipes.sdk.helpers;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.utils.Datatypes;
 
 public class EpRequirements {
@@ -51,7 +51,6 @@ public class EpRequirements {
 	public static EventPropertyPrimitive anyProperty() {
 	    return new EventPropertyPrimitive();
     }
-
 
 	public static EventPropertyPrimitive booleanReq(String domainProperty)
 	{

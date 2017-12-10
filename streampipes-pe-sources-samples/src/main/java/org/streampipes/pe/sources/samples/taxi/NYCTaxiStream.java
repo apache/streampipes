@@ -1,11 +1,11 @@
 package org.streampipes.pe.sources.samples.taxi;
 
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.slf4j.Logger;
@@ -23,9 +23,9 @@ public class NYCTaxiStream extends AbstractNycStream {
 	}
 	
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 			
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		stream.setIconUrl(SourcesConfig.iconBaseUrl + "/Taxi_Icon_2" +"_HQ.png");
 		EventSchema schema = NycTaxiUtils.getEventSchema();
 

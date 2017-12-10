@@ -6,15 +6,15 @@ import java.util.List;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.quality.MeasurementCapability;
-import org.streampipes.model.impl.quality.MeasurementObject;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.quality.MeasurementCapability;
+import org.streampipes.model.quality.MeasurementObject;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 
 public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
@@ -27,9 +27,9 @@ public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
 		this.variable = variable;
 	}
 	
-	public EventStream prepareStream(SepDescription sep) {
+	public SpDataStream prepareStream(DataSourceDescription sep) {
 		
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 		stream.setName(variable.eventName());
 		stream.setDescription(variable.description());
 		stream.setUri(sep.getUri() + variable.path());

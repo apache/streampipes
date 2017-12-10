@@ -3,20 +3,20 @@ package org.streampipes.pe.sources.samples.drillbit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.XSD;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.util.Utils;
@@ -28,9 +28,9 @@ public class WeightOnBit implements EventStreamDeclarer {
 	private static final Logger logger = LoggerFactory.getLogger("DrillBit");
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();

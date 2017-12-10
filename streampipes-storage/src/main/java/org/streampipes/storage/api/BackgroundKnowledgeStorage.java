@@ -1,18 +1,17 @@
 package org.streampipes.storage.api;
 
-import java.util.List;
-
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.repository.RepositoryException;
-
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.streampipes.model.client.ontology.Concept;
 import org.streampipes.model.client.ontology.Instance;
 import org.streampipes.model.client.ontology.Namespace;
-import org.streampipes.model.client.ontology.OntologyQuery;
-import org.streampipes.model.client.ontology.Resource;
 import org.streampipes.model.client.ontology.OntologyNode;
+import org.streampipes.model.client.ontology.OntologyQuery;
 import org.streampipes.model.client.ontology.Property;
+import org.streampipes.model.client.ontology.Resource;
+
+import java.util.List;
 
 
 public interface BackgroundKnowledgeStorage {

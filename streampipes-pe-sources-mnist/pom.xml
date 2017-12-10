@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.41.1</version>
+        <version>0.41.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>streampipes-pe-sources-mnist</artifactId>
@@ -85,11 +85,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <!--  <configuration>
-                      <archive>
-                          <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                      </archive>
-                  </configuration>-->
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -106,6 +101,7 @@
             </plugin>
         </plugins>
 
+        <finalName>streampipes-pe-sources-mnist</finalName>
 
     </build>
 </project>

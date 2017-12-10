@@ -2,10 +2,10 @@ package org.streampipes.pe.processors.esper.enrich.math;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class MathParameter extends BindingParameters {
+public class MathParameter extends EventProcessorBindingParams {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class MathParameter extends BindingParameters {
 	private String rightOperand; 
 	private String appendPropertyName;
 	
-	public MathParameter(SepaInvocation graph, List<String> selectProperties, Operation operation, String leftOperand, String rightOperand, String appendPropertyName) {
+	public MathParameter(DataProcessorInvocation graph, List<String> selectProperties, Operation operation, String leftOperand, String rightOperand, String appendPropertyName) {
 		super(graph);
 		this.selectProperties = selectProperties;
 		this.operation = operation;

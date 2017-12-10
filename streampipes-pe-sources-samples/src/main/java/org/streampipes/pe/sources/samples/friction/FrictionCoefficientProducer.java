@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.friction;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class FrictionCoefficientProducer implements SemanticEventProducerDeclarer {
     @Override
-    public SepDescription declareModel() {
-        SepDescription sep = new SepDescription("source_friction", "Friction Coefficient Replay", "");
+    public DataSourceDescription declareModel() {
+        DataSourceDescription sep = new DataSourceDescription("source_friction", "Friction Coefficient Replay", "");
         return sep;
     }
 

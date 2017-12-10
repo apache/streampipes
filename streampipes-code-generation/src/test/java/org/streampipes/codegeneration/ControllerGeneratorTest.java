@@ -2,27 +2,6 @@ package org.streampipes.codegeneration;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.MethodSpec.Builder;
-
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.vocabulary.XSD;
-import org.streampipes.codegeneration.flink.sepa.FlinkSepaControllerGenerator;
-import org.streampipes.codegeneration.utils.TV;
-import org.streampipes.commons.Utils;
-
 public class ControllerGeneratorTest {
 
 //	@Test

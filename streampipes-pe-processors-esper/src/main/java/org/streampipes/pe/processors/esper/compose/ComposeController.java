@@ -1,35 +1,30 @@
 package org.streampipes.pe.processors.esper.compose;
 
-import java.lang.reflect.InvocationTargetException;
+import org.streampipes.commons.Utils;
+import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openrdf.rio.RDFHandlerException;
-
-import com.clarkparsia.empire.annotation.InvalidRdfException;
-
-import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.output.RenameOutputStrategy;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.transform.JsonLdTransformer;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
-
-public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
+public class ComposeController extends StandaloneEventProcessorDeclarerSingleton<ComposeParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		
-		EventStream stream1 = new EventStream();
-		EventStream stream2 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
+		SpDataStream stream2 = new SpDataStream();
 		
-		SepaDescription desc = new SepaDescription("compose", "Compose EPA", "");
+		DataProcessorDescription desc = new DataProcessorDescription("compose", "Compose EPA", "");
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream2.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
@@ -37,7 +32,7 @@ public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 		desc.addEventStream(stream2);
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
-		strategies.add(new RenameOutputStrategy());
+		strategies.add(new KeepOutputStrategy());
 		desc.setOutputStrategies(strategies);
 		
 		List<StaticProperty> staticProperties = new ArrayList<StaticProperty>();
@@ -49,22 +44,12 @@ public class ComposeController extends FlatEpDeclarer<ComposeParameters>{
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation sepa) {
-	
-		try {
-			System.out.println(Utils.asString(new JsonLdTransformer().toJsonLd(sepa)));
-		} catch (RDFHandlerException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException
-				| SecurityException | ClassNotFoundException
-				| InvalidRdfException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+	public ConfiguredEventProcessor<ComposeParameters, EventProcessor<ComposeParameters>> onInvocation(DataProcessorInvocation
+																																																							 sepa) {
+
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 
-		return submit(staticParam, Compose::new, sepa);
-
+		return new ConfiguredEventProcessor<>(staticParam, Compose::new);
 	}
 
 }

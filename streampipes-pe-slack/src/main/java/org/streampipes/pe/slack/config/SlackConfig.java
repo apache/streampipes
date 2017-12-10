@@ -2,8 +2,9 @@ package org.streampipes.pe.slack.config;
 
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum SlackConfig {
+public enum SlackConfig implements PeConfig {
     INSTANCE;
 
     public static final String SLACK_NOT_INITIALIZED = "slack_token_not_initialized";
@@ -21,8 +22,11 @@ public enum SlackConfig {
     public final static String serverUrl;
     public final static String iconBaseUrl;
 
+    private final static String SERVICE_ID = "pe/org.streampipes.pe.slack";
+    private final static String SERVICE_NAME = "service_name";
+
     SlackConfig() {
-        config = SpConfig.getSpConfig("pe/org.streampipes.pe.slack");
+        config = SpConfig.getSpConfig(SERVICE_ID);
        	config.register(HOST, "slack", "Hostname for the pe slack integration");
         config.register(PORT, 8090, "Port for the pe slack integration");
        	config.register(KAFKA_HOST, "kafka", "Host for kafka of the pe sinks project");
@@ -31,17 +35,21 @@ public enum SlackConfig {
         config.register(ZOOKEEPER_PORT, 2181, "Port for zookeeper of the pe sinks project");
         config.register(SLACK_TOKEN, SLACK_NOT_INITIALIZED, "Token for the slack bot. Must be generated in slack");
 
+        config.register(SERVICE_NAME, "Slack", "The name of the service");
+
     }
 
     static {
 		serverUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort();
-		iconBaseUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort() +"/img";
+		iconBaseUrl = SlackConfig.INSTANCE.getHost() + ":" + SlackConfig.INSTANCE.getPort() +"/img/pe_icons";
 	}
 
+	@Override
     public String getHost() {
         return config.getString(HOST);
     }
 
+    @Override
     public int getPort() {
         return config.getInteger(PORT);
     }
@@ -68,6 +76,16 @@ public enum SlackConfig {
 
     public String getSlackToken() {
         return config.getString(SLACK_TOKEN);
+    }
+
+    @Override
+    public String getId() {
+        return SERVICE_ID;
+    }
+
+    @Override
+    public String getName() {
+        return config.getString(SERVICE_NAME);
     }
 
 }

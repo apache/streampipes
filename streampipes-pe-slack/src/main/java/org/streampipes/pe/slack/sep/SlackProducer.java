@@ -2,7 +2,7 @@ package org.streampipes.pe.slack.sep;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +15,8 @@ public class SlackProducer implements SemanticEventProducerDeclarer {
     }
 
     @Override
-    public SepDescription declareModel() {
-        SepDescription sep = new SepDescription("slack", "Slack Source", "Consumes data from slack");
+    public DataSourceDescription declareModel() {
+        DataSourceDescription sep = new DataSourceDescription("slack", "Slack Source", "Consumes data from slack");
         return sep;
     }
 }

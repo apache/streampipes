@@ -1,6 +1,6 @@
 package org.streampipes.storage.util;
 
-import org.streampipes.model.util.GsonSerializer;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
@@ -30,6 +30,7 @@ public class Utils {
 		return dbClient;
 	}
 
+	//TODO: Remove??
 	public static CouchDbClient getCouchDbRdfEndpointClient() {
 		CouchDbClient dbClient = new CouchDbClient(props("rdfendpoint"));
 		return dbClient;
@@ -62,6 +63,10 @@ public class Utils {
 	
 	public static CouchDbClient getCouchDbPipelineCategoriesClient() {
 		return new CouchDbClient(props("pipelinecategories"));
+	}
+
+	public static CouchDbClient getCouchDbElasticsearchFilesEndppointClient() {
+		return new CouchDbClient(props("file-export-endpoints-elasticsearch"));
 	}
 	
 	private static CouchDbProperties props(String dbname)

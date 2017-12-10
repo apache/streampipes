@@ -19,6 +19,6 @@ public class AxoomHmiInit extends StandaloneModelSubmitter {
     DeclarersSingleton.getInstance().setPort(SourceConfig.INSTANCE.getPort());
     DeclarersSingleton.getInstance().setHostName(SourceConfig.INSTANCE.getHost());
 
-    new AxoomHmiInit().init();
+    new AxoomHmiInit().init(SourceConfig.INSTANCE);
   }
 }

@@ -8,8 +8,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeSpec;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.codegeneration.ControllerGenerator;
 import org.streampipes.codegeneration.utils.JFC;
 
@@ -17,7 +17,7 @@ public class FlinkSecControllerGenerator extends ControllerGenerator {
 	private ClassName program;
 	private ClassName config;
 
-	public FlinkSecControllerGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public FlinkSecControllerGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 		program = ClassName.get(packageName, name + "Program");
 		config = ClassName.get(packageName, "Config");
@@ -39,7 +39,7 @@ public class FlinkSecControllerGenerator extends ControllerGenerator {
 
 	public Builder getRuntime() {
 		Builder b = MethodSpec.methodBuilder("getRuntime").addAnnotation(Override.class)
-				.addModifiers(Modifier.PROTECTED).addParameter(SecInvocation.class, "graph")
+				.addModifiers(Modifier.PROTECTED).addParameter(DataSinkInvocation.class, "graph")
 				.addStatement("return new $T(graph, new $T($T.JAR_FILE, $T.FLINK_HOST, $T.FLINK_PORT))", program,
 						JFC.FLINK_DEPLOYMENT_CONFIG, config, config, config)
 				.returns(JFC.FLINK_SEC_RUNTIME);

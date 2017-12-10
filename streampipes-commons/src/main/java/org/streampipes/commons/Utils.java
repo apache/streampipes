@@ -1,19 +1,18 @@
 package org.streampipes.commons;
 
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.helpers.JSONLDMode;
-import org.openrdf.rio.helpers.JSONLDSettings;
 import org.apache.commons.lang.RandomStringUtils;
-import org.openrdf.model.Graph;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+import org.eclipse.rdf4j.rio.helpers.JSONLDMode;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,14 +68,15 @@ public class Utils {
 	{
 		RDFWriter writer = Rio.createWriter(RDFFormat.JSONLD, stream);
 
-		writer.handleNamespace("sepa", "http://sepa.event-processing.org/sepa#");
+		writer.handleNamespace("sp", "https://streampipes.org/vocabulary/v1/");
 		writer.handleNamespace("ssn", "http://purl.oclc.org/NET/ssnx/ssn#");
 		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
 		writer.handleNamespace("empire", "urn:clarkparsia.com:empire:");
-		writer.handleNamespace("fzi", "urn:fzi.de:sepa:");
+		writer.handleNamespace("spi", "urn:streampipes.org:spi:");
 
 		writer.getWriterConfig().set(JSONLDSettings.JSONLD_MODE, JSONLDMode.COMPACT);
 		writer.getWriterConfig().set(JSONLDSettings.OPTIMIZE, true);
+		writer.getWriterConfig().set(BasicWriterSettings.PRETTY_PRINT, true);
 
 		return writer;
 	}

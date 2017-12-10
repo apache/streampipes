@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.streampipes.container.declarer.Declarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.Response;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 
 public class DeclarersSingletonTest {
     @Test
@@ -36,7 +36,7 @@ public class DeclarersSingletonTest {
     private SemanticEventProcessingAgentDeclarer getSepaDeclarer() {
        return new SemanticEventProcessingAgentDeclarer() {
             @Override
-            public Response invokeRuntime(SepaInvocation invocationGraph) {
+            public Response invokeRuntime(DataProcessorInvocation invocationGraph) {
                 return null;
             }
 
@@ -46,7 +46,7 @@ public class DeclarersSingletonTest {
             }
 
             @Override
-            public SepaDescription declareModel() {
+            public DataProcessorDescription declareModel() {
                 return null;
             }
         };

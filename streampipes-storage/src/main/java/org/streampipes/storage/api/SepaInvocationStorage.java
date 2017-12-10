@@ -1,13 +1,13 @@
 package org.streampipes.storage.api;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.lightcouch.Response;
 
 public interface SepaInvocationStorage {
 	
-	Response storeSepaInvocation(SepaInvocation sepaInvocation);
+	Response storeSepaInvocation(DataProcessorInvocation dataProcessorInvocation);
 	
-	SepaInvocation getSepaInvovation(String sepaInvocationId);
+	DataProcessorInvocation getSepaInvovation(String sepaInvocationId);
 
 	boolean removeSepaInvovation(String sepaInvocationId, String sepaInvocationRev);
 	

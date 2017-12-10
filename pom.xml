@@ -5,94 +5,184 @@
     <!-- The Basics -->
     <groupId>org.streampipes</groupId>
     <artifactId>streampipes-parent</artifactId>
-    <version>0.41.1</version>
+    <version>0.41.2</version>
     <packaging>pom</packaging>
     <properties>
-        <sesame.version>2.7.15</sesame.version>
+        <rdf4j.version>2.2.2</rdf4j.version>
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <logback-classic.version>1.1.9</logback-classic.version>
+        <jackson.version>2.7.4</jackson.version>
+        <type-parser.version>0.6.0</type-parser.version>
+        <simple-slack-api.version>0.5.1</simple-slack-api.version>
+        <consul-client.version>0.16.4</consul-client.version>
+        <persistence-api.version>1.0.2</persistence-api.version>
+        <junit.version>4.12</junit.version>
+        <kafka.version>0.10.0.1</kafka.version>
+        <shiro.version>1.2.3</shiro.version>
+        <streampipes-empire.version>1.9.4</streampipes-empire.version>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
     </properties>
-    <name>StreamPipes Parent POM</name>
+
+    <name>StreamPipes Parent Pom</name>
+    <description>StreamPipes </description>
+    <url>https://streampipes.org</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-classic.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.7.4</version>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.drapostolos</groupId>
+                <artifactId>type-parser</artifactId>
+                <version>${type-parser.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.Ullink</groupId>
+                <artifactId>simple-slack-api</artifactId>
+                <version>${simple-slack-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.7.4</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-                <scope>test</scope>
+                <groupId>com.orbitz.consul</groupId>
+                <artifactId>consul-client</artifactId>
+                <version>${consul-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
+                <version>${persistence-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-queryresultio-api</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-queryparser-sparql</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka_2.10</artifactId>
+                <version>${kafka.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-rio-api</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-rio-datatypes</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-core</artifactId>
+                <version>${shiro.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-rio-turtle</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-web</artifactId>
+                <version>${shiro.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-rio-rdfxml</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-queryresultio-api</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-repository-http</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-queryparser-sparql</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-sail-memory</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-api</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-queryrender</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-model</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-repository-sail</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-datatypes</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-repository-manager</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-turtle</artifactId>
+                <version>${rdf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openrdf.sesame</groupId>
-                <artifactId>sesame-queryresultio-sparqljson</artifactId>
-                <version>${sesame.version}</version>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-rdfxml</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-jsonld</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-http</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-sail-memory</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-queryrender</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-sail</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-manager</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-queryresultio-sparqljson</artifactId>
+                <version>${rdf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
@@ -136,6 +226,16 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-dataformat-json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-processors-esper</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -172,6 +272,11 @@
             <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-slack</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-performance-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -245,31 +350,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka_2.10</artifactId>
-                <version>0.10.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>0.10.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.Ullink</groupId>
-                <artifactId>simple-slack-api</artifactId>
-                <version>0.5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.1.9</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.drapostolos</groupId>
-                <artifactId>type-parser</artifactId>
-                <version>0.6.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-wrapper-esper</artifactId>
                 <version>${project.version}</version>
@@ -279,8 +359,31 @@
                 <artifactId>streampipes-user-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-app-file-export</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-vocabulary</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-serializers</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes.empire</groupId>
+                <artifactId>streampipes-empire-rdf4j</artifactId>
+                <version>${streampipes-empire.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes.empire</groupId>
+                <artifactId>streampipes-empire-pinto</artifactId>
+                <version>${streampipes-empire.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -292,6 +395,8 @@
         <module>streampipes-container</module>
         <module>streampipes-container-embedded</module>
         <module>streampipes-container-standalone</module>
+        <module>streampipes-dataformat</module>
+        <module>streampipes-dataformat-json</module>
         <module>streampipes-manager</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
@@ -315,24 +420,22 @@
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
         <module>streampipes-storage</module>
+        <module>streampipes-user-management</module>
         <module>streampipes-wrapper</module>
+        <module>streampipes-wrapper-esper</module>
         <module>streampipes-wrapper-flink</module>
         <module>streampipes-wrapper-standalone</module>
-        <module>streampipes-wrapper-esper</module>
-        <module>streampipes-user-management</module>
+        <module>streampipes-performance-tests</module>
+        <module>streampipes-storage-rdf4j</module>
+        <module>streampipes-storage-couchdb</module>
+        <module>streampipes-app-file-export</module>
+        <module>streampipes-vocabulary</module>
+        <module>streampipes-serializers</module>
+        <module>archetypes/streampipes-archetype-pe-sinks-standalone</module>
     </modules>
 
     <!-- Build Settings -->
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -391,9 +494,20 @@
                 </configuration>
             </plugin>
         </plugins>
-
-
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 
     <!-- Environment Settings -->
@@ -417,11 +531,6 @@
         <repository>
             <id>apache</id>
             <url>https://repository.apache.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>archiva.public</id>
-            <name>Nissatech Public Repository</name>
-            <url>http://maven.nissatech.com/repository/public/</url>
         </repository>
     </repositories>
 

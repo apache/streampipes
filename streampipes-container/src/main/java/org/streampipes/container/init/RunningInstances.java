@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.streampipes.container.util.ElementInfo;
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
 public enum RunningInstances {
     INSTANCE;
@@ -13,7 +13,7 @@ public enum RunningInstances {
     private final Map<String, ElementInfo> runningInstances = new HashMap<>();
 
 
-    public void add(String id, NamedSEPAElement description, InvocableDeclarer invocation) {
+    public void add(String id, NamedStreamPipesEntity description, InvocableDeclarer invocation) {
         runningInstances.put(id, new ElementInfo(description, invocation));
     }
 
@@ -26,7 +26,7 @@ public enum RunningInstances {
         }
     }
 
-    public NamedSEPAElement getDescription(String id) {
+    public NamedStreamPipesEntity getDescription(String id) {
         return runningInstances.get(id).getDescription();
     }
 

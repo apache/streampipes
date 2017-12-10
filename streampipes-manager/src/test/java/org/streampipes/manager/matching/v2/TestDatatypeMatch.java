@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import org.streampipes.model.client.matching.MatchingResultMessage;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
 public class TestDatatypeMatch extends TestCase {
 

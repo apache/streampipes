@@ -1,7 +1,7 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +12,17 @@ import java.util.Set;
  */
 public abstract class GroundingSelector {
 
-    protected NamedSEPAElement source;
-    protected Set<InvocableSEPAElement> targets;
+    protected NamedStreamPipesEntity source;
+    protected Set<InvocableStreamPipesEntity> targets;
 
-    public GroundingSelector(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
+    public GroundingSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         this.source = source;
         this.targets = targets;
     }
 
-    protected List<InvocableSEPAElement> buildInvocables() {
-        List<InvocableSEPAElement> elements = new ArrayList<>();
-        elements.add((InvocableSEPAElement) source);
+    protected List<InvocableStreamPipesEntity> buildInvocables() {
+        List<InvocableStreamPipesEntity> elements = new ArrayList<>();
+        elements.add((InvocableStreamPipesEntity) source);
         elements.addAll(targets);
 
         return elements;

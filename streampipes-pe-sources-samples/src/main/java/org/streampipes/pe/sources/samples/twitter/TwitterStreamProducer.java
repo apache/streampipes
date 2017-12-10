@@ -7,14 +7,14 @@ import javax.jms.JMSException;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 public class TwitterStreamProducer implements SemanticEventProducerDeclarer {
 
 	@Override
-	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source/twitter", "Twitter", "Twitter Event Producer");
+	public DataSourceDescription declareModel() {
+		DataSourceDescription sep = new DataSourceDescription("source/twitter", "Twitter", "Twitter Event Producer");
 		sep.setIconUrl(SourcesConfig.iconBaseUrl + "/Twitter_Icon" +"_HQ.png");
 		
 		return sep;

@@ -1,49 +1,51 @@
 package org.streampipes.pe.processors.esper.geo.geofencing;
 
+import org.streampipes.commons.Utils;
+import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
+import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpProperties;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.sdk.StaticProperties;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.PropertyValueSpecification;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
-import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.Geo;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
-import org.streampipes.container.util.StandardTransportFormat;
-
-public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
+public class GeofencingController extends StandaloneEventProcessorDeclarerSingleton<GeofencingParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
-		EventStream stream1 = new EventStream();
+	public DataProcessorDescription declareModel() {
+		SpDataStream stream1 = new SpDataStream();
 		EventSchema schema = new EventSchema();
 		EventProperty e1 = EpRequirements.domainPropertyReq(Geo.lat);
 		EventProperty e2 = EpRequirements.domainPropertyReq(Geo.lng);
 		EventProperty e3 = EpRequirements.stringReq();
 		schema.setEventProperties(Arrays.asList(e1, e2, e3));
 		
-		SepaDescription desc = new SepaDescription("geofencing", "Geofencing", "Detects whether a location-based stream moves inside a (circular) area around a given point described as latitude-longitude pair.");
-		desc.setCategory(Arrays.asList(EpaType.GEO.name()));
+		DataProcessorDescription desc = new DataProcessorDescription("geofencing", "Geofencing", "Detects whether a location-based stream moves inside a (circular) area around a given point described as latitude-longitude pair.");
+		desc.setCategory(Arrays.asList(DataProcessorType.GEO.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(schema);
@@ -52,8 +54,8 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 		
 		List<OutputStrategy> strategies = new ArrayList<OutputStrategy>();
 		List<EventProperty> additionalProperties = new ArrayList<>();
-		additionalProperties.add(EpProperties.longEp("geofencingTime", "http://schema.org/DateTime"));
-		additionalProperties.add(EpProperties.booleanEp("insideGeofence", "http://schema.org/Text"));
+		additionalProperties.add(EpProperties.longEp(Labels.empty(), "geofencingTime", "http://schema.org/DateTime"));
+		additionalProperties.add(EpProperties.booleanEp(Labels.empty(), "insideGeofence", "http://schema.org/Text"));
 		AppendOutputStrategy appendOutput = new AppendOutputStrategy();
 		appendOutput.setEventProperties(additionalProperties);
 		strategies.add(appendOutput);
@@ -92,24 +94,24 @@ public class GeofencingController extends FlatEpDeclarer<GeofencingParameters> {
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
+	public ConfiguredEventProcessor<GeofencingParameters, EventProcessor<GeofencingParameters>> onInvocation
+					(DataProcessorInvocation invocationGraph) {
 		String operation = SepaUtils.getOneOfProperty(invocationGraph, "operation");
-		
+
 		int radius = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "radius"));
-		
+
 		DomainStaticProperty dsp = SepaUtils.getDomainStaticPropertyBy(invocationGraph, "location");
 		double latitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(dsp, Geo.lat));
 		double longitude = Double.parseDouble(SepaUtils.getSupportedPropertyValue(dsp, Geo.lng));
-		
+
 		GeofencingData geofencingData = new GeofencingData(latitude, longitude, radius);
-		
+
 		String latitudeMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-latitude");
 		String longitudeMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-longitude");
 		String partitionMapping = SepaUtils.getMappingPropertyName(invocationGraph, "mapping-partition");
 		GeofencingParameters params = new GeofencingParameters(invocationGraph, getOperation(operation), geofencingData, latitudeMapping, longitudeMapping, partitionMapping);
 
-		return submit(params, Geofencing::new, invocationGraph);
-
+		return new ConfiguredEventProcessor<>(params, Geofencing::new);
 	}
 
 	private GeofencingOperation getOperation(String operation) {

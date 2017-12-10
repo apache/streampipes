@@ -2,7 +2,7 @@ package org.streampipes.container.util;
 
 import com.google.gson.Gson;
 import org.streampipes.container.init.DeclarersSingleton;
-import org.streampipes.model.impl.Response;
+import org.streampipes.model.Response;
 
 public class Util {
     public static String getInstanceId(String url, String type, String elemntId) {

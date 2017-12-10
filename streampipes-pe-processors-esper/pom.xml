@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.41.1</version>
+		<version>0.41.2</version>
 	</parent>
 	<repositories>
 		<repository>
@@ -33,6 +33,14 @@
 		<dependency>
 			<groupId>org.streampipes</groupId>
 			<artifactId>streampipes-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-dataformat-json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>
@@ -118,5 +126,6 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<finalName>streampipes-pe-processors-esper</finalName>
 	</build>
 </project>

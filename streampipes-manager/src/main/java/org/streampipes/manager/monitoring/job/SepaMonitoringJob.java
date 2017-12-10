@@ -1,10 +1,10 @@
 package org.streampipes.manager.monitoring.job;
 
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 
-public class SepaMonitoringJob extends MonitoringJob<SepaDescription>{
+public class SepaMonitoringJob extends MonitoringJob<DataProcessorDescription>{
 
-	public SepaMonitoringJob(SepaDescription monitoredObject) {
+	public SepaMonitoringJob(DataProcessorDescription monitoredObject) {
 		super(monitoredObject);
 		// TODO Auto-generated constructor stub
 	}

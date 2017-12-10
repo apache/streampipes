@@ -1,26 +1,26 @@
 package org.streampipes.model.util;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.staticproperty.AnyStaticProperty;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyNary;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.MatchingStaticProperty;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.RemoteOneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.staticproperty.AnyStaticProperty;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingProperty;
+import org.streampipes.model.staticproperty.MappingPropertyNary;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 public class SepaUtils {
 
+	// TODO move this to SDK (extractors)
+
 	public static String getSupportedPropertyValue(DomainStaticProperty dsp, String propertyId)
 	{
 		Optional<SupportedProperty> matchedProperty = dsp.getSupportedProperties().stream().filter(sp -> sp.getPropertyId().equals(propertyId)).findFirst();
@@ -38,19 +40,19 @@ public class SepaUtils {
 		else return "";
 	}
 	
-	public static DomainStaticProperty getDomainStaticPropertyBy(InvocableSEPAElement sepa, String internalName)
+	public static DomainStaticProperty getDomainStaticPropertyBy(InvocableStreamPipesEntity sepa, String internalName)
 	{
 		Optional<StaticProperty> matchedProperty = sepa.getStaticProperties().stream().filter(sp -> (sp instanceof DomainStaticProperty) && (sp.getInternalName().equals(internalName))).findFirst();
 		if (matchedProperty.isPresent()) return (DomainStaticProperty) matchedProperty.get();
 		else return null;
 	}
 	
-	public static StaticProperty getStaticPropertyByInternalName(ConsumableSEPAElement sepa, String internalName)
+	public static StaticProperty getStaticPropertyByInternalName(ConsumableStreamPipesEntity sepa, String internalName)
 	{
 		return getStaticPropertyByName(sepa.getStaticProperties(), internalName);
 	}
 	
-	public static String getFreeTextStaticPropertyValue(InvocableSEPAElement graph, String internalName)
+	public static String getFreeTextStaticPropertyValue(InvocableStreamPipesEntity graph, String internalName)
 	{
 		StaticProperty staticProperty = getStaticPropertyByInternalName(graph, internalName);
 		if (staticProperty instanceof FreeTextStaticProperty)
@@ -58,31 +60,31 @@ public class SepaUtils {
 		return null;
 	}
 	
-	public static StaticProperty getStaticPropertyByInternalName(InvocableSEPAElement seg, String internalName)
+	public static StaticProperty getStaticPropertyByInternalName(InvocableStreamPipesEntity seg, String internalName)
 	{
 		return getStaticPropertyByName(seg.getStaticProperties(), internalName);
 	}
 	
-	public static <T> T getStaticPropertyByInternalName(InvocableSEPAElement seg, String internalName, Class<T> clazz)
+	public static <T> T getStaticPropertyByInternalName(InvocableStreamPipesEntity seg, String internalName, Class<T> clazz)
 	{
 		return clazz.cast(getStaticPropertyByInternalName(seg, internalName));
 	}
 	
-	public static StaticProperty getStaticPropertyByInternalName(SecInvocation sec, String internalName)
+	public static StaticProperty getStaticPropertyByInternalName(DataSinkInvocation sec, String internalName)
 	{
 		return getStaticPropertyByName(sec.getStaticProperties(), internalName);
 	}
 	
 	// TODO: fetch event property from db for given static property name
-	public static String getMappingPropertyName(InvocableSEPAElement sepa, String staticPropertyName)
+	public static String getMappingPropertyName(InvocableStreamPipesEntity sepa, String staticPropertyName)
 	{
 		return getMappingPropertyName(sepa, staticPropertyName, false);
 	}
 	
-	public static String getMappingPropertyName(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
+	public static String getMappingPropertyName(InvocableStreamPipesEntity sepa, String staticPropertyName, boolean completeNames)
 	{
 		URI propertyURI = getURIFromStaticProperty(sepa, staticPropertyName);
-		for(EventStream stream : sepa.getInputStreams())
+		for(SpDataStream stream : sepa.getInputStreams())
 		{
 			List<String> matchedProperties = getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyURI, completeNames, "");
 			if (matchedProperties.size() > 0) return matchedProperties.get(0);
@@ -91,26 +93,26 @@ public class SepaUtils {
 		//TODO: exceptions
 	}
 	
-	public static List<String> getMatchingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName) {
+	public static List<String> getMatchingPropertyNames(InvocableStreamPipesEntity sepa, String staticPropertyName) {
 		
 		List<String> propertyNames = new ArrayList<>();
 		for(int i = 0; i <= 1; i++)
 		{
 			URI propertyURI = getMatchingPropertyURI(sepa, staticPropertyName, i == 0);
-			EventStream stream = sepa.getInputStreams().get(i);
+			SpDataStream stream = sepa.getInputStreams().get(i);
 			propertyNames.add(stream.getEventSchema().getEventProperties().stream().filter(p -> p.getElementId().equals(propertyURI.toString())).findFirst().get().getRuntimeName());
 		}
 		return propertyNames;
 		//TODO: exceptions
 	}
-	public static List<String> getMultipleMappingPropertyNames(InvocableSEPAElement sepa, String staticPropertyName, boolean completeNames)
+	public static List<String> getMultipleMappingPropertyNames(InvocableStreamPipesEntity sepa, String staticPropertyName, boolean completeNames)
 	{
 		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
 		
 		List<String> result = new ArrayList<String>();
 		for(URI propertyUri : propertyUris)
 		{
-			for(EventStream stream : sepa.getInputStreams())
+			for(SpDataStream stream : sepa.getInputStreams())
 			{
 				result.addAll(getMappingPropertyName(stream.getEventSchema().getEventProperties(), propertyUri, completeNames, ""));
 			}
@@ -127,7 +129,7 @@ public class SepaUtils {
 		{
 			if (p instanceof EventPropertyPrimitive || p instanceof EventPropertyList)
 			{	
-				if (p.getRdfId().toString().equals(propertyURI.toString())) 
+				if (p.getElementId().equals(propertyURI.toString()))
 					{
 						if (!completeNames) result.add(p.getRuntimeName());
 						else 
@@ -184,7 +186,7 @@ public class SepaUtils {
 		return getEventPropertyNameByPrefix(properties, namePrefix, true, "");
 	}
 	
-	private static URI getMatchingPropertyURI(InvocableSEPAElement sepa, String propertyName, boolean first) {
+	private static URI getMatchingPropertyURI(InvocableStreamPipesEntity sepa, String propertyName, boolean first) {
 		List<MatchingStaticProperty> properties = sepa
 				.getStaticProperties()
 				.stream()
@@ -200,7 +202,7 @@ public class SepaUtils {
 		}
 		return null;
 	}
-	private static URI getURIFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
+	private static URI getURIFromStaticProperty(InvocableStreamPipesEntity sepa, String staticPropertyName)
 	{
 		for(StaticProperty p : sepa.getStaticProperties())
 		{		
@@ -215,7 +217,7 @@ public class SepaUtils {
 		//TODO: exceptions
 	}
 	
-	private static List<URI> getMultipleURIsFromStaticProperty(InvocableSEPAElement sepa, String staticPropertyName)
+	private static List<URI> getMultipleURIsFromStaticProperty(InvocableStreamPipesEntity sepa, String staticPropertyName)
 	{
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
@@ -229,7 +231,7 @@ public class SepaUtils {
 		//TODO: exceptions
 	}
 	
-	public static URI getURIbyPropertyName(EventStream stream, String propertyName)
+	public static URI getURIbyPropertyName(SpDataStream stream, String propertyName)
 	{
 		for(EventProperty p : stream.getEventSchema().getEventProperties())
 		{
@@ -254,7 +256,7 @@ public class SepaUtils {
 		return null;
 	}
 
-	public static String getOneOfProperty(InvocableSEPAElement sepa,
+	public static String getOneOfProperty(InvocableStreamPipesEntity sepa,
 			String staticPropertyName) {
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
@@ -274,7 +276,7 @@ public class SepaUtils {
 		//TODO exceptions
 	}
 
-	public static String getRemoteOneOfProperty(InvocableSEPAElement sepa,
+	public static String getRemoteOneOfProperty(InvocableStreamPipesEntity sepa,
 			String staticPropertyName) {
 		for(StaticProperty p : sepa.getStaticProperties())
 		{
@@ -385,9 +387,9 @@ public class SepaUtils {
 		return null;
 	}
 
-	public static EventProperty getEventPropertyById(SepaInvocation graph,
+	public static EventProperty getEventPropertyById(DataProcessorInvocation graph,
 			URI replaceFrom) {
-		for(EventStream stream : graph.getInputStreams()) {
+		for(SpDataStream stream : graph.getInputStreams()) {
 			for(EventProperty p : stream.getEventSchema().getEventProperties()) {
 				if (p.getElementId().equals(replaceFrom.toString())) return p;
 			}

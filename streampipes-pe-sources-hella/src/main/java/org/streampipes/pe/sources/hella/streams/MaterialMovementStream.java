@@ -1,10 +1,11 @@
 package org.streampipes.pe.sources.hella.streams;
 
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.SO;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.pe.sources.hella.config.HellaVariables;
 import org.streampipes.pe.sources.hella.main.AbstractHellaStream;
@@ -17,19 +18,19 @@ import java.util.List;
 public class MaterialMovementStream extends AbstractHellaStream {
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		
-		EventStream stream = prepareStream(HellaVariables.MontracMovement.topic());
+		SpDataStream stream = prepareStream(HellaVariables.MontracMovement.topic());
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
-		eventProperties.add(EpProperties.stringEp("variable_type", SO.Text));
-		eventProperties.add(EpProperties.longEp("variable_timestamp", "http://schema.org/DateTime"));
-		eventProperties.add(EpProperties.stringEp("location", Arrays.asList(URI.create("http://hella.de/hella#montracLocationId"), URI.create(SO.Text))));
-		eventProperties.add(EpProperties.stringEp("event", Arrays.asList(URI.create("http://hella.de/hella#montracEvent"), URI.create(SO.Text))));
-		eventProperties.add(EpProperties.integerEp("shuttle", Arrays.asList(URI.create("http://hella.de/hella#shuttleId"), URI.create(SO.Number))));
-		eventProperties.add(EpProperties.booleanEp("rightPiece", "http://schema.org/Boolean"));
-		eventProperties.add(EpProperties.stringEp("leftPiece", "http://schema.org/Boolean"));
+		eventProperties.add(EpProperties.stringEp(Labels.empty(), "variable_type", SO.Text));
+		eventProperties.add(EpProperties.longEp(Labels.empty(), "variable_timestamp", "http://schema.org/DateTime"));
+		eventProperties.add(EpProperties.stringEp(Labels.empty(), "location", Arrays.asList(URI.create("http://hella.de/hella#montracLocationId"), URI.create(SO.Text))));
+		eventProperties.add(EpProperties.stringEp(Labels.empty(), "event", Arrays.asList(URI.create("http://hella.de/hella#montracEvent"), URI.create(SO.Text))));
+		eventProperties.add(EpProperties.integerEp(Labels.empty(), "shuttle", Arrays.asList(URI.create("http://hella.de/hella#shuttleId"), URI.create(SO.Number))));
+		eventProperties.add(EpProperties.booleanEp(Labels.empty(), "rightPiece", "http://schema.org/Boolean"));
+		eventProperties.add(EpProperties.stringEp(Labels.empty(), "leftPiece", "http://schema.org/Boolean"));
 			
 		schema.setEventProperties(eventProperties);
 		stream.setEventSchema(schema);

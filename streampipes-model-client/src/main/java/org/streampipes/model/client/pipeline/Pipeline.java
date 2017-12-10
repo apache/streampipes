@@ -1,7 +1,7 @@
 package org.streampipes.model.client.pipeline;
 
 import com.google.gson.annotations.SerializedName;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import java.util.List;
 public class Pipeline extends ElementComposition {
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	private List<SecInvocation> actions;
+	private List<DataSinkInvocation> actions;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	private boolean running;
@@ -34,11 +34,11 @@ public class Pipeline extends ElementComposition {
 		this.actions = new ArrayList<>();
 	}
 
-	public List<SecInvocation> getActions() {
+	public List<DataSinkInvocation> getActions() {
 		return actions;
 	}
 
-	public void setActions(List<SecInvocation> actions) {
+	public void setActions(List<DataSinkInvocation> actions) {
 		this.actions = actions;
 	}
 

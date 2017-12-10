@@ -1,9 +1,9 @@
 package org.streampipes.pe.processors.esper.geo.geofencing;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class GeofencingParameters extends BindingParameters {
+public class GeofencingParameters extends EventProcessorBindingParams {
 
 	private GeofencingOperation operation;
 	private GeofencingData geofencingData;
@@ -12,7 +12,7 @@ public class GeofencingParameters extends BindingParameters {
 	private String longitudeMapping;
 	private String partitionMapping;
 
-	public GeofencingParameters(SepaInvocation invocationGraph,
+	public GeofencingParameters(DataProcessorInvocation invocationGraph,
 			GeofencingOperation operation, GeofencingData geofencingData, String latitudeMapping, String longitudeMapping, String partitionMapping) {
 		super(invocationGraph);
 		this.operation = operation;

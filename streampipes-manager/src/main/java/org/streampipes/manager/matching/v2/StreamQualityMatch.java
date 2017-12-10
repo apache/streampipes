@@ -5,8 +5,8 @@ import java.util.List;
 import org.streampipes.manager.matching.v2.utils.MatchingUtils;
 import org.streampipes.model.client.matching.MatchingResultMessage;
 import org.streampipes.model.client.matching.MatchingResultType;
-import org.streampipes.model.impl.quality.EventStreamQualityDefinition;
-import org.streampipes.model.impl.quality.EventStreamQualityRequirement;
+import org.streampipes.model.quality.EventStreamQualityDefinition;
+import org.streampipes.model.quality.EventStreamQualityRequirement;
 
 public class StreamQualityMatch extends AbstractMatcher<EventStreamQualityDefinition, EventStreamQualityRequirement> {
 

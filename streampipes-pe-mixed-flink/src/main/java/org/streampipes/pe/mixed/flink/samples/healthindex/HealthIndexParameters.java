@@ -1,12 +1,12 @@
 package org.streampipes.pe.mixed.flink.samples.healthindex;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 /**
  * Created by riemer on 17.10.2016.
  */
-public class HealthIndexParameters extends BindingParameters {
+public class HealthIndexParameters extends EventProcessorBindingParams {
 
     private String frictionMapping;
     private String machineTypeMapping;
@@ -14,7 +14,7 @@ public class HealthIndexParameters extends BindingParameters {
 
     private HealthIndexVariables2 healthIndexVariables;
 
-    public HealthIndexParameters(SepaInvocation graph, String frictionMapping, String timestampMapping, String machineTypeMapping, HealthIndexVariables2 healthIndexVariables) {
+    public HealthIndexParameters(DataProcessorInvocation graph, String frictionMapping, String timestampMapping, String machineTypeMapping, HealthIndexVariables2 healthIndexVariables) {
         super(graph);
         this.frictionMapping = frictionMapping;
         this.healthIndexVariables = healthIndexVariables;

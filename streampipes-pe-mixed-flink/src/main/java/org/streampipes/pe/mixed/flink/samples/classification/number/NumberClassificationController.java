@@ -1,26 +1,26 @@
 package org.streampipes.pe.mixed.flink.samples.classification.number;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.AppendOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.CollectionStaticProperty;
-import org.streampipes.model.impl.staticproperty.DomainStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.model.impl.staticproperty.SupportedProperty;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.streampipes.model.staticproperty.DomainStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.commons.Utils;
 
@@ -30,20 +30,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NumberClassificationController extends AbstractFlinkAgentDeclarer<NumberClassificationParameters> {
+public class NumberClassificationController extends FlinkDataProcessorDeclarer<NumberClassificationParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
+	public DataProcessorDescription declareModel() {
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();		
 		EventProperty e1 = EpRequirements.domainPropertyReq(SO.Number);
 		eventProperties.add(e1);
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 
-		SepaDescription desc = new SepaDescription("classification_number", "Flink Number classification", "Label your data. Based on Apache Flink.");
+		DataProcessorDescription desc = new DataProcessorDescription("classification_number", "Flink Number classification", "Label your data. Based on Apache Flink.");
 		desc.setIconUrl(FlinkConfig.getIconUrl("classification-icon"));
 		desc.addEventStream(stream1);
 		
@@ -77,7 +77,7 @@ public class NumberClassificationController extends AbstractFlinkAgentDeclarer<N
 	}
 
 	@Override
-	protected FlinkSepaRuntime<NumberClassificationParameters> getRuntime(SepaInvocation graph) {
+	protected FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(graph, "classification_options",
 				CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "to_classify");

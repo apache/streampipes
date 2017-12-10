@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.storage.api.StorageRequests;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -22,7 +22,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.rest.api.IPipelineElement;
 import org.streampipes.storage.filter.Filter;
 
@@ -36,7 +36,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getAvailable(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+		List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
 				getUserService().getAvailableActionUris(username));
 		return ok(secs);
 	}
@@ -48,7 +48,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getFavorites(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+		List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
 				getUserService().getFavoriteActionUris(username));
 		return ok(secs);
 	}
@@ -60,9 +60,9 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@GsonWithIds
 	@Override
 	public Response getOwn(@PathParam("username") String username) {
-		List<SecDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
+		List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllSECs(),
 				getUserService().getOwnActionUris(username));
-		List<SecInvocation> si = secs.stream().map(s -> new SecInvocation(new SecInvocation(s))).collect(Collectors.toList());
+		List<DataSinkInvocation> si = secs.stream().map(s -> new DataSinkInvocation(new DataSinkInvocation(s))).collect(Collectors.toList());
 		return ok(si);
 	}
 
@@ -129,7 +129,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			return ok(new SecInvocation(new SecInvocation(getPipelineElementRdfStorage().getSECById(elementUri))));
+			return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getSECById(elementUri))));
 		} catch (URISyntaxException e) {
 			return statusMessage(Notifications.error(NotificationType.UNKNOWN_ERROR, e.getMessage()));
 		}

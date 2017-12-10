@@ -5,16 +5,16 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 
 import org.streampipes.manager.monitoring.job.MonitoringUtils;
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.streampipes.model.client.monitoring.TaskReport;
 
 public class GetDescriptionTask extends TaskDefinition {
 	
-	private ConsumableSEPAElement element;
+	private ConsumableStreamPipesEntity element;
 	
-	private static final String TASK_NAME = "HTTP Get Availability Test";
+	private static final String TASK_NAME = "HTTP Get Availability consul";
 	
-	public GetDescriptionTask(ConsumableSEPAElement element)
+	public GetDescriptionTask(ConsumableStreamPipesEntity element)
 	{
 		super();
 		this.element = element;

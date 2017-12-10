@@ -1,12 +1,15 @@
 package org.streampipes.storage.controller;
 
-import com.clarkparsia.empire.Empire;
-import com.clarkparsia.empire.EmpireOptions;
-import com.clarkparsia.empire.config.ConfigKeys;
-import com.clarkparsia.empire.config.EmpireConfiguration;
-import com.clarkparsia.empire.sesame.OpenRdfEmpireModule;
-import com.clarkparsia.empire.sesame.RepositoryFactoryKeys;
-import org.streampipes.model.transform.CustomAnnotationProvider;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import org.streampipes.empire.core.empire.Empire;
+import org.streampipes.empire.core.empire.EmpireOptions;
+import org.streampipes.empire.core.empire.config.ConfigKeys;
+import org.streampipes.empire.core.empire.config.EmpireConfiguration;
+import org.streampipes.empire.rdf4j.OpenRdfEmpireModule;
+import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
+import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.streampipes.storage.api.BackgroundKnowledgeStorage;
 import org.streampipes.storage.api.ConnectionStorage;
 import org.streampipes.storage.api.ContextStorage;
@@ -31,11 +34,6 @@ import org.streampipes.storage.impl.UserStorage;
 import org.streampipes.storage.impl.VisualizationStorageImpl;
 import org.streampipes.storage.service.UserService;
 import org.streampipes.storage.util.SesameConfig;
-import org.streampipes.storage.util.StorageUtils;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.http.HTTPRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +46,6 @@ public enum StorageManager {
     INSTANCE;
 
     private EntityManager storageManager;
-
-    private RepositoryConnection conn;
 
     private Repository repository;
     private Repository bkrepo;
@@ -85,7 +81,6 @@ public enum StorageManager {
         try {
             repository = new HTTPRepository(SesameConfig.INSTANCE.getUri(),
                     SesameConfig.INSTANCE.getRepositoryId());
-            conn = repository.getConnection();
 
             initEmpire();
 
@@ -124,10 +119,6 @@ public enum StorageManager {
 
     }
 
-    public RepositoryConnection getConnection() {
-        return conn;
-    }
-
     public Repository getRepository() {
         return bkrepo;
     }
@@ -153,7 +144,6 @@ public enum StorageManager {
     }
 
     public StorageRequests getSesameStorage() {
-        StorageUtils.fixEmpire();
         return new SesameStorageRequests();
     }
 

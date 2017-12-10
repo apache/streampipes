@@ -2,14 +2,14 @@ package org.streampipes.codegeneration;
 
 import com.squareup.javapoet.JavaFile;
 
-import org.streampipes.model.ConsumableSEPAElement;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
 
 public abstract class Generator {
 	protected String name;
 	protected String packageName;
-	protected ConsumableSEPAElement element;
+	protected ConsumableStreamPipesEntity element;
 	
-	public Generator(ConsumableSEPAElement element, String name, String packageName) {
+	public Generator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super();
 		this.element = element;
 		this.name = name;
@@ -18,11 +18,11 @@ public abstract class Generator {
 
 	public abstract JavaFile build();
 	
-	public ConsumableSEPAElement getElement() {
+	public ConsumableStreamPipesEntity getElement() {
 		return element;
 	}
 
-	public void setElement(ConsumableSEPAElement element) {
+	public void setElement(ConsumableStreamPipesEntity element) {
 		this.element = element;
 	}
 

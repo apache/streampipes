@@ -25,7 +25,7 @@ public class TestMeasurementUnitMatch extends TestCase {
 		assertTrue(matches);
 	}
 	
-/*	@Test
+/*	@consul
 	public void testNegativeMeasurementUnitMatch() {
 		
 		URI offered = UnitProvider.INSTANCE.getAvailableUnits().get(0).getResource();

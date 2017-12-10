@@ -2,9 +2,9 @@ package org.streampipes.pe.mixed.flink.samples.elasticsearch;
 
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.pe.mixed.flink.samples.elasticsearch.elastic5.Elasticsearch5Sink;
-import org.streampipes.model.impl.graph.SecInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.util.SepaUtils;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ElasticSearchProgram extends FlinkSecRuntime implements Serializable {
+public class ElasticSearchProgram extends FlinkDataSinkRuntime implements Serializable {
 
 
     /**
@@ -28,11 +28,11 @@ public class ElasticSearchProgram extends FlinkSecRuntime implements Serializabl
      */
     private static final long serialVersionUID = 1L;
 
-    public ElasticSearchProgram(SecInvocation graph) {
+    public ElasticSearchProgram(DataSinkInvocation graph) {
         super(graph);
     }
 
-    public ElasticSearchProgram(SecInvocation graph, FlinkDeploymentConfig config) {
+    public ElasticSearchProgram(DataSinkInvocation graph, FlinkDeploymentConfig config) {
         super(graph, config);
     }
 

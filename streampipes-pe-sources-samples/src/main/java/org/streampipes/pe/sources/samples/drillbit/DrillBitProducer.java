@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 
 public class DrillBitProducer implements SemanticEventProducerDeclarer {
 
 
 	@Override
-	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source_drillBit", "Drill Bit", "Drill Bit");
+	public DataSourceDescription declareModel() {
+		DataSourceDescription sep = new DataSourceDescription("source_drillBit", "Drill Bit", "Drill Bit");
 		//sep.setIconUrl(SourcesConfig.iconBaseUrl + "/DDM_Icon" +"_HQ.png");
 		return sep;
 	}

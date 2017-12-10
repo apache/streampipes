@@ -2,11 +2,13 @@ package org.streampipes.container.embedded.init;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.ModelSubmitter;
+import org.streampipes.container.model.PeConfig;
+import org.streampipes.container.util.ConsulUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-public abstract class ContainerModelSubmitter extends ModelSubmitter implements ServletContextListener {
+public abstract class ContainerModelSubmitter extends ModelSubmitter {
 
 //
 //    /**
@@ -15,13 +17,11 @@ public abstract class ContainerModelSubmitter extends ModelSubmitter implements 
 //     */
 //    public abstract void init();
 
-    public void contextInitialized(ServletContextEvent arg) {
-        DeclarersSingleton.getInstance().setPort(8030);
-        init();
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-
+    public void init(PeConfig peConfig) {
+        ConsulUtil.registerPeService(
+                peConfig.getId(),
+                peConfig.getHost(),
+                peConfig.getPort()
+        );
     }
 }

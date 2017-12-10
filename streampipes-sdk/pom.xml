@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.41.1</version>
+        <version>0.41.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,6 +12,10 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.streampipes</groupId>
+            <artifactId>streampipes-vocabulary</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

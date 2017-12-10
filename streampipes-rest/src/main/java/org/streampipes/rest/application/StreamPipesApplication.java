@@ -1,26 +1,6 @@
 package org.streampipes.rest.application;
 
-import org.streampipes.rest.impl.ApplicationLink;
-import org.streampipes.rest.impl.Authentication;
-import org.streampipes.rest.impl.AutoComplete;
-import org.streampipes.rest.impl.Deployment;
-import org.streampipes.rest.impl.Notification;
-import org.streampipes.rest.impl.OntologyContext;
-import org.streampipes.rest.impl.OntologyKnowledge;
-import org.streampipes.rest.impl.OntologyMeasurementUnit;
-import org.streampipes.rest.impl.OntologyPipelineElement;
-import org.streampipes.rest.impl.Pipeline;
-import org.streampipes.rest.impl.PipelineCategory;
-import org.streampipes.rest.impl.PipelineElementCategory;
-import org.streampipes.rest.impl.PipelineElementImport;
-import org.streampipes.rest.impl.RdfEndpoint;
-import org.streampipes.rest.impl.SemanticEventConsumer;
-import org.streampipes.rest.impl.SemanticEventProcessingAgent;
-import org.streampipes.rest.impl.SemanticEventProducer;
-import org.streampipes.rest.impl.Setup;
-import org.streampipes.rest.impl.User;
-import org.streampipes.rest.impl.VirtualSensor;
-import org.streampipes.rest.impl.Visualization;
+import org.streampipes.rest.impl.*;
 import org.streampipes.rest.serializer.GsonClientModelProvider;
 import org.streampipes.rest.serializer.GsonWithIdProvider;
 import org.streampipes.rest.serializer.GsonWithoutIdProvider;
@@ -61,6 +41,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(RdfEndpoint.class);
         apiClasses.add(ApplicationLink.class);
         apiClasses.add(User.class);
+        apiClasses.add(ConsulConfig.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);

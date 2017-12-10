@@ -1,42 +1,43 @@
 package org.streampipes.pe.processors.esper.pattern.and;
 
-import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.commons.Utils;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.Response;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.impl.output.CustomOutputStrategy;
-import org.streampipes.model.impl.output.OutputStrategy;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.OneOfStaticProperty;
-import org.streampipes.model.impl.staticproperty.Option;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.CustomOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.streampipes.model.staticproperty.Option;
+import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.wrapper.standalone.declarer.FlatEpDeclarer;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.wrapper.ConfiguredEventProcessor;
+import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AndController extends FlatEpDeclarer<AndParameters> {
+public class AndController extends StandaloneEventProcessorDeclarerSingleton<AndParameters> {
 
 	@Override
-	public SepaDescription declareModel() {
-		EventStream stream1 = new EventStream();
-		EventStream stream2 = new EventStream();
+	public DataProcessorDescription declareModel() {
+		SpDataStream stream1 = new SpDataStream();
+		SpDataStream stream2 = new SpDataStream();
 		
 		EventProperty e1 = new EventPropertyPrimitive();
 		EventProperty e2 = new EventPropertyPrimitive();
 		
-		SepaDescription desc = new SepaDescription("and", "Co-Occurrence", "Detects a co-occurrence of events in the following form: Event A happens together with Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
+		DataProcessorDescription desc = new DataProcessorDescription("and", "Co-Occurrence", "Detects a co-occurrence of events in the following form: Event A happens together with Event B within X seconds. In addition, both streams can be matched by a common property value (e.g., a.machineId = b.machineId).");
 		desc.setIconUrl(EsperConfig.iconBaseUrl + "/And_Icon_HQ.png");
-		desc.setCategory(Arrays.asList(EpaType.PATTERN_DETECT.name()));
+		desc.setCategory(Arrays.asList(DataProcessorType.PATTERN_DETECT.name()));
 		
 		stream1.setUri(EsperConfig.serverUrl +"/" +Utils.getRandomString());
 		stream1.setEventSchema(new EventSchema(Arrays.asList(e1)));
@@ -84,7 +85,7 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 	}
 
 	@Override
-	public Response invokeRuntime(SepaInvocation invocationGraph) {
+	public ConfiguredEventProcessor<AndParameters, EventProcessor<AndParameters>> onInvocation(DataProcessorInvocation invocationGraph) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
 		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
 		String matchingOperator = "";
@@ -94,7 +95,7 @@ public class AndController extends FlatEpDeclarer<AndParameters> {
 		List<String> matchingProperties = new ArrayList<>();
 		AndParameters params = new AndParameters(invocationGraph, timeUnit, matchingOperator, duration, matchingProperties);
 
-		return submit(params, And::new, invocationGraph);
+		return new ConfiguredEventProcessor<>(params, And::new);
 
 	}
 

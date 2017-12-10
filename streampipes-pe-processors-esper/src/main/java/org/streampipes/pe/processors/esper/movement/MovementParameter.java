@@ -2,10 +2,10 @@ package org.streampipes.pe.processors.esper.movement;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class MovementParameter extends BindingParameters {
+public class MovementParameter extends EventProcessorBindingParams {
 
 	private final String positionCrs; // coordinate reference system id e.g. EPSG:4326 for lat,long
 
@@ -17,7 +17,7 @@ public class MovementParameter extends BindingParameters {
 	
 	private final List<String> partitionProperties;
 
-	public MovementParameter(SepaInvocation graph,
+	public MovementParameter(DataProcessorInvocation graph,
 		List<String> partitionProperties, String positionCrs, String timestampProperty, String xProperty, String yProperty,
 		long maxInterval) {
 		super(graph);

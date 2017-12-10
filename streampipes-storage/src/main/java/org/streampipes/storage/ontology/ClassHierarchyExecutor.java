@@ -1,23 +1,22 @@
 package org.streampipes.storage.ontology;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.openrdf.model.Value;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
-
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.model.Value;
 import org.streampipes.model.client.ontology.Namespace;
 import org.streampipes.model.client.ontology.NodeType;
 import org.streampipes.model.client.ontology.OntologyNode;
 import org.streampipes.storage.filter.BackgroundKnowledgeFilter;
 import org.streampipes.storage.sparql.QueryBuilder;
 import org.streampipes.storage.util.BackgroundKnowledgeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ClassHierarchyExecutor extends QueryExecutor {
 		
@@ -26,7 +25,7 @@ public class ClassHierarchyExecutor extends QueryExecutor {
 		super(repository);
 	}
 	
-	private List<OntologyNode> getClasses() throws QueryEvaluationException, RepositoryException, MalformedQueryException {		
+	private List<OntologyNode> getClasses() throws QueryEvaluationException, RepositoryException, MalformedQueryException {
 		TupleQueryResult result = getQueryResult(QueryBuilder.getClasses());
 		List<OntologyNode> classNodes = new ArrayList<>();
 		while (result.hasNext()) {

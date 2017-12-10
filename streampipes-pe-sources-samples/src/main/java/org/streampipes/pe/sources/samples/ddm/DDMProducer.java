@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
 public class DDMProducer implements SemanticEventProducerDeclarer{
 
 	@Override
-	public SepDescription declareModel() {
-		SepDescription sep = new SepDescription("source_ddm", "DDM Replay", "Derrick Drilling Machine");
+	public DataSourceDescription declareModel() {
+		DataSourceDescription sep = new DataSourceDescription("source_ddm", "DDM Replay", "Derrick Drilling Machine");
 		sep.setIconUrl(SourcesConfig.iconBaseUrl + "/DDM_Icon" +"_HQ.png");
 		return sep;
 	}

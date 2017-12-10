@@ -8,36 +8,9 @@
 		<filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
 	</filter>
 
-	<filter>
-		<filter-name>CORS</filter-name>
-		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
-		<init-param>
-			<param-name>cors.supportedMethods</param-name>
-			<param-value>GET, POST, HEAD, PUT, DELETE, OPTIONS</param-value>
-		</init-param>
-		<init-param>
-			<param-name>cors.supportedHeaders</param-name>
-			<param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
-		</init-param>
-	</filter>
-
-
-
 	<filter-mapping>
 		<filter-name>ShiroFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-
-
-	<filter-mapping>
-		<filter-name>CORS</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-
-
-	<filter-mapping>
-		<filter-name>CORS</filter-name>
-		<url-pattern>/img/*</url-pattern>
 	</filter-mapping>
 
 	<listener>
@@ -62,8 +35,31 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>Apps</servlet-name>
+		<servlet-class>
+			org.glassfish.jersey.servlet.ServletContainer
+		</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.streampipes.app.file.export.application.AppFileExportApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jersey.config.server.provider.classnames</param-name>
+			<param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>SemanticEPA-API</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Apps</servlet-name>
+		<url-pattern>/api/apps/*</url-pattern>
+	</servlet-mapping>
+
 </web-app>

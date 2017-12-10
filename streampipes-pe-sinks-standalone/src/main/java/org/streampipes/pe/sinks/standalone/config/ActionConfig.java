@@ -2,8 +2,9 @@ package org.streampipes.pe.sinks.standalone.config;
 
 
 import org.streampipes.config.SpConfig;
+import org.streampipes.container.model.PeConfig;
 
-public enum ActionConfig {
+public enum ActionConfig implements PeConfig {
 
   INSTANCE;
 
@@ -22,13 +23,19 @@ public enum ActionConfig {
   private final static String SIMULATION_MAX_EVENTS = "simulation_max_events";
   private final static String NGINX_HOST = "nginx_host";
   private final static String NGINX_PORT = "nginx_port";
+  private final static String ICON_HOST = "icon_host";
+  private final static String ICON_PORT = "icon_port";
 
 
   public final static String serverUrl;
   public final static String iconBaseUrl;
 
+
+  private final static String SERVICE_ID= "pe/org.streampipes.pe.sinks.standalone";
+  private final static String SERVICE_NAME = "service_name";
+
   ActionConfig() {
-    config = SpConfig.getSpConfig("pe/org.streampipes.pe.sinks.standalone");
+    config = SpConfig.getSpConfig(SERVICE_ID);
 
     config.register(HOST, "pe-sinks", "Hostname for the pe sinks");
     config.register(PORT, 8090, "Port for the pe sinks");
@@ -45,21 +52,29 @@ public enum ActionConfig {
     config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
+
+    config.register(ICON_HOST, "backend", "Hostname for the icon host");
+    config.register(ICON_PORT, 80, "Port for the icons in nginx");
+
+    config.register(SERVICE_NAME, "Sinks standalone", "The name of the service");
+
   }
 
   static {
     serverUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort();
-    iconBaseUrl = ActionConfig.INSTANCE.getHost() + ":" + ActionConfig.INSTANCE.getPort() + "/img";
+    iconBaseUrl = ActionConfig.INSTANCE.getIconHost() + ":" + ActionConfig.INSTANCE.getIconPort() + "/img/pe_icons";
   }
 
   public static final String getIconUrl(String pictureName) {
     return iconBaseUrl + "/" + pictureName + ".png";
   }
 
+  @Override
   public String getHost() {
     return config.getString(HOST);
   }
 
+  @Override
   public int getPort() {
     return config.getInteger(PORT);
   }
@@ -118,6 +133,24 @@ public enum ActionConfig {
 
   public Integer getNginxPort() {
     return config.getInteger(NGINX_PORT);
+  }
+
+  public String getIconHost() {
+    return config.getString(ICON_HOST);
+  }
+
+  public int getIconPort() {
+    return config.getInteger(ICON_PORT);
+  }
+
+  @Override
+  public String getId() {
+    return SERVICE_ID;
+  }
+
+  @Override
+  public String getName() {
+    return config.getString(SERVICE_NAME);
   }
 
 }

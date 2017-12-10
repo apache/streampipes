@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.41.1</version>
+		<version>0.41.2</version>
 	</parent>
 	<artifactId>streampipes-backend</artifactId>
 	<packaging>war</packaging>
@@ -31,9 +31,8 @@
 			<artifactId>streampipes-messaging-kafka</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.thetransactioncompany</groupId>
-			<artifactId>cors-filter</artifactId>
-			<version>2.1</version>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-app-file-export</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -41,12 +40,6 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-web</artifactId>
-			<version>2.6.1</version>
-		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
@@ -59,62 +52,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>streampipes-backend</finalName>
 	</build>
-	<profiles>
-		<profile>
-			<id>kalmar</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources-kalmar</directory>
-					</resource>
-					<resource>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.tomcat.maven</groupId>
-						<artifactId>tomcat7-maven-plugin</artifactId>
-						<version>2.2</version>
-						<configuration>
-							<path>/semantic-epa-backend</path>
-							<!--<url>http://kalmar39.fzi.de/manager/text</url>
-							<server>localhost</server>
-							<username>Jerry</username>
-							<password>Th3M0u53</password>
-							-->
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>local</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>src/main/resources-local</directory>
-					</resource>
-					<resource>
-						<directory>src/main/resources</directory>
-					</resource>
-				</resources>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.tomcat.maven</groupId>
-						<artifactId>tomcat7-maven-plugin</artifactId>
-						<version>2.2</version>
-						<configuration>
-							<url>http://localhost:8080/manager/text</url>
-							<server>localhost</server>
-							<path>/semantic-epa-backend</path>
-							<username>tomcatMaven</username>
-							<password>tomcatMaven</password>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

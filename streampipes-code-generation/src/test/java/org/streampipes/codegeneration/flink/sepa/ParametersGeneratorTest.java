@@ -2,23 +2,7 @@ package org.streampipes.codegeneration.flink.sepa;
 
 import static org.junit.Assert.assertEquals;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
-import org.streampipes.sdk.PrimitivePropertyBuilder;
-import org.streampipes.sdk.stream.SchemaBuilder;
-import org.streampipes.sdk.stream.StreamBuilder;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.codegeneration.utils.TV;
-import org.streampipes.codegeneration.utils.Utils;
+import org.streampipes.model.schema.EventProperty;
 
 public class ParametersGeneratorTest {
 //

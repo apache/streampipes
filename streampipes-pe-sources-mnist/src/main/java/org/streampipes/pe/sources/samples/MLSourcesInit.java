@@ -22,7 +22,7 @@ public class MLSourcesInit extends StandaloneModelSubmitter {
         DeclarersSingleton.getInstance().setPort(MlSourceConfig.INSTANCE.getPort());
         DeclarersSingleton.getInstance().setHostName(MlSourceConfig.INSTANCE.getHost());
 
-        new MLSourcesInit().init();
+        new MLSourcesInit().init(MlSourceConfig.INSTANCE);
     }
 
 }

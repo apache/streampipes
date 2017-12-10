@@ -1,12 +1,5 @@
 package org.streampipes.codegeneration.flink.sec;
 
-import org.junit.Test;
-
-import org.streampipes.model.client.deployment.DeploymentConfiguration;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.codegeneration.api.ImplementationCodeGenerator;
-import org.streampipes.codegeneration.utils.TV;
-
 public class FlinkSecCodeGeneratorTest {
 
 //	@Test

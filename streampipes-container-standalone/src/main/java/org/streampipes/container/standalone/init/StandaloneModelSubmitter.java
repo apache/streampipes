@@ -12,6 +12,8 @@ import org.streampipes.container.api.SepaElement;
 import org.streampipes.container.api.WelcomePage;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.init.ModelSubmitter;
+import org.streampipes.container.model.PeConfig;
+import org.streampipes.container.util.ConsulUtil;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -22,7 +24,13 @@ import javax.ws.rs.core.UriBuilder;
 public abstract class StandaloneModelSubmitter extends ModelSubmitter {
 
 
-    public void init() {
+    public void init(PeConfig peConfig) {
+
+        DeclarersSingleton.getInstance()
+                .setHostName(peConfig.getHost());
+        DeclarersSingleton.getInstance()
+                .setPort(peConfig.getPort());
+
         URI baseUri = UriBuilder
                 .fromUri(DeclarersSingleton.getInstance().getBaseUri())
                 .build();
@@ -30,6 +38,13 @@ public abstract class StandaloneModelSubmitter extends ModelSubmitter {
         ResourceConfig config = new ResourceConfig(getApiClasses());
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+
+        ConsulUtil.registerPeService(
+                peConfig.getId(),
+                peConfig.getHost(),
+                peConfig.getPort()
+        );
+
     }
 
     private Set<Class<?>> getApiClasses() {

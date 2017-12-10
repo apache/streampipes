@@ -2,10 +2,10 @@ package org.streampipes.pe.sources.demonstrator.sources;
 
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.vocabulary.MessageFormat;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.pe.sources.demonstrator.config.DemonstratorVariables;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.demonstrator.config.ProaSenseSettings;
@@ -17,9 +17,9 @@ public abstract class AbstractDemonstratorStream extends AbstractAlreadyExisting
 		this.variables = variables;
 	}
 
-	public EventStream prepareStream(String topic) {
+	public SpDataStream prepareStream(String topic) {
 		
-		EventStream stream = new EventStream();
+		SpDataStream stream = new SpDataStream();
 
 		EventGrounding grounding = new EventGrounding();
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol(topic));

@@ -3,6 +3,7 @@ package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
@@ -12,7 +13,9 @@ import org.streampipes.pe.mixed.flink.samples.delay.sensor.DelayController;
 import org.streampipes.pe.mixed.flink.samples.delay.taxi.DelayTaxiController;
 import org.streampipes.pe.mixed.flink.samples.elasticsearch.ElasticSearchController;
 import org.streampipes.pe.mixed.flink.samples.enrich.timestamp.TimestampController;
+import org.streampipes.pe.mixed.flink.samples.enrich.value.ValueController;
 import org.streampipes.pe.mixed.flink.samples.file.FileSinkController;
+import org.streampipes.pe.mixed.flink.samples.filter.numericallist.ListFilterController;
 import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
@@ -46,15 +49,11 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new SpatialGridEnrichmentController())
             .add(new MaintenancePredictionController())
             .add(new StatisticsSummaryControllerWindow())
-            .add(new PeakDetectionController());
+            .add(new PeakDetectionController())
+            .add(new ValueController())
+            .add(new ListFilterController());
 
-
-    DeclarersSingleton.getInstance()
-            .setHostName(FlinkConfig.INSTANCE.getHost());
-    DeclarersSingleton.getInstance()
-            .setPort(FlinkConfig.INSTANCE.getPort());
-            ;
-    new FlinkInit().init();
+    new FlinkInit().init(FlinkConfig.INSTANCE);
   }
 
 }

@@ -8,18 +8,18 @@ import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.commons.Utils;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.KafkaTransportProtocol;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.MessageFormat;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.json.JSONObject;
 import org.streampipes.pe.slack.config.SlackConfig;
 
@@ -41,8 +41,8 @@ public class SlackStream implements EventStreamDeclarer {
     }
 
     @Override
-    public EventStream declareModel(SepDescription sep) {
-        EventStream stream = new EventStream();
+    public SpDataStream declareModel(DataSourceDescription sep) {
+        SpDataStream stream = new SpDataStream();
 
         stream.setName(name);
         stream.setDescription(description);
@@ -72,7 +72,8 @@ public class SlackStream implements EventStreamDeclarer {
     public void executeStream() {
         SlackMessagePostedListener messagePostedListener = new SlackMessagePostedListener()
         {
-            private StreamPipesKafkaProducer producer = new StreamPipesKafkaProducer(SlackConfig.INSTANCE.getKafkaUrl(), topic);
+            private SpKafkaProducer producer = new SpKafkaProducer(SlackConfig.INSTANCE.getKafkaUrl(),
+                    topic);
 
             @Override
             public void onEvent(SlackMessagePosted event, SlackSession session)

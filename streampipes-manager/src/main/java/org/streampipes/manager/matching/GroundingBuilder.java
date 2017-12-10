@@ -1,10 +1,10 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.EventGrounding;
-import org.streampipes.model.impl.TransportFormat;
-import org.streampipes.model.impl.TransportProtocol;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportFormat;
+import org.streampipes.model.grounding.TransportProtocol;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -14,10 +14,10 @@ import java.util.Set;
  */
 public class GroundingBuilder {
 
-    private NamedSEPAElement source;
-    private Set<InvocableSEPAElement> targets;
+    private NamedStreamPipesEntity source;
+    private Set<InvocableStreamPipesEntity> targets;
 
-    public GroundingBuilder(NamedSEPAElement source, Set<InvocableSEPAElement> targets) {
+    public GroundingBuilder(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         this.source = source;
         this.targets = targets;
     }

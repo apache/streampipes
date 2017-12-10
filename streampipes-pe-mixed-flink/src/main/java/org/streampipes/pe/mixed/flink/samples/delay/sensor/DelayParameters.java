@@ -1,17 +1,17 @@
 package org.streampipes.pe.mixed.flink.samples.delay.sensor;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class DelayParameters extends BindingParameters {
+public class DelayParameters extends EventProcessorBindingParams {
     private int delayValue;
     private String labelPropertyMapping;
 
-    public DelayParameters(SepaInvocation graph) {
+    public DelayParameters(DataProcessorInvocation graph) {
         super(graph);
     }
 
-    public DelayParameters(SepaInvocation graph, int delayValue, String labelPropertyMapping) {
+    public DelayParameters(DataProcessorInvocation graph, int delayValue, String labelPropertyMapping) {
         super(graph);
         this.delayValue = delayValue;
         this.labelPropertyMapping = labelPropertyMapping;

@@ -1,9 +1,9 @@
 package org.streampipes.rest.impl;
 
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaDescription;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.api.IApplicationLink;
 
 import javax.ws.rs.GET;
@@ -29,25 +29,25 @@ public class ApplicationLink extends AbstractRestInterface implements IApplicati
         return ok(generateAppLinks());
     }
 
-    private List<org.streampipes.model.impl.ApplicationLink> generateAppLinks() {
-        List<NamedSEPAElement> allElements = new ArrayList<>();
-        List<org.streampipes.model.impl.ApplicationLink> allApplicationLinks = new ArrayList<>();
+    private List<org.streampipes.model.ApplicationLink> generateAppLinks() {
+        List<NamedStreamPipesEntity> allElements = new ArrayList<>();
+        List<org.streampipes.model.ApplicationLink> allApplicationLinks = new ArrayList<>();
 
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSEPAs().stream().map(e -> new SepaDescription(e)).collect(Collectors.toList()));
+                .getAllSEPAs().stream().map(e -> new DataProcessorDescription(e)).collect(Collectors.toList()));
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSECs().stream().map(e -> new SecDescription(e)).collect(Collectors.toList()));
+                .getAllSECs().stream().map(e -> new DataSinkDescription(e)).collect(Collectors.toList()));
         allElements.addAll(getPipelineElementRdfStorage()
-                .getAllSEPs().stream().map(e -> new SepDescription(e)).collect(Collectors.toList()));
+                .getAllSEPs().stream().map(e -> new DataSourceDescription(e)).collect(Collectors.toList()));
 
         allElements.stream().forEach(e -> allApplicationLinks.addAll(removeDuplicates(allApplicationLinks, e.getApplicationLinks())));
 
         return allApplicationLinks;
     }
 
-    private List<org.streampipes.model.impl.ApplicationLink> removeDuplicates(List<org.streampipes.model.impl.ApplicationLink> allApplicationLinks,
-                                                                              List<org.streampipes.model.impl.ApplicationLink> applicationLinks) {
-        List<org.streampipes.model.impl.ApplicationLink> result = new ArrayList<>();
+    private List<org.streampipes.model.ApplicationLink> removeDuplicates(List<org.streampipes.model.ApplicationLink> allApplicationLinks,
+                                                                         List<org.streampipes.model.ApplicationLink> applicationLinks) {
+        List<org.streampipes.model.ApplicationLink> result = new ArrayList<>();
 
         applicationLinks.forEach( a -> {
                 if (allApplicationLinks

@@ -1,25 +1,82 @@
 package org.streampipes.pe.sinks.standalone.samples.dashboard;
 
-import org.streampipes.messaging.EventListener;
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
+import org.streampipes.wrapper.runtime.EventSink;
 
-import javax.jms.JMSException;
+import java.util.Map;
 
-public class Dashboard  implements EventListener<byte[]> {
-    ActiveMQPublisher publisher;
+public class Dashboard implements EventSink<DashboardParameters> {
 
-    public Dashboard(String topic) {
+    private ActiveMQPublisher publisher;
+    private JsonDataFormatDefinition jsonDataFormatDefinition;
+
+    private static String DB_NAME = "visualizablepipeline";
+    private static int DB_PORT = ActionConfig.INSTANCE.getCouchDbPort();
+    private static String DB_HOST = ActionConfig.INSTANCE.getCouchDbHost();
+    private static String DB_PROTOCOL = "http";
+
+
+    private String visualizationId;
+    private String visualizationRev;
+    private String pipelineId;
+
+
+    public Dashboard() {
+        this.jsonDataFormatDefinition = new JsonDataFormatDefinition();
+
+    }
+
+    @Override
+    public void bind(DashboardParameters parameters) throws SpRuntimeException {
+        if (!saveToCouchDB(parameters.getGraph())) {
+            throw new SpRuntimeException("The schema couldn't be stored in the couchDB");
+        }
+        this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), parameters.getGraph().getCorrespondingPipeline());
+        this.pipelineId = parameters.getPipelineId();
+    }
+
+    @Override
+    public void onEvent(Map<String, Object> event, String sourceInfo) {
         try {
-            this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsUrl(), topic);
-        } catch (JMSException e) {
+            publisher.publish(jsonDataFormatDefinition.fromMap(event));
+        } catch (SpRuntimeException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onEvent(byte[] payload) {
-        publisher.publish(payload);
+    private boolean saveToCouchDB(DataSinkInvocation invocationGraph) {
+        CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
+        DataSinkInvocation inv = new DataSinkInvocation(invocationGraph);
+        dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+        org.lightcouch.Response res = dbClient.save(DashboardModel.from(new DashboardParameters(inv)));
 
+        if (res.getError() == null) {
+            visualizationId = res.getId();
+            visualizationRev = res.getRev();
+        }
+
+        return res.getError() == null;
+    }
+
+    private boolean removeFromCouchDB() {
+        CouchDbClient dbClient = new CouchDbClient(new CouchDbProperties(DB_NAME, true, DB_PROTOCOL, DB_HOST, DB_PORT, null, null));
+        org.lightcouch.Response res = dbClient.remove(visualizationId, visualizationRev);
+
+        return res.getError() == null;
+    }
+
+    @Override
+    public void discard() throws SpRuntimeException {
+        this.publisher.disconnect();
+        if (!removeFromCouchDB()) {
+            throw new SpRuntimeException("There was an error while deleting pipeline: '" + pipelineId + "'");
+        }
     }
 }

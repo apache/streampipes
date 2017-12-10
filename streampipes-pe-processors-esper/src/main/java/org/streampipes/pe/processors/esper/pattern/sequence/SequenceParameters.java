@@ -2,10 +2,10 @@ package org.streampipes.pe.processors.esper.pattern.sequence;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class SequenceParameters extends BindingParameters {
+public class SequenceParameters extends EventProcessorBindingParams {
 
 	private String timeUnit;
 	private String matchingOperator;
@@ -13,8 +13,8 @@ public class SequenceParameters extends BindingParameters {
 	private List<String> matchingProperties;
 	
 	
-	public SequenceParameters(SepaInvocation invocationGraph, String timeUnit,
-			String matchingOperator, int duration, List<String> matchingProperties) {
+	public SequenceParameters(DataProcessorInvocation invocationGraph, String timeUnit,
+                            String matchingOperator, int duration, List<String> matchingProperties) {
 		super(invocationGraph);
 		this.timeUnit = timeUnit;
 		this.matchingOperator = matchingOperator;

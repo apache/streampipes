@@ -1,11 +1,12 @@
 package org.streampipes.sdk.builder;
 
-import org.streampipes.model.impl.eventproperty.Enumeration;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.eventproperty.QuantitativeValue;
-import org.streampipes.model.impl.quality.Accuracy;
-import org.streampipes.model.impl.quality.EventPropertyQualityDefinition;
-import org.streampipes.model.impl.quality.Resolution;
+import org.streampipes.model.schema.Enumeration;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.model.schema.QuantitativeValue;
+import org.streampipes.model.quality.Accuracy;
+import org.streampipes.model.quality.EventPropertyQualityDefinition;
+import org.streampipes.model.quality.Resolution;
 import org.streampipes.sdk.utils.Datatypes;
 
 import java.net.URI;
@@ -71,6 +72,11 @@ public class PrimitivePropertyBuilder {
     public PrimitivePropertyBuilder resolution(Float resolution, URI measurementUnit) {
         // TODO extend event property
         this.qualityDefinitions.add(new Resolution(resolution));
+        return this;
+    }
+
+    public PrimitivePropertyBuilder scope(PropertyScope propertyScope) {
+        this.eventProperty.setPropertyScope(propertyScope.name());
         return this;
     }
 

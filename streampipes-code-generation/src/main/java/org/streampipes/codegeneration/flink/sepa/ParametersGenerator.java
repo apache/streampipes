@@ -7,16 +7,16 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.TypeSpec;
 
-import org.streampipes.model.ConsumableSEPAElement;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.base.ConsumableStreamPipesEntity;
+import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.codegeneration.Generator;
 import org.streampipes.codegeneration.utils.JFC;
 import org.streampipes.codegeneration.utils.Utils;
 
 public class ParametersGenerator extends Generator {
 
-	public ParametersGenerator(ConsumableSEPAElement element, String name, String packageName) {
+	public ParametersGenerator(ConsumableStreamPipesEntity element, String name, String packageName) {
 		super(element, name, packageName);
 	}
 
@@ -40,7 +40,7 @@ public class ParametersGenerator extends Generator {
 		MethodSpec constructor = getConstructor();
 
 		TypeSpec.Builder parameterClass = TypeSpec.classBuilder(name + "Parameters").addModifiers(Modifier.PUBLIC)
-				.superclass(BindingParameters.class).addMethod(constructor);
+				.superclass(EventProcessorBindingParams.class).addMethod(constructor);
 
 		for (StaticProperty sp : element.getStaticProperties()) {
 			String internalName = Utils.toCamelCase(sp.getInternalName());

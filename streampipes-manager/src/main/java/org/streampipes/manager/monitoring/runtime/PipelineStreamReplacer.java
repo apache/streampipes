@@ -7,18 +7,18 @@ import java.util.UUID;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.Pipeline;
 
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.storage.controller.StorageManager;
 
 public class PipelineStreamReplacer {
 
 	private String pipelineId;
-	private EventStream streamToReplace;
+	private SpDataStream streamToReplace;
 	
-	public PipelineStreamReplacer(String pipelineId, EventStream streamToReplace) {
+	public PipelineStreamReplacer(String pipelineId, SpDataStream streamToReplace) {
 		this.pipelineId = pipelineId;
 		this.streamToReplace = streamToReplace;
 	}
@@ -32,7 +32,7 @@ public class PipelineStreamReplacer {
 			streamToReplace.setDOM(streamDomId);
 			currentPipeline.setStreams(Arrays.asList(streamToReplace));
 			
-			for(SepaInvocation sepaClient : currentPipeline.getSepas()) {
+			for(DataProcessorInvocation sepaClient : currentPipeline.getSepas()) {
 				// TODO
 //				for(StaticProperty staticProperty : sepaClient.getStaticProperties()) {
 //					if (staticProperty.getType() == StaticPropertyType.CUSTOM_OUTPUT) {
@@ -72,11 +72,11 @@ public class PipelineStreamReplacer {
 		throw new Exception("Property not found");
 	}
 
-	private SepDescription getSep(EventStream streamToReplace2) throws Exception {
-		List<SepDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
+	private DataSourceDescription getSep(SpDataStream streamToReplace2) throws Exception {
+		List<DataSourceDescription> seps = StorageManager.INSTANCE.getStorageAPI().getAllSEPs();
 		
-		for(SepDescription sep : seps) {
-			for(EventStream stream : sep.getEventStreams()) {
+		for(DataSourceDescription sep : seps) {
+			for(SpDataStream stream : sep.getSpDataStreams()) {
 				if (stream.getElementId().equals(streamToReplace2.getElementId())) return sep;
 			}
 		}

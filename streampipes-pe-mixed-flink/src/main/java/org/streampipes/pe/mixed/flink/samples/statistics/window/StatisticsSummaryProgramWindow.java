@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.statistics.window;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.extensions.MapKeySelector;
 import org.streampipes.pe.mixed.flink.extensions.SlidingEventTimeWindow;
 import org.streampipes.pe.mixed.flink.extensions.TimestampMappingFunction;
@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by riemer on 20.04.2017.
  */
 public class StatisticsSummaryProgramWindow extends
-        FlinkSepaRuntime<StatisticsSummaryParametersWindow> {
+        FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> {
 
   private StatisticsSummaryParamsSerializable serializableParams;
 

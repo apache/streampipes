@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.biggis;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.pe.sources.samples.config.MlSourceConfig;
@@ -19,8 +19,8 @@ public class BiggisDataProducer implements SemanticEventProducerDeclarer {
     public static String dataFolder = MlSourceConfig.INSTANCE.getDataLocation() + "biggis/";
 
     @Override
-    public SepDescription declareModel() {
-        return new SepDescription("source_biggis_data", "Big gis data producer", "Produces data to test " +
+    public DataSourceDescription declareModel() {
+        return new DataSourceDescription("source_biggis_data", "Big gis data producer", "Produces data to test " +
                 "the machine learning library");
     }
 

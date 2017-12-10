@@ -1,11 +1,11 @@
 package org.streampipes.wrapper.flink;
 
 import org.streampipes.container.declarer.InvocableDeclarer;
-import org.streampipes.model.InvocableSEPAElement;
-import org.streampipes.model.NamedSEPAElement;
-import org.streampipes.model.impl.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.Response;
 
-public abstract class AbstractFlinkDeclarer<D extends NamedSEPAElement, I extends InvocableSEPAElement, ER extends FlinkRuntime<I>> implements InvocableDeclarer<D, I> {
+public abstract class AbstractFlinkDeclarer<D extends NamedStreamPipesEntity, I extends InvocableStreamPipesEntity, ER extends FlinkRuntime<I>> implements InvocableDeclarer<D, I> {
 
 	protected I graph;
 	protected ER runtime;

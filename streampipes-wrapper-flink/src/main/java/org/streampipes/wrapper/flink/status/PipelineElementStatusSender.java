@@ -1,9 +1,7 @@
 package org.streampipes.wrapper.flink.status;
 
 import com.google.gson.Gson;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.StreamPipesRuntimeError;
-import org.streampipes.model.impl.StreamPipesStatistics;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.io.Serializable;
 
@@ -12,14 +10,14 @@ import java.io.Serializable;
  */
 public class PipelineElementStatusSender implements Serializable {
 
-  private StreamPipesKafkaProducer kafkaProducer;
+  private SpKafkaProducer kafkaProducer;
 
   private String errorTopic;
   private String statsTopic;
 
   private Gson gson;
 
-  public PipelineElementStatusSender(StreamPipesKafkaProducer kafkaProducer, String errorTopic,
+  public PipelineElementStatusSender(SpKafkaProducer kafkaProducer, String errorTopic,
                                      String statsTopic) {
 
     this.kafkaProducer = kafkaProducer;
@@ -29,11 +27,4 @@ public class PipelineElementStatusSender implements Serializable {
     this.gson = new Gson();
   }
 
-  public void sendError(StreamPipesRuntimeError errorMessage) {
-    kafkaProducer.publish(gson.toJson(errorMessage), errorTopic);
-  }
-
-  public void sendStatistics(StreamPipesStatistics statsMessage) {
-    kafkaProducer.publish(gson.toJson(statsMessage), statsTopic);
-  }
 }

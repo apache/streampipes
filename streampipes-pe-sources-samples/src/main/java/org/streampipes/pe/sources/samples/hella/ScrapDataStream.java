@@ -1,20 +1,15 @@
 package org.streampipes.pe.sources.samples.hella;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepDescription;
-import org.streampipes.model.vocabulary.SO;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.adapter.CsvPublisher;
 import org.streampipes.pe.sources.samples.adapter.CsvReadingTask;
 import org.streampipes.pe.sources.samples.adapter.FolderReadingTask;
@@ -23,6 +18,11 @@ import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.hella.parser.ScrapLineParser;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class ScrapDataStream extends AbstractHellaStream {
 	
@@ -30,9 +30,9 @@ public class ScrapDataStream extends AbstractHellaStream {
 	private static final List<String> fileNamePrefixes = Arrays.asList("20150910_", "20150911_", "20150912_", "20150913_", "20150914_", "20150915_", "20150916_");
 
 	@Override
-	public EventStream declareModel(SepDescription sep) {
+	public SpDataStream declareModel(DataSourceDescription sep) {
 		
-		EventStream stream = prepareStream(HellaVariables.Scrap.topic());
+		SpDataStream stream = prepareStream(HellaVariables.Scrap.topic());
 		
 		EventSchema schema = new EventSchema();
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
@@ -58,7 +58,8 @@ public class ScrapDataStream extends AbstractHellaStream {
 	@Override
 	public void executeStream() {
 		
-		EventProducer publisher = new StreamPipesKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Scrap.topic());
+		EventProducer publisher = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), HellaVariables.Scrap
+            .topic());
 		
 		//IMessagePublisher publisher = new ConsoleLoggingPublisher();
 		

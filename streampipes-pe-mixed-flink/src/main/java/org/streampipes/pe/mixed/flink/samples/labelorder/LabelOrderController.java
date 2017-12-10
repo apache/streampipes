@@ -1,24 +1,24 @@
 package org.streampipes.pe.mixed.flink.samples.labelorder;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.model.vocabulary.XSD;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.vocabulary.XSD;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.commons.Utils;
 
-public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderParameters> {
+public class LabelOrderController extends FlinkDataProcessorDeclarer<LabelOrderParameters> {
 
     @Override
-    public SepaDescription declareModel() {
-        SepaDescription delayDescription = ProcessingElementBuilder
+    public DataProcessorDescription declareModel() {
+        DataProcessorDescription delayDescription = ProcessingElementBuilder
                 .create("labelorder", "Label Orders", "This component labels the orders with the time difference to" +
                         "the next maintenance step.")
                 .iconUrl(FlinkConfig.getIconUrl("label-icon"))
@@ -37,7 +37,7 @@ public class LabelOrderController extends AbstractFlinkAgentDeclarer<LabelOrderP
     }
 
     @Override
-    protected FlinkSepaRuntime<LabelOrderParameters> getRuntime(SepaInvocation graph) {
+    protected FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 

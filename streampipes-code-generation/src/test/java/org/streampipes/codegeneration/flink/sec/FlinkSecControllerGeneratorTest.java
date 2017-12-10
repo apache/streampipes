@@ -2,12 +2,6 @@ package org.streampipes.codegeneration.flink.sec;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.codegeneration.utils.TV;
-import org.streampipes.codegeneration.utils.Utils;
-
 public class FlinkSecControllerGeneratorTest {
 
 //	@Test

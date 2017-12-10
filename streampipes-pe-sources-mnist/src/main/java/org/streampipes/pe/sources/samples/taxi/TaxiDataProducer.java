@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.taxi;
 
 import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.model.graph.DataSourceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.pe.sources.samples.config.MlSourceConfig;
@@ -19,8 +19,8 @@ public class TaxiDataProducer implements SemanticEventProducerDeclarer {
     public static String dataFolder = MlSourceConfig.INSTANCE.getDataLocation() + "taxi/";
 
     @Override
-    public SepDescription declareModel() {
-        return new SepDescription("sources_taxi_data", "Taxi data producer", "Produces data to test " +
+    public DataSourceDescription declareModel() {
+        return new DataSourceDescription("sources_taxi_data", "Taxi data producer", "Produces data to test " +
                 "the machine learning library");
     }
 

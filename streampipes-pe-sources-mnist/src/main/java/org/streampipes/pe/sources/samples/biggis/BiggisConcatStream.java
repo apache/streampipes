@@ -1,19 +1,19 @@
 package org.streampipes.pe.sources.samples.biggis;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.messaging.EventProducer;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.graph.SepDescription;
+import org.streampipes.messaging.kafka.SpKafkaProducer;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
+import org.streampipes.pe.sources.samples.adapter.csv.CsvReaderSettings;
+import org.streampipes.pe.sources.samples.adapter.csv.CsvReplayTask;
 import org.streampipes.pe.sources.samples.config.MlSourceConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Groundings;
-import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
-import org.streampipes.pe.sources.samples.adapter.csv.CsvReaderSettings;
-import org.streampipes.pe.sources.samples.adapter.csv.CsvReplayTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.streampipes.sdk.helpers.Labels;
 
 import java.io.File;
 import java.util.Arrays;
@@ -45,43 +45,43 @@ public class BiggisConcatStream implements EventStreamDeclarer {
     }
 
     @Override
-    public EventStream declareModel(SepDescription sep) {
+    public SpDataStream declareModel(DataSourceDescription sep) {
 
-        EventStream stream = DataStreamBuilder
+        SpDataStream stream = DataStreamBuilder
                 .create(name, name, "Produces a replay of the biggisconcat dataset")
                 .format(Groundings.jsonFormat())
                 .protocol(Groundings.kafkaGrounding(kafkaHost, kafkaPort, topic))
-                .property(EpProperties.doubleEp("label", "http://de.fzi.cep.label"))
-                .property(EpProperties.doubleEp("red0", "http://dbpedia.org/ontology/rgbCoordinateRed"))
-                .property(EpProperties.doubleEp("green0", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
-                .property(EpProperties.doubleEp("blue0", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
-                .property(EpProperties.doubleEp("nir0", "http://de.fzi.cep/nir"))
+                .property(EpProperties.doubleEp(Labels.empty(), "label", "http://de.fzi.cep.label"))
+                .property(EpProperties.doubleEp(Labels.empty(), "red0", "http://dbpedia.org/ontology/rgbCoordinateRed"))
+                .property(EpProperties.doubleEp(Labels.empty(), "green0", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
+                .property(EpProperties.doubleEp(Labels.empty(), "blue0", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
+                .property(EpProperties.doubleEp(Labels.empty(), "nir0", "http://de.fzi.cep/nir"))
 
-                .property(EpProperties.doubleEp("blue1", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
-                .property(EpProperties.doubleEp("green1", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
-                .property(EpProperties.doubleEp("red1", "http://dbpedia.org/ontology/rgbCoordinateRed"))
-                .property(EpProperties.doubleEp("nir1", "http://de.fzi.cep/nir"))
+                .property(EpProperties.doubleEp(Labels.empty(), "blue1", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
+                .property(EpProperties.doubleEp(Labels.empty(), "green1", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
+                .property(EpProperties.doubleEp(Labels.empty(), "red1", "http://dbpedia.org/ontology/rgbCoordinateRed"))
+                .property(EpProperties.doubleEp(Labels.empty(), "nir1", "http://de.fzi.cep/nir"))
 
-                .property(EpProperties.doubleEp("blue2", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
-                .property(EpProperties.doubleEp("green2", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
-                .property(EpProperties.doubleEp("red2", "http://dbpedia.org/ontology/rgbCoordinateRed"))
-                .property(EpProperties.doubleEp("nir2", "http://de.fzi.cep/nir"))
+                .property(EpProperties.doubleEp(Labels.empty(), "blue2", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
+                .property(EpProperties.doubleEp(Labels.empty(), "green2", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
+                .property(EpProperties.doubleEp(Labels.empty(), "red2", "http://dbpedia.org/ontology/rgbCoordinateRed"))
+                .property(EpProperties.doubleEp(Labels.empty(), "nir2", "http://de.fzi.cep/nir"))
 
-                .property(EpProperties.doubleEp("blue3", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
-                .property(EpProperties.doubleEp("green3", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
-                .property(EpProperties.doubleEp("red3", "http://dbpedia.org/ontology/rgbCoordinateRed"))
-                .property(EpProperties.doubleEp("nir3", "http://de.fzi.cep/nir"))
+                .property(EpProperties.doubleEp(Labels.empty(), "blue3", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
+                .property(EpProperties.doubleEp(Labels.empty(), "green3", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
+                .property(EpProperties.doubleEp(Labels.empty(), "red3", "http://dbpedia.org/ontology/rgbCoordinateRed"))
+                .property(EpProperties.doubleEp(Labels.empty(), "nir3", "http://de.fzi.cep/nir"))
 
-                .property(EpProperties.doubleEp("blue4", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
-                .property(EpProperties.doubleEp("green4", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
-                .property(EpProperties.doubleEp("red4", "http://dbpedia.org/ontology/rgbCoordinateRed"))
-                .property(EpProperties.doubleEp("nir4", "http://de.fzi.cep/nir"))
+                .property(EpProperties.doubleEp(Labels.empty(), "blue4", "http://dbpedia.org/ontology/rgbCoordinateBlue"))
+                .property(EpProperties.doubleEp(Labels.empty(), "green4", "http://dbpedia.org/ontology/rgbCoordinateGreen"))
+                .property(EpProperties.doubleEp(Labels.empty(), "red4", "http://dbpedia.org/ontology/rgbCoordinateRed"))
+                .property(EpProperties.doubleEp(Labels.empty(), "nir4", "http://de.fzi.cep/nir"))
 
 
-                .property(EpProperties.doubleEp("spacial_1", "http://de.fzi.cep/spacial_1"))
-                .property(EpProperties.doubleEp("spacial_2", "http://de.fzi.cep/spacial_2"))
-                .property(EpProperties.doubleEp("x_tile", "http://de.fzi.cep/x_tile"))
-                .property(EpProperties.doubleEp("y_tile", "http://de.fzi.cep/y_tile"))
+                .property(EpProperties.doubleEp(Labels.empty(), "spacial_1", "http://de.fzi.cep/spacial_1"))
+                .property(EpProperties.doubleEp(Labels.empty(), "spacial_2", "http://de.fzi.cep/spacial_2"))
+                .property(EpProperties.doubleEp(Labels.empty(), "x_tile", "http://de.fzi.cep/x_tile"))
+                .property(EpProperties.doubleEp(Labels.empty(), "y_tile", "http://de.fzi.cep/y_tile"))
                 .build();
 
 
@@ -99,7 +99,7 @@ public class BiggisConcatStream implements EventStreamDeclarer {
 
                 CsvReaderSettings csvReaderSettings = new CsvReaderSettings(Arrays.asList(allFiles), ",", 0, false);
 
-                EventProducer producer = new StreamPipesKafkaProducer(MlSourceConfig.INSTANCE.getKafkaUrl(), topic);
+                SpKafkaProducer producer = new SpKafkaProducer(MlSourceConfig.INSTANCE.getKafkaUrl(), topic);
 
                 CsvReplayTask csvReplayTask = new CsvReplayTask(csvReaderSettings, SimulationSettings.PERFORMANCE_TEST, producer, new BiggisConcatLineTransformer());
 

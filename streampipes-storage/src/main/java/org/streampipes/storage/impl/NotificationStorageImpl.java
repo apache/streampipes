@@ -1,62 +1,64 @@
 package org.streampipes.storage.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.streampipes.model.client.messages.ProaSenseNotificationMessage;
+import org.streampipes.model.Notification;
 import org.streampipes.storage.api.NotificationStorage;
 import org.streampipes.storage.util.Utils;
 
-public class NotificationStorageImpl extends Storage<ProaSenseNotificationMessage> implements NotificationStorage {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
+public class NotificationStorageImpl extends Storage<Notification> implements NotificationStorage {
 
-    public NotificationStorageImpl() {
-        super(ProaSenseNotificationMessage.class);
-    }
+  Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
-    @Override
-    public ProaSenseNotificationMessage getNotification(String notificationId) {
-        return getWithNullIfEmpty(notificationId);
-    }
+  public NotificationStorageImpl() {
+    super(Notification.class);
+  }
 
-    @Override
-    public List<ProaSenseNotificationMessage> getAllNotifications() {
-        return getAll();
-    }
+  @Override
+  public Notification getNotification(String notificationId) {
+    return getWithNullIfEmpty(notificationId);
+  }
 
-    @Override
-    public boolean addNotification(ProaSenseNotificationMessage notification) {
-        add(notification);
-        return true;
-    }
+  @Override
+  public List<Notification> getAllNotifications() {
+    return getAll();
+  }
 
-    @Override
-    public boolean changeNotificationStatus(String notificationId) {
-        ProaSenseNotificationMessage msg = getNotification(notificationId);
-        msg.setRead(!msg.isRead());
+  @Override
+  public boolean addNotification(Notification notification) {
+    add(notification);
+    return true;
+  }
 
-        return update(msg);
-    }
+  @Override
+  public boolean changeNotificationStatus(String notificationId) {
+    Notification msg = getNotification(notificationId);
+    msg.setRead(!msg.isRead());
 
-    @Override
-    public boolean deleteNotification(String notificationId) {
-        return delete(notificationId);
-    }
+    return update(msg);
+  }
 
-    @Override
-    public List<ProaSenseNotificationMessage> getUnreadNotifications() {
-        List<ProaSenseNotificationMessage> msgs = getAll();
+  @Override
+  public boolean deleteNotification(String notificationId) {
+    return delete(notificationId);
+  }
 
-        return msgs.stream().filter(m -> !m.isRead()).collect(Collectors.toList());
-    }
+  @Override
+  public List<Notification> getUnreadNotifications() {
+    List<Notification> msgs = getAll();
 
-    @Override
-    protected CouchDbClient getCouchDbClient() {
-        return Utils.getCouchDbNotificationClient();
-    }
+    return msgs
+            .stream()
+            .filter(m -> !m.isRead())
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  protected CouchDbClient getCouchDbClient() {
+    return Utils.getCouchDbNotificationClient();
+  }
 }

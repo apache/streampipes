@@ -1,51 +1,52 @@
 package org.streampipes.pe.sinks.standalone.samples.notification;
 
+
+import com.google.gson.Gson;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.messaging.jms.ActiveMQPublisher;
+import org.streampipes.model.Notification;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
-import org.streampipes.pe.sinks.standalone.samples.util.PlaceholderExtractor;
-import org.streampipes.messaging.EventListener;
-import org.streampipes.messaging.kafka.StreamPipesKafkaProducer;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.util.SepaUtils;
-import eu.proasense.internal.RecommendationEvent;
-import org.apache.thrift.TException;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TBinaryProtocol;
+import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
-public class NotificationProducer implements EventListener<byte[]> {
+public class NotificationProducer implements EventSink<NotificationParameters> {
 
-	StreamPipesKafkaProducer producer;
-	private TSerializer serializer;
-	private String title;
-	private String content;
+  private String title;
+  private String content;
 
-	
-	public NotificationProducer(SecInvocation sec)
-	{
-		producer = new StreamPipesKafkaProducer(ActionConfig.INSTANCE.getKafkaUrl(), "de.fzi.cep.sepa.notifications");
-		this.title = SepaUtils.getFreeTextStaticPropertyValue(sec, "title");
-		this.content = SepaUtils.getFreeTextStaticPropertyValue(sec, "content");
-		this.serializer = new TSerializer(new TBinaryProtocol.Factory());
-	}
-	
-	@Override
-	public void onEvent(byte[] json) {
-		RecommendationEvent event = new RecommendationEvent();
-		event.setAction(PlaceholderExtractor.replacePlaceholders(content, new String(json)));
-		event.setActor("Me");
-		event.setEventName(title);
-		event.setRecommendationId("Notification");
-		event.setEventProperties(new HashMap<>());
-		event.setTimestamp(new Date().getTime());
-		
-		try {
-			producer.publish(serializer.serialize(event));
-		} catch (TException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+  private ActiveMQPublisher publisher;
+  private Gson gson;
 
+
+  public NotificationProducer() {
+
+  }
+
+  @Override
+  public void bind(NotificationParameters parameters) throws SpRuntimeException {
+    this.publisher = new ActiveMQPublisher(ActionConfig.INSTANCE.getJmsHost() + ":" + ActionConfig.INSTANCE.getJmsPort(),
+            "org.streampipes.notifications");
+    this.gson = new Gson();
+    this.title = parameters.getTitle();
+    this.content = parameters.getContent();
+  }
+
+  @Override
+  public void onEvent(Map<String, Object> event, String sourceInfo) {
+    Notification notification = new Notification();
+    notification.setTitle(title);
+    notification.setMessage(content);
+    notification.setCreatedAt(new Date());
+
+    // TODO add targeted user to notification object
+
+    publisher.publish(gson.toJson(notification).getBytes());
+  }
+
+  @Override
+  public void discard() throws SpRuntimeException {
+    this.publisher.disconnect();
+  }
 }

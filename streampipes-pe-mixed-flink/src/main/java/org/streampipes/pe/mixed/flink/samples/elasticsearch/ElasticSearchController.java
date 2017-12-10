@@ -1,30 +1,30 @@
 package org.streampipes.pe.mixed.flink.samples.elasticsearch;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.AbstractFlinkConsumerDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSecRuntime;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.model.impl.ApplicationLink;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.EventStream;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.graph.SecDescription;
-import org.streampipes.model.impl.graph.SecInvocation;
-import org.streampipes.model.impl.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.impl.staticproperty.MappingPropertyUnary;
-import org.streampipes.model.impl.staticproperty.StaticProperty;
+import org.streampipes.model.ApplicationLink;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.graph.DataSinkDescription;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.streampipes.model.staticproperty.StaticProperty;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
+public class ElasticSearchController extends FlinkDataSinkDeclarer {
 
 	@Override
-	public SecDescription declareModel() {
+	public DataSinkDescription declareModel() {
 		
 		List<EventProperty> eventProperties = new ArrayList<EventProperty>();
 		EventProperty e1 = EpRequirements.domainPropertyReq("http://schema.org/DateTime");
@@ -32,10 +32,10 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		EventSchema schema1 = new EventSchema();
 		schema1.setEventProperties(eventProperties);
 		
-		EventStream stream1 = new EventStream();
+		SpDataStream stream1 = new SpDataStream();
 		stream1.setEventSchema(schema1);
 		
-		SecDescription desc = new SecDescription("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster");
+		DataSinkDescription desc = new DataSinkDescription("elasticsearch", "Elasticsearch", "Stores data in an elasticsearch cluster");
 		desc.setIconUrl(FlinkConfig.iconBaseUrl + "/elasticsearch_icon.png");
 		
 		desc.addEventStream(stream1);
@@ -54,21 +54,8 @@ public class ElasticSearchController extends AbstractFlinkConsumerDeclarer {
 		return desc;
 	}
 
-
 	@Override
-	public boolean isVisualizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public String getHtml(SecInvocation graph) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected FlinkSecRuntime getRuntime(SecInvocation graph) {
+	protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
 		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
 				FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
 //		return new ElasticSearchProgram(graph);

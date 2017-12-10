@@ -2,17 +2,17 @@ package org.streampipes.pe.processors.esper.aggregate.count;
 
 import java.util.List;
 
-import org.streampipes.model.impl.graph.SepaInvocation;
-import org.streampipes.wrapper.BindingParameters;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public class CountParameter extends BindingParameters{
+public class CountParameter extends EventProcessorBindingParams {
 
 	private int timeWindow;
 	private List<String> groupBy;
 	private TimeScale timeScale;
 	private List<String> selectProperties;
 	
-	public CountParameter(SepaInvocation graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
+	public CountParameter(DataProcessorInvocation graph, int timeWindow, List<String> groupBy, TimeScale timeScale, List<String> selectProperties) {
 		super(graph);
 		this.timeScale = timeScale;
 		this.groupBy = groupBy;

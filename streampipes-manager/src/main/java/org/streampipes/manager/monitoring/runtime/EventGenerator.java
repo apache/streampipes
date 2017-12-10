@@ -1,15 +1,15 @@
 package org.streampipes.manager.monitoring.runtime;
 
+import org.streampipes.manager.monitoring.job.MonitoringUtils;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyList;
+import org.streampipes.model.schema.EventPropertyNested;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.streampipes.manager.monitoring.job.MonitoringUtils;
-import org.streampipes.model.impl.EventSchema;
-import org.streampipes.model.impl.eventproperty.EventProperty;
-import org.streampipes.model.impl.eventproperty.EventPropertyList;
-import org.streampipes.model.impl.eventproperty.EventPropertyNested;
-import org.streampipes.model.impl.eventproperty.EventPropertyPrimitive;
 
 public abstract class EventGenerator {
 
@@ -24,7 +24,7 @@ public abstract class EventGenerator {
 	
 	public Object nextEvent()
 	{
-		return formatGenerator.makeOutputFormat(makeEvent(new HashMap<String, Object>(), schema.getEventProperties()));
+		return formatGenerator.makeOutputFormat(makeEvent(new HashMap<>(), schema.getEventProperties()));
 	}
 	
 	protected Map<String, Object> makeEvent(Map<String, Object> map, List<EventProperty> properties)

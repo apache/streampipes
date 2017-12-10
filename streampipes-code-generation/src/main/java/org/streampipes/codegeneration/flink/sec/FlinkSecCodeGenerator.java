@@ -1,7 +1,7 @@
 package org.streampipes.codegeneration.flink.sec;
 
 import org.streampipes.model.client.deployment.DeploymentConfiguration;
-import org.streampipes.model.impl.graph.SecDescription;
+import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.codegeneration.flink.ConfigGenerator;
 import org.streampipes.codegeneration.flink.FlinkCodeGenerator;
 import org.streampipes.codegeneration.flink.XmlGenerator;
@@ -9,7 +9,7 @@ import org.streampipes.codegeneration.utils.Utils;
 
 public class FlinkSecCodeGenerator extends FlinkCodeGenerator {
 
-	public FlinkSecCodeGenerator(DeploymentConfiguration config, SecDescription element) {
+	public FlinkSecCodeGenerator(DeploymentConfiguration config, DataSinkDescription element) {
 		super(config, element);
 	}
 

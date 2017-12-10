@@ -1,7 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.peak;
 
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.extensions.SlidingBatchWindow;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionProgram extends FlinkSepaRuntime<PeakDetectionParameters> {
+public class PeakDetectionProgram extends FlinkDataProcessorRuntime<PeakDetectionParameters> {
 
   public PeakDetectionProgram(PeakDetectionParameters params) {
     super(params);

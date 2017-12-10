@@ -1,12 +1,13 @@
 package org.streampipes.pe.mixed.flink.samples.peak;
 
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.impl.EpaType;
-import org.streampipes.model.impl.graph.SepaDescription;
-import org.streampipes.model.impl.graph.SepaInvocation;
+import org.streampipes.model.DataProcessorType;
+import org.streampipes.model.graph.DataProcessorDescription;
+import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
@@ -18,7 +19,7 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 /**
  * Created by riemer on 20.04.2017.
  */
-public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDetectionParameters> {
+public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDetectionParameters> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
   private static final String PARTITION_BY = "partition-by";
@@ -29,17 +30,17 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
   private static final String INFLUENCE_KEY = "sp-influence";
 
   @Override
-  public SepaDescription declareModel() {
+  public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("peak-detection", "Peak Detection",
             "Detect peaks in time series data")
-            .category(EpaType.ALGORITHM)
+            .category(DataProcessorType.ALGORITHM)
             .iconUrl(FlinkConfig.getIconUrl("peak-detection-icon"))
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.numberReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.numberReq(),
                     VALUE_TO_OBSERVE, "Value to " +
                             "observe", "Provide a value where statistics are calculated upon")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.timestampReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.timestampReq(),
                     TIMESTAMP_MAPPING, "Time", "Provide a time parameter")
-            .stream1PropertyRequirementWithUnaryMapping(EpRequirements.stringReq(),
+            .requiredPropertyStream1WithUnaryMapping(EpRequirements.stringReq(),
                     PARTITION_BY, "Group by", "Partition the stream by a given id")
             .requiredIntegerParameter(COUNT_WINDOW_SIZE, "Count Window Size", "Defines " +
                     "the size of the count window", 60)
@@ -50,15 +51,15 @@ public class PeakDetectionController extends AbstractFlinkAgentDeclarer<PeakDete
             .requiredFloatParameter(INFLUENCE_KEY, "Influence", "Defines the influence", 0.5f)
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp("id", "http://schema.org/id"),
-                    EpProperties.integerEp("signal", "http://schema.org/Number")))
+                    EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
+                    EpProperties.integerEp(Labels.empty(), "signal", "http://schema.org/Number")))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
   }
 
   @Override
-  protected FlinkSepaRuntime<PeakDetectionParameters> getRuntime(SepaInvocation sepa) {
+  protected FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
