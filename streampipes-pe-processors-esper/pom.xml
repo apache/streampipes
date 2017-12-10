@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.41.2</version>
+		<version>0.41.3-SNAPSHOT</version>
 	</parent>
 	<repositories>
 		<repository>
