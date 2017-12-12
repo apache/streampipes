@@ -8,8 +8,6 @@ import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.alarm.AlarmLightController;
 import org.streampipes.pe.sinks.standalone.samples.couchdb.CouchDbController;
 import org.streampipes.pe.sinks.standalone.samples.dashboard.DashboardController;
-import org.streampipes.pe.sinks.standalone.samples.demonstrator.pump.DemonstratorPumpController;
-import org.streampipes.pe.sinks.standalone.samples.demonstrator.ventil.DemonstratorVentilController;
 import org.streampipes.pe.sinks.standalone.samples.file.FileController;
 import org.streampipes.pe.sinks.standalone.samples.jms.JmsController;
 import org.streampipes.pe.sinks.standalone.samples.kafka.KafkaController;
@@ -27,8 +25,6 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new CouchDbController())
             .add(new DashboardController())
             .add(new AlarmLightController())
-            .add(new DemonstratorPumpController())
-            .add(new DemonstratorVentilController())
             .add(new RabbitMqController());
 
     DeclarersSingleton.getInstance().setPort(ActionConfig.INSTANCE.getPort());
