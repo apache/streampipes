@@ -412,7 +412,6 @@
         <module>streampipes-pe-sources-axoom-hmi</module>
         <module>streampipes-sources</module>
         <module>streampipes-pe-sources-kd2</module>
-        <module>streampipes-pe-sources-demonstrator</module>
         <module>streampipes-pe-sources-hella</module>
         <module>streampipes-pe-sources-mhwirth</module>
         <module>streampipes-pe-sources-mnist</module>
