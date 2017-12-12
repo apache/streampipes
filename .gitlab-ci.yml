@@ -25,7 +25,6 @@ build:
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
     - mvn clean package -DskipTests
-    - cp ./streampipes-pe-sources-demonstrator/target/sources-demonstrator.war ./streampipes-backend/target/sources-demonstrator.war
   artifacts:
     paths:
       - ./streampipes-backend/target/*.war

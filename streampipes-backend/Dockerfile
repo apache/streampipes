@@ -50,7 +50,6 @@ EXPOSE 8080
 ADD target/streampipes-backend.war /usr/local/tomcat/webapps/streampipes-backend.war
 ADD ./deployment-config/rdf4j-server.war /usr/local/tomcat/webapps/rdf4j-server.war
 ADD ./deployment-config/rdf4j-workbench.war /usr/local/tomcat/webapps/rdf4j-workbench.war
-#ADD target/sources-demonstrator.war /usr/local/tomcat/webapps/sources-demonstrator.war
 #ADD ./org.streampipes/streampipes-pe-slack/streampipes-pe-slack.war /usr/local/tomcat/webapps/slack.war
 
 ADD ./deployment-config/catalina.properties /usr/local/tomcat/conf/catalina.properties
