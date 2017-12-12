@@ -36,6 +36,8 @@ build:
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
     expire_in:  1 hour
+  except:
+      - /release-.*$/
 
 docker-backend:
    image: docker:17.06.0-ce
@@ -163,7 +165,6 @@ finish release:
     - mvn -B jgitflow:release-finish $MAVEN_CLI_OPTS
     - git push origin --all
     - git push origin --tags
-    - git push origin --delete $CI_BUILD_REF_NAME
 #  only:
 #    - /^release\/.*$/
   when: manual
