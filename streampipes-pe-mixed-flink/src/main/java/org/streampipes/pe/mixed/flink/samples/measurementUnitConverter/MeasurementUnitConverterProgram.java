@@ -1,12 +1,12 @@
 package org.streampipes.pe.mixed.flink.samples.measurementUnitConverter;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
 
 import java.util.Map;
 
-public class MeasurementUnitConverterProgram extends FlinkSepaRuntime<MeasurementUnitConverterParameters> {
+public class MeasurementUnitConverterProgram extends FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> {
 
     public MeasurementUnitConverterProgram(MeasurementUnitConverterParameters params) {
         super(params);

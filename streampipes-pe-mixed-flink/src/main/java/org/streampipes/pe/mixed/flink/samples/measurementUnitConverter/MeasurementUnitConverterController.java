@@ -3,54 +3,64 @@ package org.streampipes.pe.mixed.flink.samples.measurementUnitConverter;
 import com.github.jqudt.Unit;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.units.UnitProvider;
-import org.streampipes.wrapper.flink.AbstractFlinkAgentDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkSepaRuntime;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.model.staticproperty.Option;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class MeasurementUnitConverterController extends AbstractFlinkAgentDeclarer<MeasurementUnitConverterParameters> {
+public class MeasurementUnitConverterController extends FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> {
 
+    private static final String UNIT_NAME = "unitName";
+    private static final String INPUT_UNIT = "inputUnit";
+    private static final String OUTPUT_UNIT = "outputUnit";
 
     @Override
     public DataProcessorDescription declareModel() {
         List<Unit> availableUnits = UnitProvider.INSTANCE.getAvailableUnits();
-        List<Option> optionsList = new LinkedList<>();
-        availableUnits.forEach(unit -> optionsList.add(new Option(unit.getLabel())));
+        List<Option> optionsListInput = new LinkedList<>();
+        List<Option> optionsListOutput = new LinkedList<>();
+        availableUnits.forEach(unit -> {
+                optionsListInput.add(new Option(unit.getLabel()));
+                optionsListOutput.add(new Option(unit.getLabel()));
+                }
+        );
 
 
         return ProcessingElementBuilder.create("measurement_unit_converter", "Measurement Unit Converter",
                 "Converts a unit of measurement to another one")
                 .requiredPropertyStream1(EpRequirements.anyProperty())
-                .requiredTextParameter("unitName", "Unit name",
+                .requiredTextParameter(UNIT_NAME, "Unit name",
                         "The name of the unit which should convert")
-                .requiredSingleValueSelection("inputUnit", "Input type",
-                        "The input type unit of measurement", optionsList)
-                .requiredSingleValueSelection("outputUnity", "Output type",
-                        "The output type unit of measurement", optionsList)
+                .requiredSingleValueSelection(INPUT_UNIT, "Input type",
+                        "The input type unit of ", optionsListInput)
+                .requiredSingleValueSelection(OUTPUT_UNIT, "Output type",
+                        "The output type unit of measurement", optionsListOutput)
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
+                .outputStrategy(OutputStrategies.keep())
                 .build();
     }
 
 
 
     @Override
-    protected FlinkSepaRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa) {
+    protected FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa) {
         ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
-        String unitName = extractor.singleValueParameter("unityName", String.class);
-        Option inputUnitOption = extractor.selectedSingleValue("inputUnit", Option.class);
-        Option outputUnityOption =  extractor.selectedSingleValue("outputUnit", Option.class);
+        String unitName = extractor.singleValueParameter(UNIT_NAME, String.class);
+        Option inputUnitOption = extractor.selectedSingleValue(INPUT_UNIT, Option.class);
+        Option outputUnityOption =  extractor.selectedSingleValue(OUTPUT_UNIT, Option.class);
 
         Unit inputUnit = UnitProvider.INSTANCE.getUnitByLabel(inputUnitOption.getName());
         Unit outputUnit = UnitProvider.INSTANCE.getUnitByLabel(outputUnityOption.getName());
