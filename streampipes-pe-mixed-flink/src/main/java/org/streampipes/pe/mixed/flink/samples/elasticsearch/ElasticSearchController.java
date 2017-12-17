@@ -16,7 +16,7 @@ import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
-public class ElasticSearchController extends FlinkDataSinkDeclarer {
+public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearchParameters> {
 
 	@Override
 	public DataSinkDescription declareModel() {
@@ -43,9 +43,9 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer {
 
 		ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName);
 
-		return new ElasticSearchProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+		return new ElasticSearchProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
 						FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
-//		return new ElasticSearchProgram(graph);
+//		return new ElasticSearchProgram(params);
 	}
 
 }
