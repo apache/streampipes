@@ -5,7 +5,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.InvocableDeclarer;
 import org.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.SemanticEventProducerDescription;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
@@ -57,7 +57,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
 
     private Description getDescription(SemanticEventProducerDeclarer declarer) {
         List<Description> streams = new ArrayList<>();
-        SemanticEventProducerDescription desc = new SemanticEventProducerDescription();
+        DataSourceDescriptionHtml desc = new DataSourceDescriptionHtml();
         desc.setName(declarer.declareModel().getName());
         desc.setDescription(declarer.declareModel().getDescription());
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
