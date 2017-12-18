@@ -5,7 +5,9 @@ spEditor:
   link: 'streampipes.editor'
   url: '/editor/:pipeline'
   title: 'Pipeline Editor'
+  description: 'The editor can be used to model new pipelines'
   icon: 'action:ic_dashboard_24px'
+  homeImage: '/img/home/editor.png'
   admin: False
 spPipelines:
   path: './pipelines/pipelines.module'
@@ -14,7 +16,9 @@ spPipelines:
   link: 'streampipes.pipelines'
   url: '/pipelines/:pipeline'
   title: 'Pipelines'
+  description: 'Pipelines'
   icon: 'av:ic_play_arrow_24px'
+  homeImage: '/img/home/pipelines.png'
   admin: False
 spDashboard:
   path: './dashboard/dashboard.module'
@@ -23,7 +27,9 @@ spDashboard:
   link: 'streampipes.dashboard'
   url: '/dashboard'
   title: 'Live Dashboard'
+  description: 'The live dashboard visualizes data in real-time'
   icon: 'editor:ic_insert_chart_24px'
+  homeImage: '/img/home/dashboard.png'
   admin: False
 spAppFileDownload:
   path: './app-file-download/app-file-download.module'
@@ -32,7 +38,9 @@ spAppFileDownload:
   link: 'streampipes.appfiledownload'
   url: '/appfiledownload'
   title: 'File Download'
+  description: 'File Download'
   icon: 'file:ic_file_download_24px'
+  homeImage: '/img/home/appfiledownload.png'
   admin: False
 spOntology:
   path: './ontology/ontology.module'
@@ -40,7 +48,9 @@ spOntology:
   controller: 'OntologyCtrl'
   link: 'streampipes.ontology'
   title: 'Knowledge Management'
+  description: 'Knowledge Management'
   icon: 'social:ic_share_24px'
+  homeImage: '/img/home/ontology.png'
   admin: False
 spSensors:
   path: './sensors/sensors.module'
@@ -48,7 +58,9 @@ spSensors:
   controller: 'SensorsCtrl'
   link: 'streampipes.sensors'
   title: 'Pipeline Element Generator'
+  description: 'Pipeline Element Generator'
   icon: 'content:ic_add_24px'
+  homeImage: '/img/home/sensors.png'
   admin: False
 spAdd:
   path: './add/add.module'
@@ -57,7 +69,9 @@ spAdd:
   link: 'streampipes.add'
   url: '/add'
   title: 'Install Pipeline Elements'
+  description: 'The marketplace can be used to extend StreamPipes with new algorithms and data sinks'
   icon: 'file:ic_cloud_download_24px'
+  homeImage: '/img/home/add.png'
   admin: True
 spMyElements:
   path: './myelements/my-elements.module'
@@ -66,7 +80,9 @@ spMyElements:
   link: 'streampipes.myelements'
   url: '/myelements'
   title: 'My Elements'
+  description: 'My Elements'
   icon: 'image:ic_portrait_24px'
+  homeImage: '/img/home/myelements.png'
   admin: True
 spConfiguration:
   path: './configuration/configuration.module'
@@ -75,5 +91,7 @@ spConfiguration:
   link: 'streampipes.configuration'
   url: '/configuration'
   title: 'Configuration'
+  description: 'Configuration'
   icon: 'action:ic_settings_24px'
+  homeImage: '/img/home/configuration.png'
   admin: True
