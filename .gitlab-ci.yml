@@ -24,7 +24,7 @@ build:
   stage: build
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package -DskipTests
+    - mvn clean package javadoc:aggregate -DskipTests
   artifacts:
     paths:
       - ./streampipes-backend/target/*.war
