@@ -34,6 +34,7 @@ build:
       - ./streampipes-pe-sources-axoom-hmi/target/*.jar
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
+      - ./target/site/apidocs/**
     expire_in:  1 hour
   except:
       - /release-.*$/

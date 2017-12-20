@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- The Basics -->
@@ -25,7 +26,7 @@
     </properties>
 
     <name>StreamPipes Parent Pom</name>
-    <description>StreamPipes </description>
+    <description>StreamPipes</description>
     <url>https://streampipes.org</url>
 
     <licenses>
@@ -430,8 +431,19 @@
         <module>streampipes-app-file-export</module>
         <module>streampipes-vocabulary</module>
         <module>streampipes-serializers</module>
-        <module>archetypes/streampipes-archetype-pe-sinks-standalone</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>java8-doclint-disabled</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+    </profiles>
 
     <!-- Build Settings -->
     <build>
@@ -444,8 +456,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <additionalparam>${javadoc.opts}</additionalparam>
+                    <aggregate>true</aggregate>
+                    <excludePackageNames>org.streampipes.pe</excludePackageNames>
+                    <doclint>none</doclint>
                 </configuration>
             </plugin>
             <plugin>
@@ -466,7 +482,7 @@
                     <pushReleases>false</pushReleases>
                     <localOnly>true</localOnly>
                     <squash>false</squash>
-                    <scmCommentPrefix>[RELEASE] [skip-ci] </scmCommentPrefix>
+                    <scmCommentPrefix>[RELEASE] [skip-ci]</scmCommentPrefix>
                     <enableSshAgent>true</enableSshAgent>
                 </configuration>
             </plugin>
@@ -494,20 +510,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 
     <!-- Environment Settings -->
     <scm>

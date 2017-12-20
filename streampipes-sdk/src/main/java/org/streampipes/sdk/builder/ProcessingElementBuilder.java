@@ -22,17 +22,34 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
         this.outputStrategies = new ArrayList<>();
     }
 
+    /**
+     * Creates a new processing element using the builder pattern.
+     * @param id A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
+     * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+     * @param description A human-readable description of the element.
+     */
     public static ProcessingElementBuilder create(String id, String label, String description)
     {
         return new ProcessingElementBuilder(id, label, description);
     }
 
 
+    /**
+     * Assigns an output strategy to the element which defines the output the data processor produces.
+     * @param outputStrategy An {@link org.streampipes.model.output.OutputStrategy}. Use
+     * {@link org.streampipes.sdk.helpers.OutputStrategies} to assign the strategy.
+     * @return @link{{@link ProcessingElementBuilder}}
+     */
     public ProcessingElementBuilder outputStrategy(OutputStrategy outputStrategy) {
         this.outputStrategies.add(outputStrategy);
         return me();
     }
 
+    /**
+     * Assigns a category to the element which later serves to categorize data processors in the UI.
+      * @param epaCategory The {@link org.streampipes.model.DataProcessorType} of the element.
+     * @return @link{{@link ProcessingElementBuilder}}
+     */
     public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
         this.elementDescription.setCategory(Arrays
                 .stream(epaCategory)
