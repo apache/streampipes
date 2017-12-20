@@ -12,7 +12,7 @@
     <md-dialog-content flex="100" class="md-dialog-content">
         <h5>Existing Endpoints</h5>
         <md-list>
-            <div ng-repeat="rdfEndpoint in rdfEndpoints | orderBy: '+endpointUrl'">
+            <div ng-repeat="rdfEndpoint in rdfEndpoints | orderBy: '+endpointUrl'" ng-if="rdfEndpoint._id !== undefined">
             <md-list-item layout="row" class="md-with-secondary" >
                 <div class="md-list-item-text" flex="80" layout="column">
                     {{rdfEndpoint.endpointUrl}}
