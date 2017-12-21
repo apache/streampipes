@@ -6,7 +6,7 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
     $rootScope.title = "ProaSense";
 
     $scope.openDocumentation = function(){
-        $window.open('/docs', '_blank');
+        $window.open('https://docs.streampipes.org', '_blank');
     };
 
     $scope.logIn = function () {

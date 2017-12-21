@@ -73,7 +73,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                         user.hideTutorial = true;
                         restApi.updateUserDetails(user).success(function (data) {
 
-                            $window.open('/site', '_blank');
+                            $window.open('https://docs.streampipes.org', '_blank');
                         });
                     }, function () {
 

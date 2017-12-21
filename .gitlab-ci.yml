@@ -36,7 +36,7 @@ nginx:
     - unzip javadoc.zip
     - rm javadoc.zip
     - rm -rf javadoc/streampipes-backend && rm -rf javadoc/streampipes-pe-mixed && rm -rf javadoc/streampipes-pe-processors-esper && rm -rf javadoc/streampipes-pe-sinks-standlone && rm -rf javadoc/streampipes-pe-sources-axoom-hmi && rm -rf javadoc/streampipes-pe-sources-mnist && rm -rf javadoc/streampipes-pe-sources-samples
-    - cd javadoc && mv target/site/apidocs ./
+    - cd javadoc && mv target/site/apidocs/* ./
     - rm -rf target
     - ls -la
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
