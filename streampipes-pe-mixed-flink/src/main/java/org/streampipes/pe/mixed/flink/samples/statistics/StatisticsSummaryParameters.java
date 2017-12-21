@@ -3,9 +3,6 @@ package org.streampipes.pe.mixed.flink.samples.statistics;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class StatisticsSummaryParameters extends EventProcessorBindingParams {
 
   private String listPropertyName;

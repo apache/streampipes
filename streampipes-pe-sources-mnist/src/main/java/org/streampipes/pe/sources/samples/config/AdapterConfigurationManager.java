@@ -9,9 +9,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TreeSet;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public class AdapterConfigurationManager {
 
     private static String getAdapterConfigFilePath() {

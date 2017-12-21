@@ -1,8 +1,5 @@
 package org.streampipes.pe.sources.samples.taxiaggregated;
 
-/**
- * Created by philippzehnder on 10.04.17.
- */
 public class CountAggregateConstants {
 
 	// Domain Properties

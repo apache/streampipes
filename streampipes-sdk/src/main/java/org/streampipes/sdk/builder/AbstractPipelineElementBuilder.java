@@ -4,9 +4,6 @@ import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.sdk.helpers.Label;
 
-/**
- * Created by riemer on 04.12.2016.
- */
 public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipelineElementBuilder<BU, T>, T extends NamedStreamPipesEntity> {
 
     protected T elementDescription;

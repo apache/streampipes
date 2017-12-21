@@ -9,9 +9,6 @@ import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 05.04.2017.
- */
 public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
 
   // For testing: rabbitMQ default port is 15700 for the Axoom use case

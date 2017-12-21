@@ -22,9 +22,6 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class StatisticsSummaryControllerWindow extends
         FlinkDataProcessorDeclarer<StatisticsSummaryParametersWindow> {
 

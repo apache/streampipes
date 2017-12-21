@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by riemer on 23.09.2016.
- */
 public abstract class GroundingSelector {
 
     protected NamedStreamPipesEntity source;

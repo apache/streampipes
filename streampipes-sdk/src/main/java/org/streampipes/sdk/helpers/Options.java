@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 20.03.2017.
- */
 public class Options {
 
   /**

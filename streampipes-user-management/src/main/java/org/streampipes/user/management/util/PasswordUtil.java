@@ -8,9 +8,6 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-/**
- * Created by riemer on 07.07.2017.
- */
 public class PasswordUtil {
 
   public static byte[] createSalt() {

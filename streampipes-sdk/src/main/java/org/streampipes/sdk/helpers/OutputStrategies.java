@@ -10,9 +10,6 @@ import org.streampipes.model.output.KeepOutputStrategy;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by riemer on 06.12.2016.
- */
 public class OutputStrategies {
 
     /**

@@ -17,9 +17,6 @@ import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionCoefficient  {
 
     protected final String SwivelTopic = "";

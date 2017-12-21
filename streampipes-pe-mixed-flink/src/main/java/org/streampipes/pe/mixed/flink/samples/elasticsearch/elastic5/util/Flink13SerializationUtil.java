@@ -4,9 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-/**
- * Created by riemer on 21.03.2017.
- */
 public class Flink13SerializationUtil {
 
   private static byte[] serializeObject(Object o) throws IOException {

@@ -8,9 +8,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by riemer on 01.11.2016.
- */
 @Path("/v2/users/{email}")
 public class User extends AbstractRestInterface implements IUser {
 

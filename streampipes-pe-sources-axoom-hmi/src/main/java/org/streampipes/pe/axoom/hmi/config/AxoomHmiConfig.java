@@ -1,8 +1,5 @@
 package org.streampipes.pe.axoom.hmi.config;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public enum AxoomHmiConfig {
 
   EUROBLECH("euroblech"),

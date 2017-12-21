@@ -3,9 +3,6 @@ package org.streampipes.pe.mixed.flink.samples.statistics.window;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class StatisticsSummaryParamsSerializable implements Serializable {
 
   private String valueToObserve;

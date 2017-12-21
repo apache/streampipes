@@ -5,9 +5,6 @@ import org.streampipes.messaging.kafka.SpKafkaProducer;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 30.01.2017.
- */
 public class PipelineElementStatusSender implements Serializable {
 
   private SpKafkaProducer kafkaProducer;

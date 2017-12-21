@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionReplay implements Runnable {
 
     EventProducer gearboxPublisher;

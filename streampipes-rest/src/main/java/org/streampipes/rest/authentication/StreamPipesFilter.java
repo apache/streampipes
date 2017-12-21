@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * responds with HTML Error code 403.
  *
  * See https://stackoverflow.com/questions/30344441/shiro-filter-without-redirect/30344953#30344953
- * Created by robin on 21.05.15.
+ *
  */
 
 public class StreamPipesFilter extends UserFilter {

@@ -17,9 +17,6 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Datatypes;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<StatisticsSummaryParameters> {
 
   private static final String listPropertyMappingName = "list-property";

@@ -23,9 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by riemer on 05.10.2016.
- */
 @Path("/v2/users/{username}/rdfendpoints")
 public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
 

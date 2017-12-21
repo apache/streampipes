@@ -9,9 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 20.11.2016.
- */
 public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
 
 

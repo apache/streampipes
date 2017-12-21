@@ -4,9 +4,6 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.storage.controller.StorageManager;
 
-/**
- * Created by riemer on 27.09.2016.
- */
 public class TestPipelineExecution {
 
     public static void main(String[] args) {

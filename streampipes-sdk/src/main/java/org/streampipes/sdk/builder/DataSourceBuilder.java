@@ -2,9 +2,6 @@ package org.streampipes.sdk.builder;
 
 import org.streampipes.model.graph.DataSourceDescription;
 
-/**
- * Created by riemer on 04.12.2016.
- */
 public class DataSourceBuilder extends AbstractPipelineElementBuilder<DataSourceBuilder, DataSourceDescription> {
 
   public static DataSourceBuilder create(String id, String label, String description) {

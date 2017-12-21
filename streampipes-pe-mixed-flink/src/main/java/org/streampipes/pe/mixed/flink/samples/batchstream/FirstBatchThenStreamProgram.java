@@ -9,9 +9,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import java.io.Serializable;
 import java.util.Map;
 
-/**
- * Created by philippzehnder on 16.02.17.
- */
 public class FirstBatchThenStreamProgram extends FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> implements Serializable {
 
     public FirstBatchThenStreamProgram(FirstBatchThenStreamParameters params) {

@@ -6,9 +6,6 @@ import org.streampipes.model.graph.DataSinkDescription;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 04.12.2016.
- */
 public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBuilder, DataSinkDescription> {
 
     protected DataSinkBuilder(String id, String label, String description) {

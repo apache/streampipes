@@ -10,9 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 12.04.2017.
- */
 public class SlidingEventTimeWindow<IN> extends AbstractUdfStreamOperator<List<IN>,
         TimestampMappingFunction<IN>>
         implements

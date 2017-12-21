@@ -9,9 +9,6 @@ import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import java.io.Serializable;
 import java.util.Map;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public class FileSinkProgram extends FlinkDataSinkRuntime<FileSinkParameters> implements Serializable {
 
 

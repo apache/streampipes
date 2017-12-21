@@ -3,9 +3,6 @@ package org.streampipes.pe.mixed.flink.samples.timetofailure;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class TimeToFailureParameters extends EventProcessorBindingParams {
 
     private String healthIndexMapping;

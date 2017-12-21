@@ -1,8 +1,5 @@
 package org.streampipes.vocabulary;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class Statistics {
 
   public static final String MEAN = "http://statistics.event-processing.org/mean";

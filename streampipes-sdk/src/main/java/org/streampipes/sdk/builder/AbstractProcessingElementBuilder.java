@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by riemer on 04.12.2016.
- */
 public abstract class AbstractProcessingElementBuilder<BU extends AbstractProcessingElementBuilder<BU, T>, T extends ConsumableStreamPipesEntity> extends AbstractPipelineElementBuilder<BU, T> {
 
   protected List<StaticProperty> staticProperties;

@@ -11,9 +11,6 @@ import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-/**
- * Created by philippzehnder on 20.02.17.
- */
 public class FbtsFlatMap extends RichFlatMapFunction<Tuple2<Integer, Map<String, Object>>, Map<String, Object>> {
 
     private transient ValueState<Tuple2<Boolean, Long>> state;

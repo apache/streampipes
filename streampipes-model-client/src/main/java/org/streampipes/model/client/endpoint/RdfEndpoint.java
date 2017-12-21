@@ -2,9 +2,6 @@ package org.streampipes.model.client.endpoint;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by riemer on 05.10.2016.
- */
 public class RdfEndpoint {
 
     private @SerializedName("_id") String id;
