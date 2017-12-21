@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
  */
 public class Options {
 
+  /**
+   * Creates a new list of options by using the provided string values.
+   * @param optionLabel An arbitrary number of option labels.
+   * @return
+   */
   public static List<Option> from(String... optionLabel) {
     return Arrays.stream(optionLabel).map(Option::new).collect(Collectors.toList());
   }

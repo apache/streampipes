@@ -15,6 +15,12 @@ public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBu
         super(id, label, description, new DataSinkDescription());
     }
 
+    /**
+     * Creates a new data sink using the builder pattern.
+     * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+     * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+     * @param description A human-readable description of the element.
+     */
     public static DataSinkBuilder create(String id, String label, String description)
     {
         return new DataSinkBuilder(id, label, description);

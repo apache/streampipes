@@ -8,10 +8,19 @@ import org.streampipes.vocabulary.MessageFormat;
  */
 public class SupportedFormats {
 
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in JSON format
+   * @return The resulting {@link org.streampipes.model.grounding.TransportFormat}.
+   */
   public static TransportFormat jsonFormat() {
     return new TransportFormat(MessageFormat.Json);
   }
 
+  /**
+   * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in Thrift
+   * format
+   * @return The resulting {@link org.streampipes.model.grounding.TransportFormat}.
+   */
   public static TransportFormat thriftFormat() {
     return new TransportFormat(MessageFormat.Thrift);
   }
