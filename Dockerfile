@@ -11,6 +11,7 @@ COPY app/ /usr/share/nginx/html/app/
 COPY templates/ /usr/share/nginx/html/templates
 
 COPY site/ /usr/share/nginx/html/docs
+COPY javadoc/ /usr/share/nginx/html/javadoc
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default.conf /etc/nginx/conf.d/default.conf
