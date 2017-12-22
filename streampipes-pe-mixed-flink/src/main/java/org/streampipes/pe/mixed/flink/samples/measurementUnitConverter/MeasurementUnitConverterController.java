@@ -59,11 +59,11 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
         ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
         String unitName = extractor.singleValueParameter(UNIT_NAME, String.class);
-        Option inputUnitOption = extractor.selectedSingleValue(INPUT_UNIT, Option.class);
-        Option outputUnityOption =  extractor.selectedSingleValue(OUTPUT_UNIT, Option.class);
+        String inputUnitName = extractor.selectedSingleValue(INPUT_UNIT, String.class);
+        String outputUnityName =  extractor.selectedSingleValue(OUTPUT_UNIT, String.class);
 
-        Unit inputUnit = UnitProvider.INSTANCE.getUnitByLabel(inputUnitOption.getName());
-        Unit outputUnit = UnitProvider.INSTANCE.getUnitByLabel(outputUnityOption.getName());
+        Unit inputUnit = UnitProvider.INSTANCE.getUnitByLabel(inputUnitName);
+        Unit outputUnit = UnitProvider.INSTANCE.getUnitByLabel(outputUnityName);
 
 
         MeasurementUnitConverterParameters staticParams = new MeasurementUnitConverterParameters(
