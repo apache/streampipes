@@ -302,11 +302,6 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-pe-sources-demonstrator</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-pe-sources-hella</artifactId>
                 <version>${project.version}</version>
             </dependency>
