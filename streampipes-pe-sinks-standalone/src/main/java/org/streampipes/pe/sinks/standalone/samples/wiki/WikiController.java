@@ -10,9 +10,6 @@ import org.streampipes.wrapper.ConfiguredEventSink;
 import org.streampipes.wrapper.runtime.EventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-/**
- * Created by riemer on 05.04.2017.
- */
 public class WikiController extends StandaloneEventSinkDeclarer<WikiParameters> {
   @Override
   public DataSinkDescription declareModel() {

@@ -29,9 +29,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthIndexParameters> {
 
     private final String frictionCoefficientNominal = "frictionCoefficientNominal";

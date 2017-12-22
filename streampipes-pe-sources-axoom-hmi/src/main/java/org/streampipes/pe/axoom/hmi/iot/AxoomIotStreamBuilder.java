@@ -5,9 +5,6 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 17.04.2017.
- */
 public class AxoomIotStreamBuilder {
 
   public static List<EventStreamDeclarer> buildIotStreams() {

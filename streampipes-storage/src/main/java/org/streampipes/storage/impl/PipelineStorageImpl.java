@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-/**
- * Created by robin on 29.10.14.
- */
 public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineStorage {
 
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);

@@ -11,6 +11,11 @@ public class CollectedStreamRequirements {
   private SpDataStream streamRequirements;
   private List<MappingProperty> mappingProperties;
 
+  /**
+   * Collects stream requirements and mapping properties
+   * @param streamRequirements All stream requirements represented as an abstract data stream.
+   * @param mappingProperties All mapping properties
+   */
   public CollectedStreamRequirements(SpDataStream streamRequirements, List<MappingProperty> mappingProperties) {
     this.streamRequirements = streamRequirements;
     this.mappingProperties = mappingProperties;

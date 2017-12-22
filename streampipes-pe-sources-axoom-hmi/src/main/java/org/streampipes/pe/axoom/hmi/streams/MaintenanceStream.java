@@ -12,9 +12,6 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
 import org.apache.commons.lang.WordUtils;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class MaintenanceStream extends AbstractAxoomHmiStream {
 
   public MaintenanceStream(AxoomHmiConfig eventType) {

@@ -4,10 +4,6 @@ import org.streampipes.model.client.endpoint.RdfEndpoint;
 
 import javax.ws.rs.core.Response;
 
-
-/**
- * Created by riemer on 05.10.2016.
- */
 public interface IRdfEndpoint {
 
     Response getAllEndpoints();

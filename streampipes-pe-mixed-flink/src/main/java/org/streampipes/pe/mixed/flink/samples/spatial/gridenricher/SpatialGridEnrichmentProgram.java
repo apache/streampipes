@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridEnrichmentProgram extends FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> {
 
   public SpatialGridEnrichmentProgram(SpatialGridEnrichmentParameters params) {

@@ -11,9 +11,6 @@ import org.streampipes.storage.controller.StorageManager;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by riemer on 16.10.2016.
- */
 public abstract class AbstractNotificationSubscriber implements InternalEventProcessor<byte[]>, Runnable {
 
     protected String topic;

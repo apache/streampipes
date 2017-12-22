@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class StatisticsSummaryProgram extends FlinkDataProcessorRuntime<StatisticsSummaryParameters> {
 
   public StatisticsSummaryProgram(StatisticsSummaryParameters params) {

@@ -2,9 +2,6 @@ package org.streampipes.pe.mixed.flink.samples.healthindex;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public class HealthIndexVariables2 implements Serializable {
 
     private Integer deltacx;

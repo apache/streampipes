@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public class CsvWriter implements org.apache.flink.streaming.connectors.fs.Writer<Map<String, Object>> {
 
     private FileSystem fileSystem;

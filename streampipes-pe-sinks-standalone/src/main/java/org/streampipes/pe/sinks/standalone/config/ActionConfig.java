@@ -26,6 +26,8 @@ public enum ActionConfig implements PeConfig {
   private final static String ICON_HOST = "icon_host";
   private final static String ICON_PORT = "icon_port";
 
+  private final static String DEMONSTRATOR_PUMP_URL = "demonstator_pump_url";
+  private final static String DEMONSTRATOR_VENTIL_URL = "demonstator_ventil_url";
 
   public final static String serverUrl;
   public final static String iconBaseUrl;
@@ -52,6 +54,12 @@ public enum ActionConfig implements PeConfig {
     config.register(JMS_PORT, 61616, "Port for pe actions service for active mq");
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
+
+
+    config.register(DEMONSTRATOR_PUMP_URL, "http://192.168.0.220:8000/test?mode=",
+            "URL of the demonstrator pump to turn it on and off");
+    config.register(DEMONSTRATOR_VENTIL_URL, "http://192.168.0.221:8000/test?mode=",
+            "URL of the demonstrator ventil to turn it on and off");
 
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
@@ -141,6 +149,14 @@ public enum ActionConfig implements PeConfig {
 
   public int getIconPort() {
     return config.getInteger(ICON_PORT);
+  }
+
+  public String getDemonstratorPumpUrl() {
+    return config.getString(DEMONSTRATOR_PUMP_URL);
+  }
+
+  public String getDemonstratorVentilUrl() {
+    return config.getString(DEMONSTRATOR_VENTIL_URL);
   }
 
   @Override

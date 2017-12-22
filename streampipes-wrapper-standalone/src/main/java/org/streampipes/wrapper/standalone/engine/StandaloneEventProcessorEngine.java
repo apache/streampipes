@@ -8,9 +8,6 @@ import org.streampipes.wrapper.runtime.EventProcessor;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Created by riemer on 26.07.2017.
- */
 public abstract class StandaloneEventProcessorEngine<B extends EventProcessorBindingParams> implements EventProcessor<B> {
 
   private Optional<SpOutputCollector> collectorOpt;

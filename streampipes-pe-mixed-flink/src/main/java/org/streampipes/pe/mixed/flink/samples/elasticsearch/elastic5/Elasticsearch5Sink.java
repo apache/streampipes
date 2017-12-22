@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by riemer on 21.03.2017.
- */
-/**
  * Elasticsearch 5.x sink that requests multiple {@link ActionRequest ActionRequests}
  * against a cluster for each incoming element.
  *

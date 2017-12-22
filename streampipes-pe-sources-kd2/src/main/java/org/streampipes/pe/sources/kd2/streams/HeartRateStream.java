@@ -10,9 +10,6 @@ import org.streampipes.pe.sources.kd2.utils.BiodataUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public class HeartRateStream extends AbstractBioDataStream {
     @Override
     public SpDataStream declareModel(DataSourceDescription sep) {

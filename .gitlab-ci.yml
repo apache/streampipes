@@ -24,8 +24,7 @@ build:
   stage: build
   script:
     - echo "$MAVEN_CREDENTIALS" > /root/.m2/settings.xml
-    - mvn clean package -DskipTests
-    - cp ./streampipes-pe-sources-demonstrator/target/sources-demonstrator.war ./streampipes-backend/target/sources-demonstrator.war
+    - mvn clean package javadoc:aggregate -DskipTests
   artifacts:
     paths:
       - ./streampipes-backend/target/*.war
@@ -35,6 +34,7 @@ build:
       - ./streampipes-pe-sources-axoom-hmi/target/*.jar
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
+      - ./target/site/apidocs/**
     expire_in:  1 hour
   except:
       - /release-.*$/

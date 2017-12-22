@@ -5,9 +5,6 @@ import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 12.02.2017.
- */
 public class Prediction2BreakDownMapper implements FlatMapFunction<Map<String, Object>, Map<String, Object>>  {
 
 

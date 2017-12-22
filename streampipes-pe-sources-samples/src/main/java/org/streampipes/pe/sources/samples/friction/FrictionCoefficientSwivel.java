@@ -7,9 +7,6 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionCoefficientSwivel extends FrictionCoefficient implements EventStreamDeclarer {
 
     protected FrictionCoefficientSwivel() {

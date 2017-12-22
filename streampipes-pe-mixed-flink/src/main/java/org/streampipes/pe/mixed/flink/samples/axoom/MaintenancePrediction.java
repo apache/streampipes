@@ -17,9 +17,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 13.04.2017.
- */
 public class MaintenancePrediction extends RichCoFlatMapFunction<List<Map<String,
         Object>>, Map<String, Object>, Map<String,Object>> implements Serializable {
 

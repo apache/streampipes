@@ -3,9 +3,6 @@ package org.streampipes.pe.sources.kd2.config;
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public enum SourcesConfig implements PeConfig {
     INSTANCE;
 

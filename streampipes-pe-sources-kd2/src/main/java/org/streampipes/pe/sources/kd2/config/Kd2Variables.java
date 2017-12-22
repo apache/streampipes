@@ -1,8 +1,5 @@
 package org.streampipes.pe.sources.kd2.config;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public enum Kd2Variables {
 
     Biodata("biodata", "Biodata", ""),

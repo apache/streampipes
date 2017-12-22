@@ -14,9 +14,6 @@ import org.streampipes.wrapper.ConfiguredEventSink;
 import org.streampipes.wrapper.runtime.EventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-/**
- * Created by riemer on 05.04.2017.
- */
 public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqParameters> {
 
   private static final String RABBITMQ_BROKER_SETTINGS_KEY = "broker-settings";

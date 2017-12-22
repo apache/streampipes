@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexProgram extends FlinkDataProcessorRuntime<HealthIndexParameters> {
 
     public HealthIndexProgram(HealthIndexParameters params) {
