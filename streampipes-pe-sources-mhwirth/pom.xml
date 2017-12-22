@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.50.1-SNAPSHOT</version>
+		<version>0.50.0</version>
     </parent>
 	<artifactId>streampipes-pe-sources-mhwirth</artifactId>
 	<packaging>war</packaging>
