@@ -192,6 +192,7 @@ docker hub:
   script:
     - export MVN_VERSION=$(cat ./target/mvn_version)
     - echo $MVN_VERSION
+    - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
     - docker build --pull -t streampipes/backend:$MVN_VERSION ./streampipes-backend/
     - docker push streampipes/backend:$MVN_VERSION
     - docker build --pull -t streampipes/backend ./streampipes-backend/
