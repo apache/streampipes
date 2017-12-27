@@ -37,7 +37,7 @@ build:
       - ./streampipes-pe-mixed-flink/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
-    expire_in:  1 hour
+    expire_in:  1 week
   except:
       - /release-.*$/
 
