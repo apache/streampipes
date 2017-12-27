@@ -5,6 +5,7 @@ variables:
 stages:
    - build
    - docker
+   - docker-hub
 
 build:
   image: beevelop/nodejs-python
@@ -34,14 +35,27 @@ nginx:
     - unzip docs.zip
     - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o javadoc.zip "https://ipe-wim-gitlab.fzi.de/streampipes/ce/-/jobs/artifacts/dev/download?job=build"'
     - unzip javadoc.zip
-    - rm javadoc.zip
-    - rm -rf ./streampipes-backend && rm -rf ./streampipes-pe-mixed && rm -rf ./streampipes-pe-processors-esper && rm -rf ./streampipes-pe-sinks-standlone && rm -rf ./streampipes-pe-sources-axoom-hmi && rm -rf ./streampipes-pe-sources-mnist && rm -rf ./streampipes-pe-sources-samples
     - mkdir javadoc && mv target/site/apidocs/* ./javadoc
-    - rm -rf target
-    - ls -la
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
     - docker build --pull -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
-    - rm docs.zip
-    - rm -rf site/
+
+nginx-docker-hub:
+  image: docker:17.06.0-ce
+  stage: docker-hub
+  script:
+    - apk update
+    - apk add curl
+    - apk add unzip
+    - 'curl -k -f -L -H "PRIVATE-TOKEN: ${API_KEY}" -o docs.zip "https://ipe-wim-gitlab.fzi.de/streampipes/docs/-/jobs/artifacts/master/download?job=build"'
+    - unzip docs.zip
+    - mkdir javadoc
+    - docker login -u streampipesbuild -p $DOCKER_HUB_USER_PWD
+    - docker build --pull -t streampipes/ui:$CI_COMMIT_REF_NAME .
+    - docker push streampipes/ui:$CI_COMMIT_REF_NAME
+    - docker build --pull -t streampipes/ui .
+    - docker push streampipes/ui
+  when: manual
+  only:
+    - master
 

@@ -1,7 +1,5 @@
 FROM nginx
 
-#COPY streampipes-ui /usr/share/nginx/html
-
 COPY img/ /usr/share/nginx/html/img/
 COPY lib/ /usr/share/nginx/html/lib/
 COPY css/ /usr/share/nginx/html/css/
