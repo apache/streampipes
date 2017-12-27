@@ -57,5 +57,5 @@ nginx-docker-hub:
     - docker push streampipes/ui
   when: manual
   only:
-    - 0.50.0
+    - 0.5.0
 
