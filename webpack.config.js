@@ -23,7 +23,7 @@ let config = {
         }
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.css$/,
                 loader: 'style!css'
@@ -74,10 +74,10 @@ let config = {
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
-            "window.jQuery": "jquery"
-        })
-        , new webpack.HotModuleReplacementPlugin(),
-        new webpack.OldWatchingPlugin()
+            "window.jQuery": "jquery",
+        }),
+        new webpack.HotModuleReplacementPlugin(),
+        //new webpack.OldWatchingPlugin()
         //new webpack.optimize.UglifyJsPlugin({
         //compress: {
         //warnings: false

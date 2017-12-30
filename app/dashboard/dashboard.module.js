@@ -8,7 +8,7 @@ import 'npm/angular-sanitize';
 import 'legacy/mlhr-table';
 //import 'legacy/malhar-angular-widgets';
 import 'legacy/malhar-angular-dashboard';
-import 'npm/d3';
+//import 'npm/d3';
 import 'npm/epoch-charting';
 import 'npm/ngmap'
 
