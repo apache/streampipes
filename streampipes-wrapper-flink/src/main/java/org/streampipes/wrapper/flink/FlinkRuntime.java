@@ -132,6 +132,7 @@ public abstract class FlinkRuntime<I extends InvocableStreamPipesEntity> impleme
 	{
 		try {
 			result = env.execute(graph.getElementId());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
