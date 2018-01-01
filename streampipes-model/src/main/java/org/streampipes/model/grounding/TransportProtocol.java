@@ -5,8 +5,11 @@ import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.vocabulary.StreamPipes;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
 @RdfsClass(StreamPipes.TRANSPORT_PROTOCOL)
 @Entity
@@ -17,9 +20,10 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 
 	@RdfProperty(StreamPipes.BROKER_HOSTNAME)
 	private String brokerHostname;
-	
+
+	@OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.TOPIC)
-	private String topicName;
+	private TopicDefinition topicName;
 	
 	public TransportProtocol() {
 		super();
@@ -29,13 +33,13 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	{
 		super();
 		this.brokerHostname = uri;
-		this.topicName = topicName;
+		//this.topicName = topicName;
 	}
 
 	public TransportProtocol(TransportProtocol other) {
 		super(other);
 		this.brokerHostname = other.getBrokerHostname();
-		this.topicName = other.getTopicName();
+		//this.topicName = other.getTopicName();
 	}
 
 	public String getBrokerHostname() {
@@ -47,11 +51,11 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	}
 	
 	public String getTopicName() {
-		return topicName;
+		return topicName.toString();
 	}
 
 	public void setTopicName(String topicName) {
-		this.topicName = topicName;
+		//this.topicName = topicName;
 	}
 
 }
