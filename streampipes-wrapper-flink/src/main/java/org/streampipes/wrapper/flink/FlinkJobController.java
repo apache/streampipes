@@ -92,7 +92,7 @@ public class FlinkJobController {
 		
 		try {
 			ActorGateway jobManager = getJobManagerGateway();
-			Future<Object> response = jobManager.ask(new JobManagerMessages.StopJob(jobId), askTimeout);
+			Future<Object> response = jobManager.ask(new JobManagerMessages.CancelJob(jobId), askTimeout);
 			Await.result(response, askTimeout);
 			return true;
 		}
