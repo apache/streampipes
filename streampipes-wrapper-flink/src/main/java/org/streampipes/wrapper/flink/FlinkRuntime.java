@@ -22,9 +22,6 @@ import java.util.UUID;
 
 public abstract class FlinkRuntime<I extends InvocableStreamPipesEntity> implements Runnable, Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected boolean debug;

@@ -1,17 +1,16 @@
 package org.streampipes.pe.processors.esper.extract;
 
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class ProjectController extends StandaloneEventProcessorDeclarerSingleton
   }
 
   @Override
-  public ConfiguredEventProcessor<ProjectParameter, EventProcessor<ProjectParameter>>
+  public ConfiguredEventProcessor<ProjectParameter>
   onInvocation(DataProcessorInvocation sepa) {
     List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 

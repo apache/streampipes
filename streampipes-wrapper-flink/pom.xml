@@ -27,7 +27,6 @@
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-java</artifactId>
@@ -68,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper</artifactId>
+            <artifactId>streampipes-wrapper-distributed</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>

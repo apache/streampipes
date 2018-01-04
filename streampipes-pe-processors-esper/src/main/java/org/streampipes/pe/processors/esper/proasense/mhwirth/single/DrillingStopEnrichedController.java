@@ -3,24 +3,23 @@ package org.streampipes.pe.processors.esper.proasense.mhwirth.single;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.vocabulary.MhWirth;
-import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.vocabulary.MhWirth;
+import org.streampipes.vocabulary.XSD;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -32,7 +31,7 @@ import java.util.List;
 public class DrillingStopEnrichedController extends StandaloneEventProcessorDeclarerSingleton<DrillingStopEnrichedParameters> {
 
 	@Override
-	public ConfiguredEventProcessor<DrillingStopEnrichedParameters, EventProcessor<DrillingStopEnrichedParameters>>
+	public ConfiguredEventProcessor<DrillingStopEnrichedParameters>
 	onInvocation(DataProcessorInvocation sepa) {
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
