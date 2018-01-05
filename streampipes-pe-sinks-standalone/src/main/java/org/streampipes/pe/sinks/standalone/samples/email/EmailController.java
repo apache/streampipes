@@ -9,8 +9,7 @@ import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters> {
@@ -33,7 +32,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
     }
 
     @Override
-    public ConfiguredEventSink<EmailParameters, EventSink<EmailParameters>> onInvocation(DataSinkInvocation graph) {
+    public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph) {
         DataSinkParameterExtractor extractor = getExtractor(graph);
 
         String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
@@ -41,7 +40,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
 
         EmailParameters params = new EmailParameters(graph, toEmail, subject);
 
-        return null;
+        return new ConfiguredEventSink<>(params, EmailPublisher::new);
     }
 }
 
