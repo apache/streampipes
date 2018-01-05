@@ -116,11 +116,16 @@ public class ConsulUtil {
         return keyValues;
     }
 
-    public static void updateConfig(String key, String value, String valueType,  String description) {
+    public static void updateConfig(String key, String value, String valueType, String description, boolean password) {
         Consul consul = consulInstance();
         KeyValueClient keyValueClient = consul.keyValueClient();
 
-        keyValueClient.putValue(key, value);
+        if(!password) {
+            keyValueClient.putValue(key, value);
+        } else if(!value.equals("")) {
+            keyValueClient.putValue(key, value);
+        }
+
         keyValueClient.putValue(key + "_description", description);
         keyValueClient.putValue(key + "_type", valueType);
         LOG.info("Updated config - key:" + key +

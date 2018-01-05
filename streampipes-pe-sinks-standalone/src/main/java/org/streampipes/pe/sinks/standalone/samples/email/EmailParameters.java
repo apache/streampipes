@@ -6,20 +6,19 @@ import org.streampipes.wrapper.runtime.EventSink;
 
 public class EmailParameters extends EventSinkBindingParams {
 
-    private String fromEmailAddress;
     private String toEmailAddress;
+    private String subject;
 
-    public EmailParameters(DataSinkInvocation graph, String fromEmailAddress, String toEmailAddress) {
+    public EmailParameters(DataSinkInvocation graph, String toEmailAddress, String subject) {
         super(graph);
-        this.fromEmailAddress = fromEmailAddress;
         this.toEmailAddress = toEmailAddress;
-    }
-
-    public String getFromEmailAddress() {
-        return fromEmailAddress;
     }
 
     public String getToEmailAddress() {
         return toEmailAddress;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 }

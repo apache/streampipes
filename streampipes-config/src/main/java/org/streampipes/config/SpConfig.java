@@ -30,6 +30,8 @@ public abstract class SpConfig {
 
     public abstract void register(String key, String defaultValue, String description);
 
+    public abstract void registerPassword(String key, String defaultValue, String description);
+
     public abstract boolean getBoolean(String key);
 
     public abstract int getInteger(String key);

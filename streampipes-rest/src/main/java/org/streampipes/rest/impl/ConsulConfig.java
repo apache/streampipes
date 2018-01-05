@@ -23,7 +23,6 @@ import static org.streampipes.container.util.ConsulUtil.updateConfig;
 @Path("/v2/consul")
 public class ConsulConfig extends AbstractRestInterface implements IConsulConfig {
 
-
     static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);
 
     @GET
@@ -113,7 +112,8 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
             updateConfig(prefix + "/" + configItem.getKey(),
                             configItem.getValue(),
                             configItem.getValueType(),
-                            configItem.getDescription());
+                            configItem.getDescription(),
+                            configItem.isPassword());
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -128,8 +128,6 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
         return Response.status(Response.Status.OK).build();
     }
 
-
-
     private List<ConfigItem> getConfigForService(String serviceId) {
         Map<String, String> keyValues = ConsulUtil.getKeyValue(ConsulSpConfig.SERVICE_ROUTE_PREFIX + serviceId);
 
@@ -137,14 +135,23 @@ public class ConsulConfig extends AbstractRestInterface implements IConsulConfig
 
         for(Map.Entry<String, String> entry : keyValues.entrySet()) {
             String key = entry.getKey();
-            if(!key.endsWith("_description") && !key.endsWith("_type")) {
+            if(!key.endsWith("_description") && !key.endsWith("_type") && !key.endsWith("_isPassword")) {
                 ConfigItem configItem = new ConfigItem();
 
                 String[] splittedKey = entry.getKey().split("/");
                 String shortKey = splittedKey[splittedKey.length - 1];
 
                 configItem.setKey(shortKey);
-                configItem.setValue(entry.getValue());
+
+                String isPasswordKey = key + "_isPassword";
+                if(keyValues.containsKey(isPasswordKey)) {
+                    if(keyValues.get(isPasswordKey).equals("true")) {
+                        configItem.setPassword(true);
+                        configItem.setValue("");
+                    }
+                }
+                if(!configItem.isPassword())
+                    configItem.setValue(entry.getValue());
 
                 String descriptionKey = key + "_description";
                 if(keyValues.containsKey(descriptionKey)) {
