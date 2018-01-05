@@ -5,9 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionEventTransformer {
 
     private FrictionRawEvent rawEvent;

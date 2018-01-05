@@ -1,8 +1,5 @@
 package org.streampipes.pe.mixed.flink.samples.healthindex;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexCalculationFormulas {
 
     public static Double calculateGamma(Integer multiplier, Double frictionCoefficientStdDev) {

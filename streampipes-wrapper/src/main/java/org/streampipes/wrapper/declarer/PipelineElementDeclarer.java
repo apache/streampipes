@@ -1,28 +1,30 @@
 package org.streampipes.wrapper.declarer;
 
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.Response;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.streampipes.wrapper.params.binding.BindingParams;
-import org.streampipes.wrapper.runtime.PipelineElement;
 import org.streampipes.wrapper.runtime.PipelineElementRuntime;
-
-import java.util.function.Supplier;
 
 public abstract class PipelineElementDeclarer<B extends BindingParams, EPR extends
         PipelineElementRuntime, I
-        extends InvocableStreamPipesEntity, EX extends AbstractParameterExtractor<I>, PE extends
-        PipelineElement<B>> {
+        extends InvocableStreamPipesEntity, EX extends AbstractParameterExtractor<I>> {
 
   protected EPR epRuntime;
   protected String elementId;
 
-  public void invokeEPRuntime(B bindingParameters, Supplier<PE> supplier) throws Exception {
+  public Response invokeEPRuntime(I graph) {
 
-    elementId = bindingParameters.getGraph().getElementId();
+    try {
+      elementId = graph.getElementId();
+      epRuntime = getRuntime(graph);
+      epRuntime.bindRuntime();
+      return new Response(graph.getElementId(), true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new Response(graph.getElementId(), false, e.getMessage());
+    }
 
-    epRuntime = prepareRuntime(bindingParameters, supplier);
-    epRuntime.bindRuntime();
   }
 
   public Response detachRuntime(String pipelineId) {
@@ -37,7 +39,7 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
 
   protected abstract EX getExtractor(I graph);
 
-  public abstract EPR prepareRuntime(B bindingParameters, Supplier<PE> supplier);
+  public abstract EPR getRuntime(I graph);
 
 
 

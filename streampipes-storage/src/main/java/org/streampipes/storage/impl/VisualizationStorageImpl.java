@@ -9,9 +9,6 @@ import org.lightcouch.NoDocumentException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 05.09.2016.
- */
 public class VisualizationStorageImpl extends Storage<RunningVisualization> implements VisualizationStorage {
 
 

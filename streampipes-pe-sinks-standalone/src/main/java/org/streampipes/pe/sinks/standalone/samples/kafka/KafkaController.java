@@ -10,8 +10,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OntologyProperties;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters> {
@@ -39,7 +38,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
 	}
 
 	@Override
-	public ConfiguredEventSink<KafkaParameters, EventSink<KafkaParameters>> onInvocation(DataSinkInvocation graph) {
+	public ConfiguredEventSink<KafkaParameters> onInvocation(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
 		String topic = extractor.singleValueParameter(TOPIC_KEY,
 						String.class);

@@ -2,9 +2,6 @@ package org.streampipes.pe.mixed.flink.samples.healthindex;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 25.10.2016.
- */
 public class HealthIndexVariables implements Serializable {
 
     private Double frictionCoefficientNominal;

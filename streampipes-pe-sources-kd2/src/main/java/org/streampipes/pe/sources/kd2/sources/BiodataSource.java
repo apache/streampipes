@@ -12,9 +12,6 @@ import org.streampipes.pe.sources.kd2.streams.SkinConductanceStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public class BiodataSource implements SemanticEventProducerDeclarer {
     @Override
     public DataSourceDescription declareModel() {

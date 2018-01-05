@@ -3,9 +3,6 @@ package org.streampipes.pe.mixed.flink.samples.healthindex;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexParameters extends EventProcessorBindingParams {
 
     private String frictionMapping;

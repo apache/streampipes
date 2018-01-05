@@ -14,9 +14,6 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Datatypes;
 
-/**
- * Created by riemer on 12.02.2017.
- */
 public class Prediction2BreakdownController extends FlinkDataProcessorDeclarer<Prediction2BreakdownParameters> {
 
   private static final String PdfMapping = "pdf-Mapping";

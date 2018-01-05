@@ -15,9 +15,6 @@ import org.streampipes.pe.sources.kd2.vocabulary.Kd2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public abstract class AbstractBioDataStream extends AbstractAlreadyExistingStream {
 
     public SpDataStream prepareStream(String topic) {

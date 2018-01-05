@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class AxoomIoTCafeProducer implements SemanticEventProducerDeclarer {
 
   @Override

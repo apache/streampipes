@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class PeakDetectionCalculator implements FlatMapFunction<List<Map<String,
         Object>>, Map<String, Object>> {
 

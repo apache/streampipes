@@ -2,9 +2,6 @@ package org.streampipes.pe.mixed.flink.samples.spatial.gridenricher;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class EnrichmentSettings implements Serializable {
 
   private double latitudeStart;

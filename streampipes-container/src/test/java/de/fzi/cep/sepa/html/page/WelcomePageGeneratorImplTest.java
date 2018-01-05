@@ -16,7 +16,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.SemanticEventProducerDescription;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 import org.streampipes.container.html.page.WelcomePageGenerator;
 import org.streampipes.container.html.page.WelcomePageGeneratorImpl;
 import org.streampipes.model.SpDataStream;
@@ -57,9 +57,9 @@ public class WelcomePageGeneratorImplTest {
         assertEquals(expected.getDescription(), desc.getDescription());
         assertEquals(expected.getUri(), desc.getUri());
 
-        assertThat(desc,  instanceOf(SemanticEventProducerDescription.class));
+        assertThat(desc,  instanceOf(DataSourceDescriptionHtml.class));
 
-        SemanticEventProducerDescription sepDesc = (SemanticEventProducerDescription) desc;
+        DataSourceDescriptionHtml sepDesc = (DataSourceDescriptionHtml) desc;
         assertEquals(1, sepDesc.getStreams().size());
         Description expectedStream = new Description("streamname", "streamdescription", URI.create("baseUri/stream/streampathName"));
 

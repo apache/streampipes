@@ -16,9 +16,6 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
-/**
- * Created by riemer on 12.04.2017.
- */
 public class MaintenancePredictionController extends FlinkDataProcessorDeclarer<MaintenancePredictionParameters> {
 
   @Override

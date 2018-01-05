@@ -11,9 +11,6 @@ import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Protocols;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class OrderStream extends AbstractAxoomHmiStream {
 
   public OrderStream(AxoomHmiConfig eventType) {

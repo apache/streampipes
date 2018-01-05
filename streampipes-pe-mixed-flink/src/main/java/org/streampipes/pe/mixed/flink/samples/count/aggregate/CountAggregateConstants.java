@@ -1,8 +1,5 @@
 package org.streampipes.pe.mixed.flink.samples.count.aggregate;
 
-/**
- * Created by philippzehnder on 10.04.17.
- */
 public class CountAggregateConstants {
 
 	// Domain Properties

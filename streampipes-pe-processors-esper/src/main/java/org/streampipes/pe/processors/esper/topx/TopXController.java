@@ -9,8 +9,7 @@ import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class TopXController extends StandaloneEventProcessorDeclarerSingleton<To
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TopXParameter, EventProcessor<TopXParameter>> onInvocation(DataProcessorInvocation sepa) {
+	public ConfiguredEventProcessor<TopXParameter> onInvocation(DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
 		String sortBy = extractor.mappingPropertyValue("sortBy");

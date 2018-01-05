@@ -5,9 +5,6 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.pe.sources.kd2.vocabulary.Kd2;
 import org.streampipes.sdk.helpers.Labels;
 
-/**
- * Created by riemer on 20.11.2016.
- */
 public class BiodataUtils {
 
     public static EventProperty getHeartRateProperty() {

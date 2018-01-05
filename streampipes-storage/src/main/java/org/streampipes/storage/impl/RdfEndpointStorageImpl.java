@@ -7,9 +7,6 @@ import org.lightcouch.CouchDbClient;
 
 import java.util.List;
 
-/**
- * Created by riemer on 05.10.2016.
- */
 public class RdfEndpointStorageImpl extends Storage<RdfEndpoint> implements RdfEndpointStorage {
 
     public RdfEndpointStorageImpl() {

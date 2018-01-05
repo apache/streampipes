@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class StatisticsSummaryCalculator implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
   private String listPropertyName;

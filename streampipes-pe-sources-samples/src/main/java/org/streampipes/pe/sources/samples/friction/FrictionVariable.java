@@ -1,8 +1,5 @@
 package org.streampipes.pe.sources.samples.friction;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public enum FrictionVariable {
 
     Gearbox("Friction Coefficient Gearbox (Replay)", "", "gearbox", "de.fzi.cep.sepa.mhwirth.friction.gearbox"),

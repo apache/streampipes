@@ -10,6 +10,10 @@ public enum StreamIdentifier {
     this.streamId = streamId;
   }
 
+  /**
+   * @deprecated Use {@link org.streampipes.sdk.builder.AbstractProcessingElementBuilder} to add stream requirements.
+   * @return the stream ID
+   */
   public Integer getStreamId() {
     return streamId;
   }

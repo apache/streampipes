@@ -12,9 +12,6 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 
-/**
- * Created by riemer on 17.04.2017.
- */
 public class EnergyStream extends AbstractAxoomHmiStream {
 
   public EnergyStream(AxoomHmiConfig eventType) {

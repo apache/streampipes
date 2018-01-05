@@ -4,9 +4,6 @@ package org.streampipes.pe.axoom.hmi.config;
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;
 
-/**
- * Created by riemer on 21.04.2017.
- */
 public enum SourceConfig implements PeConfig {
     INSTANCE;
 

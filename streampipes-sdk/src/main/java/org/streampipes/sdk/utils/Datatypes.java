@@ -5,9 +5,6 @@ import org.streampipes.vocabulary.XSD;
 
 import java.net.URI;
 
-/**
- * Created by riemer on 06.12.2016.
- */
 public enum Datatypes {
 
     Integer(XSD._integer),

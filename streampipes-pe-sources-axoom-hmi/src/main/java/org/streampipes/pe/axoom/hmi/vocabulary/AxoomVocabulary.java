@@ -1,8 +1,5 @@
 package org.streampipes.pe.axoom.hmi.vocabulary;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class AxoomVocabulary {
 
   public static final String PREFIX = "http://axoom.com/vocab/";
