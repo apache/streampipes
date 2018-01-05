@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 20.03.2017.
- */
 public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesEntity> {
 
   protected T sepaElement;

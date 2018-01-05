@@ -18,9 +18,6 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<SpatialGridEnrichmentParameters> {
 
   @Override

@@ -12,9 +12,6 @@ import org.streampipes.storage.controller.StorageManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 02.09.2016.
- */
 public class PipelineStorageService {
 
     private Pipeline pipeline;

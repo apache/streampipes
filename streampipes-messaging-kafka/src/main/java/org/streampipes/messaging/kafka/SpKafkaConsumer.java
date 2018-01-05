@@ -15,9 +15,6 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
 
-/**
- * Created by riemer on 01.10.2016.
- */
 public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
         Serializable {
 

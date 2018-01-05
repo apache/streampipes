@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class TimeToFailureProgram extends FlinkDataProcessorRuntime<TimeToFailureParameters> {
 
     public TimeToFailureProgram(TimeToFailureParameters params) {

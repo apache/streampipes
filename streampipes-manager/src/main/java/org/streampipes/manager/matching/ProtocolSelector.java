@@ -12,9 +12,6 @@ import org.streampipes.model.grounding.TransportProtocol;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by riemer on 23.09.2016.
- */
 public class ProtocolSelector extends GroundingSelector {
 
     private String outputTopic;

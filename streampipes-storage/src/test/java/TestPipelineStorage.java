@@ -1,16 +1,12 @@
+import com.google.common.io.Resources;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.storage.controller.StorageManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
 
-import com.google.common.io.Resources;
-
-import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.storage.controller.StorageManager;
-
-/**
- * Created by robin on 31.10.14.
- */
 public class TestPipelineStorage {
 
     //private static final Logger LOG = LoggerFactory.getLogger(TestPipelineStorage.class);

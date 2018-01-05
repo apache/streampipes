@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 12.02.2017.
- */
 public class Prediction2BreakdownProgram extends FlinkDataProcessorRuntime<Prediction2BreakdownParameters> {
 
   public Prediction2BreakdownProgram(Prediction2BreakdownParameters params) {

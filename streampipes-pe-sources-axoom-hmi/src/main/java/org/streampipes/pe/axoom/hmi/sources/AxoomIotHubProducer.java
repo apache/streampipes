@@ -9,9 +9,6 @@ import org.streampipes.sdk.builder.DataSourceBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class AxoomIotHubProducer implements SemanticEventProducerDeclarer {
 
   @Override

@@ -1,8 +1,5 @@
 package org.streampipes.vocabulary;
 
-/**
- * Created by riemer on 12.02.2017.
- */
 public class ProaSense {
 
   public static final String PDFTYPE = "http://proasense.eu/schema/pdfType";

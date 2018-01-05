@@ -4,9 +4,6 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 
-/**
- * Created by riemer on 17.04.2017.
- */
 public class AxoomIotStream extends AbstractAlreadyExistingStream {
   @Override
   public SpDataStream declareModel(DataSourceDescription sep) {

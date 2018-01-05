@@ -10,9 +10,6 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-/**
- * Created by riemer on 29.08.2016.
- */
 public class StreamPipesApplication extends Application {
 
     @Override

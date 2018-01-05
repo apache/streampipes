@@ -9,9 +9,6 @@ import org.streampipes.serializers.json.Utils;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * Created by riemer on 30.09.2016.
- */
 public class TestPipelineStorage {
 
     public static void main(String[] args) {

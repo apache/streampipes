@@ -2,9 +2,6 @@ package org.streampipes.rest.notifications;
 
 import org.streampipes.model.Notification;
 
-/**
- * Created by riemer on 16.10.2016.
- */
 public class StreamPipesNotificationSubscriber extends AbstractNotificationSubscriber {
 
   public StreamPipesNotificationSubscriber(String topic) {

@@ -28,9 +28,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class TimeToFailureController extends FlinkDataProcessorDeclarer<TimeToFailureParameters> {
 
     private final String healthIndexMappingName = "healthIndexMappingName";

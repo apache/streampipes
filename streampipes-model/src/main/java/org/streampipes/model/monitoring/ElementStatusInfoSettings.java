@@ -7,9 +7,6 @@ import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-/**
- * Created by riemer on 30.01.2017.
- */
 @RdfsClass(StreamPipes.ELEMENT_STATUS_INFO_SETTINGS)
 @Entity
 public class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {

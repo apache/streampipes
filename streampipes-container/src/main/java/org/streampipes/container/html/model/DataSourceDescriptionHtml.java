@@ -4,16 +4,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SemanticEventProducerDescription extends Description {
+public class DataSourceDescriptionHtml extends Description {
 
     private List<Description> streams;
 
-    public SemanticEventProducerDescription(String name, String description, URI uri, List<Description> streams) {
+    public DataSourceDescriptionHtml(String name, String description, URI uri, List<Description> streams) {
         super(name, description, uri);
         this.streams = streams;
     }
 
-    public SemanticEventProducerDescription() {
+    public DataSourceDescriptionHtml() {
         streams = new ArrayList<>();
     }
 

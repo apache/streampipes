@@ -2,9 +2,6 @@ package org.streampipes.pe.mixed.flink.samples.spatial.gridenricher;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridCalculator implements Serializable {
 
   private double SOUTHDIFF = 0.004491556;

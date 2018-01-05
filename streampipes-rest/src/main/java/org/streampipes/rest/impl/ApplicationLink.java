@@ -1,23 +1,20 @@
 package org.streampipes.rest.impl;
 
 import org.streampipes.model.base.NamedStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.api.IApplicationLink;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Created by riemer on 11.10.2016.
- */
 
 @Path("/v2/applink")
 public class ApplicationLink extends AbstractRestInterface implements IApplicationLink {

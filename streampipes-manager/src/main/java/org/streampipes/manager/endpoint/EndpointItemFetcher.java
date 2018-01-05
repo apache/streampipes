@@ -2,19 +2,17 @@ package org.streampipes.manager.endpoint;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.streampipes.model.client.endpoint.RdfEndpoint;
-import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.message.BasicHeader;
+import org.streampipes.model.client.endpoint.RdfEndpoint;
+import org.streampipes.model.client.endpoint.RdfEndpointItem;
 
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 05.10.2016.
- */
+import javax.ws.rs.core.MediaType;
+
 public class EndpointItemFetcher {
 
     private List<RdfEndpoint> rdfEndpoints;

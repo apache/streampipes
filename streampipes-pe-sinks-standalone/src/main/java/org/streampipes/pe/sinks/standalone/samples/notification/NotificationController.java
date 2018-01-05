@@ -10,8 +10,7 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class NotificationController extends StandaloneEventSinkDeclarer<NotificationParameters> {
@@ -34,7 +33,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 	}
 
 	@Override
-	public ConfiguredEventSink<NotificationParameters, EventSink<NotificationParameters>> onInvocation(DataSinkInvocation graph) {
+	public ConfiguredEventSink<NotificationParameters> onInvocation(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = getExtractor(graph);
 
 		String title = extractor.singleValueParameter(TITLE_KEY, String.class);

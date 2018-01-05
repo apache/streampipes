@@ -3,29 +3,28 @@ package org.streampipes.pe.processors.esper.geo.durationofstay;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.PropertyValueSpecification;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.vocabulary.Geo;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.pe.processors.esper.geo.geofencing.GeofencingData;
 import org.streampipes.sdk.StaticProperties;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.sdk.helpers.Labels;
+import org.streampipes.vocabulary.Geo;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -95,7 +94,7 @@ public class DurationOfStayController extends StandaloneEventProcessorDeclarerSi
 	}
 
 	@Override
-	public ConfiguredEventProcessor<DurationOfStayParameters, EventProcessor<DurationOfStayParameters>> onInvocation
+	public ConfiguredEventProcessor<DurationOfStayParameters> onInvocation
 					(DataProcessorInvocation invocationGraph) {
 		int radius = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "radius"));
 

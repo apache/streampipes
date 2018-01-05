@@ -6,9 +6,6 @@ import org.apache.flink.util.Collector;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public class HealthIndexCalculator2 extends AbstractHealthIndexCalculator {
 
     private HealthIndexVariables2 variables;

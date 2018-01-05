@@ -7,9 +7,6 @@ import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 21.04.2017.
- */
 public class SlidingBatchWindow<IN> extends AbstractStreamOperator<List<IN>> implements
         OneInputStreamOperator<IN, List<IN>> {
 

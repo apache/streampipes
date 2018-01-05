@@ -10,9 +10,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Optional;
 
-/**
- * Created by riemer on 10.11.2016.
- */
 public class FrictionJsonToCsvConverter {
 
     private static final String FrictionReplayFilename = "friction-coeff.txt";

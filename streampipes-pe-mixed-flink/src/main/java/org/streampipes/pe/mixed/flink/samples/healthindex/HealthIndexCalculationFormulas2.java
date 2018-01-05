@@ -1,8 +1,5 @@
 package org.streampipes.pe.mixed.flink.samples.healthindex;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public class HealthIndexCalculationFormulas2 {
 
     public static Double calculateRateC(Double oldValue, Double newValue, Integer deltacx, Double stddev) {

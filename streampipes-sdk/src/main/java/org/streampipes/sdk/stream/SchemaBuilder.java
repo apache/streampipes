@@ -8,17 +8,18 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class SchemaBuilder {
 
 	EventSchema schema;
 	List<EventProperty> properties;
-	
+
 	private SchemaBuilder()
 	{
 		this.schema = new EventSchema();
-		this.properties = new ArrayList<EventProperty>();	
+		this.properties = new ArrayList<EventProperty>();
 	}
-	
+
 	public static SchemaBuilder create()
 	{
 		return new SchemaBuilder();
@@ -32,18 +33,18 @@ public class SchemaBuilder {
 		properties.add(primitive);
 		return this;
 	}
-	
+
 	public SchemaBuilder properties(List<EventProperty> properties)
 	{
 		this.properties.addAll(properties);
 		return this;
 	}
-	
+
 	public EventSchema build()
 	{
 		schema.setEventProperties(properties);
 		return schema;
 	}
-	
-	
+
+
 }

@@ -5,9 +5,6 @@ import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class TimeToFailureCalculator implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
     private String healthIndexMapping;

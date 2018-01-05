@@ -13,9 +13,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class StatisticsSummaryProgramWindow extends
         FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> {
 

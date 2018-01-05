@@ -9,9 +9,6 @@ import org.streampipes.vocabulary.MessageFormat;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by riemer on 23.09.2016.
- */
 public class FormatSelector extends GroundingSelector {
 
     public FormatSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {

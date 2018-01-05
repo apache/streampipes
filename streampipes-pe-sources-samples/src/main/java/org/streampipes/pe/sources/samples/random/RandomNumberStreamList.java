@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-/**
- * Created by riemer on 28.01.2017.
- */
 public class RandomNumberStreamList implements EventStreamDeclarer {
 
   private SpKafkaProducer kafkaProducer;

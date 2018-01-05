@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by riemer on 13.11.2016.
- */
 public abstract class AbstractHealthIndexCalculator implements AllWindowFunction<Map<String, Object>, Map<String, Object>, GlobalWindow> {
 
     protected String frictionValueKey;

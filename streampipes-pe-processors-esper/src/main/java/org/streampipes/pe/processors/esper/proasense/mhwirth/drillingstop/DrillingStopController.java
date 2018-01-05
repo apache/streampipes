@@ -18,8 +18,7 @@ import org.streampipes.model.util.SepaUtils;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -30,7 +29,7 @@ import java.util.List;
 public class DrillingStopController extends StandaloneEventProcessorDeclarerSingleton<DrillingStopParameters> {
 
 	@Override
-	public ConfiguredEventProcessor<DrillingStopParameters, EventProcessor<DrillingStopParameters>> onInvocation
+	public ConfiguredEventProcessor<DrillingStopParameters> onInvocation
 					(DataProcessorInvocation sepa) {
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));

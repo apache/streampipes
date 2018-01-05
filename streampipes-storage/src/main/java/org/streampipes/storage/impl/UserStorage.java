@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * User Storage.
  * Handles operations on user including user-specified pipelines.
  *
- * Created by robin on 21.06.15.
+ *
  */
 public class UserStorage extends Storage<User> {
 

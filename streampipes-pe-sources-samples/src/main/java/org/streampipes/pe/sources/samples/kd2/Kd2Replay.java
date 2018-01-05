@@ -6,9 +6,6 @@ import de.fzi.cep.sepa.adapter.kd2.publisher.StreamPipesPublisher;
 
 import java.io.*;
 
-/**
- * Created by riemer on 20.11.2016.
- */
 public class Kd2Replay implements Runnable {
 
     private String kd2DataFileName;

@@ -1,25 +1,18 @@
 package org.streampipes.manager.matching;
 
-import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 import org.streampipes.manager.matching.v2.TestUtils;
-import org.streampipes.model.client.pipeline.PipelineModificationMessage;
-import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineModificationMessage;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.pe.processors.esper.aggregate.avg.AggregationController;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.random.RandomNumberStreamJson;
-import org.junit.Test;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-/**
- * Created by riemer on 01.09.2016.
- */
-
 
 public class TestPipelineModification {
 
