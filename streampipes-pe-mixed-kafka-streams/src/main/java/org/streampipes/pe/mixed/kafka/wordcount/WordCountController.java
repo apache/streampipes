@@ -50,12 +50,13 @@ public class WordCountController extends KafkaStreamsDataProcessorDeclarer<WordC
             .build();
   }
 
-
   @Override
   public KafkaStreamsDataProcessorRuntime getRuntime(DataProcessorInvocation graph) {
     ProcessingElementParameterExtractor extractor = getExtractor(graph);
 
-    WordCountParameters params = new WordCountParameters(graph);
+    String wordFieldName = extractor.mappingPropertyValue("selected-text-property");
+
+    WordCountParameters params = new WordCountParameters(graph, wordFieldName);
 
     return new WordCountProgram(params);
   }

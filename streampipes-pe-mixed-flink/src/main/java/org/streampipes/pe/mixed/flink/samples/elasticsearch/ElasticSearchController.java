@@ -35,7 +35,7 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
 	}
 
 	@Override
-	protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
+	public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
 		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
 
 		String timestampField = extractor.mappingPropertyValue("timestamp");

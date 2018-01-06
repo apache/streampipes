@@ -37,7 +37,7 @@ public class LabelOrderController extends FlinkDataProcessorDeclarer<LabelOrderP
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 

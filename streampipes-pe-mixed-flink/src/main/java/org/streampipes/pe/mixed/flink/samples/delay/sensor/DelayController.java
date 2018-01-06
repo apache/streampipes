@@ -46,7 +46,7 @@ public class DelayController extends FlinkDataProcessorDeclarer<DelayParameters>
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<DelayParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<DelayParameters> getRuntime(DataProcessorInvocation graph) {
 
         int delayValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, DELAY_VALUE_NAME));
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);

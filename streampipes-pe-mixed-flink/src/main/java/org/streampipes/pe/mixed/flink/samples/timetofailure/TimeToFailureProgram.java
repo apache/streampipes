@@ -19,6 +19,6 @@ public class TimeToFailureProgram extends FlinkDataProcessorRuntime<TimeToFailur
 
     @Override
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
-        return messageStream[0].flatMap(new TimeToFailureCalculator(params.getHealthIndexMapping(), params.getMtbfValue()));
+        return messageStream[0].flatMap(new TimeToFailureCalculator(bindingParams.getHealthIndexMapping(), bindingParams.getMtbfValue()));
     }
 }

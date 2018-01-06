@@ -7,32 +7,24 @@ import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import java.util.Map;
 
 
-public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<DataSinkInvocation>{
+public abstract class FlinkDataSinkRuntime<B extends EventSinkBindingParams> extends FlinkRuntime<B, DataSinkInvocation>{
 
 	private static final long serialVersionUID = 1L;
 
-	protected B params;
-
 	public FlinkDataSinkRuntime(B params)
 	{
-		super(params.getGraph());
-		this.params = params;
+		super(params);
 	}
 
 	public FlinkDataSinkRuntime(B params, FlinkDeploymentConfig config)
 	{
-		super(params.getGraph(), config);
-		this.params = params;
+		super(params, config);
 	}
 
 	@Override
-	public boolean execute(DataStream<Map<String, Object>>... convertedStream) {
+	public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream) {
 		getSink(convertedStream);
-				
-		thread = new Thread(this);
-		thread.start();
-				
-		return true;
+
 	}
 
 	public abstract void getSink(DataStream<Map<String, Object>>... convertedStream1);

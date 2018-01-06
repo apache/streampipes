@@ -15,11 +15,20 @@ limitations under the License.
 */
 package org.streampipes.wrapper.kafka;
 
-import org.streampipes.wrapper.declarer.EventProcessorDeclarer;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.streampipes.commons.exceptions.SpRuntimeException;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class KafkaStreamsDataProcessorDeclarer<B extends
-        EventProcessorBindingParams> extends EventProcessorDeclarer<B, KafkaStreamsDataProcessorRuntime> {
+public abstract class KafkaStreamsDataSinkRuntime<B extends EventSinkBindingParams>
+        extends KafkaStreamsRuntime<B, DataSinkInvocation> {
 
 
+  public KafkaStreamsDataSinkRuntime(B bindingParams) {
+    super(bindingParams);
+  }
+
+  @Override
+  public void bindRuntime() throws SpRuntimeException {
+
+  }
 }

@@ -18,6 +18,6 @@ public class StatisticsSummaryProgram extends FlinkDataProcessorRuntime<Statisti
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
-    return messageStream[0].flatMap(new StatisticsSummaryCalculator(params.getListPropertyName()));
+    return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyName()));
   }
 }

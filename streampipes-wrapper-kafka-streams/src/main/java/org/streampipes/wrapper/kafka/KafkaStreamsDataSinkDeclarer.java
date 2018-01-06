@@ -15,11 +15,9 @@ limitations under the License.
 */
 package org.streampipes.wrapper.kafka;
 
-import org.streampipes.wrapper.declarer.EventProcessorDeclarer;
-import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
+import org.streampipes.wrapper.declarer.EventSinkDeclarer;
+import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class KafkaStreamsDataProcessorDeclarer<B extends
-        EventProcessorBindingParams> extends EventProcessorDeclarer<B, KafkaStreamsDataProcessorRuntime> {
-
-
+public abstract class KafkaStreamsDataSinkDeclarer <B extends
+        EventSinkBindingParams> extends EventSinkDeclarer<B, KafkaStreamsDataSinkRuntime> {
 }

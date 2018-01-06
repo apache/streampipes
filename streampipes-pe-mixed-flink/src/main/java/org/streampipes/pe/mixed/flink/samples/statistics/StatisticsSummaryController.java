@@ -49,7 +49,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
     String listPropertyMapping = SepaUtils.getMappingPropertyName(graph, listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);

@@ -44,7 +44,7 @@ public class FileSinkController extends FlinkDataSinkDeclarer<FileSinkParameters
     }
 
     @Override
-    protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
+    public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
         FileSinkParameters params = new FileSinkParameters(graph);
         return new FileSinkProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
