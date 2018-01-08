@@ -54,6 +54,7 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
     props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
     props.put("group.id", UUID.randomUUID().toString());
+    props.put("client.id", UUID.randomUUID().toString());
     props.put("zookeeper.session.timeout.ms", "60000");
     props.put("zookeeper.sync.time.ms", "20000");
     props.put("auto.commit.interval.ms", "10000");
