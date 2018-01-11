@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class PlaceholderExtractor {
 
   private static final Pattern pattern = Pattern.compile("#[^#]*#");

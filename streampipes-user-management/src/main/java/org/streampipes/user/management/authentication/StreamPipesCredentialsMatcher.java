@@ -8,9 +8,6 @@ import org.streampipes.user.management.util.PasswordUtil;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-/**
- * Created by riemer on 07.07.2017.
- */
 public class StreamPipesCredentialsMatcher implements CredentialsMatcher {
 
   @Override

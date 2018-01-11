@@ -11,9 +11,6 @@ import org.streampipes.model.grounding.KafkaTransportProtocol;
 import java.io.Serializable;
 import java.util.Properties;
 
-/**
- * Created by riemer on 01.10.2016.
- */
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
 
     private String brokerUrl;

@@ -1,8 +1,5 @@
 package org.streampipes.pe.mixed.flink.samples.spatial.gridenricher;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridConstants {
 
   public static final String GRID_X_KEY = "grid-cell-x";

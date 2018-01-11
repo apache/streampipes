@@ -5,9 +5,6 @@ import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.pe.sources.kd2.config.SourcesConfig;
 import org.streampipes.pe.sources.kd2.sources.BiodataSource;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public class SourcesKd2Init extends ContainerModelSubmitter {
 
     public void init() {

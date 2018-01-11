@@ -6,9 +6,6 @@ import org.streampipes.model.SpDataStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by riemer on 23.09.2016.
- */
 public class PipelineGraphHelpers {
 
     public static List<SpDataStream> findStreams(PipelineGraph pipelineGraph) {

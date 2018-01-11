@@ -1,5 +1,7 @@
 package org.streampipes.pe.sources.samples.mhwirth.friction;
 
+import static org.junit.Assert.assertEquals;
+
 import org.streampipes.pe.sources.samples.friction.FrictionEventTransformer;
 import org.streampipes.pe.sources.samples.friction.FrictionOutputEvent;
 import org.streampipes.pe.sources.samples.friction.FrictionRawEvent;
@@ -7,11 +9,6 @@ import org.streampipes.pe.sources.samples.friction.FrictionValue;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * Created by riemer on 26.10.2016.
- */
 public class TestFrictionEventTransformer {
 
     private final static double gearboxFrictionValue = 0.013653257862547412;

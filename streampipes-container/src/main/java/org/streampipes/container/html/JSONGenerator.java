@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.SemanticEventProducerDescription;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ private List<Description> description;
 
 	private JsonObject getJsonElement(Description d) {
 		JsonObject obj = makeDescription(d);
-		if (d instanceof SemanticEventProducerDescription) {
-			SemanticEventProducerDescription producerDesc = (SemanticEventProducerDescription) d;
+		if (d instanceof DataSourceDescriptionHtml) {
+			DataSourceDescriptionHtml producerDesc = (DataSourceDescriptionHtml) d;
 			JsonArray array = new JsonArray();
 
 			producerDesc.getStreams().forEach(s -> {

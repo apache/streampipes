@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
 
-/**
- * Created by riemer on 25.02.2017.
- */
 public class HellaReplayLoader {
 
   public static final String DIRECTORY =

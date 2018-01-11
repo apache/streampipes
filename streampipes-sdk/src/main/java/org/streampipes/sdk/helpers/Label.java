@@ -1,8 +1,5 @@
 package org.streampipes.sdk.helpers;
 
-/**
- * Created by riemer on 07.04.2017.
- */
 public class Label {
 
   private String internalId;

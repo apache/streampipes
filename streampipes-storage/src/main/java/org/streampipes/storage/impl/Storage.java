@@ -8,9 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by riemer on 30.08.2016.
- */
 public abstract class Storage<T> {
 
     private Class<T> targetClass;

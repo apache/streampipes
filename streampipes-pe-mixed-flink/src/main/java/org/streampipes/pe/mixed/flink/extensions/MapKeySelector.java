@@ -5,9 +5,6 @@ import org.apache.flink.api.java.functions.KeySelector;
 import java.io.Serializable;
 import java.util.Map;
 
-/**
- * Created by riemer on 22.04.2017.
- */
 public class MapKeySelector implements Serializable {
 
   private String groupBy;

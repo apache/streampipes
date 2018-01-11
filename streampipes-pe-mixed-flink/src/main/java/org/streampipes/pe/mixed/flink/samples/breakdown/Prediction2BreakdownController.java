@@ -14,9 +14,6 @@ import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.sdk.utils.Datatypes;
 
-/**
- * Created by riemer on 12.02.2017.
- */
 public class Prediction2BreakdownController extends FlinkDataProcessorDeclarer<Prediction2BreakdownParameters> {
 
   private static final String PdfMapping = "pdf-Mapping";
@@ -40,7 +37,7 @@ public class Prediction2BreakdownController extends FlinkDataProcessorDeclarer<P
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
     Prediction2BreakdownParameters params = new Prediction2BreakdownParameters(graph);
 
     return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

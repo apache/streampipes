@@ -10,9 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Set;
 
-/**
- * Created by riemer on 07.07.2017.
- */
 public class UserManagementService {
 
   public Boolean registerUser(RegistrationData data, Set<Role> roles) {

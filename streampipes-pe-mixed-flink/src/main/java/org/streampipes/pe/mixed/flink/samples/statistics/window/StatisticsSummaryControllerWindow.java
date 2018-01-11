@@ -22,9 +22,6 @@ import org.streampipes.sdk.helpers.SupportedProtocols;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class StatisticsSummaryControllerWindow extends
         FlinkDataProcessorDeclarer<StatisticsSummaryParametersWindow> {
 
@@ -65,7 +62,7 @@ public class StatisticsSummaryControllerWindow extends
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);

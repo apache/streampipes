@@ -8,9 +8,6 @@ import org.streampipes.sdk.builder.DataStreamBuilder;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class TrendStream extends AbstractAxoomHmiStream {
 
 

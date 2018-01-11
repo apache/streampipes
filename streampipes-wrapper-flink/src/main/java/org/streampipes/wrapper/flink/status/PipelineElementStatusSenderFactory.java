@@ -4,9 +4,6 @@ import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 
-/**
- * Created by riemer on 30.01.2017.
- */
 public class PipelineElementStatusSenderFactory {
 
   public static <I extends InvocableStreamPipesEntity> PipelineElementStatusSender getStatusSender(I graph) {

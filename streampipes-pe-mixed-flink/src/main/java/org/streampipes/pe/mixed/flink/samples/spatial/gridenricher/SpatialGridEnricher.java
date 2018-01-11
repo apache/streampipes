@@ -5,9 +5,6 @@ import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridEnricher implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
   private EnrichmentSettings settings;

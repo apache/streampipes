@@ -6,9 +6,6 @@ import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.junit.Test;
 
-/**
- * Created by riemer on 04.12.2016.
- */
 public class TestProcessingElementBuilder {
 
     @Test

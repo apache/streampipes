@@ -16,9 +16,6 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDetectionParameters> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
@@ -59,7 +56,7 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa) {
+  public FlinkDataProcessorRuntime<PeakDetectionParameters> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);

@@ -6,9 +6,6 @@ import org.streampipes.pe.axoom.hmi.sources.AxoomIotHubProducer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
 
-/**
- * Created by riemer on 16.03.2017.
- */
 public class AxoomHmiInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {

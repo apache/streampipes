@@ -5,9 +5,6 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.io.Serializable;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class PeakDetectionParameters extends EventProcessorBindingParams implements Serializable {
 
   private String valueToObserve;

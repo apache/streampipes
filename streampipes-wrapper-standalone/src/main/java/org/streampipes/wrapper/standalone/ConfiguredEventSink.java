@@ -1,12 +1,11 @@
-package org.streampipes.wrapper;
+package org.streampipes.wrapper.standalone;
 
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.runtime.EventSink;
 
 import java.util.function.Supplier;
 
-public class ConfiguredEventSink<B extends EventSinkBindingParams, E
-        extends EventSink<B>> {
+public class ConfiguredEventSink<B extends EventSinkBindingParams> {
 
   private B bindingParams;
   private Supplier<EventSink<B>> engineSupplier;

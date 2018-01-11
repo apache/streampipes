@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Created by riemer on 29.03.2017.
- */
 public class RabbitMqPublisher {
 
   private Map<String, Channel> queueMap;

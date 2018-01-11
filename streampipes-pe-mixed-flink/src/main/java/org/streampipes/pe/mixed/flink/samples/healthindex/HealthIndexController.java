@@ -29,9 +29,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthIndexParameters> {
 
     private final String frictionCoefficientNominal = "frictionCoefficientNominal";
@@ -126,7 +123,7 @@ public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthInde
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
 
         String frictionMapping = SepaUtils.getMappingPropertyName(graph, frictionMappingName);
         String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);

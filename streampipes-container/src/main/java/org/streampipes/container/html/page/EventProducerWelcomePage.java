@@ -8,7 +8,7 @@ import org.streampipes.container.declarer.EventStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.html.model.AgentDescription;
 import org.streampipes.container.html.model.Description;
-import org.streampipes.container.html.model.SemanticEventProducerDescription;
+import org.streampipes.container.html.model.DataSourceDescriptionHtml;
 
 @Deprecated
 public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEventProducerDeclarer> {
@@ -24,7 +24,7 @@ public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEvent
 		for(SemanticEventProducerDeclarer declarer : declarers)
 		{
 			List<Description> streams = new ArrayList<Description>();
-			SemanticEventProducerDescription description = new SemanticEventProducerDescription();
+			DataSourceDescriptionHtml description = new DataSourceDescriptionHtml();
 			description.setName(declarer.declareModel().getName());
 			description.setDescription(declarer.declareModel().getDescription());
 			description.setUri(URI.create(baseUri + declarer.declareModel().getUri()));

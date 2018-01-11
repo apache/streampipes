@@ -3,9 +3,6 @@ package org.streampipes.rest.v2;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class TestStreamStoryReplacement {
 
     public static void main(String[] args) {

@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by riemer on 12.04.2017.
- */
 public class MaintenancePredictionProgram extends FlinkDataProcessorRuntime<MaintenancePredictionParameters> {
 
   public MaintenancePredictionProgram(MaintenancePredictionParameters params) {

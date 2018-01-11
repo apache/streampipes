@@ -16,10 +16,7 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 13.11.2016.
- */
-public class FileSinkController extends FlinkDataSinkDeclarer {
+public class FileSinkController extends FlinkDataSinkDeclarer<FileSinkParameters> {
 
 
     @Override
@@ -47,8 +44,9 @@ public class FileSinkController extends FlinkDataSinkDeclarer {
     }
 
     @Override
-    protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
-        return new FileSinkProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+    public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
+        FileSinkParameters params = new FileSinkParameters(graph);
+        return new FileSinkProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
     }
 }

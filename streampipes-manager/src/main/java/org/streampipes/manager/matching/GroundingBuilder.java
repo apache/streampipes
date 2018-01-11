@@ -9,9 +9,6 @@ import org.streampipes.model.grounding.TransportProtocol;
 import java.util.Arrays;
 import java.util.Set;
 
-/**
- * Created by riemer on 25.09.2016.
- */
 public class GroundingBuilder {
 
     private NamedStreamPipesEntity source;
