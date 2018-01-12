@@ -13,6 +13,7 @@ public abstract class AbstractSparkDeclarer<D extends NamedStreamPipesEntity, I 
     protected SR runtime;
     protected I graph;
 
+    @Override
     public Response invokeRuntime(I sepaInvocation) {
         runtime = getRuntime(sepaInvocation);
         graph = sepaInvocation;
@@ -25,6 +26,7 @@ public abstract class AbstractSparkDeclarer<D extends NamedStreamPipesEntity, I 
         }
     }
 
+    @Override
     public Response detachRuntime(String s) {
         if (runtime.stop()) {
             return new Response(graph.getElementId(), true);
