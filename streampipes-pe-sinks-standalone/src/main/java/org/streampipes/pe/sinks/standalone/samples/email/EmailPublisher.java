@@ -23,6 +23,7 @@ public class EmailPublisher implements EventSink<EmailParameters> {
         String from = ActionConfig.INSTANCE.getEmailFrom();
         String to = parameters.getToEmailAddress();
         String subject = parameters.getSubject();
+        String content = parameters.getContent();
         String username = ActionConfig.INSTANCE.getEmailUsername();
         String password = ActionConfig.INSTANCE.getEmailPassword();
         String host = ActionConfig.INSTANCE.getEmailSmtpHost();
@@ -53,6 +54,7 @@ public class EmailPublisher implements EventSink<EmailParameters> {
             message.setFrom(new InternetAddress(from));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
+            message.setContent(content, "text/html; charset=utf-8");
         } catch (MessagingException e) {
            LOG.error(e.toString());
         }
@@ -62,8 +64,6 @@ public class EmailPublisher implements EventSink<EmailParameters> {
     @Override
     public void onEvent(Map<String, Object> event, String sourceInfo) {
         try {
-            //TODO: Which content should be send
-            message.setText(event.toString());
             Transport.send(message);
         } catch (MessagingException e) {
             LOG.error(e.toString());
