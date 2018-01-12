@@ -1,22 +1,21 @@
 package org.streampipes.pe.mixed.flink.samples.hasher;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,16 +55,14 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
 	}
 
 	@Override
-	protected FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
+	public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
 			DataProcessorInvocation graph) {
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "property-mapping");
 		
 		HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(SepaUtils.getOneOfProperty(graph, "hash-algorithm"));
 		
 		return new FieldHasherProgram(
-				new FieldHasherParameters(graph, propertyName, hashAlgorithmType),
-				new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
-						FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
+				new FieldHasherParameters(graph, propertyName, hashAlgorithmType));
 	}
 
 }

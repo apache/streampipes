@@ -36,7 +36,7 @@ public class FirstBatchThenStreamController extends FlinkDataProcessorDeclarer<F
 
 
     @Override
-    protected FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> getRuntime(DataProcessorInvocation graph) {
 
         FirstBatchThenStreamParameters params = new FirstBatchThenStreamParameters(graph);
 

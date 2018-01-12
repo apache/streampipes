@@ -22,7 +22,7 @@ public class ListFilterProgram extends FlinkDataProcessorRuntime<ListFilterParam
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
-    return messageStream[0].flatMap(new ListFilter(params.getPropertyName(),
-            params.getFilterKeywords(), params.getFilterOperation(), params.getFilterSettings()));
+    return messageStream[0].flatMap(new ListFilter(bindingParams.getPropertyName(),
+            bindingParams.getFilterKeywords(), bindingParams.getFilterOperation(), bindingParams.getFilterSettings()));
   }
 }

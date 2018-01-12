@@ -3,7 +3,6 @@ package org.streampipes.pe.mixed.flink.samples;
 
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.streampipes.container.util.ConsulUtil;
 import org.streampipes.pe.mixed.flink.samples.axoom.MaintenancePredictionController;
 import org.streampipes.pe.mixed.flink.samples.batchstream.FirstBatchThenStreamController;
 import org.streampipes.pe.mixed.flink.samples.breakdown.Prediction2BreakdownController;
@@ -20,6 +19,8 @@ import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
 import org.streampipes.pe.mixed.flink.samples.peak.PeakDetectionController;
+import org.streampipes.pe.mixed.flink.samples.performance.PerformanceTestController;
+import org.streampipes.pe.mixed.flink.samples.performancesink.PerformanceElasticController;
 import org.streampipes.pe.mixed.flink.samples.rename.FieldRenamerController;
 import org.streampipes.pe.mixed.flink.samples.spatial.gridenricher.SpatialGridEnrichmentController;
 import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
@@ -30,7 +31,6 @@ public class FlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
     DeclarersSingleton.getInstance()
-            //.add(new WordCountController())
             .add(new FirstBatchThenStreamController())
             .add(new DelayController())
             .add(new DelayTaxiController())
@@ -51,7 +51,9 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new StatisticsSummaryControllerWindow())
             .add(new PeakDetectionController())
             .add(new ValueController())
-            .add(new ListFilterController());
+            .add(new ListFilterController())
+            .add(new PerformanceTestController())
+            .add(new PerformanceElasticController());
 
     new FlinkInit().init(FlinkConfig.INSTANCE);
   }

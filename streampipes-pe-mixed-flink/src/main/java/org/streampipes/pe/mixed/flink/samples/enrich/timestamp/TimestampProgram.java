@@ -19,8 +19,8 @@ public class TimestampProgram extends FlinkDataProcessorRuntime<TimestampParamet
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
-		return (DataStream<Map<String, Object>>) messageStream[0]
-				.flatMap(new TimestampEnricher(params.getAppendTimePropertyName()));
+		return messageStream[0]
+				.flatMap(new TimestampEnricher(bindingParams.getAppendTimePropertyName()));
 	}
 
 }

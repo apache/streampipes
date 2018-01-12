@@ -35,7 +35,7 @@ public class MaintenancePredictionController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<MaintenancePredictionParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<MaintenancePredictionParameters> getRuntime(DataProcessorInvocation graph) {
     MaintenancePredictionParameters params = new MaintenancePredictionParameters(graph);
 
     return new MaintenancePredictionProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

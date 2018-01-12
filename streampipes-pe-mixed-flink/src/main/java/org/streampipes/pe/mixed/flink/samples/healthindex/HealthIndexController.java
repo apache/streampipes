@@ -123,7 +123,7 @@ public class HealthIndexController extends FlinkDataProcessorDeclarer<HealthInde
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<HealthIndexParameters> getRuntime(DataProcessorInvocation graph) {
 
         String frictionMapping = SepaUtils.getMappingPropertyName(graph, frictionMappingName);
         String timestampMapping = SepaUtils.getMappingPropertyName(graph, timestampMappingName);

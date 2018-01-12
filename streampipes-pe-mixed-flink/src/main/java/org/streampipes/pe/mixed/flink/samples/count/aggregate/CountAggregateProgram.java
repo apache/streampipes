@@ -34,7 +34,7 @@ public class CountAggregateProgram extends FlinkDataProcessorRuntime<CountAggreg
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
 
-		List<String> groupBy = params.getGroupBy();
+		List<String> groupBy = bindingParams.getGroupBy();
 
 		DataStream<Map<String, Object>> result = messageStream[0]
 				.map(new MapFunction<Map<String, Object>, Tuple2<String, Map<String, Object>>>() {
@@ -62,7 +62,7 @@ public class CountAggregateProgram extends FlinkDataProcessorRuntime<CountAggreg
 				})
 				.setParallelism(1)
 				.keyBy(0)
-				.timeWindow(params.getTimeWindowSize(), params.getSlideWindowSize())
+				.timeWindow(bindingParams.getTimeWindowSize(), bindingParams.getSlideWindowSize())
 				.apply(new MyWindow2Function())
 				.setParallelism(1)
 				.map(new MapFunction< Tuple2<String, Map<String, Object>>, Map<String, Object>>() {

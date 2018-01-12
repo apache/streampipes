@@ -20,7 +20,14 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class WordCountParameters extends EventProcessorBindingParams {
 
-  public WordCountParameters(DataProcessorInvocation graph) {
+  private String wordFieldName;
+
+  public WordCountParameters(DataProcessorInvocation graph, String wordFieldName) {
     super(graph);
+    this.wordFieldName = wordFieldName;
+  }
+
+  public String getWordFieldName() {
+    return wordFieldName;
   }
 }

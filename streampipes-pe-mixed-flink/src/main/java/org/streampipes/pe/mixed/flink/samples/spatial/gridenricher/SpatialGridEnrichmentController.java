@@ -48,7 +48,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
 
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 

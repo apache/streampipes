@@ -78,7 +78,7 @@ public class TimeToFailureController extends FlinkDataProcessorDeclarer<TimeToFa
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph) {
         String healthIndexMapping = SepaUtils.getMappingPropertyName(graph, healthIndexMappingName);
         Integer mtbfValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf));
 

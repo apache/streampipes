@@ -1,12 +1,11 @@
 package org.streampipes.pe.mixed.flink.samples.hasher;
 
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import org.apache.flink.streaming.api.datastream.DataStream;
-
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class FieldHasherProgram extends FlinkDataProcessorRuntime<FieldHasherParameters>
 	implements Serializable{
@@ -23,8 +22,8 @@ public class FieldHasherProgram extends FlinkDataProcessorRuntime<FieldHasherPar
 	@Override
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
-		return messageStream[0].flatMap(new FieldHasher(params.getPropertyName(),
-				params.getHashAlgorithmType().hashAlgorithm()));
+		return messageStream[0].flatMap(new FieldHasher(bindingParams.getPropertyName(),
+				bindingParams.getHashAlgorithmType().hashAlgorithm()));
 	}
 
 }
