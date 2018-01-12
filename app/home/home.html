@@ -9,23 +9,12 @@
         </div>
 
         <div flex layout="row" layout-align="start center">
-            <div flex="60">
+            <div flex="100">
                 <md-content class="md-padding">
-                    <md-grid-list  md-cols="2" md-gutter="1em" md-row-height="30:9">
-                        <md-grid-tile ng-click="openLink(l)" ng-repeat="l in serviceLinks" style="border:1px solid darkblue;margin-bottom:10px;cursor:pointer">
-                            <div  flex="20" layout="row" layout-align="center center" style="margin:10px;">
-                                <img class="md-card-image" ng-src={{l.imageUrl}}>
-                            </div>
-                            <div flex="80" layout="row" layout-align="start center" style="margin:10px;">
-                                <div flex="100" layout="column">
-                                    <div layout="column">
-                                        <div flex layout-align="start start" layout="column">
-                                            <h2 class="md-title">{{l.name}}</h2>
-                                            <p>{{l.description}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <md-grid-list md-cols="3" md-gutter="1em" md-row-height="30:9">
+                        <md-grid-tile ng-click="openLink(l)" ng-repeat="l in serviceLinks"
+                                      style="border:1px solid darkblue;margin-bottom:10px;cursor:pointer;background-image:url('{{l.imageUrl}}');background-size:cover;">
+                            <h4 style="background-color:white;padding:5px;border:1px solid darkblue;">{{l.name}}</h4>
                         </md-grid-tile>
                     </md-grid-list>
                 </md-content>

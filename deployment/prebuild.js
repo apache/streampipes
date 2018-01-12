@@ -51,7 +51,9 @@ for (let module of config.modules) {
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],
-        admin: modules[module]['admin']
+        admin: modules[module]['admin'],
+        description: modules[module]['description'],
+        homeImage: modules[module]['homeImage']
     });
     console.log('Active Module: ' + module)
 }
@@ -60,6 +62,7 @@ for (let module of config.modules) {
 fs.writeFileSync('app/app.module.js', mustache.render(fs.readFileSync('deployment/app.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('app/core/state.config.js', mustache.render(fs.readFileSync('deployment/state.config.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('app/layout/app.controller.js', mustache.render(fs.readFileSync('deployment/app.controller.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('app/home/home.controller.js', mustache.render(fs.readFileSync('deployment/home.controller.mst', 'utf8').toString(), modulesActive));
 
 // Move Images
 fs.writeFileSync('img/login/background.png', fs.readFileSync(config['login']['backgroundImage']));
