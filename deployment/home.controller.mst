@@ -1,0 +1,48 @@
+HomeCtrl.$inject = ['$scope', '$window', '$location'];
+
+export default function HomeCtrl($scope, $window, $location) {
+
+
+    $scope.openLink = function(l) {
+        if (l.link.newWindow) {
+            $window.open(l.link.value);
+        } else {
+            $scope.$parent.go(l.link.value);
+        }
+
+    };
+
+    $scope.serviceLinks = [
+        {{#modulesActive}}
+        {
+            name: "{{title}}",
+            description: "{{description}}",
+            imageUrl: "{{{homeImage}}}",
+            link: {
+                newWindow: false,
+                value: "{{{link}}}"
+            }
+        },
+        {{/modulesActive}}
+        {
+            name: "Notifications",
+            description: "Integrated notification manager",
+            imageUrl: "img/home/notifications.png",
+            link: {
+                newWindow: false,
+                value: "streampipes.notifications"
+            }
+        },
+        {
+            name: "ElasticSearch",
+            description: "Offline visual analytics of data",
+            imageUrl: "img/home/elastic.png",
+            link: {
+                newWindow: true,
+                value: $location.protocol() + "://" + $location.host() + ":5601"
+            }
+        }
+
+    ]
+
+};
