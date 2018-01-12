@@ -43,7 +43,7 @@ public class DelayTaxiProgram extends FlinkDataProcessorRuntime<DelayTaxiParamet
 //                })
                 .keyBy(0)
 //                .window(TumblingEventTimeWindows.of(Time.hours(2))
-                .flatMap(new DelayTaxi(this.params));
+                .flatMap(new DelayTaxi(this.bindingParams));
 
         return result;
     }

@@ -18,7 +18,7 @@ package org.streampipes.wrapper.kafka;
 import org.streampipes.wrapper.declarer.EventProcessorDeclarer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public abstract class KafkaStreamsDataProcessorDeclarer <B extends
+public abstract class KafkaStreamsDataProcessorDeclarer<B extends
         EventProcessorBindingParams> extends EventProcessorDeclarer<B, KafkaStreamsDataProcessorRuntime> {
 
 

@@ -15,7 +15,79 @@ limitations under the License.
 */
 package org.streampipes.wrapper.distributed.runtime;
 
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.wrapper.params.binding.BindingParams;
+import org.streampipes.wrapper.runtime.PipelineElementRuntime;
 
-public class DistributedRuntime<I extends InvocableStreamPipesEntity> {
+import java.util.Properties;
+import java.util.UUID;
+
+public abstract class DistributedRuntime<B extends BindingParams<I>, I extends InvocableStreamPipesEntity> extends
+        PipelineElementRuntime {
+
+  protected B bindingParams;
+  protected B params; // backwards compatibility
+
+  public DistributedRuntime(B bindingParams) {
+    super();
+    this.bindingParams = bindingParams;
+    this.params = bindingParams;
+  }
+
+  protected I getGraph() {
+    return bindingParams.getGraph();
+  }
+
+  protected Properties getProperties(KafkaTransportProtocol protocol) {
+    Properties props = new Properties();
+
+    String zookeeperHost = protocol.getZookeeperHost();
+    int zookeeperPort = protocol.getZookeeperPort();
+
+    String kafkaHost = protocol.getBrokerHostname();
+    int kafkaPort = protocol.getKafkaPort();
+
+    props.put("zookeeper.connect", zookeeperHost +":" +zookeeperPort);
+    props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
+    props.put("group.id", UUID.randomUUID().toString());
+    props.put("client.id", UUID.randomUUID().toString());
+    props.put("zookeeper.session.timeout.ms", "60000");
+    props.put("zookeeper.sync.time.ms", "20000");
+    props.put("auto.commit.interval.ms", "10000");
+    return props;
+  }
+
+  protected String getTopic(SpDataStream stream)
+  {
+    return protocol(stream)
+            .getTopicName();
+  }
+
+  protected JmsTransportProtocol getJmsProtocol(SpDataStream stream)
+  {
+    return new JmsTransportProtocol((JmsTransportProtocol) protocol(stream));
+  }
+
+  protected boolean isKafkaProtocol(SpDataStream stream)
+  {
+    return protocol(stream) instanceof KafkaTransportProtocol;
+  }
+
+  private TransportProtocol protocol(SpDataStream stream) {
+    return stream
+            .getEventGrounding()
+            .getTransportProtocol();
+  }
+
+  protected String getKafkaUrl(SpDataStream stream) {
+    // TODO add also jms support
+    return protocol(stream).getBrokerHostname() +
+            ":" +
+            ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
+  }
+
 }

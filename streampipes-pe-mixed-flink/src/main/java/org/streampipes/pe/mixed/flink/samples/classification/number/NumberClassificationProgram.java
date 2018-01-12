@@ -1,12 +1,11 @@
 package org.streampipes.pe.mixed.flink.samples.classification.number;
 
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import org.apache.flink.streaming.api.datastream.DataStream;
-
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class NumberClassificationProgram extends FlinkDataProcessorRuntime<NumberClassificationParameters>
 		implements Serializable {
@@ -23,8 +22,8 @@ public class NumberClassificationProgram extends FlinkDataProcessorRuntime<Numbe
 	protected DataStream<Map<String, Object>> getApplicationLogic(
 			DataStream<Map<String, Object>>... messageStream) {
 
-		return (DataStream<Map<String, Object>>) messageStream[0]
-				.flatMap(new Classifier(params.getPropertyName(), params.getDomainConceptData()));
+		return messageStream[0]
+				.flatMap(new Classifier(bindingParams.getPropertyName(), bindingParams.getDomainConceptData()));
 	}
 
 }

@@ -34,7 +34,7 @@ public class DelayProgram extends FlinkDataProcessorRuntime<DelayParameters> imp
                     }
                 })
                 .keyBy(0)
-                .flatMap(new Delay(this.params));
+                .flatMap(new Delay(this.bindingParams));
 
         return result;
     }

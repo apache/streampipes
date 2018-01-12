@@ -15,10 +15,13 @@ limitations under the License.
 */
 package org.streampipes.pe.mixed.kafka.wordcount;
 
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.streampipes.wrapper.kafka.KafkaStreamsDataProcessorRuntime;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WordCountProgram extends KafkaStreamsDataProcessorRuntime<WordCountParameters> {
@@ -28,9 +31,21 @@ public class WordCountProgram extends KafkaStreamsDataProcessorRuntime<WordCount
   }
 
   @Override
-  protected void getApplicationLogic(KStream<String, Map<String, Object>>... inputStreams) {
-    KStream<String, Map<String, Object>> wordCounts = inputStreams[0]
-            .flatMapValues(Arrays::asList);
-    wordCounts.print();
+  protected KStream<String, Map<String, Object>> getApplicationLogic(KStream<String, Map<String, Object>>...
+                                                                            inputStreams) {
+    return inputStreams[0]
+            .flatMapValues(value -> Arrays.asList(String.valueOf(value.get(params.getWordFieldName()))))
+            .groupBy((key, word) -> word)
+            .count()
+            .toStream()
+            .flatMap(new KeyValueMapper<String, Long, Iterable<KeyValue<String, Map<String, Object>>>>() {
+              @Override
+              public Iterable<KeyValue<String, Map<String, Object>>> apply(String s, Long aLong) {
+                Map<String, Object> outMap = new HashMap<>();
+                outMap.put("word", s);
+                outMap.put("count", aLong);
+                return Arrays.asList(new KeyValue<>(s, outMap));
+              }
+            });
   }
 }

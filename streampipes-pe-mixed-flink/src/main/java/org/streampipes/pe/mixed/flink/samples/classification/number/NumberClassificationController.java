@@ -77,7 +77,7 @@ public class NumberClassificationController extends FlinkDataProcessorDeclarer<N
 	}
 
 	@Override
-	protected FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
+	public FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(graph, "classification_options",
 				CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "to_classify");

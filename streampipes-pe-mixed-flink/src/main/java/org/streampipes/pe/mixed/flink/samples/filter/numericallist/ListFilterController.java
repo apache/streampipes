@@ -51,7 +51,7 @@ public class ListFilterController extends FlinkDataProcessorDeclarer<ListFilterP
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<ListFilterParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<ListFilterParameters> getRuntime(DataProcessorInvocation graph) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
 
     List<Double> filterKeywords = extractor.singleValueParameterFromCollection("value", Double.class);

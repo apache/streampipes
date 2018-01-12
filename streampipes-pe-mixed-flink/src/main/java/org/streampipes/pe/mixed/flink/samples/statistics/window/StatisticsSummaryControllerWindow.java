@@ -62,7 +62,7 @@ public class StatisticsSummaryControllerWindow extends
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa) {
     ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
