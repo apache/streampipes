@@ -55,7 +55,7 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
 
 
     @Override
-    protected FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa) {
+    public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa) {
         ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
 
         String unitName = extractor.singleValueParameter(UNIT_NAME, String.class);
