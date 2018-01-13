@@ -7,3 +7,4 @@ app/app.module.js
 app/layout/app.controller.js
 app/core/state.config.js
 app/home/home.controller.js
+npm-debug.log
