@@ -1,21 +1,22 @@
-configurationRestApi.$inject = ['$rootScope', '$http', 'apiConstants', '$window'];
+export class ConfigurationRestService {
 
-export default function configurationRestApi($rootScope, $http, apiConstants, $window) {
-
-    var restApi = {};
-
-    var getServerUrl = function () {
-        return apiConstants.contextPath;
+    constructor($http, apiConstants) {
+        this.$http = $http;
+        this.apiConstants = apiConstants;
     }
 
-    restApi.get = function () {
-        return $http.get(getServerUrl() + '/api/v2/consul');
+    getServerUrl() {
+        return this.apiConstants.contextPath;
     }
 
-    restApi.update = function (configuration) {
-        return $http.post(getServerUrl() + '/api/v2/consul', configuration);
+    get() {
+        return this.$http.get(this.getServerUrl() + '/api/v2/consul');
     }
 
+    update(configuration) {
+        return this.$http.post(this.getServerUrl() + '/api/v2/consul', configuration)
+    }
 
-    return restApi;
-};
+}
+
+ConfigurationRestService.$inject = ['$http', 'apiConstants'];

@@ -1,23 +1,11 @@
-consulService.$inject = [];
+import {ConsulServiceController} from "./consul-service.controller";
 
-export default function consulService() {
-
-    return {
-        templateUrl: 'app/configuration/directives/consul-service/consul-service.tmpl.html',
-        bindings: {
-            serviceDetails: "<",
-            onUpdate: "&"
-        },
-        controller: function ($scope) {
-            var ctrl = this;
-            ctrl.showConfiguration = false;
-            ctrl.updateConfiguration = function () {
-                ctrl.onUpdate({serviceDetails: this.serviceDetails});
-            }
-            ctrl.toggleConfiguration = function () {
-                ctrl.showConfiguration = !ctrl.showConfiguration;
-            }
-        }
-    }
-
+export let ConsulService = {
+    templateUrl: 'app/configuration/directives/consul-service/consul-service.tmpl.html',
+    bindings: {
+        serviceDetails: "<",
+        onUpdate: "&"
+    },
+    controller: ConsulServiceController,
+    controllerAs: 'consulServiceController'
 };

@@ -1,13 +1,13 @@
-ConfigurationCtrl.$inject = ['$scope', 'ConfigurationRestService'];
+export class ConfigurationCtrl {
 
-export default function ConfigurationCtrl($scope, ConfigurationRestService) {
+    constructor(ConfigurationRestService) {
+        this.services = {};
+        this.ConfigurationRestService = ConfigurationRestService;
+        this.getConfigurations();
+    }
 
-    $scope.services = {}
-
-    var ctrl = this;
-
-    $scope.getConfigurations = function () {
-        ConfigurationRestService.get().then(function (services) {
+    getConfigurations() {
+        this.ConfigurationRestService.get().then(services => {
             for (let service of services.data) {
                 for (let config of service.configs) {
                     if (config.valueType === 'xs:integer') {
@@ -19,20 +19,16 @@ export default function ConfigurationCtrl($scope, ConfigurationRestService) {
                     }
                 }
             }
-            $scope.services = services.data
+            this.services = services.data;
         });
     }
 
-    $scope.updateConfiguration = function (serviceDetails) {
-        let serviceDetailsToString = angular.copy(serviceDetails);
-        for (let config of serviceDetailsToString.configs) {
-            config.value = config.value + '';
-        }
-        ConfigurationRestService.update(serviceDetailsToString).then(function (response) {
+    updateConfigurations(serviceDetails) {
+        this.ConfigurationRestService.update(serviceDetails).then(response => {
 
         });
     }
-
-    $scope.getConfigurations()
 
 }
+
+ConfigurationCtrl.$inject = ['ConfigurationRestService'];
