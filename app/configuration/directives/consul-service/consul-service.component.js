@@ -7,5 +7,5 @@ export let ConsulService = {
         onUpdate: "&"
     },
     controller: ConsulServiceController,
-    controllerAs: 'consulServiceController'
+    controllerAs: '$ctrl'
 };
