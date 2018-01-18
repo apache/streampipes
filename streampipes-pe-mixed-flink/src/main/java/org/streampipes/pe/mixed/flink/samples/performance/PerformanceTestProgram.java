@@ -34,6 +34,7 @@ public class PerformanceTestProgram extends FlinkDataProcessorRuntime<Performanc
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
     return messageStream[0]
-            .flatMap(new PerformanceTestTimestampEnricher(bindingParams.getTimestampFieldName()));
+            .flatMap(new PerformanceTestTimestampEnricher(bindingParams.getTimestampFieldName())).setParallelism
+                    (bindingParams.getScaleFactor());
   }
 }
