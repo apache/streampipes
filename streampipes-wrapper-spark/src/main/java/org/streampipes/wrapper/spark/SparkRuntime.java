@@ -121,9 +121,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
 
 	public boolean stop() {
         //TODO: vermutlich via appHandle
-		//FlinkJobController ctrl = new FlinkJobController(config.getHost(), config.getPort());//TODO: das ist noch Flink-spezifisch
 		try {
-			//return ctrl.deleteJob(ctrl.findJobId(ctrl.getJobManagerGateway(), graph.getElementId()));//TODO: das ist noch Flink-spezifisch
+		    streamingContext.stop();
+		    streamingContext.awaitTermination();
             return true;
 
 		} catch (Exception e) {
