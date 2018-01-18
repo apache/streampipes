@@ -55,7 +55,7 @@ public class PerformanceTestController extends FlinkDataProcessorDeclarer<Perfor
     Integer scaleFactor = extractor.singleValueParameter("scale-factor", Integer.class);
     PerformanceTestParameters staticParam = new PerformanceTestParameters(
             graph,
-            timestampFieldName);
+            timestampFieldName, scaleFactor);
 
     return new PerformanceTestProgram(staticParam, FlinkUtils.getFlinkDeploymentConfig());
   }
