@@ -1,211 +1,229 @@
-MyElementsCtrl.$inject = ['$scope', 'restApi', '$mdToast', '$mdDialog'];
+import {JsonLdDialogController} from "./dialog/jsonldDialog.controller";
 
-export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
+export class MyElementsCtrl {
 
-    $scope.currentElements = {};
-    $scope.tabs = [
-        {
-            title: 'Data Sources',
-            type: 'source'
-        },
-        {
-            title: 'Processing Elements',
-            type: 'sepa'
-        },
-        {
-            title: 'Data Sinks',
-            type: 'action'
-        }
-    ];
-    $scope.currentTabType = $scope.tabs[0].type;
+    constructor(restApi, $mdToast, $mdDialog) {
+        this.restApi = restApi;
+        this.$mdToast = $mdToast;
+        this.$mdDialog = $mdDialog;
+        this.currentElements = [];
+        this.tabs = [
+            {
+                title: 'Data Sources',
+                type: 'source'
+            },
+            {
+                title: 'Processing Elements',
+                type: 'sepa'
+            },
+            {
+                title: 'Data Sinks',
+                type: 'action'
+            }
+        ];
+        this.currentTabType = this.tabs[0].type;
+    }
 
-    $scope.getElementId = function (element) {
-        if ($scope.currentTabType == 'source') {
+    getElementId(element) {
+        if (this.currentTabType === 'source') {
             return element.uri;
         } else {
             return element.belongsTo;
         }
     }
 
-    $scope.loadCurrentElements = function (type) {
-        if (type == 'source') {
-            $scope.loadOwnSources();
+    loadCurrentElements(type) {
+        if (type === 'source') {
+            this.loadOwnSources();
         }
-        else if (type == 'sepa') {
-            $scope.loadOwnSepas();
+        else if (type === 'sepa') {
+            this.loadOwnSepas();
         }
-        else if (type == 'action') {
-            $scope.loadOwnActions();
+        else if (type === 'action') {
+            this.loadOwnActions();
         }
-        $scope.currentTabType = type;
+        this.currentTabType = type;
     }
 
-    $scope.loadOwnActions = function () {
-        restApi.getOwnActions()
-            .success(function (actions) {
-                $scope.currentElements = actions;
+    loadOwnActions() {
+        this.restApi.getOwnActions()
+            .success(actions => {
+                this.currentElements = actions;
             })
-            .error(function (error) {
-                $scope.status = 'Unable to load actions: ' + error.message;
+            .error(error => {
+                this.status = 'Unable to load actions: ' + error.message;
             });
     }
 
-    $scope.loadOwnSepas = function () {
-        restApi.getOwnSepas()
-            .success(function (sepas) {
-                $scope.currentElements = sepas;
+    loadOwnSepas() {
+        this.restApi.getOwnSepas()
+            .success(sepas => {
+                this.currentElements = sepas;
             })
-            .error(function (error) {
-                $scope.status = 'Unable to load sepas: ' + error.message;
+            .error(error => {
+                this.status = 'Unable to load sepas: ' + error.message;
             });
     }
 
-    $scope.loadOwnSources = function () {
-        restApi.getOwnSources()
-            .success(function (sources) {
-                $scope.currentElements = sources;
+    loadOwnSources() {
+        this.restApi.getOwnSources()
+            .success(sources => {
+                this.currentElements = sources;
             })
-            .error(function (error) {
-                $scope.status = 'Unable to load sepas: ' + error.message;
+            .error(error => {
+                this.status = 'Unable to load sepas: ' + error.message;
             });
     }
 
-    $scope.elementTextIcon = function (string) {
-        var result = "";
+    elementTextIcon(string) {
+        let result = "";
         if (string.length <= 4) {
             result = string;
         } else {
-            var words = string.split(" ");
-            words.forEach(function (word, i) {
+            let words = string.split(" ");
+            words.forEach((word, i) => {
                 result += word.charAt(0);
             });
         }
         return result.toUpperCase();
     }
 
-    $scope.toggleFavorite = function (element, type) {
-        if (type == 'action') $scope.toggleFavoriteAction(element, type);
-        else if (type == 'source') $scope.toggleFavoriteSource(element, type);
-        else if (type == 'sepa') $scope.toggleFavoriteSepa(element, type);
+    toggleFavorite(element, type) {
+        if (type === 'action') this.toggleFavoriteAction(element, type);
+        else if (type === 'source') this.toggleFavoriteSource(element, type);
+        else if (type === 'sepa') this.toggleFavoriteSepa(element, type);
     }
 
-    $scope.refresh = function (elementUri, type) {
-        restApi.update(elementUri).success(function (msg) {
-            $scope.showToast(msg.notifications[0].title);
-        }).then(function () {
-            $scope.loadCurrentElements(type);
-        })
+    refresh(elementUri, type) {
+        this.restApi.update(elementUri)
+            .success(msg => {
+                this.showToast(msg.notifications[0].title);
+            })
+            .then(() => {
+                this.loadCurrentElements(type);
+            });
     }
 
-    $scope.remove = function (elementUri, type) {
-        restApi.del(elementUri).success(function (msg) {
-            $scope.showToast(msg.notifications[0].title);
-            $scope.loadCurrentElements(type);
-        });
+    remove(elementUri, type) {
+        this.restApi.del(elementUri)
+            .success(msg => {
+                this.showToast(msg.notifications[0].title);
+                this.loadCurrentElements(type);
+            });
     }
 
-    $scope.jsonld = function (event, elementUri) {
-        restApi.jsonld(elementUri).success(function (msg) {
-            $scope.showAlert(event, elementUri, msg);
-        })
+    jsonld(event, elementUri) {
+        this.restApi.jsonld(elementUri)
+            .success(msg => {
+                this.showAlert(event, elementUri, msg);
+            });
     }
 
-    $scope.toggleFavoriteAction = function (action, type) {
+    toggleFavoriteAction(action, type) {
         if (action.favorite) {
-            restApi.removePreferredAction(action.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.data.name);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.removePreferredAction(action.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.data.name);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
         else {
-            restApi.addPreferredAction(action.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.notifications[0].title);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.addPreferredAction(action.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.notifications[0].title);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
     }
 
-    $scope.toggleFavoriteSepa = function (sepa, type) {
+    toggleFavoriteSepa(sepa, type) {
         if (sepa.favorite) {
-            restApi.removePreferredSepa(sepa.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.notifications[0].title);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.removePreferredSepa(sepa.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.notifications[0].title);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
         else {
-            restApi.addPreferredSepa(sepa.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.notifications[0].title);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.addPreferredSepa(sepa.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.notifications[0].title);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
     }
 
-    $scope.toggleFavoriteSource = function (source, type) {
+    toggleFavoriteSource(source, type) {
         if (source.favorite) {
-            restApi.removePreferredSource(source.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.notifications[0].title);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.removePreferredSource(source.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.notifications[0].title);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
         else {
-            restApi.addPreferredSource(source.elementId).success(function (msg) {
-                $scope.showToast(msg.notifications[0].title);
-            }).error(function (error) {
-                $scope.showToast(error.notifications[0].title);
-            }).then(function () {
-                $scope.loadCurrentElements(type);
-            })
+            this.restApi.addPreferredSource(source.elementId)
+                .success(msg => {
+                    this.showToast(msg.notifications[0].title);
+                })
+                .error(error => {
+                    this.showToast(error.notifications[0].title);
+                })
+                .then(() => {
+                    this.loadCurrentElements(type);
+                });
         }
     }
 
-    $scope.showToast = function (string) {
-        $mdToast.show(
-            $mdToast.simple()
+    showToast(string) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
                 .content(string)
                 .position("right")
                 .hideDelay(3000)
         );
-    };
+    }
 
-    $scope.showAlert = function (ev, title, content) {
-        $mdDialog.show({
+    showAlert(ev, title, content) {
+        this.$mdDialog.show({
             controller: JsonLdDialogController,
-            templateUrl: 'app/myelements/jsonldDialog.tmpl.html',
+            controllerAs: '$ctrl',
+            templateUrl: 'app/myelements/dialog/jsonldDialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
                 content: content,
                 title: title
-            }
+            },
+            bindToController: true
         });
-    };
-
-    function JsonLdDialogController($scope, $mdDialog, content, title) {
-
-        $scope.content = content;
-        $scope.title = title;
-
-        $scope.hide = function () {
-            $mdDialog.hide();
-        };
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
     }
 
-};
+}
+
+MyElementsCtrl.$inject = ['restApi', '$mdToast', '$mdDialog'];
