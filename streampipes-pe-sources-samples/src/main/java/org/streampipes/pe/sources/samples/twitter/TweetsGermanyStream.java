@@ -1,29 +1,35 @@
 package org.streampipes.pe.sources.samples.twitter;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.commons.Utils;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.schema.EventSchema;
+import org.streampipes.pe.sources.samples.config.SampleSettings;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
-import org.streampipes.pe.sources.samples.config.SampleSettings;
-import org.streampipes.pe.sources.samples.config.SourcesConfig;
-import org.codehaus.jettison.json.JSONObject;
-import twitter4j.*;
+import twitter4j.FilterQuery;
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TweetsGermanyStream implements EventStreamDeclarer{
+import javax.jms.JMSException;
+
+public class TweetsGermanyStream implements DataStreamDeclarer {
 
 	ActiveMQPublisher publisher;
 	

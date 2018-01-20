@@ -1,29 +1,29 @@
 package org.streampipes.pe.sources.samples.twitter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.streampipes.vocabulary.FOAF;
-import org.streampipes.vocabulary.MessageFormat;
-import org.streampipes.vocabulary.SO;
-import org.streampipes.vocabulary.XSD;
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
-import org.streampipes.model.grounding.EventGrounding;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.schema.EventSchema;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.grounding.EventGrounding;
+import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.streampipes.model.quality.EventStreamQualityDefinition;
 import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.pe.sources.samples.config.SampleSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
+import org.streampipes.vocabulary.FOAF;
+import org.streampipes.vocabulary.MessageFormat;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.vocabulary.XSD;
 
-public class TwitterGeoStream implements EventStreamDeclarer {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TwitterGeoStream implements DataStreamDeclarer {
 
 	@Override
 	public SpDataStream declareModel(DataSourceDescription sep) {

@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.hella.sources;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.hella.streams.MaterialMovementStream;
@@ -20,9 +20,9 @@ public class MontracProducer implements SemanticEventProducerDeclarer {
 
 	
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
+	public List<DataStreamDeclarer> getEventStreams() {
 		
-		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
+		List<DataStreamDeclarer> streams = new ArrayList<DataStreamDeclarer>();
 		
 		streams.add(new MaterialMovementStream());
 		

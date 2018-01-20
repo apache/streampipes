@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.random;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class RandomNumberStreamList implements EventStreamDeclarer {
+public class RandomNumberStreamList implements DataStreamDeclarer {
 
   private SpKafkaProducer kafkaProducer;
 

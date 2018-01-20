@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.random;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.grounding.EventGrounding;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class NestedRandomNumberStream implements EventStreamDeclarer {
+public class NestedRandomNumberStream implements DataStreamDeclarer {
 	
 	ActiveMQPublisher samplePublisher;
 

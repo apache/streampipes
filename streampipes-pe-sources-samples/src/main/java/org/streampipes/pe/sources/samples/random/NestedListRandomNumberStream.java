@@ -4,7 +4,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -24,7 +24,7 @@ import java.util.Random;
 
 import javax.jms.JMSException;
 
-public class NestedListRandomNumberStream implements EventStreamDeclarer {
+public class NestedListRandomNumberStream implements DataStreamDeclarer {
 	
 	ActiveMQPublisher samplePublisher;
 

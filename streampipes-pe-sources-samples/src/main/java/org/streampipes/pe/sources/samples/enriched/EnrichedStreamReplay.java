@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.samples.enriched;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.grounding.EventGrounding;
@@ -13,7 +13,7 @@ import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 
-public class EnrichedStreamReplay implements EventStreamDeclarer {
+public class EnrichedStreamReplay implements DataStreamDeclarer {
 
 	private String topicName;
 	

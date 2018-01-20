@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.random;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 
@@ -17,9 +17,9 @@ public class RandomDataProducer implements SemanticEventProducerDeclarer {
 
 	
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
+	public List<DataStreamDeclarer> getEventStreams() {
 		
-		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
+		List<DataStreamDeclarer> streams = new ArrayList<DataStreamDeclarer>();
 		
 		//streams.add(new RandomTextStream());
 		streams.add(new RandomNumberStreamJson());

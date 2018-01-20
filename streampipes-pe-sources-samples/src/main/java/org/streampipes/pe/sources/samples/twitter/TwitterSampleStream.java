@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.twitter;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.jms.ActiveMQPublisher;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
@@ -34,7 +34,7 @@ import java.util.List;
 
 import javax.jms.JMSException;
 
-public class TwitterSampleStream implements EventStreamDeclarer {
+public class TwitterSampleStream implements DataStreamDeclarer {
 
 	private ActiveMQPublisher geoPublisher;
 	private EventProducer kafkaProducer;

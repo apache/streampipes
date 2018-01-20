@@ -1,7 +1,7 @@
 package org.streampipes.pe.sources.hella.main;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TransportFormat;
@@ -9,7 +9,7 @@ import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.sources.AbstractAlreadyExistingStream;
 import org.streampipes.pe.sources.hella.config.ProaSenseSettings;
 
-public abstract class AbstractHellaStream extends AbstractAlreadyExistingStream implements EventStreamDeclarer {
+public abstract class AbstractHellaStream extends AbstractAlreadyExistingStream implements DataStreamDeclarer {
 
 	public SpDataStream prepareStream(String topic) {
 		

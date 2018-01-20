@@ -4,7 +4,7 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 
 
-public interface EventStreamDeclarer {
+public interface DataStreamDeclarer {
 
 	SpDataStream declareModel(DataSourceDescription sep);
 	

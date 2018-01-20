@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.mhwirth.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.mhwirth.config.SourcesConfig;
@@ -18,8 +18,8 @@ public class DDMProducer implements SemanticEventProducerDeclarer{
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
-		List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
+	public List<DataStreamDeclarer> getEventStreams() {
+		List<DataStreamDeclarer> eventStreams = new ArrayList<DataStreamDeclarer>();
 		
 		eventStreams.add(new GearLubeOilTemperature());
 		eventStreams.add(new Torque());

@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.mhwirth.enriched;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.mhwirth.friction.GearboxFrictionCoefficientStream;
@@ -18,8 +18,8 @@ public class EnrichedEventProducer implements SemanticEventProducerDeclarer{
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
-		List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
+	public List<DataStreamDeclarer> getEventStreams() {
+		List<DataStreamDeclarer> eventStreams = new ArrayList<DataStreamDeclarer>();
 		
 		eventStreams.add(new EnrichedStream());
 		eventStreams.add(new GearboxFrictionCoefficientStream());

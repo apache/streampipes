@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.hella.sources;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.hella.streams.DustParticleStream;
@@ -21,7 +21,7 @@ public class EnvironmentalDataProducer implements SemanticEventProducerDeclarer 
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
+	public List<DataStreamDeclarer> getEventStreams() {
 		return Arrays.asList(new DustParticleStream(), new TemperatureStream(), new IrTemperatureStream(), new HumidityStream());
 	}
 

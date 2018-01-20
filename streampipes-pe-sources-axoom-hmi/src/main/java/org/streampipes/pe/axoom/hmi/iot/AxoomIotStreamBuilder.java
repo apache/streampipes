@@ -1,14 +1,14 @@
 package org.streampipes.pe.axoom.hmi.iot;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AxoomIotStreamBuilder {
 
-  public static List<EventStreamDeclarer> buildIotStreams() {
-    List<EventStreamDeclarer> iotStreams = new ArrayList<>();
+  public static List<DataStreamDeclarer> buildIotStreams() {
+    List<DataStreamDeclarer> iotStreams = new ArrayList<>();
 //    try {
 //      Gson gson = new Gson();
 //      AxoomMachines[] machineDefinitions = gson.fromJson(new FileReader(getConfigFile()),

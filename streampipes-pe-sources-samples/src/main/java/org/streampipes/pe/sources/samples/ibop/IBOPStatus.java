@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.vocabulary.XSD;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
@@ -18,7 +18,7 @@ import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.commons.Utils;
 
-public class IBOPStatus implements EventStreamDeclarer {
+public class IBOPStatus implements DataStreamDeclarer {
 
 	
 	@Override

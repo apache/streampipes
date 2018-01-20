@@ -6,7 +6,7 @@ import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.commons.Utils;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.grounding.EventGrounding;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SlackStream implements EventStreamDeclarer {
+public class SlackStream implements DataStreamDeclarer {
     private static String  topic = "slack.stream";
 
     private String name;

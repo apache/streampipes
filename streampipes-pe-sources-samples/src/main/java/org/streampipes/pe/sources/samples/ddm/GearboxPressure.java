@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.ddm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -20,7 +20,7 @@ import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.commons.Utils;
 
-public class GearboxPressure implements EventStreamDeclarer {
+public class GearboxPressure implements DataStreamDeclarer {
 	
 	
 	@Override

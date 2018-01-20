@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.taxiaggregated;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -21,7 +21,7 @@ import org.streampipes.sdk.helpers.Protocols;
 import java.io.File;
 import java.util.Arrays;
 
-public class AggregatedTaxiStream implements EventStreamDeclarer {
+public class AggregatedTaxiStream implements DataStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(AggregatedTaxiStream.class);
 
     private static String kafkaHost = MlSourceConfig.INSTANCE.getKafkaHost();

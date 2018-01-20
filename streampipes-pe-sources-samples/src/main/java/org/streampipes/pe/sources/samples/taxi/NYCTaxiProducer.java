@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.taxi;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
@@ -19,8 +19,8 @@ public class NYCTaxiProducer implements SemanticEventProducerDeclarer{
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
-		List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
+	public List<DataStreamDeclarer> getEventStreams() {
+		List<DataStreamDeclarer> streams = new ArrayList<DataStreamDeclarer>();
 		streams.add(new NYCTaxiStream());
 		streams.add(new NycTest01Stream());
 		streams.add(new NycTest02Stream());

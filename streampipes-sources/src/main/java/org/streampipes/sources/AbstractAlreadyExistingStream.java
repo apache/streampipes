@@ -1,9 +1,9 @@
 package org.streampipes.sources;
 
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 
-public abstract class AbstractAlreadyExistingStream implements EventStreamDeclarer {
+public abstract class AbstractAlreadyExistingStream implements DataStreamDeclarer {
 
 	@Override
 	public void executeStream() {		

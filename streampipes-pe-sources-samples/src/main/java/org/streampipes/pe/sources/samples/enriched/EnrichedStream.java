@@ -3,7 +3,7 @@ import java.util.Random;
 
 import com.google.gson.JsonObject;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TransportFormat;
@@ -13,7 +13,7 @@ import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.commons.Utils;
 
-public class EnrichedStream implements EventStreamDeclarer{
+public class EnrichedStream implements DataStreamDeclarer {
 	
 	public JsonObject generateSampleEvent() {
 		

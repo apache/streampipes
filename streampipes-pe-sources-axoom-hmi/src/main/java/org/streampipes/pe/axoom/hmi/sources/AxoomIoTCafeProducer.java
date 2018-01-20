@@ -4,7 +4,7 @@ import org.streampipes.pe.axoom.hmi.config.AxoomHmiConfig;
 import org.streampipes.pe.axoom.hmi.streams.EnergyStream;
 import org.streampipes.pe.axoom.hmi.streams.MaintenanceStream;
 import org.streampipes.pe.axoom.hmi.streams.OrderStream;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.sdk.builder.DataSourceBuilder;
@@ -25,8 +25,8 @@ public class AxoomIoTCafeProducer implements SemanticEventProducerDeclarer {
   }
 
   @Override
-  public List<EventStreamDeclarer> getEventStreams() {
-    List<EventStreamDeclarer> axoomStreams = new ArrayList<>(Arrays.asList(//new MachineStream
+  public List<DataStreamDeclarer> getEventStreams() {
+    List<DataStreamDeclarer> axoomStreams = new ArrayList<>(Arrays.asList(//new MachineStream
             // (AxoomHmiConfig
             // .FABTECH),
             //new MaintenanceStream(AxoomHmiConfig.FABTECH),

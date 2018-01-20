@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.friction;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 
@@ -15,8 +15,8 @@ public class FrictionCoefficientProducer implements SemanticEventProducerDeclare
     }
 
     @Override
-    public List<EventStreamDeclarer> getEventStreams() {
-        List<EventStreamDeclarer> eventStreams = new ArrayList<EventStreamDeclarer>();
+    public List<DataStreamDeclarer> getEventStreams() {
+        List<DataStreamDeclarer> eventStreams = new ArrayList<DataStreamDeclarer>();
 
         eventStreams.add(new FrictionCoefficientGearbox());
         eventStreams.add(new FrictionCoefficientSwivel());

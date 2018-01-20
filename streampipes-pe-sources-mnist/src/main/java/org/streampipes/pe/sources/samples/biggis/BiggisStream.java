@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.biggis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Arrays;
 
 
-public class BiggisStream implements EventStreamDeclarer {
+public class BiggisStream implements DataStreamDeclarer {
     static final Logger LOG = LoggerFactory.getLogger(BiggisStream.class);
 
 

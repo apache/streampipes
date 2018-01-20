@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.ram;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
@@ -18,7 +18,7 @@ import org.streampipes.pe.sources.samples.config.AkerVariables;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.commons.Utils;
 
-public class RamVelocityMeasuredValue implements EventStreamDeclarer {
+public class RamVelocityMeasuredValue implements DataStreamDeclarer {
 
 	@Override
 	public SpDataStream declareModel(DataSourceDescription sep) {

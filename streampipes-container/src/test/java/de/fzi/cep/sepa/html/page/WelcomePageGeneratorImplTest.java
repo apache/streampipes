@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.Test;
 
 import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.html.model.Description;
@@ -88,8 +88,8 @@ public class WelcomePageGeneratorImplTest {
     private SemanticEventProducerDeclarer getSepdDeclarer() {
         return new SemanticEventProducerDeclarer() {
             @Override
-            public List<EventStreamDeclarer> getEventStreams() {
-                return Arrays.asList(new EventStreamDeclarer() {
+            public List<DataStreamDeclarer> getEventStreams() {
+                return Arrays.asList(new DataStreamDeclarer() {
                     @Override
                     public SpDataStream declareModel(DataSourceDescription sep) {
                         return new SpDataStream("streampathName", "streamname", "streamdescription", null);

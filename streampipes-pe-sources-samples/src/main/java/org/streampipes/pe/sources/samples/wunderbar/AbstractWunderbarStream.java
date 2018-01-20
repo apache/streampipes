@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.streampipes.commons.Utils;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TransportFormat;
@@ -17,7 +17,7 @@ import org.streampipes.vocabulary.MessageFormat;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 
-public abstract class AbstractWunderbarStream implements EventStreamDeclarer {
+public abstract class AbstractWunderbarStream implements DataStreamDeclarer {
 
 	protected WunderbarVariables variable;
 	

@@ -4,7 +4,7 @@ import org.eclipse.rdf4j.model.Graph;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.declarer.Declarer;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.transform.Transformer;
@@ -60,8 +60,8 @@ public abstract class Element<D extends Declarer> {
                 //TODO find a better solution to add the event streams to the SepDescription
                 if (declarer instanceof SemanticEventProducerDeclarer) {
                     DataSourceDescription secDesc = ((SemanticEventProducerDeclarer) declarer).declareModel();
-                    List<EventStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
-                    for (EventStreamDeclarer esd : eventStreamDeclarers) {
+                    List<DataStreamDeclarer> eventStreamDeclarers = ((SemanticEventProducerDeclarer) declarer).getEventStreams();
+                    for (DataStreamDeclarer esd : eventStreamDeclarers) {
                         secDesc.addEventStream(esd.declareModel(secDesc));
                     }
 

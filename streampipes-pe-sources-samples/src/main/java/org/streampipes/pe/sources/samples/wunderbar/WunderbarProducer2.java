@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.wunderbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 
@@ -17,8 +17,8 @@ public class WunderbarProducer2 implements SemanticEventProducerDeclarer {
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
-		List<EventStreamDeclarer> streams = new ArrayList<>();
+	public List<DataStreamDeclarer> getEventStreams() {
+		List<DataStreamDeclarer> streams = new ArrayList<>();
 		streams.add(new AccelerometerStream(WunderbarVariables.ACCELEROMETER_2));
 		streams.add(new AngularSpeedStream(WunderbarVariables.ANGULAR_SPEED_2));
 		streams.add(new ColorStream(WunderbarVariables.COLOR_2));

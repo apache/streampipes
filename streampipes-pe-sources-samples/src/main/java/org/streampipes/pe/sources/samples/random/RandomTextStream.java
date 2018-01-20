@@ -1,10 +1,10 @@
 package org.streampipes.pe.sources.samples.random;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 
-public class RandomTextStream implements EventStreamDeclarer {
+public class RandomTextStream implements DataStreamDeclarer {
 
 	@Override
 	public SpDataStream declareModel(DataSourceDescription sep) {

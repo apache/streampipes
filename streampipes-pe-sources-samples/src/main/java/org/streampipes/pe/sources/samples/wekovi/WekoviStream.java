@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.wekovi;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
@@ -9,7 +9,7 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Formats;
 import org.streampipes.sdk.helpers.Protocols;
 
-public class WekoviStream implements EventStreamDeclarer {
+public class WekoviStream implements DataStreamDeclarer {
 
     @Override
     public SpDataStream declareModel(DataSourceDescription sep) {

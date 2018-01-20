@@ -1,13 +1,13 @@
 package org.streampipes.pe.sources.samples.taxi;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.messaging.EventProducer;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.pe.sources.samples.adapter.SimulationSettings;
 
 import java.io.File;
 
-public abstract class AbstractNycStream implements EventStreamDeclarer{
+public abstract class AbstractNycStream implements DataStreamDeclarer {
 
 	protected SpKafkaProducer publisher;
 	protected EventProducer timePublisher;

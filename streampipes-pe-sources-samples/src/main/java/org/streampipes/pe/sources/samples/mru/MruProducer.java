@@ -2,7 +2,7 @@ package org.streampipes.pe.sources.samples.mru;
 
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 
@@ -15,7 +15,7 @@ public class MruProducer implements SemanticEventProducerDeclarer{
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
+	public List<DataStreamDeclarer> getEventStreams() {
 		// TODO Auto-generated method stub
 		return null;
 	}

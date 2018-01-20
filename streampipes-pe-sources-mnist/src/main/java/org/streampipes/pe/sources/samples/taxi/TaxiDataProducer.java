@@ -1,6 +1,6 @@
 package org.streampipes.pe.sources.samples.taxi;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.slf4j.Logger;
@@ -26,9 +26,9 @@ public class TaxiDataProducer implements SemanticEventProducerDeclarer {
 
 
     @Override
-    public List<EventStreamDeclarer> getEventStreams() {
+    public List<DataStreamDeclarer> getEventStreams() {
 
-        List<EventStreamDeclarer> streams = new ArrayList<EventStreamDeclarer>();
+        List<DataStreamDeclarer> streams = new ArrayList<DataStreamDeclarer>();
 
         streams.add(new TaxiStream());
 

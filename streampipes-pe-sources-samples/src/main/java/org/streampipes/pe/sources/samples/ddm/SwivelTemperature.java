@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyPrimitive;
@@ -28,7 +28,7 @@ import org.streampipes.pe.sources.samples.config.ProaSenseSettings;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.util.Utils;
 
-public class SwivelTemperature implements EventStreamDeclarer {
+public class SwivelTemperature implements DataStreamDeclarer {
 
 	private String topicName;
 	private static final Logger logger = LoggerFactory.getLogger("SwivelTemperature");

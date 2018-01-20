@@ -3,7 +3,7 @@ package org.streampipes.pe.sources.samples.hella;
 import java.util.Arrays;
 import java.util.List;
 
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.streampipes.model.graph.DataSourceDescription;
 
@@ -17,7 +17,7 @@ public class VisualInspectionProducer implements SemanticEventProducerDeclarer {
 	}
 
 	@Override
-	public List<EventStreamDeclarer> getEventStreams() {
+	public List<DataStreamDeclarer> getEventStreams() {
 		return Arrays.asList(new ScrapDataStream());
 	}
 

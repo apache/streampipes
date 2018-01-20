@@ -2,9 +2,9 @@ package org.streampipes.pe.sources.samples.friction;
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.DataStreamDeclarer;
 
-public class FrictionCoefficientGearbox extends FrictionCoefficient implements EventStreamDeclarer {
+public class FrictionCoefficientGearbox extends FrictionCoefficient implements DataStreamDeclarer {
 
     protected FrictionCoefficientGearbox() {
         super(FrictionVariable.Gearbox);
