@@ -46,7 +46,7 @@ public abstract class EsperEventEngine<T extends EventProcessorBindingParams> im
 		
 		//MapUtils.debugPrint(System.out, "topic://" +graph.getOutputStream().getEventGrounding().getTopicName(), parameters.getOutEventType());
 		checkAndRegisterEventType(parameters.getGraph().getOutputStream().getEventGrounding()
-						.getTransportProtocol().getTopicName(), parameters.getOutEventType());
+						.getTransportProtocol().getTopicDefinition().getActualTopicName(), parameters.getOutEventType());
 		
 		List<String> statements = statements(parameters);
 		registerStatements(statements, collector, parameters);

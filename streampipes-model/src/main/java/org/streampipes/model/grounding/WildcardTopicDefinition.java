@@ -15,5 +15,58 @@ limitations under the License.
 */
 package org.streampipes.model.grounding;
 
-public class WildcardTopicDefinition {
+import org.streampipes.empire.annotations.RdfProperty;
+import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.vocabulary.StreamPipes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+
+@RdfsClass(StreamPipes.WILDCARD_TOPIC_DEFINITION)
+@Entity
+public class WildcardTopicDefinition extends TopicDefinition {
+
+  @RdfProperty(StreamPipes.HAS_WILDCARD_TOPIC_NAME)
+  private String wildcardTopicName;
+
+  @OneToMany(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.HAS_WILDCARD_TOPIC_MAPPING)
+  private List<WildcardTopicMapping> wildcardTopicMappings;
+
+  public WildcardTopicDefinition() {
+    super();
+    this.wildcardTopicMappings = new ArrayList<>();
+  }
+
+  public WildcardTopicDefinition(WildcardTopicDefinition other) {
+    super(other);
+  }
+
+  public WildcardTopicDefinition(String wildcardTopicName, List<WildcardTopicMapping> wildcardTopicMappings) {
+    this.wildcardTopicMappings = wildcardTopicMappings;
+    this.wildcardTopicName = wildcardTopicName;
+  }
+
+  public String getWildcardTopicName() {
+    return wildcardTopicName;
+  }
+
+  public void setWildcardTopicName(String wildcardTopicName) {
+    this.wildcardTopicName = wildcardTopicName;
+  }
+
+
+  public List<WildcardTopicMapping> getWildcardTopicMappings() {
+    return wildcardTopicMappings;
+  }
+
+  public void setWildcardTopicMappings(List<WildcardTopicMapping> wildcardTopicMappings) {
+    this.wildcardTopicMappings = wildcardTopicMappings;
+  }
 }

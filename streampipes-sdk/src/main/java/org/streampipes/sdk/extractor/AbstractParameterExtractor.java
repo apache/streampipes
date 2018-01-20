@@ -37,7 +37,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .get(streamIndex)
             .getEventGrounding()
             .getTransportProtocol()
-            .getTopicName();
+            .getTopicDefinition()
+            .getActualTopicName();
   }
 
   public <V> V singleValueParameter(String internalName, Class<V> targetClass) {

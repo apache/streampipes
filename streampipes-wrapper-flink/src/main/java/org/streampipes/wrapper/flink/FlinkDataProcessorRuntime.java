@@ -60,7 +60,8 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
 	private String getOutputTopic()
 	{
 		return protocol()
-				.getTopicName();
+				.getTopicDefinition()
+						.getActualTopicName();
 	}
 
 	private JmsTransportProtocol getJmsProtocol()

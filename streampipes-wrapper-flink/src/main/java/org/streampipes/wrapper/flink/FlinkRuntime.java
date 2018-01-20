@@ -194,7 +194,7 @@ public abstract class FlinkRuntime<I extends InvocableStreamPipesEntity> impleme
 			if (stream != null) {
 				KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
-				return new FlinkKafkaConsumer010<>(protocol.getTopicName(), new SimpleStringSchema
+				return new FlinkKafkaConsumer010<>(protocol.getTopicDefinition().getActualTopicName(), new SimpleStringSchema
 								(), getProperties(protocol));
 			} else {
 				return null;

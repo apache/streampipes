@@ -23,23 +23,23 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 
 	@OneToOne(fetch = FetchType.EAGER,cascade = {CascadeType.ALL})
 	@RdfProperty(StreamPipes.TOPIC)
-	private TopicDefinition topicName;
+	private TopicDefinition topicDefinition;
 	
 	public TransportProtocol() {
 		super();
 	}
 	
-	public TransportProtocol(String uri, String topicName)
+	public TransportProtocol(String uri, TopicDefinition topicDefinition)
 	{
 		super();
 		this.brokerHostname = uri;
-		//this.topicName = topicName;
+		this.topicDefinition = topicDefinition;
 	}
 
 	public TransportProtocol(TransportProtocol other) {
 		super(other);
 		this.brokerHostname = other.getBrokerHostname();
-		//this.topicName = other.getTopicName();
+		this.topicDefinition = other.getTopicDefinition();
 	}
 
 	public String getBrokerHostname() {
@@ -50,12 +50,26 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 		this.brokerHostname = uri;
 	}
 	
-	public String getTopicName() {
-		return topicName.toString();
+	public TopicDefinition getTopicDefinition() {
+		return topicDefinition;
 	}
 
+	public void setTopicDefinition(TopicDefinition topicDefinition) {
+		this.topicDefinition = topicDefinition;
+	}
+
+	// TODO only kept for backwards compatibility, remove later
+	@Deprecated
+	public String getTopicName() {
+		return topicDefinition.getActualTopicName();
+	}
+
+	@Deprecated
 	public void setTopicName(String topicName) {
-		//this.topicName = topicName;
+		if (this.topicDefinition == null) {
+			this.topicDefinition = new SimpleTopicDefinition();
+		}
+		this.topicDefinition.setActualTopicName(topicName);
 	}
 
 }

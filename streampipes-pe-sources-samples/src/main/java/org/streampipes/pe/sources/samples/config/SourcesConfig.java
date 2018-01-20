@@ -3,8 +3,6 @@ package org.streampipes.pe.sources.samples.config;
 import org.streampipes.config.SpConfig;
 import org.streampipes.container.model.PeConfig;
 
-import javax.ws.rs.PathParam;
-
 public enum SourcesConfig implements PeConfig {
 	INSTANCE;
 
@@ -43,7 +41,7 @@ public enum SourcesConfig implements PeConfig {
 	public final static String topicPrefixRam;
 
     private final static String SERVICE_ID = "pe/org.streampipes.pe.sources.samples";
-    private final static String SERVICE_NAME = "service_name";
+    private final static String SERVICE_NAME = "sources-samples";
 
 	SourcesConfig() {
 		config = SpConfig.getSpConfig(SERVICE_ID);

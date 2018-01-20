@@ -65,6 +65,11 @@ public class StreamPipes {
   public static final String TRANSPORT_FORMAT = NS + "TransportFormat";
   public static final String TRANSPORT_PROTOCOL = NS + "TransportProtocol";
 
+  public static final String TOPIC_DEFINITION = NS + "TopicDefinition";
+  public static final String SIMPLE_TOPIC_DEFINITION = NS + "SimpleTopicDefinition";
+  public static final String WILDCARD_TOPIC_DEFINITION = NS + "WildcardTopicDefinition";
+  public static final String WILDCARD_TOPIC_MAPPING = NS + "WildcardTopicMapping";
+
   // Properties
 
   public static final String REQUIRES_STREAM = NS + "requiresStream";
@@ -188,4 +193,12 @@ public class StreamPipes {
   public static final String HAS_MEASUREMENT_OBJECT = NS + "hasMeasurementObject";
 
   public static final String HAS_PROPERTY_SCOPE = NS + "hasPropertyScope";
+
+  public static final String HAS_WILDCARD_TOPIC_NAME = NS + "hasWildcardTopicName";
+  public static final String HAS_WILDCARD_TOPIC_MAPPING = NS + "hasWildcardTopicMapping";
+  public static final String HAS_ACTUAL_TOPIC_NAME = NS + "hasActualTopicName";
+
+  public static final String HAS_TOPIC_PARAMETER_TYPE = NS + "hasTopicParameterType" ;
+  public static final String HAS_TOPIC_MAPPING_ID = NS + "hasTopicMappingId";
+  public static final String HAS_MAPPED_RUNTIME_NAME = NS + "hasMappedRuntimeName";
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2017 FZI Forschungszentrum Informatik
+Copyright 2018 FZI Forschungszentrum Informatik
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,28 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package org.streampipes.model.grounding;
 
-import org.streampipes.empire.annotations.RdfsClass;
-import org.streampipes.vocabulary.StreamPipes;
+public enum TopicParameterType {
 
-import javax.persistence.Entity;
+  SENSOR_IDENTIFIER,
+  PLATFORM_IDENTIFIER,
+  LOCATION_IDENTIFIER,
 
-@RdfsClass(StreamPipes.SIMPLE_TOPIC_DEFINITION)
-@Entity
-public class SimpleTopicDefinition extends TopicDefinition {
-
-  public SimpleTopicDefinition(String topicName) {
-    super(topicName);
-  }
-
-  public SimpleTopicDefinition() {
-    super();
-  }
-
-  public SimpleTopicDefinition(SimpleTopicDefinition other) {
-    super(other);
-  }
-
+  PLATFORM_TYPE,
+  SENSOR_TYPE;
 }

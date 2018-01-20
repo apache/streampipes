@@ -25,7 +25,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 		JmsTransportProtocol protocol = new JmsTransportProtocol();
 		protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
 		protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":")+1, url.length())));
-		protocol.setTopicName(topic);
+		protocol.getTopicDefinition().setActualTopicName(topic);
 		try {
 			connect(protocol);
 		} catch (SpRuntimeException e) {
@@ -63,7 +63,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 		try {
 			this.session = connection
               .createSession(false, Session.AUTO_ACKNOWLEDGE);
-			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicName()));
+			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicDefinition().getActualTopicName()));
 			this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 			this.connection.start();
 			this.connected = true;

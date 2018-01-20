@@ -35,7 +35,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
         KafkaTransportProtocol protocol = new KafkaTransportProtocol();
         protocol.setKafkaPort(Integer.parseInt(kafkaUrl.split(":")[1]));
         protocol.setBrokerHostname(kafkaUrl.split(":")[0]);
-        protocol.setTopicName(topic);
+        protocol.getTopicDefinition().setActualTopicName(topic);
 
         try {
             this.connect(protocol, callback);
@@ -75,10 +75,10 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     public void connect(KafkaTransportProtocol protocol, InternalEventProcessor<byte[]>
             eventProcessor)
             throws SpRuntimeException {
-        LOG.info("Kafka consumer: Connecting to " +protocol.getTopicName());
+        LOG.info("Kafka consumer: Connecting to " +protocol.getTopicDefinition().getActualTopicName());
         this.eventProcessor = eventProcessor;
         this.kafkaUrl = protocol.getBrokerHostname() +":" +protocol.getKafkaPort();
-        this.topic = protocol.getTopicName();
+        this.topic = protocol.getTopicDefinition().getActualTopicName();
         this.groupId = UUID.randomUUID().toString();
         this.isRunning = true;
 

@@ -44,7 +44,8 @@ public class EventRateController extends StandaloneEventProcessorDeclarerSinglet
 
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, avgRate, outputRate
-						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
+						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
+						.getActualTopicName());
 
 		return new ConfiguredEventProcessor<>(staticParam, EventRate::new);
 	}
