@@ -41,7 +41,7 @@ public class DelayTaxiController extends FlinkDataProcessorDeclarer<DelayTaxiPar
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
 
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 

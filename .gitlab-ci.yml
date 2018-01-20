@@ -35,6 +35,7 @@ build:
       - ./streampipes-pe-sources-axoom-hmi/target/*.jar
       - ./streampipes-pe-sources-mnist/target/*.jar
       - ./streampipes-pe-mixed-flink/target/*.jar
+      - ./streampipes-pe-mixed-kafka-streams/target/*.jar
       - ./target/site/apidocs/**
       - ./target/mvn_version
     expire_in:  1 week
@@ -125,7 +126,17 @@ docker-pe-mixed-flink:
    only:
      - dev
 
-
+docker-pe-mixed-kafka:
+   image: docker:17.06.0-ce
+   stage: docker
+   dependencies:
+     - build
+   script:
+     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_HOST
+     - docker build --pull -t $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT ./streampipes-pe-mixed-kafka-streams/
+     - docker push $IMAGE_NAME/pe-mixed-kafka:SNAPSHOT
+   only:
+     - dev
 
 deploy:
   image: maven:3-jdk-8

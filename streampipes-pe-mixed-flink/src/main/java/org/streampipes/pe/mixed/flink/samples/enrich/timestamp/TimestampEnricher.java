@@ -1,9 +1,9 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.timestamp;
 
-import java.util.Map;
-
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
+
+import java.util.Map;
 
 public class TimestampEnricher implements FlatMapFunction<Map<String, Object>, Map<String, Object>> {
 
@@ -19,7 +19,5 @@ public class TimestampEnricher implements FlatMapFunction<Map<String, Object>, M
 		in.put(appendTimePropertyName, System.currentTimeMillis());
 		out.collect(in);
 	}
-	
-	
 
 }

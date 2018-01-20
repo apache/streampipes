@@ -12,8 +12,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 
@@ -35,7 +34,7 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TextFilterParameter, EventProcessor<TextFilterParameter>> onInvocation
+	public ConfiguredEventProcessor<TextFilterParameter> onInvocation
 					(DataProcessorInvocation sepa) {
 		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
 

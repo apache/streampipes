@@ -37,7 +37,7 @@ public class Prediction2BreakdownController extends FlinkDataProcessorDeclarer<P
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<Prediction2BreakdownParameters> getRuntime(DataProcessorInvocation graph) {
     Prediction2BreakdownParameters params = new Prediction2BreakdownParameters(graph);
 
     return new Prediction2BreakdownProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,

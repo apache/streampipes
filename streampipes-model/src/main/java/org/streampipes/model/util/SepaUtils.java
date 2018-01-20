@@ -1,18 +1,15 @@
 package org.streampipes.model.util;
 
-import org.streampipes.model.base.ConsumableStreamPipesEntity;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.schema.EventPropertyNested;
 import org.streampipes.model.schema.EventPropertyPrimitive;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.staticproperty.AnyStaticProperty;
 import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.MatchingStaticProperty;
@@ -23,7 +20,6 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +41,6 @@ public class SepaUtils {
 		Optional<StaticProperty> matchedProperty = sepa.getStaticProperties().stream().filter(sp -> (sp instanceof DomainStaticProperty) && (sp.getInternalName().equals(internalName))).findFirst();
 		if (matchedProperty.isPresent()) return (DomainStaticProperty) matchedProperty.get();
 		else return null;
-	}
-	
-	public static StaticProperty getStaticPropertyByInternalName(ConsumableStreamPipesEntity sepa, String internalName)
-	{
-		return getStaticPropertyByName(sepa.getStaticProperties(), internalName);
 	}
 	
 	public static String getFreeTextStaticPropertyValue(InvocableStreamPipesEntity graph, String internalName)
@@ -92,19 +83,7 @@ public class SepaUtils {
 		return null;
 		//TODO: exceptions
 	}
-	
-	public static List<String> getMatchingPropertyNames(InvocableStreamPipesEntity sepa, String staticPropertyName) {
-		
-		List<String> propertyNames = new ArrayList<>();
-		for(int i = 0; i <= 1; i++)
-		{
-			URI propertyURI = getMatchingPropertyURI(sepa, staticPropertyName, i == 0);
-			SpDataStream stream = sepa.getInputStreams().get(i);
-			propertyNames.add(stream.getEventSchema().getEventProperties().stream().filter(p -> p.getElementId().equals(propertyURI.toString())).findFirst().get().getRuntimeName());
-		}
-		return propertyNames;
-		//TODO: exceptions
-	}
+
 	public static List<String> getMultipleMappingPropertyNames(InvocableStreamPipesEntity sepa, String staticPropertyName, boolean completeNames)
 	{
 		List<URI> propertyUris = getMultipleURIsFromStaticProperty(sepa, staticPropertyName);
@@ -230,23 +209,7 @@ public class SepaUtils {
 		return null;
 		//TODO: exceptions
 	}
-	
-	public static URI getURIbyPropertyName(SpDataStream stream, String propertyName)
-	{
-		for(EventProperty p : stream.getEventSchema().getEventProperties())
-		{
-			if (p.getRuntimeName().equals(propertyName))
-				try {
-					return new URI(p.getRdfId().toString());
-				} catch (URISyntaxException e) {
-					return null;
-				}
-		}
-		return null;
-		//TODO exceptions
-	}
-	
-	
+
 	private static StaticProperty getStaticPropertyByName(List<StaticProperty> properties, String name)
 	{
 		for(StaticProperty p : properties)
@@ -295,85 +258,7 @@ public class SepaUtils {
 		return null;
 		//TODO exceptions
 	}
-	
-	public static List<StaticProperty> cloneStaticProperties(List<StaticProperty> staticProperties)
-	{
-		List<StaticProperty> result = new ArrayList<>();
-		for(StaticProperty property : staticProperties)
-		{
-			if (property instanceof FreeTextStaticProperty)
-				result.add(generateClonedFreeTextProperty((FreeTextStaticProperty) property));
-			else if (property instanceof OneOfStaticProperty)
-					result.add(generateClonedOneOfStaticProperty((OneOfStaticProperty) property));
-				else if (property instanceof MappingProperty)
-					result.add(generateClonedMappingProperty((MappingProperty) property));
-					else if (property instanceof MatchingStaticProperty)
-						result.add(generateClonedMatchingStaticProperty((MatchingStaticProperty) property));
-					else if (property instanceof AnyStaticProperty)
-						result.add(generateAnyStaticProperty((AnyStaticProperty) property));
-		}
-		return result;
-	}
 
-	private static StaticProperty generateAnyStaticProperty(
-			AnyStaticProperty property) {
-		AnyStaticProperty newProperty = new AnyStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
-		newProperty.setOptions(cloneOptions(property.getOptions()));
-		return newProperty;
-		
-	}
-
-	private static List<Option> cloneOptions(List<Option> options) {
-		List<Option> result = new ArrayList<Option>();
-		for(Option option : options)
-		{
-			Option newOption = new Option(option.getName(), option.isSelected());
-			result.add(newOption);
-		}
-		return result;
-	}
-
-	private static StaticProperty generateClonedMatchingStaticProperty(
-			MatchingStaticProperty property) {
-		MatchingStaticProperty mp = new MatchingStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
-		mp.setMatchLeft(property.getMatchLeft());
-		mp.setMatchRight(property.getMatchRight());
-		return mp;
-	}
-
-	private static StaticProperty generateClonedMappingProperty(
-			MappingProperty property) {
-		
-		if (property instanceof MappingPropertyUnary)
-		{
-			MappingPropertyUnary unaryProperty = (MappingPropertyUnary) property;
-			MappingPropertyUnary mp = new MappingPropertyUnary(unaryProperty.getMapsFrom(), unaryProperty.getInternalName(), unaryProperty.getLabel(), unaryProperty.getDescription());
-			mp.setMapsTo(unaryProperty.getMapsTo());
-			return mp;
-		}
-		else {
-			MappingPropertyNary naryProperty = (MappingPropertyNary) property;
-			MappingPropertyNary mp = new MappingPropertyNary(naryProperty.getMapsFrom(), naryProperty.getInternalName(), naryProperty.getLabel(), naryProperty.getDescription());
-			mp.setMapsTo(naryProperty.getMapsTo());
-			return mp;
-		}
-	}
-
-	private static StaticProperty generateClonedOneOfStaticProperty(
-			OneOfStaticProperty property) {
-		OneOfStaticProperty osp = new OneOfStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
-		osp.setOptions(cloneOptions(osp.getOptions()));
-		return osp;
-	}
-
-	private static StaticProperty generateClonedFreeTextProperty(
-			FreeTextStaticProperty property) {
-		FreeTextStaticProperty ftsp = new FreeTextStaticProperty(property.getInternalName(), property.getLabel(), property.getDescription());
-		ftsp.setRequiredDomainProperty(property.getRequiredDomainProperty());
-		ftsp.setValue(property.getValue());
-		return ftsp;
-	}
-	
 	public static String getFullPropertyName(EventProperty property, List<EventProperty> topLevelProperties, String initialPrefix, char delimiter)
 	{
 		for(EventProperty schemaProperty : topLevelProperties)

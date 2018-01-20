@@ -7,8 +7,7 @@ import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class FileController extends StandaloneEventSinkDeclarer<FileParameters> {
@@ -34,7 +33,7 @@ public class FileController extends StandaloneEventSinkDeclarer<FileParameters> 
 
 
   @Override
-  public ConfiguredEventSink<FileParameters, EventSink<FileParameters>> onInvocation(DataSinkInvocation graph) {
+  public ConfiguredEventSink<FileParameters> onInvocation(DataSinkInvocation graph) {
     String path = getExtractor(graph).singleValueParameter(PATH_KEY, String.class);
 
     FileParameters params = new FileParameters(graph, path);

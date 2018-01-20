@@ -3,98 +3,62 @@ package org.streampipes.wrapper.flink;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.util.serialization.SerializationSchema;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
-import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.flink.serializer.SimpleJmsSerializer;
 import org.streampipes.wrapper.flink.serializer.SimpleKafkaSerializer;
 import org.streampipes.wrapper.flink.sink.FlinkJmsProducer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
-public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<DataProcessorInvocation> {
+public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingParams> extends FlinkRuntime<B,
+				DataProcessorInvocation> {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
-	protected B params;
-
 
 	public FlinkDataProcessorRuntime(B params)
 	{
-		super(params.getGraph());
-		this.params = params;
+		super(params);
 	}
 
 	public FlinkDataProcessorRuntime(B params, FlinkDeploymentConfig config)
 	{
-		super(params.getGraph(), config);
-		this.params = params;
+		super(params, config);
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean execute(DataStream<Map<String, Object>>... convertedStream)
+	public void appendExecutionConfig(DataStream<Map<String, Object>>... convertedStream)
 	{
 		DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
 
 		SerializationSchema<Map<String, Object>> kafkaSerializer = new SimpleKafkaSerializer();
 		SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
-		//applicationLogic.print();
-		if (isOutputKafkaProtocol()) applicationLogic
-				.addSink(new FlinkKafkaProducer010<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
+		if (isKafkaProtocol(getOutputStream())) applicationLogic
+				.addSink(new FlinkKafkaProducer010<>(getTopic(getOutputStream()),
+								kafkaSerializer, getProperties((KafkaTransportProtocol) getOutputStream().getEventGrounding().getTransportProtocol())));
 		else applicationLogic
-				.addSink(new FlinkJmsProducer<>(getJmsProtocol(), jmsSerializer));
+				.addSink(new FlinkJmsProducer<>(getJmsProtocol(getOutputStream()), jmsSerializer));
 
-		thread = new Thread(this);
-		thread.start();
-
-		return true;
 	}
 
+	private SpDataStream getOutputStream() {
+		return getGraph().getOutputStream();
+	}
 
 	protected abstract DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream);
 
-	private String getOutputTopic()
-	{
-		return protocol()
-				.getTopicDefinition()
-						.getActualTopicName();
-	}
+	protected Properties getProperties(KafkaTransportProtocol protocol) {
+		Properties props = new Properties();
 
-	private JmsTransportProtocol getJmsProtocol()
-	{
-		return new JmsTransportProtocol((JmsTransportProtocol) protocol());
-	}
+		String kafkaHost = protocol.getBrokerHostname();
+		Integer kafkaPort = protocol.getKafkaPort();
 
-	private boolean isOutputKafkaProtocol()
-	{
-		return protocol() instanceof KafkaTransportProtocol;
-	}
-
-	private TransportProtocol protocol() {
-		return params
-				.getGraph()
-				.getOutputStream()
-				.getEventGrounding()
-				.getTransportProtocol();
-	}
-
-	private String getKafkaUrl() {
-		// TODO add also jms support
-		return protocol().getBrokerHostname() +
-				":" +
-				((KafkaTransportProtocol) protocol()).getKafkaPort();
-//		return String.valueOf(getProperties().get("bootstrap.servers"));
-	}
-
-	public B getParams() {
-		return params;
-	}
-
-	public void setParams(B params) {
-		this.params = params;
+		props.put("client.id", UUID.randomUUID().toString());
+		props.put("bootstrap.servers", kafkaHost +":" +kafkaPort);
+		return props;
 	}
 }

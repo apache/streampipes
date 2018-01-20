@@ -9,6 +9,7 @@
     <name>StreamPipes Wrapper for Apache Flink</name>
     <properties>
         <jackson.version>2.7.4</jackson.version>
+        <flink.version>1.4.0</flink.version>
     </properties>
     <dependencies>
         <dependency>
@@ -26,11 +27,10 @@
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-java</artifactId>
-            <version>1.2.0</version>
+            <version>${flink.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_2.11</artifactId>
-            <version>1.2.0</version>
+            <version>${flink.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -67,12 +67,12 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper</artifactId>
+            <artifactId>streampipes-wrapper-distributed</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.10_2.11</artifactId>
-            <version>1.2.0</version>
+            <artifactId>flink-connector-kafka-0.11_2.11</artifactId>
+            <version>${flink.version}</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>

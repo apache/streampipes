@@ -38,8 +38,8 @@ public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchPara
         config.put("bulk.flush.max.actions", "100");
         config.put("cluster.name", "streampipes-cluster");
 
-        String indexName = params.getIndexName();
-        String timeName = params.getTimestampField();
+        String indexName = bindingParams.getIndexName();
+        String timeName = bindingParams.getTimestampField();
 
         // TODO We removed the typename for the demo
         // String typeName = SepaUtils.getFreeTextStaticPropertyValue(graph, "type-name");

@@ -4,18 +4,16 @@ import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.CustomOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -51,15 +49,15 @@ public class AbsenceController extends StandaloneEventProcessorDeclarerSingleton
   }
 
   @Override
-  public ConfiguredEventProcessor<AbsenceParameters, EventProcessor<AbsenceParameters>> onInvocation(DataProcessorInvocation sepa) {
+  public ConfiguredEventProcessor<AbsenceParameters> onInvocation(DataProcessorInvocation sepa) {
+    ProcessingElementParameterExtractor extractor = getExtractor(sepa);
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
       selectProperties.add(p.getRuntimeName());
     }
 
-    int timeWindowSize = Integer.parseInt(
-            ((FreeTextStaticProperty) (SepaUtils.getStaticPropertyByInternalName(sepa, "timeWindow"))).getValue());
+    Integer timeWindowSize = extractor.singleValueParameter("timeWindow", Integer.class);
 
     AbsenceParameters staticParam = new AbsenceParameters(sepa, selectProperties, timeWindowSize);
 

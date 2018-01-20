@@ -1,22 +1,21 @@
 package org.streampipes.pe.processors.esper.enrich.timer;
 
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.vocabulary.SO;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class TimestampController extends StandaloneEventProcessorDeclarerSinglet
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TimestampParameter, EventProcessor<TimestampParameter>> onInvocation(DataProcessorInvocation
+	public ConfiguredEventProcessor<TimestampParameter> onInvocation(DataProcessorInvocation
 																																																								 sepa) {
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
