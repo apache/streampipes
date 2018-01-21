@@ -47,6 +47,7 @@ export default function EndpointInstallationController($scope, $mdDialog, restAp
                     $scope.installationStatus[index].status = "success";
                 } else {
                     $scope.installationStatus[index].status = "error";
+                    $scope.installationStatus[index].details = data.notifications[0].additionalInformation;
                 }
             })
             .error(function (data) {

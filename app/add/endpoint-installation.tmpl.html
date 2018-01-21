@@ -20,6 +20,12 @@
             <div flex="100" class="md-dialog-content" style="padding:20px;" ng-show="page == 'installation'">
                 <div ng-repeat="status in installationStatus">
                     <h4>{{install ? 'Installing' : 'Uninstalling'}} {{status.id+1}} of {{endpointItemsToInstall.length}} ({{status.name}})...{{status.status}}</h4>
+                    <div>
+                        <div flex layout="column" ng-show="status.details">
+                            <b>More Details:</b>
+                            <div class="md-padding"><i class="fa fa-terminal">{{status.details}}</i></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
