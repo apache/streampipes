@@ -16,8 +16,8 @@ public abstract class SparkDataProcessorRuntime<B extends EventProcessorBindingP
     private static final long serialVersionUID = 1L;
     protected B params;
 
-    public SparkDataProcessorRuntime(B params) {
-        super(params.getGraph());
+    public SparkDataProcessorRuntime(B params, SparkDeploymentConfig deploymentConfig) {
+        super(params.getGraph(), deploymentConfig);
         this.params = params;
     }
 

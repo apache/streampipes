@@ -30,6 +30,7 @@ import java.util.Map;
  */
 public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> implements Runnable, Serializable {
     private static final long serialVersionUID = 1L;
+    private final SparkDeploymentConfig deploymentConfig;
 
     protected Thread thread;
     protected SparkAppHandle appHandle;
@@ -38,11 +39,12 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
     protected I graph;
     protected Map kafkaParams;
 
-    public SparkRuntime(I graph) {
+    public SparkRuntime(I graph, SparkDeploymentConfig deploymentConfig) {
         this.graph = graph;
+        this.deploymentConfig = deploymentConfig;
 
         kafkaParams = new HashMap<>();
-        kafkaParams.put("bootstrap.servers", "kafka:9092");
+        kafkaParams.put("bootstrap.servers", this.deploymentConfig.getKafkaHost());
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
         kafkaParams.put("key.serializer", StringSerializer.class);
@@ -76,9 +78,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
                     .setMaster("local[*]")//TODO
                     .setConf(SparkLauncher.DRIVER_MEMORY, "2g");//TODO
 */
-            SparkConf conf = new SparkConf().setAppName("Spark-Test-1")//TODO
-                    .setMaster("local[*]");//TODO
-            streamingContext = new JavaStreamingContext(conf, new Duration(1000));//TODO: millis aus Consul/sinnvoller Default
+            SparkConf conf = new SparkConf().setAppName(this.deploymentConfig.getAppName())
+                    .setMaster(this.deploymentConfig.getSparkHost());
+            streamingContext = new JavaStreamingContext(conf, new Duration(this.deploymentConfig.getSparkBatchDuration()));
 
             JavaDStream<Map<String, Object>> messageStream1 = null;
             JavaInputDStream<ConsumerRecord<String, String>> source1 = getStream1Source(streamingContext);
