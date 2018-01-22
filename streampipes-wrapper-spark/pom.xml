@@ -8,6 +8,11 @@
     <artifactId>streampipes-wrapper-spark</artifactId>
     <version>0.41.2-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.streampipes</groupId>
