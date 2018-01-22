@@ -13,11 +13,12 @@ import java.util.function.BiConsumer;
  * Created by Jochen Lutz on 2017-12-21.
  */
 public class SimpleKafkaSerializer implements VoidFunction<org.apache.spark.api.java.JavaRDD<java.util.Map<java.lang.String,java.lang.Object>>> {
+    private static SimpleKafkaSerializer instance;
 
     private final Map kafkaParams;
     private final String topic;
 
-    public SimpleKafkaSerializer(Map kafkaParams, String topicName) {
+    private SimpleKafkaSerializer(Map kafkaParams, String topicName) {
         this.topic = topicName;
         //System.out.println("Sending output to Kafka topic '" + topicName + "'");
         this.kafkaParams = kafkaParams;
@@ -39,5 +40,13 @@ public class SimpleKafkaSerializer implements VoidFunction<org.apache.spark.api.
                 producer.send(new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(map)));
             }
         });
+    }
+
+    public static synchronized SimpleKafkaSerializer getInstance(Map kafkaParams, String topicName) {
+        if (SimpleKafkaSerializer.instance == null) {
+            SimpleKafkaSerializer.instance = new SimpleKafkaSerializer(kafkaParams, topicName);
+        }
+
+        return SimpleKafkaSerializer.instance;
     }
 }
