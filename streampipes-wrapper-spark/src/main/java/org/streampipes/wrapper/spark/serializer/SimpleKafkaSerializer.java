@@ -15,19 +15,17 @@ import java.util.function.BiConsumer;
 public class SimpleKafkaSerializer implements VoidFunction<org.apache.spark.api.java.JavaRDD<java.util.Map<java.lang.String,java.lang.Object>>> {
 
     private final Map kafkaParams;
-    //private final KafkaProducer<String, String> producer;
     private final String topic;
 
     public SimpleKafkaSerializer(Map kafkaParams, String topicName) {
-        //producer = new KafkaProducer<String, String>(kafkaParams);
         this.topic = topicName;
-        System.out.println("Sending output to Kafka topic '" + topicName + "'");
+        //System.out.println("Sending output to Kafka topic '" + topicName + "'");
         this.kafkaParams = kafkaParams;
     }
 
     @Override
     public void call(JavaRDD<Map<String, Object>> javaRDD) throws Exception {
-        System.out.println("Sending Kafka output");
+        //System.out.println("Sending Kafka output");
 
         javaRDD.foreach(new VoidFunction<Map<String, Object>>() {
             private static final long serialVersionUID = 1L;

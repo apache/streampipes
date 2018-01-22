@@ -25,21 +25,6 @@ public abstract class SparkDataProcessorRuntime<B extends EventProcessorBindingP
 
     @Override
     public boolean execute(JavaDStream<Map<String, Object>>... convertedStream) {
-        /*
-        DataStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
-
-		SerializationSchema<Map<String, Object>> kafkaSerializer = new SimpleKafkaSerializer();
-		SerializationSchema<Map<String, Object>> jmsSerializer = new SimpleJmsSerializer();
-		//applicationLogic.print();
-		if (isOutputKafkaProtocol()) applicationLogic
-				.addSink(new FlinkKafkaProducer010<>(getKafkaUrl(), getOutputTopic(), kafkaSerializer));
-		else applicationLogic
-				.addSink(new FlinkJmsProducer<>(getJmsProtocol(), jmsSerializer));
-
-
-         */
-        //TODO: aus convertedStream und OutputSerializer und Sink was bauen
-
         JavaDStream<Map<String, Object>> applicationLogic = getApplicationLogic(convertedStream);
         //applicationLogic.print();
 

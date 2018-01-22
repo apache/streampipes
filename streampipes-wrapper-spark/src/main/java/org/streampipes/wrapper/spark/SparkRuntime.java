@@ -13,7 +13,6 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
-import org.spark_project.guava.base.Strings;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
@@ -21,7 +20,6 @@ import org.streampipes.wrapper.spark.converter.JsonToMapFormat;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +31,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
     private final SparkDeploymentConfig deploymentConfig;
 
     protected Thread thread;
-    protected SparkAppHandle appHandle;
+    //protected SparkAppHandle appHandle;
     //protected SparkLauncher launcher;
-    protected JavaStreamingContext streamingContext;//TODO: static wieder raus nach Aufteilung
+    protected JavaStreamingContext streamingContext;
     protected I graph;
     protected Map kafkaParams;
 
@@ -53,21 +51,6 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
         kafkaParams.put("auto.offset.reset", "latest");
         kafkaParams.put("enable.auto.commit", false);
     }
-    //TODO: Constructor(en)
-
-    /*
-    public static void main(String[] args) {
-        //TODO: wie startExecution() sinnvoll verteilen
-
-
-
-        stream.mapToPair(new PairFunction<ConsumerRecord<String, String>, String, String>() {
-                    @Override
-                    public Tuple2<String, String> call(ConsumerRecord<String, String> record) {
-                        return new Tuple2<>(record.key(), record.value());
-                    }
-        });
-    }*/
 
     public boolean startExecution() {
         try {
@@ -108,10 +91,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
         }
 	}
 
-	public abstract boolean execute(JavaDStream<Map<String, Object>>... convertedStream); //TODO: richtiger Spark-Stream-Typ (passt DStream? Ist das Parent der anderen in oas.streaming.dstream?)
+	public abstract boolean execute(JavaDStream<Map<String, Object>>... convertedStream);
 
     public void run() {
-
 		try {
 		    //TODO: brauche ich hier doch startApplication() und und streamingContext.start() in main()? Wie dann die Daten in main() kriegen?
             //appHandle = launcher.startApplication();
@@ -122,7 +104,6 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
 	}
 
 	public boolean stop() {
-        //TODO: vermutlich via appHandle
 		try {
 		    streamingContext.stop();
 		    streamingContext.awaitTermination();
@@ -143,7 +124,7 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
     }
 
     /**
-     * This method takes the i's input stream and creates a source for the flink graph
+     * This method takes the i's input stream and creates a source for the Spark streaming job
      * Currently just kafka is supported as a protocol
      * TODO Add also jms support
      * @param i
@@ -157,7 +138,7 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
             if (stream != null) {
                 KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
-                System.out.println("Listening on Kafka topic '" + protocol.getTopicName() + "'");
+                //System.out.println("Listening on Kafka topic '" + protocol.getTopicName() + "'");
                 return KafkaUtils.createDirectStream(streamingContext,LocationStrategies.PreferConsistent(),ConsumerStrategies.<String, String>Subscribe(Arrays.asList(protocol.getTopicName()), kafkaParams));
             } else {
                 return null;
