@@ -3,6 +3,7 @@ package org.streampipes.model.grounding;
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
 import org.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.CascadeType;
@@ -39,7 +40,9 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	public TransportProtocol(TransportProtocol other) {
 		super(other);
 		this.brokerHostname = other.getBrokerHostname();
-		this.topicDefinition = other.getTopicDefinition();
+		if (other.getTopicDefinition() != null) {
+			this.topicDefinition = new Cloner().topicDefinition(other.getTopicDefinition());
+		}
 	}
 
 	public String getBrokerHostname() {
@@ -58,18 +61,18 @@ public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 		this.topicDefinition = topicDefinition;
 	}
 
-	// TODO only kept for backwards compatibility, remove later
-	@Deprecated
-	public String getTopicName() {
-		return topicDefinition.getActualTopicName();
-	}
-
-	@Deprecated
-	public void setTopicName(String topicName) {
-		if (this.topicDefinition == null) {
-			this.topicDefinition = new SimpleTopicDefinition();
-		}
-		this.topicDefinition.setActualTopicName(topicName);
-	}
+//	// TODO only kept for backwards compatibility, remove later
+//	@Deprecated
+//	public String getTopicName() {
+//		return topicDefinition.getActualTopicName();
+//	}
+//
+//	@Deprecated
+//	public void setTopicName(String topicName) {
+//		if (this.topicDefinition == null) {
+//			this.topicDefinition = new SimpleTopicDefinition();
+//		}
+//		this.topicDefinition.setActualTopicName(topicName);
+//	}
 
 }

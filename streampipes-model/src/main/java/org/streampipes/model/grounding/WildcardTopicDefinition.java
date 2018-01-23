@@ -17,6 +17,7 @@ package org.streampipes.model.grounding;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.util.Cloner;
 import org.streampipes.vocabulary.StreamPipes;
 
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class WildcardTopicDefinition extends TopicDefinition {
 
   public WildcardTopicDefinition(WildcardTopicDefinition other) {
     super(other);
+    this.wildcardTopicName = other.getWildcardTopicName();
+    this.wildcardTopicMappings = new Cloner().wildcardTopics(other.getWildcardTopicMappings());
   }
 
   public WildcardTopicDefinition(String wildcardTopicName, List<WildcardTopicMapping> wildcardTopicMappings) {

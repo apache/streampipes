@@ -17,16 +17,17 @@ package org.streampipes.model.grounding;
 
 import org.streampipes.empire.annotations.RdfProperty;
 import org.streampipes.empire.annotations.RdfsClass;
+import org.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
 @RdfsClass(StreamPipes.WILDCARD_TOPIC_MAPPING)
 @Entity
-public class WildcardTopicMapping {
+public class WildcardTopicMapping extends UnnamedStreamPipesEntity {
 
   @RdfProperty(StreamPipes.HAS_TOPIC_PARAMETER_TYPE)
-  private TopicParameterType topicParameterType;
+  private String topicParameterType;
 
   @RdfProperty(StreamPipes.HAS_TOPIC_MAPPING_ID)
   private String mappingId;
@@ -34,17 +35,30 @@ public class WildcardTopicMapping {
   @RdfProperty(StreamPipes.HAS_MAPPED_RUNTIME_NAME)
   private String mappedRuntimeName;
 
-  public WildcardTopicMapping(TopicParameterType topicParameterType, String mappingId, String mappedRuntimeName) {
+  private String selectedMapping;
+
+  public WildcardTopicMapping(String topicParameterType, String mappingId, String mappedRuntimeName) {
     this.topicParameterType = topicParameterType;
     this.mappingId = mappingId;
     this.mappedRuntimeName = mappedRuntimeName;
   }
 
-  public TopicParameterType getTopicParameterType() {
+  public WildcardTopicMapping() {
+    super();
+  }
+
+  public WildcardTopicMapping(WildcardTopicMapping other) {
+    this.topicParameterType = other.getTopicParameterType();
+    this.mappingId = other.getMappingId();
+    this.mappedRuntimeName = other.getMappedRuntimeName();
+    this.selectedMapping = other.getSelectedMapping();
+  }
+
+  public String getTopicParameterType() {
     return topicParameterType;
   }
 
-  public void setTopicParameterType(TopicParameterType topicParameterType) {
+  public void setTopicParameterType(String topicParameterType) {
     this.topicParameterType = topicParameterType;
   }
 
@@ -62,5 +76,13 @@ public class WildcardTopicMapping {
 
   public void setMappedRuntimeName(String mappedRuntimeName) {
     this.mappedRuntimeName = mappedRuntimeName;
+  }
+
+  public String getSelectedMapping() {
+    return selectedMapping;
+  }
+
+  public void setSelectedMapping(String selectedMapping) {
+    this.selectedMapping = selectedMapping;
   }
 }

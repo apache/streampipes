@@ -18,7 +18,6 @@ import org.streampipes.pe.sources.samples.ram.RamProducer;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.taxi.NYCTaxiProducer;
 import org.streampipes.pe.sources.samples.twitter.TwitterStreamProducer;
-import org.streampipes.pe.sources.samples.wekovi.WekoviDataProducer;
 import org.streampipes.pe.sources.samples.wunderbar.WunderbarProducer;
 import org.streampipes.pe.sources.samples.wunderbar.WunderbarProducer2;
 
@@ -50,7 +49,7 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
         DeclarersSingleton.getInstance().add(new WunderbarProducer())
                 .add(new WunderbarProducer2());
 
-        DeclarersSingleton.getInstance().add(new WekoviDataProducer());
+        //DeclarersSingleton.getInstance().add(new WekoviDataProducer());
 
         new SourcesSamplesInit().init(SourcesConfig.INSTANCE);
     }

@@ -263,7 +263,8 @@ public class SepaUtils {
 	{
 		for(EventProperty schemaProperty : topLevelProperties)
 		{
-			if (property.getRdfId().toString().equals(schemaProperty.getRdfId().toString())) return initialPrefix + property.getRuntimeName();
+			if (property.getElementId().equals(schemaProperty.getElementId())) return initialPrefix + property
+						.getRuntimeName();
 			else if (schemaProperty instanceof EventPropertyNested)
 			{
 				return getFullPropertyName(property, ((EventPropertyNested) schemaProperty).getEventProperties(), initialPrefix +schemaProperty.getRuntimeName() +delimiter, delimiter);

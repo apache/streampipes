@@ -10,12 +10,14 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.wrapper.distributed.runtime.DistributedRuntime;
 import org.streampipes.wrapper.flink.converter.JsonToMapFormat;
 import org.streampipes.wrapper.params.binding.BindingParams;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public abstract class FlinkRuntime<B extends BindingParams<I>, I extends InvocableStreamPipesEntity> extends
         DistributedRuntime<B, I> implements Runnable, Serializable {
@@ -80,8 +82,16 @@ public abstract class FlinkRuntime<B extends BindingParams<I>, I extends Invocab
       if (stream != null) {
         KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
-        return new FlinkKafkaConsumer010<>(protocol.getTopicName(), new SimpleStringSchema
-                (), getProperties(protocol));
+        if (protocol.getTopicDefinition() instanceof SimpleTopicDefinition) {
+          return new FlinkKafkaConsumer010<>(protocol
+                  .getTopicDefinition()
+                  .getActualTopicName(), new SimpleStringSchema
+                  (), getProperties(protocol));
+        } else {
+          String patternTopic = replaceWildcardWithPatternFormat(protocol.getTopicDefinition().getActualTopicName());
+          return new FlinkKafkaConsumer010<>(Pattern.compile(patternTopic), new SimpleStringSchema
+                  (), getProperties(protocol));
+        }
       } else {
         return null;
       }
