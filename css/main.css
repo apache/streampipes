@@ -50,6 +50,34 @@ md-toolbar:not(.md-menu-toolbar) {
 	font-family: Arial !important;
 }
 
+.home-image-wrapper {
+	margin-bottom:10px;
+	cursor:pointer;
+}
+
+.home-image {
+	opacity:0.6;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(114, 160, 178, 0.8);
+	background-size:cover;
+}
+
+.home-image:hover {
+	opacity:1;
+}
+
+.home-image-caption {
+	z-index:2;
+	background:white;
+	padding:5px;
+	margin-bottom:0px;
+	text-align:center;
+}
+
 .btn-6a {
 	border: 4px solid #226fbe;
 }

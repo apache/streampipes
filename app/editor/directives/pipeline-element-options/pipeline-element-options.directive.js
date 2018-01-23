@@ -17,6 +17,7 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
             createFunction: "=",
             createPartialPipelineFunction: "=",
             showCustomizeDialogFunction: "=",
+            showCustomizeStreamDialogFunction: "=",
             deleteFunction: "="
         },
         controller: function ($scope) {
@@ -54,6 +55,10 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
 
             $scope.openCustomizeDialog = function () {
                 $scope.showCustomizeDialogFunction($scope.getDomElement($scope.internalId));
+            }
+
+            $scope.openCustomizeStreamDialog = function () {
+                $scope.showCustomizeStreamDialogFunction($scope.getDomElement($scope.internalId));
             }
 
             $scope.$on("SepaElementConfigured", function (event, item) {

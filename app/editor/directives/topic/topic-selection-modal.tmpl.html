@@ -1,0 +1,36 @@
+<md-dialog aria-label="Configure Stream" flex="70" style="max-height:80%;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Configure Stream</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content flex="100" class="md-dialog-content" ng-if="finished">
+        <div flex="100" layout="column">
+            <h4>Are you interested in all events produced by this source?</h4>
+            <h5>You can apply the following filters:</h5>
+            <topic-selection-dialog topic-mappings="platformIdMappings"
+                                    stream-description="streamDescription"
+                                    title-field="'Filter by platform'"></topic-selection-dialog>
+            <topic-selection-dialog topic-mappings="locationIdMappings"
+                                    stream-description="streamDescription"
+                                    title-field="'Filter by location'"></topic-selection-dialog>
+            <topic-selection-dialog topic-mappings="sensorIdMappings"
+                                    stream-description="streamDescription"
+                                    title-field="'Filter by sensor'"></topic-selection-dialog>
+        </div>
+
+    </md-dialog-content>
+    <div class="md-actions" layout="row">
+        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="save()">
+            Save
+        </md-button>
+        <md-button ng-click="hide()" style="margin-right:20px;">
+            Close
+        </md-button>
+    </div>
+</md-dialog>

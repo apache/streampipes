@@ -182,6 +182,10 @@ export default function restApi($rootScope, $http, apiConstants) {
 		return $http.post(urlBase() +"/pipelines", pipeline);
 	}
 
+	restApi.updateStream = function(stream) {
+		return $http.post(urlBase() +"/streams/update", stream);
+	}
+
 	restApi.deleteOwnPipeline = function(pipelineId) {
 
 		// delete all the widgets that use the pipeline results

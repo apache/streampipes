@@ -1,0 +1,24 @@
+<div layout="column" class="customize-item-main sp-blue-border-nopadding">
+    <div class="customize-item-title sp-blue-bg" layout="row" flex="100" layout-align="space-between center">
+        <div>
+            {{titleField}}
+        </div>
+    </div>
+    <div class="customize-item-content">
+        <div ng-repeat="topicMapping in topicMappings">
+            <b>{{getLabel(topicMapping.mappingId)}}</b>
+            <md-input-container flex="100" layout="column">
+                <md-radio-group class="md-accent"
+                                ng-model="topicMapping.selectedMapping">
+                    <md-radio-button ng-value="'*'" >
+                        All<br/>
+                    </md-radio-button>
+                    <md-radio-button ng-repeat="possibleValue in getPossibleValues(topicMapping.mappedRuntimeName)"
+                                     ng-value="possibleValue">
+                        {{possibleValue}}<br/>
+                    </md-radio-button>
+                </md-radio-group>
+            </md-input-container>
+        </div>
+    </div>
+</div>

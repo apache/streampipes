@@ -65,7 +65,7 @@ export default function jsplumbService($http, $rootScope, pipelineElementIconSer
         scope.currentPipelineElement = $newElement.data("JSON");
         scope.currentPipelineElementDom = $newElement[0].id;
         var elementId = scope.currentPipelineElement.type == 'stream' ? scope.currentPipelineElement.elementId : scope.currentPipelineElement.belongsTo;
-        $newElement.append($compile('<pipeline-element-options show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' + elementId + ' internal-id=' + scope.currentPipelineElementDom + '></pipeline-element-options>')(scope));
+        $newElement.append($compile('<pipeline-element-options show-customize-stream-dialog-function=showCustomizeStreamDialog show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' + elementId + ' internal-id=' + scope.currentPipelineElementDom + '></pipeline-element-options>')(scope));
     }
 
     jsplumbService.streamDropped = function (scope, jsplumb, $newElement, endpoints, preview) {
@@ -79,7 +79,9 @@ export default function jsplumbService($http, $rootScope, pipelineElementIconSer
         if (endpoints) {
             jsplumb.addEndpoint($newElement, jsplumbConfig.streamEndpointOptions);
         }
-        if (!preview) loadOptionsButtons(scope, $newElement);
+        if (!preview) {
+            loadOptionsButtons(scope, $newElement);
+        }
         return $newElement;
     };
 

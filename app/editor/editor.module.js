@@ -30,6 +30,7 @@ import multipleValueInput from './directives/multivalue/multiple-value-input.dir
 import pipelineElementOptions from './directives/pipeline-element-options/pipeline-element-options.directive';
 import collectionStaticProperty from './directives/collection/collection.directive';
 import customizeDialog from './directives/customize/customize-dialog.directive';
+import topicSelectionDialog from './directives/topic/topic-selection-dialog.directive';
 
 
 
@@ -52,4 +53,5 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .directive('multipleValueInput', multipleValueInput)
     .directive('collectionStaticProperty', collectionStaticProperty)
     .directive('customizeDialog', customizeDialog)
+    .directive('topicSelectionDialog', topicSelectionDialog)
     .name;

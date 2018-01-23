@@ -4,6 +4,7 @@ import CustomizeController from './customize.controller';
 import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
 import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
+import TopicSelectionController from './directives/topic/topic-selection-modal.controller';
 
 EditorCtrl.$inject = ['$scope',
     '$rootScope',
@@ -58,6 +59,10 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     var jsplumbConfig = jsplumbConfigService.getEditorConfig();
 
+    var logError = function(error) {
+        console.log(error);
+    }
+
     if ($rootScope.email != undefined) {
         restApi
             .getUserDetails()
@@ -80,9 +85,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     });
                 }
             })
-            .error(function (msg) {
-                console.log(msg);
-            });
+            .error(logError);
     }
 
 
@@ -104,17 +107,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     }
 
     $scope.showElementInfo = function (element) {
-        $mdDialog.show({
-            controller: HelpDialogController,
-            templateUrl: 'app/editor/directives/pipeline-element-options/help-dialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            scope: $scope,
-            preserveScope: true,
-            locals: {
-                pipelineElement: element,
-            }
-        })
+        var dialogTemplate = getDialogTemplate(HelpDialogController, 'app/editor/directives/pipeline-element-options/help-dialog.tmpl.html');
+        dialogTemplate.locals = {
+            pipelineElement: element
+        }
+        $mdDialog.show(dialogTemplate);
     };
 
     $scope.autoLayout = function () {
@@ -212,50 +209,40 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     $scope.showSavePipelineDialog = function (elementData, sepaName) {
         $rootScope.state.currentElement = elementData;
-        $mdDialog.show({
-            controller: SavePipelineController,
-            templateUrl: 'app/editor/directives/submitPipelineModal.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            scope: $scope,
-            rootScope: $rootScope,
-            preserveScope: true,
-
-        })
+        var dialogContent = getDialogTemplate(SavePipelineController, 'app/editor/directives/submitPipelineModal.tmpl.html');
+        $mdDialog.show(dialogContent);
     }
 
     $scope.showMatchingErrorDialog = function (elementData) {
-        $mdDialog.show({
-            controller: MatchingErrorController,
-            templateUrl: 'app/editor/directives/matchingErrorDialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            scope: $scope,
-            rootScope: $rootScope,
-            preserveScope: true,
-            locals: {
-                elementData: elementData,
-            }
-        })
+        var dialogContent = getDialogTemplate(MatchingErrorController, 'app/editor/directives/matchingErrorDialog.tmpl.html');
+        dialogContent.locals = {
+            elementData: elementData
+        }
+        $mdDialog.show(dialogContent);
     }
 
     $scope.showCustomizeDialog = function (elementData, sepaName, sourceEndpoint) {
         $rootScope.state.currentElement = elementData;
-        $mdDialog.show({
-            controller: CustomizeController,
-            templateUrl: 'app/editor/directives/customizeElementDialog.tmpl.html',
+        var dialogContent = getDialogTemplate(CustomizeController, 'app/editor/directives/customizeElementDialog.tmpl.html');
+        dialogContent.locals = {
+            elementData: elementData,
+            sepaName: sepaName,
+            sourceEndpoint: sourceEndpoint
+        }
+        $mdDialog.show(dialogContent);
+    };
+
+    var getDialogTemplate = function(controller, templateUrl) {
+        return {
+            controller: controller,
+            templateUrl: templateUrl,
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             scope: $scope,
             rootScope: $rootScope,
-            preserveScope: true,
-            locals: {
-                elementData: elementData,
-                sepaName: sepaName,
-                sourceEndpoint: sourceEndpoint
-            }
-        })
-    };
+            preserveScope: true
+        }
+    }
 
     $scope.showClearAssemblyConfirmDialog = function (ev) {
         var confirm = $mdDialog.confirm()
@@ -319,9 +306,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 $scope.currentPipelineDescription = pipeline.description;
 
             })
-            .error(function (msg) {
-                console.log(msg);
-            });
+            .error(logError);
 
     };
 
@@ -346,40 +331,27 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
         if (type == 'stream') {
             restApi.getEpCategories()
-                .then(function (result) {
-                    $scope.options = result.data;
-                    angular.forEach($scope.options, function (o) {
-                        $scope.selectedOptions.push(o.type);
-                    });
-                }, function (error) {
-                    $scope.options = [];
-                    console.log(error);
-                });
+                .then(handleCategoriesSuccess, handleCategoriesError);
         } else if (type == 'sepa') {
             restApi.getEpaCategories()
-                .then(function (result) {
-                    $scope.options = result.data;
-                    angular.forEach($scope.options, function (o) {
-                        $scope.selectedOptions.push(o.type);
-                    });
-                }, function (error) {
-                    $scope.options = [];
-                    console.log(error);
-                });
+                .then(handleCategoriesSuccess, handleCategoriesError);
         } else if (type == 'action') {
             restApi.getEcCategories()
-                .then(function (result) {
-                    $scope.options = result.data;
-                    angular.forEach($scope.options, function (o) {
-                        $scope.selectedOptions.push(o.type);
-                    });
-                }, function (error) {
-                    $scope.options = [];
-                    console.log(error);
-                });
+                .then(handleCategoriesSuccess, handleCategoriesError);
         }
-
     };
+
+    var handleCategoriesSuccess = function(result) {
+        $scope.options = result.data;
+        angular.forEach($scope.options, function (o) {
+            $scope.selectedOptions.push(o.type);
+        });
+    }
+
+    var handleCategoriesError = function(error) {
+        $scope.options = [];
+        console.log(error);
+    }
 
     $scope.loadSources = function () {
         var tempStreams = [];
@@ -412,9 +384,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 })
 
             })
-            .error(function (msg) {
-                console.log(msg);
-            });
+            .error(logError);
     };
     $scope.loadActions = function () {
         restApi.getOwnActions()
@@ -538,9 +508,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                             $scope.showMatchingErrorDialog(data);
                         }
                     })
-                    .error(function (data) {
-                        console.log(data);
-                    });
+                    .error(logError);
             }
         });
 
@@ -575,10 +543,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
+                        checkTopicModel($newState);
 
-                        jsplumbService.streamDropped($scope, jsPlumb, $newState, true);
-
-                        //Droppable Sepas
+                    //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
                         jsplumbService.sepaDropped($scope, jsPlumb, $newState, true);
 
@@ -617,6 +584,30 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         }
 
     };
+
+    var checkTopicModel = function(state) {
+        jsplumbService.streamDropped($scope, jsPlumb, state, true);
+        var streamDescription = state.data("JSON");
+        if (streamDescription
+                .eventGrounding
+                .transportProtocols[0]
+                .properties.
+                topicDefinition
+                .type == "org.streampipes.model.grounding.WildcardTopicDefinition") {
+            $scope.showCustomizeStreamDialog(state);
+        } else {
+            console.log("Wrong format");
+            console.log(streamDescription);
+        }
+    }
+
+    $scope.showCustomizeStreamDialog = function(state) {
+        var dialogContent = getDialogTemplate(TopicSelectionController, 'app/editor/directives/topic/topic-selection-modal.tmpl.html');
+        dialogContent.locals = {
+            state : state
+        }
+        $mdDialog.show(dialogContent);
+    }
 
     /**
      * clears the Assembly of all elements
@@ -682,7 +673,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
             if (!pipelineEditorService.isConnected(element, jsPlumb)) {
                 error = true;
-
                 showToast("error", "All elements must be connected", "Submit Error");
             }
 
@@ -693,14 +683,11 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
                 } else if ($element.data("JSON").staticProperties != null) {
                     showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-                    ;
                     error = true;
-
                 }
             } else if ($element.hasClass('stream')) {
                 streamPresent = true;
                 pipelineNew.addElement(element);
-
 
             } else if ($element.hasClass('action')) {
                 actionPresent = true;
@@ -710,7 +697,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                     ;
                     error = true;
-
                 }
             }
         });
@@ -724,7 +710,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             error = true;
         }
         if (!error) {
-
             $rootScope.state.currentPipeline = pipelineNew;
             if ($rootScope.state.adjustingPipelineState) {
                 $rootScope.state.currentPipeline.name = $scope.currentPipelineName;
@@ -799,11 +784,8 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             id = "#" + modification.domId;
             if ($(id) !== "undefined") {
                 $(id).data("JSON").staticProperties = modification.staticProperties;
-
                 $(id).data("JSON").outputStrategies = modification.outputStrategies;
-
                 $(id).data("JSON").inputStreams = modification.inputStreams;
-
             }
         }
     }
@@ -816,4 +798,5 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 .hideDelay(3000)
         );
     }
+
 };
