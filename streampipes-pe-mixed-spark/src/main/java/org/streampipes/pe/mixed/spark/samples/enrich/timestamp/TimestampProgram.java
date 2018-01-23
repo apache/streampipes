@@ -12,8 +12,8 @@ import java.util.Map;
 public class TimestampProgram extends SparkDataProcessorRuntime<TimestampParameters>  {
     private static final long serialVersionUID = 1L;
 
-    public TimestampProgram(TimestampParameters params, SparkDeploymentConfig sparkConfig) {
-        super(params, sparkConfig);
+    public TimestampProgram(TimestampParameters params, SparkDeploymentConfig sparkDeploymentConfig) {
+        super(params, sparkDeploymentConfig);
     }
 
     protected JavaDStream<Map<String, Object>> getApplicationLogic(JavaDStream<Map<String, Object>>... dStreams) {
