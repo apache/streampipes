@@ -44,6 +44,27 @@ public class WildcardTopicBuilder {
     return this;
   }
 
+  public WildcardTopicBuilder addPlatformIdMapping(String runtimeName) {
+    return addSimpleMapping(TopicParameterType.PLATFORM_IDENTIFIER, runtimeName);
+  }
+
+  public WildcardTopicBuilder addSensorIdMapping(String runtimeName) {
+    return addSimpleMapping(TopicParameterType.SENSOR_IDENTIFIER, runtimeName);
+  }
+
+  public WildcardTopicBuilder addLocationIdMapping(String runtimeName) {
+    return addSimpleMapping(TopicParameterType.LOCATION_IDENTIFIER, runtimeName);
+  }
+
+  public WildcardTopicBuilder addPlatformTypeMapping(String runtimeName) {
+    return addSimpleMapping(TopicParameterType.PLATFORM_TYPE, runtimeName);
+  }
+
+  public WildcardTopicBuilder addSensorTypeMapping(String runtimeName) {
+    return addSimpleMapping(TopicParameterType.SENSOR_TYPE, runtimeName);
+  }
+
+
   public WildcardTopicDefinition build() {
     return this.wildcardTopicDefinition;
   }

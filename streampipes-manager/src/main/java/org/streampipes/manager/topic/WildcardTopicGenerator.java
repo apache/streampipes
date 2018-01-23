@@ -17,6 +17,7 @@ package org.streampipes.manager.topic;
 
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.grounding.TopicDefinition;
+import org.streampipes.model.grounding.TopicParameterType;
 import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.grounding.WildcardTopicMapping;
 
@@ -50,6 +51,10 @@ public class WildcardTopicGenerator {
 
   private String buildActualTopicName(String wildcardTopicName, List<WildcardTopicMapping> wildcardTopicMappings) {
     for (WildcardTopicMapping wm : wildcardTopicMappings) {
+      if (TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.SENSOR_TYPE ||
+              TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.PLATFORM_TYPE) {
+        wm.setSelectedMapping(wm.getMappingId());
+      }
       wildcardTopicName = wildcardTopicName.replace("$" + wm.getMappingId(), wm.getSelectedMapping());
     }
 

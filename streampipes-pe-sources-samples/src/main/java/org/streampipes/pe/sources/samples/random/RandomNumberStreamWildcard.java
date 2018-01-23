@@ -20,7 +20,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.streampipes.messaging.kafka.SpKafkaProducer;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.grounding.TopicParameterType;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.sdk.builder.DataStreamBuilder;
@@ -106,12 +105,14 @@ public class RandomNumberStreamWildcard extends RandomNumberStream {
             .format(Formats.jsonFormat())
             .protocol(Protocols.kafka(SourcesConfig.INSTANCE.getKafkaHost(), SourcesConfig.INSTANCE.getKafkaPort(),
                     WildcardTopicBuilder
-                            .create("org.streampipes.company.$facilityId.$assemblyLineId.afagor" +
-                            ".$machineId.pressure.$sensorId")
-                            .addSimpleMapping(TopicParameterType.LOCATION_IDENTIFIER, FACILITY_ID_NAME)
-                            .addSimpleMapping(TopicParameterType.LOCATION_IDENTIFIER, ASSEMBLY_LINE_ID_NAME)
-                            .addSimpleMapping(TopicParameterType.SENSOR_IDENTIFIER, SENSOR_ID_NAME)
-                            .addSimpleMapping(TopicParameterType.PLATFORM_IDENTIFIER, MACHINE_ID_NAME)
+                            .create("org.streampipes.company.$facilityId.$assemblyLineId.$afagor" +
+                            ".$machineId.$pressure.$sensorId")
+                            .addLocationIdMapping(FACILITY_ID_NAME)
+                            .addLocationIdMapping(ASSEMBLY_LINE_ID_NAME)
+                            .addSensorIdMapping(SENSOR_ID_NAME)
+                            .addPlatformIdMapping(MACHINE_ID_NAME)
+                            .addPlatformTypeMapping("afagor")
+                            .addSensorTypeMapping("pressure")
                             .build()))
 
             .build();
