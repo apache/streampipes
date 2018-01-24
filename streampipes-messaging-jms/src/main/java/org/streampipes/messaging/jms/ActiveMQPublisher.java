@@ -4,6 +4,7 @@ import org.streampipes.commons.exceptions.SpRuntimeException;
 import org.streampipes.messaging.EventProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.streampipes.model.grounding.JmsTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
 
 import javax.jms.*;
 
@@ -25,7 +26,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 		JmsTransportProtocol protocol = new JmsTransportProtocol();
 		protocol.setBrokerHostname(url.substring(0, url.lastIndexOf(":")));
 		protocol.setPort(Integer.parseInt(url.substring(url.lastIndexOf(":")+1, url.length())));
-		protocol.setTopicName(topic);
+		protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
 		try {
 			connect(protocol);
 		} catch (SpRuntimeException e) {
@@ -63,7 +64,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
 		try {
 			this.session = connection
               .createSession(false, Session.AUTO_ACKNOWLEDGE);
-			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicName()));
+			this.producer = session.createProducer(session.createTopic(protocolSettings.getTopicDefinition().getActualTopicName()));
 			this.producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 			this.connection.start();
 			this.connected = true;

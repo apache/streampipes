@@ -91,7 +91,7 @@ public class InvocationGraphBuilder {
                     .setEventSchema(getInputSchema(source, getIndex(t)));
 
             String elementIdentifier = makeElementIdentifier(pipelineId, inputGrounding
-                    .getTransportProtocol().getTopicName(), t.getName());
+                    .getTransportProtocol().getTopicDefinition().getActualTopicName(), t.getName());
 
             t.setUri(t.getBelongsTo() + "/" + elementIdentifier);
             t.setCorrespondingPipeline(pipelineId);

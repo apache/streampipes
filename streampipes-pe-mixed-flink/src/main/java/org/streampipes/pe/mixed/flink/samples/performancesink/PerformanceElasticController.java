@@ -21,7 +21,6 @@ import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.schema.PropertyScope;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.pe.mixed.flink.samples.elasticsearch.ElasticSearchParameters;
-import org.streampipes.pe.mixed.flink.samples.elasticsearch.ElasticSearchProgram;
 import org.streampipes.sdk.builder.DataSinkBuilder;
 import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
@@ -47,6 +46,7 @@ public class PerformanceElasticController extends FlinkDataSinkDeclarer<ElasticS
                     .build())
             .requiredTextParameter("index-name", "Index Name", "Elasticsearch index name property")
             .requiredIntegerParameter(Labels.from("epa-count", "EPA count", ""))
+            .requiredIntegerParameter(Labels.from("scale-factor", "Scale Factor", ""))
             .supportedFormats(SupportedFormats.jsonFormat())
             .supportedProtocols(SupportedProtocols.kafka())
             .build();
@@ -59,8 +59,10 @@ public class PerformanceElasticController extends FlinkDataSinkDeclarer<ElasticS
     String timestampField = extractor.mappingPropertyValue("timestamp");
     String indexName = extractor.singleValueParameter("index-name", String.class);
     Integer epaCount = extractor.singleValueParameter("epa-count", Integer.class);
+    Integer scaleFactor = extractor.singleValueParameter("scale-factor", Integer.class);
 
-    PerformanceElasticParameters params = new PerformanceElasticParameters(graph, timestampField, indexName, epaCount);
+    PerformanceElasticParameters params = new PerformanceElasticParameters(graph, timestampField, indexName,
+            epaCount, scaleFactor);
 
     return new PerformanceElasticProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
             FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));

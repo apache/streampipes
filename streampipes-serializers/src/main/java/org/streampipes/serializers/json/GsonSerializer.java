@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.DataSinkType;
+import org.streampipes.model.grounding.TopicDefinition;
 import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.quality.EventPropertyQualityDefinition;
@@ -22,13 +23,12 @@ public class GsonSerializer {
 
   public static Gson getGson() {
     GsonBuilder builder = new GsonBuilder();
-//		builder.registerTypeAdapter(SepaDescription.class, new JsonLdSerializer());
     builder.registerTypeAdapter(EventProperty.class, new JsonLdSerializer<EventProperty>());
     builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
     builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
     builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
-    //builder.registerTypeAdapter(Operation.class, new JsonLdSerializer<Operation>());
+    builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
     builder.setPrettyPrinting();
     return builder.create();
   }
@@ -39,7 +39,6 @@ public class GsonSerializer {
     builder.registerTypeAdapter(StaticProperty.class, new JsonLdSerializer<StaticProperty>());
     builder.registerTypeAdapter(OutputStrategy.class, new JsonLdSerializer<OutputStrategy>());
     builder.registerTypeAdapter(TransportProtocol.class, new JsonLdSerializer<TransportProtocol>());
-    //builder.registerTypeAdapter(MeasurementProperty.class, new JsonLdSerializer<MeasurementProperty>());
     builder.registerTypeAdapter(MappingProperty.class, new JsonLdSerializer<MappingProperty>());
     builder.registerTypeAdapter(ValueSpecification.class, new JsonLdSerializer<ValueSpecification>());
     builder.registerTypeAdapter(DataSinkType.class, new EcTypeAdapter());
@@ -48,9 +47,7 @@ public class GsonSerializer {
     builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
     builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
     builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
-    //builder.registerTypeAdapter(EventStreamQualityRequirement.class, new JsonLdSerializer<EventStreamQualityRequirement>());
-    //builder.registerTypeAdapter(EventPropertyQualityRequirement.class, new JsonLdSerializer<EventPropertyQualityRequirement>());
-
+    builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
 
     builder.setPrettyPrinting();
     return builder;

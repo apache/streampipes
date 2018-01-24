@@ -11,8 +11,10 @@ import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.grounding.EventGrounding;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
 import org.streampipes.model.grounding.TransportFormat;
 import org.streampipes.model.grounding.TransportProtocol;
+import org.streampipes.model.grounding.WildcardTopicDefinition;
 import org.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.streampipes.model.output.AppendOutputStrategy;
 import org.streampipes.model.output.CustomOutputStrategy;
@@ -120,7 +122,9 @@ public class CustomAnnotationProvider implements EmpireAnnotationProvider {
             Enumeration.class,
             QuantitativeValue.class,
             ApplicationLink.class,
-            ElementStatusInfoSettings.class
+            ElementStatusInfoSettings.class,
+            WildcardTopicDefinition.class,
+            SimpleTopicDefinition.class
     );
   }
 }

@@ -61,14 +61,13 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     return props;
   }
 
-  protected String getTopic(SpDataStream stream)
-  {
+  protected String getTopic(SpDataStream stream) {
     return protocol(stream)
-            .getTopicName();
+            .getTopicDefinition()
+            .getActualTopicName();
   }
 
-  protected JmsTransportProtocol getJmsProtocol(SpDataStream stream)
-  {
+  protected JmsTransportProtocol getJmsProtocol(SpDataStream stream) {
     return new JmsTransportProtocol((JmsTransportProtocol) protocol(stream));
   }
 
@@ -77,7 +76,7 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     return protocol(stream) instanceof KafkaTransportProtocol;
   }
 
-  private TransportProtocol protocol(SpDataStream stream) {
+  protected TransportProtocol protocol(SpDataStream stream) {
     return stream
             .getEventGrounding()
             .getTransportProtocol();
@@ -88,6 +87,11 @@ public abstract class DistributedRuntime<B extends BindingParams<I>, I extends I
     return protocol(stream).getBrokerHostname() +
             ":" +
             ((KafkaTransportProtocol) protocol(stream)).getKafkaPort();
+  }
+
+  protected String replaceWildcardWithPatternFormat(String topic) {
+    topic = topic.replaceAll("\\.", "\\\\.");
+    return topic.replaceAll("\\*", ".*");
   }
 
 }

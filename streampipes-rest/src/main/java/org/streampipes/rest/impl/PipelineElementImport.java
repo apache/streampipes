@@ -71,7 +71,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 			return Operations.verifyAndAddElement(payload, username, publicElement);
 		} catch (Exception e) {
             e.printStackTrace();
-			return Notifications.error(NotificationType.PARSE_ERROR);
+			return Notifications.error(NotificationType.PARSE_ERROR, e.getMessage());
 
 		}
 	}

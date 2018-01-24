@@ -21,13 +21,19 @@ import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 public class PerformanceTestParameters extends EventProcessorBindingParams {
 
   private String timestampFieldName;
+  private Integer scaleFactor;
 
-  public PerformanceTestParameters(DataProcessorInvocation graph, String timestampFieldName) {
+  public PerformanceTestParameters(DataProcessorInvocation graph, String timestampFieldName, Integer scaleFactor) {
     super(graph);
     this.timestampFieldName = timestampFieldName;
+    this.scaleFactor = scaleFactor;
   }
 
   public String getTimestampFieldName() {
     return timestampFieldName;
+  }
+
+  public Integer getScaleFactor() {
+    return scaleFactor;
   }
 }

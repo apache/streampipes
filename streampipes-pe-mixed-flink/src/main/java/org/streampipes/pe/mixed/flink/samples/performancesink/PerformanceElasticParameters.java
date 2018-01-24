@@ -23,13 +23,15 @@ public class PerformanceElasticParameters  extends EventSinkBindingParams {
   private String timestampField;
   private String indexName;
   private Integer epaCount;
+  private Integer scaleFactor;
 
   public PerformanceElasticParameters(DataSinkInvocation graph, String timestampField, String indexName, Integer
-          epaCount) {
+          epaCount, Integer scaleFactor) {
     super(graph);
     this.timestampField = timestampField;
     this.indexName = indexName;
     this.epaCount = epaCount;
+    this.scaleFactor = scaleFactor;
   }
 
   public String getTimestampField() {
@@ -42,6 +44,10 @@ public class PerformanceElasticParameters  extends EventSinkBindingParams {
 
   public Integer getEpaCount() {
     return epaCount;
+  }
+
+  public Integer getScaleFactor() {
+    return scaleFactor;
   }
 }
 

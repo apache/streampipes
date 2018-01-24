@@ -23,7 +23,7 @@ public class KafkaTransportProtocol extends TransportProtocol {
 	
 	public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost, int zookeeperPort)
 	{
-		super(kafkaHost, topic);
+		super(kafkaHost, new SimpleTopicDefinition(topic));
 		this.zookeeperHost = zookeeperHost;
 		this.zookeeperPort = zookeeperPort;
 		this.kafkaPort = kafkaPort;
@@ -35,6 +35,13 @@ public class KafkaTransportProtocol extends TransportProtocol {
 		this.kafkaPort = other.getKafkaPort();
 		this.zookeeperHost = other.getZookeeperHost();
 		this.zookeeperPort = other.getZookeeperPort();
+	}
+
+	public KafkaTransportProtocol(String kafkaHost, Integer kafkaPort, WildcardTopicDefinition wildcardTopicDefinition) {
+		super(kafkaHost, wildcardTopicDefinition);
+		this.kafkaPort = kafkaPort;
+		this.zookeeperHost = kafkaHost;
+		this.zookeeperPort = kafkaPort;
 	}
 	
 	public KafkaTransportProtocol()

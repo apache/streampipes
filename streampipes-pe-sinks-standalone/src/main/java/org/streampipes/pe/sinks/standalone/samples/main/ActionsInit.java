@@ -8,10 +8,12 @@ import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.pe.sinks.standalone.samples.alarm.AlarmLightController;
 import org.streampipes.pe.sinks.standalone.samples.couchdb.CouchDbController;
 import org.streampipes.pe.sinks.standalone.samples.dashboard.DashboardController;
+import org.streampipes.pe.sinks.standalone.samples.email.EmailController;
 import org.streampipes.pe.sinks.standalone.samples.file.FileController;
 import org.streampipes.pe.sinks.standalone.samples.jms.JmsController;
 import org.streampipes.pe.sinks.standalone.samples.kafka.KafkaController;
 import org.streampipes.pe.sinks.standalone.samples.notification.NotificationController;
+import org.streampipes.pe.sinks.standalone.samples.onesignal.OneSignalController;
 import org.streampipes.pe.sinks.standalone.samples.rabbitmq.RabbitMqController;
 public class ActionsInit extends StandaloneModelSubmitter {
 
@@ -25,7 +27,10 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new CouchDbController())
             .add(new DashboardController())
             .add(new AlarmLightController())
-            .add(new RabbitMqController());
+            .add(new RabbitMqController())
+            .add(new EmailController())
+            .add(new RabbitMqController())
+            .add(new OneSignalController());
 
     DeclarersSingleton.getInstance().setPort(ActionConfig.INSTANCE.getPort());
     DeclarersSingleton.getInstance().setHostName(ActionConfig.INSTANCE.getHost());

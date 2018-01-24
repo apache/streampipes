@@ -79,7 +79,7 @@ public class SlackNotificationController implements SemanticEventConsumerDeclare
 
       slackNotification = new SlackNotification(params);
 
-      String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicName();
+      String consumerTopic = invocationGraph.getInputStreams().get(0).getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
 
       kafkaConsumerGroup = new SpKafkaConsumer(SlackConfig.INSTANCE.getKafkaUrl(), consumerTopic,
               slackNotification);
