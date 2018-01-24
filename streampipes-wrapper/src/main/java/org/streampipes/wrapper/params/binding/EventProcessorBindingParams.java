@@ -26,7 +26,7 @@ public abstract class EventProcessorBindingParams extends
 		this.outEventType = SchemaUtils.toRuntimeMap(graph.getOutputStream().getEventSchema().getEventProperties());
 		outputStream = graph.getOutputStream();
 		EventGrounding outputGrounding = outputStream.getEventGrounding();
-		outName = outputGrounding.getTransportProtocol().getTopicName();
+		outName = outputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 		
 	}
 

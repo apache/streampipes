@@ -57,6 +57,7 @@ public class PerformanceElasticProgram extends FlinkDataSinkRuntime<PerformanceE
     String indexName = bindingParams.getIndexName();
     String timeName = bindingParams.getTimestampField();
     Integer epaCount = bindingParams.getEpaCount();
+    Integer scaleFactor = bindingParams.getScaleFactor();
 
     String typeName = indexName;
 
@@ -89,7 +90,7 @@ public class PerformanceElasticProgram extends FlinkDataSinkRuntime<PerformanceE
       }
 
     }).addSink(new Elasticsearch5Sink<>(config, transports, new
-            ElasticSearchIndexRequestBuilder(indexName, typeName)));
+            ElasticSearchIndexRequestBuilder(indexName, typeName))).setParallelism(scaleFactor);
   }
 }
 

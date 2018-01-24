@@ -13,6 +13,7 @@ import org.streampipes.pe.sinks.standalone.samples.file.FileController;
 import org.streampipes.pe.sinks.standalone.samples.jms.JmsController;
 import org.streampipes.pe.sinks.standalone.samples.kafka.KafkaController;
 import org.streampipes.pe.sinks.standalone.samples.notification.NotificationController;
+import org.streampipes.pe.sinks.standalone.samples.onesignal.OneSignalController;
 import org.streampipes.pe.sinks.standalone.samples.rabbitmq.RabbitMqController;
 public class ActionsInit extends StandaloneModelSubmitter {
 
@@ -27,7 +28,9 @@ public class ActionsInit extends StandaloneModelSubmitter {
             .add(new DashboardController())
             .add(new AlarmLightController())
             .add(new RabbitMqController())
-            .add(new EmailController());
+            .add(new EmailController())
+            .add(new RabbitMqController())
+            .add(new OneSignalController());
 
     DeclarersSingleton.getInstance().setPort(ActionConfig.INSTANCE.getPort());
     DeclarersSingleton.getInstance().setHostName(ActionConfig.INSTANCE.getHost());

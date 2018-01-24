@@ -41,6 +41,7 @@ public class PerformanceTestController extends FlinkDataProcessorDeclarer<Perfor
             .outputStrategy(OutputStrategies.append(
                     EpProperties.longEp(Labels.empty(), "appendedTime", SO.DateTime)))
             .requiredTextParameter(Labels.from("timestamp-field-name", "Timestamp field name", ""))
+            .requiredIntegerParameter(Labels.from("scale-factor", "Scale Factor", ""))
             .supportedProtocols(SupportedProtocols.kafka())
             .supportedFormats(SupportedFormats.jsonFormat())
             .build();
@@ -51,9 +52,10 @@ public class PerformanceTestController extends FlinkDataProcessorDeclarer<Perfor
           DataProcessorInvocation graph) {
     ProcessingElementParameterExtractor extractor = getExtractor(graph);
     String timestampFieldName = extractor.singleValueParameter("timestamp-field-name", String.class);
+    Integer scaleFactor = extractor.singleValueParameter("scale-factor", Integer.class);
     PerformanceTestParameters staticParam = new PerformanceTestParameters(
             graph,
-            timestampFieldName);
+            timestampFieldName, scaleFactor);
 
     return new PerformanceTestProgram(staticParam, FlinkUtils.getFlinkDeploymentConfig());
   }

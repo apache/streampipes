@@ -7,7 +7,9 @@ import org.streampipes.manager.execution.http.PipelineExecutor;
 import org.streampipes.manager.execution.http.PipelineStorageService;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
 import org.streampipes.manager.recommender.ElementRecommender;
+import org.streampipes.manager.topic.WildcardTopicGenerator;
 import org.streampipes.manager.verification.extractor.TypeExtractor;
+import org.streampipes.model.SpDataStream;
 import org.streampipes.model.client.endpoint.RdfEndpoint;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.model.client.messages.Message;
@@ -100,5 +102,9 @@ public class Operations {
 
 	public static List<RdfEndpointItem> getEndpointUriContents(List<RdfEndpoint> endpoints) {
 		return new EndpointItemFetcher(endpoints).getItems();
+	}
+
+	public static SpDataStream updateActualTopic(SpDataStream stream) {
+		return new WildcardTopicGenerator(stream).computeActualTopic();
 	}
 }

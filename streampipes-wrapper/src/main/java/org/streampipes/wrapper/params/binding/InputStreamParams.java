@@ -19,7 +19,7 @@ public class InputStreamParams implements Serializable {
 	public InputStreamParams(SpDataStream inputStream) {
 		super();
 		this.eventGrounding = inputStream.getEventGrounding();
-		this.inName = eventGrounding.getTransportProtocol().getTopicName();
+		this.inName = eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 		this.eventSchema = inputStream.getEventSchema();
 	}
 	

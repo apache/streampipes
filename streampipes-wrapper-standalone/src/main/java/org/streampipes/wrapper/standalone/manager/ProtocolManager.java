@@ -75,7 +75,7 @@ public class ProtocolManager {
 
 
   private static String topicName(TransportProtocol protocol) {
-    return protocol.getTopicName();
+    return protocol.getTopicDefinition().getActualTopicName();
   }
 
   public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws

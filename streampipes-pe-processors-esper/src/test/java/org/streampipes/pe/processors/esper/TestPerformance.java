@@ -20,7 +20,10 @@ public class TestPerformance {
 			controller.invokeRuntime(invocation);
 			
 			DataProcessorInvocation invocation2 = new DataProcessorInvocation(invocation);
-			invocation2.getOutputStream().getEventGrounding().getTransportProtocol().setTopicName(RandomStringUtils.randomAlphabetic(8));
+			invocation2.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition().setActualTopicName(
+							(RandomStringUtils
+							.randomAlphabetic
+							(8)));
 			
 			controller.invokeRuntime(invocation2);
 			Thread.sleep(2000);

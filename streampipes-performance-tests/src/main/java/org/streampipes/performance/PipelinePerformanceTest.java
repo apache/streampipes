@@ -15,7 +15,34 @@ limitations under the License.
 */
 package org.streampipes.performance;
 
+import org.streampipes.performance.model.PerformanceTestSettings;
+import org.streampipes.performance.util.ParameterTool;
+
 public class PipelinePerformanceTest {
+
+  /**
+   * configuration parameters:
+   * - number of timestamp enrichment epas
+   * - parallelism of enrichment epas
+   * - parallelism of elastic epas
+   * - total number of events to be simulated
+   * - wait time between events in ms
+   * - number of producer threads
+   * - backend URL (optional)
+   */
+
+  public static void main(String[] args) {
+    if (args.length < 6) {
+      System.out.println("Usage: java -jar streampipes-performance-tests.jar [NUMBER OF TIMESTAMP ENRICH EPAS] " +
+              "[PARALELLISM OF ENRICHMENT EPAS], [PARALELLISM OF ELASTIC EPAs], [TOTAL NUMBER OF EVENTS], [WAIT TIME " +
+              "BETWEEN EVENTS], [NUMBER OF PRODUCER THREADS]");
+    } else {
+      PerformanceTestSettings settings = ParameterTool.fromArgs(args);
+
+
+    }
+
+  }
 
   // SOURCE
 

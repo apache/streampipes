@@ -30,7 +30,11 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	
 	final static long SIMULATION_DELAY_MS = SourcesConfig.INSTANCE.getSimulaitonDelayMs();
 	final static int SIMULATION_DELAY_NS = SourcesConfig.INSTANCE.getSimulaitonDelayNs();
-	
+
+	public RandomNumberStream() {
+
+	}
+
 	public RandomNumberStream(String topic) {
 		this.topic = topic;
 	}
@@ -72,7 +76,7 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	@Override
 	public void executeStream() {
 
-		kafkaProducer = new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
+		kafkaProducer = getKafkaProducer(topic);
 
 		Runnable r = new Runnable() {
 
@@ -115,4 +119,8 @@ public abstract class RandomNumberStream implements EventStreamDeclarer {
 	}
 	
 	protected abstract Optional<byte[]> getMessage(long nanoTime, int randomNumber, int counter);
+
+	public SpKafkaProducer getKafkaProducer(String topic) {
+		return new SpKafkaProducer(SourcesConfig.INSTANCE.getKafkaUrl(), topic);
+	}
 }

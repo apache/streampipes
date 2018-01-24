@@ -19,7 +19,8 @@ public abstract class BindingParams<I extends InvocableStreamPipesEntity> {
     this.graph = graph;
     this.inEventTypes = new HashMap<>();
     graph.getInputStreams().forEach(is ->
-            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicName(), SchemaUtils.toRuntimeMap
+            inEventTypes.put(is.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName(), SchemaUtils
+                    .toRuntimeMap
                     (is.getEventSchema().getEventProperties())));
 
     graph.getInputStreams().forEach(s -> inputStreamParams.add(new InputStreamParams(s)));

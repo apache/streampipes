@@ -24,7 +24,7 @@ public class EnrichedStreamReplay implements EventStreamDeclarer {
 		grounding.setTransportProtocol(ProaSenseSettings.standardProtocol("FZI.SEPA.SEP.Enriched.Replay"));
 		grounding.setTransportFormats(Utils.createList(new TransportFormat(MessageFormat.Json)));
 		
-		this.topicName = grounding.getTransportProtocol().getTopicName();
+		this.topicName = grounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 		stream.setEventGrounding(grounding);
 		stream.setEventSchema(EnrichedUtils.getEnrichedSchema());
 		stream.setName("Enriched Stream Replay");

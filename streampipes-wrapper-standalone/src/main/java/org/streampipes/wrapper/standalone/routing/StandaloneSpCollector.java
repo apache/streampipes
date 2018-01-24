@@ -42,7 +42,7 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
   }
 
   protected String getTopic() {
-    return transportProtocol.getTopicName();
+    return transportProtocol.getTopicDefinition().getActualTopicName();
   }
 
 }
