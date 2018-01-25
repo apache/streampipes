@@ -34,3 +34,4 @@ public class BenniProducer implements SemanticEventProducerDeclarer {
   public List<EventStreamDeclarer> getEventStreams() {
     return Arrays.asList(new BenniStream());
   }
+}
