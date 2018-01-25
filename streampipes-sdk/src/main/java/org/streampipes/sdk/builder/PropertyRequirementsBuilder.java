@@ -15,5 +15,41 @@ limitations under the License.
 */
 package org.streampipes.sdk.builder;
 
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.sdk.utils.Datatypes;
+
+import java.net.URI;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class PropertyRequirementsBuilder {
+
+  private EventPropertyPrimitive propertyReq;
+
+  /**
+   * Creates new requirements for a data processor or a data sink at a property level. A matching event property
+   * needs to provide all requirements assigned by this class.
+   * @return {@link PropertyRequirementsBuilder}
+   */
+  public static PropertyRequirementsBuilder create(Datatypes propertyDatatype) {
+    return new PropertyRequirementsBuilder(propertyDatatype);
+  }
+
+  private PropertyRequirementsBuilder(Datatypes propertyDatatype) {
+    this.propertyReq = new EventPropertyPrimitive();
+    this.propertyReq.setRuntimeType(propertyDatatype.toString());
+  }
+
+  public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
+    this.propertyReq.setDomainProperties(Arrays
+            .stream(domainProperties)
+            .map(URI::create)
+            .collect(Collectors.toList()));
+
+    return this;
+  }
+
+  public PropertyRequirementsBuilder measurementUnit() {
+    return this;
+  }
 }

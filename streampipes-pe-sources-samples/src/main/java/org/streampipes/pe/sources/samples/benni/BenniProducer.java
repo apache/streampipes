@@ -15,5 +15,22 @@ limitations under the License.
 */
 package org.streampipes.pe.sources.samples.benni;
 
-public class BenniProducer {
-}
+import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.sdk.builder.DataSourceBuilder;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class BenniProducer implements SemanticEventProducerDeclarer {
+
+  public DataSourceDescription declareModel() {
+    return DataSourceBuilder.create("benni", "Benni Source", "A data source that " +
+            "holds event streams produces by benni.")
+            .build();
+  }
+
+  public List<EventStreamDeclarer> getEventStreams() {
+    return Arrays.asList(new BenniStream());
+  }

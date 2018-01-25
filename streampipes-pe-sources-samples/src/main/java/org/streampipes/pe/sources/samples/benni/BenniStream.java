@@ -15,5 +15,80 @@ limitations under the License.
 */
 package org.streampipes.pe.sources.samples.benni;
 
-public class BenniStream {
+import org.streampipes.container.declarer.EventStreamDeclarer;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.schema.PropertyScope;
+import org.streampipes.pe.sources.samples.config.SourcesConfig;
+import org.streampipes.sdk.builder.DataStreamBuilder;
+import org.streampipes.sdk.builder.PrimitivePropertyBuilder;
+import org.streampipes.sdk.helpers.EpProperties;
+import org.streampipes.sdk.helpers.Formats;
+import org.streampipes.sdk.helpers.Protocols;
+import org.streampipes.sdk.utils.Datatypes;
+
+public class BenniStream implements EventStreamDeclarer {
+
+  @Override
+  public SpDataStream declareModel(DataSourceDescription sep) {
+    return DataStreamBuilder.create("benni-stream", "Benni Stream", "")
+            .property(EpProperties.timestampProperty("time"))
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.String, "mac")
+                    .label("Mac Address")
+                    .description("The mac address of the sensor of the sensor")
+                    .domainProperty("http://schema.org/mac")
+                    .scope(PropertyScope.DIMENSION_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "light")
+                    .label("Light")
+                    .description("Denotes the light value in the sensor")
+                    .domainProperty("http://schema.org/light")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "battery")
+                    .label("Battery")
+                    .description("Denotes the battery value in the sensor")
+                    .domainProperty("http://schema.org/battery")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "conductivity")
+                    .label("Conductivity")
+                    .description("Denotes the conductivity value of the sensor")
+                    .domainProperty("http://schema.org/conductivity")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "moisture")
+                    .label("Moisture")
+                    .description("Denotes the moisture value of the sensor")
+                    .domainProperty("http://schema.org/moisture")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .property(PrimitivePropertyBuilder
+                    .create(Datatypes.Integer, "temperature")
+                    .label("Temperature")
+                    .description("Denotes the temperature value of the sensor")
+                    .domainProperty("http://schema.org/temperature")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .build())
+            .format(Formats.jsonFormat())
+            .protocol(Protocols.kafka(SourcesConfig.INSTANCE.getKafkaHost(), SourcesConfig.INSTANCE.getKafkaPort(),
+                    "org.streampipes.benni"))
+            .build();
+  }
+
+  @Override
+  public void executeStream() {
+
+  }
+
+  @Override
+  public boolean isExecutable() {
+    return false;
+  }
+
 }

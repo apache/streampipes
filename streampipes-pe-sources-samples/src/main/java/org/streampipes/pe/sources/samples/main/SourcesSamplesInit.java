@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.pe.sources.samples.benni.BenniProducer;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.ddm.DDMProducer;
 import org.streampipes.pe.sources.samples.drillbit.DrillBitProducer;
@@ -47,7 +48,7 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
 
         }
         DeclarersSingleton.getInstance().add(new WunderbarProducer())
-                .add(new WunderbarProducer2());
+                .add(new WunderbarProducer2()).add(new BenniProducer());
 
         //DeclarersSingleton.getInstance().add(new WekoviDataProducer());
 

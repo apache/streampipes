@@ -3,17 +3,17 @@ package org.streampipes.pe.mixed.flink.samples.measurementUnitConverter;
 import com.github.jqudt.Unit;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.output.OutputStrategy;
-import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.model.staticproperty.Option;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 import org.streampipes.units.UnitProvider;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.streampipes.model.staticproperty.Option;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.LinkedList;
@@ -39,13 +39,16 @@ public class MeasurementUnitConverterController extends FlinkDataProcessorDeclar
 
         return ProcessingElementBuilder.create("measurement_unit_converter", "Measurement Unit Converter",
                 "Converts a unit of measurement to another one")
-                .requiredPropertyStream1(EpRequirements.anyProperty())
-                .requiredTextParameter(UNIT_NAME, "Unit name",
-                        "The name of the unit which should convert")
-                .requiredSingleValueSelection(INPUT_UNIT, "Input type",
-                        "The input type unit of ", optionsListInput)
-                .requiredSingleValueSelection(OUTPUT_UNIT, "Output type",
-                        "The output type unit of measurement", optionsListOutput)
+                .requiredStream(StreamRequirementsBuilder
+                        .create()
+                        .requiredProperty(EpRequirements.anyProperty())
+                        .build())
+                .requiredTextParameter(Labels.from(UNIT_NAME, "Unit name",
+                        "The name of the unit which should convert"))
+                .requiredSingleValueSelection(Labels.from(INPUT_UNIT, "Input type",
+                        "The input type unit of "), optionsListInput)
+                .requiredSingleValueSelection(Labels.from(OUTPUT_UNIT, "Output type",
+                        "The output type unit of measurement"), optionsListOutput)
                 .supportedProtocols(SupportedProtocols.kafka())
                 .supportedFormats(SupportedFormats.jsonFormat())
                 .outputStrategy(OutputStrategies.keep())
