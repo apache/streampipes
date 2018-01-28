@@ -316,7 +316,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             type: 'stream',
         },
         {
-            title: 'Processing Elements',
+            title: 'Data Processors',
             type: 'sepa',
         },
         {

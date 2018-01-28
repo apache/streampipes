@@ -8,16 +8,16 @@
         <div ng-repeat="topicMapping in topicMappings">
             <b>{{getLabel(topicMapping.mappingId)}}</b>
             <md-input-container flex="100" layout="column">
-                <md-radio-group class="md-accent"
+                <md-select class="md-accent"
                                 ng-model="topicMapping.selectedMapping">
-                    <md-radio-button ng-value="'*'" >
+                    <md-option ng-value="'*'" >
                         All<br/>
-                    </md-radio-button>
-                    <md-radio-button ng-repeat="possibleValue in getPossibleValues(topicMapping.mappedRuntimeName)"
+                    </md-option>
+                    <md-option ng-repeat="possibleValue in getPossibleValues(topicMapping.mappedRuntimeName)"
                                      ng-value="possibleValue">
                         {{possibleValue}}<br/>
-                    </md-radio-button>
-                </md-radio-group>
+                    </md-option>
+                </md-select>
             </md-input-container>
         </div>
     </div>

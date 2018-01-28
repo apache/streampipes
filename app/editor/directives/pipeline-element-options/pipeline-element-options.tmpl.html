@@ -7,7 +7,7 @@
                 </md-tooltip></md-icon>
         </md-button>
 </span>
-<span class="customize-button" ng-show="pipelineElement.type=='stream'">
+<span class="customize-button" ng-show="pipelineElement.type=='stream' && isWildcardTopic(pipelineElement)">
     <md-button ng-click="openCustomizeStreamDialog()" ng-disabled="!isRootElement()" class="md-icon-button"
                style="margin:0px;font-size:20px;">
         <md-icon md-svg-icon='action:ic_settings_24px'>

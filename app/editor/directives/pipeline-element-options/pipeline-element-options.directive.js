@@ -172,6 +172,16 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                 }
             }
 
+            $scope.isWildcardTopic = function(pipelineElement) {
+                return pipelineElement
+                    .eventGrounding
+                    .transportProtocols[0]
+                    .properties
+                    .topicDefinition
+                    .type == "org.streampipes.model.grounding.WildcardTopicDefinition";
+
+            }
+
         },
         link: function postLink(scope, element) {
 
