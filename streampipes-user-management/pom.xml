@@ -16,10 +16,6 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-storage</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
             <artifactId>streampipes-storage-couchdb</artifactId>
         </dependency>
         <dependency>
