@@ -11,7 +11,7 @@ import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IOntologyPipelineElement;
 import org.streampipes.serializers.json.GsonSerializer;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;

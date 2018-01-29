@@ -5,7 +5,7 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IRdfEndpoint;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 import java.util.ArrayList;
 import java.util.Collection;

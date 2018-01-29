@@ -20,10 +20,10 @@ import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.rest.http.HttpJsonParser;
 import org.streampipes.storage.api.PipelineStorage;
 import org.streampipes.storage.api.StorageRequests;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.storage.impl.UserStorage;
-import org.streampipes.storage.service.UserService;
-import org.streampipes.storage.util.Transformer;
+import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.couchdb.impl.UserStorage;
+import org.streampipes.manager.storage.UserService;
+import org.streampipes.storage.rdf4j.util.Transformer;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

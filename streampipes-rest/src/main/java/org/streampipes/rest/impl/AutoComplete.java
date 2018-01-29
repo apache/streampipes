@@ -17,9 +17,9 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.streampipes.model.client.messages.AutocompleteItem;
 import org.streampipes.model.client.messages.AutocompleteResult;
 import org.streampipes.model.client.ontology.OntologyQuery;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.storage.ontology.QueryExecutor;
-import org.streampipes.storage.sparql.QueryBuilder;
+import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.rdf4j.ontology.QueryExecutor;
+import org.streampipes.storage.rdf4j.sparql.QueryBuilder;
 
 @Path("/v2/autocomplete")
 public class AutoComplete extends AbstractRestInterface {

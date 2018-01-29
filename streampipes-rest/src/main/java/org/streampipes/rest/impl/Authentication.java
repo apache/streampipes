@@ -16,8 +16,8 @@ import org.streampipes.model.client.user.ShiroAuthenticationResponse;
 import org.streampipes.model.client.user.ShiroAuthenticationResponseFactory;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IAuthentication;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.user.management.UserManagementService;
+import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.manager.storage.UserManagementService;
 
 import java.util.HashSet;
 import java.util.Set;

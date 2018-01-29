@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 @Path("/v2/users/{username}/pipelinecategories")
 public class PipelineCategory extends AbstractRestInterface {

@@ -13,7 +13,7 @@ import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.streampipes.storage.util.Utils;
+import org.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 

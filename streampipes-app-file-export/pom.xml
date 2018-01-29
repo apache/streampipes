@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-storage</artifactId>
+            <artifactId>streampipes-storage-couchdb</artifactId>
         </dependency>
         <dependency>
             <groupId>com.mashape.unirest</groupId>

@@ -2,7 +2,7 @@ package org.streampipes.rest.impl;
 
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.rest.api.IUser;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

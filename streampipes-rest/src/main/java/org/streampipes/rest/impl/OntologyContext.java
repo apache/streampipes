@@ -1,5 +1,11 @@
 package org.streampipes.rest.impl;
 
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.client.ontology.Context;
+import org.streampipes.rest.api.IOntologyContext;
+
 import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
@@ -11,13 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.rest.api.IOntologyContext;
-import org.streampipes.storage.controller.StorageManager;
-import org.streampipes.model.client.ontology.Context;
 
 @Path("/v2/contexts")
 public class OntologyContext extends AbstractRestInterface implements IOntologyContext {

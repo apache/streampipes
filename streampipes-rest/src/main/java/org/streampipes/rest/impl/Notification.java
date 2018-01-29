@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.INotification;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 @Path("/v2/users/{username}/notifications")
 public class Notification extends AbstractRestInterface implements INotification {

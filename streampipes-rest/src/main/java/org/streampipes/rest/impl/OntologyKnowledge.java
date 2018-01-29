@@ -21,7 +21,7 @@ import org.streampipes.model.client.ontology.Namespace;
 import org.streampipes.model.client.ontology.Property;
 import org.streampipes.model.client.ontology.Resource;
 import org.streampipes.rest.api.IOntologyKnowledge;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 @Path("/v2/ontology")
 public class OntologyKnowledge extends AbstractRestInterface implements IOntologyKnowledge {

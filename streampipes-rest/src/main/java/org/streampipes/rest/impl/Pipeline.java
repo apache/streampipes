@@ -11,7 +11,7 @@ import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 import org.streampipes.commons.exceptions.NoMatchingFormatException;
 import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
 import org.streampipes.commons.exceptions.NoMatchingProtocolException;

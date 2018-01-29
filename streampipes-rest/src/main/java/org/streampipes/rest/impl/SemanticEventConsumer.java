@@ -24,7 +24,7 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.rest.api.IPipelineElement;
-import org.streampipes.storage.filter.Filter;
+import org.streampipes.storage.rdf4j.filter.Filter;
 
 @Path("/v2/users/{username}/actions")
 public class SemanticEventConsumer extends AbstractRestInterface implements IPipelineElement {

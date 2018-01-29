@@ -11,7 +11,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.storage.api.StorageRequests;
-import org.streampipes.storage.service.UserService;
+import org.streampipes.manager.storage.UserService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

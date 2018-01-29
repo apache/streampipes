@@ -241,7 +241,7 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
-                <artifactId>streampipes-manager</artifactId>
+                <artifactId>streampipes-pipeline-management</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -380,6 +380,26 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-couchdb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-management</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-storage-rdf4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.streampipes.empire</groupId>
                 <artifactId>streampipes-empire-rdf4j</artifactId>
                 <version>${streampipes-empire.version}</version>
@@ -389,6 +409,7 @@
                 <artifactId>streampipes-empire-pinto</artifactId>
                 <version>${streampipes-empire.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -402,7 +423,7 @@
         <module>streampipes-container-standalone</module>
         <module>streampipes-dataformat</module>
         <module>streampipes-dataformat-json</module>
-        <module>streampipes-manager</module>
+        <module>streampipes-pipeline-management</module>
         <module>streampipes-measurement-units</module>
         <module>streampipes-messaging-kafka</module>
         <module>streampipes-messaging</module>
@@ -423,7 +444,7 @@
         <module>streampipes-pe-sources-samples</module>
         <module>streampipes-rest</module>
         <module>streampipes-sdk</module>
-        <module>streampipes-storage</module>
+        <module>streampipes-storage-api</module>
         <module>streampipes-user-management</module>
         <module>streampipes-wrapper</module>
         <module>streampipes-wrapper-esper</module>
@@ -438,6 +459,7 @@
         <module>streampipes-wrapper-kafka-streams</module>
         <module>streampipes-pe-mixed-kafka-streams</module>
         <module>streampipes-wrapper-distributed</module>
+        <module>streampipes-storage-management</module>
     </modules>
 
     <profiles>

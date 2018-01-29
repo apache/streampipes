@@ -7,7 +7,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.streampipes.rest.api.IVisualization;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 @Path("/v2/visualizations")
 public class Visualization extends AbstractRestInterface implements IVisualization {

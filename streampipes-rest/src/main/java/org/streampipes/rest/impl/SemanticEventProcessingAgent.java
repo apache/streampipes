@@ -22,7 +22,7 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.rest.api.IPipelineElement;
-import org.streampipes.storage.filter.Filter;
+import org.streampipes.storage.rdf4j.filter.Filter;
 
 @Path("/v2/users/{username}/sepas")
 public class SemanticEventProcessingAgent extends AbstractRestInterface implements IPipelineElement {

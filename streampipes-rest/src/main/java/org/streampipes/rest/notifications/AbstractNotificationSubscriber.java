@@ -8,7 +8,7 @@ import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.Notification;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.manager.storage.StorageManager;
 
 import java.text.SimpleDateFormat;
 

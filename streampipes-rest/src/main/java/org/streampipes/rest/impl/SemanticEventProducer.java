@@ -7,7 +7,7 @@ import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipelineElement;
-import org.streampipes.storage.filter.Filter;
+import org.streampipes.storage.rdf4j.filter.Filter;
 
 import java.net.URISyntaxException;
 import java.util.List;
