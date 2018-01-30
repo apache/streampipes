@@ -1,7 +1,5 @@
 package org.streampipes.wrapper.spark;
 
-import scala.tools.cmd.gen.AnyVals;
-
 import java.io.Serializable;
 
 /**
@@ -15,15 +13,22 @@ public class SparkDeploymentConfig implements Serializable {
     private String sparkHost;
     private long sparkBatchDuration;
     private String kafkaHost;
+    private boolean runLocal;
 
-    public SparkDeploymentConfig(String jarFile, String appName, String sparkHost, long sparkBatchDuration, String kafkaHost) {
+    public SparkDeploymentConfig(String jarFile, String appName, String sparkHost, boolean runLocal, long sparkBatchDuration, String kafkaHost) {
         super();
 
         this.jarFile = jarFile;
         this.appName = appName;
         this.sparkHost = sparkHost;
+        this.runLocal = runLocal;
         this.sparkBatchDuration = sparkBatchDuration;
         this.kafkaHost = kafkaHost;//TODO: JMS berücksichtigen
+
+    }
+
+    public SparkDeploymentConfig(String jarFile, String appName, String sparkHost, long sparkBatchDuration, String kafkaHost) {
+        this(jarFile, appName, sparkHost, false, sparkBatchDuration, kafkaHost);
     }
 
     public SparkDeploymentConfig(String jarFile, String appName, String sparkHost, String kafkaHost) {
@@ -52,6 +57,14 @@ public class SparkDeploymentConfig implements Serializable {
 
     public void setSparkHost(String sparkHost) {
         this.sparkHost = sparkHost;
+    }
+
+    public boolean isRunLocal() {
+        return runLocal;
+    }
+
+    public void setRunLocal(boolean runLocal) {
+        this.runLocal = runLocal;
     }
 
     public long getSparkBatchDuration() {

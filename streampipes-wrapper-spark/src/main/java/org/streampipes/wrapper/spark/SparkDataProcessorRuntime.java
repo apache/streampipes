@@ -7,6 +7,9 @@ import org.streampipes.model.grounding.TransportProtocol;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.streampipes.wrapper.spark.serializer.SimpleKafkaSerializer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
@@ -39,6 +42,28 @@ public abstract class SparkDataProcessorRuntime<B extends EventProcessorBindingP
         thread.start();
 
         return true;
+    }
+
+    @Override
+    protected byte[] getSerializationData() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(params);
+            out.writeObject(deploymentConfig);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+
+    return bos.toByteArray();
     }
 
     private boolean isOutputKafkaProtocol() {

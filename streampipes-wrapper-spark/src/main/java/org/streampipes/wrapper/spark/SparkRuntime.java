@@ -16,10 +16,12 @@ import org.apache.spark.streaming.kafka010.LocationStrategies;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
+import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.spark.converter.JsonToMapFormat;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,11 +30,11 @@ import java.util.Map;
  */
 public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> implements Runnable, Serializable {
     private static final long serialVersionUID = 1L;
-    private final SparkDeploymentConfig deploymentConfig;
+    protected final SparkDeploymentConfig deploymentConfig;
 
     protected Thread thread;
-    //protected SparkAppHandle appHandle;
-    //protected SparkLauncher launcher;
+    protected SparkAppHandle appHandle;
+    protected SparkLauncher launcher;
     protected JavaStreamingContext streamingContext;
     protected I graph;
     protected Map kafkaParams;
@@ -53,68 +55,85 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
     }
 
     public boolean startExecution() {
-        try {
-            //TODO: ist der ganze Launcher unnötig? Wie ist das mit Launcher und Streaming?
-            /*launcher = new SparkLauncher()
-                    .setAppResource("/home/lutz/BigGIS/sparktest1/target/spark-test1-0.1-SNAPSHOT.jar")//TODO
-                    .setMainClass("org.streampipes.biggis.sparktest1.SparkTest1Program")//TODO
-                    .setMaster("local[*]")//TODO
-                    .setConf(SparkLauncher.DRIVER_MEMORY, "2g");//TODO
-*/
-            SparkConf conf = new SparkConf().setAppName(this.deploymentConfig.getAppName())
-                    .setMaster(this.deploymentConfig.getSparkHost());
-            streamingContext = new JavaStreamingContext(conf, new Duration(this.deploymentConfig.getSparkBatchDuration()));
+        if (this.deploymentConfig.isRunLocal()) {
+            try {
+                SparkConf conf = new SparkConf().setAppName(this.deploymentConfig.getAppName())
+                        .setMaster(this.deploymentConfig.getSparkHost());
+                streamingContext = new JavaStreamingContext(conf, new Duration(this.deploymentConfig.getSparkBatchDuration()));
 
-            JavaDStream<Map<String, Object>> messageStream1 = null;
-            JavaInputDStream<ConsumerRecord<String, String>> source1 = getStream1Source(streamingContext);
-            if (source1 != null) {
-                messageStream1 = source1.flatMap(new JsonToMapFormat());
+                JavaDStream<Map<String, Object>> messageStream1 = null;
+                JavaInputDStream<ConsumerRecord<String, String>> source1 = getStream1Source(streamingContext);
+                if (source1 != null) {
+                    messageStream1 = source1.flatMap(new JsonToMapFormat());
+                } else {
+                    throw new Exception("At least one source must be defined for a Spark SEPA");
+                }
+                //TODO: zweiter Stream. Kann das Spark?
+
+
+                //TODO: Error Handling
+
+                execute(messageStream1);
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
-            else {
-                throw new Exception("At least one source must be defined for a Spark SEPA");
-            }
-            //TODO: zweiter Stream. Kann das Spark?
-
-            execute(messageStream1);
-
-
-
-
-            //TODO: Error Handling
-
-
-            return true;
         }
-        catch (Exception e) {
+        else {
+            try {
+                byte[] data = getSerializationData();
+                String enc = Base64.getEncoder().encodeToString(data);
+                //System.out.println("Sending data: '" + enc + "'");
+
+                launcher = new SparkLauncher()
+                        .setAppResource(this.deploymentConfig.getJarFile())
+                        .setMainClass(this.getClass().getName())
+                        .addAppArgs(enc)
+                        //.redirectError()
+                        //.redirectOutput(ProcessBuilder.Redirect.PIPE)
+                        .setMaster(this.deploymentConfig.getSparkHost())
+                        .setConf(SparkLauncher.DRIVER_MEMORY, "2g");//TODO
+                appHandle = launcher.startApplication();
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    protected abstract byte[] getSerializationData();
+
+    public abstract boolean execute(JavaDStream<Map<String, Object>>... convertedStream);
+
+    public void run() {
+        try {
+            streamingContext.start();
+            if (deploymentConfig.isRunLocal()) {
+                streamingContext.awaitTermination();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean stop() {
+        try {
+            appHandle.stop();
+            //streamingContext.stop();
+            //streamingContext.awaitTermination();
+            return true;
+
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-	}
 
-	public abstract boolean execute(JavaDStream<Map<String, Object>>... convertedStream);
+    }
 
-    public void run() {
-		try {
-		    //TODO: brauche ich hier doch startApplication() und und streamingContext.start() in main()? Wie dann die Daten in main() kriegen?
-            //appHandle = launcher.startApplication();
-            streamingContext.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public boolean stop() {
-		try {
-		    streamingContext.stop();
-		    streamingContext.awaitTermination();
-            return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-	}
     private JavaInputDStream<ConsumerRecord<String, String>> getStream1Source(JavaStreamingContext streamingContext) {
         return getStreamSource(0, streamingContext);
     }
@@ -127,6 +146,7 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
      * This method takes the i's input stream and creates a source for the Spark streaming job
      * Currently just kafka is supported as a protocol
      * TODO Add also jms support
+     *
      * @param i
      * @param streamingContext
      * @return
@@ -139,8 +159,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
                 KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
                 //System.out.println("Listening on Kafka topic '" + protocol.getTopicName() + "'");
-                return KafkaUtils.createDirectStream(streamingContext,LocationStrategies.PreferConsistent(),ConsumerStrategies.<String, String>Subscribe(Arrays.asList(protocol.getTopicName()), kafkaParams));
-            } else {
+                return KafkaUtils.createDirectStream(streamingContext, LocationStrategies.PreferConsistent(), ConsumerStrategies.<String, String>Subscribe(Arrays.asList(protocol.getTopicName()), kafkaParams));
+            }
+            else {
                 return null;
             }
         }
