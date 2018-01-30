@@ -15,7 +15,7 @@ import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.manager.storage.StorageManager;
 import org.streampipes.manager.storage.UserService;
 
@@ -35,7 +35,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 	protected List<VerificationResult> validationResults;
 	protected List<Verifier> validators;
 	
-	protected StorageRequests storageApi = StorageManager.INSTANCE.getStorageAPI();
+	protected IPipelineElementDescriptionStorage storageApi = StorageManager.INSTANCE.getStorageAPI();
 	protected UserService userService = StorageManager.INSTANCE.getUserService();
 	
 	public ElementVerifier(String graphData, Class<T> elementClass)

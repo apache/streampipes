@@ -4,7 +4,7 @@ import org.streampipes.model.client.RunningVisualization;
 
 import java.util.List;
 
-public interface VisualizationStorage {
+public interface IVisualizationStorage {
 
     List<RunningVisualization> getRunningVisualizations();
 

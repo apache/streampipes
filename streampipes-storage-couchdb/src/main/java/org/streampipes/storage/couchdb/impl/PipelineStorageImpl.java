@@ -5,7 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.VirtualSensor;
-import org.streampipes.storage.api.PipelineStorage;
+import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.utils.Utils;
 
 import org.apache.shiro.SecurityUtils;
@@ -17,19 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineStorage {
+public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipelineStorage {
 
     Logger LOG = LoggerFactory.getLogger(PipelineStorageImpl.class);
 
     private static final String SYSTEM_USER = "system";
 
     public PipelineStorageImpl() {
-        super(Pipeline.class);
+        super(Utils.getCouchDbPipelineClient(), Pipeline.class);
     }
 
     @Override
     public List<Pipeline> getAllPipelines() {
-        List<Pipeline> pipelines = getAll();
+        List<Pipeline> pipelines = findAll();
 
         List<Pipeline> result = new ArrayList<>();
         for (Pipeline p : pipelines)
@@ -61,7 +62,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
 
     @Override
     public void storePipeline(Pipeline pipeline) {
-        add(pipeline);
+        persist(pipeline);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
 
     @Override
     public Pipeline getPipeline(String pipelineId) {
-        return getWithNullIfEmpty(pipelineId);
+        return findWithNullIfEmpty(pipelineId);
     }
 
     @Override
@@ -81,28 +82,22 @@ public class PipelineStorageImpl extends Storage<Pipeline> implements PipelineSt
 
     @Override
     public void store(Pipeline object) {
-        add(object);
+        persist(object);
     }
 
     @Override
     public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
-        CouchDbClient dbClient = getCouchDbClient();
-        dbClient.save(virtualSensor);
-        dbClient.shutdown();
+        couchDbClient.save(virtualSensor);
+        couchDbClient.shutdown();
     }
 
     @Override
     public List<VirtualSensor> getVirtualSensors(String username) {
-        CouchDbClient dbClient = getCouchDbClient();
-        List<VirtualSensor> virtualSensors = dbClient.view("_all_docs")
+        List<VirtualSensor> virtualSensors = couchDbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(VirtualSensor.class);
-        dbClient.shutdown();
+        couchDbClient.shutdown();
         return virtualSensors;
     }
 
-    @Override
-    protected CouchDbClient getCouchDbClient() {
-        return Utils.getCouchDbPipelineClient();
-    }
 }

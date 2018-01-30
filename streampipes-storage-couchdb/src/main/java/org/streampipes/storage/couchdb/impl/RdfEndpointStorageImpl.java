@@ -1,22 +1,22 @@
 package org.streampipes.storage.couchdb.impl;
 
 import org.streampipes.model.client.endpoint.RdfEndpoint;
-import org.streampipes.storage.api.RdfEndpointStorage;
+import org.streampipes.storage.api.IRdfEndpointStorage;
+import org.streampipes.storage.couchdb.dao.AbstractDao;
 import org.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.CouchDbClient;
 
 import java.util.List;
 
-public class RdfEndpointStorageImpl extends Storage<RdfEndpoint> implements RdfEndpointStorage {
+public class RdfEndpointStorageImpl extends AbstractDao<RdfEndpoint> implements IRdfEndpointStorage {
 
     public RdfEndpointStorageImpl() {
-        super(RdfEndpoint.class);
+        super(Utils.getCouchDbRdfEndpointClient(), RdfEndpoint.class);
     }
 
 
     @Override
     public void addRdfEndpoint(RdfEndpoint rdfEndpoint) {
-        add(rdfEndpoint);
+        persist(rdfEndpoint);
     }
 
     @Override
@@ -26,11 +26,7 @@ public class RdfEndpointStorageImpl extends Storage<RdfEndpoint> implements RdfE
 
     @Override
     public List<RdfEndpoint> getRdfEndpoints() {
-        return getAll();
+        return findAll();
     }
 
-    @Override
-    protected CouchDbClient getCouchDbClient() {
-        return Utils.getCouchDbRdfEndpointClient();
-    }
 }

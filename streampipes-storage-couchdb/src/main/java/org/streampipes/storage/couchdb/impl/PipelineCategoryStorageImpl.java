@@ -1,27 +1,26 @@
 package org.streampipes.storage.couchdb.impl;
 
+import org.streampipes.model.client.pipeline.PipelineCategory;
+import org.streampipes.storage.api.IPipelineCategoryStorage;
+import org.streampipes.storage.couchdb.dao.AbstractDao;
+import org.streampipes.storage.couchdb.utils.Utils;
+
 import java.util.List;
 
-import org.streampipes.model.client.pipeline.PipelineCategory;
-import org.streampipes.storage.api.PipelineCategoryStorage;
-import org.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.CouchDbClient;
-
-public class PipelineCategoryStorageImpl extends Storage<PipelineCategory> implements PipelineCategoryStorage {
+public class PipelineCategoryStorageImpl extends AbstractDao<PipelineCategory> implements IPipelineCategoryStorage {
 
 	public PipelineCategoryStorageImpl() {
-		super(PipelineCategory.class);
+		super(Utils.getCouchDbPipelineCategoriesClient(), PipelineCategory.class);
 	}
 
 	@Override
 	public List<PipelineCategory> getPipelineCategories() {
-		return getAll();
+		return findAll();
 	}
 
 	@Override
 	public boolean addPipelineCategory(PipelineCategory pipelineCategory) {
-		add(pipelineCategory);
-		return true;
+		return persist(pipelineCategory);
 	}
 
 	@Override
@@ -29,8 +28,4 @@ public class PipelineCategoryStorageImpl extends Storage<PipelineCategory> imple
 		return delete(categoryId);
 	}
 
-	@Override
-	protected CouchDbClient getCouchDbClient() {
-		return Utils.getCouchDbPipelineCategoriesClient();
-	}
 }

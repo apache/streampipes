@@ -5,7 +5,7 @@ import org.streampipes.model.client.pipeline.Pipeline;
 
 import java.util.List;
 
-public interface PipelineStorage {
+public interface IPipelineStorage {
 
 	List<Pipeline> getAllPipelines();
 

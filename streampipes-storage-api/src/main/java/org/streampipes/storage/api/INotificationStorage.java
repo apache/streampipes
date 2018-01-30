@@ -4,7 +4,7 @@ import org.streampipes.model.Notification;
 
 import java.util.List;
 
-public interface NotificationStorage {
+public interface INotificationStorage {
 
 	Notification getNotification(String notificationId);
 	

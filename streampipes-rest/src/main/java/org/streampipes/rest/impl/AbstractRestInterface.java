@@ -18,8 +18,8 @@ import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.rest.http.HttpJsonParser;
-import org.streampipes.storage.api.PipelineStorage;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.manager.storage.StorageManager;
 import org.streampipes.storage.couchdb.impl.UserStorage;
 import org.streampipes.manager.storage.UserService;
@@ -45,11 +45,11 @@ public abstract class AbstractRestInterface {
 		}
 	}
 
-	protected StorageRequests getPipelineElementRdfStorage() {
+	protected IPipelineElementDescriptionStorage getPipelineElementRdfStorage() {
 		return StorageManager.INSTANCE.getStorageAPI();
 	}
 
-	protected PipelineStorage getPipelineStorage() {
+	protected IPipelineStorage getPipelineStorage() {
 		return StorageManager.INSTANCE.getPipelineStorageAPI();
 	}
 

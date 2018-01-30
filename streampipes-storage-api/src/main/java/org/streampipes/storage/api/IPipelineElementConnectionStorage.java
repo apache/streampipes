@@ -1,11 +1,11 @@
 package org.streampipes.storage.api;
 
+import org.streampipes.model.client.connection.Connection;
+import org.streampipes.model.client.pipeline.PipelineElementRecommendation;
+
 import java.util.List;
 
-import org.streampipes.model.client.pipeline.PipelineElementRecommendation;
-import org.streampipes.model.client.connection.Connection;
-
-public interface ConnectionStorage {
+public interface IPipelineElementConnectionStorage {
 
 	void addConnection(Connection connection);
 	

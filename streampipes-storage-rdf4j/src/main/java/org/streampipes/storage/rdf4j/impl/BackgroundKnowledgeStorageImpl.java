@@ -26,7 +26,7 @@ import org.streampipes.model.client.ontology.OntologyQueryItem;
 import org.streampipes.model.client.ontology.OntologyQueryResponse;
 import org.streampipes.model.client.ontology.Property;
 import org.streampipes.model.client.ontology.Resource;
-import org.streampipes.storage.api.BackgroundKnowledgeStorage;
+import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
 import org.streampipes.storage.rdf4j.filter.BackgroundKnowledgeFilter;
 import org.streampipes.storage.rdf4j.ontology.ClassHierarchyExecutor;
 import org.streampipes.storage.rdf4j.ontology.ConceptUpdateExecutor;
@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BackgroundKnowledgeStorageImpl implements
-		BackgroundKnowledgeStorage {
+        IBackgroundKnowledgeStorage {
 
 	Repository repo;
 

@@ -7,7 +7,6 @@ public enum CouchDbConfig {
 
     INSTANCE;
 
-
     private class TestOnChange implements SpConfigChangeCallback {
 
         @Override

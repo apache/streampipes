@@ -11,7 +11,7 @@ import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.storage.Rdf4JStorageManager;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.rdf4j.sparql.QueryBuilder;
 import org.streampipes.storage.rdf4j.util.Transformer;
 
@@ -23,7 +23,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-public class SesameStorageRequests implements StorageRequests {
+public class SesameStorageRequests implements IPipelineElementDescriptionStorage {
 
 	private Rdf4JStorageManager manager;
 	private EntityManager entityManager;

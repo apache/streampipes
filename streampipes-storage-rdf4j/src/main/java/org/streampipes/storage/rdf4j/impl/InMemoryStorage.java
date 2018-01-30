@@ -7,7 +7,7 @@ import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryStorage implements StorageRequests {
+public class InMemoryStorage implements IPipelineElementDescriptionStorage {
 	
 	private Map<String, DataSinkDescription> inMemorySECStorage;
 	private Map<String, DataSourceDescription> inMemorySEPStorage;
 	private Map<String, DataProcessorDescription> inMemorySEPAStorage;
 	private Map<String, SpDataStream> inMemoryEventStreamStorage;
-	private StorageRequests sesameStorage;
+	private IPipelineElementDescriptionStorage sesameStorage;
 	private Cloner cloner;
 	
 	
-	public InMemoryStorage(StorageRequests sesameStorage)
+	public InMemoryStorage(IPipelineElementDescriptionStorage sesameStorage)
 	{
 		this.inMemorySECStorage = new HashMap<>();
 		this.inMemorySEPAStorage = new HashMap<>();

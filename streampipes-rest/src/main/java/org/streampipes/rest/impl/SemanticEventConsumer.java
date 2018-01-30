@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.rest.annotation.GsonWithIds;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 
 import org.streampipes.model.client.messages.Notification;
@@ -96,7 +96,7 @@ public class SemanticEventConsumer extends AbstractRestInterface implements IPip
 	@Override
 	public Response removeOwn(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
 		try {
-			StorageRequests requestor = getPipelineElementRdfStorage();
+			IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
 			getUserService().deleteOwnAction(username, elementUri);
 			requestor.deleteSEC(requestor.getSECById(elementUri));
 		} catch (URISyntaxException e) {

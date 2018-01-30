@@ -14,7 +14,7 @@ import org.streampipes.model.client.ontology.Resource;
 import java.util.List;
 
 
-public interface BackgroundKnowledgeStorage {
+public interface IBackgroundKnowledgeStorage {
 
 	List<OntologyNode> getClassHierarchy() throws QueryEvaluationException, RepositoryException, MalformedQueryException;
 	

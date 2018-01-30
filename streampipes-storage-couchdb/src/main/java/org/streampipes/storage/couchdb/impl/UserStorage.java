@@ -1,11 +1,10 @@
 package org.streampipes.storage.couchdb.impl;
 
-import org.streampipes.model.client.user.User;
-import org.streampipes.storage.couchdb.utils.Utils;
-
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.streampipes.model.client.user.User;
+import org.streampipes.storage.couchdb.dao.AbstractDao;
+import org.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,30 +15,31 @@ import java.util.stream.Collectors;
  *
  *
  */
-public class UserStorage extends Storage<User> {
+public class UserStorage extends AbstractDao<User> {
 
     Logger LOG = LoggerFactory.getLogger(UserStorage.class);
 
     public UserStorage() {
-        super(User.class);
+        super(Utils.getCouchDbUserClient(), User.class);
     }
     
     public List<User> getAllUsers()
     {
-        List<User> users = getAll();
+        List<User> users = findAll();
     	return users.stream().collect(Collectors.toList());
     }
 
     public User getUser(String email) {
         // TODO improve
-        CouchDbClient dbClient = getCouchDbClient();
-        List<User> users = dbClient.view("users/username").key(email).includeDocs(true).query(User.class);
-        if (users.size() != 1) LOG.error("None or to many users with matching username");
+        List<User> users = couchDbClient.view("users/username").key(email).includeDocs(true).query(User.class);
+        if (users.size() != 1) {
+            LOG.error("None or to many users with matching username");
+        }
         return users.get(0);
     }
 
     public void storeUser(User user) {
-        add(user);
+        persist(user);
     }
 
     public void updateUser(User user) {
@@ -48,13 +48,12 @@ public class UserStorage extends Storage<User> {
     
     public boolean emailExists(String email)
     {
-    	List<User> users = getAll();
+    	List<User> users = findAll();
     	return users
                 .stream()
                 .filter(u -> u.getEmail() != null)
                 .anyMatch(u -> u.getEmail().equals(email));
     }
-    
 
     /**
     *
@@ -62,13 +61,13 @@ public class UserStorage extends Storage<User> {
     * @return True if user exists exactly once, false otherwise
     */
    public boolean checkUser(String username) {
-       CouchDbClient dbClient = getCouchDbClient();
-       List<User> users = dbClient.view("users/username").key(username).includeDocs(true).query(User.class);
+       List<User> users = couchDbClient
+               .view("users/username")
+               .key(username)
+               .includeDocs(true)
+               .query(User.class);
+
        return users.size() == 1;
    }
 
-    @Override
-    protected CouchDbClient getCouchDbClient() {
-        return Utils.getCouchDbUserClient();
-    }
 }

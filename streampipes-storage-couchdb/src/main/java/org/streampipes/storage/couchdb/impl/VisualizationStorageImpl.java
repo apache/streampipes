@@ -1,30 +1,24 @@
 package org.streampipes.storage.couchdb.impl;
 
-import org.streampipes.model.client.RunningVisualization;
-import org.streampipes.storage.api.VisualizationStorage;
-import org.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
+import org.streampipes.model.client.RunningVisualization;
+import org.streampipes.storage.api.IVisualizationStorage;
+import org.streampipes.storage.couchdb.dao.AbstractDao;
+import org.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisualizationStorageImpl extends Storage<RunningVisualization> implements VisualizationStorage {
+public class VisualizationStorageImpl extends AbstractDao<RunningVisualization> implements IVisualizationStorage {
 
 
     public VisualizationStorageImpl() {
-        super(RunningVisualization.class);
-    }
-
-    @Override
-    protected CouchDbClient getCouchDbClient() {
-        return Utils.getCouchDbVisualizationClient();
+        super(Utils.getCouchDbVisualizationClient(), RunningVisualization.class);
     }
 
     @Override
     public List<RunningVisualization> getRunningVisualizations() {
-        CouchDbClient dbClient = getCouchDbClient();
-        List<RunningVisualization> visualizations = dbClient.view("_all_docs")
+        List<RunningVisualization> visualizations = couchDbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(RunningVisualization.class);
         List<RunningVisualization> result = new ArrayList<>();
@@ -35,28 +29,24 @@ public class VisualizationStorageImpl extends Storage<RunningVisualization> impl
 
     @Override
     public void storeVisualization(RunningVisualization visualization) {
-        CouchDbClient dbClient = getCouchDbClient();
-        dbClient.save(visualization);
-        dbClient.shutdown();
+        couchDbClient.save(visualization);
+        couchDbClient.shutdown();
 
     }
 
     @Override
     public void deleteVisualization(String pipelineId) {
         try {
-            CouchDbClient dbClient = getCouchDbClient();
             List<RunningVisualization> currentVisualizations = getRunningVisualizations();
             for (RunningVisualization viz : currentVisualizations) {
                 if (viz.getPipelineId() != null) {
                     if (viz.getPipelineId().equals(pipelineId))
-                        dbClient.remove(viz);
+                        couchDbClient.remove(viz);
                 }
             }
-            dbClient.shutdown();
+            couchDbClient.shutdown();
         } catch (NoDocumentException e) {
             e.printStackTrace();
         }
-        return;
-
     }
 }

@@ -13,14 +13,14 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 import org.streampipes.model.client.ontology.Context;
 import org.streampipes.model.client.ontology.RdfFormat;
-import org.streampipes.storage.api.ContextStorage;
+import org.streampipes.storage.api.IOntologyContextStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class ContextStorageImpl implements ContextStorage {
+public class ContextStorageImpl implements IOntologyContextStorage {
 
 	private Repository repository;
 	

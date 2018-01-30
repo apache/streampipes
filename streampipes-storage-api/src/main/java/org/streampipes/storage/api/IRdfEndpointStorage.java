@@ -4,7 +4,7 @@ import org.streampipes.model.client.endpoint.RdfEndpoint;
 
 import java.util.List;
 
-public interface RdfEndpointStorage {
+public interface IRdfEndpointStorage {
 
     void addRdfEndpoint(RdfEndpoint rdfEndpoint);
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.streampipes.model.client.pipeline.PipelineCategory;
 
-public interface PipelineCategoryStorage {
+public interface IPipelineCategoryStorage {
 
 	List<PipelineCategory> getPipelineCategories();
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.streampipes.model.client.ontology.Context;
 
-public interface ContextStorage {
+public interface IOntologyContextStorage {
 
 	List<String> getAvailableContexts();
 	

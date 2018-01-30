@@ -1,10 +1,10 @@
 package org.streampipes.storage.api;
 
-import java.util.List;
-
 import org.streampipes.model.client.monitoring.JobReport;
 
-public interface MonitoringDataStorage {
+import java.util.List;
+
+public interface IPipelineMonitoringDataStorage {
 
 	List<JobReport> getAllMonitoringJobReports();
 	

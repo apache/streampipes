@@ -11,7 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public interface StorageRequests {
+public interface IPipelineElementDescriptionStorage {
 	
 	boolean storeInvocableSEPAElement(InvocableStreamPipesEntity element);
 

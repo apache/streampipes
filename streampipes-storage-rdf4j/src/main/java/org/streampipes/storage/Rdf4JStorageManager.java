@@ -25,9 +25,9 @@ import org.streampipes.empire.core.empire.config.EmpireConfiguration;
 import org.streampipes.empire.rdf4j.OpenRdfEmpireModule;
 import org.streampipes.empire.rdf4j.RepositoryFactoryKeys;
 import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
-import org.streampipes.storage.api.BackgroundKnowledgeStorage;
-import org.streampipes.storage.api.ContextStorage;
-import org.streampipes.storage.api.StorageRequests;
+import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
+import org.streampipes.storage.api.IOntologyContextStorage;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.streampipes.storage.rdf4j.impl.BackgroundKnowledgeStorageImpl;
 import org.streampipes.storage.rdf4j.impl.ContextStorageImpl;
 import org.streampipes.storage.rdf4j.impl.InMemoryStorage;
@@ -50,7 +50,7 @@ public enum Rdf4JStorageManager {
   private Repository bkrepo;
 
   private InMemoryStorage inMemoryStorage;
-  private BackgroundKnowledgeStorage backgroundKnowledgeStorage;
+  private IBackgroundKnowledgeStorage backgroundKnowledgeStorage;
 
   private boolean inMemoryInitialized = false;
 
@@ -118,7 +118,7 @@ public enum Rdf4JStorageManager {
 
   }
 
-  public BackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
+  public IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
     if (backgroundKnowledgeStorage == null) {
       initSesameDatabases();
     }
@@ -129,7 +129,7 @@ public enum Rdf4JStorageManager {
     return bkrepo;
   }
 
-  public StorageRequests getStorageAPI() {
+  public IPipelineElementDescriptionStorage getStorageAPI() {
     if (backgroundKnowledgeStorage == null) {
       initSesameDatabases();
     }
@@ -145,11 +145,11 @@ public enum Rdf4JStorageManager {
     return storageManager;
   }
 
-  public ContextStorage getContextStorage() {
+  public IOntologyContextStorage getContextStorage() {
     return new ContextStorageImpl(bkrepo);
   }
 
-  public StorageRequests getSesameStorage() {
+  public IPipelineElementDescriptionStorage getSesameStorage() {
     return new SesameStorageRequests();
   }
 
