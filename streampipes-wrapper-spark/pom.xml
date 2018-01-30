@@ -4,9 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.streampipes</groupId>
+    <parent>
+        <groupId>org.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.41.2</version>
+    </parent>
+
     <artifactId>streampipes-wrapper-spark</artifactId>
-    <version>0.41.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -17,22 +21,14 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
-            <version>0.41.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
-            <version>0.41.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-wrapper</artifactId>
-            <version>0.41.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-wrapper</artifactId>
-            <version>0.41.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
