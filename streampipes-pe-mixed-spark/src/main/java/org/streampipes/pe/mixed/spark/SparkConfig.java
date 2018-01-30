@@ -10,7 +10,7 @@ public enum SparkConfig implements PeConfig {
     INSTANCE;
 
     private SpConfig config;
-    public static final String JAR_FILE = "./streampipes-spark-test1.jar";
+    public static final String JAR_FILE = "/streampipes-pe-mixed-spark.jar";
 
     private final static String HOST = "host";
     private final static String PORT = "port";
