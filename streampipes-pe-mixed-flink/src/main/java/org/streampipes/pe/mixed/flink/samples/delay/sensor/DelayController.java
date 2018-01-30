@@ -1,5 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.delay.sensor;
 
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -46,7 +47,7 @@ public class DelayController extends FlinkDataProcessorDeclarer<DelayParameters>
     }
 
     @Override
-    public FlinkDataProcessorRuntime<DelayParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<DelayParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
         int delayValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, DELAY_VALUE_NAME));
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);

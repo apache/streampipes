@@ -39,8 +39,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	}
 
 	@Override
-	public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph) {
-		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
+	public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
 		String topic = extractor.singleValueParameter(TOPIC_KEY,
 						String.class);

@@ -34,8 +34,7 @@ public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalPa
     }
 
     @Override
-    public ConfiguredEventSink<OneSignalParameters> onInvocation(DataSinkInvocation graph) {
-        DataSinkParameterExtractor extractor = getExtractor(graph);
+    public ConfiguredEventSink<OneSignalParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
         String content = extractor.singleValueParameter(CONTENT_KEY, String.class);
         String appId = extractor.singleValueParameter(APP_ID, String.class);

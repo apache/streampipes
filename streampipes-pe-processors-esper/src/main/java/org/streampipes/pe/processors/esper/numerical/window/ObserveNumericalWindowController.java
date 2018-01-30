@@ -19,6 +19,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -86,7 +87,7 @@ public class ObserveNumericalWindowController extends StandaloneEventProcessorDe
 
 	@Override
 	public ConfiguredEventProcessor<ObserveNumericalWindowParameters>
-	onInvocation(DataProcessorInvocation invocationGraph) {
+	onInvocation(DataProcessorInvocation invocationGraph, ProcessingElementParameterExtractor extractor) {
 		String valueLimit = SepaUtils.getOneOfProperty(invocationGraph, "value-limit");
 
 		double threshold = Double.parseDouble(

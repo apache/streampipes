@@ -35,8 +35,7 @@ public class EventRateController extends StandaloneEventProcessorDeclarerSinglet
 
 	@Override
 	public ConfiguredEventProcessor<EventRateParameter> onInvocation(DataProcessorInvocation
-																																																								 sepa) {
-		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+                                                                           sepa, ProcessingElementParameterExtractor extractor) {
 
 		Integer avgRate = extractor.singleValueParameter("rate", Integer.class);
 		Integer outputRate = extractor.singleValueParameter("output", Integer.class);

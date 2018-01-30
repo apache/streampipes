@@ -14,6 +14,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -56,7 +57,7 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
 
 	@Override
 	public FlinkDataProcessorRuntime<FieldHasherParameters> getRuntime(
-			DataProcessorInvocation graph) {
+					DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "property-mapping");
 		
 		HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(SepaUtils.getOneOfProperty(graph, "hash-algorithm"));

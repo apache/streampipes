@@ -17,6 +17,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
@@ -84,7 +85,7 @@ public class AndController extends StandaloneEventProcessorDeclarerSingleton<And
 	}
 
 	@Override
-	public ConfiguredEventProcessor<AndParameters> onInvocation(DataProcessorInvocation invocationGraph) {
+	public ConfiguredEventProcessor<AndParameters> onInvocation(DataProcessorInvocation invocationGraph, ProcessingElementParameterExtractor extractor) {
 		String timeUnit = SepaUtils.getOneOfProperty(invocationGraph, "time-unit");
 		//String matchingOperator = SepaUtils.getOneOfProperty(invocationGraph, "matching-operator");
 		String matchingOperator = "";

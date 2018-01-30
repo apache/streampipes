@@ -76,8 +76,7 @@ public class CountAggregateController extends FlinkDataProcessorDeclarer<CountAg
 
 	@Override
 	public FlinkDataProcessorRuntime<CountAggregateParameters> getRuntime(
-			DataProcessorInvocation sepa) {
-		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+					DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 				CountAggregateConstants.GROUP_BY, true);

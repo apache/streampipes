@@ -6,6 +6,7 @@ import org.streampipes.container.util.DeclarerUtils;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.pe.mixed.flink.FlinkUtils;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
@@ -23,7 +24,7 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
 	}
 
 	@Override
-	public FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph) {
+	public FlinkDataProcessorRuntime<WordCountParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		return new WordCountProgram(new WordCountParameters(graph), FlinkUtils.getFlinkDeploymentConfig());
 		// return new WordCountProgram(new WordCountParameters(graph));
 

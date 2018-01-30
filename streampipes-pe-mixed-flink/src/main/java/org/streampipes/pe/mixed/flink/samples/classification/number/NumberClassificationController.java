@@ -1,6 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.classification.number;
 
 import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -77,7 +78,7 @@ public class NumberClassificationController extends FlinkDataProcessorDeclarer<N
 	}
 
 	@Override
-	public FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph) {
+	public FlinkDataProcessorRuntime<NumberClassificationParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(graph, "classification_options",
 				CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(graph, "to_classify");

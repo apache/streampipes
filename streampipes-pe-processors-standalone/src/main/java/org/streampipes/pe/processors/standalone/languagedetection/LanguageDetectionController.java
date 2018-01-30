@@ -15,6 +15,7 @@ import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.standalone.config.Config;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
@@ -67,7 +68,7 @@ public class LanguageDetectionController extends StandaloneEventProcessorDeclare
 
 	@Override
 	public ConfiguredEventProcessor<LanguageDetectionParameters>
-	onInvocation(DataProcessorInvocation sepa) {
+	onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		String textMapping = SepaUtils.getMappingPropertyName(sepa,
 						"text");
 

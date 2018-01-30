@@ -32,8 +32,7 @@ public class TopXController extends StandaloneEventProcessorDeclarerSingleton<To
 	}
 
 	@Override
-	public ConfiguredEventProcessor<TopXParameter> onInvocation(DataProcessorInvocation sepa) {
-		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+	public ConfiguredEventProcessor<TopXParameter> onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
 		String sortBy = extractor.mappingPropertyValue("sortBy");
 		Integer limit = extractor.singleValueParameter("topx", Integer.class);

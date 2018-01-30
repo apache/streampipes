@@ -16,6 +16,7 @@ import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.SO;
 import org.streampipes.vocabulary.XSD;
@@ -76,7 +77,7 @@ public class NumberClassificationController extends StandaloneEventProcessorDecl
 
 	@Override
 	public ConfiguredEventProcessor<NumberClassificationParameters>
-	onInvocation(DataProcessorInvocation sepa) {
+	onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "classification_options",
 						CollectionStaticProperty.class);
 		String propertyName = SepaUtils.getMappingPropertyName(sepa, "to_classify");

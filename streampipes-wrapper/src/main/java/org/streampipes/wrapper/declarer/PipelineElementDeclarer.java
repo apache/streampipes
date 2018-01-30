@@ -17,7 +17,8 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
 
     try {
       elementId = graph.getElementId();
-      epRuntime = getRuntime(graph);
+      // change to getRuntime(graph, extractor)
+      epRuntime = getRuntime(graph, getExtractor(graph));
       epRuntime.bindRuntime();
       return new Response(graph.getElementId(), true);
     } catch (Exception e) {
@@ -39,7 +40,7 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
 
   protected abstract EX getExtractor(I graph);
 
-  public abstract EPR getRuntime(I graph);
+  public abstract EPR getRuntime(I graph, EX extractor);
 
 
 

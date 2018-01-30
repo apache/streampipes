@@ -8,6 +8,7 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
@@ -37,7 +38,7 @@ public class TimestampController extends StandaloneEventProcessorDeclarerSinglet
 
 	@Override
 	public ConfiguredEventProcessor<TimestampParameter> onInvocation(DataProcessorInvocation
-																																																								 sepa) {
+                                                                           sepa, ProcessingElementParameterExtractor extractor) {
 		AppendOutputStrategy strategy = (AppendOutputStrategy) sepa.getOutputStrategies().get(0);
 
 		String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");

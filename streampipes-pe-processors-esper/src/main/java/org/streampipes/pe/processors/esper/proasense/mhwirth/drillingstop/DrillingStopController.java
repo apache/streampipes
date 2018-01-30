@@ -15,6 +15,7 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
@@ -30,7 +31,7 @@ public class DrillingStopController extends StandaloneEventProcessorDeclarerSing
 
 	@Override
 	public ConfiguredEventProcessor<DrillingStopParameters> onInvocation
-					(DataProcessorInvocation sepa) {
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
 		int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
 

@@ -12,6 +12,7 @@ import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -59,7 +60,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 
 	@Override
 	public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
-			DataProcessorInvocation graph) {
+					DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		ReplaceOutputStrategy ros = (ReplaceOutputStrategy) graph.getOutputStrategies().get(0);
 		EventProperty oldProperty = SepaUtils.getEventPropertyById(graph, ros.getReplaceProperties().get(0).getReplaceTo());
 		String newPropertyName = ros.getReplaceProperties().get(0).getReplaceWith().getRuntimeName();

@@ -56,8 +56,7 @@ public class AggregationController extends StandaloneEventProcessorDeclarerSingl
 
   @Override
   public ConfiguredEventProcessor<AggregationParameter> onInvocation
-          (DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
     List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa, "groupBy", true);
 

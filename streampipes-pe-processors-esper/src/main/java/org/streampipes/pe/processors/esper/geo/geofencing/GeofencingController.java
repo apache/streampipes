@@ -20,6 +20,7 @@ import org.streampipes.model.staticproperty.SupportedProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
@@ -94,7 +95,7 @@ public class GeofencingController extends StandaloneEventProcessorDeclarerSingle
 
 	@Override
 	public ConfiguredEventProcessor<GeofencingParameters> onInvocation
-					(DataProcessorInvocation invocationGraph) {
+          (DataProcessorInvocation invocationGraph, ProcessingElementParameterExtractor extractor) {
 		String operation = SepaUtils.getOneOfProperty(invocationGraph, "operation");
 
 		int radius = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "radius"));

@@ -17,6 +17,7 @@ import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.MhWirth;
 import org.streampipes.vocabulary.XSD;
@@ -33,7 +34,7 @@ public class DrillingStartEnrichedController extends
 
   @Override
   public ConfiguredEventProcessor<DrillingStartEnrichedParameters>
-  onInvocation(DataProcessorInvocation sepa) {
+  onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     int minRpm = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "rpm"));
     int minTorque = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa, "torque"));
 

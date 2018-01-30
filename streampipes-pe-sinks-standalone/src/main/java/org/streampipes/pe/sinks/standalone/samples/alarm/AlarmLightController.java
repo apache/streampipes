@@ -4,6 +4,7 @@ import org.streampipes.model.DataSinkType;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -26,7 +27,7 @@ public class AlarmLightController extends StandaloneEventSinkDeclarer<AlarmLight
 	}
 
 	@Override
-	public ConfiguredEventSink<AlarmLightParameters> onInvocation(DataSinkInvocation graph) {
+	public ConfiguredEventSink<AlarmLightParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 		String selectedOption = getExtractor(graph).selectedSingleValue("state", String.class);
 		AlarmLightParameters params = new AlarmLightParameters(graph, selectedOption);
 

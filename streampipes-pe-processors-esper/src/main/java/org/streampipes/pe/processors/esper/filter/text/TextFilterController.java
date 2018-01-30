@@ -33,16 +33,16 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 						.build();
 	}
 
+
+
+	// change to onInvocation(graph, extractor)
 	@Override
 	public ConfiguredEventProcessor<TextFilterParameter> onInvocation
-					(DataProcessorInvocation sepa) {
-		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+	(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
 		String keyword = extractor.singleValueParameter("keyword", String.class);
-		String operation =extractor.selectedSingleValue("operation", String.class);
+		String operation = extractor.selectedSingleValue("operation", String.class);
 		String filterProperty = extractor.mappingPropertyValue("text");
-
-		logger.info("Text Property: " +filterProperty);
 
 		TextFilterParameter staticParam = new TextFilterParameter(sepa,
 						keyword,

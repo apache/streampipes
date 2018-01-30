@@ -20,6 +20,7 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -80,7 +81,7 @@ public class ObserveNumericalController extends StandaloneEventProcessorDeclarer
 
 	@Override
 	public ConfiguredEventProcessor<ObserveNumericalParameters>
-	onInvocation(DataProcessorInvocation invocationGraph) {
+	onInvocation(DataProcessorInvocation invocationGraph, ProcessingElementParameterExtractor extractor) {
 		String valueLimit = SepaUtils.getOneOfProperty(invocationGraph, "value-limit");
 
 		String outputProperty = ((AppendOutputStrategy) invocationGraph.getOutputStrategies().get(0)).getEventProperties().get(0).getRuntimeName();

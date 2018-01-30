@@ -19,6 +19,7 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
@@ -73,7 +74,7 @@ public class IncreaseController extends StandaloneEventProcessorDeclarerSingleto
 
 	@Override
 	public ConfiguredEventProcessor<IncreaseParameters> onInvocation(DataProcessorInvocation
-																																																								 invocationGraph) {
+                                                                           invocationGraph, ProcessingElementParameterExtractor extractor) {
 		String operation = SepaUtils.getOneOfProperty(invocationGraph, "operation");
 		System.out.println(operation);
 		int increase = (int) Double.parseDouble(SepaUtils.getFreeTextStaticPropertyValue(invocationGraph, "increase"));

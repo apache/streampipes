@@ -24,6 +24,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.XSD;
@@ -117,7 +118,7 @@ public class MovementController extends StandaloneEventProcessorDeclarerSingleto
 
 	@Override
 	public ConfiguredEventProcessor<MovementParameter> onInvocation(DataProcessorInvocation
-																																																							 sepa) {
+                                                                          sepa, ProcessingElementParameterExtractor extractor) {
 		String epsgProperty = null;
 		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
 						.getStaticPropertyByInternalName(sepa, "epsg")));

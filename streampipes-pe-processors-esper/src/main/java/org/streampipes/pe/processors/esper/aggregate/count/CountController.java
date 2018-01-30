@@ -9,6 +9,7 @@ import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Options;
@@ -43,7 +44,7 @@ public class CountController extends StandaloneEventProcessorDeclarerSingleton<C
 	}
 
 	@Override
-	public ConfiguredEventProcessor<CountParameter> onInvocation(DataProcessorInvocation sepa) {
+	public ConfiguredEventProcessor<CountParameter> onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 						"groupBy", true);
 

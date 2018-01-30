@@ -9,6 +9,7 @@ import org.streampipes.model.output.KeepOutputStrategy;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
@@ -44,7 +45,7 @@ public class ComposeController extends StandaloneEventProcessorDeclarerSingleton
 
 	@Override
 	public ConfiguredEventProcessor<ComposeParameters> onInvocation(DataProcessorInvocation
-																																																							 sepa) {
+                                                                          sepa, ProcessingElementParameterExtractor extractor) {
 
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 

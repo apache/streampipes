@@ -53,8 +53,7 @@ public class PerformanceElasticController extends FlinkDataSinkDeclarer<ElasticS
   }
 
   @Override
-  public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
-    DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
+  public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
     String timestampField = extractor.mappingPropertyValue("timestamp");
     String indexName = extractor.singleValueParameter("index-name", String.class);

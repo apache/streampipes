@@ -49,8 +49,7 @@ public class AbsenceController extends StandaloneEventProcessorDeclarerSingleton
   }
 
   @Override
-  public ConfiguredEventProcessor<AbsenceParameters> onInvocation(DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+  public ConfiguredEventProcessor<AbsenceParameters> onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
     List<String> selectProperties = new ArrayList<>();
     for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {

@@ -15,6 +15,7 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.StaticProperties;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
@@ -65,7 +66,7 @@ public class StreamStoppedController extends StandaloneEventProcessorDeclarerSin
 
 	@Override
 	public ConfiguredEventProcessor<StreamStoppedParameter> onInvocation
-					(DataProcessorInvocation sepa) {
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		String topic = SepaUtils.getFreeTextStaticPropertyValue(sepa, "topic");
 		StreamStoppedParameter staticParam = new StreamStoppedParameter(sepa, topic);
 

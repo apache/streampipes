@@ -52,8 +52,7 @@ public class GridEnrichmentController extends StandaloneEventProcessorDeclarerSi
 
   @Override
   public ConfiguredEventProcessor<GridEnrichmentParameter> onInvocation
-          (DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
     Integer cellSize =extractor.singleValueParameter("cellSize", Integer.class);
     Double startingLatitude = extractor.supportedOntologyPropertyValue("startingCell", Geo.lat, Double.class);

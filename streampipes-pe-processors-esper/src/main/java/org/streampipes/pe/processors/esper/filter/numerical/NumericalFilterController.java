@@ -36,8 +36,7 @@ public class NumericalFilterController extends StandaloneEventProcessorDeclarerS
 
 	@Override
 	public ConfiguredEventProcessor<NumericalFilterParameter> onInvocation
-					(DataProcessorInvocation sepa) {
-		ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+					(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
 		Double threshold = extractor.singleValueParameter("value", Double.class);
 		String stringOperation = extractor.selectedSingleValue("operation", String.class);

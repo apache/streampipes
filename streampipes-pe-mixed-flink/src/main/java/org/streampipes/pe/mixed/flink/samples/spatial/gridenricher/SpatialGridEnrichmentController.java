@@ -48,9 +48,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
-
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
+  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     Integer cellSize = extractor.singleValueParameter("cellsize", Integer.class);
     String latitudePropertyName = extractor.mappingPropertyValue("mapping-latitude");

@@ -40,8 +40,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
   }
 
   @Override
-  public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph) {
-    DataSinkParameterExtractor extractor = getExtractor(graph);
+  public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
     String subject = extractor.singleValueParameter(EMAIL_SUBJECT, String.class);

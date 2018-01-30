@@ -16,6 +16,7 @@ import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.enrich.math.Operation;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.XSD;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -91,7 +92,7 @@ public class BinaryMathController extends StandaloneEventProcessorDeclarerSingle
 
 	@Override
 	public ConfiguredEventProcessor<BinaryMathParameter> onInvocation
-					(DataProcessorInvocation sepa) {
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		String operation = SepaUtils.getOneOfProperty(sepa,
 						"operation");
 

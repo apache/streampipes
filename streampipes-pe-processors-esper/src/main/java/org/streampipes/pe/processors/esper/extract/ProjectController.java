@@ -6,6 +6,7 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
@@ -32,7 +33,7 @@ public class ProjectController extends StandaloneEventProcessorDeclarerSingleton
 
   @Override
   public ConfiguredEventProcessor<ProjectParameter>
-  onInvocation(DataProcessorInvocation sepa) {
+  onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     List<NestedPropertyMapping> projectProperties = new ArrayList<>();
 
     for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {

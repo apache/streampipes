@@ -8,6 +8,7 @@ import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.staticproperty.CollectionStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
@@ -30,7 +31,7 @@ public class AdvancedTextFilterController extends StandaloneEventProcessorDeclar
 
   @Override
   public ConfiguredEventProcessor<AdvancedTextFilterParameters>
-  onInvocation(DataProcessorInvocation sepa) {
+  onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     String operation = SepaUtils.getOneOfProperty(sepa, "operatoin");
     CollectionStaticProperty collection = SepaUtils.getStaticPropertyByInternalName(sepa, "collection", CollectionStaticProperty.class);
     String propertyName = SepaUtils.getMappingPropertyName(sepa, "text-mapping");

@@ -13,6 +13,7 @@ import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.PrimitivePropertyBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.stream.SchemaBuilder;
@@ -86,7 +87,7 @@ public class ShuttleTimeController extends StandaloneEventProcessorDeclarerSingl
 
 	@Override
 	public ConfiguredEventProcessor<ShuttleTimeParameters> onInvocation
-					(DataProcessorInvocation sepa) {
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		List<String> selectProperties = new ArrayList<>();
 		for (EventProperty p : sepa.getOutputStream().getEventSchema().getEventProperties()) {
 			selectProperties.add(p.getRuntimeName());

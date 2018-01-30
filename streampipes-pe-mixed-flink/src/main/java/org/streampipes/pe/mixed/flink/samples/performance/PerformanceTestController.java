@@ -49,8 +49,7 @@ public class PerformanceTestController extends FlinkDataProcessorDeclarer<Perfor
 
   @Override
   public FlinkDataProcessorRuntime<PerformanceTestParameters> getRuntime(
-          DataProcessorInvocation graph) {
-    ProcessingElementParameterExtractor extractor = getExtractor(graph);
+          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
     String timestampFieldName = extractor.singleValueParameter("timestamp-field-name", String.class);
     Integer scaleFactor = extractor.singleValueParameter("scale-factor", Integer.class);
     PerformanceTestParameters staticParam = new PerformanceTestParameters(

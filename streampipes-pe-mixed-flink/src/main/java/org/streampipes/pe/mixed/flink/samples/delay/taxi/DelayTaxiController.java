@@ -1,6 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.delay.taxi;
 
 import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -41,7 +42,7 @@ public class DelayTaxiController extends FlinkDataProcessorDeclarer<DelayTaxiPar
     }
 
     @Override
-    public FlinkDataProcessorRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<DelayTaxiParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
         String labelPropertyMapping = SepaUtils.getMappingPropertyName(graph, LABEL_PROPERTY_NAME);
 

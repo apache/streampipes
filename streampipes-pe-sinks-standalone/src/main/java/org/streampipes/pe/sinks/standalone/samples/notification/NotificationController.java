@@ -33,8 +33,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
 	}
 
 	@Override
-	public ConfiguredEventSink<NotificationParameters> onInvocation(DataSinkInvocation graph) {
-		DataSinkParameterExtractor extractor = getExtractor(graph);
+	public ConfiguredEventSink<NotificationParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
 		String title = extractor.singleValueParameter(TITLE_KEY, String.class);
 		String content = extractor.singleValueParameter(CONTENT_KEY, String.class);

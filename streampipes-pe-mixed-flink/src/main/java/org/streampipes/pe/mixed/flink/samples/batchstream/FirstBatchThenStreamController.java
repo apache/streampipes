@@ -1,5 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.batchstream;
 
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -36,7 +37,7 @@ public class FirstBatchThenStreamController extends FlinkDataProcessorDeclarer<F
 
 
     @Override
-    public FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<FirstBatchThenStreamParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
         FirstBatchThenStreamParameters params = new FirstBatchThenStreamParameters(graph);
 

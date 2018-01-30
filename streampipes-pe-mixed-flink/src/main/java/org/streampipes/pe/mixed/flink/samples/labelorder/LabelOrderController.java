@@ -1,5 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.labelorder;
 
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -37,7 +38,7 @@ public class LabelOrderController extends FlinkDataProcessorDeclarer<LabelOrderP
     }
 
     @Override
-    public FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<LabelOrderParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
         LabelOrderParameters params = new LabelOrderParameters(graph);
 

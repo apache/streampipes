@@ -5,6 +5,7 @@ import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.pe.sinks.standalone.config.ActionConfig;
 import org.streampipes.sdk.builder.DataSinkBuilder;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
@@ -27,7 +28,7 @@ public class DashboardController extends StandaloneEventSinkDeclarer<DashboardPa
     }
 
     @Override
-    public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph) {
+    public ConfiguredEventSink<DashboardParameters> onInvocation(DataSinkInvocation invocationGraph, DataSinkParameterExtractor extractor) {
          return new ConfiguredEventSink<>(new DashboardParameters(invocationGraph), Dashboard::new);
     }
 

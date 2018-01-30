@@ -16,6 +16,7 @@ import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -29,7 +30,7 @@ import java.util.List;
 public class MeetsController extends StandaloneEventProcessorDeclarerSingleton<MeetsParameters> {
 
 	@Override
-	public ConfiguredEventProcessor<MeetsParameters> onInvocation(DataProcessorInvocation graph) {
+	public ConfiguredEventProcessor<MeetsParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		return null;
 	}
 

@@ -42,8 +42,7 @@ public class MathController extends StandaloneEventProcessorDeclarerSingleton<Ma
   }
 
   @Override
-  public ConfiguredEventProcessor<MathParameter> onInvocation(DataProcessorInvocation sepa) {
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+  public ConfiguredEventProcessor<MathParameter> onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
     String operation = extractor.selectedSingleValue("operation", String.class);
     String leftOperand = extractor.mappingPropertyValue("leftOperand");

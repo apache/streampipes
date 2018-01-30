@@ -1,6 +1,7 @@
 package org.streampipes.wrapper.standalone.declarer;
 
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.wrapper.declarer.EventSinkDeclarer;
 import org.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.streampipes.wrapper.standalone.ConfiguredEventSink;
@@ -11,7 +12,7 @@ public abstract class StandaloneEventSinkDeclarerSingleton<B extends
         EventSinkBindingParams> extends EventSinkDeclarer<B, StandaloneEventSinkRuntime> {
 
   @Override
-  public StandaloneEventSinkRuntime getRuntime(DataSinkInvocation graph) {
+  public StandaloneEventSinkRuntime getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
     ConfiguredEventSink<B> configuredEngine = onInvocation(graph);
     StandaloneEventSinkRuntimeParams<B> runtimeParams = new StandaloneEventSinkRuntimeParams<>

@@ -6,6 +6,7 @@ import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.schema.EventPropertyList;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
@@ -50,7 +51,7 @@ public class DistributionController extends StandaloneEventProcessorDeclarerSing
 
   @Override
   public ConfiguredEventProcessor<DistributionParameters> onInvocation
-          (DataProcessorInvocation sepa) {
+          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
     int timeWindow = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(sepa,
             "batch-window"));
 

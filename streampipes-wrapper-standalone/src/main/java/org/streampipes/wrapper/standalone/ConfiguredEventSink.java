@@ -22,5 +22,7 @@ public class ConfiguredEventSink<B extends EventSinkBindingParams> {
   public Supplier<EventSink<B>> getEngineSupplier() {
     return engineSupplier;
   }
+
+
 }
 

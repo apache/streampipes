@@ -40,9 +40,7 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
 
 
   @Override
-  public ConfiguredEventSink<CouchDbParameters> onInvocation(DataSinkInvocation graph) {
-    DataSinkParameterExtractor extractor = getExtractor(graph);
-
+  public ConfiguredEventSink<CouchDbParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);
