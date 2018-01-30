@@ -1,23 +1,23 @@
 package org.streampipes.manager.execution.http;
 
+import org.lightcouch.DocumentConflictException;
+import org.streampipes.manager.execution.status.PipelineStatusManager;
+import org.streampipes.manager.execution.status.SepMonitoringManager;
+import org.streampipes.manager.util.TemporaryGraphStorage;
+import org.streampipes.model.base.InvocableStreamPipesEntity;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.client.pipeline.PipelineOperationStatus;
+import org.streampipes.model.client.pipeline.PipelineStatusMessage;
+import org.streampipes.model.client.pipeline.PipelineStatusMessageType;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.storage.management.StorageDispatcher;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.lightcouch.DocumentConflictException;
-
-import org.streampipes.manager.execution.status.PipelineStatusManager;
-import org.streampipes.manager.execution.status.SepMonitoringManager;
-import org.streampipes.manager.util.TemporaryGraphStorage;
-import org.streampipes.model.client.pipeline.PipelineOperationStatus;
-import org.streampipes.model.client.pipeline.PipelineStatusMessage;
-import org.streampipes.model.client.pipeline.PipelineStatusMessageType;
-import org.streampipes.model.base.InvocableStreamPipesEntity;
-import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.graph.DataSinkInvocation;
-import org.streampipes.manager.storage.StorageManager;
 
 public class PipelineExecutor {
 
@@ -69,7 +69,8 @@ public class PipelineExecutor {
 		
 		if (status.isSuccess())
 		{
-			if (visualize) StorageManager.INSTANCE.getVisualizationStorageApi().deleteVisualization(pipeline.getPipelineId());
+			if (visualize) StorageDispatcher.INSTANCE.getNoSqlStore().getVisualizationStorageApi().deleteVisualization(pipeline
+						.getPipelineId());
 			if (storeStatus) setPipelineStopped(pipeline);
 			
 			PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(), 
@@ -85,7 +86,7 @@ public class PipelineExecutor {
 		pipeline.setRunning(true);
 		pipeline.setStartedAt(new Date().getTime());
 		try {
-			StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+			getPipelineStorageApi().updatePipeline(pipeline);
 		} catch (DocumentConflictException dce)
 		{
 			//dce.printStackTrace();
@@ -94,12 +95,16 @@ public class PipelineExecutor {
 	
 	private void setPipelineStopped(Pipeline pipeline) {
 		pipeline.setRunning(false);
-		StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+		getPipelineStorageApi().updatePipeline(pipeline);
 	}
 	
 	private void storeInvocationGraphs(String pipelineId, List<InvocableStreamPipesEntity> graphs)
 	{
 		TemporaryGraphStorage.graphStorage.put(pipelineId, graphs);
+	}
+
+	private IPipelineStorage getPipelineStorageApi() {
+		return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
 	}
 
 }

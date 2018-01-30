@@ -1,17 +1,18 @@
 package org.streampipes.manager.monitoring.runtime;
 
+import org.streampipes.manager.operations.Operations;
+import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.Pipeline;
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.graph.DataSourceDescription;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.storage.management.StorageManager;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.streampipes.manager.operations.Operations;
-import org.streampipes.model.client.pipeline.Pipeline;
-
-import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.graph.DataSourceDescription;
-import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.manager.storage.StorageManager;
 
 public class PipelineStreamReplacer {
 
@@ -24,10 +25,10 @@ public class PipelineStreamReplacer {
 	}
 	
 	public boolean replaceStream() {
-		Pipeline currentPipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+		Pipeline currentPipeline = getPipelineStorage().getPipeline(pipelineId);
 		String streamDomId = currentPipeline.getStreams().get(0).getDOM();
 		Operations.stopPipeline(currentPipeline);
-		currentPipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+		currentPipeline = getPipelineStorage().getPipeline(pipelineId);
 		try {
 			streamToReplace.setDOM(streamDomId);
 			currentPipeline.setStreams(Arrays.asList(streamToReplace));
@@ -53,15 +54,19 @@ public class PipelineStreamReplacer {
 			currentPipeline.setPipelineId(newPipelineId);
 			currentPipeline.setRev(null);
 			currentPipeline.setName(currentPipeline.getName() +" (Replacement)");
-			StorageManager.INSTANCE.getPipelineStorageAPI().storePipeline(currentPipeline);
-			Operations.startPipeline(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(newPipelineId));
+			getPipelineStorage().storePipeline(currentPipeline);
+			Operations.startPipeline(getPipelineStorage().getPipeline(newPipelineId));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			Operations.startPipeline(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId));
+			Operations.startPipeline(getPipelineStorage().getPipeline(pipelineId));
 			return false;
 		}
 		
+	}
+
+	private IPipelineStorage getPipelineStorage() {
+		return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
 	}
 
 	private String getElementId(String humanDescription) throws Exception {

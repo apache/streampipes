@@ -17,7 +17,7 @@ import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.serializers.json.GsonSerializer;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

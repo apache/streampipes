@@ -1,7 +1,7 @@
 package org.streampipes.rest.impl;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.ontology.Context;
 import org.streampipes.rest.api.IOntologyContext;

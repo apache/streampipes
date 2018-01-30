@@ -10,11 +10,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-storage-rdf4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.streampipes</groupId>
-			<artifactId>streampipes-storage-couchdb</artifactId>
+			<artifactId>streampipes-storage-management</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.streampipes</groupId>

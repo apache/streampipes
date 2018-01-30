@@ -1,13 +1,12 @@
 package org.streampipes.manager.monitoring.job;
 
-import java.util.Date;
-import java.util.List;
-
 import com.google.gson.Gson;
-
 import org.streampipes.model.client.monitoring.JobReport;
 import org.streampipes.model.client.monitoring.TaskReport;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageDispatcher;
+
+import java.util.Date;
+import java.util.List;
 
 public class MonitoringJobExecutor implements Runnable {
 
@@ -22,7 +21,7 @@ public class MonitoringJobExecutor implements Runnable {
 		List<TaskReport> reports = job.performJobExecution();
 		reports.forEach(r -> System.out.println(r.toString()));
 		JobReport jobReport = new JobReport(job.getElementId(), new Date(), reports);
-		StorageManager.INSTANCE.getMonitoringDataStorageApi().storeJobReport(jobReport);
+		StorageDispatcher.INSTANCE.getNoSqlStore().getMonitoringDataStorageApi().storeJobReport(jobReport);
 		System.out.println(new Gson().toJson(jobReport));
 	}
 	

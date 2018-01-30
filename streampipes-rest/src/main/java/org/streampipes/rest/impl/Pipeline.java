@@ -1,6 +1,12 @@
 package org.streampipes.rest.impl;
 
 import com.google.gson.JsonSyntaxException;
+import org.streampipes.commons.exceptions.NoMatchingFormatException;
+import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
+import org.streampipes.commons.exceptions.NoMatchingProtocolException;
+import org.streampipes.commons.exceptions.NoMatchingSchemaException;
+import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
+import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.streampipes.manager.execution.status.PipelineStatusManager;
 import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.exception.InvalidConnectionException;
@@ -11,19 +17,19 @@ import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.model.client.pipeline.PipelineOperationStatus;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IPipeline;
-import org.streampipes.manager.storage.StorageManager;
-import org.streampipes.commons.exceptions.NoMatchingFormatException;
-import org.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
-import org.streampipes.commons.exceptions.NoMatchingProtocolException;
-import org.streampipes.commons.exceptions.NoMatchingSchemaException;
-import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
-import org.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.UUID;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/v2/users/{username}/pipelines")
 public class Pipeline extends AbstractRestInterface implements IPipeline {
@@ -87,7 +93,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
     public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String elementUri) {
-        StorageManager.INSTANCE.getPipelineStorageAPI().deletePipeline(elementUri);
+        getPipelineStorage().deletePipeline(elementUri);
         return statusMessage(Notifications.success("Pipeline deleted"));
     }
 
@@ -102,7 +108,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @GsonWithIds
     @Override
     public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
-        return ok(StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId));
+        return ok(getPipelineStorage().getPipeline(pipelineId));
     }
 
     @Path("/{pipelineId}/start")
@@ -205,7 +211,7 @@ public class Pipeline extends AbstractRestInterface implements IPipeline {
     @GsonWithIds
     @Override
     public Response overwritePipeline(@PathParam("username") String username, org.streampipes.model.client.pipeline.Pipeline pipeline) {
-        StorageManager.INSTANCE.getPipelineStorageAPI().updatePipeline(pipeline);
+        getPipelineStorage().updatePipeline(pipeline);
         return statusMessage(Notifications.success("Pipeline modified"));
     }
 

@@ -3,6 +3,7 @@ package org.streampipes.manager.storage;
 import org.streampipes.model.client.user.RegistrationData;
 import org.streampipes.model.client.user.Role;
 import org.streampipes.model.client.user.User;
+import org.streampipes.storage.management.StorageDispatcher;
 import org.streampipes.user.management.util.PasswordUtil;
 
 import java.security.NoSuchAlgorithmException;
@@ -17,11 +18,16 @@ public class UserManagementService {
     try {
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
       user.setPassword(encryptedPassword);
-      StorageManager.INSTANCE.getUserStorageAPI().storeUser(user);
+      StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(user);
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       return false;
     }
 
     return true;
   }
+
+  public static UserService getUserService() {
+    return new UserService(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+  }
+
 }

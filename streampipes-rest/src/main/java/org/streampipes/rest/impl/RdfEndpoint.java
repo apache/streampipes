@@ -5,7 +5,7 @@ import org.streampipes.manager.operations.Operations;
 import org.streampipes.model.client.endpoint.RdfEndpointItem;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IRdfEndpoint;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.api.IRdfEndpointStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,8 +40,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @GsonWithIds
   @Override
   public Response addRdfEndpoint(org.streampipes.model.client.endpoint.RdfEndpoint rdfEndpoint) {
-    StorageManager.INSTANCE
-            .getRdfEndpointStorage()
+    getRdfEndpointStorage()
             .addRdfEndpoint(rdfEndpoint);
 
     return Response.status(Response.Status.OK).build();
@@ -54,8 +53,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
   @GsonWithIds
   @Override
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
-    StorageManager.INSTANCE
-            .getRdfEndpointStorage()
+    getRdfEndpointStorage()
             .removeRdfEndpoint(rdfEndpointId);
 
     return Response.status(Response.Status.OK).build();
@@ -84,9 +82,7 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
               new org.streampipes.model.client.endpoint.RdfEndpoint(endpoint);
       servicerdRdfEndpoints.add(rdfEndpoint);
     }
-    List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = StorageManager
-            .INSTANCE
-            .getRdfEndpointStorage()
+    List<org.streampipes.model.client.endpoint.RdfEndpoint> databasedRdfEndpoints = getRdfEndpointStorage()
             .getRdfEndpoints();
 
     List<org.streampipes.model.client.endpoint.RdfEndpoint> concatList =
@@ -109,5 +105,9 @@ public class RdfEndpoint extends AbstractRestInterface implements IRdfEndpoint {
     elementUris.addAll(getUserService().getOwnActionUris(username));
     elementUris.addAll(getUserService().getOwnSepaUris(username));
     return elementUris;
+  }
+
+  private IRdfEndpointStorage getRdfEndpointStorage() {
+    return getNoSqlStorage().getRdfEndpointStorage();
   }
 }

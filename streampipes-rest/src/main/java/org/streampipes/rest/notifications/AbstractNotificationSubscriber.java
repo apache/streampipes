@@ -8,7 +8,7 @@ import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.Notification;
 import org.streampipes.model.grounding.JmsTransportProtocol;
 import org.streampipes.model.grounding.SimpleTopicDefinition;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.text.SimpleDateFormat;
 
@@ -46,8 +46,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
     }
 
     protected void storeNotification(Notification message) {
-        StorageManager
-                .INSTANCE
+        StorageDispatcher.INSTANCE.getNoSqlStore()
                 .getNotificationStorageApi()
                 .addNotification(message);
     }

@@ -35,7 +35,7 @@ import org.streampipes.model.staticproperty.MappingProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -232,7 +232,7 @@ public class PipelineVerificationHandler {
             }
 
             String url = property.getRemoteUrl() + "streampipes/models?username=" + username + "&analyticsOperation=" + operation;
-            Response res = Request.Get(url).useExpectContinue().setHeader("Content-Type", "application/json")
+            Response res = Request.Get(url).useExpectContinue().addHeader("Content-Type", "application/json")
                     .version(HttpVersion.HTTP_1_1)
                     .execute();
 
@@ -334,7 +334,7 @@ public class PipelineVerificationHandler {
             sourceId = ((InvocableStreamPipesEntity) sepaElement).getBelongsTo();
         }
         Connection connection = new Connection(sourceId, rdfRootElement.getBelongsTo());
-        StorageManager.INSTANCE.getConnectionStorageApi().addConnection(connection);
+        StorageDispatcher.INSTANCE.getNoSqlStore().getConnectionStorageApi().addConnection(connection);
         return this;
     }
 

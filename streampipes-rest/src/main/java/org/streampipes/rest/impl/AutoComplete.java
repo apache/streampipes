@@ -17,7 +17,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.streampipes.model.client.messages.AutocompleteItem;
 import org.streampipes.model.client.messages.AutocompleteResult;
 import org.streampipes.model.client.ontology.OntologyQuery;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 import org.streampipes.storage.rdf4j.ontology.QueryExecutor;
 import org.streampipes.storage.rdf4j.sparql.QueryBuilder;
 

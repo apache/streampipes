@@ -10,7 +10,7 @@ import org.eclipse.rdf4j.sail.inferencer.fc.config.ForwardChainingRDFSInferencer
 import org.eclipse.rdf4j.sail.memory.config.MemoryStoreConfig;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 import org.streampipes.storage.rdf4j.util.SesameConfig;
 
 import java.util.ArrayList;

@@ -4,8 +4,10 @@ import org.lightcouch.CouchDbClient;
 import org.streampipes.commons.exceptions.ElementNotFoundException;
 import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.client.user.User;
-import org.streampipes.storage.couchdb.impl.UserStorage;
+import org.streampipes.storage.api.INoSqlStorage;
+import org.streampipes.storage.api.IUserStorage;
 import org.streampipes.storage.couchdb.utils.Utils;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class UserService {
 
-	private UserStorage userStorage;
+	private IUserStorage userStorage;
 	
-	public UserService(UserStorage userStorage)
+	public UserService(IUserStorage userStorage)
 	{
 		this.userStorage = userStorage;
 	}
@@ -32,12 +34,17 @@ public class UserService {
 	
 	public List<Pipeline> getOwnPipelines(String email)
 	{
-		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getCreatedByUser().equals(email)).collect(Collectors.toList());
+		return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p
+          .getCreatedByUser()
+          .equals(email))
+            .collect(Collectors.toList());
 	}
 	
 	public Pipeline getPipeline(String username, String pipelineId) throws ElementNotFoundException
 	{
-		return StorageManager.INSTANCE.getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getPipelineId().equals(pipelineId)).findFirst().orElseThrow(ElementNotFoundException::new);
+		return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines().stream().filter(p -> p.getPipelineId
+          ().equals
+            (pipelineId)).findFirst().orElseThrow(ElementNotFoundException::new);
 	}	
 
     /**
@@ -51,7 +58,7 @@ public class UserService {
 //        User user = userStorage.getUser(username);
 //        user.addOwnPipeline(pipeline);
 //        userStorage.updateUser(user);
-        StorageManager.INSTANCE.getPipelineStorageAPI().storePipeline(pipeline);
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().storePipeline(pipeline);
     }
 
     public void addOwnSource(String username, String elementId, boolean publicElement) {
@@ -243,8 +250,8 @@ public class UserService {
     	return userStorage.getUser(username).getPreferredSources();
     }
 
-    private UserStorage userStorage() {
-        return StorageManager.INSTANCE.getUserStorageAPI();
+    private IUserStorage userStorage() {
+        return getStorageManager().getUserStorageAPI();
     }
     
     /**
@@ -255,10 +262,9 @@ public class UserService {
    public boolean checkUser(String username) {
       return userStorage.checkUser(username);
    }
-   
-   public static void main(String[] args)
-   {
-	   System.out.println(new UserService(StorageManager.INSTANCE.getUserStorageAPI()).getAvailableActionUris("riemer@fzi.de"));
+
+   private INoSqlStorage getStorageManager() {
+     return StorageDispatcher.INSTANCE.getNoSqlStore();
    }
 
 }

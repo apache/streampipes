@@ -5,9 +5,9 @@ import org.streampipes.manager.data.PipelineGraphBuilder;
 import org.streampipes.manager.matching.InvocationGraphBuilder;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.client.pipeline.Pipeline;
-import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class PipelineStorageService {
         pipeline.setSepas(sepas);
         pipeline.setActions(secs);
 
-        StorageManager.INSTANCE.getPipelineStorageAPI().store(pipeline);
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().store(pipeline);
     }
 
     private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {

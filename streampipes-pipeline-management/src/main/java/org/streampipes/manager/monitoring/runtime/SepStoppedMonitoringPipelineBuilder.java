@@ -19,7 +19,7 @@ import org.streampipes.model.staticproperty.DomainStaticProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.staticproperty.SupportedProperty;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

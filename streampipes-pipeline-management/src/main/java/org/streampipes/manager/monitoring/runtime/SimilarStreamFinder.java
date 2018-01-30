@@ -1,14 +1,15 @@
 package org.streampipes.manager.monitoring.runtime;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.SpDataStream;
+import org.streampipes.model.client.pipeline.Pipeline;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.model.quality.MeasurementCapability;
 import org.streampipes.model.quality.MeasurementObject;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.storage.management.StorageManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimilarStreamFinder {
 
@@ -17,7 +18,7 @@ public class SimilarStreamFinder {
 	private List<SpDataStream> similarStreams;
 	
 	public SimilarStreamFinder(String pipelineId) {
-		this.pipeline = StorageManager.INSTANCE.getPipelineStorageAPI().getPipeline(pipelineId);
+		this.pipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipelineId);
 		this.similarStreams = new ArrayList<>();
 	}
 	

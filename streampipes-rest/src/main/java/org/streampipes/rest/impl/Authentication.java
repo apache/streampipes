@@ -5,6 +5,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
@@ -16,8 +17,6 @@ import org.streampipes.model.client.user.ShiroAuthenticationResponse;
 import org.streampipes.model.client.user.ShiroAuthenticationResponseFactory;
 import org.streampipes.rest.annotation.GsonWithIds;
 import org.streampipes.rest.api.IAuthentication;
-import org.streampipes.manager.storage.StorageManager;
-import org.streampipes.manager.storage.UserManagementService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,9 +69,9 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
     @Override
     public Response doRegister(RegistrationData data) {
 
-        Set<Role> roles = new HashSet<Role>();
+        Set<Role> roles = new HashSet<>();
         roles.add(data.getRole());
-        if (StorageManager.INSTANCE.getUserStorageAPI().emailExists(data.getEmail())) {
+        if (getUserStorage().emailExists(data.getEmail())) {
             return ok(Notifications.error("This email address already exists. Please choose another address."));
         } else {
             new UserManagementService().registerUser(data, roles);
@@ -89,7 +88,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
 
         if (BackendConfig.INSTANCE.isConfigured()) {
             if (SecurityUtils.getSubject().isAuthenticated()) {
-                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager.INSTANCE.getUserStorageAPI().getUser((String) SecurityUtils.getSubject().getPrincipal()));
+                ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String)
+                        SecurityUtils.getSubject().getPrincipal()));
                 System.out.println(SecurityUtils.getSubject().getSession().getId().toString());
                 return ok(response);
             }
@@ -107,8 +107,8 @@ public class Authentication extends AbstractRestInterface implements IAuthentica
         shiroToken.setRememberMe(true);
 
         subject.login(shiroToken);
-        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(StorageManager
-                .INSTANCE.getUserStorageAPI().getUser((String) subject.getPrincipal()));
+        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory.create(getUserStorage().getUser((String) subject
+                .getPrincipal()));
         response.setToken(subject.getSession().getId().toString());
 
         return response;

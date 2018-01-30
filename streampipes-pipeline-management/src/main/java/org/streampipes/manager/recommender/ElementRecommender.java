@@ -5,6 +5,7 @@ import org.streampipes.commons.Utils;
 import org.streampipes.commons.exceptions.NoSepaInPipelineException;
 import org.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
 import org.streampipes.manager.matching.PipelineVerificationHandler;
+import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.manager.util.PipelineVerificationUtils;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.base.NamedStreamPipesEntity;
@@ -15,7 +16,9 @@ import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.api.INoSqlStorage;
+import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.storage.management.StorageManager;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -55,8 +58,7 @@ public class ElementRecommender {
         else {
             recommendationMessage
                     .setRecommendedElements(calculateWeights(
-                            filterOldElements(StorageManager
-                                    .INSTANCE
+                            filterOldElements(getNoSqlStorage()
                                     .getConnectionStorageApi()
                                     .getRecommendedElements(rootNodeElementId))));
             return recommendationMessage;
@@ -164,7 +166,7 @@ public class ElementRecommender {
     }
 
     private List<DataProcessorDescription> getAllSepas() {
-        List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnSepaUris(email);
+        List<String> userObjects = UserManagementService.getUserService().getOwnSepaUris(email);
         return StorageManager
                 .INSTANCE
                 .getStorageAPI()
@@ -175,7 +177,7 @@ public class ElementRecommender {
     }
 
     private List<DataSinkDescription> getAllSecs() {
-        List<String> userObjects = StorageManager.INSTANCE.getUserService().getOwnActionUris(email);
+        List<String> userObjects = UserManagementService.getUserService().getOwnActionUris(email);
         return StorageManager
                 .INSTANCE
                 .getStorageAPI()
@@ -194,5 +196,9 @@ public class ElementRecommender {
 
     private InvocableStreamPipesEntity getRootNode() throws NoSepaInPipelineException {
         return PipelineVerificationUtils.getRootNode(pipeline);
+    }
+
+    private INoSqlStorage getNoSqlStorage() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore();
     }
 }

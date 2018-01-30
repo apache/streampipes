@@ -28,6 +28,7 @@ import org.streampipes.serializers.jsonld.CustomAnnotationProvider;
 import org.streampipes.storage.api.IBackgroundKnowledgeStorage;
 import org.streampipes.storage.api.IOntologyContextStorage;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.storage.api.ITripleStorage;
 import org.streampipes.storage.rdf4j.impl.BackgroundKnowledgeStorageImpl;
 import org.streampipes.storage.rdf4j.impl.ContextStorageImpl;
 import org.streampipes.storage.rdf4j.impl.InMemoryStorage;
@@ -40,7 +41,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.spi.PersistenceProvider;
 
-public enum Rdf4JStorageManager {
+public enum Rdf4JStorageManager implements ITripleStorage {
 
   INSTANCE;
 
@@ -118,6 +119,7 @@ public enum Rdf4JStorageManager {
 
   }
 
+  @Override
   public IBackgroundKnowledgeStorage getBackgroundKnowledgeStorage() {
     if (backgroundKnowledgeStorage == null) {
       initSesameDatabases();
@@ -125,10 +127,12 @@ public enum Rdf4JStorageManager {
     return this.backgroundKnowledgeStorage;
   }
 
+  @Override
   public Repository getRepository() {
     return bkrepo;
   }
 
+  @Override
   public IPipelineElementDescriptionStorage getStorageAPI() {
     if (backgroundKnowledgeStorage == null) {
       initSesameDatabases();
@@ -141,14 +145,17 @@ public enum Rdf4JStorageManager {
 
   }
 
+  @Override
   public EntityManager getEntityManager() {
     return storageManager;
   }
 
+  @Override
   public IOntologyContextStorage getContextStorage() {
     return new ContextStorageImpl(bkrepo);
   }
 
+  @Override
   public IPipelineElementDescriptionStorage getSesameStorage() {
     return new SesameStorageRequests();
   }

@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.exceptions.SepaParseException;
+import org.streampipes.manager.storage.UserManagementService;
 import org.streampipes.manager.verification.messages.VerificationError;
 import org.streampipes.manager.verification.messages.VerificationResult;
 import org.streampipes.manager.verification.structure.GeneralVerifier;
@@ -16,7 +17,7 @@ import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
 import org.streampipes.serializers.jsonld.JsonLdTransformer;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 import org.streampipes.manager.storage.UserService;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 	protected List<Verifier> validators;
 	
 	protected IPipelineElementDescriptionStorage storageApi = StorageManager.INSTANCE.getStorageAPI();
-	protected UserService userService = StorageManager.INSTANCE.getUserService();
+	protected UserService userService = UserManagementService.getUserService();
 	
 	public ElementVerifier(String graphData, Class<T> elementClass)
 	{

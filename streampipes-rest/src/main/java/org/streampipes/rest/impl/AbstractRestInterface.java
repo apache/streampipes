@@ -9,20 +9,26 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.rio.UnsupportedRDFormatException;
 import org.streampipes.commons.Utils;
 import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
+import org.streampipes.manager.storage.UserManagementService;
+import org.streampipes.manager.storage.UserService;
 import org.streampipes.model.base.NamedStreamPipesEntity;
 import org.streampipes.model.client.messages.ErrorMessage;
 import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.SuccessMessage;
-import org.streampipes.serializers.jsonld.JsonLdTransformer;
-import org.streampipes.serializers.json.GsonSerializer;
 import org.streampipes.rest.http.HttpJsonParser;
-import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.serializers.json.GsonSerializer;
+import org.streampipes.serializers.jsonld.JsonLdTransformer;
+import org.streampipes.storage.api.INoSqlStorage;
+import org.streampipes.storage.api.INotificationStorage;
 import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.streampipes.manager.storage.StorageManager;
-import org.streampipes.storage.couchdb.impl.UserStorage;
-import org.streampipes.manager.storage.UserService;
+import org.streampipes.storage.api.IPipelineStorage;
+import org.streampipes.storage.api.ITripleStorage;
+import org.streampipes.storage.api.IUserStorage;
+import org.streampipes.storage.api.IVisualizationStorage;
+import org.streampipes.storage.management.StorageDispatcher;
+import org.streampipes.storage.management.StorageManager;
 import org.streampipes.storage.rdf4j.util.Transformer;
 
 import java.io.IOException;
@@ -50,15 +56,31 @@ public abstract class AbstractRestInterface {
 	}
 
 	protected IPipelineStorage getPipelineStorage() {
-		return StorageManager.INSTANCE.getPipelineStorageAPI();
+		return getNoSqlStorage().getPipelineStorageAPI();
 	}
 
-	protected UserStorage getUserStorage() {
-		return StorageManager.INSTANCE.getUserStorageAPI();
+	protected IUserStorage getUserStorage() {
+		return getNoSqlStorage().getUserStorageAPI();
 	}
 
 	protected UserService getUserService() {
-		return StorageManager.INSTANCE.getUserService();
+		return UserManagementService.getUserService();
+	}
+
+	protected IVisualizationStorage getVisualizationStorage() {
+		return getNoSqlStorage().getVisualizationStorageApi();
+	}
+
+	protected INotificationStorage getNotificationStorage() {
+		return getNoSqlStorage().getNotificationStorageApi();
+	}
+
+	protected INoSqlStorage getNoSqlStorage() {
+		return StorageDispatcher.INSTANCE.getNoSqlStore();
+	}
+
+	protected ITripleStorage getTripleStorage() {
+		return StorageDispatcher.INSTANCE.getTripleStore();
 	}
 	
 	protected String parseURIContent(String payload) throws URISyntaxException, ClientProtocolException, IOException

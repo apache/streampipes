@@ -4,7 +4,7 @@ import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.model.client.user.Role;
 import org.streampipes.model.client.user.User;
-import org.streampipes.manager.storage.StorageManager;
+import org.streampipes.storage.management.StorageDispatcher;
 import org.streampipes.user.management.util.PasswordUtil;
 
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +33,7 @@ public class UserRegistrationInstallationStep implements InstallationStep {
 
 		try {
 			String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
-			StorageManager.INSTANCE.getUserStorageAPI().storeUser(new User(adminEmail,
+			StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(new User(adminEmail,
 							encryptedPassword, roles));
 			return Arrays.asList(Notifications.success("Creating admin user..."));
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
