@@ -266,6 +266,16 @@
             </dependency>
             <dependency>
                 <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-wrapper-spark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
+                <artifactId>streampipes-pe-mixed-spark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.streampipes</groupId>
                 <artifactId>streampipes-sources</artifactId>
                 <version>${project.version}</version>
             </dependency>
