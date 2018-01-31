@@ -13,7 +13,7 @@ export class MyElementsCtrl {
                 type: 'source'
             },
             {
-                title: 'Processing Elements',
+                title: 'Data Processors',
                 type: 'sepa'
             },
             {
