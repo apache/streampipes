@@ -9,7 +9,7 @@ export default function MyElementsCtrl($scope, restApi, $mdToast, $mdDialog) {
             type: 'source'
         },
         {
-            title: 'Data Processors',
+            title: 'Processing Elements',
             type: 'sepa'
         },
         {
