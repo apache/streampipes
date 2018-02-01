@@ -36,10 +36,8 @@ public class ConfigurableTimestampController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<ConfigurableTimestampParameters> getRuntime(
-          DataProcessorInvocation graph) {
-
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
+  public FlinkDataProcessorRuntime<ConfigurableTimestampParameters> getRuntime(
+          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String timestampName = extractor.mappingPropertyValue("timestamp_name");
 

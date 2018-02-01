@@ -39,6 +39,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(ApplicationLink.class);
         apiClasses.add(User.class);
         apiClasses.add(ConsulConfig.class);
+        apiClasses.add(DataStream.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);

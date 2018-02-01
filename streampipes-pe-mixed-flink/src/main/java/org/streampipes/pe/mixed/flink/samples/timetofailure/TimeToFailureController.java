@@ -1,6 +1,7 @@
 package org.streampipes.pe.mixed.flink.samples.timetofailure;
 
 import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -78,7 +79,7 @@ public class TimeToFailureController extends FlinkDataProcessorDeclarer<TimeToFa
     }
 
     @Override
-    protected FlinkDataProcessorRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph) {
+    public FlinkDataProcessorRuntime<TimeToFailureParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
         String healthIndexMapping = SepaUtils.getMappingPropertyName(graph, healthIndexMappingName);
         Integer mtbfValue = Integer.parseInt(SepaUtils.getFreeTextStaticPropertyValue(graph, mtbf));
 

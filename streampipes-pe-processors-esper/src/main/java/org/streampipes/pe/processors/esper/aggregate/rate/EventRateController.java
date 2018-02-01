@@ -11,8 +11,7 @@ import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 public class EventRateController extends StandaloneEventProcessorDeclarerSingleton<EventRateParameter> {
@@ -35,16 +34,16 @@ public class EventRateController extends StandaloneEventProcessorDeclarerSinglet
 	}
 
 	@Override
-	public ConfiguredEventProcessor<EventRateParameter, EventProcessor<EventRateParameter>> onInvocation(DataProcessorInvocation
-																																																								 sepa) {
-		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+	public ConfiguredEventProcessor<EventRateParameter> onInvocation(DataProcessorInvocation
+                                                                           sepa, ProcessingElementParameterExtractor extractor) {
 
 		Integer avgRate = extractor.singleValueParameter("rate", Integer.class);
 		Integer outputRate = extractor.singleValueParameter("output", Integer.class);
 
 		String topicPrefix = "topic://";
 		EventRateParameter staticParam = new EventRateParameter(sepa, avgRate, outputRate
-						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicName());
+						, topicPrefix + sepa.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
+						.getActualTopicName());
 
 		return new ConfiguredEventProcessor<>(staticParam, EventRate::new);
 	}

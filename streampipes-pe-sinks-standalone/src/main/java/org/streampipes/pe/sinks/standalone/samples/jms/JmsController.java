@@ -11,8 +11,7 @@ import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OntologyProperties;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
@@ -40,8 +39,7 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
 	}
 
 	@Override
-	public ConfiguredEventSink<JmsParameters, EventSink<JmsParameters>> onInvocation(DataSinkInvocation graph) {
-		DataSinkParameterExtractor extractor = DataSinkParameterExtractor.from(graph);
+	public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
 
 		String topic = extractor.singleValueParameter(TOPIC_KEY,
 						String.class);

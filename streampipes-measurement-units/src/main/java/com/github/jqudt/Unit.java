@@ -4,9 +4,10 @@
  */
 package com.github.jqudt;
 
+import java.io.Serializable;
 import java.net.URI;
 
-public class Unit {
+public class Unit implements Serializable{
 
 	private URI resource;
 	private String label;

@@ -17,7 +17,8 @@ public class ProcessingElementParameterExtractor extends AbstractParameterExtrac
             .getOutputStream()
             .getEventGrounding()
             .getTransportProtocol()
-            .getTopicName();
+            .getTopicDefinition()
+            .getActualTopicName();
   }
 
 }

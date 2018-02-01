@@ -24,7 +24,7 @@ public class FileSinkProgram extends FlinkDataSinkRuntime<FileSinkParameters> im
     public void getSink(DataStream<Map<String, Object>>... convertedStream) {
         RollingSink sink = new RollingSink<String>("./");
         sink.setBucketer(new DateTimeBucketer("yyyy-MM-dd--HHmm"));
-        sink.setWriter(new CsvWriter());
+        //sink.setWriter(new CsvWriter());
         sink.setBatchSize(1024 * 1024 * 400); // this is 400 MB,
         convertedStream[0].addSink(sink);
     }

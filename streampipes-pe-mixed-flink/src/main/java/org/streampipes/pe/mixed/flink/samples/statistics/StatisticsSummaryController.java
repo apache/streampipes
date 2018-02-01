@@ -1,5 +1,6 @@
 package org.streampipes.pe.mixed.flink.samples.statistics;
 
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
@@ -49,7 +50,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
     String listPropertyMapping = SepaUtils.getMappingPropertyName(graph, listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMapping);

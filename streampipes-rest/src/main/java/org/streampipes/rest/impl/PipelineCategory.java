@@ -1,5 +1,8 @@
 package org.streampipes.rest.impl;
 
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.storage.api.IPipelineCategoryStorage;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,27 +12,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.storage.controller.StorageManager;
-
 @Path("/v2/users/{username}/pipelinecategories")
 public class PipelineCategory extends AbstractRestInterface {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCategories(@PathParam("username") String username) {
-		return ok(StorageManager
-				.INSTANCE
-				.getPipelineCategoryStorageApi()
+		return ok(getPipelineCategoryStorage()
 				.getPipelineCategories());
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addCategory(@PathParam("username") String username, org.streampipes.model.client.pipeline.PipelineCategory pipelineCategory) {
-		boolean success = StorageManager
-				.INSTANCE
-				.getPipelineCategoryStorageApi()
+		boolean success = getPipelineCategoryStorage()
 				.addPipelineCategory(pipelineCategory);
 		if (success) return ok(Notifications.success("Category successfully stored. "));
 		else return ok(Notifications.error("Could not create category."));
@@ -39,11 +35,13 @@ public class PipelineCategory extends AbstractRestInterface {
 	@Path("/{categoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response removeCategory(@PathParam("username") String username, @PathParam("categoryId") String categoryId) {
-		boolean success = StorageManager
-				.INSTANCE
-				.getPipelineCategoryStorageApi()
+		boolean success = getPipelineCategoryStorage()
 				.deletePipelineCategory(categoryId);
 		if (success) return ok(Notifications.success("Category successfully deleted. "));
 		else return ok(Notifications.error("Could not delete category."));
+	}
+
+	private IPipelineCategoryStorage getPipelineCategoryStorage() {
+		return getNoSqlStorage().getPipelineCategoryStorageApi();
 	}
 }

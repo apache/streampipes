@@ -83,7 +83,7 @@ public class LabelOrderProgram extends FlinkDataProcessorRuntime<LabelOrderParam
 //                    }
 //                })
 //                .keyBy(0)
-                .flatMap(new LabelOrder(this.params));
+                .flatMap(new LabelOrder(this.bindingParams));
 
 
         result.print();

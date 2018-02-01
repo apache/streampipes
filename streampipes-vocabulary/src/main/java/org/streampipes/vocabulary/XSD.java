@@ -118,7 +118,7 @@ public class XSD {
 	
 	public static final URI _negativeInteger = toURI("negativeInteger");
 	
-	public static final URI _long = toURI("loxs:booleanng");
+	public static final URI _long = toURI("long");
 
 
 	/**

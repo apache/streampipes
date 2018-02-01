@@ -20,15 +20,13 @@ public abstract class EventProcessorBindingParams extends
 
 	private final Map<String, Object> outEventType;
 	
-	private final static String topicPrefix = "topic://";
-	
 	public EventProcessorBindingParams(DataProcessorInvocation graph)
 	{
 		super(new DataProcessorInvocation(graph));
 		this.outEventType = SchemaUtils.toRuntimeMap(graph.getOutputStream().getEventSchema().getEventProperties());
 		outputStream = graph.getOutputStream();
 		EventGrounding outputGrounding = outputStream.getEventGrounding();
-		outName = outputGrounding.getTransportProtocol().getTopicName();
+		outName = outputGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 		
 	}
 

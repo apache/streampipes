@@ -43,7 +43,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
-      consumer = session.createConsumer(session.createTopic(protocolSettings.getTopicName()));
+      consumer = session.createConsumer(session.createTopic(protocolSettings.getTopicDefinition().getActualTopicName()));
       initListener();
       this.connected = true;
     } catch (JMSException e) {

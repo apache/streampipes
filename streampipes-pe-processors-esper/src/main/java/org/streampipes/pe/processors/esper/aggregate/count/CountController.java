@@ -2,19 +2,19 @@ package org.streampipes.pe.processors.esper.aggregate.count;
 
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.util.SepaUtils;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class CountController extends StandaloneEventProcessorDeclarerSingleton<C
 	}
 
 	@Override
-	public ConfiguredEventProcessor<CountParameter, EventProcessor<CountParameter>> onInvocation(DataProcessorInvocation sepa) {
+	public ConfiguredEventProcessor<CountParameter> onInvocation(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 		List<String> groupBy = SepaUtils.getMultipleMappingPropertyNames(sepa,
 						"groupBy", true);
 

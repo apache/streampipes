@@ -1,22 +1,23 @@
 package org.streampipes.pe.mixed.flink.samples.enrich.timestamp;
 
-import org.streampipes.sdk.helpers.Labels;
-import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
+import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.vocabulary.SO;
+import org.streampipes.pe.mixed.flink.FlinkUtils;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
 import org.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.sdk.helpers.EpProperties;
 import org.streampipes.sdk.helpers.EpRequirements;
+import org.streampipes.sdk.helpers.Labels;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
+import org.streampipes.vocabulary.SO;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,8 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<TimestampParameters> getRuntime(
-          DataProcessorInvocation graph) {
-    System.out.println(FlinkConfig.JAR_FILE);
+  public FlinkDataProcessorRuntime<TimestampParameters> getRuntime(
+          DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
     AppendOutputStrategy strategy = (AppendOutputStrategy) graph.getOutputStrategies().get(0);
 
     String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");
@@ -54,8 +54,7 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
             appendTimePropertyName,
             selectProperties);
 
-    return new TimestampProgram(staticParam, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
-            FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
+    return new TimestampProgram(staticParam, FlinkUtils.getFlinkDeploymentConfig());
 //		return new TimestampProgram(staticParam);
   }
 

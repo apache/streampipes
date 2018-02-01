@@ -6,8 +6,12 @@ import java.util.Set;
 
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UnitCollector {
+
+	static Logger LOG = LoggerFactory.getLogger(UnitCollector.class);
 
 	private static final String namespace = "http://qudt.org/schema/qudt#";
 	
@@ -94,7 +98,7 @@ public class UnitCollector {
 					if (unit != null) availableUnits.add(unit);
 				}
 			} catch (Exception e) {
-				System.out.println("No entry found");
+				LOG.warn("No entry found");
 			}
 		}
 	}

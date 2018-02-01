@@ -26,11 +26,17 @@ public enum ActionConfig implements PeConfig {
   private final static String ICON_HOST = "icon_host";
   private final static String ICON_PORT = "icon_port";
 
-  private final static String DEMONSTRATOR_PUMP_URL = "demonstator_pump_url";
-  private final static String DEMONSTRATOR_VENTIL_URL = "demonstator_ventil_url";
-
   public final static String serverUrl;
   public final static String iconBaseUrl;
+
+  public final static String EMAIL_FROM = "email_from";
+  public final static String EMAIL_USERNAME = "email_username";
+  public final static String EMAIL_PASSWORD = "email_password";
+  public final static String EMAIL_SMTP_HOST = "email_smpt_host";
+  public final static String EMAIL_SMTP_PORT = "email_smpt_port";
+  public final static String EMAIL_STARTTLS = "email_starttls";
+  public final static String EMAIL_SLL = "email_sll";
+
 
 
   private final static String SERVICE_ID= "pe/org.streampipes.pe.sinks.standalone";
@@ -55,17 +61,19 @@ public enum ActionConfig implements PeConfig {
     config.register(SIMULATION_DELAY, 10, "Delay time in milliseconds for the simulation");
     config.register(SIMULATION_MAX_EVENTS, 105000, "Maximal number of events for the simulation");
 
-
-    config.register(DEMONSTRATOR_PUMP_URL, "http://192.168.0.220:8000/test?mode=",
-            "URL of the demonstrator pump to turn it on and off");
-    config.register(DEMONSTRATOR_VENTIL_URL, "http://192.168.0.221:8000/test?mode=",
-            "URL of the demonstrator ventil to turn it on and off");
-
     config.register(ICON_HOST, "backend", "Hostname for the icon host");
     config.register(ICON_PORT, 80, "Port for the icons in nginx");
 
-    config.register(SERVICE_NAME, "Sinks standalone", "The name of the service");
 
+    config.register(EMAIL_FROM, "", "The Email adress which send from");
+    config.register(EMAIL_USERNAME, "", "The username of the email account");
+    config.registerPassword(EMAIL_PASSWORD, "", "The password of the email account");
+    config.register(EMAIL_SMTP_HOST, "", "The SMTP Host");
+    config.register(EMAIL_SMTP_PORT, "", "The SMTP Port");
+    config.register(EMAIL_STARTTLS, "", "Use startls?");
+    config.register(EMAIL_SLL, "", "Use SLL?");
+
+    config.register(SERVICE_NAME, "Sinks standalone", "The name of the service");
   }
 
   static {
@@ -151,13 +159,7 @@ public enum ActionConfig implements PeConfig {
     return config.getInteger(ICON_PORT);
   }
 
-  public String getDemonstratorPumpUrl() {
-    return config.getString(DEMONSTRATOR_PUMP_URL);
-  }
 
-  public String getDemonstratorVentilUrl() {
-    return config.getString(DEMONSTRATOR_VENTIL_URL);
-  }
 
   @Override
   public String getId() {
@@ -169,4 +171,31 @@ public enum ActionConfig implements PeConfig {
     return config.getString(SERVICE_NAME);
   }
 
+  public String getEmailFrom() {
+    return config.getString(EMAIL_FROM);
+  }
+
+  public String getEmailUsername() {
+    return config.getString(EMAIL_USERNAME);
+  }
+
+  public String getEmailPassword() {
+    return config.getString(EMAIL_PASSWORD);
+  }
+
+  public String getEmailSmtpHost() {
+    return config.getString(EMAIL_SMTP_HOST);
+  }
+
+  public int getEmailSmtpPort() {
+    return config.getInteger(EMAIL_SMTP_PORT);
+  }
+
+  public boolean useEmailStarttls() {
+    return config.getBoolean(EMAIL_STARTTLS);
+  }
+
+  public boolean useEmailSll() {
+    return config.getBoolean(EMAIL_SLL);
+  }
 }
