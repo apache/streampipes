@@ -17,21 +17,24 @@ package org.streampipes.storage.couchdb.dao;
 
 import org.lightcouch.CouchDbClient;
 
+import java.util.function.Supplier;
+
 public abstract class DbCommand<T, S> {
 
-  protected CouchDbClient couchDbClient;
+  private Supplier<CouchDbClient> couchDbClientSupplier;
   protected Class<S> clazz;
 
-  public DbCommand(CouchDbClient couchDbClient, Class<S> clazz) {
-    this.couchDbClient = couchDbClient;
+  public DbCommand(Supplier<CouchDbClient> couchDbClientSupplier, Class<S> clazz) {
+   this.couchDbClientSupplier = couchDbClientSupplier;
     this.clazz = clazz;
   }
 
-  protected abstract T executeCommand();
+  protected abstract T executeCommand(CouchDbClient couchDbClient);
 
 
   public T execute() {
-    T result = executeCommand();
+    CouchDbClient couchDbClient = couchDbClientSupplier.get();
+    T result = executeCommand(couchDbClient);
     couchDbClient.shutdown();
 
     return result;

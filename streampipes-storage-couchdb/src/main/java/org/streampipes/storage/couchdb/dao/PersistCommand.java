@@ -18,17 +18,19 @@ package org.streampipes.storage.couchdb.dao;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.Response;
 
+import java.util.function.Supplier;
+
 public class PersistCommand<T> extends DbCommand<Boolean, T> {
 
   private T objectToPersist;
 
-  public PersistCommand(CouchDbClient couchDbClient, T objectToPersist, Class<T> clazz) {
+  public PersistCommand(Supplier<CouchDbClient> couchDbClient, T objectToPersist, Class<T> clazz) {
     super(couchDbClient, clazz);
     this.objectToPersist = objectToPersist;
   }
 
   @Override
-  protected Boolean executeCommand() {
+  protected Boolean executeCommand(CouchDbClient couchDbClient) {
     Response response = couchDbClient.save(objectToPersist);
 
     return response.getError() == null;

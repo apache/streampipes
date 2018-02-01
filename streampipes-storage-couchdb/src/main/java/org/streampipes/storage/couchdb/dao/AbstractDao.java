@@ -19,44 +19,45 @@ import org.lightcouch.CouchDbClient;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class AbstractDao<T> {
 
-  protected CouchDbClient couchDbClient;
+  protected Supplier<CouchDbClient> couchDbClientSupplier;
   protected Class<T> clazz;
 
-  public AbstractDao(CouchDbClient couchDbClient, Class<T> clazz) {
-    this.couchDbClient = couchDbClient;
+  public AbstractDao(Supplier<CouchDbClient> couchDbClientSupplier, Class<T> clazz) {
+    this.couchDbClientSupplier = couchDbClientSupplier;
     this.clazz = clazz;
   }
 
   public Boolean persist(T objToPersist) {
-    DbCommand<Boolean, T> cmd = new PersistCommand<>(couchDbClient, objToPersist, clazz);
+    DbCommand<Boolean, T> cmd = new PersistCommand<>(couchDbClientSupplier, objToPersist, clazz);
     return cmd.execute();
   }
 
   public Boolean delete(String key) {
-    DbCommand<Boolean, T> cmd = new DeleteCommand<>(couchDbClient, key, clazz);
+    DbCommand<Boolean, T> cmd = new DeleteCommand<>(couchDbClientSupplier, key, clazz);
     return cmd.execute();
   }
 
   public Boolean update(T objToUpdate) {
-    DbCommand<Boolean, T> cmd = new UpdateCommand<>(couchDbClient, objToUpdate, clazz);
+    DbCommand<Boolean, T> cmd = new UpdateCommand<>(couchDbClientSupplier, objToUpdate, clazz);
     return cmd.execute();
   }
 
   public Optional<T> find(String id) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClient, id, clazz);
+    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
     return cmd.execute();
   }
 
   public List<T> findAll() {
-    DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClient, clazz);
+    DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz);
     return cmd.execute();
   }
 
   public T findWithNullIfEmpty(String id) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClient, id, clazz);
+    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
     return cmd.execute().get();
   }
 

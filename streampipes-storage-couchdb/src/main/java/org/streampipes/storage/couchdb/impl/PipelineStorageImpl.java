@@ -25,7 +25,7 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
     private static final String SYSTEM_USER = "system";
 
     public PipelineStorageImpl() {
-        super(Utils.getCouchDbPipelineClient(), Pipeline.class);
+        super(Utils::getCouchDbPipelineClient, Pipeline.class);
     }
 
     @Override
@@ -87,12 +87,14 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
 
     @Override
     public void storeVirtualSensor(String username, VirtualSensor virtualSensor) {
+        CouchDbClient couchDbClient = couchDbClientSupplier.get();
         couchDbClient.save(virtualSensor);
         couchDbClient.shutdown();
     }
 
     @Override
     public List<VirtualSensor> getVirtualSensors(String username) {
+        CouchDbClient couchDbClient = couchDbClientSupplier.get();
         List<VirtualSensor> virtualSensors = couchDbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(VirtualSensor.class);

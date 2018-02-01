@@ -18,17 +18,19 @@ package org.streampipes.storage.couchdb.dao;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 
+import java.util.function.Supplier;
+
 public class UpdateCommand<T> extends DbCommand<Boolean, T> {
 
   private T objectToUpdate;
 
-  public UpdateCommand(CouchDbClient couchDbClient, T objectToUpdate, Class<T> clazz) {
+  public UpdateCommand(Supplier<CouchDbClient> couchDbClient, T objectToUpdate, Class<T> clazz) {
     super(couchDbClient, clazz);
     this.objectToUpdate = objectToUpdate;
   }
 
   @Override
-  protected Boolean executeCommand() {
+  protected Boolean executeCommand(CouchDbClient couchDbClient) {
     try {
       couchDbClient.update(objectToUpdate);
       return true;

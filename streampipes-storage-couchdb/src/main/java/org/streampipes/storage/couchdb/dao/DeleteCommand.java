@@ -18,17 +18,19 @@ package org.streampipes.storage.couchdb.dao;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 
+import java.util.function.Supplier;
+
 public class DeleteCommand<T> extends DbCommand<Boolean, T> {
 
   private String key;
 
-  public DeleteCommand(CouchDbClient couchDbClient, String key, Class<T> clazz) {
+  public DeleteCommand(Supplier<CouchDbClient> couchDbClient, String key, Class<T> clazz) {
     super(couchDbClient, clazz);
     this.key = key;
   }
 
   @Override
-  protected Boolean executeCommand() {
+  protected Boolean executeCommand(CouchDbClient couchDbClient) {
     try {
       T result = couchDbClient.find(clazz, key);
       couchDbClient.remove(result);
