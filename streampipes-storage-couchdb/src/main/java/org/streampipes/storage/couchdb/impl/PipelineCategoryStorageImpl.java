@@ -10,7 +10,7 @@ import java.util.List;
 public class PipelineCategoryStorageImpl extends AbstractDao<PipelineCategory> implements IPipelineCategoryStorage {
 
 	public PipelineCategoryStorageImpl() {
-		super(Utils.getCouchDbPipelineCategoriesClient(), PipelineCategory.class);
+		super(Utils::getCouchDbPipelineCategoriesClient, PipelineCategory.class);
 	}
 
 	@Override

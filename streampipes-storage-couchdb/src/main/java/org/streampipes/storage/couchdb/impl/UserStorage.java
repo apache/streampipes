@@ -1,5 +1,6 @@
 package org.streampipes.storage.couchdb.impl;
 
+import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.model.client.user.User;
@@ -21,7 +22,7 @@ public class UserStorage extends AbstractDao<User> implements IUserStorage {
     Logger LOG = LoggerFactory.getLogger(UserStorage.class);
 
     public UserStorage() {
-        super(Utils.getCouchDbUserClient(), User.class);
+        super(Utils::getCouchDbUserClient, User.class);
     }
     
     @Override
@@ -34,6 +35,7 @@ public class UserStorage extends AbstractDao<User> implements IUserStorage {
     @Override
     public User getUser(String email) {
         // TODO improve
+        CouchDbClient couchDbClient = couchDbClientSupplier.get();
         List<User> users = couchDbClient.view("users/username").key(email).includeDocs(true).query(User.class);
         if (users.size() != 1) {
             LOG.error("None or to many users with matching username");
@@ -68,7 +70,8 @@ public class UserStorage extends AbstractDao<User> implements IUserStorage {
     */
    @Override
    public boolean checkUser(String username) {
-       List<User> users = couchDbClient
+       List<User> users = couchDbClientSupplier
+               .get()
                .view("users/username")
                .key(username)
                .includeDocs(true)

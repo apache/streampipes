@@ -23,7 +23,7 @@ public class ConnectionStorageImpl extends AbstractDao<Connection> implements
 
 
   public ConnectionStorageImpl() {
-    super(Utils.getCouchDbConnectionClient(), Connection.class);
+    super(Utils::getCouchDbConnectionClient, Connection.class);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class ConnectionStorageImpl extends AbstractDao<Connection> implements
 
   private String buildQuery(String from) {
     String escapedPath = UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" + from + "\"]&endkey=[\"" + from + "\", {}]&group=true");
-    return couchDbClient.getDBUri() + "_design/connection/_view/frequent?" + escapedPath;
+    return couchDbClientSupplier.get().getDBUri() + "_design/connection/_view/frequent?" + escapedPath;
   }
 
   private List<PipelineElementRecommendation> handleResponse(JsonObject jsonObject) {

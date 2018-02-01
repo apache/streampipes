@@ -19,15 +19,16 @@ import org.lightcouch.CouchDbClient;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class FindAllCommand<T> extends DbCommand<List<T>, T> {
 
-  public FindAllCommand(CouchDbClient couchDbClient, Class<T> clazz) {
+  public FindAllCommand(Supplier<CouchDbClient> couchDbClient, Class<T> clazz) {
     super(couchDbClient, clazz);
   }
 
   @Override
-  protected List<T> executeCommand() {
+  protected List<T> executeCommand(CouchDbClient couchDbClient) {
     List<T> allResults = couchDbClient.view("_all_docs")
             .includeDocs(true)
             .query(clazz);

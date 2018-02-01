@@ -19,18 +19,19 @@ import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class FindCommand<T> extends DbCommand<Optional<T>, T> {
 
   private String id;
 
-  public FindCommand(CouchDbClient couchDbClient, String id, Class<T> clazz) {
+  public FindCommand(Supplier<CouchDbClient> couchDbClient, String id, Class<T> clazz) {
     super(couchDbClient, clazz);
     this.id = id;
   }
 
   @Override
-  protected Optional<T> executeCommand() {
+  protected Optional<T> executeCommand(CouchDbClient couchDbClient) {
     try {
       T result = couchDbClient.find(clazz, id);
       return Optional.of(result);

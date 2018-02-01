@@ -10,7 +10,7 @@ import java.util.List;
 public class RdfEndpointStorageImpl extends AbstractDao<RdfEndpoint> implements IRdfEndpointStorage {
 
     public RdfEndpointStorageImpl() {
-        super(Utils.getCouchDbRdfEndpointClient(), RdfEndpoint.class);
+        super(Utils::getCouchDbRdfEndpointClient, RdfEndpoint.class);
     }
 
 

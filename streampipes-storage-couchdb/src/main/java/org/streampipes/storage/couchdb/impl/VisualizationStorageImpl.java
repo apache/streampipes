@@ -1,5 +1,6 @@
 package org.streampipes.storage.couchdb.impl;
 
+import org.lightcouch.CouchDbClient;
 import org.lightcouch.NoDocumentException;
 import org.streampipes.model.client.RunningVisualization;
 import org.streampipes.storage.api.IVisualizationStorage;
@@ -13,11 +14,12 @@ public class VisualizationStorageImpl extends AbstractDao<RunningVisualization> 
 
 
     public VisualizationStorageImpl() {
-        super(Utils.getCouchDbVisualizationClient(), RunningVisualization.class);
+        super(Utils::getCouchDbVisualizationClient, RunningVisualization.class);
     }
 
     @Override
     public List<RunningVisualization> getRunningVisualizations() {
+        CouchDbClient couchDbClient = couchDbClientSupplier.get();
         List<RunningVisualization> visualizations = couchDbClient.view("_all_docs")
                 .includeDocs(true)
                 .query(RunningVisualization.class);
@@ -29,6 +31,7 @@ public class VisualizationStorageImpl extends AbstractDao<RunningVisualization> 
 
     @Override
     public void storeVisualization(RunningVisualization visualization) {
+        CouchDbClient couchDbClient = couchDbClientSupplier.get();
         couchDbClient.save(visualization);
         couchDbClient.shutdown();
 
@@ -37,6 +40,7 @@ public class VisualizationStorageImpl extends AbstractDao<RunningVisualization> 
     @Override
     public void deleteVisualization(String pipelineId) {
         try {
+            CouchDbClient couchDbClient = couchDbClientSupplier.get();
             List<RunningVisualization> currentVisualizations = getRunningVisualizations();
             for (RunningVisualization viz : currentVisualizations) {
                 if (viz.getPipelineId() != null) {

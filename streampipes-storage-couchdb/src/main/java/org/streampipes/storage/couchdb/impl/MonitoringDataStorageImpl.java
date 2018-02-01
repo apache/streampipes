@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class MonitoringDataStorageImpl extends AbstractDao<JobReport> implements IPipelineMonitoringDataStorage {
 
 	public MonitoringDataStorageImpl() {
-		super(Utils.getCouchDbMonitoringClient(), JobReport.class);
+		super(Utils::getCouchDbMonitoringClient, JobReport.class);
 	}
 
 	@Override

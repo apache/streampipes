@@ -16,7 +16,7 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
   public NotificationStorageImpl() {
-    super(Utils.getCouchDbNotificationClient(), Notification.class);
+    super(Utils::getCouchDbNotificationClient, Notification.class);
   }
 
   @Override
