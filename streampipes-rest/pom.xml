@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.51.2-SNAPSHOT</version>
+		<version>0.51.1</version>
 	</parent>
 	<name>StreamPipes REST API</name>
 	<artifactId>streampipes-rest</artifactId>
