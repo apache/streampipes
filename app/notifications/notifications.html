@@ -1,4 +1,4 @@
-<div flex class="page-container page-container-padding">
+<div flex class="page-container page-container-padding" ng-controller="NotificationsCtrl as ctrl">
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
     </div>
     <div flex layout="column" layout-fill>
@@ -6,7 +6,7 @@
             <section>
                 <md-subheader class="md-primary">Unread Messages</md-subheader>
                 <md-list layout-padding>
-                    <md-list-item class="md-3-line" ng-repeat="notification in unreadNotifications">
+                    <md-list-item class="md-3-line" ng-repeat="notification in ctrl.unreadNotifications">
                         <md-button class="md-icon-button" ng-click="changeNotificationStatus(notification._id)">
                             <i class="material-icons" style="color: rgb(63,81,181);">markunread</i>
                             <md-tooltip md-direction="top">
@@ -31,7 +31,7 @@
             <section>
                 <md-subheader class="md-primary">All Messages</md-subheader>
                 <md-list layout-padding>
-                    <md-list-item class="md-3-line" ng-repeat="notification in notifications">
+                    <md-list-item class="md-3-line" ng-repeat="notification in ctrl.notifications">
 
                         <div class="md-list-item-text" style="margin-bottom:10px;margin-top:10px;">
                             <h3><b>{{notification.title}}</b></h3>
