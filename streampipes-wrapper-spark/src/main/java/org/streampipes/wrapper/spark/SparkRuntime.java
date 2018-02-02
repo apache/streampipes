@@ -16,7 +16,6 @@ import org.apache.spark.streaming.kafka010.LocationStrategies;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.base.InvocableStreamPipesEntity;
 import org.streampipes.model.grounding.KafkaTransportProtocol;
-import org.streampipes.wrapper.params.binding.BindingParams;
 import org.streampipes.wrapper.spark.converter.JsonToMapFormat;
 
 import java.io.*;
