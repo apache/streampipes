@@ -1,25 +1,28 @@
-AppFileDownloadCtrl.$inject = ['$scope', 'appFileDownloadRestService', '$window'];
+export class AppFileDownloadCtrl {
 
-export default function AppFileDownloadCtrl($scope, appFileDownloadRestService, $window) {
+    constructor(AppFileDownloadRestApi) {
+        this.appFileDownloadRestApiService = AppFileDownloadRestApi;
+        this.newFile = {};
+        this.allFiles = [];
+        this.getFiles();
+    }
 
-    $scope.newFile = {};
 
-    $scope.allFiles = [];
-
-    $scope.deleteFile = function (fileName) {
-        appFileDownloadRestService.removeFile(fileName).success(function () {
-            $scope.getFiles();
+    deleteFile(fileName) {
+        this.appFileDownloadRestApiService.removeFile(fileName).success(function () {
+            this.getFiles();
         });
     }
 
-    $scope.downloadFile = function (fileName) {
-        appFileDownloadRestService.getFile(fileName);
+    downloadFile(fileName) {
+        this.appFileDownloadRestApiService.getFile(fileName);
     }
 
-    $scope.getFiles = function () {
-        appFileDownloadRestService.getAll()
+    getFiles() {
+        const self = this;
+        this.appFileDownloadRestApiService.getAll()
             .success(function (allFiles) {
-                $scope.allFiles = allFiles;
+                self.allFiles = allFiles;
             })
             .error(function (msg) {
                 console.log(msg);
@@ -27,33 +30,13 @@ export default function AppFileDownloadCtrl($scope, appFileDownloadRestService, 
 
     };
 
-    $scope.createNewFile = function(file) {
+    createNewFile(file) {
         var start = new Date(file.timestampFrom).getTime();
         var end = new Date(file.timestampTo).getTime();
-        appFileDownloadRestService.createFile(file.index, start, end).success(function (err, res) {
+        this.appFileDownloadRestApiService.createFile(file.index, start, end).success(function (err, res) {
             $scope.getFiles();
         });
     };
-
-    $scope.getFiles();
-
-    // $scope.res = appFileDownloadRestService.createFile("testfeld",1506416708, 1506418628);
-
-    // $scope.applicationLinks = [];
-
-    // var loadApplicationLinks = function() {
-    //     restApi.getApplicationLinks()
-    //         .success(function (applicationLinks) {
-    //             $scope.applicationLinks = applicationLinks;
-    //         })
-    //         .error(function (error) {
-    //             console.log(error);
-    //         });
-    // }
-
-    // $scope.openApp = function(applicationUrl) {
-    //     $window.open(applicationUrl, "_blank");
-    // }
-
-    // loadApplicationLinks();
 }
+
+AppFileDownloadCtrl.$inject = ['AppFileDownloadRestApi'];

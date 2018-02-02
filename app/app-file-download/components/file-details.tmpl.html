@@ -4,7 +4,7 @@
     </div>
     <div flex layout="row">
         <span flex flex-order="2" layout="row" layout-align="center center">
-            <md-button ng-click="downloadFile(file.fileName)" class="md-icon-button">
+            <md-button ng-click="fileDetailsController.downloadFile(file.fileName)" class="md-icon-button">
                 <md-icon
                     md-svg-icon="file:ic_file_download_24px" aria-label="Modify"
                     class="md-accent">
@@ -15,7 +15,7 @@
             </md-button>
         </span>
         <span flex flex-order="4" layout="row" layout-align="center center">
-            <md-button ng-click="deleteFile(file.fileName)" class="md-icon-button"><md-icon
+            <md-button ng-click="fileDetailsController.deleteFile(file.fileName)" class="md-icon-button"><md-icon
                     md-svg-icon="action:ic_delete_24px"
                     aria-label="Delete"></md-icon>
                 <md-tooltip md-direction="top">
