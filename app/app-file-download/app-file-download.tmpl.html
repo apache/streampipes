@@ -1,4 +1,4 @@
-<div flex class="page-container page-container-padding"ng-controller="AppFileDownloadCtrl as appFileDownloadCtrl">
+<div flex class="page-container page-container-padding"ng-controller="AppFileDownloadCtrl as ctrl">
     <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
         <div flex layout-fill layout="row" layout-align="start center"
              style="height:48px;padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
@@ -28,7 +28,7 @@
                                 <input datetime-picker ng-model="newFile.timestampTo" />
                             </md-input-container>
                             <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-                                <md-button ng-click="appFileDownloadCtrl.createNewFile(newFile)" class="md-raised md-primary">Create File</md-button>
+                                <md-button ng-click="ctrl.createNewFile(newFile)" class="md-raised md-primary">Create File</md-button>
                             </section>
                         </div>
 
@@ -41,10 +41,10 @@
                     </div>
                     <div class="sp-blue-border">
                         <div layout="column"
-                             ng-repeat="file in appFileDownloadCtrl.allFiles">
+                             ng-repeat="file in ctrl.allFiles">
                             <file-details></file-details>
                         </div>
-                        <div layout="row" layout-align="center center" ng-if="appFileDownloadCtrl.allFiles.length == 0">
+                        <div layout="row" layout-align="center center" ng-if="ctrl.allFiles.length == 0">
                             <h5>(no files available)</h5>
                         </div>
                     </div>
