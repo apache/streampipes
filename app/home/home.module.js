@@ -1,7 +1,7 @@
-import angular from 'npm/angular';
+import angular from 'angular';
 
-import { HomeCtrl } from './home.controller'
-import { HomeService} from "./home.service";
+import {HomeCtrl} from './home.controller'
+import {HomeService} from "./home.service";
 
 export default angular.module('sp.home', [])
 	.controller('HomeCtrl', HomeCtrl)

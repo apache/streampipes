@@ -6,5 +6,5 @@ bundle.js.map
 app/app.module.js
 app/layout/app.controller.js
 app/core/state.config.js
-app/home/home.controller.js
+app/home/home.service.js
 npm-debug.log
