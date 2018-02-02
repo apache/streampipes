@@ -1,39 +1,41 @@
-NotificationsCtrl.$inject = ['$rootScope', '$scope', 'restApi'];
+export class NotificationsCtrl {
 
-export default function NotificationsCtrl($rootScope, $scope, restApi) {
-	$scope.notifications = [{}];
-	$scope.unreadNotifications = [];
-		
-	$scope.getNotifications = function(){
-        $scope.unreadNotifications = [];
-        restApi.getNotifications()
-            .success(function(notifications){
-                console.log(notifications);
-                $scope.notifications = notifications;
-                $scope.getUnreadNotifications();
-            })
-            .error(function(msg){
-                console.log(msg);
-            });
-    };
-    
-    $scope.getUnreadNotifications = function() {
-    	angular.forEach($scope.notifications, function(value, key) {
-    		if (!value.read) $scope.unreadNotifications.push(value);
-    	});
+    constructor(restApi, $rootScope) {
+        this.restApi = restApi;
+        this.$rootScope = $rootScope;
+        this.notifications = [{}];
+        this.unreadNotifications = [];
+        this.getNotifications();
     }
-        
-    $scope.changeNotificationStatus = function(notificationId){
-        restApi.updateNotification(notificationId)
-            .success(function(success){
-            	$scope.getNotifications();
-                $rootScope.updateUnreadNotifications();
+
+    getNotifications() {
+        this.unreadNotifications = [];
+        this.restApi.getNotifications()
+            .success(notifications => {
+                this.notifications = notifications;
+                this.getUnreadNotifications();
             })
-            .error(function(msg){
+            .error(msg => {
                 console.log(msg);
             });
     };
-    
-    
-    $scope.getNotifications();
+
+    getUnreadNotifications() {
+        angular.forEach(this.notifications, function (value) {
+            if (!value.read) this.unreadNotifications.push(value);
+        });
+    }
+
+    changeNotificationStatus(notificationId) {
+        this.restApi.updateNotification(notificationId)
+            .success(success => {
+                this.getNotifications();
+                this.$rootScope.updateUnreadNotifications();
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
 };
+
+NotificationsCtrl.$inject = ['restApi', '$rootScope'];
