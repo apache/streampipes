@@ -1,51 +1,47 @@
-appFileDownloadRestApi.$inject = ['$rootScope', '$http', 'apiConstants', '$window'];
+export class AppFileDownloadRestApi {
 
-export default function appFileDownloadRestApi($rootScope, $http, apiConstants, $window) {
-
-    var restApi = {};
-
-    var getServerUrl = function() {
-        return apiConstants.contextPath + "/api/apps/v1/elasticsearch";
-        //return "http://localhost:8080"  + apiConstants.contextPath + apiConstants.api;
+    constructor($http, apiConstants, $window)   {
+        this.$http = $http;
+        this.$window = $window;
+        this.apiConstants = apiConstants;
     }
 
-    restApi.getAll = function () {
-        return $http.get(getServerUrl() +'/files');
+
+    getServerUrl() {
+        return this.apiConstants.contextPath + "/api/apps/v1/elasticsearch";
     }
 
-    restApi.getFile = function (fileName) {
-        $window.open(getServerUrl() + '/file/' + fileName);
-        // return $http.get(getServerUrl() + '/file/' + fileName);
+    getAll() {
+        return this.$http.get(this.getServerUrl() +'/files');
     }
 
-    restApi.removeFile = function (fileName) {
-        return $http({
+    getFile(fileName) {
+        this.$window.open(this.getServerUrl() + '/file/' + fileName);
+    }
+
+    removeFile(fileName) {
+        return this.$http({
             method: 'DELETE',
-            url: getServerUrl() + "/file/" + fileName
+            url: this.getServerUrl() + "/file/" + fileName
         })
     }
     
-    restApi.createFile = function (index, timestampFrom, timestampTo) {
+    createFile(index, timestampFrom, timestampTo) {
 
-        var postObject = {
-            // 'index': index,
-            // 'timestampFrom': timestampFrom,
-            // 'timestampTo': timestampTo
-        }
+        var postObject = {};
         postObject.index = index;
         postObject.timestampFrom = timestampFrom;
         postObject.timestampTo = timestampTo;
 
-
-        return $http({
+        return this.$http({
             method: 'POST',
             dataType: 'json',
-            url: getServerUrl() + "/file",
+            url: this.getServerUrl() + "/file",
             data: postObject,
             headers: {'Content-Type': 'application/json'}
         })
     }
 
-
-    return restApi;
 };
+
+AppFileDownloadRestApi.$inject = ['$http', 'apiConstants', '$window'];

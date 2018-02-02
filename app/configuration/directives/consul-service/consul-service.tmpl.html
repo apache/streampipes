@@ -1,21 +1,21 @@
 <div class="assemblyOptions sp-blue-bg" layout="row" layout-align="space-between center">
-    <span ng-if="$ctrl.serviceDetails.meta.status === 'passing'">
+    <span ng-if="ctrl.serviceDetails.meta.status === 'passing'">
         <md-icon style="color: #4CAF50" md-svg-icon="image:ic_brightness_1_24px"></md-icon>
     </span>
-    <span ng-if="$ctrl.serviceDetails.meta.status === 'critical'">
+    <span ng-if="ctrl.serviceDetails.meta.status === 'critical'">
         <md-icon style="color: #F44336;" md-svg-icon="image:ic_brightness_1_24px"></md-icon>
     </span>
-    <h4>{{$ctrl.serviceDetails.name}}</h4>
-    <span ng-if="$ctrl.showConfiguration">
-        <md-icon ng-click="$ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_less_24px"></md-icon>
+    <h4>{{ctrl.serviceDetails.name}}</h4>
+    <span ng-if="ctrl.showConfiguration">
+        <md-icon ng-click="ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_less_24px"></md-icon>
     </span>
-    <span ng-if="!$ctrl.showConfiguration">
-        <md-icon ng-click="$ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_more_24px"></md-icon>
+    <span ng-if="!ctrl.showConfiguration">
+        <md-icon ng-click="ctrl.toggleConfiguration()" md-svg-icon="navigation:ic_expand_more_24px"></md-icon>
     </span>
 </div>
-<div class="sp-blue-border" ng-show="$ctrl.showConfiguration" style="padding:5px">
-    <form ng-submit="$ctrl.updateConfiguration()" layout="column">
-        <md-input-container ng-repeat="configuration in $ctrl.serviceDetails.configs">
+<div class="sp-blue-border" ng-show="ctrl.showConfiguration" style="padding:5px">
+    <form ng-submit="ctrl.updateConfiguration()" layout="column">
+        <md-input-container ng-repeat="configuration in ctrl.serviceDetails.configs">
             <label ng-if="configuration.valueType != 'xs:boolean'">{{configuration.key}}</label>
             <input ng-if="configuration.valueType == 'xs:integer' || configuration.valueType == 'xs:double'"
                    ng-model="configuration.value" type="number">

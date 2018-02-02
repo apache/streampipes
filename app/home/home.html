@@ -1,4 +1,4 @@
-<div flex class="page-container page-container-padding" ng-controller="HomeCtrl as homeCtrl">
+<div flex class="page-container page-container-padding" ng-controller="HomeCtrl as ctrl">
 
     <div flex="100">
         <div flex="100" layout="column" style="padding:0px;background-color:#f6f6f6">
@@ -12,7 +12,7 @@
             <div flex="100">
                 <md-content class="md-padding">
                     <md-grid-list md-cols="3" md-gutter="1em" md-row-height="30:9">
-                        <md-grid-tile ng-click="homeCtrl.openLink(l)" ng-repeat="l in homeCtrl.serviceLinks" class="sp-darkblue-border home-image-wrapper"
+                        <md-grid-tile ng-click="ctrl.openLink(l)" ng-repeat="l in ctrl.serviceLinks" class="sp-darkblue-border home-image-wrapper"
                                       >
                             <div class="home-image" style="background-image: url('{{l.imageUrl}}')"></div>
                             <h4 class="sp-darkblue-border home-image-caption">{{l.name}}</h4>

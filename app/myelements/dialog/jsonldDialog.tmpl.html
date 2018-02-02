@@ -2,21 +2,21 @@
   <form>
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2>{{$ctrl.title}}</h2>
+      <h2>{{ctrl.title}}</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="$ctrl.cancel()">
+      <md-button class="md-icon-button" ng-click="ctrl.cancel()">
         <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
       </md-button>
     </div>
   </md-toolbar>
   <md-dialog-content style="max-width:800px;max-height:810px; ">
     <div>
-      <pre nag-prism source="{{$ctrl.content}}" class="language-json line-numbers"></pre>
+      <pre nag-prism source="{{ctrl.content}}" class="language-json line-numbers"></pre>
       <!--<pre pretty-json="content"></pre>-->
     </div>
   </md-dialog-content>
   <div class="md-actions" layout="row">
-    <md-button ng-click="$ctrl.hide()" style="margin-right:20px;" >
+    <md-button ng-click="ctrl.hide()" style="margin-right:20px;" >
       Close
     </md-button>
   </div>

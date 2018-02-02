@@ -1,0 +1,52 @@
+export class HomeService {
+    constructor($window, $location, $state) {
+        this.$location = $location;
+        this.$state = $state;
+        this.$window = $window;
+    }
+
+    openLink(l) {
+        if (l.link.newWindow) {
+            this.$window.open(l.link.value);
+        } else {
+            this.$state.go(l.link.value);
+        }
+
+    };
+
+    getServiceLinks() {
+        return [
+           {{#modulesActive}}
+           {
+               name: "{{title}}",
+               description: "{{description}}",
+               imageUrl: "{{{homeImage}}}",
+               link: {
+                   newWindow: false,
+                   value: "{{{link}}}"
+               }
+           },
+           {{/modulesActive}}
+           {
+               name: "Notifications",
+               description: "Integrated notification manager",
+               imageUrl: "img/home/notifications.png",
+               link: {
+                   newWindow: false,
+                   value: "streampipes.notifications"
+               }
+           },
+           {
+               name: "ElasticSearch",
+               description: "Offline visual analytics of data",
+               imageUrl: "img/home/elastic.png",
+               link: {
+                   newWindow: true,
+                   value: this.$location.protocol() + "://" + this.$location.host() + ":5601"
+               }
+           }
+       ]
+    }
+}
+
+HomeService.$inject = ['$window', '$location', '$state'];

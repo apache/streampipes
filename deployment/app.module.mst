@@ -10,7 +10,6 @@ import spServices from './services/services.module';
 
 import spCore from './core/core.module';
 import spHome from './home/home.module';
-import spCreate from './create/create.module';
 import spLayout from './layout/layout.module';
 import spLogin from './login/login.module';
 import spNotifications from './notifications/notifications.module';
@@ -27,7 +26,6 @@ export default angular
         spServices,
         spCore,
         spHome,
-        spCreate,
         spLayout,
         spLogin,
         spNotifications,
