@@ -1,78 +1,97 @@
-import StartAllPipelinesController from './start-all-pipelines.controller';
-import PipelineCategoriesDialogController from './pipeline-categories-dialog.controller';
+import {StartAllPipelinesController} from './dialog/start-all-pipelines-dialog.controller';
+import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-dialog.controller';
 
-PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];
+export class PipelineCtrl {
 
-export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker, getElementIconText) {
-    $scope.pipeline = {};
-    $scope.pipelines = [];
-    $scope.systemPipelines = [];
-    $scope.pipelinShowing = false;
-    var pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
-    $scope.starting = false;
-    $scope.stopping = false;
-    
-    $scope.pipelineCategories = [];
-    $scope.activeCategory = "";
+    constructor($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker, getElementIconText) {
+        this.restApi = restApi;
+        this.$rootScope = $rootScope;
+        this.$mdDialog = $mdDialog;
+        this.$state = $state;
+        this.$timeout = $timeout;
+        this.$stateParams = $stateParams;
+        this.imageChecker = imageChecker;
+        this.getElementIconText = getElementIconText;
 
-    $scope.startPipelineDirectly = $stateParams.pipeline;
+        this.pipeline = {};
+        this.pipelines = [];
+        this.systemPipelines = [];
+        this.pipelinShowing = false;
+        this.pipelinePlumb = jsPlumb.getInstance({Container: "pipelineDisplay"});
+        this.starting = false;
+        this.stopping = false;
 
-    $scope.$on('$destroy', function () {
-        pipelinePlumb.deleteEveryEndpoint();
-    });
+        this.pipelineCategories = [];
+        this.activeCategory = "";
 
-    $scope.setSelectedTab = function (categoryId) {
-        $scope.activeCategory = categoryId;
+        this.startPipelineDirectly = $stateParams.pipeline;
+
+        $scope.$on('$destroy', () => {
+            this.pipelinePlumb.deleteEveryEndpoint();
+        });
+
+        this.getPipelineCategories();
+        this.getPipelines();
+        this.getSystemPipelines();
     }
 
-    $scope.getPipelines = function () {
-        restApi.getOwnPipelines()
-            .success(function (pipelines) {
-                $scope.pipelines = pipelines;
+    setSelectedTab(categoryId) {
+        this.activeCategory = categoryId;
+    }
+
+    getPipelines() {
+        this.restApi.getOwnPipelines()
+            .success(pipelines => {
+                this.pipelines = pipelines;
+                if (this.startPipelineDirectly != "") {
+                    angular.forEach(this.pipelines, pipeline => {
+                        if (pipeline._id == this.startPipelineDirectly) {
+                            pipeline.immediateStart = true;
+                        }
+                    });
+                    this.startPipelineDirectly = "";
+                }
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
 
     };
-    
-    $scope.getSystemPipelines = function() {
-        restApi.getSystemPipelines()
-            .success(function (pipelines) {
-                $scope.systemPipelines = pipelines;
+
+    getSystemPipelines() {
+        this.restApi.getSystemPipelines()
+            .success(pipelines => {
+                this.systemPipelines = pipelines;
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
     }
-    $scope.getPipelines();
-    $scope.getSystemPipelines();
 
-    $scope.getPipelineCategories = function () {
-        restApi.getPipelineCategories()
-            .success(function (pipelineCategories) {
-                $scope.pipelineCategories = pipelineCategories;
+   getPipelineCategories() {
+        this.restApi.getPipelineCategories()
+            .success(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories;
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
 
     };
-    $scope.getPipelineCategories();
 
-    $scope.isTextIconShown = function (element) {
+    isTextIconShown(element) {
         return element.iconUrl == null || element.iconUrl == 'http://localhost:8080/img' || typeof element.iconUrl === 'undefined';
 
     };
 
-    $scope.activeClass = function (pipeline) {
+    activeClass(pipeline) {
         return 'active-pipeline';
     }
 
-    $scope.checkCurrentSelectionStatus = function(status) {
+    checkCurrentSelectionStatus(status) {
         var active = true;
-        angular.forEach($scope.pipelines, function(pipeline) {
-            if ($scope.activeCategory == "" || pipeline.pipelineCategories == $scope.activeCategory) {
+        angular.forEach(this.pipelines, pipeline => {
+            if (this.activeCategory == "" || pipeline.pipelineCategories == this.activeCategory) {
                 if (pipeline.running == status) {
                     active = false;
                 }
@@ -82,134 +101,55 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         return active;
     }
 
-    $scope.startAllPipelines = function(action) {
-        $mdDialog.show({
+    startAllPipelines(action) {
+        this.$mdDialog.show({
             controller: StartAllPipelinesController,
-            templateUrl: 'app/pipelines/start-all-pipelines.tmpl.html',
+            controllerAs : 'ctrl',
+            templateUrl: 'app/pipelines/dialog/start-all-pipelines-dialog.tmpl.html',
             parent: angular.element(document.body),
-            scope: $scope,
-            preserveScope: true,
             clickOutsideToClose: false,
             locals: {
-                pipelines: $scope.pipelines,
+                pipelines: this.pipelines,
                 action: action,
-                activeCategory: $scope.activeCategory
-            }
+                activeCategory: this.activeCategory,
+                refreshPipelines: this.refreshPipelines,
+                getPipelines: this.getPipelines,
+                getSystemPipelines: this.getSystemPipelines
+            },
+            bindToController: true
         })
     }
-
-    $scope.showPipelineCategoriesDialog = function () {
-        $mdDialog.show({
+    
+    showPipelineCategoriesDialog() {
+        this.$mdDialog.show({
             controller: PipelineCategoriesDialogController,
-            templateUrl: 'app/pipelines/templates/managePipelineCategoriesDialog.tmpl.html',
-            parent: angular.element(document.body),
-            scope: $scope,
-            preserveScope: true,
-            clickOutsideToClose: true
-        })
-    };
-
-    $scope.showDialog = function (data) {
-        $mdDialog.show({
-            controller: PipelineStatusDialogController,
-            templateUrl: 'app/pipelines/templates/pipelineOperationDialog.tmpl.html',
+            controllerAs : 'ctrl',
+            templateUrl: 'app/pipelines/dialog/pipeline-categories-dialog.tmpl.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             locals: {
-                data: data
-            }
+                pipelines: this.pipelines,
+                refreshPipelines: this.refreshPipelines,
+                getPipelines: this.getPipelines,
+                getSystemPipelines: this.getSystemPipelines
+            },
+            bindToController: true
         })
     };
 
-    $scope.startPipeline = function (pipelineId) {
-        $scope.starting = true;
-        restApi.startPipeline(pipelineId)
-            .success(function (data) {
-                $scope.showDialog(data);
-                $scope.getPipelines();
-                $scope.getSystemPipelines();
-
-                $scope.starting = false;
-
-            })
-            .error(function (data) {
-                console.log(data);
-
-                $scope.starting = false;
-
-                $scope.showDialog({
-                    notifications: [{
-                        title: "Network Error",
-                        description: "Please check your Network."
-                    }]
-                });
-
-            });
-    };
-
-    $scope.stopPipeline = function (pipelineId) {
-        $scope.stopping = true;
-        restApi.stopPipeline(pipelineId)
-            .success(function (data) {
-                $scope.stopping = false;
-                $scope.showDialog(data);
-                $scope.getPipelines();
-                $scope.getSystemPipelines();
-            })
-            .error(function (data) {
-                console.log(data);
-                $scope.stopping = false;
-                $scope.showDialog({
-                    notifications: [{
-                        title: "Network Error",
-                        description: "Please check your Network."
-                    }]
-                });
-
-            });
-    };
-
-
-
-
-    if ($scope.startPipelineDirectly != "") {
-        $scope.startPipeline($scope.startPipelineDirectly);
+    refreshPipelines() {
+        console.log("refreshing pipelines");
+        this.getPipelines();
+        this.getSystemPipelines();
     }
+    
 
-    $scope.showPipeline = function (pipeline) {
+    showPipeline(pipeline) {
         pipeline.display = !pipeline.display;
+    }
+    
 
-        //clearPipelineDisplay();
-        //displayPipeline(pipeline);
-    };
-    $scope.modifyPipeline = function (pipeline) {
-        showPipelineInEditor(pipeline);
-
-    };
-
-
-    $scope.deletePipeline = function (ev, pipelineId) {
-        var confirm = $mdDialog.confirm()
-            .title('Delete pipeline?')
-            .textContent('The pipeline will be removed. ')
-            .targetEvent(ev)
-            .ok('Delete')
-            .cancel('Cancel');
-        $mdDialog.show(confirm).then(function () {
-            restApi.deleteOwnPipeline(pipelineId)
-                .success(function (data) {
-                    $scope.getPipelines();
-                    $scope.getSystemPipelines();
-                })
-                .error(function (data) {
-                    console.log(data);
-                })
-        }, function () {
-
-        });
-    };
-
-    $scope.addImageOrTextIcon = function ($element, json) {
+    addImageOrTextIcon($element, json) {
         imageChecker.imageExists(json.iconUrl, function (exists) {
             if (exists) {
                 var $img = $('<img>')
@@ -225,7 +165,7 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         });
     }
 
-    $scope.elementTextIcon = function (string) {
+    elementTextIcon(string) {
         var result = "";
         if (string.length <= 4) {
             result = string;
@@ -237,26 +177,8 @@ export default function PipelineCtrl($scope, restApi, $rootScope, $mdDialog, $st
         }
         return result.toUpperCase();
     };
+    
 
+}
 
-    function showPipelineInEditor(id) {
-        $rootScope.go("streampipes.editor", {pipeline: id});
-    }
-
-    $scope.showPipelineDetails = function(id) {
-        $rootScope.go("streampipes.pipelineDetails", {pipeline: id});
-    }
-
-    function PipelineStatusDialogController($scope, $mdDialog, data) {
-
-        $scope.data = data;
-
-        $scope.hide = function () {
-            $mdDialog.hide();
-        };
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-    }
-
-};
+PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];

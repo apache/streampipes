@@ -1,4 +1,4 @@
-export default function pipelineCategoryFilter() { 
+export function PipelineCategoryFilter() {
 	return function(pipelines, categoryId) {
 		var result = [];
 		var showAll = false;

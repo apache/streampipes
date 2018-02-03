@@ -1,0 +1,151 @@
+<md-dialog aria-label="Pipeline Categories" flex="70">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Pipeline Categories</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-dialog-content">
+
+            <div ng-repeat="pipelineCategory in ctrl.pipelineCategories">
+                <div style="border: 5px;border-color:blue;">
+                    <md-list-item layout="row" layout-align="start start" class="md-with-secondary"
+                                  style="padding:5px;border:1px solid;border-color:#39b54a">
+                        <div class="md-list-item-text" flex="80" layout="column">
+                            <div flex layout="column">
+                                <h4><b>{{pipelineCategory.categoryName}}</b></h4>
+                                <h5><i>{{pipelineCategory.categoryDescription}}</i></h5>
+                                <div ng-show="ctrl.categoryDetailsVisible[pipelineCategory._id]">
+                                    <div ng-show="ctrl.addPipelineToCategorySelected[pipelineCategory._id]"
+                                         style="padding:10px;">
+                                        <md-list-item layout="row" class="md-with-secondary">
+                                            <div class="md-list-item-text" flex="80" layout="column">
+                                                <md-select ng-model="pipelineCategory.selectedPipelineId"
+                                                           placeholder="Select Pipeline">
+                                                    <md-option
+                                                            ng-repeat="pipeline in ctrl.pipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id | orderBy:'+name'"
+                                                            value="{{pipeline._id}}">
+                                                        <b>{{pipeline.name}}</b><br/>
+                                                    </md-option>
+                                                    <md-option
+                                                            ng-repeat="pipeline in ctrl.systemPipelines | categoryAlreadyInPipelineFilter: pipelineCategory._id | orderBy:'+name'"
+                                                            value="{{pipeline._id}}">
+                                                        <b>{{pipeline.name}}</b><br/>
+                                                    </md-option>
+                                                </md-select>
+                                            </div>
+                                            <div class="md-list-item-text" flex="20" layout="row"
+                                                 layout-align="end center">
+                                                <div flex="50" layout="row" layout-align="center end">
+                                                    <md-button ng-click="ctrl.addPipelineToCategory(pipelineCategory)"
+                                                               class="md-icon-button md-accent">
+                                                        <md-icon md-svg-icon="content:ic_save_24px"
+                                                                 aria-label="Save"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                                <div flex="50" layout="row" layout-align="center end">
+                                                    <md-button
+                                                            ng-click="ctrl.showAddToCategoryInput(pipelineCategory._id, false)"
+                                                            class="md-icon-button">
+                                                        <md-icon md-svg-icon="content:ic_clear_24px"
+                                                                 aria-label="Delete"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </md-list-item>
+                                    </div>
+                                    <div ng-repeat="pipeline in ctrl.pipelines | pipelineCategoryFilter: pipelineCategory._id | orderBy:'+name'">
+                                        <md-list-item layout="row" class="md-with-secondary" style="padding-left:10px;">
+                                            <div class="md-list-item-text" flex="80" layout="column">
+                                                {{pipeline.name}}
+                                            </div>
+                                            <div class="md-list-item-text" flex="20" layout="column"
+                                                 layout-align="end center">
+                                                <md-button
+                                                        ng-click="ctrl.removePipelineFromCategory(pipeline, pipelineCategory._id)"
+                                                        class="md-icon-button">
+                                                    <md-icon md-svg-icon="content:ic_remove_circle_outline_24px"
+                                                             aria-label="Delete"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </md-list-item>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div flex="20" layout="row">
+                            <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
+                                <md-button class="md-icon-button" ng-show="categoryDetailsVisible[pipelineCategory._id]"
+                                           ng-click="ctrl.toggleCategoryDetailsVisibility(pipelineCategory._id)">
+                                    <i class="material-icons" style="color:rgb(255,64,129);">arrow_drop_up</i>
+                                    <md-tooltip md-direction="top">
+                                        Hide Details
+                                    </md-tooltip>
+                                </md-button>
+                                <md-button class="md-icon-button"
+                                           ng-show="!ctrl.categoryDetailsVisible[pipelineCategory._id]"
+                                           ng-click="ctrl.toggleCategoryDetailsVisibility(pipelineCategory._id)">
+                                    <i class="material-icons" style="color:rgb(255,64,129);">arrow_drop_down</i>
+                                    <md-tooltip md-direction="top">
+                                        Show Details
+                                    </md-tooltip>
+                                </md-button>
+                            </div>
+                            <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
+                                <md-button ng-click="ctrl.showAddToCategoryInput(pipelineCategory._id, true)"
+                                           class="md-accent md-icon-button">
+                                    <md-icon md-svg-icon="content:ic_add_circle_outline_24px"
+                                             aria-label="Add Pipeline"></md-icon>
+                                    <md-tooltip md-direction="top">
+                                        Add Pipeline to Category
+                                    </md-tooltip>
+                                </md-button>
+                            </div>
+                            <div class="md-list-item-text" flex="33" layout="row" layout-align="center start">
+                                <md-button ng-click="ctrl.deletePipelineCategory(pipelineCategory._id)"
+                                           class="md-icon-button">
+                                    <md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon>
+                                    <md-tooltip md-direction="top">
+                                        Delete Category
+                                    </md-tooltip>
+                                </md-button>
+                            </div>
+                        </div>
+                    </md-list-item>
+                </div>
+                <md-divider/>
+            </div>
+            <div ng-show="ctrl.addSelected">
+                <md-list-item layout="row" class="md-with-secondary">
+                    <div class="md-list-item-text" flex="20" layout="column">
+                        <md-input-container><label>Name</label> <input
+                                type="text" ng-model="ctrl.newCategory.categoryName">
+                        </md-input-container>
+                    </div>
+                    <div class="md-list-item-text" flex="60" layout="column">
+                        <md-input-container><label>Description</label> <input
+                                type="text" ng-model="ctrl.newCategory.categoryDescription">
+                        </md-input-container>
+                    </div>
+                    <div class="md-list-item-text" flex="20" layout="column">
+                        <md-button ng-click="ctrl.addPipelineCategory()" class="md-accent md-icon-button">
+                            <md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon>
+                        </md-button>
+                    </div>
+                </md-list-item>
+            </div>
+            <md-button ng-click="ctrl.showAddInput()" class="md-accent">Add Category</md-button>
+
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
+                Close
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
