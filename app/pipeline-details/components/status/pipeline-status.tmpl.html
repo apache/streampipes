@@ -4,14 +4,14 @@
     </div>
 </div>
 <div class="sp-blue-border">
-    <div layout="column" style="min-height:100px; padding:5px;padding-left:15px;" ng-if="pipelineStatus.length > 0">
+    <div layout="column" style="min-height:100px; padding:5px;padding-left:15px;" ng-if="ctrl.pipelineStatus.length > 0">
         <div layout="row" flex="100">
             <div flex="20"><h5><b>Date</b></h5></div>
             <div flex="20"><h5><b>Status</b></h5></div>
             <div flex="60"><h5><b>Description</b></h5></div>
             <div flex="60"><h5><b>Details</b></h5></div>
         </div>
-        <div flex="100" layout="column" ng-repeat="status in pipelineStatus | orderBy: 'timestamp':true">
+        <div flex="100" layout="column" ng-repeat="status in ctrl.pipelineStatus | orderBy: 'timestamp':true">
             <div flex="100" layout="row">
                 <div flex="20"><h5>{{status.timestamp | date:'dd.MM.yyyy HH:mm'}}</h5></div>
                 <div flex="20"><h5>{{status.messageType}}</h5></div>
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div layout="column" layout-align="center center" style="min-height:100px; padding:5px;padding-left:15px;" ng-if="pipelineStatus.length==0">
+    <div layout="column" layout-align="center center" style="min-height:100px; padding:5px;padding-left:15px;" ng-if="ctrl.pipelineStatus.length==0">
         (no status information available)
     </div>
 </div>

@@ -7,8 +7,8 @@
     <div class="sp-blue-border">
         <div flex="100" layout-align="center center" layout="row" style="padding:10px">
             <div flex="30">
-                <md-button ng-click="startPipeline()" class="md-button"
-                           ng-disabled="starting" ng-if="!pipeline.running">
+                <md-button ng-click="ctrl.startPipeline()" class="md-button"
+                           ng-disabled="ctrl.starting" ng-if="!ctrl.pipeline.running">
                     <md-icon md-svg-icon="av:ic_play_arrow_24px" aria-label="Start"
                              class="md-accent"></md-icon>
                     &nbsp;Start
@@ -16,8 +16,8 @@
                         Start Pipeline
                     </md-tooltip>
                 </md-button>
-                <md-button ng-click="stopPipeline()" class="md-button"
-                           ng-disabled="stopping" ng-if="pipeline.running">
+                <md-button ng-click="ctrl.stopPipeline()" class="md-button"
+                           ng-disabled="ctrl.stopping" ng-if="ctrl.pipeline.running">
                     <md-icon md-svg-icon="av:ic_stop_24px" aria-label="Stop" class="md-accent"></md-icon>
                     &nbsp;Stop
                     <md-tooltip md-direction="top">
@@ -26,7 +26,7 @@
                 </md-button>
             </div>
             <div flex="30">
-                <md-button ng-click="modifyPipeline()" class="md-button">
+                <md-button ng-click="ctrl.modifyPipeline()" class="md-button">
                     <md-icon
                             md-svg-icon="editor:ic_mode_edit_24px" aria-label="Modify"
                             class="md-accent">
@@ -38,7 +38,7 @@
                 </md-button>
             </div>
             <div flex="30">
-                <md-button ng-click="deletePipeline($event)" class="md-button">
+                <md-button ng-click="ctrl.deletePipeline($event)" class="md-button">
                     <md-icon
                             md-svg-icon="action:ic_delete_24px"
                             aria-label="Delete" class="md-accent"></md-icon>

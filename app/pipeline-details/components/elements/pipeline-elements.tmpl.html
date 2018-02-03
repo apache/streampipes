@@ -5,16 +5,16 @@
         </div>
     </div>
     <div class="sp-blue-border" style="max-height: 800px;overflow:auto;">
-        <div ng-if="selectedElement != ''">
+        <div ng-if="ctrl.selectedElement != ''">
             <div layout="column" style="padding:5px;padding-left:10px;">
-                <pipeline-elements-row pipeline="pipeline" element="selectedElement"></pipeline-elements-row>
+                <pipeline-elements-row pipeline="ctrl.pipeline" element="ctrl.selectedElement"></pipeline-elements-row>
 
                 <md-divider/>
                 <div style="margin-bottom:15px;"></div>
 
             </div>
         </div>
-        <div layout="column" layout-align="center center" ng-if="selectedElement == ''">
+        <div layout="column" layout-align="center center" ng-if="ctrl.selectedElement == ''">
             (select an element in the preview window to see details)
         </div>
     </div>

@@ -1,32 +1,41 @@
-PipelineDetailsCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$stateParams', 'pipelinePositioningService'];
 
-export default function PipelineDetailsCtrl($scope, restApi, $rootScope, $stateParams, pipelinePositioningService) {
+export class PipelineDetailsCtrl {
 
-    var currentPipeline = $stateParams.pipeline;
-    $scope.pipeline = {};
+    constructor($scope, restApi, $rootScope, $stateParams, pipelinePositioningService) {
+        this.restApi = restApi;
+        this.$rootScope = $rootScope;
+        this.$scope = $scope;
+        this.$stateParams = $stateParams;
+        this.pipelinePositioningService = pipelinePositioningService;
 
-    $scope.selectedTab = "overview";
-    $scope.selectedElement = "";
+        this.currentPipeline = $stateParams.pipeline;
+        this.pipeline = {};
 
-    $scope.setSelectedTab = function(tabTitle) {
-        $scope.selectedTab = tabTitle;
+        this.selectedTab = "overview";
+        this.selectedElement = "";
+
+        this.loadPipeline();
     }
 
-    $scope.updateSelected = function(selected) {
-        $scope.selectedElement = selected;
-        $scope.$apply();
+    setSelectedTab(tabTitle) {
+        this.selectedTab = tabTitle;
     }
 
-    var loadPipeline = function () {
-        restApi.getPipelineById(currentPipeline)
-            .success(function (pipeline) {
-                $scope.pipeline = pipeline;
+    updateSelected(selected) {
+        this.selectedElement = selected;
+        this.$scope.$apply();
+    }
+
+    loadPipeline() {
+        this.restApi.getPipelineById(this.currentPipeline)
+            .success(pipeline => {
+                this.pipeline = pipeline;
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
     }
 
-    loadPipeline();
-
 }
+
+PipelineDetailsCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$stateParams', 'pipelinePositioningService'];
