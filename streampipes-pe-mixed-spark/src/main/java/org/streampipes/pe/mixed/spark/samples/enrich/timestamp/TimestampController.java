@@ -32,7 +32,6 @@ public class TimestampController extends SparkDataProcessorDeclarer<TimestampPar
     }
 
     protected SparkDataProcessorRuntime getRuntime(DataProcessorInvocation dataProcessorInvocation) {
-        System.out.println(SparkConfig.JAR_FILE);
         AppendOutputStrategy strategy = (AppendOutputStrategy) dataProcessorInvocation.getOutputStrategies().get(0);
 
         String appendTimePropertyName = SepaUtils.getEventPropertyName(strategy.getEventProperties(), "appendedTime");

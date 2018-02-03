@@ -32,7 +32,8 @@ public abstract class SparkDataProcessorRuntime<B extends EventProcessorBindingP
         //applicationLogic.print();
 
         if (isOutputKafkaProtocol()) {
-            applicationLogic.foreachRDD(SimpleKafkaSerializer.getInstance(kafkaParams, protocol().getTopicName()));
+            applicationLogic.foreachRDD(SimpleKafkaSerializer.getInstance(kafkaParams, protocol().getTopicDefinition
+                    ().getActualTopicName()));
         }
         else {
             //TODO: JMS

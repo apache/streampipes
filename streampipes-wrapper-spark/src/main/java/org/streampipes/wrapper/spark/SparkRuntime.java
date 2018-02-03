@@ -158,7 +158,9 @@ public abstract class SparkRuntime<I extends InvocableStreamPipesEntity> impleme
                 KafkaTransportProtocol protocol = (KafkaTransportProtocol) stream.getEventGrounding().getTransportProtocol();
 
                 //System.out.println("Listening on Kafka topic '" + protocol.getTopicName() + "'");
-                return KafkaUtils.createDirectStream(streamingContext, LocationStrategies.PreferConsistent(), ConsumerStrategies.<String, String>Subscribe(Arrays.asList(protocol.getTopicName()), kafkaParams));
+                return KafkaUtils.createDirectStream(streamingContext, LocationStrategies.PreferConsistent(),
+                        ConsumerStrategies.<String, String>Subscribe(Arrays.asList(protocol.getTopicDefinition().getActualTopicName()),
+                                kafkaParams));
             }
             else {
                 return null;
