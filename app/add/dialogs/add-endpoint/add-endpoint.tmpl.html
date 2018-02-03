@@ -3,7 +3,7 @@
         <div class="md-toolbar-tools">
             <h2>Endpoint Settings</h2>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="cancel()">
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
             </md-button>
         </div>
@@ -12,36 +12,36 @@
     <md-dialog-content flex="100" class="md-dialog-content">
         <h5>Existing Endpoints</h5>
         <md-list>
-            <div ng-repeat="rdfEndpoint in rdfEndpoints | orderBy: '+endpointUrl'" ng-if="rdfEndpoint._id !== undefined">
+            <div ng-repeat="rdfEndpoint in ctrl.rdfEndpoints | orderBy: '+endpointUrl'" ng-if="rdfEndpoint._id !== undefined">
             <md-list-item layout="row" class="md-with-secondary" >
                 <div class="md-list-item-text" flex="80" layout="column">
                     {{rdfEndpoint.endpointUrl}}
                 </div>
                 <div class="md-list-item-text" flex="20" layout="column">
-                    <md-button  ng-click="removeRdfEndpoint(rdfEndpoint._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>
+                    <md-button  ng-click="ctrl.removeRdfEndpoint(rdfEndpoint._id)" class="md-icon-button"><md-icon md-svg-icon="action:ic_delete_24px" aria-label="Delete"></md-icon></md-button>
                 </div>
             </md-list-item>
             <p/>
             </div>
             <md-divider></md-divider>
-            <div ng-show="addSelected">
+            <div ng-show="ctrl.addSelected">
                 <md-list-item layout="row" class="md-with-secondary" >
                     <div class="md-list-item-text" flex="80" layout="column">
                         <md-input-container> <label>Endpoint URL</label> <input
-                                type="text" ng-model="newEndpoint.endpointUrl">
+                                type="text" ng-model="ctrl.newEndpoint.endpointUrl">
                         </md-input-container>
                     </div>
                     <div class="md-list-item-text" flex="20" layout="column">
-                        <md-button  ng-click="addRdfEndpoint(newEndpoint)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>
+                        <md-button  ng-click="ctrl.addRdfEndpoint(newEndpoint)" class="md-icon-button"><md-icon md-svg-icon="content:ic_save_24px" aria-label="Delete"></md-icon></md-button>
                     </div>
                 </md-list-item>
             </div>
-            <md-button ng-click="showAddInput()" class="md-accent">Add RDF Endpoint</md-button>
+            <md-button ng-click="ctrl.showAddInput()" class="md-accent">Add RDF Endpoint</md-button>
         </md-list>
 
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="hide()" style="margin-right:20px;">
+        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
             Close
         </md-button>
     </div>
