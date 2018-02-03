@@ -19,7 +19,10 @@ import org.streampipes.pe.mixed.flink.samples.filter.numericallist.ListFilterCon
 import org.streampipes.pe.mixed.flink.samples.hasher.FieldHasherController;
 import org.streampipes.pe.mixed.flink.samples.healthindex.HealthIndexController;
 import org.streampipes.pe.mixed.flink.samples.labelorder.LabelOrderController;
+import org.streampipes.pe.mixed.flink.samples.measurementUnitConverter.MeasurementUnitConverterController;
 import org.streampipes.pe.mixed.flink.samples.peak.PeakDetectionController;
+import org.streampipes.pe.mixed.flink.samples.performance.PerformanceTestController;
+import org.streampipes.pe.mixed.flink.samples.performancesink.PerformanceElasticController;
 import org.streampipes.pe.mixed.flink.samples.rename.FieldRenamerController;
 import org.streampipes.pe.mixed.flink.samples.spatial.gridenricher.SpatialGridEnrichmentController;
 import org.streampipes.pe.mixed.flink.samples.statistics.StatisticsSummaryController;
@@ -51,7 +54,10 @@ public class FlinkInit extends StandaloneModelSubmitter {
             .add(new StatisticsSummaryControllerWindow())
             .add(new PeakDetectionController())
             .add(new ValueController())
-            .add(new ListFilterController());
+            .add(new ListFilterController())
+            .add(new PerformanceTestController())
+            .add(new PerformanceElasticController())
+            .add(new MeasurementUnitConverterController());
 
     new FlinkInit().init(FlinkConfig.INSTANCE);
   }

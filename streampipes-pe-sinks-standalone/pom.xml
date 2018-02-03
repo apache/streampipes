@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.streampipes</groupId>
        <artifactId>streampipes-parent</artifactId>
-        <version>0.41.2</version>
+        <version>0.51.2-SNAPSHOT</version>
     </parent>
     <artifactId>streampipes-pe-sinks-standalone</artifactId>
     <repositories>
@@ -59,6 +59,25 @@
         <dependency>
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mailapi</artifactId>
+            <version>1.4.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.5.3</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

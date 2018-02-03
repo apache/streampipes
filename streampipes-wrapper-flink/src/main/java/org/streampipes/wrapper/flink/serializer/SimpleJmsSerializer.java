@@ -1,12 +1,10 @@
 package org.streampipes.wrapper.flink.serializer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.flink.streaming.util.serialization.SerializationSchema;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.flink.streaming.util.serialization.SerializationSchema;
+
+import java.util.Map;
 
 public class SimpleJmsSerializer  implements SerializationSchema<Map<String, Object>>{
 
@@ -24,20 +22,6 @@ public class SimpleJmsSerializer  implements SerializationSchema<Map<String, Obj
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	public static void main(String[] args) {
-		SimpleJmsSerializer serializer = new SimpleJmsSerializer();
-		long current = System.currentTimeMillis();
-		Map<String, Object> map = new HashMap<>();
-		map.put("key", 1);
-		map.put("2ndkey", 2);
-		for(int i = 0; i<= 1000000; i++) {
-			
-			serializer.serialize(map);
-		}
-		long now = System.currentTimeMillis();
-		System.out.println("Took, " +(now-current) +", this is " +10000/((now-current)*1000));
 	}
 
 }

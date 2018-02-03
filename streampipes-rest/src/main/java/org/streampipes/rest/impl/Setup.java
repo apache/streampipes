@@ -1,5 +1,14 @@
 package org.streampipes.rest.impl;
 
+import com.google.gson.JsonObject;
+import org.streampipes.config.backend.BackendConfig;
+import org.streampipes.manager.setup.Installer;
+import org.streampipes.model.client.messages.Message;
+import org.streampipes.model.client.messages.Notifications;
+import org.streampipes.model.client.setup.InitialSettings;
+import org.streampipes.rest.api.ISetup;
+import org.streampipes.rest.notifications.NotificationListener;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,16 +18,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.google.gson.JsonObject;
-
-import org.streampipes.config.backend.BackendConfig;
-import org.streampipes.model.client.setup.InitialSettings;
-import org.streampipes.manager.setup.Installer;
-import org.streampipes.model.client.messages.Message;
-import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.rest.api.ISetup;
-import org.streampipes.rest.notifications.NotificationListener;
 
 @Path("/v2/setup")
 public class Setup extends AbstractRestInterface implements ISetup {

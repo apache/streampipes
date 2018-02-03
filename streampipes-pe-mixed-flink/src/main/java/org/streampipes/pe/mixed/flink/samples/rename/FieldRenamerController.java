@@ -1,25 +1,26 @@
 package org.streampipes.pe.mixed.flink.samples.rename;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
-import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.schema.EventSchema;
+import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.output.ReplaceOutputStrategy;
 import org.streampipes.model.output.UriPropertyMapping;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.util.SepaUtils;
-import org.streampipes.container.util.StandardTransportFormat;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
+import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRenamerParameters> {
 
@@ -58,8 +59,8 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
 	}
 
 	@Override
-	protected FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
-			DataProcessorInvocation graph) {
+	public FlinkDataProcessorRuntime<FieldRenamerParameters> getRuntime(
+					DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 		ReplaceOutputStrategy ros = (ReplaceOutputStrategy) graph.getOutputStrategies().get(0);
 		EventProperty oldProperty = SepaUtils.getEventPropertyById(graph, ros.getReplaceProperties().get(0).getReplaceTo());
 		String newPropertyName = ros.getReplaceProperties().get(0).getReplaceWith().getRuntimeName();

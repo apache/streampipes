@@ -1,8 +1,5 @@
 package org.streampipes.pe.sources.kd2.vocabulary;
 
-/**
- * Created by riemer on 18.11.2016.
- */
 public class Kd2 {
 
     private static final String KD2_Domain = "http://kd2.kit.edu/";

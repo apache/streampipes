@@ -10,8 +10,8 @@ import org.streampipes.model.client.messages.Message;
 import org.streampipes.model.client.messages.Notification;
 import org.streampipes.model.client.messages.NotificationType;
 import org.streampipes.model.client.messages.Notifications;
-import org.streampipes.storage.api.StorageRequests;
-import org.streampipes.storage.service.UserService;
+import org.streampipes.storage.api.IPipelineElementDescriptionStorage;
+import org.streampipes.manager.storage.UserService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -71,7 +71,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 			return Operations.verifyAndAddElement(payload, username, publicElement);
 		} catch (Exception e) {
             e.printStackTrace();
-			return Notifications.error(NotificationType.PARSE_ERROR);
+			return Notifications.error(NotificationType.PARSE_ERROR, e.getMessage());
 
 		}
 	}
@@ -101,7 +101,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
 
 		UserService userService = getUserService();
-		StorageRequests requestor = getPipelineElementRdfStorage();
+		IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
 		try {
 			if (requestor.getSEPAById(elementId) != null) 
 				{
@@ -130,7 +130,7 @@ public class PipelineElementImport extends AbstractRestInterface {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getActionAsJsonLd(@PathParam("id") String elementId)
 	{
-		StorageRequests requestor = getPipelineElementRdfStorage();
+		IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
 		elementId = decode(elementId);
 		try {
 			if (requestor.getSEPAById(elementId) != null) return ok(toJsonLd(requestor.getSEPAById(elementId)));

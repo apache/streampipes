@@ -17,7 +17,7 @@ public class JmsTransportProtocol extends TransportProtocol {
 	
 	public JmsTransportProtocol(String uri, int port, String topicName)
 	{
-		super(uri, topicName);
+		super(uri, new SimpleTopicDefinition(topicName));
 		this.port = port;
 	}
 	

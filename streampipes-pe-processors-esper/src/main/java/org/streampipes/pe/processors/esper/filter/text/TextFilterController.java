@@ -12,8 +12,7 @@ import org.streampipes.sdk.helpers.Options;
 import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 
@@ -34,16 +33,16 @@ public class TextFilterController extends StandaloneEventProcessorDeclarerSingle
 						.build();
 	}
 
+
+
+	// change to onInvocation(graph, extractor)
 	@Override
-	public ConfiguredEventProcessor<TextFilterParameter, EventProcessor<TextFilterParameter>> onInvocation
-					(DataProcessorInvocation sepa) {
-		ProcessingElementParameterExtractor extractor = getExtractor(sepa);
+	public ConfiguredEventProcessor<TextFilterParameter> onInvocation
+	(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
 		String keyword = extractor.singleValueParameter("keyword", String.class);
-		String operation =extractor.selectedSingleValue("operation", String.class);
+		String operation = extractor.selectedSingleValue("operation", String.class);
 		String filterProperty = extractor.mappingPropertyValue("text");
-
-		logger.info("Text Property: " +filterProperty);
 
 		TextFilterParameter staticParam = new TextFilterParameter(sepa,
 						keyword,

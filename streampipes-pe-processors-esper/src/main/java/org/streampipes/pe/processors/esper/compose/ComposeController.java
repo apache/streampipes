@@ -5,12 +5,12 @@ import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
-import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.output.KeepOutputStrategy;
+import org.streampipes.model.output.OutputStrategy;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.util.ArrayList;
@@ -44,8 +44,8 @@ public class ComposeController extends StandaloneEventProcessorDeclarerSingleton
 	}
 
 	@Override
-	public ConfiguredEventProcessor<ComposeParameters, EventProcessor<ComposeParameters>> onInvocation(DataProcessorInvocation
-																																																							 sepa) {
+	public ConfiguredEventProcessor<ComposeParameters> onInvocation(DataProcessorInvocation
+                                                                          sepa, ProcessingElementParameterExtractor extractor) {
 
 		ComposeParameters staticParam = new ComposeParameters(sepa);
 

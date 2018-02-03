@@ -7,9 +7,6 @@ import org.streampipes.model.graph.DataSourceDescription;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionCoefficientProducer implements SemanticEventProducerDeclarer {
     @Override
     public DataSourceDescription declareModel() {

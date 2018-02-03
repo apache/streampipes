@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 17.10.2016.
- */
 public class HealthIndexProgram extends FlinkDataProcessorRuntime<HealthIndexParameters> {
 
     public HealthIndexProgram(HealthIndexParameters params) {
@@ -24,6 +21,9 @@ public class HealthIndexProgram extends FlinkDataProcessorRuntime<HealthIndexPar
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
         return messageStream[0]
                 .countWindowAll(2, 1)
-                .apply(new HealthIndexCalculator2(params.getFrictionMapping(), params.getTimestampMapping(), params.getMachineTypeMapping(), params.getHealthIndexVariables()));
+                .apply(new HealthIndexCalculator2(bindingParams.getFrictionMapping(),
+                        bindingParams.getTimestampMapping(),
+                        bindingParams.getMachineTypeMapping(),
+                        bindingParams.getHealthIndexVariables()));
     }
 }

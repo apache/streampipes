@@ -19,9 +19,6 @@ import org.streampipes.commons.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 12.10.2016.
- */
 public abstract class FrictionCoefficientStream extends AbstractAlreadyExistingStream {
 
     protected SpDataStream getPreparedEventStream(DataSourceDescription sep, AkerVariables variable, String pathName, String topic) {

@@ -2,11 +2,15 @@ package org.streampipes.config.model;
 
 public class ConfigItem {
 
-    String key;
-    String description;
-    String value;
-    String valueType;
+    private String key;
+    private String description;
+    private String value;
+    private String valueType;
+    private boolean isPassword;
 
+    public ConfigItem() {
+        setPassword(false);
+    }
 
     public String getKey() {
         return key;
@@ -38,5 +42,13 @@ public class ConfigItem {
 
     public void setValueType(String valueType) {
         this.valueType = valueType;
+    }
+
+    public boolean isPassword() {
+        return isPassword;
+    }
+
+    public void setPassword(boolean state) {
+        isPassword = state;
     }
 }

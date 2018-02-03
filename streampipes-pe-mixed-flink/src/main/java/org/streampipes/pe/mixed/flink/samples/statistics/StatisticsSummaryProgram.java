@@ -6,9 +6,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 import java.util.Map;
 
-/**
- * Created by riemer on 29.01.2017.
- */
 public class StatisticsSummaryProgram extends FlinkDataProcessorRuntime<StatisticsSummaryParameters> {
 
   public StatisticsSummaryProgram(StatisticsSummaryParameters params) {
@@ -21,6 +18,6 @@ public class StatisticsSummaryProgram extends FlinkDataProcessorRuntime<Statisti
 
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... messageStream) {
-    return messageStream[0].flatMap(new StatisticsSummaryCalculator(params.getListPropertyName()));
+    return messageStream[0].flatMap(new StatisticsSummaryCalculator(bindingParams.getListPropertyName()));
   }
 }

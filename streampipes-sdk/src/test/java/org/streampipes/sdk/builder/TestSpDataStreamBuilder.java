@@ -8,9 +8,6 @@ import org.streampipes.sdk.helpers.Groundings;
 import org.streampipes.sdk.utils.Datatypes;
 import org.junit.Test;
 
-/**
- * Created by riemer on 06.12.2016.
- */
 public class TestSpDataStreamBuilder {
 
     @Test

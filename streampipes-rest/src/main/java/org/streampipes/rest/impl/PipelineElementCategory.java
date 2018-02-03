@@ -13,7 +13,7 @@ import org.streampipes.model.DataProcessorType;
 import org.streampipes.model.client.Category;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.rest.api.IPipelineElementCategory;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.storage.management.StorageManager;
 
 @Path("/v2/categories")
 public class PipelineElementCategory extends AbstractRestInterface implements IPipelineElementCategory {

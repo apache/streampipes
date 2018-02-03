@@ -81,26 +81,31 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
 
     @Override
     public void register(String key, boolean defaultValue, String description) {
-        register(key, Boolean.toString(defaultValue), "xs:boolean", description);
+        register(key, Boolean.toString(defaultValue), "xs:boolean", description, false);
     }
 
     @Override
     public void register(String key, int defaultValue, String description) {
-        register(key, Integer.toString(defaultValue), "xs:integer", description);
+        register(key, Integer.toString(defaultValue), "xs:integer", description, false);
     }
 
     @Override
     public void register(String key, double defaultValue, String description) {
-        register(key, Double.toString(defaultValue), "xs:double", description);
+        register(key, Double.toString(defaultValue), "xs:double", description, false);
 
     }
 
     @Override
     public void register(String key, String defaultValue, String description) {
-        register(key, defaultValue, "xs:string", description);
+        register(key, defaultValue, "xs:string", description, false);
     }
 
-    private void register(String key, String defaultValue, String valueType, String description) {
+    @Override
+    public void registerPassword(String key, String defaultValue, String description) {
+        register(key, defaultValue, "xs:string", description, true);
+    }
+
+    private void register(String key, String defaultValue, String valueType, String description, boolean isPassword) {
 
         Optional<String> i = kvClient.getValueAsString(addSn(key));
         // TODO this check does not work
@@ -108,6 +113,8 @@ public class ConsulSpConfig extends SpConfig implements Runnable {
             kvClient.putValue(addSn(key), defaultValue);
             kvClient.putValue(addSn(key) + "_description", description);
             kvClient.putValue(addSn(key) + "_type", valueType);
+            if(isPassword)
+                kvClient.putValue(addSn(key) + "_isPassword", "true");
         }
 
         if (configProps != null) {

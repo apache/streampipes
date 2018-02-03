@@ -1,25 +1,23 @@
 package org.streampipes.pe.mixed.flink.samples.file;
 
 import org.streampipes.container.util.StandardTransportFormat;
-import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
-import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
-import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
 import org.streampipes.model.graph.DataSinkDescription;
 import org.streampipes.model.graph.DataSinkInvocation;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.streampipes.model.staticproperty.StaticProperty;
+import org.streampipes.pe.mixed.flink.samples.FlinkConfig;
+import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
+import org.streampipes.wrapper.flink.FlinkDataSinkRuntime;
+import org.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by riemer on 13.11.2016.
- */
-public class FileSinkController extends FlinkDataSinkDeclarer {
+public class FileSinkController extends FlinkDataSinkDeclarer<FileSinkParameters> {
 
 
     @Override
@@ -47,8 +45,9 @@ public class FileSinkController extends FlinkDataSinkDeclarer {
     }
 
     @Override
-    protected FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph) {
-        return new FileSinkProgram(graph, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
+    public FlinkDataSinkRuntime getRuntime(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+        FileSinkParameters params = new FileSinkParameters(graph);
+        return new FileSinkProgram(params, new FlinkDeploymentConfig(FlinkConfig.JAR_FILE,
                 FlinkConfig.INSTANCE.getFlinkHost(), FlinkConfig.INSTANCE.getFlinkPort()));
     }
 }

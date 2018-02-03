@@ -4,9 +4,6 @@ import org.apache.flink.api.common.functions.MapFunction;
 
 import java.util.Map;
 
-/**
- * Created by philippzehnder on 20.02.17.
- */
 public class AddUnionKeyMap implements MapFunction<Map<String, Object>, Map<String, Object>> {
     private int key;
 

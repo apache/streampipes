@@ -9,9 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
-/**
- * Created by riemer on 30.08.2016.
- */
 @Provider
 @GsonClientModel
 @Produces(MediaType.APPLICATION_JSON)

@@ -11,9 +11,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class PeakDetectionProgram extends FlinkDataProcessorRuntime<PeakDetectionParameters> {
 
   public PeakDetectionProgram(PeakDetectionParameters params) {
@@ -28,12 +25,12 @@ public class PeakDetectionProgram extends FlinkDataProcessorRuntime<PeakDetectio
   @Override
   protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>[] messageStream) {
 
-    Integer lag = params.getLag();
-    String groupBy = params.getGroupBy();
-    String valueToObserve = params.getValueToObserve();
-    Double threshold = params.getThreshold();
-    Double influence = params.getInfluence();
-    Integer countWindowSize = params.getCountWindowSize();
+    Integer lag = bindingParams.getLag();
+    String groupBy = bindingParams.getGroupBy();
+    String valueToObserve = bindingParams.getValueToObserve();
+    Double threshold = bindingParams.getThreshold();
+    Double influence = bindingParams.getInfluence();
+    Integer countWindowSize = bindingParams.getCountWindowSize();
 
     return messageStream[0]
             .keyBy(getKeySelector())
@@ -49,7 +46,7 @@ public class PeakDetectionProgram extends FlinkDataProcessorRuntime<PeakDetectio
   }
 
   private KeySelector<Map<String, Object>, String> getKeySelector() {
-    String groupBy = params.getGroupBy();
+    String groupBy = bindingParams.getGroupBy();
     return new KeySelector<Map<String, Object>, String>() {
       @Override
       public String getKey(Map<String, Object> in) throws Exception {

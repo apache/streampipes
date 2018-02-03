@@ -19,7 +19,12 @@ public class OntoReader {
 		String filename = "onto/" + ontology;
 		InputStream ins = OntoReader.class.getClassLoader()
 				.getResourceAsStream(filename);
-		repos.addAll(Rio.parse(ins, "",RDFFormat.RDFXML));
+
+		if(filename.endsWith(".ttl")) {
+			repos.addAll(Rio.parse(ins, "",RDFFormat.TURTLE));
+		} else {
+			repos.addAll(Rio.parse(ins, "",RDFFormat.RDFXML));
+		}
 
 	}
 }

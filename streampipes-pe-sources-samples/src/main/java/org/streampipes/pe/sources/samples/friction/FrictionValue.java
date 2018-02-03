@@ -1,8 +1,5 @@
 package org.streampipes.pe.sources.samples.friction;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionValue {
 
     private double value;

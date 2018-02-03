@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.streampipes.commons.Utils;
 import org.streampipes.container.util.StandardTransportFormat;
 import org.streampipes.model.DataProcessorType;
-import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.SpDataStream;
-import org.streampipes.model.schema.EventProperty;
-import org.streampipes.model.schema.EventPropertyPrimitive;
 import org.streampipes.model.graph.DataProcessorDescription;
 import org.streampipes.model.graph.DataProcessorInvocation;
 import org.streampipes.model.output.AppendOutputStrategy;
@@ -17,18 +14,21 @@ import org.streampipes.model.quality.Accuracy;
 import org.streampipes.model.quality.EventPropertyQualityRequirement;
 import org.streampipes.model.quality.EventStreamQualityRequirement;
 import org.streampipes.model.quality.Frequency;
+import org.streampipes.model.schema.EventProperty;
+import org.streampipes.model.schema.EventPropertyPrimitive;
+import org.streampipes.model.schema.EventSchema;
 import org.streampipes.model.staticproperty.MappingPropertyNary;
 import org.streampipes.model.staticproperty.MappingPropertyUnary;
 import org.streampipes.model.staticproperty.OneOfStaticProperty;
 import org.streampipes.model.staticproperty.Option;
 import org.streampipes.model.staticproperty.StaticProperty;
 import org.streampipes.model.util.SepaUtils;
+import org.streampipes.pe.processors.esper.config.EsperConfig;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.vocabulary.Geo;
 import org.streampipes.vocabulary.XSD;
-import org.streampipes.pe.processors.esper.config.EsperConfig;
-import org.streampipes.sdk.helpers.EpRequirements;
-import org.streampipes.wrapper.ConfiguredEventProcessor;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventProcessorDeclarerSingleton;
 
 import java.net.URI;
@@ -117,8 +117,8 @@ public class MovementController extends StandaloneEventProcessorDeclarerSingleto
 	}
 
 	@Override
-	public ConfiguredEventProcessor<MovementParameter, EventProcessor<MovementParameter>> onInvocation(DataProcessorInvocation
-																																																							 sepa) {
+	public ConfiguredEventProcessor<MovementParameter> onInvocation(DataProcessorInvocation
+                                                                          sepa, ProcessingElementParameterExtractor extractor) {
 		String epsgProperty = null;
 		OneOfStaticProperty osp = ((OneOfStaticProperty) (SepaUtils
 						.getStaticPropertyByInternalName(sepa, "epsg")));

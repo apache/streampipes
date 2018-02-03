@@ -18,9 +18,6 @@ import org.streampipes.sdk.helpers.OutputStrategies;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
 
-/**
- * Created by riemer on 08.04.2017.
- */
 public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<SpatialGridEnrichmentParameters> {
 
   @Override
@@ -51,9 +48,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
   }
 
   @Override
-  protected FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph) {
-
-    ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(graph);
+  public FlinkDataProcessorRuntime<SpatialGridEnrichmentParameters> getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     Integer cellSize = extractor.singleValueParameter("cellsize", Integer.class);
     String latitudePropertyName = extractor.mappingPropertyValue("mapping-latitude");

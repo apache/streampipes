@@ -15,13 +15,11 @@ public class InputStreamParams implements Serializable {
 	private EventGrounding eventGrounding;
 	private EventSchema eventSchema;
 	private String inName;
-	
-	private static String topicPrefix = "topic://";
-	
+
 	public InputStreamParams(SpDataStream inputStream) {
 		super();
 		this.eventGrounding = inputStream.getEventGrounding();
-		this.inName = eventGrounding.getTransportProtocol().getTopicName();
+		this.inName = eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
 		this.eventSchema = inputStream.getEventSchema();
 	}
 	

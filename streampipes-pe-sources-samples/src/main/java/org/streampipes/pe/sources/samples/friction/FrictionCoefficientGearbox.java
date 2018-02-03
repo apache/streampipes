@@ -4,9 +4,6 @@ import org.streampipes.model.SpDataStream;
 import org.streampipes.model.graph.DataSourceDescription;
 import org.streampipes.container.declarer.EventStreamDeclarer;
 
-/**
- * Created by riemer on 26.10.2016.
- */
 public class FrictionCoefficientGearbox extends FrictionCoefficient implements EventStreamDeclarer {
 
     protected FrictionCoefficientGearbox() {

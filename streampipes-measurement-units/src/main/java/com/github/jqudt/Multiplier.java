@@ -4,7 +4,9 @@
  */
 package com.github.jqudt;
 
-public class Multiplier {
+import java.io.Serializable;
+
+public class Multiplier implements Serializable{
 
 	private double offset;
 	private double multiplier;

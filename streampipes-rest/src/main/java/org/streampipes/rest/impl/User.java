@@ -2,15 +2,16 @@ package org.streampipes.rest.impl;
 
 import org.streampipes.model.client.messages.Notifications;
 import org.streampipes.rest.api.IUser;
-import org.streampipes.storage.controller.StorageManager;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by riemer on 01.11.2016.
- */
 @Path("/v2/users/{email}")
 public class User extends AbstractRestInterface implements IUser {
 
@@ -36,7 +37,7 @@ public class User extends AbstractRestInterface implements IUser {
         if (user != null) {
             org.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
             user.setPassword(existingUser.getPassword());
-            StorageManager.INSTANCE.getUserStorageAPI().updateUser(user);
+            getUserStorage().updateUser(user);
             return ok(Notifications.success("User updated"));
         } else {
             return statusMessage(Notifications.error("User not found"));
@@ -44,6 +45,6 @@ public class User extends AbstractRestInterface implements IUser {
     }
 
     private org.streampipes.model.client.user.User getUser(String email) {
-        return StorageManager.INSTANCE.getUserStorageAPI().getUser(email);
+        return getUserStorage().getUser(email);
     }
 }

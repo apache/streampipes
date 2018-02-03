@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.streampipes.container.init.DeclarersSingleton;
 import org.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.streampipes.pe.sources.samples.benni.BenniProducer;
 import org.streampipes.pe.sources.samples.config.SourcesConfig;
 import org.streampipes.pe.sources.samples.ddm.DDMProducer;
 import org.streampipes.pe.sources.samples.drillbit.DrillBitProducer;
@@ -18,7 +19,6 @@ import org.streampipes.pe.sources.samples.ram.RamProducer;
 import org.streampipes.pe.sources.samples.random.RandomDataProducer;
 import org.streampipes.pe.sources.samples.taxi.NYCTaxiProducer;
 import org.streampipes.pe.sources.samples.twitter.TwitterStreamProducer;
-import org.streampipes.pe.sources.samples.wekovi.WekoviDataProducer;
 import org.streampipes.pe.sources.samples.wunderbar.WunderbarProducer;
 import org.streampipes.pe.sources.samples.wunderbar.WunderbarProducer2;
 
@@ -48,9 +48,9 @@ public class SourcesSamplesInit extends StandaloneModelSubmitter {
 
         }
         DeclarersSingleton.getInstance().add(new WunderbarProducer())
-                .add(new WunderbarProducer2());
+                .add(new WunderbarProducer2()).add(new BenniProducer());
 
-        DeclarersSingleton.getInstance().add(new WekoviDataProducer());
+        //DeclarersSingleton.getInstance().add(new WekoviDataProducer());
 
         new SourcesSamplesInit().init(SourcesConfig.INSTANCE);
     }

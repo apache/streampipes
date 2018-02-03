@@ -9,8 +9,7 @@ import org.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.streampipes.sdk.helpers.EpRequirements;
 import org.streampipes.sdk.helpers.SupportedFormats;
 import org.streampipes.sdk.helpers.SupportedProtocols;
-import org.streampipes.wrapper.ConfiguredEventSink;
-import org.streampipes.wrapper.runtime.EventSink;
+import org.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParameters> {
@@ -41,9 +40,7 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
 
 
   @Override
-  public ConfiguredEventSink<CouchDbParameters, EventSink<CouchDbParameters>> onInvocation(DataSinkInvocation graph) {
-    DataSinkParameterExtractor extractor = getExtractor(graph);
-
+  public ConfiguredEventSink<CouchDbParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
     String hostname = extractor.singleValueParameter(DATABASE_HOST_KEY, String.class);
     Integer port = extractor.singleValueParameter(DATABASE_PORT_KEY, Integer.class);
     String dbName = extractor.singleValueParameter(DATABASE_NAME_KEY, String.class);

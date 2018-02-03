@@ -2,9 +2,6 @@ package org.streampipes.model.client.endpoint;
 
 import java.util.List;
 
-/**
- * Created by riemer on 05.10.2016.
- */
 public class RdfEndpointItem {
 
     private String name;

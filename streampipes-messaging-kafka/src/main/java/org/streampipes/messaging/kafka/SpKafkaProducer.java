@@ -11,9 +11,6 @@ import org.streampipes.model.grounding.KafkaTransportProtocol;
 import java.io.Serializable;
 import java.util.Properties;
 
-/**
- * Created by riemer on 01.10.2016.
- */
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
 
     private String brokerUrl;
@@ -58,9 +55,9 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     @Override
     public void connect(KafkaTransportProtocol protocolSettings) {
-        LOG.info("Kafka producer: Connecting to " +protocolSettings.getTopicName());
+        LOG.info("Kafka producer: Connecting to " +protocolSettings.getTopicDefinition().getActualTopicName());
         this.brokerUrl = protocolSettings.getBrokerHostname() +":" +protocolSettings.getKafkaPort();
-        this.topic = protocolSettings.getTopicName();
+        this.topic = protocolSettings.getTopicDefinition().getActualTopicName();
         this.producer = new KafkaProducer<>(getProperties());
         this.connected = true;
     }

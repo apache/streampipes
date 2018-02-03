@@ -18,6 +18,6 @@ public class ValueProgram extends FlinkDataProcessorRuntime<ValueParameters> {
 
     @Override
     protected DataStream<Map<String, Object>> getApplicationLogic(DataStream<Map<String, Object>>... dataStreams) {
-        return dataStreams[0].flatMap(new ValueEnricher(getParams().getValueName(), params.getValue()));
+        return dataStreams[0].flatMap(new ValueEnricher(params.getValueName(), params.getValue()));
     }
 }

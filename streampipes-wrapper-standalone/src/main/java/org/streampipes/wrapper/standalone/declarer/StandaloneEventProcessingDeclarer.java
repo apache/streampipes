@@ -1,22 +1,23 @@
 package org.streampipes.wrapper.standalone.declarer;
 
+import org.streampipes.model.graph.DataProcessorInvocation;
+import org.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.streampipes.wrapper.declarer.EventProcessorDeclarer;
 import org.streampipes.wrapper.params.binding.EventProcessorBindingParams;
-import org.streampipes.wrapper.runtime.EventProcessor;
+import org.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.streampipes.wrapper.standalone.param.StandaloneEventProcessorRuntimeParams;
 import org.streampipes.wrapper.standalone.runtime.StandaloneEventProcessorRuntime;
-
-import java.util.function.Supplier;
 
 public abstract class StandaloneEventProcessingDeclarer<B extends
         EventProcessorBindingParams> extends EventProcessorDeclarer<B, StandaloneEventProcessorRuntime> {
 
-  @Override
-  public StandaloneEventProcessorRuntime prepareRuntime(B bindingParameters,
-                                                        Supplier<EventProcessor<B>> supplier) {
+  public abstract ConfiguredEventProcessor<B> onInvocation(DataProcessorInvocation graph);
 
+  @Override
+  public StandaloneEventProcessorRuntime getRuntime(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    ConfiguredEventProcessor<B> configuredEngine = onInvocation(graph);
     StandaloneEventProcessorRuntimeParams<B> runtimeParams = new StandaloneEventProcessorRuntimeParams<>
-            (supplier, bindingParameters, false);
+            (configuredEngine.getEngineSupplier(), configuredEngine.getBindingParams(), false);
 
     return new StandaloneEventProcessorRuntime(runtimeParams);
   }

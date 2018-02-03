@@ -6,11 +6,13 @@ import org.apache.flink.configuration.ConfigConstants;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.runtime.akka.AkkaUtils;
 import org.apache.flink.runtime.client.JobStatusMessage;
+import org.apache.flink.runtime.concurrent.Executors;
+import org.apache.flink.runtime.highavailability.HighAvailabilityServices;
+import org.apache.flink.runtime.highavailability.HighAvailabilityServicesUtils;
 import org.apache.flink.runtime.instance.ActorGateway;
 import org.apache.flink.runtime.jobgraph.JobStatus;
 import org.apache.flink.runtime.leaderretrieval.LeaderRetrievalService;
 import org.apache.flink.runtime.messages.JobManagerMessages;
-import org.apache.flink.runtime.messages.JobManagerMessages.CancelJob;
 import org.apache.flink.runtime.messages.JobManagerMessages.RunningJobsStatus;
 import org.apache.flink.runtime.util.LeaderRetrievalUtils;
 import scala.Some;
@@ -47,7 +49,12 @@ public class FlinkJobController {
 			throw new IOException("Could not start actor system to communicate with JobManager", e);
 		}
 
-		LeaderRetrievalService lrs = LeaderRetrievalUtils.createLeaderRetrievalService(config);
+		//LeaderRetrievalService lrs = LeaderRetrievalUtils.createLeaderRetrievalService(config);
+		LeaderRetrievalService lrs = HighAvailabilityServicesUtils.createHighAvailabilityServices(
+						config,
+						Executors.directExecutor(),
+						HighAvailabilityServicesUtils.AddressResolution.TRY_ADDRESS_RESOLUTION).getJobManagerLeaderRetriever
+						(HighAvailabilityServices.DEFAULT_JOB_ID);
 
 		return LeaderRetrievalUtils.retrieveLeaderGateway(lrs, actorSystem, lookupTimeout);
 	}
@@ -85,7 +92,7 @@ public class FlinkJobController {
 		
 		try {
 			ActorGateway jobManager = getJobManagerGateway();
-			Future<Object> response = jobManager.ask(new CancelJob(jobId), askTimeout);
+			Future<Object> response = jobManager.ask(new JobManagerMessages.CancelJob(jobId), askTimeout);
 			Await.result(response, askTimeout);
 			return true;
 		}

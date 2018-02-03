@@ -5,10 +5,11 @@
 	<parent>
 		<groupId>org.streampipes</groupId>
 		<artifactId>streampipes-parent</artifactId>
-		<version>0.41.2</version>
+		<version>0.51.2-SNAPSHOT</version>
 	</parent>
 	<properties>
 		<elasticsearch.version>5.2.2</elasticsearch.version>
+		<flink.version>1.4.0</flink.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,9 +59,13 @@
 			<artifactId>streampipes-sdk</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.streampipes</groupId>
+			<artifactId>streampipes-measurement-units</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-filesystem_2.11</artifactId>
-			<version>1.2.0</version>
+			<version>${flink.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -96,12 +101,6 @@
             <groupId>org.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.streampipes</groupId>
-            <artifactId>streampipes-storage</artifactId>
-        </dependency>
-
-
     </dependencies>
 
 	<build>

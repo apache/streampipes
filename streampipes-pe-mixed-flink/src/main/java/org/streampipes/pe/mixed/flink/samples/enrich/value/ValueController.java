@@ -32,8 +32,7 @@ public class ValueController extends FlinkDataProcessorDeclarer<ValueParameters>
 
 
     @Override
-    protected FlinkDataProcessorRuntime<ValueParameters> getRuntime(DataProcessorInvocation sepa) {
-        ProcessingElementParameterExtractor extractor = ProcessingElementParameterExtractor.from(sepa);
+    public FlinkDataProcessorRuntime<ValueParameters> getRuntime(DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
 
         String valueName = extractor.singleValueParameter("valueName", String.class);
         String value = extractor.singleValueParameter("value", String.class);

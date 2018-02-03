@@ -10,9 +10,6 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-/**
- * Created by riemer on 29.08.2016.
- */
 public class StreamPipesApplication extends Application {
 
     @Override
@@ -42,6 +39,7 @@ public class StreamPipesApplication extends Application {
         apiClasses.add(ApplicationLink.class);
         apiClasses.add(User.class);
         apiClasses.add(ConsulConfig.class);
+        apiClasses.add(DataStream.class);
 
         // Serializers
         apiClasses.add(GsonWithIdProvider.class);

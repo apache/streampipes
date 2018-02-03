@@ -7,13 +7,11 @@ import org.streampipes.messaging.InternalEventProcessor;
 import org.streampipes.messaging.jms.ActiveMQConsumer;
 import org.streampipes.model.Notification;
 import org.streampipes.model.grounding.JmsTransportProtocol;
-import org.streampipes.storage.controller.StorageManager;
+import org.streampipes.model.grounding.SimpleTopicDefinition;
+import org.streampipes.storage.management.StorageDispatcher;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by riemer on 16.10.2016.
- */
 public abstract class AbstractNotificationSubscriber implements InternalEventProcessor<byte[]>, Runnable {
 
     protected String topic;
@@ -33,7 +31,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
         JmsTransportProtocol protocol = new JmsTransportProtocol();
         protocol.setPort(BackendConfig.INSTANCE.getJmsPort());
         protocol.setBrokerHostname("tcp://" +BackendConfig.INSTANCE.getJmsHost());
-        protocol.setTopicName(topic);
+        protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
 
         return protocol;
     }
@@ -48,8 +46,7 @@ public abstract class AbstractNotificationSubscriber implements InternalEventPro
     }
 
     protected void storeNotification(Notification message) {
-        StorageManager
-                .INSTANCE
+        StorageDispatcher.INSTANCE.getNoSqlStore()
                 .getNotificationStorageApi()
                 .addNotification(message);
     }

@@ -8,9 +8,6 @@ import org.streampipes.vocabulary.StreamPipes;
 
 import javax.persistence.Entity;
 
-/**
- * Created by riemer on 11.10.2016.
- */
 @RdfsClass(StreamPipes.APPLICATION_LINK)
 @Entity
 public class ApplicationLink extends UnnamedStreamPipesEntity {
