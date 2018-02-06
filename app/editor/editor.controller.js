@@ -19,7 +19,6 @@ EditorCtrl.$inject = ['$scope',
     '$mdDialog',
     '$window',
     '$compile',
-    'imageChecker',
     'getElementIconText',
     'initTooltips',
     '$mdToast',
@@ -29,7 +28,7 @@ EditorCtrl.$inject = ['$scope',
     'pipelineEditorService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, imageChecker, getElementIconText, initTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, getElementIconText, initTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;

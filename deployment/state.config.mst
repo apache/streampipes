@@ -35,8 +35,8 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/home/home.html',
                     controller: 'HomeCtrl',
                     resolve: {
-                        'AuthData': function (authService) {
-                            return authService.authenticate;
+                        'AuthData': function (AuthService) {
+                            return AuthService.authenticate();
                         }
                     }
                 }
