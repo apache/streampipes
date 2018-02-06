@@ -1,22 +1,22 @@
-<div flex class="page-container page-container-padding">
+<div flex class="page-container page-container-padding" ng-controller="OntologyCtrl as ctrl">
     <div flex="100" layout="row" style="padding:0px;background-color:#f6f6f6">
         <div flex="none" layout-wrap layout="row" layout-align="start center"
              style="padding-left:10px;font-size:14px;line-height:24px;border-bottom:1px solid #ccc">
-            <md-button class="md-accent" ng-click="openNamespaceDialog()">Manage Namespaces</md-button>
-            <md-button class="md-accent" ng-click="openImportDialog()">Manage Vocabularies</md-button>
+            <md-button class="md-accent" ng-click="ctrl.openNamespaceDialog()">Manage Namespaces</md-button>
+            <md-button class="md-accent" ng-click="ctrl.openImportDialog()">Manage Vocabularies</md-button>
         </div>
         <div layout-fill>
             <md-tabs md-border-bottom>
-                <md-tab label="Things" md-on-select="setSelectedTab('CONCEPTS')"></md-tab>
-                <md-tab label="Properties" md-on-select="setSelectedTab('PROPERTIES')"></md-tab>
+                <md-tab label="Things" md-on-select="ctrl.setSelectedTab('CONCEPTS')"></md-tab>
+                <md-tab label="Properties" md-on-select="ctrl.setSelectedTab('PROPERTIES')"></md-tab>
             </md-tabs>
         </div>
 
     </div>
     <div flex="100" layout="row" class="md-padding">
-        <div layout="column" flex="100" ng-if="selectedTab === 'PROPERTIES'">
+        <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'PROPERTIES'">
             <div layout="row">
-                <md-button class="md-accent" ng-click="openAddElementDialog('Property')">
+                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Property')">
                     <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Property"></md-icon>
                     Create Property
                 </md-button>
@@ -29,7 +29,7 @@
                     </div>
                     <md-content>
                         <md-list style="height:100vh">
-                            <md-list-item class="md-2-line" ng-repeat="item in properties">
+                            <md-list-item class="md-2-line" ng-repeat="item in ctrl.properties">
                                 <div class="letter-circle ontology-panel-title-property md-avatar">P</div>
                                 <div class="md-list-item-text">
                                     <h3> {{ item.title }} </h3>
@@ -51,12 +51,12 @@
                     </md-content>
                 </div>
                 <div flex="70" layout="column" class="ontology-panel-main ontology-panel-property"
-                     ng-show="propertySelected">
+                     ng-show="ctrl.propertySelected">
                     <div class="ontology-panel-title ontology-panel-property ontology-panel-title-property">
-                        {{propertyDetail.elementHeader.title}}
+                        {{ctrl.propertyDetail.elementHeader.title}}
                     </div>
                     <md-content class="md-padding">
-                        <form name="propertyForm" ng-submit="updateProperty()" role="form">
+                        <form name="propertyForm" ng-submit="ctrl.updateProperty()" role="form">
                             <div flex layout="column">
                                 <md-input-container><label>Label</label> <input
                                         type="text" ng-model="propertyDetail.rdfsLabel" required>
@@ -67,45 +67,45 @@
                             </div>
                             <md-divider></md-divider>
                             <h4>Type Definition</h4>
-                            <div ng-show="propertyDetail.rangeDefined">
+                            <div ng-show="ctrl.propertyDetail.rangeDefined">
                                 <a ng-click="reset()">(Remove Type Definition)</a>
-                                <div ng-show="propertyDetail.range.rangeType === 'PRIMITIVE'">
+                                <div ng-show="ctrl.propertyDetail.range.rangeType === 'PRIMITIVE'">
                                     <h5>Primitive Property</h5>
-                                    <md-radio-group ng-model="propertyDetail.range.rdfsDatatype" class="md-accent">
-                                        <md-radio-button ng-repeat="primitiveClass in primitiveClasses"
+                                    <md-radio-group ng-model="ctrl.propertyDetail.range.rdfsDatatype" class="md-accent">
+                                        <md-radio-button ng-repeat="primitiveClass in ctrl.primitiveClasses"
                                                          ng-value="primitiveClass.id"
-                                                         ng-checked="propertyDetail.range.rdfsDatatype === primitiveClass.id">
+                                                         ng-checked="ctrl.propertyDetail.range.rdfsDatatype === primitiveClass.id">
                                             <b>{{primitiveClass.title}}</b><br/>
                                             {{primitiveClass.description}}
                                         </md-radio-button>
                                     </md-radio-group>
                                 </div>
-                                <div ng-show="propertyDetail.range.rangeType === 'QUANTITATIVE_VALUE'">
+                                <div ng-show="ctrl.propertyDetail.range.rangeType === 'QUANTITATIVE_VALUE'">
                                     <h5>Quantitative Value</h5>
                                 </div>
-                                <div ng-show="propertyDetail.rangeType === 'ENUMERATION'">
+                                <div ng-show="ctrl.propertyDetail.rangeType === 'ENUMERATION'">
                                     <h5>Enumeration</h5>
                                     <md-input-container flex><label>Minimum Value</label>
-                                        <input type="text" ng-model="propertyDetail.range.minValue">
+                                        <input type="text" ng-model="ctrl.propertyDetail.range.minValue">
                                     </md-input-container>
                                     <md-input-container flex><label>Maximum Value</label>
-                                        <input type="text" ng-model="propertyDetail.range.maxValue">
+                                        <input type="text" ng-model="ctrl.propertyDetail.range.maxValue">
                                     </md-input-container>
                                     <md-input-container flex><label>Unit Code</label>
-                                        <input type="text" ng-model="propertyDetail.range.unitCode">
+                                        <input type="text" ng-model="ctrl.propertyDetail.range.unitCode">
                                     </md-input-container>
                                 </div>
 
                             </div>
-                            <div ng-show="!propertyDetail.rangeDefined">
+                            <div ng-show="!ctrl.propertyDetail.rangeDefined">
                                 <div layout="column">
-                                    <md-radio-group ng-model="selectedRangeType" class="md-accent">
-                                        <md-radio-button ng-repeat="rt in rangeTypes" ng-value="rt.rangeType">
+                                    <md-radio-group ng-model="ctrl.selectedRangeType" class="md-accent">
+                                        <md-radio-button ng-repeat="rt in ctrl.rangeTypes" ng-value="ctrl.rt.rangeType">
                                             <b>{{rt.title}}</b><br/>
                                             {{rt.description}}
                                         </md-radio-button>
                                     </md-radio-group>
-                                    <md-button class="md-accent" ng-click="addTypeDefinition()" type="button">Add
+                                    <md-button class="md-accent" ng-click="ctrl.addTypeDefinition()" type="button">Add
                                         Type
                                         Definition
                                     </md-button>
@@ -114,13 +114,13 @@
                             <md-divider></md-divider>
                             <div class="form-actions">
                                 <md-button class="md-accent md-raised" type="submit"
-                                           ng-disabled="propertyForm.$pristine || propertyForm.$invalid || loading">
+                                           ng-disabled="ctrl.propertyForm.$pristine || ctrl.propertyForm.$invalid || ctrl.loading">
                                     Save
                                 </md-button>
                                 <md-progress-circular class="md-accent" md-mode="indeterminate"
-                                                      ng-show="loading"></md-progress-circular>
+                                                      ng-show="ctrl.loading"></md-progress-circular>
                                 <div class="md-warn" ng-show="errorMessagePresent">
-                                    <h4>{{errorMessage}}</h4>
+                                    <h4>{{ctrl.errorMessage}}</h4>
                                 </div>
                             </div>
                         </form>
@@ -128,13 +128,13 @@
                 </div>
             </div>
         </div>
-        <div layout="column" flex="100" ng-if="selectedTab === 'CONCEPTS'">
+        <div layout="column" flex="100" ng-if="ctrl.selectedTab === 'CONCEPTS'">
             <div layout="row">
-                <md-button class="md-accent" ng-click="openAddElementDialog('Concept')">
+                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Concept')">
                     <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Concept"></md-icon>
                     Create Concept
                 </md-button>
-                <md-button class="md-accent" ng-click="openAddElementDialog('Instance')">
+                <md-button class="md-accent" ng-click="ctrl.openAddElementDialog('Instance')">
                     <md-icon md-svg-icon="content:ic_add_circle_outline_24px" aria-label="Add Instance"></md-icon>
                     Create Instance
                 </md-button>
@@ -148,7 +148,7 @@
                     </div>
                     <md-content>
                         <md-list style="height:100vh">
-                            <md-list-item class="md-2-line" ng-repeat-start="item in concepts">
+                            <md-list-item class="md-2-line" ng-repeat-start="item in ctrl.concepts">
                                 <div class="letter-circle ontology-panel-title-concept md-avatar">C</div>
                                 <div class="md-list-item-text">
                                     <h3> {{ item.title }} </h3>
@@ -169,7 +169,7 @@
                                 <md-divider/>
                             </md-list-item>
                             <md-list-item class="md-2-line" style="padding-left:30px !important;" ng-repeat-end
-                                          ng-repeat="node in item.nodes">
+                                          ng-repeat="node in ctrl.item.nodes">
                                 <div class="letter-circle ontology-panel-title-instance md-avatar">I</div>
                                 <div class="md-list-item-text">
                                     <h3> {{ node.title }} </h3>
@@ -190,27 +190,27 @@
 
                 <div flex="70" layout="column"
                      class="ontology-panel-main ontology-panel-concept"
-                     ng-show="conceptSelected && !instanceSelected">
+                     ng-show="ctrl.conceptSelected && !ctrl.instanceSelected">
                     <div class="ontology-panel-title ontology-panel-concept ontology-panel-title-concept">
-                        {{conceptDetail.elementHeader.title}}
+                        {{ctrl.conceptDetail.elementHeader.title}}
                     </div>
                     <md-content class="md-padding">
                         <div flex layout="column">
                             <md-input-container><label>Label</label> <input
-                                    type="text" ng-model="conceptDetail.rdfsLabel" required>
+                                    type="text" ng-model="ctrl.conceptDetail.rdfsLabel" required>
                             </md-input-container>
                             <md-input-container flex><label>Description</label>
-                                <input type="text" ng-model="conceptDetail.rdfsDescription" required>
+                                <input type="text" ng-model="ctrl.conceptDetail.rdfsDescription" required>
                             </md-input-container>
                         </div>
                         <md-divider></md-divider>
                         <p/>
                         <h4>Properties</h4>
 
-                        <div ng-show="conceptDetail.domainProperties">
-                            <div ng-repeat="property in conceptDetail.domainProperties">
+                        <div ng-show="ctrl.conceptDetail.domainProperties">
+                            <div ng-repeat="property in ctrl.conceptDetail.domainProperties">
                                 <div class="ontology-panel-concept md-padding" style="margin-bottom:10px;">
-                                    <p><a ng-click="removePropertyFromClass(property)">(Remove this
+                                    <p><a ng-click="ctrl.removePropertyFromClass(property)">(Remove this
                                         property)</a>
                                     </p>
                                     <b>{{property.elementHeader.title}}</b>
@@ -220,7 +220,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div ng-show="!conceptDetail.domainProperties || conceptDetail.domainProperties.length == 0">
+                        <div ng-show="!ctrl.conceptDetail.domainProperties || ctrl.conceptDetail.domainProperties.length == 0">
                             No properties present.
                         </div>
                         <md-divider></md-divider>
@@ -228,45 +228,45 @@
                         <h4>Add new Property</h4>
                         <div layout="row">
                             <select ng-model="currentlySelectedClassProperty">
-                                <option ng-repeat="property in properties" value="{{property.id}}">
+                                <option ng-repeat="property in ctrl.properties" value="{{property.id}}">
                                     {{property.title}}
                                 </option>
                             </select>
                             <md-button class="md-accent"
-                                       ng-click="addPropertyToClass(currentlySelectedClassProperty)"
+                                       ng-click="ctrl.addPropertyToClass(ctrl.currentlySelectedClassProperty)"
                                        type="button">
                                 Add Property
                             </md-button>
                         </div>
                         <md-divider></md-divider>
                         <div flex="100" layout="column" layout-align="center end">
-                            <md-button class="md-accent md-raised" ng-click="storeClass()" type="submit">Save
+                            <md-button class="md-accent md-raised" ng-click="ctrl.storeClass()" type="submit">Save
                             </md-button>
                         </div>
                     </md-content>
                 </div>
                 <div flex="70" layout="column"
-                     class="ontology-panel-main ontology-panel-instance" ng-show="instanceSelected">
+                     class="ontology-panel-main ontology-panel-instance" ng-show="ctrl.instanceSelected">
                     <div class="ontology-panel-title ontology-panel-instance ontology-panel-title-instance">
-                        {{instanceDetail.elementHeader.title}}
+                        {{ctrl.instanceDetail.elementHeader.title}}
                     </div>
                     <md-content class="md-padding">
                         <div flex layout="column">
                             <md-input-container><label>Label</label> <input
-                                    type="text" ng-model="instanceDetail.rdfsLabel" required>
+                                    type="text" ng-model="ctrl.instanceDetail.rdfsLabel" required>
                             </md-input-container>
                             <md-input-container flex><label>Description</label>
-                                <input type="text" ng-model="instanceDetail.rdfsDescription" required>
+                                <input type="text" ng-model="ctrl.instanceDetail.rdfsDescription" required>
                             </md-input-container>
                         </div>
                         <md-divider></md-divider>
                         <p/>
                         <h4>Properties</h4>
 
-                        <div ng-show="instanceDetail.domainProperties">
-                            <div ng-repeat="property in instanceDetail.domainProperties">
+                        <div ng-show="ctrl.instanceDetail.domainProperties">
+                            <div ng-repeat="property in ctrl.instanceDetail.domainProperties">
                                 <div class="ontology-panel-instance md-padding" style="margin-bottom:10px;">
-                                    <p><a ng-click="removePropertyFromInstance(property)">(Remove this
+                                    <p><a ng-click="ctrl.removePropertyFromInstance(property)">(Remove this
                                         property)</a>
                                     </p>
                                     <h4>{{property.elementHeader.title}}</h4>
@@ -303,7 +303,7 @@
                             </div>
                             <md-divider></md-divider>
                             <div flex="100" layout="column" layout-align="center end">
-                                <md-button class="md-accent md-raised" ng-click="storeInstance()" type="submit">Save
+                                <md-button class="md-accent md-raised" ng-click="ctrl.storeInstance()" type="submit">Save
                                 </md-button>
                             </div>
                         </div>

@@ -1,62 +1,69 @@
-export default function ContextController($scope, $mdDialog, restApi, Upload) {
+export class ContextController {
 
-	$scope.contexts = [];
-	$scope.addSelected = false;
-	$scope.newContext = {};
-	$scope.file = {};
+    constructor($mdDialog, restApi, Upload) {
+        this.restApi = restApi;
+        this.$mdDialog = $mdDialog;
+        this.Upload = Upload;
 
-	$scope.availableFormats = ["RDFXML", "JSONLD", "TURTLE", "RDFA"];
+        this.contexts = [];
+        this.addSelected = false;
+        this.newContext = {};
+        this.file = {};
 
-	$scope.getContexts = function() {
-		restApi.getAvailableContexts()
-			.success(function(contexts){
-				$scope.contexts = contexts;
-			})
-			.error(function(msg){
-				console.log(msg);
-			});
-	}
+        this.availableFormats = ["RDFXML", "JSONLD", "TURTLE", "RDFA"];
 
-	$scope.deleteContext = function(contextId) {
-		restApi.deleteContext(contextId)
-			.success(function(msg){
-				$scope.getContexts();
-			})
-			.error(function(msg){
-				console.log(msg);
-			}); 	
-	}
+        this.getContexts();
+    }
 
-	$scope.showAddInput = function() {
-		$scope.addSelected = true;
-	}
+    getContexts() {
+        this.restApi.getAvailableContexts()
+            .success(contexts => {
+                this.contexts = contexts;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
 
-	$scope.submit = function(file) {
-		$scope.f = file;
-		if (file) {
-			file.upload = Upload.upload({
-				url: '/semantic-epa-backend/api/v2/contexts',
-				data: {file: file, 'context' : angular.toJson($scope.newContext)}
-			});
+    deleteContext(contextId) {
+        this.restApi.deleteContext(contextId)
+            .success(msg => {
+                this.getContexts();
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
 
-			file.upload.then(function (response) {
-			}, function (response) {
-				if (response.status > 0)
-					$scope.errorMsg = response.status + ': ' + response.data;
-			}, function (evt) {
-				file.progress = Math.min(100, parseInt(100.0 * 
-					evt.loaded / evt.total));
-			});
-		}   
-	}
+    showAddInput() {
+        this.addSelected = true;
+    }
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+    submit(file) {
+        if (file) {
+            file.upload = this.Upload.upload({
+                url: '/semantic-epa-backend/api/v2/contexts',
+                data: {file: file, 'context' : angular.toJson(this.newContext)}
+            });
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+            file.upload.then(function (response) {
+            }, function (response) {
+                if (response.status > 0)
+                    this.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 *
+                    evt.loaded / evt.total));
+            });
+        }
+    }
 
-	$scope.getContexts();
+    hide() {
+        this.$mdDialog.hide();
+    };
+
+    cancel() {
+        this.$mdDialog.cancel();
+    };
 }
+
+ContextController.$inject = ['$mdDialog', 'restApi', 'Upload'];

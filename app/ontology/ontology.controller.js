@@ -1,279 +1,322 @@
-OntologyCtrl.$inject = ['$scope', 'restApi', '$mdToast', '$mdDialog'];
-import AddDialogController from './add-dialog.controller';
-import DialogController from './dialog.controller';
-import ContextController from './context.controller';
+import { AddDialogController } from './add-dialog.controller';
+import { DialogController } from './dialog.controller';
+import { ContextController } from './context.controller';
 
 
-export default function OntologyCtrl($scope, restApi, $mdToast, $mdDialog) {
+// export default function OntologyCtrl($scope, restApi, $mdToast, $mdDialog) {
+export class OntologyCtrl {
 
-	$scope.primitiveClasses = [{"title" : "String", "description" : "A textual datatype, e.g., 'machine1'", "id" : "http://www.w3.org/2001/XMLSchema#string"},
-		{"title" : "Boolean", "description" : "A true/false value", "id" : "http://www.w3.org/2001/XMLSchema#boolean"},
-		{"title" : "Integer", "description" : "A whole-numerical datatype, e.g., '1'", "id" : "http://www.w3.org/2001/XMLSchema#integer"},
-		{"title" : "Double", "description" : "A floating-point number, e.g., '1.25'", "id" : "http://www.w3.org/2001/XMLSchema#double"}];
+    constructor(restApi, $mdToast, $mdDialog) {
+        this.restApi = restApi;
+        this.$mdToast = $mdToast;
+        this.$mdDialog = $mdDialog;
 
-$scope.rangeTypes = [{"title" : "Primitive Type", "description" : "A primitive type, e.g., a number or a textual value", "rangeType" : "PRIMITIVE"},
-	{"title" : "Enumeration", "description" : "A textual value with a specified value set", "rangeType" : "ENUMERATION"},
-	{"title" : "Quantitative Value", "description" : "A numerical value within a specified range", "rangeType" : "QUANTITATIVE_VALUE"}];
+        this.primitiveClasses = [{
+            "title": "String",
+            "description": "A textual datatype, e.g., 'machine1'",
+            "id": "http://www.w3.org/2001/XMLSchema#string"
+        },
+            {"title": "Boolean", "description": "A true/false value", "id": "http://www.w3.org/2001/XMLSchema#boolean"},
+            {
+                "title": "Integer",
+                "description": "A whole-numerical datatype, e.g., '1'",
+                "id": "http://www.w3.org/2001/XMLSchema#integer"
+            },
+            {
+                "title": "Double",
+                "description": "A floating-point number, e.g., '1.25'",
+                "id": "http://www.w3.org/2001/XMLSchema#double"
+            }];
 
-$scope.properties = [];
-$scope.propertySelected = false;
-$scope.propertyDetail = {};
-$scope.selectedPrimitive = $scope.primitiveClasses[0];
-$scope.selectedRangeType = $scope.rangeTypes[0].rangeType;
+        this.rangeTypes = [{
+            "title": "Primitive Type",
+            "description": "A primitive type, e.g., a number or a textual value",
+            "rangeType": "PRIMITIVE"
+        },
+            {
+                "title": "Enumeration",
+                "description": "A textual value with a specified value set",
+                "rangeType": "ENUMERATION"
+            },
+            {
+                "title": "Quantitative Value",
+                "description": "A numerical value within a specified range",
+                "rangeType": "QUANTITATIVE_VALUE"
+            }];
 
-$scope.concepts = [];
-$scope.conceptSelected = false;
-$scope.conceptDetail = {};
-$scope.currentlySelectedClassProperty;
 
-$scope.instanceSelected = false;
-$scope.instanceDetail = {};
-$scope.selectedInstanceProperty = "";
+        this.properties = [];
+        this.propertySelected = false;
+        this.propertyDetail = {};
+        this.selectedPrimitive = this.primitiveClasses[0];
+        this.selectedRangeType = this.rangeTypes[0].rangeType;
 
-$scope.selectedTab = "CONCEPTS";
+        this.concepts = [];
+        this.conceptSelected = false;
+        this.conceptDetail = {};
+        this.currentlySelectedClassProperty;
 
-$scope.setSelectedTab = function(type) {
-	$scope.selectedTab = type;
-}
+        this.instanceSelected = false;
+        this.instanceDetail = {};
+        this.selectedInstanceProperty = "";
 
-$scope.loadProperties = function(){
-	restApi.getOntologyProperties()
-		.success(function(propertiesData){
-			$scope.properties = propertiesData;
-		})
-		.error(function(msg){
-			console.log(msg);
-		});
+        this.selectedTab = "CONCEPTS";
+
+        this.loadProperties();
+        this.loadConcepts();
+
+    }
+
+    setSelectedTab(type) {
+        this.selectedTab = type;
+    }
+
+    loadProperties() {
+        this.restApi.getOntologyProperties()
+            .success(propertiesData => {
+                this.properties = propertiesData;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
+
+    loadConcepts() {
+        this.restApi.getOntologyConcepts()
+            .success(conceptsData => {
+                this.concepts = conceptsData;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
+
+    loadPropertyDetails(propertyId) {
+        this.restApi.getOntologyPropertyDetails(propertyId)
+            .success(propertiesData => {
+                this.propertyDetail = propertiesData;
+                this.propertySelected = true;
+            })
+            .error(msg => {
+                this.propertySelected = false;
+                console.log(msg);
+            });
+    };
+
+    loadConceptDetails(conceptId) {
+        this.instanceSelected = false;
+        this.restApi.getOntologyConceptDetails(conceptId)
+            .success(conceptData => {
+                this.conceptDetail = conceptData;
+                this.conceptSelected = true;
+            })
+            .error(msg => {
+                this.conceptSelected = false;
+                console.log(msg);
+            });
+    };
+
+    loadInstanceDetails(instanceId) {
+        this.restApi.getOntologyInstanceDetails(instanceId)
+            .success(instanceData => {
+                this.instanceDetail = instanceData;
+                this.instanceSelected = true;
+            })
+            .error(msg => {
+                this.instanceSelected = false;
+                console.log(msg);
+            });
+    };
+
+    addPropertyToClass(p) {
+        if (!this.conceptDetail.domainProperties) this.conceptDetail.domainProperties = [];
+        this.restApi.getOntologyPropertyDetails(p)
+            .success(propertiesData => {
+                this.conceptDetail.domainProperties.push(propertiesData);
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
+
+    addPropertyToInstance() {
+        if (!this.instanceDetail.domainProperties) this.instanceDetail.domainProperties = [];
+        this.restApi.getOntologyPropertyDetails(this.selectedInstanceProperty)
+            .success(propertiesData => {
+                this.instanceDetail.domainProperties.push(propertiesData);
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+
+    }
+
+    removePropertyFromInstancefunction(property) {
+        this.instanceDetail.domainProperties.splice(this.instanceDetail.domainProperties.indexOf(property), 1);
+    }
+
+    removePropertyFromClass(property) {
+        this.conceptDetail.domainProperties.splice(this.conceptDetail.domainProperties.indexOf(property), 1);
+    }
+
+    storeClass() {
+        this.loading = true;
+        this.restApi.updateOntologyConcept(this.conceptDetail.elementHeader.id, this.conceptDetail)
+            .success(msg => {
+                this.loading = false;
+                this.showToast("Concept updated.");
+            })
+            .error(msg => {
+                this.loading = false;
+            });
+    }
+
+    storeInstance() {
+        this.loading = true;
+        this.restApi.updateOntologyInstance(this.instanceDetail.elementHeader.id, this.instanceDetail)
+            .success(msg => {
+                this.loading = false;
+                this.showToast("Instance updated.");
+                this.loadConcepts();
+            })
+            .error(msg => {
+                this.loading = false;
+            });
+    }
+
+    addTypeDefinition() {
+        this.propertyDetail.range = {};
+        this.propertyDetail.range.rangeType = this.selectedRangeType;
+        this.propertyDetail.rangeDefined = true;
+        if (this.selectedRangeType === 'PRIMITIVE')
+        {
+            this.propertyDetail.rdfsDatatype = "";
+        } else if (this.selectedRangeType === 'QUANTITATIVE_VALUE')
+        {
+            this.propertyDetail.range.minValue = -1;
+            this.propertyDetail.range.maxValue = -1;
+            this.propertyDetail.range.unitCode = "";
+        } else if (this.selectedRangeType === 'ENUMERATION')
+        {
+            this.propertyDetail.range.minValue = -1;
+            this.propertyDetail.range.maxValue = -1;
+            this.propertyDetail.range.unitCode = "";
+        }
+    }
+
+    reset() {
+        this.propertyDetail.rangeDefined = false;
+    }
+
+    updateProperty() {
+        this.loading = true;
+        this.propertyDetail.labelDefined = true;
+        this.restApi.updateOntologyProperty(this.propertyDetail.elementHeader.id, this.propertyDetail)
+            .success(msg => {
+                this.loading = false;
+                this.showToast("Property updated.");
+            })
+            .error(msg => {
+                this.loading = false;
+
+            });
+    }
+
+    openNamespaceDialog(){
+        this.$mdDialog.show({
+            controller: DialogController,
+            controllerAs: 'ctrl',
+            templateUrl: 'app/ontology/templates/manageNamespacesDialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+        })
+    };
+
+    openAddElementDialog(elementType){
+        this.openAddElementDialog(elementType, undefined);
+    };
+
+
+    deleteConcept(conceptId) {
+        this.restApi.deleteOntologyConcept(conceptId)
+            .success(msg => {
+                this.loadConcepts();
+                this.conceptSelected = false;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
+
+    deleteProperty(propertyId) {
+        this.restApi.deleteOntologyProperty(propertyId)
+            .success(msg => {
+                this.loadProperties();
+                this.propertySelected = false;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
+
+    deleteInstance(instanceId) {
+        this.restApi.deleteOntologyInstance(instanceId)
+            .success(msg => {
+                this.loadConcepts();
+                this.instanceSelected = false;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    };
+
+    // TODO fix after refactoring
+    // $scope.$on('loadProperty', function(event, propertyId) {
+    //     $scope.loadPropertyDetails(propertyId);
+    // });
+
+
+
+    showToast(text) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
+                .content(text)
+                .position("top right")
+                .hideDelay(3000)
+        );
+    }
+
+    openImportDialog() {
+        this.$mdDialog.show({
+            controller: ContextController,
+            controllerAs: 'ctrl',
+            templateUrl: 'app/ontology/templates/manageVocabulariesDialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+        })
+    }
+
+    openAddElementDialog(elementType, conceptId){
+        this.$mdDialog.show({
+            controller: AddDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: 'app/ontology/templates/createElementDialog.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+            // scope: this,
+            locals : {
+                elementType : elementType,
+                conceptId : conceptId,
+                loadConcepts: this.loadConcepts,
+                loadConceptDetails: this.loadConceptDetails,
+                loadProperties: this.loadProperties,
+                loadPropertyDetails: this.loadPropertyDetails,
+                loadInstanceDetails: this.loadInstanceDetails
+
+            }
+        })
+    }
+
 };
 
-$scope.loadConcepts = function(){
-	restApi.getOntologyConcepts()
-		.success(function(conceptsData){
-			$scope.concepts = conceptsData;
-		})
-		.error(function(msg){
-			console.log(msg);
-		});
-};
-
-$scope.loadPropertyDetails = function(propertyId){
-	restApi.getOntologyPropertyDetails(propertyId)
-		.success(function(propertiesData){
-			$scope.propertyDetail = propertiesData;
-			$scope.propertySelected = true;
-		})
-		.error(function(msg){
-			$scope.propertySelected = false;
-			console.log(msg);
-		});
-};
-
-$scope.loadConceptDetails = function(conceptId){
-	$scope.instanceSelected = false;
-	restApi.getOntologyConceptDetails(conceptId)
-		.success(function(conceptData){
-			$scope.conceptDetail = conceptData;
-			$scope.conceptSelected = true;
-		})
-		.error(function(msg){
-			$scope.conceptSelected = false;
-			console.log(msg);
-		});
-};
-
-$scope.loadInstanceDetails = function(instanceId){
-	restApi.getOntologyInstanceDetails(instanceId)
-		.success(function(instanceData){
-			$scope.instanceDetail = instanceData;
-			$scope.instanceSelected = true;
-		})
-		.error(function(msg){
-			$scope.instanceSelected = false;
-			console.log(msg);
-		});
-};
-
-$scope.addPropertyToClass = function(p) {
-	if (!$scope.conceptDetail.domainProperties) $scope.conceptDetail.domainProperties = [];
-	restApi.getOntologyPropertyDetails(p)
-		.success(function(propertiesData){
-			$scope.conceptDetail.domainProperties.push(propertiesData);
-		})
-		.error(function(msg){
-			console.log(msg);
-		});
-}
-
-$scope.addPropertyToInstance = function() {
-	if (!$scope.instanceDetail.domainProperties) $scope.instanceDetail.domainProperties = [];
-	restApi.getOntologyPropertyDetails($scope.selectedInstanceProperty)
-		.success(function(propertiesData){
-			$scope.instanceDetail.domainProperties.push(propertiesData);
-		})
-		.error(function(msg){
-			console.log(msg);
-		});
-
-}
-
-$scope.removePropertyFromInstance = function(property) {
-	$scope.instanceDetail.domainProperties.splice($scope.instanceDetail.domainProperties.indexOf(property), 1);
-}
-
-$scope.removePropertyFromClass = function(property) {
-	$scope.conceptDetail.domainProperties.splice($scope.conceptDetail.domainProperties.indexOf(property), 1);
-}
-
-$scope.storeClass = function() {
-	$scope.loading = true;
-	restApi.updateOntologyConcept($scope.conceptDetail.elementHeader.id, $scope.conceptDetail)
-		.success(function(msg){
-			$scope.loading = false;
-			$scope.showToast("Concept updated.");
-		})
-		.error(function(msg){
-			$scope.loading = false;
-
-		});
-}
-
-$scope.storeInstance = function() {
-	$scope.loading = true;
-	restApi.updateOntologyInstance($scope.instanceDetail.elementHeader.id, $scope.instanceDetail)
-		.success(function(msg){
-			$scope.loading = false;
-			$scope.showToast("Instance updated.");
-			$scope.loadConcepts();
-		})
-		.error(function(msg){
-			$scope.loading = false;
-
-		});
-}
-
-$scope.addTypeDefinition = function() {
-	$scope.propertyDetail.range = {};
-	$scope.propertyDetail.range.rangeType = $scope.selectedRangeType;
-	$scope.propertyDetail.rangeDefined = true;
-	if ($scope.selectedRangeType === 'PRIMITIVE')
-	{
-		$scope.propertyDetail.rdfsDatatype = "";
-	} else if ($scope.selectedRangeType === 'QUANTITATIVE_VALUE')
-	{
-		$scope.propertyDetail.range.minValue = -1;
-		$scope.propertyDetail.range.maxValue = -1;
-		$scope.propertyDetail.range.unitCode = "";
-	} else if ($scope.selectedRangeType === 'ENUMERATION')
-	{
-		$scope.propertyDetail.range.minValue = -1;
-		$scope.propertyDetail.range.maxValue = -1;
-		$scope.propertyDetail.range.unitCode = "";
-	}
-}
-
-$scope.reset = function() {
-	$scope.propertyDetail.rangeDefined = false;
-}
-
-$scope.updateProperty = function() {
-	$scope.loading = true;
-	$scope.propertyDetail.labelDefined = true;
-	restApi.updateOntologyProperty($scope.propertyDetail.elementHeader.id, $scope.propertyDetail)
-		.success(function(msg){
-			$scope.loading = false;
-			$scope.showToast("Property updated.");
-		})
-		.error(function(msg){
-			$scope.loading = false;
-
-		});
-}
-
-$scope.openNamespaceDialog = function(){
-	$mdDialog.show({
-		controller: DialogController,
-		templateUrl: 'app/ontology/templates/manageNamespacesDialog.tmpl.html',
-		parent: angular.element(document.body),
-		clickOutsideToClose:true,
-	})
-};
-
-$scope.openAddElementDialog = function(elementType){
-	$scope.openAddElementDialog(elementType, undefined);
-};
-
-$scope.openAddElementDialog = function(elementType, conceptId){
-	$mdDialog.show({
-		controller: AddDialogController,
-		templateUrl: 'app/ontology/templates/createElementDialog.tmpl.html',
-		parent: angular.element(document.body),
-		clickOutsideToClose:true,
-		scope:$scope,
-		preserveScope:true,
-		locals : {
-			elementType : elementType,
-			conceptId : conceptId
-		}
-	})
-}
-
-$scope.deleteConcept = function(conceptId) {
-	restApi.deleteOntologyConcept(conceptId)
-		.success(function(msg){
-			$scope.loadConcepts();
-			$scope.conceptSelected = false;
-		})
-		.error(function(msg){
-			console.log(msg);
-		}); 
-};
-
-$scope.deleteProperty = function(propertyId) {
-	restApi.deleteOntologyProperty(propertyId)
-		.success(function(msg){
-			$scope.loadProperties();
-			$scope.propertySelected = false;
-		})
-		.error(function(msg){
-			console.log(msg);
-		}); 
-};
-
-$scope.deleteInstance = function(instanceId) {
-	restApi.deleteOntologyInstance(instanceId)
-		.success(function(msg){
-			$scope.loadConcepts();
-			$scope.instanceSelected = false;
-		})
-		.error(function(msg){
-			console.log(msg);
-		}); 
-};
-
-$scope.$on('loadProperty', function(event, propertyId) {
-	$scope.loadPropertyDetails(propertyId);
-});
-
-$scope.loadProperties();
-$scope.loadConcepts();
-
-
-$scope.showToast = function(text) {
-	$mdToast.show(
-		$mdToast.simple()
-		.content(text)
-		.position("top right")
-		.hideDelay(3000)
-	);
-}
-
-$scope.openImportDialog = function() {
-	$mdDialog.show({
-		controller: ContextController,
-		templateUrl: 'app/ontology/templates/manageVocabulariesDialog.tmpl.html',
-		parent: angular.element(document.body),
-		clickOutsideToClose:true,
-	})
-}
-
-};
+OntologyCtrl.$inject = ['restApi', '$mdToast', '$mdDialog'];

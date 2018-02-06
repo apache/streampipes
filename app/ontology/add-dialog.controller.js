@@ -1,64 +1,81 @@
-export default function AddDialogController($scope, $mdDialog, restApi, elementType, conceptId) {
+export class AddDialogController {
 
-	$scope.elementData = {};
-	$scope.elementData.namespace = "";
-	$scope.elementData.id = "";
-	$scope.elementData.elementName = "";
-	//$scope.elementData.instanceOf = conceptId;
-	$scope.elementType = elementType;
-	$scope.conceptId = conceptId;
-	$scope.namespaces = [];
+    constructor($mdDialog, restApi, elementType, conceptId, loadConcepts, loadConceptDetails, loadProperties,
+                loadPropertyDetails, loadInstanceDetails) {
+        this.restApi = restApi;
+        this.$mdDialog = $mdDialog;
 
-	$scope.getNamespaces = function() {
-		restApi.getOntologyNamespaces()
-			.success(function(namespaces){
-				$scope.namespaces = namespaces;
-			})
-			.error(function(msg){
-				console.log(msg);
-			});
-	}
+        this.loadConcepts = loadConcepts;
+        this.loadConceptDetails = loadConceptDetails;
+        this.loadProperties = loadProperties;
+        this.loadPropertyDetails = loadPropertyDetails;
+        this.loadInstanceDetails = loadInstanceDetails;
 
-	$scope.add = function() {
-		var promise;
-		if (elementType === 'Property') 
-		{
-			restApi.addOntologyProperty($scope.elementData)
-				.success(function(msg){
-					$scope.loadProperties();
-					$scope.loadPropertyDetails($scope.elementData.namespace +$scope.elementData.elementName);
-				});
-		}
-		else if (elementType === 'Concept') 
-		{
-			restApi.addOntologyConcept($scope.elementData)
-				.success(function(msg){
-					$scope.loadConcepts();
-					$scope.loadConceptDetails($scope.elementData.namespace +$scope.elementData.elementName);
-				});
-		}
-		else 
-		{
-			if ($scope.conceptId != undefined) $scope.elementData.instanceOf = conceptId;
-			$scope.elementData.id=$scope.elementData.namespace +$scope.elementData.elementName
-			restApi.addOntologyInstance($scope.elementData).success(function(msg){
+        this.elementData = {};
+        this.elementData.namespace = "";
+        this.elementData.id = "";
+        this.elementData.elementName = "";
+        this.elementType = elementType;
+        this.conceptId = conceptId;
+        this.namespaces = [];
 
-				$scope.loadConcepts();
-				if ($scope.conceptId != undefined) $scope.loadConceptDetails(conceptId);
-				$scope.loadInstanceDetails($scope.elementData.namespace +$scope.elementData.elementName);
-			});
-		}
+        this.getNamespaces();
+    }
 
-		$scope.hide();
-	};
 
-	$scope.hide = function() {
-		$mdDialog.hide();
-	};
+    getNamespaces() {
+        this.restApi.getOntologyNamespaces()
+            .success(namespaces => {
+                this.namespaces = namespaces;
+            })
+            .error(msg => {
+                console.log(msg);
+            });
+    }
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
-	};
+    add() {
+        var promise;
+        if (this.elementType === 'Property')
+        {
+            this.restApi.addOntologyProperty(this.elementData)
+                .success(msg => {
+                    this.loadProperties();
+                    this.loadPropertyDetails(this.elementData.namespace + this.elementData.elementName);
+                });
+        }
+        else if (this.elementType === 'Concept')
+        {
+            this.restApi.addOntologyConcept(this.elementData)
+                .success(msg => {
+                    this.loadConcepts();
+                    this.loadConceptDetails(this.elementData.namespace + this.elementData.elementName);
+                });
+        }
+        else
+        {
+            // parent: this,
+            if (this.conceptId != undefined) this.elementData.instanceOf = conceptId;
+            this.elementData.id = this.elementData.namespace + this.elementData.elementName
+            this.restApi.addOntologyInstance(this.elementData).success(msg => {
+                this.loadConcepts();
+                if (this.conceptId != undefined) this.loadConceptDetails(conceptId);
+                this.loadInstanceDetails(this.elementData.namespace + this.elementData.elementName);
+            });
+        }
 
-	$scope.getNamespaces();
+        this.hide();
+    };
+
+    hide() {
+        this.$mdDialog.hide();
+    };
+
+    cancel() {
+        this.$mdDialog.cancel();
+    };
+
+
 }
+
+AddDialogController.$inject = ['$mdDialog', 'restApi', 'elementType', 'conceptId', 'loadConcepts', 'loadConceptDetails',
+'loadProperties', 'loadPropertyDetails', 'loadInstanceDetails'];
