@@ -1,4 +1,4 @@
-export default function categoryAlreadyInPipelineFilter() { 
+export function CategoryAlreadyInPipelineFilter() {
 	return function(pipelines, categoryId) {
 		var result = [];
 		angular.forEach(pipelines, function(pipeline) {
