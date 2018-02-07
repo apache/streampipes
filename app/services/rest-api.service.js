@@ -2,10 +2,9 @@ import _ from 'npm/lodash';
 
 
 export class RestApi {
-
-
-    constructor ($rootScope, $http, apiConstants) {
-        this.$rootScope = $rootScope;
+    
+    constructor ($http, apiConstants, AuthStatusService) {
+        this.AuthStatusService = AuthStatusService;
         this.$http = $http;
         this.apiConstants = apiConstants;
     }
@@ -15,7 +14,7 @@ export class RestApi {
     }
 
     urlBase() {
-        return this.getServerUrl() +'/users/' + this.$rootScope.email;
+        return this.getServerUrl() +'/users/' + this.AuthStatusService.email;
     };
 
     getUserDetails() {
@@ -496,4 +495,4 @@ export class RestApi {
     };
 }
 
-RestApi.$inject = ['$rootScope', '$http', 'apiConstants'];
+RestApi.$inject = ['$http', 'apiConstants', 'AuthStatusService'];
