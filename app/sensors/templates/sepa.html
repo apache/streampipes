@@ -1,35 +1,35 @@
 <div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('basics')" aria-label="Basics" ng-click="selectEpaTab('basics')">1
+        <md-button ng-class="ctrl.getEpaActiveTabCss('basics')" aria-label="Basics" ng-click="ctrl.selectEpaTab('basics')">1
         </md-button>
         Basics
     </div>
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('streams')" aria-label="Streams" ng-click="selectEpaTab('streams')">2
+        <md-button ng-class="ctrl.getEpaActiveTabCss('streams')" aria-label="Streams" ng-click="ctrl.selectEpaTab('streams')">2
         </md-button>
         Stream Requirements
     </div>
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('staticProperties')" aria-label="Streams"
-                   ng-click="selectEpaTab('staticProperties')">3
+        <md-button ng-class="ctrl.getEpaActiveTabCss('staticProperties')" aria-label="Streams"
+                   ng-click="ctrl.selectEpaTab('staticProperties')">3
         </md-button>
         Static Properties
     </div>
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('outputStrategy')" aria-label="Deployment"
-                   ng-click="selectEpaTab('outputStrategy')">4
+        <md-button ng-class="ctrl.getEpaActiveTabCss('outputStrategy')" aria-label="Deployment"
+                   ng-click="ctrl.selectEpaTab('outputStrategy')">4
         </md-button>
         Output Strategy
     </div>
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('supportedGrounding')" aria-label="Deployment"
-                   ng-click="selectEpaTab('supportedGrounding')">5
+        <md-button ng-class="ctrl.getEpaActiveTabCss('supportedGrounding')" aria-label="Deployment"
+                   ng-click="ctrl.selectEpaTab('supportedGrounding')">5
         </md-button>
         Supported Grounding
     </div>
     <div layout="column" flex="33" layout-align="center center">
-        <md-button ng-class="getEpaActiveTabCss('deployment')" aria-label="Deployment"
-                   ng-click="selectEpaTab('deployment')">6
+        <md-button ng-class="ctrl.getEpaActiveTabCss('deployment')" aria-label="Deployment"
+                   ng-click="ctrl.selectEpaTab('deployment')">6
         </md-button>
         Deployment
     </div>

@@ -1,0 +1,55 @@
+<div layout="column" flex="100" class="md-padding-left">
+    <md-checkbox ng-model="ctrl.accuracySelected" aria-label="ctrl.qualities[0].label">
+        {{qualities[0].label}}
+    </md-checkbox>
+    <div ng-if="ctrl.accuracySelected" class="md-padding-left">
+        <div layout="row" flex="70">
+
+            <div flex="50">
+                <md-input-container>
+                    <label>Quantity Value</label>
+                    <input ng-model="element.description" required ng-disabled="ctrl.disabled">
+                </md-input-container>
+            </div>
+            <div flex="50">
+                <measurement-unit disabled="ctrl.disabled" property="ctrl.property.properties.measurementUnit"
+                                  style="width:100%;"/>
+            </div>
+        </div>
+    </div>
+    <md-checkbox ng-model="ctrl.precisionSelected" aria-label="ctrl.qualities[1].label">
+        {{ctrl.qualities[1].label}}
+    </md-checkbox>
+    <div ng-if="ctrl.precisionSelected" class="md-padding-left">
+        <div layout="row" flex="70">
+
+            <div flex="50">
+                <md-input-container>
+                    <label>Quantity Value</label>
+                    <input ng-model="ctrl.element.description" required ng-disabled="ctrl.disabled">
+                </md-input-container>
+            </div>
+            <div flex="50">
+                <measurement-unit disabled="ctrl.disabled" property="ctrl.property.properties.measurementUnit"
+                                  style="width:100%;"/>
+            </div>
+        </div>
+    </div>
+    <md-checkbox ng-model="ctrl.resolutionSelected" aria-label="ctrl.qualities[2].label">
+        {{ctrl.qualities[2].label}}
+    </md-checkbox>
+    <div ng-if="ctrl.resolutionSelected" class="md-padding-left">
+        <div layout="row" flex="70">
+            <div flex="50">
+                <md-input-container>
+                    <label>Quantity Value</label>
+                    <input ng-model="ctrl.element.description" required ng-disabled="ctrl.disabled">
+                </md-input-container>
+            </div>
+            <div flex="50">
+                <measurement-unit disabled="ctrl.disabled" property="ctrl.property.properties.measurementUnit"
+                                  style="width:100%;"/>
+            </div>
+        </div>
+    </div>
+</div>

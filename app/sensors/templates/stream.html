@@ -4,7 +4,7 @@
             <sepa-basics element="selectedStream"></sepa-basics>
 
             <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
-                <md-button class="md-raised md-accent" ng-click="switchSepaTab(1)">Next</md-button>
+                <md-button class="md-raised md-accent" ng-click="ctrl.switchSepaTab(1)">Next</md-button>
             </section>
         </md-content>
     </md-tab>
@@ -12,15 +12,15 @@
         <md-content class="md-padding">
             <div layout="row" flex="100" class="md-padding">
                 <h3 class="md-display-2">Schema</h3>
-                <div ng-repeat="property in selectedStream.eventSchema.eventProperties">
+                <div ng-repeat="property in ctrl.selectedStream.eventSchema.eventProperties">
                     <h4>Property {{$index+1}}</h4>
                     <md-input-container>
                         <label>Datatype</label>
-                        <input ng-model="property.properties.runtimeType" required ng-disabled="{{editingDisabled}}">
+                        <input ng-model="property.properties.runtimeType" required ng-disabled="{{ctrl.editingDisabled}}">
                     </md-input-container>
                     <md-input-container>
                         <label>Runtime Name</label>
-                        <input ng-model="property.properties.runtimeName" required ng-disabled="{{editingDisabled}}">
+                        <input ng-model="property.properties.runtimeName" required ng-disabled="{{ctrl.editingDisabled}}">
                     </md-input-container>
                     <md-input-container>
                         <label>Domain Properties</label>

@@ -1,0 +1,16 @@
+<div layout="row" flex="100" class="md-padding">
+	<div flex="100" layout="column">
+		<md-input-container>
+	        <label>Name</label>
+	        <input ng-model="ctrl.element.name" required ng-disabled="ctrl.disabled">
+      	</md-input-container>
+	    <md-input-container>
+	    	<label>Description</label>
+	        <input ng-model="ctrl.element.description" required ng-disabled="ctrl.disabled">
+	    </md-input-container>
+	    <md-input-container>
+	        <label>Internal Identifier</label>
+	        <input ng-model="ctrl.element.pathName" required ng-disabled="ctrl.disabled">
+      	</md-input-container>
+	</div>
+</div>

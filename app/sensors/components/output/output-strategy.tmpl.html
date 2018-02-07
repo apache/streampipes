@@ -1,0 +1,27 @@
+<div ng-repeat = "(key, strategy) in ctrl.strategies">
+	<collapsible title-label="ctrl.getType(strategy)" list="ctrl.strategies" index="key" disabled="ctrl.disabled" subtitle="true" removable="!ctrl.disabled" collapsible="true" subtitle="true" layout-fill>
+		<div ng-show="strategy.type == ctrl.outputStrategyTypes[0].type">
+			<event-properties properties="strategy.properties.eventProperties" disabled="ctrl.disabled"></event-properties>
+		</div>
+		<div ng-show="strategy.type == ctrl.outputStrategyTypes[1].type">
+			(no further configuration required)
+		</div>
+		<div ng-show="strategy.type == ctrl.outputStrategyTypes[2].type">
+			<event-properties properties="strategy.properties" disabled="ctrl.disabled"></event-properties>
+		</div>
+		<div ng-show="strategy.type == ctrl.outputStrategyTypes[3].type">
+			(not yet implemented)
+		</div>
+		<div ng-show="strategy.type == ctrl.outputStrategyTypes[4].type">
+			(no further configuration required)
+		</div>
+	</collapsible>
+</div>
+<div layout="row">
+	<md-select  ng-disabled="ctrl.disabled" ng-model="ctrl.selectedOutputStrategy" placeholder="Select output strategy type" ng-disabled="ctrl.strategies.length >= 1">
+          <md-option ng-repeat="spt in ctrl.outputStrategyTypes" value="{{spt.type}}">
+            <b>{{spt.label}}</b>
+          </md-option>
+	</md-select>
+	<md-button class="md-accent" ng-click="ctrl.addOutputStrategy(ctrl.strategies)" ng-disabled="ctrl.strategies.length >= 1 || ctrl.disabled">Add output strategy</md-button>
+</div>	

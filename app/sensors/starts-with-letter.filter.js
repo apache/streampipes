@@ -1,4 +1,4 @@
-export default function startsWithLetter() {
+export function startsWithLetter() {
 	return function (items, fromLetter, toLetter) {
 		var filtered = [];
 		for (var i = 0; i < items.length; i++) {

@@ -1,249 +1,266 @@
-SensorsCtrl.$inject = ['$scope', 'restApi', '$filter'];
+export class SensorsCtrl {
 
-export default function SensorsCtrl($scope, restApi, $filter) {
-	$scope.editingDisabled = true;
+	constructor(restApi, $filter) {
+		this.restApi = restApi;
+		this.$filter = $filter;
 
-	$scope.categoryOpt = {displayProp: 'type', idProp: 'type', externalIdProp: 'type'};
+		this.editingDisabled = true;
 
-	$scope.sepas = [];
-	$scope.sources = [];
-	$scope.actions = [];
+		this.categoryOpt = {displayProp: 'type', idProp: 'type', externalIdProp: 'type'};
 
-	$scope.selectedSepa;
-	$scope.selectedSource;
-	$scope.selectedAction;
-	$scope.selectedStream;
+		this.sepas = [];
+		this.sources = [];
+		this.actions = [];
 
-	$scope.sepaSelected = false;
-	$scope.sourceSelected = false;
-	$scope.actionSelected = false;
-	$scope.streamSelected = false;
+		this.selectedSepa;
+		this.selectedSource;
+		this.selectedAction;
+		this.selectedStream;
 
-	$scope.availableEpaCategories = [];
-	$scope.availableEcCategories = [];
+		this.sepaSelected = false;
+		this.sourceSelected = false;
+		this.actionSelected = false;
+		this.streamSelected = false;
 
-	$scope.selectedCategories = [];
+		this.availableEpaCategories = [];
+		this.availableEcCategories = [];
 
-	$scope.selectedTab = "SOURCES";
+		this.selectedCategories = [];
 
-	$scope.activeProducerTab = "basics";
-	$scope.activeStreamTab = "basics";
-	$scope.activeEpaTab = "basics";
-	$scope.activeConsumerTab = "basics";
+		this.selectedTab = "SOURCES";
 
-	$scope.showHints = false;
+		this.activeProducerTab = "basics";
+		this.activeStreamTab = "basics";
+		this.activeEpaTab = "basics";
+		this.activeConsumerTab = "basics";
 
-	$scope.deploymentSettings = [{"elementType" : "SEPA", 
-		"outputTypes" :  [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
-			{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."}],
-	"runtimeType" : {"title" : "Runtime implementation", "runtimeTypes" :[{"type" : "ALGORITHM", "description" : "Custom implementation"},
-		{"type" : "ESPER", "description" : "Esper"},
-		{"type" : "FLINK", "description" : "Apache Flink"},
-		{"type" : "STORM", "description" : "Apache Storm"}]}},
-	{"elementType" : "SEP", 
-		"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to implement an adapter based on this description."},
-			{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
-			{"type" : "DIRECT_IMPORT", "description" : "Specified streams are already available on the message broker (no adapter implementation needed)."}],
-	"runtimeType" : {"title" : "Adapter type (beta)", "runtimeTypes" : [{"type" : "CUSTOM", "description" : "Custom adapter"},
-		{"type" : "OPC", "description" : "OPC adapter"},
-		{"type" : "FILE", "description" : "File adapter"},
-		{"type" : "MYSQL", "description" : "MySQL adapter"}]}},
-	{"elementType" : "SEC", 
-		"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
-			{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
-		],
-	"runtimeTypes" : {"title" : "Runtime implementation", "runtimeTypes" : [{"type" : "ACTION", "description" : "Custom implementation"},
-		{"type" : "ACTION_FLINK", "description" : "Apache Flink"},
-	]}}];
+		this.showHints = false;
 
-	$scope.setSelectedTab = function(type) {
-		$scope.selectedTab = type;
+		this.deploymentSettings = [{"elementType" : "SEPA",
+			"outputTypes" :  [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
+				{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."}],
+			"runtimeType" : {"title" : "Runtime implementation", "runtimeTypes" :[{"type" : "ALGORITHM", "description" : "Custom implementation"},
+				{"type" : "ESPER", "description" : "Esper"},
+				{"type" : "FLINK", "description" : "Apache Flink"},
+				{"type" : "STORM", "description" : "Apache Storm"}]}},
+			{"elementType" : "SEP",
+				"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to implement an adapter based on this description."},
+					{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
+					{"type" : "DIRECT_IMPORT", "description" : "Specified streams are already available on the message broker (no adapter implementation needed)."}],
+				"runtimeType" : {"title" : "Adapter type (beta)", "runtimeTypes" : [{"type" : "CUSTOM", "description" : "Custom adapter"},
+					{"type" : "OPC", "description" : "OPC adapter"},
+					{"type" : "FILE", "description" : "File adapter"},
+					{"type" : "MYSQL", "description" : "MySQL adapter"}]}},
+			{"elementType" : "SEC",
+				"outputTypes" : [{"type" : "IMPLEMENTATION", "description" : "I'd like to generate a runtime implementation."},
+					{"type" : "DESCRIPTION", "description" : "I'd like to generate the description only."},
+				],
+				"runtimeTypes" : {"title" : "Runtime implementation", "runtimeTypes" : [{"type" : "ACTION", "description" : "Custom implementation"},
+					{"type" : "ACTION_FLINK", "description" : "Apache Flink"},
+				]}}];
+
+
+		this.loadSepas();
+		this.loadActions();
+		this.loadSources();
+		this.loadEcCategories();
+		this.loadEpaCategories();
+
 	}
 
-	$scope.toggleEditMode = function() {
-		$scope.editingDisabled = !$scope.editingDisabled;
+
+	setSelectedTab(type) {
+		this.selectedTab = type;
+	}
+
+	toggleEditMode() {
+		this.editingDisabled = !this.editingDisabled;
 
 	}
 
-	$scope.selectProducerTab = function(name) {
-		$scope.activeProducerTab = name;
+	selectProducerTab(name) {
+		this.activeProducerTab = name;
 	}
 
-	$scope.isProducerTabSelected = function(name) {
-		return $scope.activeProducerTab == name;
+	isProducerTabSelected(name) {
+		return this.activeProducerTab == name;
 	}
 
-	$scope.getProducerActiveTabCss = function(name) {
-		if (name == $scope.activeProducerTab) return "md-fab md-accent";
+	getProducerActiveTabCss(name) {
+		if (name == this.activeProducerTab) {
+			return "md-fab md-accent";
+		}
+		else {
+			return "md-fab md-accent wizard-inactive";
+		}
+	}
+
+	selectEpaTab(name) {
+		this.activeEpaTab = name;
+	}
+
+	isEpaTabSelected(name) {
+		return this.activeEpaTab == name;
+	}
+
+	getEpaActiveTabCss(name) {
+		if (name == this.activeEpaTab) {
+			return "md-fab md-accent";
+		}
+		else {
+			return "md-fab md-accent wizard-inactive";
+		}
+	}
+
+	selectConsumerTab(name) {
+		this.activeConsumerTab = name;
+	}
+
+	isConsumerTabSelected(name) {
+		return this.activeConsumerTab == name;
+	}
+
+	getConsumerActiveTabCss(name) {
+		if (name == this.activeConsumerTab) return "md-fab md-accent";
 		else return "md-fab md-accent wizard-inactive";
 	}
 
-	$scope.selectEpaTab = function(name) {
-		$scope.activeEpaTab = name;
-	}
 
-	$scope.isEpaTabSelected = function(name) {
-		return $scope.activeEpaTab == name;
-	}
-
-	$scope.getEpaActiveTabCss = function(name) {
-		if (name == $scope.activeEpaTab) return "md-fab md-accent";
-		else return "md-fab md-accent wizard-inactive";
-	}
-
-	$scope.selectConsumerTab = function(name) {
-		$scope.activeConsumerTab = name;
-	}
-
-	$scope.isConsumerTabSelected = function(name) {
-		return $scope.activeConsumerTab == name;
-	}
-
-	$scope.getConsumerActiveTabCss = function(name) {
-		if (name == $scope.activeConsumerTab) return "md-fab md-accent";
-		else return "md-fab md-accent wizard-inactive";
-	}
-
-
-	$scope.removeStream = function(eventStreams, stream) {
+	removeStream(eventStreams, stream) {
 		eventStreams.splice(stream, 1);
 	}
 
-	$scope.loadStreamDetails = function(stream, editingDisabled) {
-		$scope.editingDisabled = editingDisabled;
-		$scope.streamSelected = true;
-		$scope.selectedStream = stream;
+	loadStreamDetails(stream, editingDisabled) {
+		this.editingDisabled = editingDisabled;
+		this.streamSelected = true;
+		this.selectedStream = stream;
 	}
 
-	$scope.addNewSepa = function() {
-		$scope.selectedSepa = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
-		$scope.sepaSelected = true;
-		$scope.editingDisabled = false;
+	addNewSepa() {
+		this.selectedSepa = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
+		this.sepaSelected = true;
+		this.editingDisabled = false;
 	}
 
-	$scope.addNewAction = function() {
-		$scope.selectedAction = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
-		$scope.actionSelected = true;
-		$scope.editingDisabled = false;
+	addNewAction() {
+		this.selectedAction = {"spDataStreams" : [], "name" : "", "staticProperties" : []};
+		this.actionSelected = true;
+		this.editingDisabled = false;
 	}
 
-	$scope.addNewSource = function() {
-		$scope.selectedSource = undefined;
-		$scope.selectedSource = {"spDataStreams" : [], "name" : ""};
-		$scope.sourceSelected = true;
-		$scope.streamSelected = false;
-		$scope.selectedStream = "";
-		$scope.editingDisabled = false;
-		$scope.activeProducerTab = "basics";
-		$scope.activeStreamTab = "basics";
+	addNewSource() {
+		this.selectedSource = undefined;
+		this.selectedSource = {"spDataStreams" : [], "name" : ""};
+		this.sourceSelected = true;
+		this.streamSelected = false;
+		this.selectedStream = "";
+		this.editingDisabled = false;
+		this.activeProducerTab = "basics";
+		this.activeStreamTab = "basics";
 	}
 
-	$scope.addStream = function(element) {
+	addStream(element) {
 		element.push({"name" : "", "eventSchema" : {"eventProperties" : []}, "eventGrounding" : {"transportFormats" : [], "transportProtocols" : []}});
-		$scope.loadStreamDetails(element[element.length-1]);
+		this.loadStreamDetails(element[element.length-1]);
 	}
 
-	$scope.cloneStream = function(eventStreams, stream) {
+	cloneStream(eventStreams, stream) {
 		var clonedStream = angular.copy(stream);
 		clonedStream.uri = "";
 		eventStreams.push(clonedStream);
 	}
 
-	$scope.loadSepaDetails = function(uri, keepIds, editingDisabled) {
-		restApi.getSepaDetailsFromOntology(uri, keepIds)
-			.success(function(sepaData){
-				$scope.selectedSepa = sepaData;
-				$scope.sepaSelected = true;
-				$scope.editingDisabled = editingDisabled;
+	loadSepaDetails(uri, keepIds, editingDisabled) {
+		this.restApi.getSepaDetailsFromOntology(uri, keepIds)
+			.success(sepaData => {
+				this.selectedSepa = sepaData;
+				this.sepaSelected = true;
+				this.editingDisabled = editingDisabled;
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	}
 
-	$scope.loadActionDetails = function(uri, keepIds, editingDisabled) {
-		restApi.getActionDetailsFromOntology(uri, keepIds)
-			.success(function(actionData){
-				$scope.selectedAction = actionData;
-				$scope.actionSelected = true;
-				$scope.editingDisabled = editingDisabled;
+	loadActionDetails(uri, keepIds, editingDisabled) {
+		this.restApi.getActionDetailsFromOntology(uri, keepIds)
+			.success(actionData => {
+				this.selectedAction = actionData;
+				this.actionSelected = true;
+				this.editingDisabled = editingDisabled;
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	}
 
-	$scope.loadSourceDetails = function(index) {
-		$scope.editingDisabled = true;
-		$scope.sourceSelected = true;
-		$scope.selectedSource = $scope.sources[index];
+	loadSourceDetails(index) {
+		this.editingDisabled = true;
+		this.sourceSelected = true;
+		this.selectedSource = this.sources[index];
 	}
 
-	$scope.loadSepas = function(){
-		restApi.getSepasFromOntology()
-			.success(function(sepaData){
-				$scope.sepas = $filter('orderBy')(sepaData, "name", false);;
+	loadSepas(){
+		this.restApi.getSepasFromOntology()
+			.success(sepaData => {
+				this.sepas = this.$filter('orderBy')(sepaData, "name", false);;
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	};
 
-	$scope.getSourceDetailsFromOntology = function(sourceId) {
-		restApi.getSourceDetailsFromOntology(sourceId, false) 
-			.success(function(source){
-				$scope.editingDisabled = false;
-				$scope.sourceSelected = true;
-				$scope.selectedSource = source;
-				$scope.selectedSource.uri = "";		
-				angular.forEach($scope.selectedSource.spDataStreams, function(stream, key) {
+	getSourceDetailsFromOntology(sourceId) {
+		this.restApi.getSourceDetailsFromOntology(sourceId, false)
+			.success(source => {
+				this.editingDisabled = false;
+				this.sourceSelected = true;
+				this.selectedSource = source;
+				this.selectedSource.uri = "";
+				angular.forEach(this.selectedSource.spDataStreams, (stream, key) => {
 					stream.uri = "";
 				});
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	}
 
-	$scope.loadSources = function(){
-		restApi.getSourcesFromOntology()
-			.success(function(sources){
-
-				$scope.sources = $filter('orderBy')(sources, "name", false);
+	loadSources(){
+		this.restApi.getSourcesFromOntology()
+			.success(sources => {
+				this.sources = this.$filter('orderBy')(sources, "name", false);
+				console.log(this.sources);
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	};
 
-	$scope.loadActions = function(){
-		restApi.getActionsFromOntology()
-			.success(function(actions){
-				$scope.actions = $filter('orderBy')(actions, "name", false);
+	loadActions(){
+		this.restApi.getActionsFromOntology()
+			.success(actions => {
+				this.actions = this.$filter('orderBy')(actions, "name", false);
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			});
 	};
 
-	$scope.loadEpaCategories = function() {
-		restApi.getEpaCategories()
-			.success(function(epas){
-				$scope.availableEpaCategories = epas;
+	loadEpaCategories() {
+		this.restApi.getEpaCategories()
+			.success(epas => {
+				this.availableEpaCategories = epas;
 			});
 	}
 
-	$scope.loadEcCategories = function() {
-		restApi.getEcCategories()
-			.success(function(ecs){
-				$scope.availableEcCategories = ecs;
+	loadEcCategories() {
+		this.restApi.getEcCategories()
+			.success(ecs => {
+				this.availableEcCategories = ecs;
 			});
 	}
 
-	$scope.loadSepas();
-	$scope.loadActions();
-	$scope.loadSources();
-	$scope.loadEcCategories();
-	$scope.loadEpaCategories();
+}
 
-};
+SensorsCtrl.$inject = ['restApi', '$filter'];

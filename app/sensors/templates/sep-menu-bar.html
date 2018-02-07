@@ -10,16 +10,16 @@
                     </button>
                     <md-menu-content>
                         <md-menu-item class="md-indent">
-                            <md-button ng-click="addNewSource()">&nbsp;New model</md-button>
+                            <md-button ng-click="ctrl.addNewSource()">&nbsp;New model</md-button>
                         </md-menu-item>
                         <md-menu-item class="md-indent">
                             <md-menu>
                                 <md-button ng-click="$mdOpenMenu()">Create from existing model</md-button>
                                 <md-menu-content>
-                                    <div ng-repeat="(pointer, source) in sources track by $index | orderBy: 'name'">
+                                    <div ng-repeat="(pointer, source) in ctrl.sources track by $index">
                                         <md-menu-item class="md-indent">
 
-                                            <md-button ng-click="getSourceDetailsFromOntology(source.uri)">
+                                            <md-button ng-click="ctrl.getSourceDetailsFromOntology(source.uri)">
                                                 &nbsp;{{source.name}}
                                             </md-button>
                                         </md-menu-item>
@@ -40,9 +40,9 @@
                         View existing sources
                     </button>
                     <md-menu-content>
-                        <div ng-repeat="(pointer, source) in sources track by $index | orderBy: 'name'">
+                        <div ng-repeat="(pointer, source) in ctrl.sources track by $index">
                             <md-menu-item class="md-indent">
-                                <md-button ng-click="loadSourceDetails(pointer)">&nbsp;{{source.name}}
+                                <md-button ng-click="ctrl.loadSourceDetails(pointer)">&nbsp;{{source.name}}
                                 </md-button>
                             </md-menu-item>
                         </div>
@@ -52,7 +52,7 @@
         </div>
         <span flex></span>
         <div layout="row" layout-align="center center">
-            <md-switch ng-model="showHints" style="margin:0px;margin-right:20%">{{showHints ? "Showing
+            <md-switch ng-model="showHints" style="margin:0px;margin-right:20%">{{ctrl.showHints ? "Showing
                 hints" : "Hiding hints"}}
             </md-switch>
         </div>

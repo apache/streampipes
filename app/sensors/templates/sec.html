@@ -1,40 +1,40 @@
 <div layout="row" flex="100" layout-align="center center" class="wizard-row" style="margin-bottom:5%;">
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('basics')" aria-label="Basics" ng-click="selectConsumerTab('basics')">1</md-button>
+		<md-button ng-class="ctrl.getConsumerActiveTabCss('basics')" aria-label="Basics" ng-click="ctrl.selectConsumerTab('basics')">1</md-button>
 		Basics
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('streams')" aria-label="Streams" ng-click="selectConsumerTab('streams')">2</md-button>
+		<md-button ng-class="ctrl.getConsumerActiveTabCss('streams')" aria-label="Streams" ng-click="ctrl.selectConsumerTab('streams')">2</md-button>
 		Stream Requirements
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('staticProperties')" aria-label="Streams" ng-click="selectConsumerTab('staticProperties')">3</md-button>
+		<md-button ng-class="ctrl.getConsumerActiveTabCss('staticProperties')" aria-label="Streams" ng-click="ctrl.selectConsumerTab('staticProperties')">3</md-button>
 		Static Properties
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('supportedGrounding')" aria-label="Deployment" ng-click="selectConsumerTab('supportedGrounding')">4</md-button>
+		<md-button ng-class="ctrl.getConsumerActiveTabCss('supportedGrounding')" aria-label="Deployment" ng-click="ctrl.selectConsumerTab('supportedGrounding')">4</md-button>
 		Supported Grounding
 	</div>
 	<div layout="column" flex="33" layout-align="center center">
-		<md-button ng-class="getConsumerActiveTabCss('deployment')" aria-label="Deployment" ng-click="selectConsumerTab('deployment')">5</md-button>
+		<md-button ng-class="ctrl.getConsumerActiveTabCss('deployment')" aria-label="Deployment" ng-click="ctrl.selectConsumerTab('deployment')">5</md-button>
 		Deployment
 	</div>
 </div>
 
 <div flex="100" class="md-whiteframe-z1">
-	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('basics')">	
-		<sepa-basics element="selectedAction" disabled="editingDisabled"></sepa-basics>
+	<collapsible title-label="'Basics'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill ng-if="ctrl.isConsumerTabSelected('basics')">
+		<sepa-basics element="ctrl.selectedAction" disabled="ctrl.editingDisabled"></sepa-basics>
 	</collapsible> 
-	<collapsible title-label="'Stream Requirements'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('streams')">	
-		<stream-restriction element="selectedAction.spDataStreams" disabled="editingDisabled"></stream-restriction>
+	<collapsible title-label="'Stream Requirements'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill ng-if="ctrl.isConsumerTabSelected('streams')">
+		<stream-restriction element="ctrl.selectedAction.spDataStreams" disabled="ctrl.editingDisabled"></stream-restriction>
 	</collapsible>
-	<collapsible title-label="'Basics'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('staticProperties')">	
-		<static-properties element="selectedAction.staticProperties" streams="selectedAction.spDataStreams" disabled="editingDisabled"></static-properties>
+	<collapsible title-label="'Basics'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill ng-if="ctrl.isConsumerTabSelected('staticProperties')">
+		<static-properties element="ctrl.selectedAction.staticProperties" streams="ctrl.selectedAction.spDataStreams" disabled="editingDisabled"></static-properties>
 	</collapsible>		
-	<collapsible title-label="'Supported Grounding'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('supportedGrounding')">	
-		<supported-grounding grounding="selectedAction.supportedGrounding" disabled="editingDisabled"></supported-grounding> 
+	<collapsible title-label="'Supported Grounding'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill ng-if="ctrl.isConsumerTabSelected('supportedGrounding')">
+		<supported-grounding grounding="ctrl.selectedAction.supportedGrounding" disabled="ctrl.editingDisabled"></supported-grounding>
 	</collapsible>
-	<collapsible title-label="'Deployment'" disabled="disabled" removable="false" collapsible="false" layout-fill ng-if="isConsumerTabSelected('deployment')">
-		<deployment element="selectedAction" deployment-settings="deploymentSettings[2]" disabled="disabled" style="width:100%;"/>
+	<collapsible title-label="'Deployment'" disabled="ctrl.disabled" removable="false" collapsible="false" layout-fill ng-if="ctrl.isConsumerTabSelected('deployment')">
+		<deployment element="ctrl.selectedAction" deployment-settings="ctrl.deploymentSettings[2]" disabled="ctrl.disabled" style="width:100%;"/>
 	</collapsible>
 </div>

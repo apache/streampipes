@@ -1,0 +1,34 @@
+<div flex="100" layout="column" layout-fill class="sp-blue-border-nopadding" style="margin-bottom:10px;">
+    <div flex="100" ng-class="!ctrl.subtitle ? 'assemblyOptions sp-blue-bg' : 'md-padding'" style="margin-top:0px;">
+        <div layout="row" layout-align="start center">
+            <h4>{{ctrl.titleLabel}}</h4>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-show="ctrl.hide" ng-click="ctrl.toggleVisibility()" ng-if="ctrl.collapsible">
+                <i class="material-icons" ng-style="!ctrl.subtitle ? 'color: white;' : ''">arrow_drop_up</i>
+                <md-tooltip md-direction="top">
+                    Hide
+                </md-tooltip>
+            </md-button>
+            <md-button class="md-icon-button" ng-show="!ctrl.hide" ng-click="ctrl.toggleVisibility()" ng-if="ctrl.collapsible">
+                <i class="material-icons" ng-style="!ctrl.subtitle ? 'color: white;' : ''">arrow_drop_down</i>
+                <md-tooltip md-direction="top">
+                    Show
+                </md-tooltip>
+            </md-button>
+            <md-button ng-disabled="ctrl.disabled" ng-click="ctrl.removeProperty(ctrl.list, ctrl.ctr)" class="md-icon-button"
+                       ng-if="ctrl.removable" >
+                <i class="material-icons"
+                   ng-style="!ctrl.subtitle ? 'color: white;' : ''">clear</i>
+                <md-tooltip md-direction="top">
+                    Clear
+                </md-tooltip>
+            </md-button>
+
+        </div>
+    </div>
+    <div>
+        <div flex="100" layout="column" layout-fill ng-transclude ng-if="ctrl.hide" class="md-padding">
+
+        </div>
+    </div>
+</div>

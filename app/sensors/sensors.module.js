@@ -2,82 +2,82 @@ import angular from 'npm/angular';
 
 import spServices from '../services/services.module';
 
-import SensorsCtrl from './sensors.controller';
-import startsWithLetter from './starts-with-letter.filter';
+import {SensorsCtrl} from './sensors.controller';
+import {startsWithLetter} from './starts-with-letter.filter';
 
-import deploymentType from './directives/deployment/deployment-type.directive'
-import deployment from './directives/deployment/deployment.directive'
+import {DeploymentTypeComponent} from './components/deployment/deployment-type.component'
+import {DeploymentComponent} from './components/deployment/deployment.component'
 
-import advancedSettings from './directives/general/advanced-settings.directive'
-import collapsible from './directives/general/collapsible.directive'
-import nagPrism from './directives/general/nag-prism.directive'
-import options from './directives/general/options.directive'
-import valueSpecification from './directives/general/value-specification.directive'
+import {AdvancedSettingsComponent} from './components/general/advanced-settings.component'
+import {CollapsibleComponent} from './components/general/collapsible.component'
+import nagPrism from './components/general/nag-prism.directive'
+import {OptionsComponent} from './components/general/options.component'
+import {ValueSpecificationComponent} from './components/general/value-specification.component'
 
-import generatedElementDescription from './directives/generated-element/generated-element-description.directive'
-import generatedElementImplementation from './directives/generated-element/generated-element-implementation.directive'
+import {GeneratedElementDescriptionComponent} from './components/generated-element/generated-element-description.component'
+import {GeneratedElementImplementationComponent} from './components/generated-element/generated-element-implementation.component'
 
-import supportedGrounding from './directives/grounding/supported-grounding.directive'
-import transportFormat from './directives/grounding/transport-format.directive'
-import transportProtocol from './directives/grounding/transport-protocol.directive'
+import {SupportedGroundingComponent} from './components/grounding/supported-grounding.component'
+import {TransportFormatComponent} from './components/grounding/transport-format.component'
+import {TransportProtocolComponent} from './components/grounding/transport-protocol.component'
 
-import outputStrategy from './directives/output/output-strategy.directive'
+import {OutputStrategyComponent} from './components/output/output-strategy.component'
 
-import datatypeProperty from './directives/property/datatype-property.directive'
-import domainConceptProperty from './directives/property/domain-concept-property.directive'
-import domainProperty from './directives/property/domain-property.directive'
-import eventProperties from './directives/property/event-properties.directive'
-import propertyRestriction from './directives/property/property-restriction.directive'
-import requiredPropertyValues from './directives/property/required-property-values.directive'
-import staticProperties from './directives/property/static-properties.directive'
+import {DatatypePropertyComponent} from './components/property/datatype-property.component'
+import {DomainConceptPropertyComponent} from './components/property/domain-concept-property.component'
+import {DomainPropertyComponent} from './components/property/domain-property.component'
+import {EventPropertiesComponent} from './components/property/event-properties.component'
+import {PropertyRestrictionComponent} from './components/property/property-restriction.component'
+import {RequiredPropertyValuesComponent} from './components/property/required-property-values.component'
+import {StaticPropertiesComponent} from './components/property/static-properties.component'
 
-import propertyQualityDefinitions from './directives/quality/property-quality-definitions.directive'
-import streamQualityDefinitions from './directives/quality/stream-quality-definitions.directive'
+import {PropertyQualityDefinitionsComponent} from './components/quality/property-quality-definitions.component'
+import {StreamQualityDefinitionsComponent} from './components/quality/stream-quality-definitions.component'
 
-import streamRestriction from './directives/restriction/stream-restriction.directive'
+import {StreamRestrictionComponent} from './components/restriction/stream-restriction.component'
 
-import sepaBasics from './directives/sepa/sepa-basics.directive'
-import sepaStreamDetail from './directives/sepa/sepa-stream-detail.directive'
+import {SepaBasicsComponent} from './components/sepa/sepa-basics.component'
+import {SepaStreamDetailComponent} from './components/sepa/sepa-stream-detail.component'
 
-import measurementUnit from './directives/unit/measurement-unit.directive'
+import {MeasurementUnitComponent} from './components/unit/measurement-unit.component'
 
 
 export default angular.module('sp.sensors', [spServices])
 	.controller('SensorsCtrl', SensorsCtrl)
 	.filter('startsWithLetter', startsWithLetter)
-	.directive('deploymentType', deploymentType)
-	.directive('deployment', deployment)
+	.component('deploymentType', DeploymentTypeComponent)
+	.component('deployment', DeploymentComponent)
 
-	.directive('advancedSettings', advancedSettings)
-	.directive('collapsible', collapsible)
+	.component('advancedSettings', AdvancedSettingsComponent)
+	.component('collapsible', CollapsibleComponent)
 	.directive('nagPrism', nagPrism)
-	.directive('options', options)
-	.directive('valueSpecification', valueSpecification)
+	.component('options', OptionsComponent)
+	.component('valueSpecification', ValueSpecificationComponent)
 
-	.directive('generatedElementDescription', generatedElementDescription)
-	.directive('generatedElementImplementation', generatedElementImplementation)
+	.component('generatedElementDescription', GeneratedElementDescriptionComponent)
+	.component('generatedElementImplementation', GeneratedElementImplementationComponent)
 
-	.directive('supportedGrounding', supportedGrounding)
-	.directive('transportFormat', transportFormat)
-	.directive('transportProtocol', transportProtocol)
+	.component('supportedGrounding', SupportedGroundingComponent)
+	.component('transportFormat', TransportFormatComponent)
+	.component('transportProtocol', TransportProtocolComponent)
 
-	.directive('outputStrategy', outputStrategy)
+	.component('outputStrategy', OutputStrategyComponent)
 
-	.directive('datatypeProperty', datatypeProperty )
-	.directive('domainConceptProperty', domainConceptProperty)
-	.directive('domainProperty', domainProperty)
-	.directive('eventProperties', eventProperties)
-	.directive('propertyRestriction', propertyRestriction)
-	.directive('requiredPropertyValues', requiredPropertyValues)
-	.directive('staticProperties', staticProperties)
+	.component('datatypeProperty', DatatypePropertyComponent )
+	.component('domainConceptProperty', DomainConceptPropertyComponent)
+	.component('domainProperty', DomainPropertyComponent)
+	.component('eventProperties', EventPropertiesComponent)
+	.component('propertyRestriction', PropertyRestrictionComponent)
+	.component('requiredPropertyValues', RequiredPropertyValuesComponent)
+	.component('staticProperties', StaticPropertiesComponent)
 
-	.directive('propertyQualityDefinitions', propertyQualityDefinitions)
-	.directive('streamQualityDefinitions', streamQualityDefinitions)
+	.component('propertyQualityDefinitions', PropertyQualityDefinitionsComponent)
+	.component('streamQualityDefinitions', StreamQualityDefinitionsComponent)
 
-	.directive('streamRestriction', streamRestriction)
+	.component('streamRestriction', StreamRestrictionComponent)
 
-	.directive('sepaBasics', sepaBasics)
-	.directive('sepaStreamDetail', sepaStreamDetail)
+	.component('sepaBasics', SepaBasicsComponent)
+	.component('sepaStreamDetail', SepaStreamDetailComponent)
 
-	.directive('measurementUnit', measurementUnit)
+	.component('measurementUnit', MeasurementUnitComponent)
 .name;
