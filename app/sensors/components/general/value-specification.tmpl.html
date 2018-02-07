@@ -1,0 +1,51 @@
+<div class="md-padding">
+	<md-radio-group ng-model="ctrl.property.type" ng-disabled="ctrl.disabled">
+	 <md-radio-button ng-repeat="t in ctrl.valueSpecifications"
+                         ng-value="t.type"
+                         ng-disabled="ctrl.isDisallowed(t.type)">{{t.label}}</md-radio-button>
+	</md-radio-group>
+	
+	<div ng-if="ctrl.property.type == ctrl.valueSpecifications[1].type" class="md-padding">
+	<b>Quantitative Value</b>
+		<div flex="100" layout-fill layout="row">
+			<div flex="33"> 
+				<md-input-container style="width:100%">
+			    	<label>Minimum value</label>
+			        <input ng-model="ctrl.property.properties.minValue" required ng-disabled="ctrl.disabled">
+			    </md-input-container>   
+		  	</div>
+		  	<div flex="33">
+				<md-input-container style="width:100%">
+			    	<label>Maximum value</label>
+			        <input ng-model="ctrl.property.properties.maxValue" required ng-disabled="ctrl.disabled">
+			    </md-input-container>
+			</div>
+			<div flex="33">
+	    		<md-input-container style="width:100%">
+			    	<label>Step</label>
+			        <input ng-model="ctrl.property.properties.step" required ng-disabled="ctrl.disabled">
+			    </md-input-container>
+	    	</div>
+		</div>
+	
+	</div>
+	<div ng-if="ctrl.property.type == ctrl.valueSpecifications[2].type" class="md-padding">
+	<b>Enumeration</b>
+		<div flex="70" layout="column">
+			<div ng-repeat="runtimeValue in ctrl.property.properties.runtimeValues track by $index">
+				<div flex="70" layout-fill layout="row">
+					<div flex="60"> 
+						<md-input-container style="width:100%">
+				    	<label>Runtime Value</label>
+				        	<input ng-model="ctrl.property.properties.runtimeValues[$index]" required ng-disabled="ctrl.disabled">
+				    	</md-input-container>
+					</div>
+					<div flex="40"> 
+						<md-button class="md-accent" ng-click="ctrl.remove(ctrl.property.properties.runtimeValues, $index)" ng-disabled="ctrl.disabled">Remove</md-button>
+					</div>
+				</div>
+			</div>
+			<div flex><md-button class="md-accent" ng-click="ctrl.add()" ng-disabled="ctrl.disabled">Add Member</md-button></div>
+		</div>
+	</div>
+</div>

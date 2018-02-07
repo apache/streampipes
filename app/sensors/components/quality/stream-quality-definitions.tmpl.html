@@ -1,0 +1,40 @@
+<div layout="row" flex="100" class="md-padding">
+    <div flex="100" layout="column">
+        <md-checkbox ng-model="ctrl.frequencySelected" aria-label="ctrl.qualities[0].label">
+            {{ctrl.qualities[0].label}}
+        </md-checkbox>
+        <div ng-if="ctrl.frequencySelected" class="md-padding-left">
+            <div layout="row" flex="70">
+
+                <div flex="50">
+                    <md-input-container>
+                        <label>Quantity Value</label>
+                        <input ng-model="ctrl.element.properties.quantityValue" required ng-disabled="disabled">
+                    </md-input-container>
+                </div>
+                <div flex="50">
+                    <measurement-unit disabled="disabled" property="element.properties.measurementUnit"
+                                      style="width:100%;"></measurement-unit>
+                </div>
+            </div>
+        </div>
+        <md-checkbox ng-model="latencySelected" aria-label="qualities[1].label">
+            {{qualities[1].label}}
+        </md-checkbox>
+        <div ng-if="latencySelected" class="md-padding-left">
+            <div layout="row" flex="70">
+
+                <div flex="50">
+                    <md-input-container>
+                        <label>Quantity Value</label>
+                        <input ng-model="element.properties.quantityValue" required ng-disabled="disabled">
+                    </md-input-container>
+                </div>
+                <div flex="50">
+                    <measurement-unit disabled="disabled" property="element.properties.measurementUnit"
+                                      style="width:100%;"></measurement-unit>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

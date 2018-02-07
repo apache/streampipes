@@ -10,7 +10,7 @@
                     </button>
                     <md-menu-content>
                         <md-menu-item class="md-indent">
-                            <md-button ng-click="addNewAction()">&nbsp;New</md-button>
+                            <md-button ng-click="ctrl.addNewAction()">&nbsp;New</md-button>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -29,9 +29,9 @@
                             <md-menu>
                                 <md-button ng-click="$mdOpenMenu()">A-F</md-button>
                                 <md-menu-content>
-                                    <div ng-repeat="action in actions | startsWithLetter:'a':'f' | orderBy: 'name'">
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'a':'f' | orderBy: 'name'">
                                         <md-menu-item class="md-indent">
-                                            <md-button ng-click="loadActionDetails(action.uri, true, true)">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
                                                 &nbsp;{{action.name}}
                                             </md-button>
                                         </md-menu-item>
@@ -43,9 +43,9 @@
                             <md-menu>
                                 <md-button ng-click="$mdOpenMenu()">G-M</md-button>
                                 <md-menu-content>
-                                    <div ng-repeat="action in actions | startsWithLetter:'g':'m' | orderBy: 'name'">
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'g':'m' | orderBy: 'name'">
                                         <md-menu-item class="md-indent">
-                                            <md-button ng-click="loadActionDetails(action.uri, true, true)">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
                                                 &nbsp;{{action.name}}
                                             </md-button>
                                         </md-menu-item>
@@ -57,9 +57,9 @@
                             <md-menu>
                                 <md-button ng-click="$mdOpenMenu()">N-S</md-button>
                                 <md-menu-content>
-                                    <div ng-repeat="action in actions | startsWithLetter:'n':'s' | orderBy: 'name'">
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'n':'s' | orderBy: 'name'">
                                         <md-menu-item class="md-indent">
-                                            <md-button ng-click="loadActionDetails(action.uri, true, true)">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
                                                 &nbsp;{{action.name}}
                                             </md-button>
                                         </md-menu-item>
@@ -71,9 +71,9 @@
                             <md-menu>
                                 <md-button ng-click="$mdOpenMenu()">T-Z</md-button>
                                 <md-menu-content>
-                                    <div ng-repeat="action in actions | startsWithLetter:'t':'z' | orderBy: 'name'">
+                                    <div ng-repeat="action in ctrl.actions | startsWithLetter:'t':'z' | orderBy: 'name'">
                                         <md-menu-item class="md-indent">
-                                            <md-button ng-click="loadActionDetails(action.uri, true, true)">
+                                            <md-button ng-click="ctrl.loadActionDetails(action.uri, true, true)">
                                                 &nbsp;{{action.name}}
                                             </md-button>
                                         </md-menu-item>
