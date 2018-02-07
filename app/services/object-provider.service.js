@@ -1,6 +1,6 @@
-objectProvider.$inject = ['$http', 'restApi', 'imageChecker'];
+objectProvider.$inject = ['$http', 'restApi', 'ImageChecker'];
 
-export default function objectProvider($http, restApi, imageChecker) {
+export default function objectProvider($http, restApi, ImageChecker) {
         var oP = this;
 
         this.Stream = function (element) {
@@ -186,7 +186,7 @@ export default function objectProvider($http, restApi, imageChecker) {
             } else {
                 iconUrl = json.iconUrl;
             }
-            imageChecker.imageExists(iconUrl, function (exists) {
+            ImageChecker.imageExists(iconUrl, function (exists) {
                 if (exists) {
                     var $img = $('<img>')
                         .attr("src", iconUrl)

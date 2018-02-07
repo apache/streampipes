@@ -3,14 +3,14 @@ import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-d
 
 export class PipelineCtrl {
 
-    constructor($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, imageChecker, getElementIconText) {
+    constructor($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, ImageChecker, getElementIconText) {
         this.restApi = restApi;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$timeout = $timeout;
         this.$stateParams = $stateParams;
-        this.imageChecker = imageChecker;
+        this.ImageChecker = ImageChecker;
         this.getElementIconText = getElementIconText;
 
         this.pipeline = {};
@@ -150,7 +150,7 @@ export class PipelineCtrl {
     
 
     addImageOrTextIcon($element, json) {
-        imageChecker.imageExists(json.iconUrl, function (exists) {
+        ImageChecker.imageExists(json.iconUrl, function (exists) {
             if (exists) {
                 var $img = $('<img>')
                     .attr("src", json.iconUrl)
@@ -181,4 +181,4 @@ export class PipelineCtrl {
 
 }
 
-PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'imageChecker', 'getElementIconText'];
+PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'ImageChecker', 'getElementIconText'];

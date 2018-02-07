@@ -1,62 +1,61 @@
-authService.$inject = ['$http', '$rootScope', '$location', '$state', 'restApi'];
+export class AuthService {
 
-export default function authService($http, $rootScope, $location, $state, restApi) {
+    constructor($rootScope, $location, $state, restApi) {
+        this.$rootScope = $rootScope;
+        this.$location = $location;
+        this.$state = $state;
+        this.restApi = restApi;
+    }
 
-    //var promise = $http.get("/semantic-epa-backend/api/v2/admin/authc")
-
-    var promise = restApi.getAuthc()
-        .then(
-            function (response) {
-                if (response.data.success == false) {
-                    $rootScope.authenticated = false;
-                    //$http.get("/semantic-epa-backend/api/v2/setup/configured")
-                    restApi.configured()
-                        .then(function (response) {
-                            if (response.data.configured) {
-                                $rootScope.appConfig = response.data.appConfig;
-                                if (!$location.path().startsWith("/sso") && !$location.path().startsWith("/streampipes/login")) {
-                                    $state.go("login")//$location.path("/login");
+    authenticate() {
+        return this.restApi.getAuthc()
+            .then(
+                response => {
+                    if (response.data.success == false) {
+                        this.$rootScope.authenticated = false;
+                        this.restApi.configured()
+                            .then(response => {
+                                if (response.data.configured) {
+                                    this.$rootScope.appConfig = response.data.appConfig;
+                                    if (!this.$location.path().startsWith("/sso") && !this.$location.path().startsWith("/streampipes/login")) {
+                                        this.$state.go("login")
+                                    }
                                 }
-                            }
-                            else $state.go("setup")
-                        })
-                }
-                else {
-                    $rootScope.username = response.data.info.authc.principal.username;
-                    $rootScope.email = response.data.info.authc.principal.email;
-                    $rootScope.authenticated = true;
-                    $rootScope.token = response.data.token;
-                    //$http.get("/semantic-epa-backend/api/v2/setup/configured")
-                    restApi.configured()
-                        .then(function (response) {
-                            if (response.data.configured) {
-                                $rootScope.appConfig = response.data.appConfig;
-                            }
-                        });
-                    //$http.get("/semantic-epa-backend/api/v2/users/" +$rootScope.email +"/notifications")
-                    restApi.getNotifications()
-                        .success(function (notifications) {
-                            $rootScope.unreadNotifications = notifications
-                        })
-                        .error(function (msg) {
-                            console.log(msg);
-                        });
+                                else this.$state.go("setup")
+                            })
+                    }
+                    else {
+                        this.$rootScope.username = response.data.info.authc.principal.username;
+                        this.$rootScope.email = response.data.info.authc.principal.email;
+                        this.$rootScope.authenticated = true;
+                        this.$rootScope.token = response.data.token;
+                        this.restApi.configured()
+                            .then(response => {
+                                if (response.data.configured) {
+                                    this.$rootScope.appConfig = response.data.appConfig;
+                                }
+                            });
+                        this.restApi.getNotifications()
+                            .success(notifications => {
+                                this.$rootScope.unreadNotifications = notifications
+                            })
+                            .error(msg => {
+                                console.log(msg);
+                            });
 
-                }
-            },
-            function (response) {
-                $rootScope.username = undefined;
-                $rootScope.authenticated = false;
-                //$http.get("/semantic-epa-backend/api/v2/setup/configured")
-                restApi.configured()
-                    .then(function (conf) {
-                        if (conf.data.configured) {
-                        }
-                        else $state.go("setup")
-                    })
-            });
+                    }
+                },
+                response => {
+                    this.$rootScope.username = undefined;
+                    this.$rootScope.authenticated = false;
+                    this.restApi.configured()
+                        .then(conf => {
+                            if (conf.data.configured) {
+                            }
+                            else this.$state.go("setup")
+                        })
+                });
+    }
+}
 
-    return {
-        authenticate: promise
-    };
-};
+AuthService.$inject = ['$rootScope', '$location', '$state', 'restApi'];

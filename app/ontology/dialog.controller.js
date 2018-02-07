@@ -1,54 +1,62 @@
-export default function DialogController($scope, $mdDialog, restApi) {
-	$scope.namespaces = [];
-	$scope.addSelected = false;
-	$scope.newNamespace = {};
+export class DialogController {
 
-	$scope.getNamespaces = function() {
-		restApi.getOntologyNamespaces()
-			.success(function(namespaces){
-				$scope.namespaces = namespaces;
+    constructor($mdDialog, restApi) {
+    	this.restApi = restApi;
+    	this.$mdDialog = $mdDialog;
+    	this.namespaces = [];
+		this.addSelected = false;
+		this.newNamespace = {};
+
+        this.getNamespaces();
+	}
+
+	getNamespaces() {
+		this.restApi.getOntologyNamespaces()
+			.success(namespaces => {
+				this.namespaces = namespaces;
 			})
 			.error(function(msg){
 				console.log(msg);
 			});
 	}
 
-	$scope.addNamespace = function() {
-		restApi.addOntologyNamespace($scope.newNamespace)
-			.success(function(msg){
-				$scope.addSelected = false;
-				$scope.newNamespace = {};
-				$scope.getNamespaces();
+	addNamespace() {
+		this.restApi.addOntologyNamespace(this.newNamespace)
+			.success(msg => {
+				this.addSelected = false;
+				this.newNamespace = {};
+				this.getNamespaces();
 			})
-			.error(function(msg){
-				$scope.addSelected = false;
+			.error(msg => {
+				this.addSelected = false;
 				console.log(msg);
 			}); 		
 	}
 
-	$scope.deleteNamespace = function(prefix) {
-		restApi.deleteOntologyNamespace(prefix)
-			.success(function(msg){
-				$scope.getNamespaces();
+	deleteNamespace(prefix) {
+		this.restApi.deleteOntologyNamespace(prefix)
+			.success(msg => {
+				this.getNamespaces();
 			})
-			.error(function(msg){
+			.error(msg => {
 				console.log(msg);
 			}); 	
 	}
 
-	$scope.showAddInput = function() {
-		$scope.addSelected = true;
-		$scope.newNamespace.prefix = "";
-		$scope.newNamespace.name = "";
+	showAddInput() {
+		this.addSelected = true;
+		this.newNamespace.prefix = "";
+		this.newNamespace.name = "";
 	}
 
-	$scope.hide = function() {
-		$mdDialog.hide();
+	hide() {
+		this.$mdDialog.hide();
 	};
 
-	$scope.cancel = function() {
-		$mdDialog.cancel();
+	cancel() {
+		this.$mdDialog.cancel();
 	};
 
-	$scope.getNamespaces();
 }
+
+DialogController.$inject = ['$mdDialog', 'restApi'];

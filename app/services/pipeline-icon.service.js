@@ -1,6 +1,6 @@
-pipelineElementIconService.$inject = ['$http', '$rootScope', 'imageChecker', 'getElementIconText'];
+pipelineElementIconService.$inject = ['$http', '$rootScope', 'ImageChecker', 'getElementIconText'];
 
-export default function pipelineElementIconService($http, $rootScope, imageChecker, getElementIconText) {
+export default function pipelineElementIconService($http, $rootScope, ImageChecker, getElementIconText) {
 
     var pipelineElementIconService = {};
 
@@ -11,7 +11,7 @@ export default function pipelineElementIconService($http, $rootScope, imageCheck
         } else {
             iconUrl = json.iconUrl;
         }
-        imageChecker.imageExists(iconUrl, function (exists) {
+        ImageChecker.imageExists(iconUrl, function (exists) {
             if (exists) {
                 var $img = $('<img>')
                     .attr("src", iconUrl)

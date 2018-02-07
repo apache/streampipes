@@ -1,11 +1,12 @@
-import angular from 'npm/angular';
+import angular from 'angular';
 import 'npm/dagre';
 
 import spConstants from '../constants/constants.module'
 
-import imageChecker from './image-checker.service'
+import { ImageChecker } from './image-checker.service'
+import { AuthService } from './auth.service'
+
 import restApi from './rest-api.service'
-import auth from './auth.service'
 import domainProperties from './domain-properties.service'
 import getElementIconText from './get-element-icon-text.service'
 import initTooltips from './init-tooltips.service'
@@ -21,8 +22,9 @@ import pipelineElementOptions from '../editor/directives/pipeline-element-option
 import pipelineEditorService from './pipeline-editor.service'
 
 export default angular.module('sp.services', [spConstants])
-	.factory('imageChecker', imageChecker)
-	.service('authService', auth)
+	.service('ImageChecker', ImageChecker)
+	.service('AuthService', AuthService)
+
 	.service('getElementIconText', getElementIconText)
 	.service('initTooltips', initTooltips)
 	.factory('restApi', restApi)
