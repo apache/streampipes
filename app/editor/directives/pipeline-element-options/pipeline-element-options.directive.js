@@ -2,10 +2,10 @@ import HelpDialogController from './help-dialog.controller';
 import PossibleElementsController from './possible-elements-dialog.controller';
 import angular from 'npm/angular';
 
-pipelineElementOptions.$inject = ['$rootScope', '$mdDialog', 'restApi', 'objectProvider', 'initTooltips'];
+pipelineElementOptions.$inject = ['$rootScope', '$mdDialog', 'RestApi', 'objectProvider', 'InitTooltips'];
 'use strict';
 
-export default function pipelineElementOptions($rootScope, $mdDialog, restApi, objectProvider, initTooltips) {
+export default function pipelineElementOptions($rootScope, $mdDialog, RestApi, objectProvider, InitTooltips) {
 
     return {
         restrict: 'E',
@@ -66,7 +66,7 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
             });
 
             var initRecs = function (pipeline, $element) {
-                restApi.recommendPipelineElement(pipeline)
+                RestApi.recommendPipelineElement(pipeline)
                     .success(function (data) {
                         if (data.success) {
                             $(".recommended-list", $element).remove();
@@ -118,7 +118,7 @@ export default function pipelineElementOptions($rootScope, $mdDialog, restApi, o
                     }
                 }
                 $('ul', $element).circleMenu('init');
-                initTooltips();
+                InitTooltips.initTooltips();
             }
 
             $scope.showRecommendations = function (e) {

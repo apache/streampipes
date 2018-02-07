@@ -1,6 +1,6 @@
-SensorsCtrl.$inject = ['$scope', 'restApi', '$filter'];
+SensorsCtrl.$inject = ['$scope', 'RestApi', '$filter'];
 
-export default function SensorsCtrl($scope, restApi, $filter) {
+export default function SensorsCtrl($scope, RestApi, $filter) {
 	$scope.editingDisabled = true;
 
 	$scope.categoryOpt = {displayProp: 'type', idProp: 'type', externalIdProp: 'type'};
@@ -150,7 +150,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	}
 
 	$scope.loadSepaDetails = function(uri, keepIds, editingDisabled) {
-		restApi.getSepaDetailsFromOntology(uri, keepIds)
+		RestApi.getSepaDetailsFromOntology(uri, keepIds)
 			.success(function(sepaData){
 				$scope.selectedSepa = sepaData;
 				$scope.sepaSelected = true;
@@ -162,7 +162,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	}
 
 	$scope.loadActionDetails = function(uri, keepIds, editingDisabled) {
-		restApi.getActionDetailsFromOntology(uri, keepIds)
+		RestApi.getActionDetailsFromOntology(uri, keepIds)
 			.success(function(actionData){
 				$scope.selectedAction = actionData;
 				$scope.actionSelected = true;
@@ -180,7 +180,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	}
 
 	$scope.loadSepas = function(){
-		restApi.getSepasFromOntology()
+		RestApi.getSepasFromOntology()
 			.success(function(sepaData){
 				$scope.sepas = $filter('orderBy')(sepaData, "name", false);;
 			})
@@ -190,7 +190,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	};
 
 	$scope.getSourceDetailsFromOntology = function(sourceId) {
-		restApi.getSourceDetailsFromOntology(sourceId, false) 
+		RestApi.getSourceDetailsFromOntology(sourceId, false)
 			.success(function(source){
 				$scope.editingDisabled = false;
 				$scope.sourceSelected = true;
@@ -206,7 +206,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	}
 
 	$scope.loadSources = function(){
-		restApi.getSourcesFromOntology()
+		RestApi.getSourcesFromOntology()
 			.success(function(sources){
 
 				$scope.sources = $filter('orderBy')(sources, "name", false);
@@ -217,7 +217,7 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	};
 
 	$scope.loadActions = function(){
-		restApi.getActionsFromOntology()
+		RestApi.getActionsFromOntology()
 			.success(function(actions){
 				$scope.actions = $filter('orderBy')(actions, "name", false);
 			})
@@ -227,14 +227,14 @@ export default function SensorsCtrl($scope, restApi, $filter) {
 	};
 
 	$scope.loadEpaCategories = function() {
-		restApi.getEpaCategories()
+		RestApi.getEpaCategories()
 			.success(function(epas){
 				$scope.availableEpaCategories = epas;
 			});
 	}
 
 	$scope.loadEcCategories = function() {
-		restApi.getEcCategories()
+		RestApi.getEcCategories()
 			.success(function(ecs){
 				$scope.availableEcCategories = ecs;
 			});

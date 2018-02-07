@@ -1,7 +1,7 @@
 export class ContextController {
 
-    constructor($mdDialog, restApi, Upload) {
-        this.restApi = restApi;
+    constructor($mdDialog, RestApi, Upload) {
+        this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
         this.Upload = Upload;
 
@@ -16,7 +16,7 @@ export class ContextController {
     }
 
     getContexts() {
-        this.restApi.getAvailableContexts()
+        this.RestApi.getAvailableContexts()
             .success(contexts => {
                 this.contexts = contexts;
             })
@@ -26,7 +26,7 @@ export class ContextController {
     }
 
     deleteContext(contextId) {
-        this.restApi.deleteContext(contextId)
+        this.RestApi.deleteContext(contextId)
             .success(msg => {
                 this.getContexts();
             })
@@ -66,4 +66,4 @@ export class ContextController {
     };
 }
 
-ContextController.$inject = ['$mdDialog', 'restApi', 'Upload'];
+ContextController.$inject = ['$mdDialog', 'RestApi', 'Upload'];

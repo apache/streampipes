@@ -1,17 +1,18 @@
 import {StartAllPipelinesController} from './dialog/start-all-pipelines-dialog.controller';
 import {PipelineCategoriesDialogController} from './dialog/pipeline-categories-dialog.controller';
+import {ElementIconText} from "../services/get-element-icon-text.service";
 
 export class PipelineCtrl {
 
-    constructor($scope, restApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, ImageChecker, getElementIconText) {
-        this.restApi = restApi;
+    constructor($scope, RestApi, $rootScope, $mdDialog, $state, $timeout, $stateParams, ImageChecker, ElementIconText) {
+        this.RestApi = RestApi;
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$timeout = $timeout;
         this.$stateParams = $stateParams;
         this.ImageChecker = ImageChecker;
-        this.getElementIconText = getElementIconText;
+        this.ElementIconText = ElementIconText;
 
         this.pipeline = {};
         this.pipelines = [];
@@ -40,7 +41,7 @@ export class PipelineCtrl {
     }
 
     getPipelines() {
-        this.restApi.getOwnPipelines()
+        this.RestApi.getOwnPipelines()
             .success(pipelines => {
                 this.pipelines = pipelines;
                 if (this.startPipelineDirectly != "") {
@@ -59,7 +60,7 @@ export class PipelineCtrl {
     };
 
     getSystemPipelines() {
-        this.restApi.getSystemPipelines()
+        this.RestApi.getSystemPipelines()
             .success(pipelines => {
                 this.systemPipelines = pipelines;
             })
@@ -69,7 +70,7 @@ export class PipelineCtrl {
     }
 
    getPipelineCategories() {
-        this.restApi.getPipelineCategories()
+        this.RestApi.getPipelineCategories()
             .success(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
             })
@@ -158,7 +159,7 @@ export class PipelineCtrl {
                 $element.append($img);
             } else {
                 var $span = $("<span>")
-                    .text(getElementIconText(json.name) || "N/A")
+                    .text(ElementIconText.getElementIconText(json.name) || "N/A")
                     .addClass("element-text-icon")
                 $element.append($span);
             }
@@ -181,4 +182,4 @@ export class PipelineCtrl {
 
 }
 
-PipelineCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'ImageChecker', 'getElementIconText'];
+PipelineCtrl.$inject = ['$scope', 'RestApi', '$rootScope', '$mdDialog', '$state', '$timeout', '$stateParams', 'ImageChecker', 'ElementIconText'];

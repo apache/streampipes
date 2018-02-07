@@ -1,6 +1,6 @@
-staticProperties.$inject = ['restApi'];
+staticProperties.$inject = ['RestApi'];
 
-export default function staticProperties(restApi) {
+export default function staticProperties(RestApi) {
 	return {
 		restrict : 'E',
 		templateUrl : 'app/sensors/directives/property/static-properties.tmpl.html',
@@ -86,7 +86,7 @@ export default function staticProperties(restApi) {
 			$scope.properties = [];
 
 			$scope.loadProperties = function(){
-				restApi.getOntologyProperties()
+				RestApi.getOntologyProperties()
 					.success(function(propertiesData){
 						$scope.properties = propertiesData;
 					})

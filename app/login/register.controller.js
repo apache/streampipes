@@ -1,6 +1,6 @@
-RegisterCtrl.$inject = ['$scope', 'restApi'];
+RegisterCtrl.$inject = ['$scope', 'RestApi'];
 
-export default function RegisterCtrl($scope, restApi) {
+export default function RegisterCtrl($scope, RestApi) {
 
 		$scope.loading = false;
 		$scope.registrationFailed = false;
@@ -26,7 +26,7 @@ export default function RegisterCtrl($scope, restApi) {
 			$scope.registrationSuccess = false;
 			$scope.errorMessage = "";
 
-			restApi.register(payload)
+			RestApi.register(payload)
 				.then(
 					function(response) {
 						$scope.loading = false;

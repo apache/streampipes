@@ -1,20 +1,20 @@
-SettingsCtrl.$inject = ['$rootScope', '$scope', 'restApi', '$mdToast'];
+SettingsCtrl.$inject = ['$rootScope', '$scope', 'rhrtApi', '$mdToast'];
 
-export default function SettingsCtrl($rootScope, $scope, restApi, $mdToast) {
+export default function SettingsCtrl($rootScope, $scope, RestApi, $mdToast) {
 
 		$scope.loading = false;
 
 		$scope.setup = {};
 
 		$scope.loadConfig = function() {
-			restApi.getConfiguration().success(function(msg) {
+			RestApi.getConfiguration().success(function(msg) {
 				$scope.setup = msg;
 			});
 		}
 
 		$scope.configure = function() {
 			$scope.loading = true;
-			restApi.updateConfiguration($scope.setup).success(function(data) {
+			RestApi.updateConfiguration($scope.setup).success(function(data) {
 				$rootScope.appConfig = $scope.setup.appConfig;
 				$scope.loading = false;
 				$scope.showToast(data.notifications[0].title);

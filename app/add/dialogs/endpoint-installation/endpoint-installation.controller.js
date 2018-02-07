@@ -1,8 +1,8 @@
 export class EndpointInstallationController {
 
-    constructor($mdDialog, restApi, endpointItems, install) {
+    constructor($mdDialog, RestApi, endpointItems, install) {
         this.$mdDialog = $mdDialog;
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.endpointItems = endpointItems;
         this.install = install;
         this.endpointItemsToInstall = endpointItems;
@@ -42,9 +42,9 @@ export class EndpointInstallationController {
     }
 
     installElement(endpointUri, index) {
-        endpointUri = encodeURIComponent(endpointUri.uri);
+        endpointUri = this.encodeURIComponent(endpointUri.uri);
 
-        this.restApi.add(endpointUri, true)
+        this.RestApi.add(endpointUri, true)
             .success(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
@@ -69,7 +69,7 @@ export class EndpointInstallationController {
     }
 
     uninstallElement(endpointUri, index) {
-        this.restApi.del(endpointUri.uri)
+        this.RestApi.del(endpointUri.uri)
             .success(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
@@ -93,4 +93,4 @@ export class EndpointInstallationController {
     }
 }
 
-EndpointInstallationController.$inject = ['$mdDialog', 'restApi', 'endpointItems', 'install'];
+EndpointInstallationController.$inject = ['$mdDialog', 'RestApi', 'endpointItems', 'install'];

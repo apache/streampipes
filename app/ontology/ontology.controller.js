@@ -3,11 +3,11 @@ import { DialogController } from './dialog.controller';
 import { ContextController } from './context.controller';
 
 
-// export default function OntologyCtrl($scope, restApi, $mdToast, $mdDialog) {
+// export default function OntologyCtrl($scope, RestApi, $mdToast, $mdDialog) {
 export class OntologyCtrl {
 
-    constructor(restApi, $mdToast, $mdDialog) {
-        this.restApi = restApi;
+    constructor(RestApi, $mdToast, $mdDialog) {
+        this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$mdDialog = $mdDialog;
 
@@ -72,7 +72,7 @@ export class OntologyCtrl {
     }
 
     loadProperties() {
-        this.restApi.getOntologyProperties()
+        this.RestApi.getOntologyProperties()
             .success(propertiesData => {
                 this.properties = propertiesData;
             })
@@ -82,7 +82,7 @@ export class OntologyCtrl {
     };
 
     loadConcepts() {
-        this.restApi.getOntologyConcepts()
+        this.RestApi.getOntologyConcepts()
             .success(conceptsData => {
                 this.concepts = conceptsData;
             })
@@ -92,7 +92,7 @@ export class OntologyCtrl {
     };
 
     loadPropertyDetails(propertyId) {
-        this.restApi.getOntologyPropertyDetails(propertyId)
+        this.RestApi.getOntologyPropertyDetails(propertyId)
             .success(propertiesData => {
                 this.propertyDetail = propertiesData;
                 this.propertySelected = true;
@@ -105,7 +105,7 @@ export class OntologyCtrl {
 
     loadConceptDetails(conceptId) {
         this.instanceSelected = false;
-        this.restApi.getOntologyConceptDetails(conceptId)
+        this.RestApi.getOntologyConceptDetails(conceptId)
             .success(conceptData => {
                 this.conceptDetail = conceptData;
                 this.conceptSelected = true;
@@ -117,7 +117,7 @@ export class OntologyCtrl {
     };
 
     loadInstanceDetails(instanceId) {
-        this.restApi.getOntologyInstanceDetails(instanceId)
+        this.RestApi.getOntologyInstanceDetails(instanceId)
             .success(instanceData => {
                 this.instanceDetail = instanceData;
                 this.instanceSelected = true;
@@ -130,7 +130,7 @@ export class OntologyCtrl {
 
     addPropertyToClass(p) {
         if (!this.conceptDetail.domainProperties) this.conceptDetail.domainProperties = [];
-        this.restApi.getOntologyPropertyDetails(p)
+        this.RestApi.getOntologyPropertyDetails(p)
             .success(propertiesData => {
                 this.conceptDetail.domainProperties.push(propertiesData);
             })
@@ -141,7 +141,7 @@ export class OntologyCtrl {
 
     addPropertyToInstance() {
         if (!this.instanceDetail.domainProperties) this.instanceDetail.domainProperties = [];
-        this.restApi.getOntologyPropertyDetails(this.selectedInstanceProperty)
+        this.RestApi.getOntologyPropertyDetails(this.selectedInstanceProperty)
             .success(propertiesData => {
                 this.instanceDetail.domainProperties.push(propertiesData);
             })
@@ -161,7 +161,7 @@ export class OntologyCtrl {
 
     storeClass() {
         this.loading = true;
-        this.restApi.updateOntologyConcept(this.conceptDetail.elementHeader.id, this.conceptDetail)
+        this.RestApi.updateOntologyConcept(this.conceptDetail.elementHeader.id, this.conceptDetail)
             .success(msg => {
                 this.loading = false;
                 this.showToast("Concept updated.");
@@ -173,7 +173,7 @@ export class OntologyCtrl {
 
     storeInstance() {
         this.loading = true;
-        this.restApi.updateOntologyInstance(this.instanceDetail.elementHeader.id, this.instanceDetail)
+        this.RestApi.updateOntologyInstance(this.instanceDetail.elementHeader.id, this.instanceDetail)
             .success(msg => {
                 this.loading = false;
                 this.showToast("Instance updated.");
@@ -211,7 +211,7 @@ export class OntologyCtrl {
     updateProperty() {
         this.loading = true;
         this.propertyDetail.labelDefined = true;
-        this.restApi.updateOntologyProperty(this.propertyDetail.elementHeader.id, this.propertyDetail)
+        this.RestApi.updateOntologyProperty(this.propertyDetail.elementHeader.id, this.propertyDetail)
             .success(msg => {
                 this.loading = false;
                 this.showToast("Property updated.");
@@ -238,7 +238,7 @@ export class OntologyCtrl {
 
 
     deleteConcept(conceptId) {
-        this.restApi.deleteOntologyConcept(conceptId)
+        this.RestApi.deleteOntologyConcept(conceptId)
             .success(msg => {
                 this.loadConcepts();
                 this.conceptSelected = false;
@@ -249,7 +249,7 @@ export class OntologyCtrl {
     };
 
     deleteProperty(propertyId) {
-        this.restApi.deleteOntologyProperty(propertyId)
+        this.RestApi.deleteOntologyProperty(propertyId)
             .success(msg => {
                 this.loadProperties();
                 this.propertySelected = false;
@@ -260,7 +260,7 @@ export class OntologyCtrl {
     };
 
     deleteInstance(instanceId) {
-        this.restApi.deleteOntologyInstance(instanceId)
+        this.RestApi.deleteOntologyInstance(instanceId)
             .success(msg => {
                 this.loadConcepts();
                 this.instanceSelected = false;
@@ -319,4 +319,4 @@ export class OntologyCtrl {
 
 };
 
-OntologyCtrl.$inject = ['restApi', '$mdToast', '$mdDialog'];
+OntologyCtrl.$inject = ['RestApi', '$mdToast', '$mdDialog'];

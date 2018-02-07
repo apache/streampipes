@@ -1,9 +1,9 @@
 export class PipelineCategoriesDialogController {
 
-    constructor($mdDialog, restApi)
+    constructor($mdDialog, RestApi)
     {
         this.$mdDialog = $mdDialog;
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.newCategory = {};
         this.newCategory.categoryName = "";
         this.newCategory.categoryDescription = "";
@@ -35,7 +35,7 @@ export class PipelineCategoriesDialogController {
     }
 
     storeUpdatedPipeline(pipeline) {
-        this.restApi.updatePipeline(pipeline)
+        this.RestApi.updatePipeline(pipeline)
             .success(msg => {
                 console.log(msg);
                 this.refreshPipelines();
@@ -56,7 +56,7 @@ export class PipelineCategoriesDialogController {
     }
 
     addPipelineCategory() {
-        this.restApi.storePipelineCategory(this.newCategory)
+        this.RestApi.storePipelineCategory(this.newCategory)
             .success(data => {
                 console.log(data);
                 this.getPipelineCategories();
@@ -68,7 +68,7 @@ export class PipelineCategoriesDialogController {
     }
 
     getPipelineCategories() {
-        this.restApi.getPipelineCategories()
+        this.RestApi.getPipelineCategories()
             .success(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
             })
@@ -83,7 +83,7 @@ export class PipelineCategoriesDialogController {
     }
 
     deletePipelineCategory(pipelineId) {
-        this.restApi.deletePipelineCategory(pipelineId)
+        this.RestApi.deletePipelineCategory(pipelineId)
             .success(data => {
                 console.log(data);
                 this.getPipelineCategories();
@@ -108,4 +108,4 @@ export class PipelineCategoriesDialogController {
     }
 }
 
-PipelineCategoriesDialogController.$inject = ['$mdDialog', 'restApi'];
+PipelineCategoriesDialogController.$inject = ['$mdDialog', 'RestApi'];

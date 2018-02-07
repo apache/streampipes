@@ -2,8 +2,8 @@ import {PipelineStatusDialogController} from '../../dialog/pipeline-status-dialo
 
 export class PipelineDetailsController {
 
-    constructor(restApi, $mdDialog, $rootScope) {
-        this.restApi = restApi;
+    constructor(RestApi, $mdDialog, $rootScope) {
+        this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
 
@@ -16,7 +16,7 @@ export class PipelineDetailsController {
 
     startPipeline(pipelineId) {
         this.starting = true;
-        this.restApi.startPipeline(pipelineId)
+        this.RestApi.startPipeline(pipelineId)
             .success(data => {
                 this.showDialog(data);
                 this.refreshPipelines();
@@ -37,7 +37,7 @@ export class PipelineDetailsController {
 
     stopPipeline(pipelineId) {
         this.stopping = true;
-        this.restApi.stopPipeline(pipelineId)
+        this.RestApi.stopPipeline(pipelineId)
             .success(data => {
                 this.stopping = false;
                 this.showDialog(data);
@@ -64,7 +64,7 @@ export class PipelineDetailsController {
             .ok('Delete')
             .cancel('Cancel');
         this.$mdDialog.show(confirm).then(() => {
-            this.restApi.deleteOwnPipeline(pipelineId)
+            this.RestApi.deleteOwnPipeline(pipelineId)
                 .success(data => {
                     this.refreshPipelines();
                 })
@@ -104,4 +104,4 @@ export class PipelineDetailsController {
 
 }
 
-PipelineDetailsController.$inject = ['restApi', '$mdDialog', '$rootScope'];
+PipelineDetailsController.$inject = ['RestApi', '$mdDialog', '$rootScope'];

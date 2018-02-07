@@ -1,6 +1,6 @@
-AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'restApi', '$state', '$window', '$location'];
+AppCtrl.$inject = ['$rootScope', '$scope', '$mdSidenav', '$mdUtil', 'RestApi', '$state', '$window', '$location'];
 
-export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi, $state, $window, $location) {
+export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, RestApi, $state, $window, $location) {
 
     $rootScope.unreadNotifications = [];
     $rootScope.title = "StreamPipes";
@@ -14,7 +14,7 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     };
 
     $rootScope.updateUnreadNotifications = function(){
-        restApi.getNotifications()
+        RestApi.getNotifications()
             .success(function(notifications){
                 var notificationCount = 0;
                 angular.forEach(notifications, function(value, key) {
@@ -43,7 +43,7 @@ export default function AppCtrl($rootScope, $scope, $mdSidenav, $mdUtil, restApi
     };
 
     $scope.logout = function () {
-        restApi.logout().then(function () {
+        RestApi.logout().then(function () {
             $scope.user = undefined;
             $rootScope.authenticated = false;
             $state.go("login");

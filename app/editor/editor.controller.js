@@ -5,13 +5,14 @@ import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
 import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
 import TopicSelectionController from './directives/topic/topic-selection-modal.controller';
+import {InitTooltips} from "../services/init-tooltips.service";
 
 EditorCtrl.$inject = ['$scope',
     '$rootScope',
     '$state',
     '$timeout',
     '$http',
-    'restApi',
+    'RestApi',
     '$stateParams',
     'objectProvider',
     'apiConstants',
@@ -19,8 +20,7 @@ EditorCtrl.$inject = ['$scope',
     '$mdDialog',
     '$window',
     '$compile',
-    'getElementIconText',
-    'initTooltips',
+    'InitTooltips',
     '$mdToast',
     'jsplumbService',
     'jsplumbConfigService',
@@ -28,7 +28,7 @@ EditorCtrl.$inject = ['$scope',
     'pipelineEditorService'];
 
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, restApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, getElementIconText, initTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
+export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, RestApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, InitTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
 
     $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
     $scope.isStreamInAssembly = false;
@@ -63,7 +63,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     }
 
     if ($rootScope.email != undefined) {
-        restApi
+        RestApi
             .getUserDetails()
             .success(function (user) {
                 if (!user.hideTutorial || user.hideTutorial == undefined) {
@@ -75,7 +75,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
                     $mdDialog.show(confirm).then(function () {
                         user.hideTutorial = true;
-                        restApi.updateUserDetails(user).success(function (data) {
+                        RestApi.updateUserDetails(user).success(function (data) {
 
                             $window.open('https://docs.streampipes.org', '_blank');
                         });
@@ -274,7 +274,6 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     });
     $rootScope.$on("elements.loaded", function () {
         makeDraggable();
-        //initTooltips();
     });
     $scope.openContextMenu = function ($mdOpenMenu, event) {
         $mdOpenMenu(event.$event);
@@ -298,7 +297,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     };
 
     $scope.displayPipelineById = function () {
-        restApi.getPipelineById($scope.currentModifiedPipeline)
+        RestApi.getPipelineById($scope.currentModifiedPipeline)
             .success(function (pipeline) {
                 pipelinePositioningService.displayPipeline($scope, jsPlumb, pipeline, "#assembly", false);
                 $scope.currentPipelineName = pipeline.name;
@@ -329,13 +328,13 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         $scope.selectedOptions = [];
 
         if (type == 'stream') {
-            restApi.getEpCategories()
+            RestApi.getEpCategories()
                 .then(handleCategoriesSuccess, handleCategoriesError);
         } else if (type == 'sepa') {
-            restApi.getEpaCategories()
+            RestApi.getEpaCategories()
                 .then(handleCategoriesSuccess, handleCategoriesError);
         } else if (type == 'action') {
-            restApi.getEcCategories()
+            RestApi.getEcCategories()
                 .then(handleCategoriesSuccess, handleCategoriesError);
         }
     };
@@ -354,7 +353,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     $scope.loadSources = function () {
         var tempStreams = [];
-        restApi.getOwnSources()
+        RestApi.getOwnSources()
             .then(function (sources) {
                 sources.data.forEach(function (source, i, sources) {
                     source.spDataStreams.forEach(function (stream) {
@@ -371,7 +370,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
 
     $scope.loadSepas = function () {
-        restApi.getOwnSepas()
+        RestApi.getOwnSepas()
             .success(function (sepas) {
                 $.each(sepas, function (i, sepa) {
                     sepa.type = 'sepa';
@@ -386,7 +385,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             .error(logError);
     };
     $scope.loadActions = function () {
-        restApi.getOwnActions()
+        RestApi.getOwnActions()
             .success(function (actions) {
                 $.each(actions, function (i, action) {
                     action.type = 'action';
@@ -552,7 +551,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     } else if (ui.draggable.hasClass('action')) {
                         jsplumbService.actionDropped($scope, jsPlumb, $newState, true);
                     }
-                    initTooltips();
+                    InitTooltips.initTooltips();
                 }
                 jsPlumb.repaintEverything(true);
             }

@@ -1,8 +1,8 @@
 
 export class PipelineDetailsCtrl {
 
-    constructor($scope, restApi, $rootScope, $stateParams, pipelinePositioningService) {
-        this.restApi = restApi;
+    constructor($scope, RestApi, $rootScope, $stateParams, pipelinePositioningService) {
+        this.RestApi = RestApi;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$stateParams = $stateParams;
@@ -27,7 +27,7 @@ export class PipelineDetailsCtrl {
     }
 
     loadPipeline() {
-        this.restApi.getPipelineById(this.currentPipeline)
+        this.RestApi.getPipelineById(this.currentPipeline)
             .success(pipeline => {
                 this.pipeline = pipeline;
             })
@@ -38,4 +38,4 @@ export class PipelineDetailsCtrl {
 
 }
 
-PipelineDetailsCtrl.$inject = ['$scope', 'restApi', '$rootScope', '$stateParams', 'pipelinePositioningService'];
+PipelineDetailsCtrl.$inject = ['$scope', 'RestApi', '$rootScope', '$stateParams', 'pipelinePositioningService'];

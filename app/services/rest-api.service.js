@@ -1,495 +1,499 @@
 import _ from 'npm/lodash';
 
-restApi.$inject = ['$rootScope', '$http', 'apiConstants'];
-
-export default function restApi($rootScope, $http, apiConstants) {
-
-	var restApi = {};
-
-	var getServerUrl = function() {
-		return apiConstants.contextPath + apiConstants.api;
-		//return "http://localhost:8080"  + apiConstants.contextPath + apiConstants.api;
-	}
-
-	var urlBase = function() {
-		return getServerUrl() +'/users/' +$rootScope.email;
-	};
-
-	restApi.getUserDetails = function() {
-		return $http.get(urlBase());
-	}
-
-	restApi.updateUserDetails = function(user) {
-		return $http.put(urlBase(), user);
-	}
-
-	restApi.getBlocks = function () {
-		return $http.get(urlBase() + "/block");
-	};
-	restApi.saveBlock = function(block) {
-		return $http.post(urlBase() + "/block", block);
-	};
-
-	restApi.getOwnActions = function () {
-		return $http.get(urlBase() +"/actions/own");
-	};
-
-	restApi.getAvailableActions = function () {
-		return $http.get(urlBase() +"/actions/available");
-	};
-
-	restApi.getPreferredActions = function () {
-		return $http.get(urlBase() +"/actions/favorites");
-	};
-
-	restApi.addPreferredAction = function(elementUri) {
-		return $http({
-			method: 'POST',
-			url: urlBase() + "/actions/favorites",
-			data: $.param({uri: elementUri}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-	}
-
-	restApi.removePreferredAction = function(elementUri) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/actions/favorites/" + encodeURIComponent(elementUri)
-		})
-	}
-
-	restApi.getOwnSepas = function () {
-		return $http.get(urlBase() +"/sepas/own");
-	};
-
-	restApi.getAvailableSepas = function () {
-		return $http.get(urlBase() +"/sepas/available");
-	};
-
-	restApi.getPreferredSepas = function () {
-		return $http.get(urlBase() +"/sepas/favorites");
-	};
-
-	restApi.addPreferredSepa = function(elementUri) {
-		return $http({
-			method: 'POST',
-			url: urlBase() + "/sepas/favorites",
-			data: $.param({uri: elementUri}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-	}
-
-	restApi.removePreferredSepa = function(elementUri) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/sepas/favorites/" + encodeURIComponent(elementUri)
-		})
-	}
-
-	restApi.getOwnSources = function () {
-		return $http.get(urlBase() +"/sources/own");
-	};
-
-	restApi.getAvailableSources = function () {
-		return $http.get(urlBase() +"/sources/available");
-	};
-
-	restApi.getPreferredSources = function () {
-		return $http.get(urlBase() +"/sources/favorites");
-	};
-
-	restApi.addPreferredSource = function(elementUri) {
-		return $http({
-			method: 'POST',
-			url: urlBase() + "/sources/favorites",
-			data: $.param({uri: elementUri}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-	}
-
-	restApi.removePreferredSource = function(elementUri) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/sources/favorites/" + encodeURIComponent(elementUri)
-		})
-	}
-
-	restApi.getOwnStreams = function(source){
-		return $http.get(urlBase() + "/sources/" + encodeURIComponent(source.uri) + "/streams");
-
-	};
-
-	restApi.add = function(elementUri, ispublic) {
-		return $http({
-			method: 'POST',
-			url: urlBase() + "/element",
-			data: $.param({uri: elementUri, publicElement: ispublic}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-	}
-
-	restApi.addBatch = function(elementUris, ispublic) {
-		return $http({
-			method: 'POST',
-			url: urlBase() + "/element/batch",
-			data: $.param({uri: elementUris, publicElement: ispublic}),
-			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-	}
-
-	restApi.update = function(elementUri) {
-		return $http({
-			method: 'PUT',
-			url: urlBase() + "/element/" + encodeURIComponent(elementUri)
-		})
-	}
-
-	restApi.del = function(elementUri) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/element/" + encodeURIComponent(elementUri)
-		})
-	}
-
-	restApi.jsonld = function(elementUri) {
-		return $http.get(urlBase() +"/element/" + encodeURIComponent(elementUri) +"/jsonld");
-	}
-
-	restApi.configured = function() {
-		return $http.get(getServerUrl() + "/setup/configured");
-		//return $http.get(getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
-
-	}
-
-	restApi.getConfiguration = function() {
-		return $http.get(getServerUrl() +"/setup/configuration");
-	}
-
-	restApi.updateConfiguration = function(config) {
-		return $http.put(getServerUrl() +"/setup/configuration", config);
-	};
-
-	restApi.getOwnPipelines = function() {
-		return $http.get(urlBase() +"/pipelines/own");
-		//return $http.get("/semantic-epa-backend/api/pipelines");
-	};
-
-	restApi.getSystemPipelines = function() {
-		return $http.get(urlBase() +"/pipelines/system");
-	};
-
-	restApi.storePipeline = function(pipeline) {
-		return $http.post(urlBase() +"/pipelines", pipeline);
-	}
-
-	restApi.updateStream = function(stream) {
-		return $http.post(urlBase() +"/streams/update", stream);
-	}
-
-	restApi.deleteOwnPipeline = function(pipelineId) {
-
-		// delete all the widgets that use the pipeline results
-		$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
-			var toDelete = _.chain(data.data.rows)
-				.filter(function(o) {
-					return o.doc.visualisation.pipelineId == pipelineId;
-				}).value();
-
-			_.map(toDelete, function(o) {
-				$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
-			});	
-
-		});
-		
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/pipelines/" +pipelineId
-		});
-	}
-
-	restApi.getPipelineCategories = function() {
-		return $http.get(urlBase() +"/pipelinecategories");
-	};
-
-	restApi.storePipelineCategory = function(pipelineCategory) {
-		return $http.post(urlBase() +"/pipelinecategories", pipelineCategory);
-	};
-
-	restApi.deletePipelineCategory = function(categoryId) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/pipelinecategories/" +categoryId
-		});
-	}
-
-	restApi.recommendPipelineElement = function(pipeline) {
-		return $http.post(urlBase() +"/pipelines/recommend", pipeline);
-	}
-
-	restApi.updatePartialPipeline = function(pipeline) {
-		return $http.post(urlBase() +"/pipelines/update", pipeline);
-	}
-
-	restApi.startPipeline = function(pipelineId) {
-		return $http.get(urlBase() +"/pipelines/" +pipelineId +"/start");
-	}
-
-	restApi.stopPipeline = function(pipelineId) {
-		return $http.get(urlBase() +"/pipelines/" +pipelineId +"/stop");
-	}
-
-	restApi.getPipelineById = function(pipelineId) {
-		return $http.get(urlBase() + "/pipelines/" + pipelineId);
-	}
-
-	restApi.getPipelineStatusById = function(pipelineId) {
-		return $http.get(urlBase() + "/pipelines/" + pipelineId +"/status");
-	}
-
-	restApi.updatePipeline = function(pipeline){
-		var pipelineId = pipeline._id;
-		return $http.put(urlBase() + "/pipelines/" + pipelineId, pipeline);
-	}
-
-	restApi.getNotifications = function() {
-		return $http.get(urlBase() +"/notifications");
-	}
-
-	restApi.getUnreadNotifications = function() {
-		return $http.get(urlBase() +"/notifications/unread");
-	}
-
-	restApi.updateNotification = function(notificationId) {
-		return $http.put(urlBase() +"/notifications/" +notificationId);
-	}
-
-	restApi.deleteNotifications = function(notificationId) {
-		return $http({
-			method: 'DELETE',
-			url: urlBase() + "/notifications/" +notificationId
-		});
-	}
-
-	restApi.getSepaById = function(elementId) {
-		return $http.get(urlBase() +"/sepas/" + encodeURIComponent(elementId));
-	}
-
-	restApi.getActionById = function(elementId) {
-		return $http.get(urlBase() +"/actions/" + encodeURIComponent(elementId));
-	};
-
-	restApi.getOntologyProperties = function() {
-		return $http.get( getServerUrl() + "/ontology/properties");
-	};
-
-	restApi.getOntologyPropertyDetails = function(propertyId) {
-		return $http.get(getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId));
-	}
-
-	restApi.addOntologyProperty = function(propertyData) {
-		return $http.post(getServerUrl() + "/ontology/properties", propertyData);
-	}
-
-	restApi.getOntologyConcepts = function() {
-		return $http.get(getServerUrl() + "/ontology/types");
-	};
-
-	restApi.getOntologyConceptDetails = function(conceptId) {
-		return $http.get(getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId));
-	}
-
-	restApi.getOntologyNamespaces = function() {
-		return $http.get(getServerUrl() + "/ontology/namespaces");
-	}
-
-	restApi.addOntologyNamespace = function(namespace) {
-		return $http.post(getServerUrl() + "/ontology/namespaces", namespace);
-	}
-
-	restApi.deleteOntologyNamespace = function(prefix) {
-		return $http({
-			method: 'DELETE',
-			url: getServerUrl() + "/ontology/namespaces/" + encodeURIComponent(prefix)
-		});
-	}
-
-	restApi.addOntologyConcept = function(conceptData) {
-		return $http.post(getServerUrl() + "/ontology/types", conceptData);
-	}
-
-	restApi.addOntologyInstance = function(instanceData) {
-		return $http.post(getServerUrl() + "/ontology/instances", instanceData);
-	}
-
-	restApi.getOntologyInstanceDetails = function(instanceId) {
-		return $http.get(getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId));
-	}
-
-	restApi.updateOntologyProperty = function(propertyId, propertyData) {
-		return $http.put(getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId), propertyData);
-	}
-
-	restApi.updateOntologyConcept = function(conceptId, conceptData) {
-		return $http.put(getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId), conceptData);
-	}
-
-	restApi.updateOntologyInstance = function(instanceId, instanceData) {
-		return $http.put(getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId), instanceData);
-	}
-
-	restApi.deleteOntologyInstance = function(instanceId) {
-		return $http({
-			method: 'DELETE',
-			url: getServerUrl() + "/ontology/instances/" + encodeURIComponent(instanceId)
-		});
-	}
-
-	restApi.deleteOntologyProperty = function(propertyId) {
-		return $http({
-			method: 'DELETE',
-			url: getServerUrl() + "/ontology/properties/" + encodeURIComponent(propertyId)
-		});
-	}
-
-	restApi.deleteOntologyConcept = function(conceptId) {
-		return $http({
-			method: 'DELETE',
-			url: getServerUrl() + "/ontology/types/" + encodeURIComponent(conceptId)
-		});
-	}
-
-	restApi.getAvailableContexts = function() {
-		return $http.get(getServerUrl()+ "/contexts");
-	};
-
-	restApi.deleteContext = function(contextId) {
-		return $http({
-			method: 'DELETE',
-			url: getServerUrl() + "/contexts/" + encodeURIComponent(contextId)
-		});
-	}
-
-	restApi.getDomainKnowledgeItems = function(query) {
-		return $http.post(getServerUrl() + "/autocomplete/domain", query);
-	};
-
-
-	restApi.getSepasFromOntology = function() {
-		return $http.get(getServerUrl() + "/ontology/sepas")
-	}
-
-	restApi.getSepaDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(getServerUrl() + "/ontology/sepas/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
-	}
-
-	restApi.getSourcesFromOntology = function() {
-		return $http.get(getServerUrl() + "/ontology/sources")
-	}
-
-	restApi.getSourceDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(getServerUrl() + "/ontology/sources/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
-	}
-
-	restApi.getActionsFromOntology = function() {
-		return $http.get(getServerUrl() + "/ontology/actions")
-	}
-
-	restApi.getActionDetailsFromOntology = function(uri, keepIds) {
-		return $http.get(getServerUrl() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
-	}
-
-	restApi.getRunningVisualizations = function() {
-		return $http.get(getServerUrl() + "/visualizations");
-	}
-
-	restApi.getAllUnits = function() {
-		return $http.get(getServerUrl() + "/units/instances");
-	}
-
-	restApi.getAllUnitTypes = function() {
-		return $http.get(getServerUrl() + "/units/types");
-	}
-
-	restApi.getUnit = function(resource) {
-		return $http.get(getServerUrl() + "/units/instances/" + encodeURIComponent(resource));
-	}
-
-	restApi.getEpaCategories = function() {
-		return $http.get(getServerUrl() + "/categories/epa");
-	}
-
-	restApi.getEcCategories = function() {
-		return $http.get(getServerUrl() + "/categories/ec");
-	}
-
-	restApi.getEpCategories = function() {
-		return $http.get(getServerUrl() + "/categories/ep");
-	}
-
-	restApi.getAvailableApps = function(elementId) {
-		return $http.get(urlBase() +"/marketplace");
-	}
-
-	restApi.installApp = function(bundleInfo) {
-		return $http.post(urlBase() +"/marketplace/install", bundleInfo);
-	}
-
-	restApi.uninstallApp = function(bundleInfo) {
-		return $http.post(urlBase() +"/marketplace/uninstall", bundleInfo);
-	}
-
-	restApi.getTargetPods = function() {
-		return $http.get(urlBase() +"/marketplace/pods");
-	}
-
-	restApi.getRdfEndpoints = function() {
-		return $http.get(urlBase() +"/rdfendpoints");
-	}
-
-	restApi.getRdfEndpointItems = function() {
-		return $http.get(urlBase() +"/rdfendpoints/items");
-	}
-
-	restApi.addRdfEndpoint = function(rdfEndpoint) {
-		return $http.post(urlBase() +"/rdfendpoints", rdfEndpoint);
-	}
-
-	restApi.removeRdfEndpoint = function(rdfEndpointId) {
-		return $http.delete(urlBase() +"/rdfendpoints/" +rdfEndpointId);
-	}
-
-	restApi.getAuthc = function() {
-		return $http.get(getServerUrl() + "/admin/authc");
-	}
-
-	restApi.login = function(credentials) {
-		return $http.post(getServerUrl() + "/admin/login", credentials);
-	}
-
-	restApi.loginSso = function(credentials, componentId, sessionId) {
-		return $http.post(getServerUrl() + "/admin/login/" +componentId +"?session=" +sessionId, credentials);
-	}
-
-	restApi.logout = function() {
-		return $http.get(getServerUrl() + "/admin/logout");
-	}
-
-	restApi.setupInstall = function(setup) {
-			return $http.post(getServerUrl() + "/setup/install", setup);
-	}
-
-	restApi.register = function(payload) {
-			return $http.post(getServerUrl() +"/admin/register", payload);
-	}
-	
-	restApi.deployStorm = function(payload) {
-		return $http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: urlBase() + '/deploy/storm'})
-
-	}
-
-	restApi.getApplicationLinks = function() {
-		return $http.get(getServerUrl() + "/applink");
-	};
-
-	return restApi;
-};
+
+export class RestApi {
+
+
+    constructor ($rootScope, $http, apiConstants) {
+        this.$rootScope = $rootScope;
+        this.$http = $http;
+        this.apiConstants = apiConstants;
+    }
+
+    getServerUrl() {
+        return this.apiConstants.contextPath + this.apiConstants.api;
+    }
+
+    urlBase() {
+        return this.getServerUrl() +'/users/' + this.$rootScope.email;
+    };
+
+    getUserDetails() {
+        return this.$http.get(this.urlBase());
+    }
+
+    updateUserDetails(user) {
+        return this.$http.put(this.urlBase(), user);
+    }
+
+    getBlocks() {
+        return this.$http.get(this.urlBase() + "/block");
+    };
+    saveBlock(block) {
+        return this.$http.post(this.urlBase() + "/block", block);
+    };
+
+    getOwnActions() {
+        return this.$http.get(this.urlBase() +"/actions/own");
+    };
+
+    getAvailableActions() {
+        return this.$http.get(this.urlBase() +"/actions/available");
+    };
+
+    getPreferredActions() {
+        return this.$http.get(this.urlBase() +"/actions/favorites");
+    };
+
+    addPreferredAction(elementUri) {
+        return this.$http({
+            method: 'POST',
+            url: this.urlBase() + "/actions/favorites",
+            data: $.param({uri: elementUri}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+
+    removePreferredAction(elementUri) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/actions/favorites/" + this.encodeURIComponent(elementUri)
+        })
+    }
+
+    getOwnSepas() {
+        return this.$http.get(this.urlBase() +"/sepas/own");
+    };
+
+    getAvailableSepas() {
+        return this.$http.get(this.urlBase() +"/sepas/available");
+    };
+
+    getPreferredSepas() {
+        return this.$http.get(this.urlBase() +"/sepas/favorites");
+    };
+
+    addPreferredSepa(elementUri) {
+        return this.$http({
+            method: 'POST',
+            url: this.urlBase() + "/sepas/favorites",
+            data: $.param({uri: elementUri}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+
+    removePreferredSepa(elementUri) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/sepas/favorites/" + this.encodeURIComponent(elementUri)
+        })
+    }
+
+    getOwnSources() {
+        return this.$http.get(this.urlBase() +"/sources/own");
+    };
+
+    getAvailableSources() {
+        return this.$http.get(this.urlBase() +"/sources/available");
+    };
+
+    getPreferredSources() {
+        return this.$http.get(this.urlBase() +"/sources/favorites");
+    };
+
+    addPreferredSource(elementUri) {
+        return this.$http({
+            method: 'POST',
+            url: this.urlBase() + "/sources/favorites",
+            data: $.param({uri: elementUri}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+
+    removePreferredSource(elementUri) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/sources/favorites/" + this.encodeURIComponent(elementUri)
+        })
+    }
+
+    getOwnStreams(source){
+        return this.$http.get(this.urlBase() + "/sources/" + this.encodeURIComponent(source.uri) + "/streams");
+
+    };
+
+    add(elementUri, ispublic) {
+        return this.$http({
+            method: 'POST',
+            url: this.urlBase() + "/element",
+            data: $.param({uri: elementUri, publicElement: ispublic}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+
+    addBatch(elementUris, ispublic) {
+        return this.$http({
+            method: 'POST',
+            url: this.urlBase() + "/element/batch",
+            data: $.param({uri: elementUris, publicElement: ispublic}),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+
+    update(elementUri) {
+        return this.$http({
+            method: 'PUT',
+            url: this.urlBase() + "/element/" + this.encodeURIComponent(elementUri)
+        })
+    }
+
+    del(elementUri) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/element/" + this.encodeURIComponent(elementUri)
+        })
+    }
+
+    jsonld(elementUri) {
+        return this.$http.get(this.urlBase() +"/element/" + this.encodeURIComponent(elementUri) +"/jsonld");
+    }
+
+    configured() {
+        return this.$http.get(this.getServerUrl() + "/setup/configured");
+
+    }
+
+    getConfiguration() {
+        return this.$http.get(this.getServerUrl() +"/setup/configuration");
+        //return this.$http.get(this.getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
+    }
+
+    updateConfiguration(config) {
+        return this.$http.put(this.getServerUrl() +"/setup/configuration", config);
+        //return this.$http.get(this.getServerUrl() +"/semantic-epa-backend/api/v2/setup/configured");
+    };
+
+    getOwnPipelines() {
+        return this.$http.get(this.urlBase() +"/pipelines/own");
+        //return this.$http.get("/semantic-epa-backend/api/pipelines");
+    };
+
+    getSystemPipelines() {
+        return this.$http.get(this.urlBase() +"/pipelines/system");
+    };
+
+    storePipeline(pipeline) {
+        return this.$http.post(this.urlBase() +"/pipelines", pipeline);
+    }
+
+    updateStream(stream) {
+        return this.$http.post(this.urlBase() +"/streams/update", stream);
+    }
+
+    deleteOwnPipeline(pipelineId) {
+
+        // delete all the widgets that use the pipeline results
+        this.$http.get("/dashboard/_all_docs?include_docs=true").then(function(data) {
+            var toDelete = _.chain(data.data.rows)
+                .filter(function(o) {
+                    return o.doc.visualisation.pipelineId == pipelineId;
+                }).value();
+
+            _.map(toDelete, function(o) {
+                this.$http.delete("/dashboard/" + o.doc._id + '?rev=' + o.doc._rev);
+            });
+
+        });
+
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/pipelines/" +pipelineId
+        });
+    }
+
+    getPipelineCategories() {
+        return this.$http.get(this.urlBase() +"/pipelinecategories");
+    };
+
+    storePipelineCategory(pipelineCategory) {
+        return this.$http.post(this.urlBase() +"/pipelinecategories", pipelineCategory);
+    };
+
+    deletePipelineCategory(categoryId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/pipelinecategories/" +categoryId
+        });
+    }
+
+    recommendPipelineElement(pipeline) {
+        return this.$http.post(this.urlBase() +"/pipelines/recommend", pipeline);
+    }
+
+    updatePartialPipeline(pipeline) {
+        return this.$http.post(this.urlBase() +"/pipelines/update", pipeline);
+    }
+
+    startPipeline(pipelineId) {
+        return this.$http.get(this.urlBase() +"/pipelines/" +pipelineId +"/start");
+    }
+
+    stopPipeline(pipelineId) {
+        return this.$http.get(this.urlBase() +"/pipelines/" +pipelineId +"/stop");
+    }
+
+    getPipelineById(pipelineId) {
+        return this.$http.get(this.urlBase() + "/pipelines/" + pipelineId);
+    }
+
+    getPipelineStatusById(pipelineId) {
+        return this.$http.get(this.urlBase() + "/pipelines/" + pipelineId +"/status");
+    }
+
+    updatePipeline(pipeline){
+        var pipelineId = pipeline._id;
+        return this.$http.put(this.urlBase() + "/pipelines/" + pipelineId, pipeline);
+    }
+
+    getNotifications() {
+        return this.$http.get(this.urlBase() +"/notifications");
+    }
+
+    getUnreadNotifications() {
+        return this.$http.get(this.urlBase() +"/notifications/unread");
+    }
+
+    updateNotification(notificationId) {
+        return this.$http.put(this.urlBase() +"/notifications/" +notificationId);
+    }
+
+    deleteNotifications(notificationId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.urlBase() + "/notifications/" +notificationId
+        });
+    }
+
+    getSepaById(elementId) {
+        return this.$http.get(this.urlBase() +"/sepas/" + this.encodeURIComponent(elementId));
+    }
+
+    getActionById(elementId) {
+        return this.$http.get(this.urlBase() +"/actions/" + this.encodeURIComponent(elementId));
+    };
+
+    getOntologyProperties() {
+        return this.$http.get( this.getServerUrl() + "/ontology/properties");
+    };
+
+    getOntologyPropertyDetails(propertyId) {
+        return this.$http.get(this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId));
+    }
+
+    addOntologyProperty(propertyData) {
+        return this.$http.post(this.getServerUrl() + "/ontology/properties", propertyData);
+    }
+
+    getOntologyConcepts() {
+        return this.$http.get(this.getServerUrl() + "/ontology/types");
+    };
+
+    getOntologyConceptDetails(conceptId) {
+        return this.$http.get(this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId));
+    }
+
+    getOntologyNamespaces() {
+        return this.$http.get(this.getServerUrl() + "/ontology/namespaces");
+    }
+
+    addOntologyNamespace(namespace) {
+        return this.$http.post(this.getServerUrl() + "/ontology/namespaces", namespace);
+    }
+
+    deleteOntologyNamespace(prefix) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.getServerUrl() + "/ontology/namespaces/" + this.encodeURIComponent(prefix)
+        });
+    }
+
+    addOntologyConcept(conceptData) {
+        return this.$http.post(this.getServerUrl() + "/ontology/types", conceptData);
+    }
+
+    addOntologyInstance(instanceData) {
+        return this.$http.post(this.getServerUrl() + "/ontology/instances", instanceData);
+    }
+
+    getOntologyInstanceDetails(instanceId) {
+        return this.$http.get(this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId));
+    }
+
+    updateOntologyProperty(propertyId, propertyData) {
+        return this.$http.put(this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId), propertyData);
+    }
+
+    updateOntologyConcept(conceptId, conceptData) {
+        return this.$http.put(this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId), conceptData);
+    }
+
+    updateOntologyInstance(instanceId, instanceData) {
+        return this.$http.put(this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId), instanceData);
+    }
+
+    deleteOntologyInstance(instanceId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.getServerUrl() + "/ontology/instances/" + this.encodeURIComponent(instanceId)
+        });
+    }
+
+    deleteOntologyProperty(propertyId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.getServerUrl() + "/ontology/properties/" + this.encodeURIComponent(propertyId)
+        });
+    }
+
+    deleteOntologyConcept(conceptId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.getServerUrl() + "/ontology/types/" + this.encodeURIComponent(conceptId)
+        });
+    }
+
+    getAvailableContexts() {
+        return this.$http.get(this.getServerUrl()+ "/contexts");
+    };
+
+    deleteContext(contextId) {
+        return this.$http({
+            method: 'DELETE',
+            url: this.getServerUrl() + "/contexts/" + this.encodeURIComponent(contextId)
+        });
+    }
+
+    getDomainKnowledgeItems(query) {
+        return this.$http.post(this.getServerUrl() + "/autocomplete/domain", query);
+    };
+
+
+    getSepasFromOntology() {
+        return this.$http.get(this.getServerUrl() + "/ontology/sepas")
+    }
+
+    getSepaDetailsFromOntology(uri, keepIds) {
+        return this.$http.get(this.getServerUrl() + "/ontology/sepas/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+    }
+
+    getSourcesFromOntology() {
+        return this.$http.get(this.getServerUrl() + "/ontology/sources")
+    }
+
+    getSourceDetailsFromOntology(uri, keepIds) {
+        return this.$http.get(this.getServerUrl() + "/ontology/sources/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+    }
+
+    getActionsFromOntology() {
+        return this.$http.get(this.getServerUrl() + "/ontology/actions")
+    }
+
+    getActionDetailsFromOntology(uri, keepIds) {
+        return this.$http.get(this.getServerUrl() + "/ontology/actions/" + this.encodeURIComponent(uri) +"?keepIds=" +keepIds);
+    }
+
+    getRunningVisualizations() {
+        return this.$http.get(this.getServerUrl() + "/visualizations");
+    }
+
+    getAllUnits() {
+        return this.$http.get(this.getServerUrl() + "/units/instances");
+    }
+
+    getAllUnitTypes() {
+        return this.$http.get(this.getServerUrl() + "/units/types");
+    }
+
+    getUnit(resource) {
+        return this.$http.get(this.getServerUrl() + "/units/instances/" + this.encodeURIComponent(resource));
+    }
+
+    getEpaCategories() {
+        return this.$http.get(this.getServerUrl() + "/categories/epa");
+    }
+
+    getEcCategories() {
+        return this.$http.get(this.getServerUrl() + "/categories/ec");
+    }
+
+    getEpCategories() {
+        return this.$http.get(this.getServerUrl() + "/categories/ep");
+    }
+
+    getAvailableApps(elementId) {
+        return this.$http.get(this.urlBase() +"/marketplace");
+    }
+
+    installApp(bundleInfo) {
+        return this.$http.post(this.urlBase() +"/marketplace/install", bundleInfo);
+    }
+
+    uninstallApp(bundleInfo) {
+        return this.$http.post(this.urlBase() +"/marketplace/uninstall", bundleInfo);
+    }
+
+    getTargetPods() {
+        return this.$http.get(this.urlBase() +"/marketplace/pods");
+    }
+
+    getRdfEndpoints() {
+        return this.$http.get(this.urlBase() +"/rdfendpoints");
+    }
+
+    getRdfEndpointItems() {
+        return this.$http.get(this.urlBase() +"/rdfendpoints/items");
+    }
+
+    addRdfEndpoint(rdfEndpoint) {
+        return this.$http.post(this.urlBase() +"/rdfendpoints", rdfEndpoint);
+    }
+
+    removeRdfEndpoint(rdfEndpointId) {
+        return this.$http.delete(this.urlBase() +"/rdfendpoints/" +rdfEndpointId);
+    }
+
+    getAuthc() {
+        return this.$http.get(this.getServerUrl() + "/admin/authc");
+    }
+
+    login(credentials) {
+        return this.$http.post(this.getServerUrl() + "/admin/login", credentials);
+    }
+
+    loginSso(credentials, componentId, sessionId) {
+        return this.$http.post(this.getServerUrl() + "/admin/login/" +componentId +"?session=" +sessionId, credentials);
+    }
+
+    logout() {
+        return this.$http.get(this.getServerUrl() + "/admin/logout");
+    }
+
+    setupInstall(setup) {
+        return this.$http.post(this.getServerUrl() + "/setup/install", setup);
+    }
+
+    register(payload) {
+        return this.$http.post(this.getServerUrl() +"/admin/register", payload);
+    }
+
+    deployStorm(payload) {
+        return this.$http({method: 'GET', responseType : 'arraybuffer', headers: {'Accept' : 'application/zip'}, url: this.urlBase() + '/deploy/storm'})
+
+    }
+
+    getApplicationLinks() {
+        return this.$http.get(this.getServerUrl() + "/applink");
+    };
+}
+
+RestApi.$inject = ['$rootScope', '$http', 'apiConstants'];

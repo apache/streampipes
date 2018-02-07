@@ -1,6 +1,6 @@
-LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$state', '$stateParams', 'restApi', '$window'];
+LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window'];
 
-export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, restApi, $window) {
+export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, RestApi, $window) {
     $scope.loading = false;
     $scope.authenticationFailed = false;
     $rootScope.title = "ProaSense";
@@ -13,7 +13,7 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
         $scope.authenticationFailed = false;
         $scope.loading = true;
         if ($stateParams.target != "") {
-            restApi.loginSso($scope.credentials, $stateParams.target, $stateParams.session)
+            RestApi.loginSso($scope.credentials, $stateParams.target, $stateParams.session)
                 .then(
                     function (response) {
                         $scope.loading = false;
@@ -39,7 +39,7 @@ export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location,
                 );
         }
         //$http.post("/semantic-epa-backend/api/v2/admin/login", $scope.credentials)
-        restApi.login($scope.credentials)
+        RestApi.login($scope.credentials)
             .then(
                 function (response) { // success
                     $scope.loading = false;

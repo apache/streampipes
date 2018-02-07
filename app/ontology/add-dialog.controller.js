@@ -1,8 +1,8 @@
 export class AddDialogController {
 
-    constructor($mdDialog, restApi, elementType, conceptId, loadConcepts, loadConceptDetails, loadProperties,
+    constructor($mdDialog, RestApi, elementType, conceptId, loadConcepts, loadConceptDetails, loadProperties,
                 loadPropertyDetails, loadInstanceDetails) {
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
 
         this.loadConcepts = loadConcepts;
@@ -24,7 +24,7 @@ export class AddDialogController {
 
 
     getNamespaces() {
-        this.restApi.getOntologyNamespaces()
+        this.RestApi.getOntologyNamespaces()
             .success(namespaces => {
                 this.namespaces = namespaces;
             })
@@ -37,7 +37,7 @@ export class AddDialogController {
         var promise;
         if (this.elementType === 'Property')
         {
-            this.restApi.addOntologyProperty(this.elementData)
+            this.RestApi.addOntologyProperty(this.elementData)
                 .success(msg => {
                     this.loadProperties();
                     this.loadPropertyDetails(this.elementData.namespace + this.elementData.elementName);
@@ -45,7 +45,7 @@ export class AddDialogController {
         }
         else if (this.elementType === 'Concept')
         {
-            this.restApi.addOntologyConcept(this.elementData)
+            this.RestApi.addOntologyConcept(this.elementData)
                 .success(msg => {
                     this.loadConcepts();
                     this.loadConceptDetails(this.elementData.namespace + this.elementData.elementName);
@@ -56,7 +56,7 @@ export class AddDialogController {
             // parent: this,
             if (this.conceptId != undefined) this.elementData.instanceOf = conceptId;
             this.elementData.id = this.elementData.namespace + this.elementData.elementName
-            this.restApi.addOntologyInstance(this.elementData).success(msg => {
+            this.RestApi.addOntologyInstance(this.elementData).success(msg => {
                 this.loadConcepts();
                 if (this.conceptId != undefined) this.loadConceptDetails(conceptId);
                 this.loadInstanceDetails(this.elementData.namespace + this.elementData.elementName);
@@ -77,5 +77,5 @@ export class AddDialogController {
 
 }
 
-AddDialogController.$inject = ['$mdDialog', 'restApi', 'elementType', 'conceptId', 'loadConcepts', 'loadConceptDetails',
+AddDialogController.$inject = ['$mdDialog', 'RestApi', 'elementType', 'conceptId', 'loadConcepts', 'loadConceptDetails',
 'loadProperties', 'loadPropertyDetails', 'loadInstanceDetails'];

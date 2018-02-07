@@ -1,8 +1,8 @@
 export class AddEndpointController {
 
-    constructor($mdDialog, restApi) {
+    constructor($mdDialog, RestApi) {
         this.$mdDialog = $mdDialog;
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.rdfEndpoints = [];
         this.addSelected = false;
         this.newEndpoint = {};
@@ -14,7 +14,7 @@ export class AddEndpointController {
     }
 
     loadRdfEndpoints() {
-        this.restApi.getRdfEndpoints()
+        this.RestApi.getRdfEndpoints()
             .success(rdfEndpoints => {
                 this.rdfEndpoints = rdfEndpoints;
             })
@@ -24,7 +24,7 @@ export class AddEndpointController {
     }
 
     addRdfEndpoint(rdfEndpoint) {
-        this.restApi.addRdfEndpoint(rdfEndpoint)
+        this.RestApi.addRdfEndpoint(rdfEndpoint)
             .success(message => {
                 this.loadRdfEndpoints();
                 this.getEndpointItems();
@@ -35,7 +35,7 @@ export class AddEndpointController {
     }
 
     removeRdfEndpoint(rdfEndpointId) {
-        this.restApi.removeRdfEndpoint(rdfEndpointId)
+        this.RestApi.removeRdfEndpoint(rdfEndpointId)
             .success(message => {
                 this.loadRdfEndpoints();
             })
@@ -54,4 +54,4 @@ export class AddEndpointController {
 
 }
 
-AddEndpointController.$inject = ['$mdDialog', 'restApi'];
+AddEndpointController.$inject = ['$mdDialog', 'RestApi'];

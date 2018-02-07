@@ -1,6 +1,6 @@
-PossibleElementsController.$inject = ['$scope', '$mdDialog', 'getElementIconText'];
+PossibleElementsController.$inject = ['$scope', '$mdDialog', 'ElementIconText'];
 
-export default function PossibleElementsController($scope, $mdDialog, getElementIconText) {
+export default function PossibleElementsController($scope, $mdDialog, ElementIconText) {
 
 
     $scope.create = function(possibleElement) {
@@ -12,7 +12,7 @@ export default function PossibleElementsController($scope, $mdDialog, getElement
     }
 
     $scope.iconText = function(elementId) {
-        return getElementIconText(elementId);
+        return ElementIconText.getElementIconText(elementId);
     }
 
     $scope.hide = function () {

@@ -1,6 +1,6 @@
-SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'restApi', '$mdToast'];
+SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'RestApi', '$mdToast'];
 
-export default function SavePipelineController($scope, $rootScope, $mdDialog, $state, restApi, $mdToast) {
+export default function SavePipelineController($scope, $rootScope, $mdDialog, $state, RestApi, $mdToast) {
 
     $scope.pipelineCategories = [];
 
@@ -17,7 +17,7 @@ export default function SavePipelineController($scope, $rootScope, $mdDialog, $s
     }
 
     $scope.getPipelineCategories = function () {
-        restApi.getPipelineCategories()
+        RestApi.getPipelineCategories()
             .success(function (pipelineCategories) {
                 $scope.pipelineCategories = pipelineCategories;
             })
@@ -45,7 +45,7 @@ export default function SavePipelineController($scope, $rootScope, $mdDialog, $s
                     if ($rootScope.state.adjustingPipelineState && $scope.overwrite) {
                         var pipelineId = $rootScope.state.adjustingPipeline._id;
 
-                        restApi.deleteOwnPipeline(pipelineId)
+                        RestApi.deleteOwnPipeline(pipelineId)
                             .success(function (data) {
                                 if (data.success) {
                                     $rootScope.state.adjustingPipelineState = false;

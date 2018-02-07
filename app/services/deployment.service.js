@@ -1,6 +1,6 @@
-deploymentService.$inject = ['$http', '$rootScope', 'restApi'];
+deploymentService.$inject = ['$http', '$rootScope', 'RestApi'];
 
-export default function deploymentService($http, $rootScope, restApi) {
+export default function deploymentService($http, $rootScope, RestApi) {
 
 	var deploymentService = {};
 

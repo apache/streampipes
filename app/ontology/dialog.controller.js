@@ -1,7 +1,7 @@
 export class DialogController {
 
-    constructor($mdDialog, restApi) {
-    	this.restApi = restApi;
+    constructor($mdDialog, RestApi) {
+    	this.RestApi = RestApi;
     	this.$mdDialog = $mdDialog;
     	this.namespaces = [];
 		this.addSelected = false;
@@ -11,7 +11,7 @@ export class DialogController {
 	}
 
 	getNamespaces() {
-		this.restApi.getOntologyNamespaces()
+		this.RestApi.getOntologyNamespaces()
 			.success(namespaces => {
 				this.namespaces = namespaces;
 			})
@@ -21,7 +21,7 @@ export class DialogController {
 	}
 
 	addNamespace() {
-		this.restApi.addOntologyNamespace(this.newNamespace)
+		this.RestApi.addOntologyNamespace(this.newNamespace)
 			.success(msg => {
 				this.addSelected = false;
 				this.newNamespace = {};
@@ -34,7 +34,7 @@ export class DialogController {
 	}
 
 	deleteNamespace(prefix) {
-		this.restApi.deleteOntologyNamespace(prefix)
+		this.RestApi.deleteOntologyNamespace(prefix)
 			.success(msg => {
 				this.getNamespaces();
 			})
@@ -59,4 +59,4 @@ export class DialogController {
 
 }
 
-DialogController.$inject = ['$mdDialog', 'restApi'];
+DialogController.$inject = ['$mdDialog', 'RestApi'];

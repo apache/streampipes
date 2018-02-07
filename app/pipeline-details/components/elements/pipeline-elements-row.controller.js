@@ -1,11 +1,11 @@
 export class PipelineElementsRowController {
 
-    constructor(getElementIconText) {
-        this.getElementIconText = getElementIconText;
+    constructor(ElementIconText) {
+        this.ElementIconText = ElementIconText;
     }
 
     elementTextIcon() {
-        return this.getElementIconText(this.element.name);
+        return this.ElementIconText.getElementIconText(this.element.name);
     }
 
     getElementType(pipeline, element) {
@@ -28,4 +28,4 @@ export class PipelineElementsRowController {
     }
 }
 
-PipelineElementsRowController.$inject = ['getElementIconText'];
+PipelineElementsRowController.$inject = ['ElementIconText'];

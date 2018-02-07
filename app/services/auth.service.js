@@ -1,19 +1,19 @@
 export class AuthService {
 
-    constructor($rootScope, $location, $state, restApi) {
+    constructor($rootScope, $location, $state, RestApi) {
         this.$rootScope = $rootScope;
         this.$location = $location;
         this.$state = $state;
-        this.restApi = restApi;
+        this.RestApi = RestApi;
     }
 
     authenticate() {
-        return this.restApi.getAuthc()
+        return this.RestApi.getAuthc()
             .then(
                 response => {
                     if (response.data.success == false) {
                         this.$rootScope.authenticated = false;
-                        this.restApi.configured()
+                        this.RestApi.configured()
                             .then(response => {
                                 if (response.data.configured) {
                                     this.$rootScope.appConfig = response.data.appConfig;
@@ -29,13 +29,13 @@ export class AuthService {
                         this.$rootScope.email = response.data.info.authc.principal.email;
                         this.$rootScope.authenticated = true;
                         this.$rootScope.token = response.data.token;
-                        this.restApi.configured()
+                        this.RestApi.configured()
                             .then(response => {
                                 if (response.data.configured) {
                                     this.$rootScope.appConfig = response.data.appConfig;
                                 }
                             });
-                        this.restApi.getNotifications()
+                        this.RestApi.getNotifications()
                             .success(notifications => {
                                 this.$rootScope.unreadNotifications = notifications
                             })
@@ -48,7 +48,7 @@ export class AuthService {
                 response => {
                     this.$rootScope.username = undefined;
                     this.$rootScope.authenticated = false;
-                    this.restApi.configured()
+                    this.RestApi.configured()
                         .then(conf => {
                             if (conf.data.configured) {
                             }
@@ -58,4 +58,4 @@ export class AuthService {
     }
 }
 
-AuthService.$inject = ['$rootScope', '$location', '$state', 'restApi'];
+AuthService.$inject = ['$rootScope', '$location', '$state', 'RestApi'];

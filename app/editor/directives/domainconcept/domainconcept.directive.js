@@ -1,6 +1,6 @@
-domainConceptInput.$inject = ['restApi'];
+domainConceptInput.$inject = ['RestApi'];
 
-export default function domainConceptInput(restApi) {
+export default function domainConceptInput(RestApi) {
 
 	return {
 		restrict : 'E',
@@ -27,7 +27,7 @@ export default function domainConceptInput(restApi) {
 					query.requiredProperties.push(propertyObj);
 				});
 
-				restApi.getDomainKnowledgeItems(query)
+				RestApi.getDomainKnowledgeItems(query)
 					.success(function(queryResponse){
 						if (!$scope.availableDomainProperties[item.elementId])
 					{

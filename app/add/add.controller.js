@@ -4,10 +4,10 @@ import angular from 'angular';
 
 export class AddCtrl {
 
-    constructor(restApi, $mdDialog, getElementIconText) {
-        this.restApi = restApi;
+    constructor(RestApi, $mdDialog, ElementIconText) {
+        this.RestApi = RestApi;
         this.$mdDialog = $mdDialog;
-        this.getElementIconText = getElementIconText;
+        this.ElementIconText = ElementIconText;
         this.elements = "";
         this.results = [];
         this.loading = false;
@@ -18,7 +18,7 @@ export class AddCtrl {
     }
 
     iconText(elementName) {
-        return this.getElementIconText(elementName);
+        return this.ElementIconText.getElementIconText(elementName);
     }
 
     setSelectedTab(type) {
@@ -72,7 +72,7 @@ export class AddCtrl {
 
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
-        this.restApi.getRdfEndpointItems()
+        this.RestApi.getRdfEndpointItems()
             .success(endpointItems => {
                 this.endpointItems = endpointItems;
                 this.endpointItemsLoadingComplete = true;
@@ -84,7 +84,7 @@ export class AddCtrl {
 
     addFromEndpoint(endpointUrl) {
         this.loading = true;
-        this.restApi.addBatch(endpointUrl, true)
+        this.RestApi.addBatch(endpointUrl, true)
             .success(data => {
                 this.loading = false;
                 data.forEach((element, index) => {
@@ -154,4 +154,4 @@ export class AddCtrl {
 
 }
 
-AddCtrl.$inject = ['restApi', '$mdDialog', 'getElementIconText'];
+AddCtrl.$inject = ['RestApi', '$mdDialog', 'ElementIconText'];

@@ -1,13 +1,13 @@
-import restApi from './rest-api.service'
+import RestApi from './rest-api.service'
 
-domainProperties.$inject = ['$http', 'restApi'];
+domainProperties.$inject = ['$http', 'RestApi'];
 
-export default function domainProperties($http, restApi){
+export default function domainProperties($http, RestApi){
 	var domainPropertiesService = {};
 
 	var availableDomainProperties;
 
-	restApi.getOntologyProperties()
+	RestApi.getOntologyProperties()
 		.success(function(propertiesData){
 			availableDomainProperties = propertiesData;
 		})

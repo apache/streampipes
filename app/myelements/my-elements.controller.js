@@ -2,8 +2,8 @@ import {JsonLdDialogController} from "./dialog/jsonldDialog.controller";
 
 export class MyElementsCtrl {
 
-    constructor(restApi, $mdToast, $mdDialog) {
-        this.restApi = restApi;
+    constructor(RestApi, $mdToast, $mdDialog) {
+        this.RestApi = RestApi;
         this.$mdToast = $mdToast;
         this.$mdDialog = $mdDialog;
         this.currentElements = [];
@@ -46,7 +46,7 @@ export class MyElementsCtrl {
     }
 
     loadOwnActions() {
-        this.restApi.getOwnActions()
+        this.RestApi.getOwnActions()
             .success(actions => {
                 this.currentElements = actions;
             })
@@ -56,7 +56,7 @@ export class MyElementsCtrl {
     }
 
     loadOwnSepas() {
-        this.restApi.getOwnSepas()
+        this.RestApi.getOwnSepas()
             .success(sepas => {
                 this.currentElements = sepas;
             })
@@ -66,7 +66,7 @@ export class MyElementsCtrl {
     }
 
     loadOwnSources() {
-        this.restApi.getOwnSources()
+        this.RestApi.getOwnSources()
             .success(sources => {
                 this.currentElements = sources;
             })
@@ -95,7 +95,7 @@ export class MyElementsCtrl {
     }
 
     refresh(elementUri, type) {
-        this.restApi.update(elementUri)
+        this.RestApi.update(elementUri)
             .success(msg => {
                 this.showToast(msg.notifications[0].title);
             })
@@ -105,7 +105,7 @@ export class MyElementsCtrl {
     }
 
     remove(elementUri, type) {
-        this.restApi.del(elementUri)
+        this.RestApi.del(elementUri)
             .success(msg => {
                 this.showToast(msg.notifications[0].title);
                 this.loadCurrentElements(type);
@@ -113,7 +113,7 @@ export class MyElementsCtrl {
     }
 
     jsonld(event, elementUri) {
-        this.restApi.jsonld(elementUri)
+        this.RestApi.jsonld(elementUri)
             .success(msg => {
                 this.showAlert(event, elementUri, msg);
             });
@@ -121,7 +121,7 @@ export class MyElementsCtrl {
 
     toggleFavoriteAction(action, type) {
         if (action.favorite) {
-            this.restApi.removePreferredAction(action.elementId)
+            this.RestApi.removePreferredAction(action.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -133,7 +133,7 @@ export class MyElementsCtrl {
                 });
         }
         else {
-            this.restApi.addPreferredAction(action.elementId)
+            this.RestApi.addPreferredAction(action.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -148,7 +148,7 @@ export class MyElementsCtrl {
 
     toggleFavoriteSepa(sepa, type) {
         if (sepa.favorite) {
-            this.restApi.removePreferredSepa(sepa.elementId)
+            this.RestApi.removePreferredSepa(sepa.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -160,7 +160,7 @@ export class MyElementsCtrl {
                 });
         }
         else {
-            this.restApi.addPreferredSepa(sepa.elementId)
+            this.RestApi.addPreferredSepa(sepa.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -175,7 +175,7 @@ export class MyElementsCtrl {
 
     toggleFavoriteSource(source, type) {
         if (source.favorite) {
-            this.restApi.removePreferredSource(source.elementId)
+            this.RestApi.removePreferredSource(source.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -187,7 +187,7 @@ export class MyElementsCtrl {
                 });
         }
         else {
-            this.restApi.addPreferredSource(source.elementId)
+            this.RestApi.addPreferredSource(source.elementId)
                 .success(msg => {
                     this.showToast(msg.notifications[0].title);
                 })
@@ -226,4 +226,4 @@ export class MyElementsCtrl {
 
 }
 
-MyElementsCtrl.$inject = ['restApi', '$mdToast', '$mdDialog'];
+MyElementsCtrl.$inject = ['RestApi', '$mdToast', '$mdDialog'];

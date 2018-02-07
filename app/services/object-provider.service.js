@@ -1,6 +1,6 @@
-objectProvider.$inject = ['$http', 'restApi', 'ImageChecker'];
+objectProvider.$inject = ['$http', 'RestApi', 'ImageChecker'];
 
-export default function objectProvider($http, restApi, ImageChecker) {
+export default function objectProvider($http, RestApi, ImageChecker) {
         var oP = this;
 
         this.Stream = function (element) {
@@ -108,13 +108,13 @@ export default function objectProvider($http, restApi, ImageChecker) {
 
             this.update = function (info, success) {
                 var pipeline = this;
-                return restApi.updatePartialPipeline(pipeline);
+                return RestApi.updatePartialPipeline(pipeline);
 
             };
 
             this.send = function () {
                 var pipeline = this;
-                return restApi.storePipeline(pipeline);
+                return RestApi.storePipeline(pipeline);
 
             }
 

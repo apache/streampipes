@@ -36,11 +36,11 @@ export default angular
         {{module}},
         {{/modulesActive}}
     ])
-    .run(function ($rootScope, $location, restApi, AuthService, $state, $urlRouter, objectProvider) {
+    .run(function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, objectProvider) {
         var bypass;
         window.loading_screen.finish();
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
-            restApi.configured().success(function (msg) {
+            RestApi.configured().success(function (msg) {
                 if (msg.configured) {
                     AuthService.authenticate();
                 }

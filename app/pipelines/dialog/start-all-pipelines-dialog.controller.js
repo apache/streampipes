@@ -2,9 +2,9 @@
 
 export class StartAllPipelinesController {
 
-    constructor($mdDialog, restApi, pipelines, action, activeCategory) {
+    constructor($mdDialog, RestApi, pipelines, action, activeCategory) {
         this.$mdDialog = $mdDialog;
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.pipelines = pipelines;
         this.activeCategory = activeCategory;
         this.pipelinesToModify = [];
@@ -71,7 +71,7 @@ export class StartAllPipelinesController {
     }
 
     startPipeline(pipeline, index) {
-        this.restApi.startPipeline(pipeline._id)
+        this.RestApi.startPipeline(pipeline._id)
             .success(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
@@ -96,7 +96,7 @@ export class StartAllPipelinesController {
     
 
     stopPipeline(pipeline, index) {
-        this.restApi.stopPipeline(pipeline._id)
+        this.RestApi.stopPipeline(pipeline._id)
             .success(data => {
                 if (data.success) {
                     this.installationStatus[index].status = "success";
@@ -120,4 +120,4 @@ export class StartAllPipelinesController {
     }
 }
 
-StartAllPipelinesController.$inject = ['$mdDialog', 'restApi', 'pipelines', 'action', 'activeCategory'];
+StartAllPipelinesController.$inject = ['$mdDialog', 'RestApi', 'pipelines', 'action', 'activeCategory'];

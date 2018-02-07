@@ -1,6 +1,6 @@
-eventProperties.$inject = ['restApi'];
+eventProperties.$inject = ['RestApi'];
 
-export default function eventProperties(restApi) {
+export default function eventProperties(RestApi) {
 	return {
 		restrict: 'E',
 		templateUrl: 'app/sensors/directives/property/event-properties.tmpl.html',
@@ -18,7 +18,7 @@ export default function eventProperties(restApi) {
 	$scope.existingProperties = [];
 
 	$scope.loadProperties = function(){
-		restApi.getOntologyProperties()
+		RestApi.getOntologyProperties()
 			.success(function(propertiesData){
 				$scope.existingProperties = propertiesData;
 			})

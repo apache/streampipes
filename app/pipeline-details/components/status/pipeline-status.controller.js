@@ -1,13 +1,13 @@
 export class PipelineStatusController {
 
-    constructor(restApi) {
+    constructor(RestApi) {
         this.pipelineStatus = [];
-        this.restApi = restApi;
+        this.RestApi = RestApi;
         this.getPipelineStatus();
     }
 
     getPipelineStatus() {
-        this.restApi.getPipelineStatusById(this.pipeline._id)
+        this.RestApi.getPipelineStatusById(this.pipeline._id)
             .success(data => {
                 this.pipelineStatus = data;
             })
@@ -15,4 +15,4 @@ export class PipelineStatusController {
 
 }
 
-PipelineStatusController.$inject = ['restApi'];
+PipelineStatusController.$inject = ['RestApi'];

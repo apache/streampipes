@@ -1,6 +1,6 @@
-pipelineElementIconService.$inject = ['$http', '$rootScope', 'ImageChecker', 'getElementIconText'];
+pipelineElementIconService.$inject = ['$http', '$rootScope', 'ImageChecker', 'ElementIconText'];
 
-export default function pipelineElementIconService($http, $rootScope, ImageChecker, getElementIconText) {
+export default function pipelineElementIconService($http, $rootScope, ImageChecker, ElementIconText) {
 
     var pipelineElementIconService = {};
 
@@ -34,7 +34,7 @@ export default function pipelineElementIconService($http, $rootScope, ImageCheck
                     name = json.name;
                 }
                 var $span = $("<span>")
-                    .text(getElementIconText(name) || "N/A")
+                    .text(ElementIconText.getElementIconText(name) || "N/A")
                     .attr(
                         {
                             "data-toggle": "tooltip",

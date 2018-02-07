@@ -1,11 +1,11 @@
-AppLinksCtrl.$inject = ['$scope', 'restApi', '$window'];
+AppLinksCtrl.$inject = ['$scope', 'RestApi', '$window'];
 
-export default function AppLinksCtrl($scope, restApi, $window) {
+export default function AppLinksCtrl($scope, RestApi, $window) {
 
     $scope.applicationLinks = [];
 
     var loadApplicationLinks = function() {
-        restApi.getApplicationLinks()
+        RestApi.getApplicationLinks()
             .success(function (applicationLinks) {
                 $scope.applicationLinks = applicationLinks;
             })

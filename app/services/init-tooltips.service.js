@@ -1,5 +1,9 @@
-export default function initTooltips() {
-	return function () {
-		$('.tt').tooltip();
-	}
-};
+export class InitTooltips {
+    constructor() {}
+
+    initTooltips() {
+        return function () {
+            $('.tt').tooltip();
+        }
+    };
+}

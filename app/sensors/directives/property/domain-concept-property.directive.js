@@ -1,6 +1,6 @@
-domainConceptProperty.$inject = ['restApi'];
+domainConceptProperty.$inject = ['RestApi'];
 
-export default function domainConceptProperty(restApi) {
+export default function domainConceptProperty(RestApi) {
 	return {
 		restrict : 'AE',
 		templateUrl : 'app/sensors/directives/property/domain-concept-property.tmpl.html',
@@ -14,7 +14,7 @@ export default function domainConceptProperty(restApi) {
 			scope.properties = [];
 
 			scope.loadProperties = function(){
-				restApi.getOntologyProperties()
+				RestApi.getOntologyProperties()
 					.success(function(propertiesData){
 						scope.properties = propertiesData;
 					})
@@ -24,7 +24,7 @@ export default function domainConceptProperty(restApi) {
 			};
 
 			scope.loadConcepts = function(){
-				restApi.getOntologyConcepts()
+				RestApi.getOntologyConcepts()
 					.success(function(conceptsData){
 						scope.concepts = conceptsData;
 					})

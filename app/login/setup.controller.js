@@ -1,6 +1,6 @@
-SetupCtr.$inject = ['$scope', '$rootScope', '$location', 'restApi', '$mdToast'];
+SetupCtr.$inject = ['$scope', '$rootScope', '$location', 'RestApi', '$mdToast'];
 
-export default function SetupCtr($scope, $rootScope, $location, restApi, $mdToast) {
+export default function SetupCtr($scope, $rootScope, $location, RestApi, $mdToast) {
 
     $scope.installationFinished = false;
     $scope.installationSuccessful = false;
@@ -22,10 +22,10 @@ export default function SetupCtr($scope, $rootScope, $location, restApi, $mdToas
 
     $scope.configure = function () {
         $scope.loading = true;
-        restApi.setupInstall($scope.setup).success(function (data) {
+        RestApi.setupInstall($scope.setup).success(function (data) {
             $scope.installationResults = data;
 
-            restApi.configured()
+            RestApi.configured()
                 .then(function (response) {
                     if (response.data.configured) {
                         $rootScope.appConfig = response.data.appConfig;

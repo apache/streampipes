@@ -1,6 +1,6 @@
-CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'restApi', 'state'];
+CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'RestApi', 'state'];
 
-export default function CustomizeController($scope, $rootScope, $mdDialog, restApi, state) {
+export default function CustomizeController($scope, $rootScope, $mdDialog, RestApi, state) {
 
     $scope.streamDescription = state.data("JSON");
     $scope.finished = false;
@@ -36,7 +36,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, restA
     }
 
     $scope.save = function () {
-        restApi
+        RestApi
             .updateStream($scope.streamDescription)
             .success(function (stream) {
                 state.data("JSON", $.extend(true, {}, stream));

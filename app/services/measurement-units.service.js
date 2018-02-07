@@ -1,13 +1,13 @@
-measurementUnits.$inject = ['$http', 'restApi'];
+measurementUnits.$inject = ['$http', 'RestApi'];
 
-export default function measurementUnits($http, restApi) {
+export default function measurementUnits($http, RestApi) {
 	var measurementUnitsService = {};
 
 	var allMeasurementUnits = {};
 	var allMeasurementUnitTypes = {};
 
 	var updateUnits = function() {
-		restApi.getAllUnits()
+		RestApi.getAllUnits()
 			.success(function(measurementUnits){
 				allMeasurementUnits = measurementUnits;
 			})
@@ -18,7 +18,7 @@ export default function measurementUnits($http, restApi) {
 
 
 	var updateUnitTypes = function() {
-		restApi.getAllUnitTypes()
+		RestApi.getAllUnitTypes()
 			.success(function(measurementUnits){
 				allMeasurementUnitTypes = measurementUnits;
 			})

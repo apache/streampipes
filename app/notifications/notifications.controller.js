@@ -1,7 +1,7 @@
 export class NotificationsCtrl {
 
-    constructor(restApi, $rootScope) {
-        this.restApi = restApi;
+    constructor(RestApi, $rootScope) {
+        this.RestApi = RestApi;
         this.$rootScope = $rootScope;
         this.notifications = [{}];
         this.unreadNotifications = [];
@@ -10,7 +10,7 @@ export class NotificationsCtrl {
 
     getNotifications() {
         this.unreadNotifications = [];
-        this.restApi.getNotifications()
+        this.RestApi.getNotifications()
             .success(notifications => {
                 this.notifications = notifications;
                 this.getUnreadNotifications();
@@ -27,7 +27,7 @@ export class NotificationsCtrl {
     }
 
     changeNotificationStatus(notificationId) {
-        this.restApi.updateNotification(notificationId)
+        this.RestApi.updateNotification(notificationId)
             .success(success => {
                 this.getNotifications();
                 this.$rootScope.updateUnreadNotifications();
@@ -38,4 +38,4 @@ export class NotificationsCtrl {
     };
 };
 
-NotificationsCtrl.$inject = ['restApi', '$rootScope'];
+NotificationsCtrl.$inject = ['RestApi', '$rootScope'];

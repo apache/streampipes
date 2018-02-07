@@ -1,6 +1,6 @@
-AddWidget.$inject = ['WidgetInstances', '$compile', 'WidgetTemplates', '$http', 'getElementIconText'];
+AddWidget.$inject = ['WidgetInstances', '$compile', 'WidgetTemplates', '$http', 'ElementIconText'];
 
-export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $http, getElementIconText) {
+export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $http, ElementIconText) {
 
 
 	function AddWidget($scope, $mdDialog, visualizablePipelines, rerenderDashboard, layoutId) {
@@ -21,7 +21,7 @@ export default function AddWidget(WidgetInstances, $compile, WidgetTemplates, $h
 		}];
 
 		$scope.iconText = function (elementName) {
-			return getElementIconText(elementName);
+			return ElementIconText.getElementIconText(elementName);
 		}
 		
 		$scope.selectPipeline = function(vis) {

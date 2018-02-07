@@ -5,11 +5,11 @@ import spConstants from '../constants/constants.module'
 
 import { ImageChecker } from './image-checker.service'
 import { AuthService } from './auth.service'
+import { ElementIconText } from './get-element-icon-text.service'
+import { InitTooltips } from './init-tooltips.service'
+import { RestApi } from './rest-api.service'
 
-import restApi from './rest-api.service'
 import domainProperties from './domain-properties.service'
-import getElementIconText from './get-element-icon-text.service'
-import initTooltips from './init-tooltips.service'
 import httpInterceptor from './http-interceptor.service'
 import measurementUnits from './measurement-units.service'
 import deploymentService from './deployment.service'
@@ -24,10 +24,10 @@ import pipelineEditorService from './pipeline-editor.service'
 export default angular.module('sp.services', [spConstants])
 	.service('ImageChecker', ImageChecker)
 	.service('AuthService', AuthService)
+	.service('ElementIconText', ElementIconText)
+	.service('InitTooltips', InitTooltips)
+	.service('RestApi', RestApi)
 
-	.service('getElementIconText', getElementIconText)
-	.service('initTooltips', initTooltips)
-	.factory('restApi', restApi)
 	.service('objectProvider', objectProvider)
 	.factory('domainPropertiesService', domainProperties)
 	.factory('httpInterceptor', httpInterceptor)
