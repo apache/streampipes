@@ -4,8 +4,8 @@ export let DeploymentComponent = {
     templateUrl: 'app/sensors/components/deployment/deployment.tmpl.html',
     bindings: {
         disabled : "<",
-        deploymentSettings : "<",
-        element: "<"
+        deploymentSettings : "=",
+        element: "="
     },
     controller: DeploymentController,
     controllerAs: 'ctrl'

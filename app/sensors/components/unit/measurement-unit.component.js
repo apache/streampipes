@@ -4,7 +4,7 @@ export let MeasurementUnitComponent = {
     templateUrl: 'app/sensors/components/unit/measurement-unit.tmpl.html',
     bindings: {
         disabled : "<",
-        property : "<"
+        property : "="
     },
     controller: MeasurementUnitController,
     controllerAs: 'ctrl'

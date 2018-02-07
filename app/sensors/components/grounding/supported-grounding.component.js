@@ -4,7 +4,7 @@ export let SupportedGroundingComponent = {
     templateUrl: 'app/sensors/components/grounding/supported-grounding.tmpl.html',
     bindings: {
         disabled : "<",
-        grounding : "<"
+        grounding : "="
     },
     controller: SupportedGroundingController,
     controllerAs: 'ctrl'

@@ -3,7 +3,7 @@ export class DeploymentController {
     constructor(deploymentService) {
         this.deploymentService = deploymentService;
         this.deployment = {};
-        this.deployment.elementType = $scope.deploymentSettings.elementType;
+        this.deployment.elementType = this.deploymentSettings.elementType;
 
         this.resultReturned = false;
         this.loading = false;

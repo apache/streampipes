@@ -4,8 +4,8 @@ export let DatatypePropertyComponent = {
     templateUrl: 'app/sensors/components/property/datatype-property.tmpl.html',
     bindings: {
         disabled : "<",
-        runtimeType : "<",
-        dpMode: "<"
+        runtimeType : "=",
+        dpMode: "="
     },
     controller: DatatypePropertyController,
     controllerAs: 'ctrl'

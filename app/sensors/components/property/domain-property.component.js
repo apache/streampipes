@@ -4,7 +4,7 @@ export let DomainPropertyComponent = {
     templateUrl: 'app/sensors/components/property/domain-property.tmpl.html',
     bindings: {
         disabled : "<",
-        property : "<"
+        property : "="
     },
     controller: DomainPropertyController,
     controllerAs: 'ctrl'
