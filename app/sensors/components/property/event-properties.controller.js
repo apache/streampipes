@@ -1,7 +1,7 @@
 export class EventPropertiesController {
 
-    constructor(restApi) {
-        this.restApi = restApi;
+    constructor(RestApi) {
+        this.RestApi = RestApi;
         this.primitiveClasses = [{
             "title": "String",
             "description": "A textual datatype, e.g., 'machine1'",
@@ -24,7 +24,7 @@ export class EventPropertiesController {
     }
 
     loadProperties() {
-        this.restApi.getOntologyProperties()
+        this.RestApi.getOntologyProperties()
             .success(propertiesData => {
                 this.existingProperties = propertiesData;
             })
@@ -42,4 +42,4 @@ export class EventPropertiesController {
     }
 }
 
-EventPropertiesController.$inject = ['restApi'];
+EventPropertiesController.$inject = ['RestApi'];
