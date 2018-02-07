@@ -4,7 +4,7 @@ export let RequiredPropertyValuesComponent = {
     templateUrl: 'app/sensors/components/property/required-property-values.tmpl.html',
     bindings: {
         disabled : "<",
-        property : "<"
+        property : "="
     },
     controller: RequiredPropertyValuesController,
     controllerAs: 'ctrl'

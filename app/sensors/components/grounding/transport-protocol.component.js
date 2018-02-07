@@ -4,7 +4,7 @@ export let TransportProtocolComponent = {
     templateUrl: 'app/sensors/components/grounding/transport-protocol.tmpl.html',
     bindings: {
         disabled : "<",
-        grounding : "<"
+        grounding : "="
     },
     controller: TransportProtocolController,
     controllerAs: 'ctrl'

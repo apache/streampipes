@@ -4,7 +4,7 @@ export let OutputStrategyComponent = {
     templateUrl: 'app/sensors/components/output/output-strategy.tmpl.html',
     bindings: {
         disabled : "<",
-        strategies : "<"
+        strategies : "="
     },
     controller: OutputStrategyController,
     controllerAs: 'ctrl'

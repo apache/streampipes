@@ -4,7 +4,7 @@ export let StreamRestrictionComponent = {
     templateUrl: 'app/sensors/components/restriction/stream-restriction.tmpl.html',
     bindings: {
         disabled : "<",
-        streams : "<"
+        streams : "=element"
     },
     controller: StreamRestrictionController,
     controllerAs: 'ctrl'

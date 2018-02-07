@@ -4,7 +4,7 @@ export let PropertyRestrictionComponent = {
     templateUrl: 'app/sensors/components/property/property-restriction.tmpl.html',
     bindings: {
         disabled : "<",
-        restriction : "<"
+        restriction : "=element"
     },
     controller: PropertyRestrictionController,
     controllerAs: 'ctrl'

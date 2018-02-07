@@ -4,8 +4,8 @@ export let StaticPropertiesComponent = {
     templateUrl: 'app/sensors/components/property/static-properties.tmpl.html',
     bindings: {
         disabled : "<",
-        staticProperties : "<",
-        streams: "<"
+        staticProperties : "=",
+        streams: "="
     },
     controller: StaticPropertiesController,
     controllerAs: 'ctrl'

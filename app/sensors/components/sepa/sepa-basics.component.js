@@ -4,7 +4,7 @@ export let SepaBasicsComponent = {
     templateUrl: 'app/sensors/components/sepa/sepa-basics.tmpl.html',
     bindings: {
         disabled : "<",
-        element : "<"
+        element : "="
     },
     controller: SepaBasicsController,
     controllerAs: 'ctrl'

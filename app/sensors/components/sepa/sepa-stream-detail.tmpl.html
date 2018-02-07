@@ -34,7 +34,7 @@
 
     <collapsible title-label="'Basics'" disabled="ctrl.disabled" removable="false" collapsible="false"
                  ng-if="ctrl.isStreamTabSelected('basics')" style="width:100%">
-        <sepa-basics element="stream" disabled="ctrl.disabled"></sepa-basics>
+        <sepa-basics element="ctrl.stream" disabled="ctrl.disabled"></sepa-basics>
     </collapsible>
     <collapsible title-label="'Event Schema'" disabled="ctrl.disabled" removable="false" collapsible="false"
                  ng-if="ctrl.isStreamTabSelected('schema')" style="width:100%">

@@ -4,8 +4,8 @@ export let PropertyQualityDefinitionsComponent = {
     templateUrl: 'app/sensors/components/quality/property-quality-definitions.tmpl.html',
     bindings: {
         disabled : "<",
-        property : "<",
-        runtimeType: "<"
+        property : "=",
+        runtimeType: "="
     },
     controller: PropertyQualityDefinitionsController,
     controllerAs: 'ctrl'
