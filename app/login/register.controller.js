@@ -1,50 +1,52 @@
-RegisterCtrl.$inject = ['$scope', 'RestApi'];
+export class RegisterCtrl {
 
-export default function RegisterCtrl($scope, RestApi) {
+    constructor(RestApi) {
+        this.RestApi = RestApi;
 
-		$scope.loading = false;
-		$scope.registrationFailed = false;
-		$scope.registrationSuccess = false;
-		$scope.errorMessage = "";
+        this.loading = false;
+        this.registrationFailed = false;
+        this.registrationSuccess = false;
+        this.errorMessage = "";
+
+        this.roles = [{"name": "System Administrator", "internalName": "SYSTEM_ADMINISTRATOR"},
+            {"name": "Manager", "internalName": "MANAGER"},
+            {"name": "Operator", "internalName": "OPERATOR"},
+            {"name": "Business Analyst", "internalName": "BUSINESS_ANALYST"},
+            {"name": "Demo User", "internalName": "USER_DEMO"}];
+
+        this.selectedRole = this.roles[0].internalName;
+    }
 
 
-		$scope.roles = [{"name" : "System Administrator", "internalName" : "SYSTEM_ADMINISTRATOR"},
-			{"name" : "Manager", "internalName" : "MANAGER"},
-			{"name" : "Operator", "internalName" : "OPERATOR"},
-			{"name" : "Business Analyst", "internalName" : "BUSINESS_ANALYST"},
-			{"name" : "Demo User", "internalName" : "USER_DEMO"}];
+    register() {
+        var payload = {};
+        payload.password = this.password;
+        payload.email = this.email;
+        payload.role = this.selectedRole;
+        this.loading = true;
+        this.registrationFailed = false;
+        this.registrationSuccess = false;
+        this.errorMessage = "";
 
-		$scope.selectedRole = $scope.roles[0].internalName;
+        this.RestApi.register(payload)
+            .then(response => {
+                    this.loading = false;
+                    if (response.data.success) {
+                        this.registrationSuccess = true;
+                    }
+                    else {
+                        this.registrationFailed = true;
+                        this.errorMessage = response.data.notifications[0].title;
+                    }
 
-		$scope.register = function() {
-			var payload = {};
-			payload.password = $scope.password;
-			payload.email = $scope.email;
-			payload.role = $scope.selectedRole;
-			$scope.loading = true;
-			$scope.registrationFailed = false;
-			$scope.registrationSuccess = false;
-			$scope.errorMessage = "";
+                }, response => { // error
 
-			RestApi.register(payload)
-				.then(
-					function(response) {
-						$scope.loading = false;
-						if (response.data.success)
-				{
-					$scope.registrationSuccess = true;
-				}
-				else
-				{
-					$scope.registrationFailed = true;
-					$scope.errorMessage = response.data.notifications[0].title;
-				}
+                    this.loading = false;
+                    this.registrationFailed = true;
+                }
+            )
+    };
+}
+;
 
-					}, function(response) { // error
-
-						$scope.loading = false;
-						$scope.registrationFailed = true;
-					}
-				)
-		};
-	};
+RegisterCtrl.$inject = ['RestApi'];
