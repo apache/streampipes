@@ -1,59 +1,65 @@
-SetupCtr.$inject = ['$scope', '$rootScope', '$location', 'RestApi', '$mdToast'];
+export class SetupCtrl {
 
-export default function SetupCtr($scope, $rootScope, $location, RestApi, $mdToast) {
+    constructor($location, RestApi, $mdToast) {
+        this.$location = $location;
+        this.RestApi = RestApi;
+        this.$mdToast = $mdToast;
 
-    $scope.installationFinished = false;
-    $scope.installationSuccessful = false;
-    $scope.installationResults = [{}];
-    $scope.loading = false;
-		$scope.showAdvancedSettings = false;
+        this.installationFinished = false;
+        this.installationSuccessful = false;
+        this.installationResults = [{}];
+        this.loading = false;
+        this.showAdvancedSettings = false;
+
+        this.setup = {
+            couchDbHost: '',
+            sesameHost: '',
+            kafkaHost: '',
+            zookeeperHost: '',
+            jmsHost: '',
+            adminEmail: '',
+            adminPassword: '',
+        };
+    }
 
 
-    $scope.setup = {
-        couchDbHost: '',
-        sesameHost: '',
-        kafkaHost: '', 
-        zookeeperHost: '',
-        jmsHost: '',
-        adminEmail: '',
-        adminPassword: '',
-    };
 
 
-    $scope.configure = function () {
-        $scope.loading = true;
-        RestApi.setupInstall($scope.setup).success(function (data) {
+    configure() {
+        this.loading = true;
+        this.RestApi.setupInstall(this.setup).success(data => {
             $scope.installationResults = data;
 
-            RestApi.configured()
-                .then(function (response) {
+            this.RestApi.configured()
+                .then(response => {
                     if (response.data.configured) {
-                        $rootScope.appConfig = response.data.appConfig;
-                        $scope.installationFinished = true;
-                        $scope.loading = false;
+                        this.installationFinished = true;
+                        this.loading = false;
                     }
-                }).error(function (data) {
-                $scope.loading = false;
-                $scope.showToast("Fatal error, contact administrator");
+                }).error(data => {
+                this.loading = false;
+                this.showToast("Fatal error, contact administrator");
             });
         });
     }
 
-    $scope.showToast = function (string) {
-        $mdToast.show(
-            $mdToast.simple()
+    showToast(string) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
                 .content(string)
                 .position("right")
                 .hideDelay(3000)
         );
     };
 
-    $scope.addPod = function (podUrls) {
+    addPod(podUrls) {
         if (podUrls == undefined) podUrls = [];
         podUrls.push("localhost");
     }
 
-    $scope.removePod = function (podUrls, index) {
+    removePod(podUrls, index) {
         podUrls.splice(index, 1);
     }
 };
+
+SetupCtrl.$inject = ['$location', 'RestApi', '$mdToast'];

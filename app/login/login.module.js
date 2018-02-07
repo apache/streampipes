@@ -4,7 +4,7 @@ import spServices from '../services/services.module'
 
 import { RegisterCtrl } from './register.controller'
 import { LoginCtrl } from './login.controller'
-import SetupCtrl from './setup.controller'
+import { SetupCtrl } from './setup.controller'
 
 export default angular.module('sp.login', [spServices])
 	.controller('RegisterCtrl', RegisterCtrl)
