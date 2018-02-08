@@ -1,69 +1,51 @@
-LoginCtrl.$inject = ['$rootScope', '$scope', '$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window'];
 
-export default function LoginCtrl($rootScope, $scope, $timeout, $log, $location, $state, $stateParams, RestApi, $window) {
-    $scope.loading = false;
-    $scope.authenticationFailed = false;
-    $rootScope.title = "ProaSense";
+export class LoginCtrl {
 
-    $scope.openDocumentation = function(){
-        $window.open('https://docs.streampipes.org', '_blank');
+    constructor($timeout, $log, $location, $state, $stateParams, RestApi, $window, AuthStatusService) {
+        this.$timeout = $timeout;
+        this.$log = $log;
+        this.$location = $location;
+        this.$state = $state;
+        this.$stateParams = $stateParams;
+        this.$window = $window;
+        this.RestApi = RestApi;
+        this.AuthStatusService = AuthStatusService;
+
+        this.loading = false;
+        this.authenticationFailed = false;
+    }
+
+
+    openDocumentation(){
+        this.$window.open('https://docs.streampipes.org', '_blank');
     };
 
-    $scope.logIn = function () {
-        $scope.authenticationFailed = false;
-        $scope.loading = true;
-        if ($stateParams.target != "") {
-            RestApi.loginSso($scope.credentials, $stateParams.target, $stateParams.session)
-                .then(
-                    function (response) {
-                        $scope.loading = false;
-                        if (response.data.success) {
-                            {
-                                $rootScope.username = response.data.info.authc.principal.username;
-                                $rootScope.email = response.data.info.authc.principal.email;
-                                $rootScope.token = response.data.token;
-                                $rootScope.authenticated = true;
-                                if ($stateParams.target != "") {
-                                    console.log("going to " + $stateParams.target);
-                                    $state.go($stateParams.target);
-                                }
-                            }
-                        }
-                    },
-                    function (response) { // error
-                        console.log(response);
-                        $scope.loading = false;
-                        $rootScope.authenticated = false;
-                        $scope.authenticationFailed = true;
-                    }
-                );
-        }
-        //$http.post("/semantic-epa-backend/api/v2/admin/login", $scope.credentials)
-        RestApi.login($scope.credentials)
-            .then(
-                function (response) { // success
-                    $scope.loading = false;
+    logIn() {
+        this.authenticationFailed = false;
+        this.loading = true;
+        this.RestApi.login(this.credentials)
+            .then(response => { // success
+                    this.loading = false;
                     if (response.data.success) {
-                        $rootScope.username = response.data.info.authc.principal.username;
-                        $rootScope.email = response.data.info.authc.principal.email;
-                        console.log(response.data.token);
-                        $rootScope.token = response.data.token;
-                        $rootScope.authenticated = true;
+                        this.AuthStatusService.username = response.data.info.authc.principal.username;
+                        this.AuthStatusService.email = response.data.info.authc.principal.email;
+                        this.AuthStatusService.token = response.data.token;
+                        this.AuthStatusService.authenticated = true;
 
-                        $state.go("streampipes");
+                        this.$state.go("streampipes");
                     }
                     else {
-                        $rootScope.authenticated = false;
-                        $scope.authenticationFailed = true;
+                        this.AuthStatusService.authenticated = false;
+                        this.authenticationFailed = true;
                     }
 
-                }, function (response) { // error
-                    console.log(response);
-                    $scope.loading = false;
-                    $rootScope.authenticated = false;
-                    $scope.authenticationFailed = true;
+                }, response => { // error
+                    this.loading = false;
+                    this.AuthStatusService.authenticated = false;
+                    this.authenticationFailed = true;
                 }
             )
     };
-}
-;
+};
+
+LoginCtrl.$inject = ['$timeout', '$log', '$location', '$state', '$stateParams', 'RestApi', '$window', 'AuthStatusService'];

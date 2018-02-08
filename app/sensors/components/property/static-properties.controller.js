@@ -1,7 +1,7 @@
 export class StaticPropertiesController {
 
-    constructor(restApi) {
-        this.restApi = restApi;
+    constructor(RestApi) {
+        this.RestApi = RestApi;
         this.staticPropertyTypes = [{
             label: "Text Input",
             "type": "org.streampipes.model.staticproperty.FreeTextStaticProperty"
@@ -94,7 +94,7 @@ export class StaticPropertiesController {
     }
 
     loadProperties() {
-        this.restApi.getOntologyProperties()
+        this.RestApi.getOntologyProperties()
             .success(propertiesData =>  {
                 this.properties = propertiesData;
             })
@@ -104,4 +104,4 @@ export class StaticPropertiesController {
     }
 }
 
-StaticPropertiesController.$inject = ['restApi'];
+StaticPropertiesController.$inject = ['RestApi'];

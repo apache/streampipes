@@ -36,7 +36,8 @@ export default angular
         {{module}},
         {{/modulesActive}}
     ])
-    .run(function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, objectProvider) {
+    .run(["$rootScope", "$location", "RestApi", "AuthService", "$state", "$urlRouter", "objectProvider", "AuthStatusService",
+    function ($rootScope, $location, RestApi, AuthService, $state, $urlRouter, objectProvider, AuthStatusService) {
         var bypass;
         window.loading_screen.finish();
         if (!$location.path().startsWith("/login") && !$location.path().startsWith("/sso")) {
@@ -45,7 +46,7 @@ export default angular
                     AuthService.authenticate();
                 }
                 else {
-                    $rootScope.authenticated = false;
+                    AuthStatusService.authenticated = false;
                     $state.go("setup");
                 }
             });
@@ -56,12 +57,11 @@ export default angular
             function (event, toState, toParams, fromState, fromParams) {
                 var isLogin = toState.name === "login";
                 var isSetup = toState.name === "setup";
-                var isExternalLogin = (toState.name === "sso" || toState.name === "ssosuccess");
                 var isRegister = toState.name === "register";
-                if (isLogin || isSetup || isRegister || isExternalLogin) {
+                if (isLogin || isSetup || isRegister) {
                     return;
                 }
-                else if ($rootScope.authenticated === false) {
+                else if (AuthStatusService.authenticated === false) {
                     event.preventDefault();
                     console.log("logging in event prevent");
                     $state.go('login');
@@ -79,7 +79,7 @@ export default angular
         $rootScope.state.adjustingPipelineState = false;
         $rootScope.state.adjustingPipeline = {};
 
-    }).config(function($mdThemingProvider) {
+    }]).config(function($mdThemingProvider) {
 
         $mdThemingProvider.definePalette('streamPipesPrimary', {
             '50': '304269',

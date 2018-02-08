@@ -8,6 +8,7 @@ import { AuthService } from './auth.service'
 import { ElementIconText } from './get-element-icon-text.service'
 import { InitTooltips } from './init-tooltips.service'
 import { RestApi } from './rest-api.service'
+import { AuthStatusService } from './auth-status.service'
 
 import domainProperties from './domain-properties.service'
 import httpInterceptor from './http-interceptor.service'
@@ -27,6 +28,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('ElementIconText', ElementIconText)
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)
+	.service('AuthStatusService', AuthStatusService)
 
 	.service('objectProvider', objectProvider)
 	.factory('domainPropertiesService', domainProperties)

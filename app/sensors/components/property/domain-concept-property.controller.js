@@ -1,7 +1,7 @@
 export class DomainConceptPropertyController {
 
-    constructor(restApi) {
-        this.restApi = restApi;
+    constructor(RestApi) {
+        this.RestApi = RestApi;
         this.concepts = [];
         this.properties = [];
 
@@ -10,7 +10,7 @@ export class DomainConceptPropertyController {
     }
 
     loadProperties() {
-        this.restApi.getOntologyProperties()
+        this.RestApi.getOntologyProperties()
             .success(propertiesData => {
                 this.properties = propertiesData;
             })
@@ -20,7 +20,7 @@ export class DomainConceptPropertyController {
     }
 
     loadConcepts() {
-        this.restApi.getOntologyConcepts()
+        this.RestApi.getOntologyConcepts()
             .success(conceptsData => {
                 this.concepts = conceptsData;
             })
@@ -43,8 +43,8 @@ export class DomainConceptPropertyController {
     }
 
     toggleConceptRestriction(domainProperty) {
-        if ($scope.conceptRestricted(domainProperty)) domainProperty.requiredClass = undefined;
-        else domainProperty.requiredClass = $scope.concepts[0].id;
+        if (this.conceptRestricted(domainProperty)) domainProperty.requiredClass = undefined;
+        else domainProperty.requiredClass = this.concepts[0].id;
     }
 
     conceptSelected(conceptId, currentConceptId) {
@@ -57,4 +57,4 @@ export class DomainConceptPropertyController {
 
 }
 
-DomainConceptPropertyController.$inject = ['restApi'];
+DomainConceptPropertyController.$inject = ['RestApi'];

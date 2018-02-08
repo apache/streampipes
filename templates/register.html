@@ -1,5 +1,5 @@
 <div class="md-padding logo-production" layout-xs="column" layout="row" layout-align="center center"
-     style="min-height:100vh !important;">
+     style="min-height:100vh !important;" ng-controller="RegisterCtrl as ctrl">
     <div flex="40" layout-align="center center">
         <div layout="column" flex="60" layout-align="center center" style="position:relative;top:-25px;margin-left:auto;margin-right:auto;">
             <div flex="60" layout-align="center center" layout="row"
@@ -10,17 +10,17 @@
         <md-card class="card-100-center" style="padding:20px;position:relative;top:-75px;">
             <h1>Register</h1>
             <div flex="100" layout-sm="column">
-                <form name="registerForm" ng-submit="register()" role="form">
+                <form name="registerForm" ng-submit="ctrl.register()" role="form">
                     <div flex layout="column">
                         <md-input-container><label>Email</label> <input
-                                type="email" ng-model="email" required></md-input-container>
+                                type="email" ng-model="ctrl.email" required></md-input-container>
                         <md-input-container flex><label>Password:</label>
-                            <input type="password" ng-model="password" required></md-input-container>
+                            <input type="password" ng-model="ctrl.password" required></md-input-container>
                         <md-input-container><label>Role</label>
                             <md-select
                                     ng-model="selectedRole">
                                 <md-option
-                                        ng-repeat="role in roles" value="{{role.internalName}}">
+                                        ng-repeat="role in ctrl.roles" value="{{role.internalName}}">
                                     {{role.name}}
                                 </md-option>
                             </md-select>
@@ -28,15 +28,15 @@
                     </div>
                     <div class="form-actions">
                         <md-button class="md-accent md-raised" type="submit"
-                                   ng-disabled="registerForm.$pristine || registerForm.$invalid">Register
+                                   ng-disabled="ctrl.registerForm.$pristine || ctrl.registerForm.$invalid">Register
                         </md-button>
                         <md-progress-circular class="md-accent" md-mode="indeterminate"
-                                              ng-show="loading"></md-progress-circular>
-                        <div class="md-warn" ng-show="registrationFailed">
+                                              ng-show="ctrl.loading"></md-progress-circular>
+                        <div class="md-warn" ng-show="ctrl.registrationFailed">
                             <h4>Registration failed. Please try again.</h4>
-                            <h5>{{errorMessage}}</h5>
+                            <h5>{{ctrl.errorMessage}}</h5>
                         </div>
-                        <div class="md-success" ng-show="registrationSuccess">
+                        <div class="md-success" ng-show="ctrl.registrationSuccess">
                             <h4>Registration successful. Go to <a ui-sref="login">Login</a> page</h4>
                         </div>
                     </div>

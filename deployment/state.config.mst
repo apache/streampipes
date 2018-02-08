@@ -96,15 +96,6 @@ export default function stateConfig($stateProvider, $urlRouterProvider) {
                 }
             }
         })
-        .state('streampipes.settings', {
-            url: '/settings',
-            views: {
-                "spMain@streampipes": {
-                    templateUrl: 'templates/settings.html',
-                    controller: 'SettingsCtrl'
-                }
-            }
-        })
         .state('streampipes.notifications', {
             url: '/notifications',
             views: {
