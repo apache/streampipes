@@ -1,22 +1,26 @@
-AppLinksCtrl.$inject = ['$scope', 'RestApi', '$window'];
+export class AppLinksCtrl {
 
-export default function AppLinksCtrl($scope, RestApi, $window) {
+    constructor(RestApi, $window) {
+        this.RestApi = RestApi;
+        this.$window = $window;
+        this.applicationLinks = [];
+        this.loadApplicationLinks();
+    }
 
-    $scope.applicationLinks = [];
-
-    var loadApplicationLinks = function() {
-        RestApi.getApplicationLinks()
-            .success(function (applicationLinks) {
-                $scope.applicationLinks = applicationLinks;
+    loadApplicationLinks() {
+        this.RestApi.getApplicationLinks()
+            .success(applicationLinks => {
+                this.applicationLinks = applicationLinks;
             })
-            .error(function (error) {
+            .error(error => {
                 console.log(error);
             });
     }
 
-    $scope.openApp = function(applicationUrl) {
-        $window.open(applicationUrl, "_blank");
+    openApp(applicationUrl) {
+        this.$window.open(applicationUrl, "_blank");
     }
 
-    loadApplicationLinks();
 }
+
+AppLinksCtrl.$inject = ['RestApi', '$window'];
