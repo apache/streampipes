@@ -9,8 +9,8 @@ import { ElementIconText } from './get-element-icon-text.service'
 import { InitTooltips } from './init-tooltips.service'
 import { RestApi } from './rest-api.service'
 import { AuthStatusService } from './auth-status.service'
+import { DomainProperties } from './domain-properties.service'
 
-import domainProperties from './domain-properties.service'
 import httpInterceptor from './http-interceptor.service'
 import measurementUnits from './measurement-units.service'
 import deploymentService from './deployment.service'
@@ -29,9 +29,9 @@ export default angular.module('sp.services', [spConstants])
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)
 	.service('AuthStatusService', AuthStatusService)
-
 	.service('objectProvider', objectProvider)
-	.factory('domainPropertiesService', domainProperties)
+	.service('DomainProperties', DomainProperties)
+
 	.factory('httpInterceptor', httpInterceptor)
 	.factory('measurementUnitsService', measurementUnits)
 	.factory('deploymentService', deploymentService)
