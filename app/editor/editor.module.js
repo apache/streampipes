@@ -10,7 +10,7 @@ import angulerUiSortable from 'npm/angular-ui-sortable';
 import angulerUiBootstrap from 'npm/angular-ui-bootstrap';
 import 'npm/angular-trix';
 
-import EditorCtrl from './editor.controller';
+import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
 import capitalize from './capitalize.filter';

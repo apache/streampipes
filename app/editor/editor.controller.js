@@ -7,160 +7,220 @@ import HelpDialogController from './components/pipeline-element-options/help-dia
 import TopicSelectionController from './components/topic/topic-selection-modal.controller';
 import {InitTooltips} from "../services/init-tooltips.service";
 
-EditorCtrl.$inject = ['$scope',
-    '$rootScope',
-    '$state',
-    '$timeout',
-    '$http',
-    'RestApi',
-    '$stateParams',
-    'objectProvider',
-    'apiConstants',
-    '$q',
-    '$mdDialog',
-    '$window',
-    '$compile',
-    'InitTooltips',
-    '$mdToast',
-    'jsplumbService',
-    'jsplumbConfigService',
-    'pipelinePositioningService',
-    'pipelineEditorService'];
+export class EditorCtrl {
 
+    constructor($scope, 
+                $rootScope, 
+                $state, 
+                $timeout, 
+                $http, 
+                RestApi, 
+                $stateParams, 
+                objectProvider, 
+                apiConstants, 
+                $q, 
+                $mdDialog, 
+                $window, 
+                $compile, 
+                InitTooltips, 
+                $mdToast, 
+                jsplumbService, 
+                jsplumbConfigService, 
+                pipelinePositioningService, 
+                pipelineEditorService) {
 
-export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, RestApi, $stateParams, objectProvider, apiConstants, $q, $mdDialog, $window, $compile, InitTooltips, $mdToast, jsplumbService, jsplumbConfigService, pipelinePositioningService, pipelineEditorService) {
+        this.$scope = $scope;
+        this.$rootScope = $rootScope;
+        this.$state = $state;
+        this.$timeout = $timeout;
+        this.$http = $http;
+        this.RestApi = RestApi;
+        this.$stateParams = $stateParams;
+        this.objectProvider = objectProvider;
+        this.apiConstants = apiConstants;
+        this.$q = $q;
+        this.$mdDialog = $mdDialog;
+        this.$window = $window;
+        this.$compile = $compile;
+        this.InitTooltips = InitTooltips;
+        this.$mdToast = $mdToast;
+        this.jsplumbService = jsplumbService;
+        this.jsplumbConfigService = jsplumbConfigService;
+        this.pipelinePositioningService = pipelinePositioningService;
+        this.pipelineEditorService = pipelineEditorService;
 
-    $scope.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
-    $scope.isStreamInAssembly = false;
-    $scope.isSepaInAssembly = false;
-    $scope.isActionInAssembly = false;
-    $scope.currentElements = [];
-    $scope.allElements = {};
-    $scope.currentModifiedPipeline = $stateParams.pipeline;
-    $scope.possibleElements = [];
-    $scope.activePossibleElementFilter = {};
-    $scope.selectedTab = 0;
-    $rootScope.title = "StreamPipes";
-    $scope.options = [];
-    $scope.selectedOptions = [];
+        this.standardUrl = "http://localhost:8080/semantic-epa-backend/api/";
+        this.isStreamInAssembly = false;
+        this.isSepaInAssembly = false;
+        this.isActionInAssembly = false;
+        this.currentElements = [];
+        this.allElements = {};
+        this.currentModifiedPipeline = $stateParams.pipeline;
+        this.possibleElements = [];
+        this.activePossibleElementFilter = {};
+        this.selectedTab = 0;
+        $rootScope.title = "StreamPipes";
+        this.options = [];
+        this.selectedOptions = [];
 
-    $scope.currentPipelineName = "";
-    $scope.currentPipelineDescription = "";
+        this.currentPipelineName = "";
+        this.currentPipelineDescription = "";
 
-    $scope.minimizedEditorStand = false;
+        this.minimizedEditorStand = false;
 
-    $scope.selectMode = true;
+        this.selectMode = true;
 
-    $scope.currentZoomLevel = 1;
+        this.currentZoomLevel = 1;
 
-    $scope.currentPipelineElement;
-    $scope.currentPipelineElementDom;
+        this.currentPipelineElement;
+        this.currentPipelineElementDom;
 
-    var jsplumbConfig = jsplumbConfigService.getEditorConfig();
+        var jsplumbConfig = jsplumbConfigService.getEditorConfig();
 
-    var logError = function(error) {
-        console.log(error);
-    }
+        if (this.$rootScope.email != undefined) {
+            this.RestApi
+                .getUserDetails()
+                .success(function (user) {
+                    if (!user.hideTutorial || user.hideTutorial == undefined) {
+                        var confirm = $mdDialog.confirm()
+                            .title('Welcome to StreamPipes!')
+                            .textContent('If you are new to StreamPipes, check out our user guide')
+                            .ok('Show tutorial')
+                            .cancel('Cancel');
 
-    if ($rootScope.email != undefined) {
-        RestApi
-            .getUserDetails()
-            .success(function (user) {
-                if (!user.hideTutorial || user.hideTutorial == undefined) {
-                    var confirm = $mdDialog.confirm()
-                        .title('Welcome to StreamPipes!')
-                        .textContent('If you are new to StreamPipes, check out our user guide')
-                        .ok('Show tutorial')
-                        .cancel('Cancel');
+                        $mdDialog.show(confirm).then(() => {
+                            user.hideTutorial = true;
+                            this.RestApi.updateUserDetails(user).success(function (data) {
 
-                    $mdDialog.show(confirm).then(function () {
-                        user.hideTutorial = true;
-                        RestApi.updateUserDetails(user).success(function (data) {
+                                this.$window.open('https://docs.streampipes.org', '_blank');
+                            });
+                        }, function () {
 
-                            $window.open('https://docs.streampipes.org', '_blank');
                         });
-                    }, function () {
+                    }
+                })
+        }
 
-                    });
-                }
-            })
-            .error(logError);
+        // T1
+        $("#assembly").panzoom({
+            disablePan: true,
+            increment: 0.25,
+            minScale: 0.5,
+            maxScale: 1.5,
+            contain: 'invert'
+        });
+
+        $("#assembly").on('panzoomzoom', (e, panzoom, scale) => {
+            this.currentZoomLevel = scale;
+            jsPlumb.setZoom(scale);
+            jsPlumb.repaintEverything();
+        });
+
+        // T1
+        angular.element($window).on('scroll', () => {
+            jsPlumb.repaintEverything(true);
+        });
+
+
+        // T1
+        $scope.$on('$destroy', () => {
+            jsPlumb.deleteEveryEndpoint();
+        });
+
+        // T1
+        $scope.$on('$viewContentLoaded', event => {
+            jsPlumb.setContainer("assembly");
+
+            this.initAssembly();
+            this.initPlumb();
+        });
+
+        // T1
+        $rootScope.$on("elements.loaded", () => {
+            this.makeDraggable();
+        });
+
+        // T1
+        this.tabs = [
+            {
+                title: 'Data Streams',
+                type: 'stream',
+            },
+            {
+                title: 'Data Processors',
+                type: 'sepa',
+            },
+            {
+                title: 'Data Sinks',
+                type: 'action',
+            }
+        ];
+
+        // T1
+        this.loadSources();
+        this.loadSepas();
+        this.loadActions();
     }
 
-
-    $scope.isValidPipeline = function () {
-        return $scope.isStreamInAssembly && $scope.isActionInAssembly;
+    isValidPipeline() {
+        return this.isStreamInAssembly && this.isActionInAssembly;
     }
 
-    $scope.toggleEditorStand = function () {
-        $scope.minimizedEditorStand = !$scope.minimizedEditorStand;
+    toggleEditorStand() {
+        this.minimizedEditorStand = !this.minimizedEditorStand;
     }
 
-    $scope.currentFocus = function (element, active) {
-        if (active) $scope.currentlyFocusedElement = element;
-        else $scope.currentlyFocusedElement = undefined;
+    currentFocus(element, active) {
+        if (active) this.currentlyFocusedElement = element;
+        else this.currentlyFocusedElement = undefined;
     }
 
-    $scope.currentFocusActive = function (element) {
-        return $scope.currentlyFocusedElement == element;
+    currentFocusActive(element) {
+        return this.currentlyFocusedElement == element;
     }
 
-    $scope.showElementInfo = function (element) {
-        var dialogTemplate = getDialogTemplate(HelpDialogController, 'app/editor/components/pipeline-element-options/help-dialog.tmpl.html');
+    showElementInfo(element) {
+        var dialogTemplate = this.getDialogTemplate(HelpDialogController, 'app/editor/components/pipeline-element-options/help-dialog.tmpl.html');
         dialogTemplate.locals = {
             pipelineElement: element
         }
         $mdDialog.show(dialogTemplate);
     };
 
-    $scope.autoLayout = function () {
-        pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", jsPlumb, 110, false);
+    autoLayout() {
+        this.pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", jsPlumb, 110, false);
         jsPlumb.repaintEverything();
     }
 
-    $("#assembly").panzoom({
-        disablePan: true,
-        increment: 0.25,
-        minScale: 0.5,
-        maxScale: 1.5,
-        contain: 'invert'
-    });
-
-    $("#assembly").on('panzoomzoom', function (e, panzoom, scale) {
-        $scope.currentZoomLevel = scale;
-        jsPlumb.setZoom(scale);
-        jsPlumb.repaintEverything();
-    });
-
-    $scope.toggleSelectMode = function () {
-        if ($scope.selectMode) {
+    toggleSelectMode() {
+        if (this.selectMode) {
             $("#assembly").panzoom("option", "disablePan", false);
             $("#assembly").selectable("disable");
-            $scope.selectMode = false;
+            thisArg.selectMode = false;
         }
         else {
             $("#assembly").panzoom("option", "disablePan", true);
             $("#assembly").selectable("enable");
-            $scope.selectMode = true;
+            this.selectMode = true;
         }
     }
 
-    $scope.zoomOut = function () {
-        doZoom(true);
+    zoomOut() {
+        this.doZoom(true);
     }
 
-    $scope.zoomIn = function () {
-        doZoom(false);
+    zoomIn() {
+        this.doZoom(false);
     }
 
-    var doZoom = function (zoomOut) {
+    doZoom(zoomOut) {
         $("#assembly").panzoom("zoom", zoomOut);
     }
 
-    $scope.possibleFilter = function (value, index, array) {
-        if ($scope.possibleElements.length > 0) {
-            for (var i = 0; i < $scope.possibleElements.length; i++) {
-                if (value.belongsTo === $scope.possibleElements[i].elementId) {
+    possibleFilter(value, index, array) {
+        if (this.possibleElements.length > 0) {
+            for (var i = 0; i < this.possibleElements.length; i++) {
+                if (value.belongsTo === this.possibleElements[i].elementId) {
                     return true;
                 }
             }
@@ -169,12 +229,12 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         return true;
     };
 
-    $scope.selectFilter = function (value, index, array) {
-        if ($scope.selectedOptions.length > 0) {
+    selectFilter(value, index, array) {
+        if (this.selectedOptions.length > 0) {
             var found = false;
             if (value.category.length == 0) value.category[0] = "UNCATEGORIZED";
-            angular.forEach(value.category, function (c) {
-                if ($scope.selectedOptions.indexOf(c) > -1) found = true;
+            angular.forEach(value.category, c => {
+                if (this.selectedOptions.indexOf(c) > -1) found = true;
             });
             return found;
         } else {
@@ -182,186 +242,151 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         }
     };
 
-    $scope.toggleFilter = function (option) {
-        $scope.selectedOptions = [];
-        $scope.selectedOptions.push(option.type);
+    toggleFilter(option) {
+        this.selectedOptions = [];
+        this.selectedOptions.push(option.type);
     }
 
-    $scope.optionSelected = function (option) {
-        return $scope.selectedOptions.indexOf(option.type) > -1;
+    optionSelected(option) {
+        return this.selectedOptions.indexOf(option.type) > -1;
     }
 
-    $scope.selectAllOptions = function () {
-        $scope.selectedOptions = [];
-        angular.forEach($scope.options, function (o) {
-            $scope.selectedOptions.push(o.type);
+    selectAllOptions() {
+        this.selectedOptions = [];
+        angular.forEach(this.options, o => {
+            this.selectedOptions.push(o.type);
         });
     }
 
-    $scope.deselectAllOptions = function () {
-        $scope.selectedOptions = [];
+    deselectAllOptions() {
+        this.selectedOptions = [];
     }
 
-    $scope.showImageIf = function (iconUrl) {
+    showImageIf(iconUrl) {
         return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
     };
 
-    $scope.showSavePipelineDialog = function (elementData, sepaName) {
-        $rootScope.state.currentElement = elementData;
-        var dialogContent = getDialogTemplate(SavePipelineController, 'app/editor/components/submitPipelineModal.tmpl.html');
-        $mdDialog.show(dialogContent);
+    showSavePipelineDialog(elementData, sepaName) {
+        this.$rootScope.state.currentElement = elementData;
+        var dialogContent = this.getDialogTemplate(SavePipelineController, 'app/editor/components/submitPipelineModal.tmpl.html');
+        this.$mdDialog.show(dialogContent);
     }
 
-    $scope.showMatchingErrorDialog = function (elementData) {
-        var dialogContent = getDialogTemplate(MatchingErrorController, 'app/editor/components/matchingErrorDialog.tmpl.html');
+    showMatchingErrorDialog(elementData) {
+        var dialogContent = this.getDialogTemplate(MatchingErrorController, 'app/editor/components/matchingErrorDialog.tmpl.html');
         dialogContent.locals = {
             elementData: elementData
         }
-        $mdDialog.show(dialogContent);
+        this.$mdDialog.show(dialogContent);
     }
 
-    $scope.showCustomizeDialog = function (elementData, sepaName, sourceEndpoint) {
-        $rootScope.state.currentElement = elementData;
-        var dialogContent = getDialogTemplate(CustomizeController, 'app/editor/components/customizeElementDialog.tmpl.html');
+    showCustomizeDialog(elementData, sepaName, sourceEndpoint) {
+        this.$rootScope.state.currentElement = elementData;
+        var dialogContent = this.getDialogTemplate(CustomizeController, 'app/editor/components/customizeElementDialog.tmpl.html');
         dialogContent.locals = {
             elementData: elementData,
             sepaName: sepaName,
             sourceEndpoint: sourceEndpoint
         }
-        $mdDialog.show(dialogContent);
+        this.$mdDialog.show(dialogContent);
     };
 
-    var getDialogTemplate = function(controller, templateUrl) {
+    getDialogTemplate(controller, templateUrl) {
         return {
             controller: controller,
             templateUrl: templateUrl,
             parent: angular.element(document.body),
             clickOutsideToClose: true,
-            scope: $scope,
-            rootScope: $rootScope,
+            scope: this.$scope,
+            rootScope: this.$rootScope,
             preserveScope: true
         }
     }
 
-    $scope.showClearAssemblyConfirmDialog = function (ev) {
-        var confirm = $mdDialog.confirm()
+    showClearAssemblyConfirmDialog(ev) {
+        var confirm = this.$mdDialog.confirm()
             .title('Clear assembly area?')
             .textContent('All pipeline elements in the assembly area will be removed.')
             .targetEvent(ev)
             .ok('Clear assembly')
             .cancel('Cancel');
-        $mdDialog.show(confirm).then(function () {
-            $scope.clearAssembly();
+        this.$mdDialog.show(confirm).then(() => {
+            this.clearAssembly();
         }, function () {
 
         });
     };
 
-    angular.element($window).on('scroll', function () {
-        jsPlumb.repaintEverything(true);
-    });
-
-
-    $scope.$on('$destroy', function () {
-        jsPlumb.deleteEveryEndpoint();
-    });
-
-    $scope.$on('$viewContentLoaded', function (event) {
-        jsPlumb.setContainer("assembly");
-
-        initAssembly();
-        initPlumb();
-    });
-    $rootScope.$on("elements.loaded", function () {
-        makeDraggable();
-    });
-    $scope.openContextMenu = function ($mdOpenMenu, event) {
+    openContextMenu($mdOpenMenu, event) {
         $mdOpenMenu(event.$event);
         alert("open context menu");
     };
 
+    loadCurrentElements(type) {
 
-    $scope.loadCurrentElements = function (type) {
-
-        $scope.currentElements = [];
+        this.currentElements = [];
         if (type == 'stream') {
-            $scope.loadOptions("stream");
-            $scope.currentElements = $scope.allElements["stream"];
+            this.loadOptions("stream");
+            this.currentElements = this.allElements["stream"];
         } else if (type == 'sepa') {
-            $scope.loadOptions("sepa");
-            $scope.currentElements = $scope.allElements["sepa"];
+            this.loadOptions("sepa");
+            this.currentElements = this.allElements["sepa"];
         } else if (type == 'action') {
-            $scope.loadOptions("action");
-            $scope.currentElements = $scope.allElements["action"];
+            this.loadOptions("action");
+            this.currentElements = this.allElements["action"];
         }
     };
 
-    $scope.displayPipelineById = function () {
-        RestApi.getPipelineById($scope.currentModifiedPipeline)
-            .success(function (pipeline) {
-                pipelinePositioningService.displayPipeline($scope, jsPlumb, pipeline, "#assembly", false);
-                $scope.currentPipelineName = pipeline.name;
-                $scope.currentPipelineDescription = pipeline.description;
+    displayPipelineById() {
+        this.RestApi.getPipelineById(this.currentModifiedPipeline)
+            .success((pipeline) => {
+                this.pipelinePositioningService.displayPipeline(this.$scope, jsPlumb, pipeline, "#assembly", false);
+                this.currentPipelineName = pipeline.name;
+                this.currentPipelineDescription = pipeline.description;
 
             })
-            .error(logError);
-
     };
 
-    $scope.tabs = [
-        {
-            title: 'Data Streams',
-            type: 'stream',
-        },
-        {
-            title: 'Data Processors',
-            type: 'sepa',
-        },
-        {
-            title: 'Data Sinks',
-            type: 'action',
-        }
-    ];
-
-    $scope.loadOptions = function (type) {
-        $scope.options = [];
-        $scope.selectedOptions = [];
+    loadOptions(type) {
+        this.options = [];
+        this.selectedOptions = [];
 
         if (type == 'stream') {
-            RestApi.getEpCategories()
-                .then(handleCategoriesSuccess, handleCategoriesError);
+            this.RestApi.getEpCategories()
+                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
         } else if (type == 'sepa') {
-            RestApi.getEpaCategories()
-                .then(handleCategoriesSuccess, handleCategoriesError);
+            this.RestApi.getEpaCategories()
+                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
         } else if (type == 'action') {
-            RestApi.getEcCategories()
-                .then(handleCategoriesSuccess, handleCategoriesError);
+            this.RestApi.getEcCategories()
+                .then(s => this.handleCategoriesSuccess(s), e => this.handleCategoriesError(e));
         }
     };
 
-    var handleCategoriesSuccess = function(result) {
-        $scope.options = result.data;
-        angular.forEach($scope.options, function (o) {
-            $scope.selectedOptions.push(o.type);
+    handleCategoriesSuccess(result) {
+        console.log(result);
+        this.options = result.data;
+        angular.forEach(this.options, o => {
+            this.selectedOptions.push(o.type);
         });
     }
 
-    var handleCategoriesError = function(error) {
-        $scope.options = [];
+    handleCategoriesError(error) {
+        this.options = [];
         console.log(error);
     }
 
-    $scope.loadSources = function () {
+    loadSources() {
         var tempStreams = [];
-        RestApi.getOwnSources()
-            .then(function (sources) {
-                sources.data.forEach(function (source, i, sources) {
+        this.RestApi.getOwnSources()
+            .then((sources) => {
+                sources.data.forEach((source, i, sources) => {
                     source.spDataStreams.forEach(function (stream) {
                         stream.type = 'stream';
                         tempStreams = tempStreams.concat(stream);
                     });
-                    $scope.allElements["stream"] = tempStreams;
-                    $scope.currentElements = $scope.allElements["stream"];
+                    this.allElements["stream"] = tempStreams;
+                    this.currentElements = this.allElements["stream"];
                 });
             }, function (msg) {
                 console.log(msg);
@@ -369,41 +394,36 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     };
 
 
-    $scope.loadSepas = function () {
-        RestApi.getOwnSepas()
-            .success(function (sepas) {
-                $.each(sepas, function (i, sepa) {
+    loadSepas() {
+        this.RestApi.getOwnSepas()
+            .success(sepas => {
+                $.each(sepas, (i, sepa) => {
                     sepa.type = 'sepa';
                 });
-                $scope.allElements["sepa"] = sepas;
-                $timeout(function () {
+                this.allElements["sepa"] = sepas;
+                this.$timeout(() => {
                     //makeDraggable();
-                    $rootScope.state.sepas = $.extend(true, [], $scope.allElements["sepa"]);
+                    this.$rootScope.state.sepas = $.extend(true, [], this.allElements["sepa"]);
                 })
 
             })
-            .error(logError);
     };
-    $scope.loadActions = function () {
-        RestApi.getOwnActions()
-            .success(function (actions) {
-                $.each(actions, function (i, action) {
+
+    loadActions() {
+        this.RestApi.getOwnActions()
+            .success((actions) => {
+                $.each(actions, (i, action) => {
                     action.type = 'action';
                 });
-                $scope.allElements["action"] = actions;
-                $timeout(function () {
-                    //makeDraggable();
-                    $rootScope.state.actions = $.extend(true, [], $scope.allElements["action"]);
+                this.allElements["action"] = actions;
+                this.$timeout(() => {
+                    this.$rootScope.state.actions = $.extend(true, [], this.allElements["action"]);
                 })
 
             });
     };
 
-    $scope.loadSources();
-    $scope.loadSepas();
-    $scope.loadActions();
-
-    var makeDraggable = function () {
+    makeDraggable() {
         $('.draggable-icon').draggable({
             revert: 'invalid',
             helper: 'clone',
@@ -418,7 +438,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         });
     };
 
-    $scope.elementTextIcon = function (string) {
+    elementTextIcon(string) {
         var result = "";
         if (string.length <= 4) {
             result = string;
@@ -431,19 +451,18 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             });
         }
         return string;
-        //return result.toUpperCase();
     }
 
     //TODO ANGULARIZE
     //Initiate assembly and jsPlumb functionality-------
-    function initPlumb() {
-        $rootScope.state.plumbReady = true;
+    initPlumb() {
+        this.$rootScope.state.plumbReady = true;
 
-        jsplumbService.prepareJsplumb(jsPlumb);
+        this.jsplumbService.prepareJsplumb(jsPlumb);
 
         jsPlumb.unbind("connection");
 
-        jsPlumb.bind("connectionDetached", function (info, originalEvent) {
+        jsPlumb.bind("connectionDetached", (info, originalEvent) => {
             var el = ($("#" + info.targetEndpoint.elementId));
             el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
             el.removeClass('a');
@@ -451,7 +470,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             info.targetEndpoint.setType("empty");
         });
 
-        jsPlumb.bind("connectionDrag", function (connection) {
+        jsPlumb.bind("connectionDrag", connection => {
             jsPlumb.selectEndpoints().each(function (endpoint) {
                 if (endpoint.isTarget && endpoint.connections.length == 0) {
                     endpoint.setType("highlight");
@@ -459,54 +478,53 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             });
 
         });
-        jsPlumb.bind("connectionAborted", function (connection) {
-            jsPlumb.selectEndpoints().each(function (endpoint) {
+        jsPlumb.bind("connectionAborted", connection => {
+            jsPlumb.selectEndpoints().each(endpoint => {
                 if (endpoint.isTarget && endpoint.connections.length == 0) {
                     endpoint.setType("empty");
                 }
             });
         })
 
-        jsPlumb.bind("connection", function (info, originalEvent) {
+        jsPlumb.bind("connection", (info, originalEvent) => {
             var $target = $(info.target);
 
             if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
-                $rootScope.state.currentPipeline = $scope.createPartialPipeline(info.target, false);
-                $rootScope.state.currentPipeline.update()
-                    .success(function (data) {
+                this.$rootScope.state.currentPipeline = this.createPartialPipeline(info.target, false);
+                this.$rootScope.state.currentPipeline.update()
+                    .success(data => {
                         if (data.success) {
                             info.targetEndpoint.setType("token");
-                            modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = $rootScope.state.currentPipeline.sepas[i]; i++) {
+                            this.modifyPipeline(data.pipelineModifications);
+                            for (var i = 0, sepa; sepa = this.$rootScope.state.currentPipeline.sepas[i]; i++) {
                                 var id = "#" + sepa.DOM;
                                 if ($(id).length > 0) {
                                     if ($(id).data("JSON").configured != true) {
-                                        if (!pipelineEditorService.isFullyConnected(id, jsPlumb)) {
+                                        if (!this.pipelineEditorService.isFullyConnected(id, jsPlumb)) {
                                             return;
                                         }
                                         var sourceEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        $scope.showCustomizeDialog($(id), sepa.name, sourceEndpoint);
+                                        this.showCustomizeDialog($(id), sepa.name, sourceEndpoint);
                                     }
                                 }
                             }
-                            for (var i = 0, action; action = $rootScope.state.currentPipeline.actions[i]; i++) {
+                            for (var i = 0, action; action = this.$rootScope.state.currentPipeline.actions[i]; i++) {
                                 var id = "#" + action.DOM;
                                 if ($(id).length > 0) {
                                     if ($(id).data("JSON").configured != true) {
-                                        if (!pipelineEditorService.isFullyConnected(id, jsPlumb)) {
+                                        if (!this.pipelineEditorService.isFullyConnected(id, jsPlumb)) {
                                             return;
                                         }
                                         var actionEndpoint = jsPlumb.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        $scope.showCustomizeDialog($(id), action.name, actionEndpoint);
+                                        this.showCustomizeDialog($(id), action.name, actionEndpoint);
                                     }
                                 }
                             }
                         } else {
                             jsPlumb.detach(info.connection);
-                            $scope.showMatchingErrorDialog(data);
+                            this.showMatchingErrorDialog(data);
                         }
                     })
-                    .error(logError);
             }
         });
 
@@ -515,9 +533,9 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         };
     }
 
-    var getPipelineElementContents = function (belongsTo) {
+    getPipelineElementContents(belongsTo) {
         var pipelineElement = undefined;
-        angular.forEach($scope.allElements, function (category) {
+        angular.forEach(this.allElements, category => {
             angular.forEach(category, function (sepa) {
                 if (sepa.belongsTo == belongsTo) {
                     pipelineElement = sepa;
@@ -527,31 +545,31 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         return pipelineElement;
     }
 
-    function initAssembly() {
+    initAssembly() {
         $('#assembly').droppable({
             tolerance: "fit",
-            drop: function (element, ui) {
+            drop: (element, ui) => {
 
                 if (ui.draggable.hasClass('draggable-icon')) {
                     if (ui.draggable.data("JSON") == null) {
                         alert("No JSON - Data for Dropped element");
                         return false;
                     }
-                    var $newState = jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), pipelineEditorService.getCoordinates(ui, $scope.currentZoomLevel), false, "#assembly");
+                    var $newState = this.jsplumbService.createNewAssemblyElement(jsPlumb, ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false, "#assembly");
 
                     //Droppable Streams
                     if (ui.draggable.hasClass('stream')) {
-                        checkTopicModel($newState);
+                        this.checkTopicModel($newState);
 
                     //Droppable Sepas
                     } else if (ui.draggable.hasClass('sepa')) {
-                        jsplumbService.sepaDropped($scope, jsPlumb, $newState, true);
+                        this.jsplumbService.sepaDropped(this.$scope, jsPlumb, $newState, true);
 
                         //Droppable Actions
                     } else if (ui.draggable.hasClass('action')) {
-                        jsplumbService.actionDropped($scope, jsPlumb, $newState, true);
+                        this.jsplumbService.actionDropped(this.$scope, jsPlumb, $newState, true);
                     }
-                    InitTooltips.initTooltips();
+                    this.InitTooltips.initTooltips();
                 }
                 jsPlumb.repaintEverything(true);
             }
@@ -567,7 +585,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             })
             .on('click', ".recommended-item", function (e) {
                 e.stopPropagation();
-                $scope.createAndConnect(this);
+                this.createAndConnect(this);
             });
 
 
@@ -576,15 +594,15 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             $('.circleMenu-open').circleMenu('close');
         });
 
-        if (typeof $scope.currentModifiedPipeline != 'undefined') {
-            $rootScope.state.adjustingPipelineState = true;
-            $scope.displayPipelineById();
+        if (typeof this.currentModifiedPipeline != 'undefined') {
+            this.$rootScope.state.adjustingPipelineState = true;
+            this.displayPipelineById();
         }
 
     };
 
-    var checkTopicModel = function(state) {
-        jsplumbService.streamDropped($scope, jsPlumb, state, true);
+    checkTopicModel(state) {
+        this.jsplumbService.streamDropped(this.$scope, jsPlumb, state, true);
         var streamDescription = state.data("JSON");
         if (streamDescription
                 .eventGrounding
@@ -592,28 +610,28 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 .properties.
                 topicDefinition
                 .type == "org.streampipes.model.grounding.WildcardTopicDefinition") {
-            $scope.showCustomizeStreamDialog(state);
+            this.showCustomizeStreamDialog(state);
         } else {
             console.log("Wrong format");
             console.log(streamDescription);
         }
     }
 
-    $scope.showCustomizeStreamDialog = function(state) {
-        var dialogContent = getDialogTemplate(TopicSelectionController, 'app/editor/components/topic/topic-selection-modal.tmpl.html');
+    showCustomizeStreamDialog(state) {
+        var dialogContent = this.getDialogTemplate(TopicSelectionController, 'app/editor/components/topic/topic-selection-modal.tmpl.html');
         dialogContent.locals = {
             state : state
         }
-        $mdDialog.show(dialogContent);
+        this.$mdDialog.show(dialogContent);
     }
 
     /**
      * clears the Assembly of all elements
      */
-    $scope.clearAssembly = function () {
+    clearAssembly() {
         $('#assembly').children().not('#clear, #submit').remove();
         jsPlumb.deleteEveryEndpoint();
-        $rootScope.state.adjustingPipelineState = false;
+        this.$rootScope.state.adjustingPipelineState = false;
         $("#assembly").panzoom("reset", {
             disablePan: true,
             increment: 0.25,
@@ -621,18 +639,18 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             maxScale: 1.5,
             contain: 'invert'
         });
-        $scope.currentZoomLevel = 1;
-        jsPlumb.setZoom($scope.currentZoomLevel);
+        this.currentZoomLevel = 1;
+        jsPlumb.setZoom(this.currentZoomLevel);
         jsPlumb.repaintEverything();
     };
 
-    $scope.createPartialPipeline = function (currentElement, recommendationConfig) {
-        var pipelinePart = new objectProvider.Pipeline();
-        addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
+    createPartialPipeline(currentElement, recommendationConfig) {
+        var pipelinePart = new this.objectProvider.Pipeline();
+        this.addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
         return pipelinePart;
     }
 
-    function addElementToPartialPipeline(element, pipelinePart, recommendationConfig) {
+    addElementToPartialPipeline(element, pipelinePart, recommendationConfig) {
         pipelinePart.addElement(element);
         // add all children of pipeline element that are not already present in the pipeline
         if (!recommendationConfig) {
@@ -640,7 +658,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
             if (outgoingConnections.length > 0) {
                 for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
                     if (!pipelinePart.hasElement(ocon.target.id)) {
-                        addElementToPartialPipeline(ocon.target, pipelinePart, recommendationConfig);
+                        this.addElementToPartialPipeline(ocon.target, pipelinePart, recommendationConfig);
                     }
                 }
             }
@@ -650,7 +668,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         var connections = jsPlumb.getConnections({target: element});
         if (connections.length > 0) {
             for (var i = 0, con; con = connections[i]; i++) {
-                addElementToPartialPipeline(con.source, pipelinePart);
+                this.addElementToPartialPipeline(con.source, pipelinePart);
             }
         }
     }
@@ -658,20 +676,20 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     /**
      * Sends the pipeline to the server
      */
-    $scope.submit = function () {
+    submit() {
         var error = false;
-        var pipelineNew = new objectProvider.Pipeline();
+        var pipelineNew = new this.objectProvider.Pipeline();
         var streamPresent = false;
         var sepaPresent = false;
         var actionPresent = false;
 
 
-        $('#assembly').find('.connectable, .connectable-block').each(function (i, element) {
+        $('#assembly').find('.connectable, .connectable-block').each((i, element) => {
             var $element = $(element);
 
-            if (!pipelineEditorService.isConnected(element, jsPlumb)) {
+            if (!this.pipelineEditorService.isConnected(element, jsPlumb)) {
                 error = true;
-                showToast("error", "All elements must be connected", "Submit Error");
+                this.showToast("error", "All elements must be connected", "Submit Error");
             }
 
             if ($element.hasClass('sepa')) {
@@ -680,7 +698,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                     pipelineNew.addElement(element);
 
                 } else if ($element.data("JSON").staticProperties != null) {
-                    showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+                    this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                     error = true;
                 }
             } else if ($element.hasClass('stream')) {
@@ -692,56 +710,56 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
                 if ($element.data("JSON").staticProperties == null || $element.data("options")) {
                     pipelineNew.addElement(element);
                 } else {
-                    showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+                    this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
                     ;
                     error = true;
                 }
             }
         });
         if (!streamPresent) {
-            showToast("error", "No stream element present in pipeline", "Submit Error");
+            this.showToast("error", "No stream element present in pipeline", "Submit Error");
             error = true;
         }
 
         if (!actionPresent) {
-            showToast("error", "No action element present in pipeline", "Submit Error");
+            this.showToast("error", "No action element present in pipeline", "Submit Error");
             error = true;
         }
         if (!error) {
-            $rootScope.state.currentPipeline = pipelineNew;
-            if ($rootScope.state.adjustingPipelineState) {
-                $rootScope.state.currentPipeline.name = $scope.currentPipelineName;
-                $rootScope.state.currentPipeline.description = $scope.currentPipelineDescription;
+            this.$rootScope.state.currentPipeline = pipelineNew;
+            if (this.$rootScope.state.adjustingPipelineState) {
+                this.$rootScope.state.currentPipeline.name = this.currentPipelineName;
+                this.$rootScope.state.currentPipeline.description = this.currentPipelineDescription;
             }
 
-            openPipelineNameModal();
+            this.openPipelineNameModal();
         }
     }
 
-    function openPipelineNameModal() {
-        if ($rootScope.state.adjustingPipelineState) {
-            $scope.modifyPipelineMode = true;
+    openPipelineNameModal() {
+        if (this.$rootScope.state.adjustingPipelineState) {
+            this.modifyPipelineMode = true;
         }
-        $scope.showSavePipelineDialog();
+        this.showSavePipelineDialog();
     }
 
-    $scope.createAssemblyElement = function (json, $parentElement) {
+    createAssemblyElement(json, $parentElement) {
         var x = $parentElement.position().left;
         var y = $parentElement.position().top;
         var coord = {'x': x + 200, 'y': y};
         var $target;
-        var $createdElement = jsplumbService.createNewAssemblyElement(jsPlumb, json, coord, false, "#assembly");
+        var $createdElement = this.jsplumbService.createNewAssemblyElement(jsPlumb, json, coord, false, "#assembly");
         if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
-            $target = jsplumbService.sepaDropped($scope, jsPlumb, $createdElement, true);
+            $target = this.jsplumbService.sepaDropped(this.$scope, jsPlumb, $createdElement, true);
         } else {
-            $target = jsplumbService.actionDropped($scope, jsPlumb, $createdElement, true);
+            $target = this.jsplumbService.actionDropped(this.$scope, jsPlumb, $createdElement, true);
         }
 
         var options;
         if ($parentElement.hasClass("stream")) {
-            options = jsplumbConfig.streamEndpointOptions;
+            options = this.jsplumbConfig.streamEndpointOptions;
         } else {
-            options = jsplumbConfig.sepaEndpointOptions;
+            options = this.jsplumbConfig.sepaEndpointOptions;
         }
         var sourceEndPoint;
         if (jsPlumb.selectEndpoints({source: $parentElement}).length > 0) {
@@ -761,22 +779,22 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         jsPlumb.repaintEverything();
     }
 
-    $scope.createAndConnect = function (target) {
+    createAndConnect(target) {
         var json = $("a", $(target)).data("recObject").json;
         var $parentElement = $(target).parents(".connectable");
-        $scope.createAssemblyElement(json, $parentElement);
+        this.createAssemblyElement(json, $parentElement);
     }
 
-    $scope.clearCurrentElement = function () {
-        $rootScope.state.currentElement = null;
+    clearCurrentElement() {
+        this.$rootScope.state.currentElement = null;
     };
 
-    $scope.handleDeleteOption = function ($element) {
+    handleDeleteOption($element) {
         jsPlumb.removeAllEndpoints($element);
         $element.remove();
     }
 
-    function modifyPipeline(pipelineModifications) {
+    modifyPipeline(pipelineModifications) {
         var id;
         for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
             id = "#" + modification.domId;
@@ -788,13 +806,33 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
         }
     }
 
-    function showToast(type, title, description) {
-        $mdToast.show(
-            $mdToast.simple()
+    showToast(type, title, description) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
                 .textContent(title)
                 .position("top right")
                 .hideDelay(3000)
         );
     }
 
-};
+}
+
+EditorCtrl.$inject = ['$scope',
+    '$rootScope',
+    '$state',
+    '$timeout',
+    '$http',
+    'RestApi',
+    '$stateParams',
+    'objectProvider',
+    'apiConstants',
+    '$q',
+    '$mdDialog',
+    '$window',
+    '$compile',
+    'InitTooltips',
+    '$mdToast',
+    'jsplumbService',
+    'jsplumbConfigService',
+    'pipelinePositioningService',
+    'pipelineEditorService'];
