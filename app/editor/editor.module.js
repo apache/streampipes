@@ -17,20 +17,20 @@ import capitalize from './capitalize.filter';
 import displayRecommendedFilter from './display-recommended.filter';
 import objectProvider from '../services/object-provider.service';
 
-import any from './directives/any/any.directive';
-import customOutput from './directives/customoutput/customoutput.directive';
-import domainConceptInput from './directives/domainconcept/domainconcept.directive';
-import freetext from './directives/freetext/freetext.directive';
-import mappingPropertyUnary from './directives/mappingunary/mappingunary.directive';
-import mappingPropertyNary from './directives/mappingnary/mappingnary.directive';
-import matchingProperty from './directives/matchingproperty/matchingproperty.directive';
-import oneof from './directives/oneof/oneof.directive';
-import replaceOutput from './directives/replaceoutput/replaceoutput.directive';
-import multipleValueInput from './directives/multivalue/multiple-value-input.directive';
-import pipelineElementOptions from './directives/pipeline-element-options/pipeline-element-options.directive';
-import collectionStaticProperty from './directives/collection/collection.directive';
-import customizeDialog from './directives/customize/customize-dialog.directive';
-import topicSelectionDialog from './directives/topic/topic-selection-dialog.directive';
+import {AnyComponent} from './components/any/any.component';
+import {CustomOutputComponent} from './components/customoutput/customoutput.component';
+import {DomainConceptComponent} from './components/domainconcept/domainconcept.component';
+import {FreeTextComponent} from './components/freetext/freetext.component';
+import {MappingUnaryComponent} from './components/mappingunary/mappingunary.component';
+import {MappingNaryComponent} from './components/mappingnary/mappingnary.component';
+import {MatchingPropertyComponent} from './components/matchingproperty/matchingproperty.component';
+import {OneOfComponent} from './components/oneof/oneof.component';
+import {ReplaceOutputComponent} from './components/replaceoutput/replaceoutput.component';
+import {MultipleValueInputComponent} from './components/multivalue/multiple-value-input.component';
+import pipelineElementOptions from './components/pipeline-element-options/pipeline-element-options.directive';
+import {CollectionComponent} from './components/collection/collection.component';
+import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
+import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
 
 
 
@@ -41,17 +41,17 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .directive('objectProvider', objectProvider)
     .filter('capitalize', objectProvider)
     .filter('displayRecommendedFilter', displayRecommendedFilter)
-    .directive('any', any)
-    .directive('customOutput', customOutput)
-    .directive('domainConceptInput', domainConceptInput)
-    .directive('freetext', freetext)
-    .directive('mappingPropertyNary', mappingPropertyNary)
-    .directive('mappingPropertyUnary', mappingPropertyUnary)
-    .directive('matchingProperty', matchingProperty)
-    .directive('oneof', oneof)
-    .directive('replaceOutput', replaceOutput)
-    .directive('multipleValueInput', multipleValueInput)
-    .directive('collectionStaticProperty', collectionStaticProperty)
-    .directive('customizeDialog', customizeDialog)
-    .directive('topicSelectionDialog', topicSelectionDialog)
+    .component('any', AnyComponent)
+    .component('customOutput', CustomOutputComponent)
+    .component('domainConceptInput', DomainConceptComponent)
+    .component('freetext', FreeTextComponent)
+    .component('mappingPropertyNary', MappingNaryComponent)
+    .component('mappingPropertyUnary', MappingUnaryComponent)
+    .component('matchingProperty', MatchingPropertyComponent)
+    .component('oneof', OneOfComponent)
+    .component('replaceOutput', ReplaceOutputComponent)
+    .component('multipleValueInput', MultipleValueInputComponent)
+    .component('collectionStaticProperty', CollectionComponent)
+    .component('customizeDialog', CustomizeDialogComponent)
+    .component('topicSelectionDialog', TopicSelectionDialogComponent)
     .name;

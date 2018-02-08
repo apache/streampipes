@@ -1,6 +1,0 @@
-<div ng-repeat="option in staticProperty.properties.mapsFromOptions | displayRecommendedFilter: staticProperty.properties.propertyScope:displayRecommended">
-    <md-checkbox ng-checked="exists(option, staticProperty)" ng-click="toggle(option, staticProperty)" name="{{option.properties.elementId}}">
-        <div ng-if="option.properties.label"><b>{{option.properties.label}}</b> <i>({{option.properties.description}})</i><br/></div>
-        <div ng-if="!option.properties.label"> <b>{{option.properties.runtimeName}}</b><br/></div>
-    </md-checkbox>
-</div>

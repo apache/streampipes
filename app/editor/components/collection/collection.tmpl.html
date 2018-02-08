@@ -1,0 +1,42 @@
+<div class="customize-item-content sp-blue-border-nopadding"
+     ng-repeat="sp in ctrl.staticProperty.properties.members track by $index">
+    <div flex="100" layout="row" layout-align="end center">
+        <md-button ng-click="ctrl.removeMember(ctrl.staticProperty, $index)" class="md-icon-button"
+                   ng-disabled="ctrl.staticProperty.properties.members.length == 1">
+            <i class="material-icons">clear</i>
+            <md-tooltip md-direction="top">
+                Remove
+            </md-tooltip>
+        </md-button>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'OneOfStaticProperty'">
+        <oneof static-property="sp"></oneof>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'FreeTextStaticProperty'">
+        <freetext input-streams="selectedElement.inputStreams" static-property="sp"></freetext>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'AnyStaticProperty'">
+        <any static-property="sp"></any>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'DomainStaticProperty'">
+        <domain-concept-input static-property="sp"
+                              auto-complete-static-property="sp"></domain-concept-input>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'MappingPropertyUnary'">
+        <mapping-property-unary static-property="sp"></mapping-property-unary>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'MappingPropertyNary'">
+        <mapping-property-nary static-property="sp"></mapping-property-nary>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'MatchingProperty'">
+        <matching-property static-property="sp"></matching-property>
+    </div>
+    <div ng-if="sp.properties.staticPropertyType == 'CollectionStaticProperty'">
+        <collection-property static-property="sp"></collection-property>
+    </div>
+</div>
+<div flex="100" layout="row" layout-align="end center">
+    <md-button ng-click="ctrl.addMember(staticProperty)">
+        Add
+    </md-button>
+</div>

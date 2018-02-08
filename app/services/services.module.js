@@ -19,7 +19,7 @@ import pipelinePositioningService from './pipeline-positioning.service'
 import jsplumbService from './jsplumb.service'
 import jsplumbConfigService from './jsplumb-config.service'
 import pipelineElementIconService from './pipeline-icon.service'
-import pipelineElementOptions from '../editor/directives/pipeline-element-options/pipeline-element-options.directive'
+import pipelineElementOptions from '../editor/components/pipeline-element-options/pipeline-element-options.directive'
 import pipelineEditorService from './pipeline-editor.service'
 
 export default angular.module('sp.services', [spConstants])

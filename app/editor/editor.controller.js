@@ -3,8 +3,8 @@
 import CustomizeController from './customize.controller';
 import MatchingErrorController from './matching-error.controller';
 import SavePipelineController from './save-pipeline.controller';
-import HelpDialogController from './directives/pipeline-element-options/help-dialog.controller';
-import TopicSelectionController from './directives/topic/topic-selection-modal.controller';
+import HelpDialogController from './components/pipeline-element-options/help-dialog.controller';
+import TopicSelectionController from './components/topic/topic-selection-modal.controller';
 import {InitTooltips} from "../services/init-tooltips.service";
 
 EditorCtrl.$inject = ['$scope',
@@ -106,7 +106,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     }
 
     $scope.showElementInfo = function (element) {
-        var dialogTemplate = getDialogTemplate(HelpDialogController, 'app/editor/directives/pipeline-element-options/help-dialog.tmpl.html');
+        var dialogTemplate = getDialogTemplate(HelpDialogController, 'app/editor/components/pipeline-element-options/help-dialog.tmpl.html');
         dialogTemplate.locals = {
             pipelineElement: element
         }
@@ -208,12 +208,12 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     $scope.showSavePipelineDialog = function (elementData, sepaName) {
         $rootScope.state.currentElement = elementData;
-        var dialogContent = getDialogTemplate(SavePipelineController, 'app/editor/directives/submitPipelineModal.tmpl.html');
+        var dialogContent = getDialogTemplate(SavePipelineController, 'app/editor/components/submitPipelineModal.tmpl.html');
         $mdDialog.show(dialogContent);
     }
 
     $scope.showMatchingErrorDialog = function (elementData) {
-        var dialogContent = getDialogTemplate(MatchingErrorController, 'app/editor/directives/matchingErrorDialog.tmpl.html');
+        var dialogContent = getDialogTemplate(MatchingErrorController, 'app/editor/components/matchingErrorDialog.tmpl.html');
         dialogContent.locals = {
             elementData: elementData
         }
@@ -222,7 +222,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
 
     $scope.showCustomizeDialog = function (elementData, sepaName, sourceEndpoint) {
         $rootScope.state.currentElement = elementData;
-        var dialogContent = getDialogTemplate(CustomizeController, 'app/editor/directives/customizeElementDialog.tmpl.html');
+        var dialogContent = getDialogTemplate(CustomizeController, 'app/editor/components/customizeElementDialog.tmpl.html');
         dialogContent.locals = {
             elementData: elementData,
             sepaName: sepaName,
@@ -600,7 +600,7 @@ export default function EditorCtrl($scope, $rootScope, $state, $timeout, $http, 
     }
 
     $scope.showCustomizeStreamDialog = function(state) {
-        var dialogContent = getDialogTemplate(TopicSelectionController, 'app/editor/directives/topic/topic-selection-modal.tmpl.html');
+        var dialogContent = getDialogTemplate(TopicSelectionController, 'app/editor/components/topic/topic-selection-modal.tmpl.html');
         dialogContent.locals = {
             state : state
         }
