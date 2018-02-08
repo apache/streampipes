@@ -1,10 +1,9 @@
 export class DomainPropertyController {
 
-    constructor(domainPropertiesService) {
-        this.domainProperties = [];
-        this.domainProperties = domainPropertiesService.getDomainProperties();
+    constructor(DomainProperties) {
+        this.domainProperties = DomainProperties.getDomainProperties();
     }
 
 }
 
-DomainPropertyController.$inject = ['domainPropertiesService'];
+DomainPropertyController.$inject = ['DomainProperties'];
