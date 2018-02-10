@@ -3,7 +3,7 @@
         <div class="md-toolbar-tools">
             <h2>Compatible Elements</h2>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="cancel()">
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
             </md-button>
         </div>
@@ -11,8 +11,8 @@
 
     <md-dialog-content flex="100" class="md-dialog-content">
         <md-list>
-        <md-list-item class="md-2-line" ng-repeat="possibleElement in possibleElements | orderBy: '+name'" ng-click="create(possibleElement)">
-            <div class="draggable-icon-preview {{type(possibleElement)}}">{{iconText(possibleElement.name)}}</div>
+        <md-list-item class="md-2-line" ng-repeat="possibleElement in ctrl.possibleElements | orderBy: '+name'" ng-click="ctrl.create(possibleElement)">
+            <div class="draggable-icon-preview {{ctrl.type(possibleElement)}}">{{ctrl.iconText(possibleElement.name)}}</div>
             <div class="md-list-item-text">
                 <h3>{{ possibleElement.name }}</h3>
                 <p>{{ possibleElement.description }}</p>
@@ -23,7 +23,7 @@
 
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="hide()" style="margin-right:20px;">
+        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
             Close
         </md-button>
     </div>

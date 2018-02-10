@@ -27,7 +27,7 @@ import {MatchingPropertyComponent} from './components/matchingproperty/matchingp
 import {OneOfComponent} from './components/oneof/oneof.component';
 import {ReplaceOutputComponent} from './components/replaceoutput/replaceoutput.component';
 import {MultipleValueInputComponent} from './components/multivalue/multiple-value-input.component';
-import pipelineElementOptions from './components/pipeline-element-options/pipeline-element-options.directive';
+import {PipelineElementOptionsComponent} from './components/pipeline-element-options/pipeline-element-options.component';
 import {CollectionComponent} from './components/collection/collection.component';
 import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
 import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';

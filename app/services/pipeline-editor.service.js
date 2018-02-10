@@ -1,31 +1,34 @@
-pipelineEditorService.$inject = ['$rootScope', 'jsplumbService', 'apiConstants'];
+export class PipelineEditorService {
 
-export default function pipelineEditorService($rootScope, jsplumbService, apiConstants) {
+    constructor($rootScope, JsplumbService, apiConstants, JsplumbBridge) {
+        this.$rootScope = $rootScope;
+        this.JsplumbService = JsplumbService;
+        this.apiConstants = apiConstants;
+        this.JsplumbBridge = JsplumbBridge;
+    }
 
-    var pipelineEditorService = {};
+    getCoordinates(ui, currentZoomLevel) {
 
-    pipelineEditorService.getCoordinates = function(ui, currentZoomLevel) {
-
-        var newLeft = getDropPositionX(ui.helper, currentZoomLevel);
-        var newTop = getDropPositionY(ui.helper, currentZoomLevel);
+        var newLeft = this.getDropPositionX(ui.helper, currentZoomLevel);
+        var newTop = this.getDropPositionY(ui.helper, currentZoomLevel);
         return {
             'x': newLeft,
             'y': newTop
         };
     }
 
-    pipelineEditorService.isConnected = function(element, jsplumb) {
-        if (jsplumb.getConnections({source: element}).length < 1 && jsplumb.getConnections({target: element}).length < 1) {
+    isConnected(element) {
+        if (this.JsplumbBridge.getConnections({source: element}).length < 1 && this.JsplumbBridge.getConnections({target: element}).length < 1) {
             return false;
         }
         return true;
     }
 
-    pipelineEditorService.isFullyConnected = function(element, jsplumb) {
-        return $(element).data("JSON").inputStreams == null || jsplumb.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
+    isFullyConnected(element) {
+        return $(element).data("JSON").inputStreams == null || this.JsplumbBridge.getConnections({target: $(element)}).length == $(element).data("JSON").inputStreams.length;
     }
 
-    var getDropPositionY = function(helper, currentZoomLevel) {
+    getDropPositionY(helper, currentZoomLevel) {
         var newTop;
         var helperPos = helper.offset();
         var divPos = $('#assembly').offset();
@@ -33,7 +36,7 @@ export default function pipelineEditorService($rootScope, jsplumbService, apiCon
         return newTop;
     }
 
-    var getDropPositionX = function(helper, currentZoomLevel) {
+    getDropPositionX(helper, currentZoomLevel) {
         var newLeft;
         var helperPos = helper.offset();
         var divPos = $('#assembly').offset();
@@ -41,5 +44,6 @@ export default function pipelineEditorService($rootScope, jsplumbService, apiCon
         return newLeft;
     }
 
-    return pipelineEditorService;
 }
+
+PipelineEditorService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'JsplumbBridge'];

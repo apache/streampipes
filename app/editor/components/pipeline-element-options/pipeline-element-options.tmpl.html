@@ -1,5 +1,5 @@
-<span class="customize-button" ng-show="pipelineElement.type!='stream'">
-    <md-button ng-click="openCustomizeDialog()" ng-disabled="!isRootElement()" class="md-icon-button"
+<span class="customize-button" ng-show="ctrl.pipelineElement.type!='stream'">
+    <md-button ng-click="ctrl.openCustomizeDialog()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
                style="margin:0px;font-size:20px;">
         <md-icon md-svg-icon='action:ic_settings_24px'
         > <md-tooltip md-direction="top">
@@ -7,8 +7,8 @@
                 </md-tooltip></md-icon>
         </md-button>
 </span>
-<span class="customize-button" ng-show="pipelineElement.type=='stream' && isWildcardTopic(pipelineElement)">
-    <md-button ng-click="openCustomizeStreamDialog()" ng-disabled="!isRootElement()" class="md-icon-button"
+<span class="customize-button" ng-show="ctrl.pipelineElement.type=='stream' && ctrl.isWildcardTopic(pipelineElement)">
+    <md-button ng-click="ctrl.openCustomizeStreamDialog()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
                style="margin:0px;font-size:20px;">
         <md-icon md-svg-icon='action:ic_settings_24px'>
             <md-tooltip md-direction="top">
@@ -17,16 +17,16 @@
         </md-button>
 </span>
 <span class="delete-button">
-    <md-button ng-click="removeElement()" ng-disabled="!isRootElement()" class="md-icon-button"
+    <md-button ng-click="ctrl.removeElement()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
                style="margin:0px;font-size:20px;">
         <md-icon md-svg-icon='navigation:ic_cancel_24px' class="red">
 
 </md-icon>
         </md-button>
     </span>
-<span class="possible-button" ng-show="pipelineElement.type!='action'"><md-button
-        ng-disabled="!possibleElements || possibleElements.length == 0 || !isConfigured(internalId)"
-        ng-click="openPossibleElementsDialog()" class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
+<span class="possible-button" ng-show="ctrl.pipelineElement.type!='action'"><md-button
+        ng-disabled="!ctrl.possibleElements || ctrl.possibleElements.length == 0 || !ctrl.isConfigured(internalId)"
+        ng-click="ctrl.openPossibleElementsDialog()" class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon
         md-svg-icon='action:ic_visibility_24px'>
     <md-tooltip md-direction="bottom">
                     Compatible Elements
@@ -34,8 +34,8 @@
 
 </md-icon></md-button>
     </span>
-<span class="recommended-button" ng-show="pipelineElement.type!='action'"><md-button
-        ng-click="showRecommendations($event)" ng-disabled="!recommendationsAvailable || !isConfigured()"
+<span class="recommended-button" ng-show="ctrl.pipelineElement.type!='action'"><md-button
+        ng-click="ctrl.showRecommendations($event)" ng-disabled="!ctrl.recommendationsAvailable || !ctrl.isConfigured()"
         class="md-icon-button" style="margin:0px;font-size:20px;"><md-icon md-svg-icon='content:ic_add_circle_24px'>
     <md-tooltip md-direction="bottom">
                     Recommended Elements
@@ -43,9 +43,9 @@
 </md-icon>
     </md-button>
     </span>
-<span class="help-button"><md-button ng-click="openHelpDialog()" class="md-icon-button"
-                                     style="margin:0px;font-size:20px;"><md-icon md-svg-icon='action:ic_help_24px'
-> <md-tooltip md-direction="bottom">
+<span class="help-button"><md-button ng-click="ctrl.openHelpDialog()" class="md-icon-button"
+                                     style="margin:0px;font-size:20px;"><md-icon md-svg-icon='action:ic_help_24px'>
+    <md-tooltip md-direction="bottom">
                     Help
                 </md-tooltip></md-icon>
     </md-button>

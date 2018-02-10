@@ -3,18 +3,18 @@
         <div class="md-toolbar-tools">
             <h2>Pipeline Element Information</h2>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="cancel()">
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
             </md-button>
         </div>
     </md-toolbar>
 
     <md-dialog-content flex="100" class="md-dialog-content">
-        <h3>{{pipelineElement.name}}</h3>
-        <h4>{{pipelineElement.description}}</h4>
+        <h3>{{ctrl.pipelineElement.name}}</h3>
+        <h4>{{ctrl.pipelineElement.description}}</h4>
     </md-dialog-content>
     <div class="md-actions" layout="row">
-        <md-button ng-click="hide()" style="margin-right:20px;">
+        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
             Close
         </md-button>
     </div>
