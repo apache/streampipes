@@ -1,18 +1,16 @@
 export class PossibleElementsController {
 
-    constructor($scope, $mdDialog, ElementIconText) {
-        this.$scope = $scope;
+    constructor($mdDialog, ElementIconText, JsplumbService, pipelineModel, possibleElements, pipelineElementDomId) {
         this.$mdDialog = $mdDialog;
         this.ElementIconText = ElementIconText;
+        this.pipelineModel = pipelineModel;
+        this.pipelineElementDomId = pipelineElementDomId;
+        this.possibleElements = possibleElements;
+        this.JsplumbService = JsplumbService;
     }
-
 
     create(possibleElement) {
-        this.$scope.createFunction(this.$scope.getPipelineElementContents(possibleElement.elementId), this.$scope.getDomElement($scope.internalId));
-    }
-
-    type(possibleElement) {
-        return this.$scope.getPipelineElementContents(possibleElement.elementId).type;
+        this.JsplumbService.createElement(this.pipelineModel, possibleElement, this.pipelineElementDomId);
     }
 
     iconText(elementId) {
@@ -28,4 +26,4 @@ export class PossibleElementsController {
     };
 }
 
-PossibleElementsController.$inject = ['$scope', '$mdDialog', 'ElementIconText'];
+PossibleElementsController.$inject = ['$mdDialog', 'ElementIconText', 'JsplumbService', 'pipelineModel', 'possibleElements', 'pipelineElementDomId'];

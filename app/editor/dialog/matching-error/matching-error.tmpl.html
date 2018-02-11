@@ -4,7 +4,7 @@
     <div class="md-toolbar-tools">
       <h2>Connection error</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="cancel()">
+      <md-button class="md-icon-button" ng-click="ctrl.cancel()">
         <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
       </md-button>
     </div>
@@ -12,7 +12,7 @@
   <md-dialog-content class="md-dialog-content">
     <div>
     	<h4>The provided stream does not meet the specified requirements of this component.</h4>
-    	<div ng-repeat="entry in msg | orderBy:'-'">
+    	<div ng-repeat="entry in ctrl.msg | orderBy:'-'">
 	    	<div flex="100" class="md-whiteframe-z1">
 	    		<div flex layout="column" class="md-padding">
 		    		<div>
@@ -31,7 +31,7 @@
     </div>
   </md-dialog-content>
   <div class="md-actions" layout="row">
-    <md-button ng-click="hide()" style="margin-right:20px;" >
+    <md-button ng-click="ctrl.hide()" style="margin-right:20px;" >
       Close
     </md-button>
   </div>

@@ -1,10 +1,8 @@
 export class HelpDialogController {
 
-    constructor($scope, $mdDialog, pipelineElement) {
-        this.$scope = $scope;
+    constructor($mdDialog, pipelineElement) {
         this.$mdDialog = $mdDialog;
         this.pipelineElement = pipelineElement;
-        this.$scope.pipelineElement = pipelineElement;
     }
 
     hide() {
@@ -16,4 +14,4 @@ export class HelpDialogController {
     };
 }
 
-HelpDialogController.$inject = ['$scope', '$mdDialog', 'pipelineElement'];
+HelpDialogController.$inject = ['$mdDialog', 'pipelineElement'];

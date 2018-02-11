@@ -31,11 +31,11 @@ export class JsplumbBridge {
     selectEndpoints() {
         return jsPlumb.selectEndpoints();
     }
-    
+
     selectEndpoints(endpoint) {
         return jsPlumb.selectEndpoints(endpoint);
     }
-    
+
     detach(connection) {
         jsPlumb.detach(connection);
     }
@@ -43,17 +43,12 @@ export class JsplumbBridge {
     getConnections(filter) {
         return jsPlumb.getConnections(filter);
     }
-    
+
     addEndpoint(element, options) {
-        console.log("adding endpoint");
-        this.$timeout(() => {
-            var test = jsPlumb.addEndpoint(element, options);
-            console.log(jsPlumb.selectEndpoints());
-            console.log(test);
-        });
+        jsPlumb.addEndpoint(element, options);
         this.repaintEverything();
     }
-    
+
     connect(connection) {
         jsPlumb.connect(connection);
     }
@@ -69,7 +64,7 @@ export class JsplumbBridge {
     draggable(element, option) {
         jsPlumb.draggable(element, option);
     }
-    
+
     setSuspendDrawing(bool1, bool2) {
         jsPlumb.setSuspendDrawing(bool1, bool2);
     }
@@ -79,4 +74,4 @@ export class JsplumbBridge {
     }
 }
 
-JsplumbBridge.$inject=['$timeout'];
+JsplumbBridge.$inject = ['$timeout'];

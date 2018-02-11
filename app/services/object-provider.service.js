@@ -36,14 +36,11 @@ export class ObjectProvider {
         pipeline.actions = [];
 
         return pipeline;
-
     }
 
-    makePipeline(element, currentPipelineElements) {
-
+    makePipeline(element, currentPipelineElements, rootElementId) {
         var pipeline = this.preparePipeline();
-
-        var rootElement = this.findElement(element.id, currentPipelineElements);
+        var rootElement = this.findElement(rootElementId, currentPipelineElements);
         this.addElement(element, rootElement, currentPipelineElements, pipeline);
         return pipeline;
     }

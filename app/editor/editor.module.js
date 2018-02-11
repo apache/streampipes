@@ -32,8 +32,7 @@ import {CollectionComponent} from './components/collection/collection.component'
 import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
 import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
 import {PipelineComponent} from './components/pipeline/pipeline.component';
-
-
+import {EditorDialogManager} from './editor-dialog-manager.service';
 
 export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .controller('EditorCtrl', EditorCtrl)
@@ -56,4 +55,5 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .component('customizeDialog', CustomizeDialogComponent)
     .component('topicSelectionDialog', TopicSelectionDialogComponent)
     .component('pipeline', PipelineComponent)
+    .service('EditorDialogManager', EditorDialogManager)
     .name;

@@ -14,6 +14,7 @@ import { JsplumbBridge } from './jsplumb-bridge.service'
 import { JsplumbService } from './jsplumb.service'
 import { PipelinePositioningService } from './pipeline-positioning.service'
 import { PipelineEditorService } from './pipeline-editor.service'
+import { DialogBuilder } from './dialog-builder.service'
 
 import httpInterceptor from './http-interceptor.service'
 import measurementUnits from './measurement-units.service'
@@ -37,6 +38,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('JsplumbService', JsplumbService)
 	.service('PipelinePositioningService', PipelinePositioningService)
 	.service('PipelineEditorService', PipelineEditorService)
+	.service('DialogBuilder', DialogBuilder)
 
 	.factory('httpInterceptor', httpInterceptor)
 	.factory('measurementUnitsService', measurementUnits)

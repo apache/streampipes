@@ -4,7 +4,8 @@ export let PipelineComponent = {
     templateUrl: 'app/editor/components/pipeline/pipeline.tmpl.html',
     bindings: {
         staticProperty : "=",
-        pipelineModel: "="
+        pipelineModel: "=",
+        allElements: "="
     },
     controller: PipelineController,
     controllerAs: 'ctrl'

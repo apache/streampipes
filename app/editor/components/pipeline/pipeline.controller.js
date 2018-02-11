@@ -1,21 +1,18 @@
-import {CustomizeController} from '../../customize.controller';
-import MatchingErrorController from '../../matching-error.controller';
-
 export class PipelineController {
 
-    constructor($scope, $element, $timeout, $rootScope, JsplumbService, PipelineEditorService, JsplumbBridge, ImageChecker, InitTooltips, jsplumbConfigService, ObjectProvider, $mdDialog) {
-        this.$scope = $scope;
+    constructor($timeout, $rootScope, JsplumbService, PipelineEditorService, JsplumbBridge, ImageChecker, InitTooltips, jsplumbConfigService, ObjectProvider, DialogBuilder, EditorDialogManager) {
         this.JsplumbBridge = JsplumbBridge;
         this.jsplumbService = JsplumbService;
         this.pipelineEditorService = PipelineEditorService;
         this.ImageChecker = ImageChecker;
         this.InitTooltips = InitTooltips;
         this.$rootScope = $rootScope;
-        this.$element = $element;
         this.$timeout = $timeout;
         this.jsplumbConfigService = jsplumbConfigService;
         this.objectProvider = ObjectProvider;
-        this.$mdDialog = $mdDialog;
+        this.DialogBuilder = DialogBuilder;
+        this.EditorDialogManager = EditorDialogManager;
+        this.currentMouseOverElement = "";
 
         this.currentPipelineModel = {};
         this.idCounter = 0;
@@ -28,6 +25,10 @@ export class PipelineController {
             this.initPlumb();
         });
 
+    }
+
+    updateMouseover(elementId) {
+        this.currentMouseOverElement = elementId;
     }
 
     getElementCss(currentPipelineElementSettings) {
@@ -52,10 +53,7 @@ export class PipelineController {
                         alert("No JSON - Data for Dropped element");
                         return false;
                     }
-                    var pipelineElementConfig = this.jsplumbService.createNewAssemblyElement(ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), "", "", false);
-                    pipelineElementConfig.payload.DOM = "jsplumb_" +this.idCounter;
-                    this.idCounter++;
-
+                    var pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false);
                     this.pipelineModel.push(pipelineElementConfig);
 
                     //Droppable Streams
@@ -90,11 +88,6 @@ export class PipelineController {
                 delay: 150
 
             })
-            .on('click', ".recommended-item", function (e) {
-                e.stopPropagation();
-                this.createAndConnect(this);
-            });
-
 
         $(document).click(function () {
             $('.circleMenu-open').circleMenu('close');
@@ -107,7 +100,6 @@ export class PipelineController {
 
     };
 
-
     checkTopicModel(pipelineElementConfig) {
         this.$timeout(() => {
             this.$timeout(() => {
@@ -115,85 +107,24 @@ export class PipelineController {
             });
         });
 
-        //this.loadOptionsButtons(this, state);
         var streamDescription = pipelineElementConfig.payload
         if (streamDescription
                 .eventGrounding
                 .transportProtocols[0]
                 .properties.topicDefinition
                 .type === "org.streampipes.model.grounding.WildcardTopicDefinition") {
-            //this.showCustomizeStreamDialog(state);
+            this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);
         }
     }
 
-    loadOptionsButtons(scope, $newElement) {
-        this.currentPipelineElement = $newElement.data("JSON");
-        this.currentPipelineElementDom = $newElement[0].id;
-        var elementId = this.currentPipelineElement.type == 'stream' ? this.currentPipelineElement.elementId : this.currentPipelineElement.belongsTo;
-        $newElement.append(this.$compile('<pipeline-element-options show-customize-stream-dialog-function=ctrl.showCustomizeStreamDialog show-customize-dialog-function=ctrl.showCustomizeDialog delete-function=ctrl.handleDeleteOption create-partial-pipeline-function=ctrl.createPartialPipeline create-function=ctrl.createAssemblyElement all-elements=ctrl.allElements pipeline-element-id=' + elementId + ' internal-id=' + this.currentPipelineElementDom + '></pipeline-element-options>')(this.$scope));
-    }
-
-    showCustomizeStreamDialog(state) {
-        var dialogContent = this.getDialogTemplate(TopicSelectionController, 'app/editor/components/topic/topic-selection-modal.tmpl.html');
-        dialogContent.locals = {
-            state: state
-        }
-        this.$mdDialog.show(dialogContent);
-    }
-
-    handleDeleteOption($element, internalId) {
+    handleDeleteOption(internalId) {
         angular.forEach(this.pipelineModel, (pe, index) => {
            if (pe.payload.DOM == internalId) {
                this.pipelineModel.splice(index, 1);
            }
         });
-        this.JsplumbBridge.removeAllEndpoints($element);
-        $element.remove();
+        this.JsplumbBridge.removeAllEndpoints(internalId);
     }
-
-    showMatchingErrorDialog(elementData) {
-        var dialogContent = this.getDialogTemplate(MatchingErrorController, 'app/editor/components/matchingErrorDialog.tmpl.html');
-        dialogContent.locals = {
-            elementData: elementData
-        }
-        this.$mdDialog.show(dialogContent);
-    }
-
-    showCustomizeDialog(elementData, sepaName, sourceEndpoint, sepa) {
-        var dialogContent = this.getDialogTemplate(CustomizeController, 'app/editor/components/customizeElementDialog.tmpl.html');
-        dialogContent.locals = {
-            elementData: elementData,
-            sepaName: sepaName,
-            sourceEndpoint: sourceEndpoint,
-            sepa: sepa
-        }
-        this.$mdDialog.show(dialogContent);
-    };
-
-    getDialogTemplate(controller, templateUrl) {
-        return {
-            controller: controller,
-            controllerAs: "ctrl",
-            bindToController: true,
-            templateUrl: templateUrl,
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            //scope: this.$scope,
-            //rootScope: this.$rootScope,
-            //preserveScope: true
-        }
-    }
-
-    getDomElement(internalId) {
-
-    }
-
-    waitForRenderingFinished(internalId, pipelineElementConfig) {
-        this.$timeout(() => {
-            this.jsplumbService.streamDropped(pipelineElementConfig.DOM, pipelineElementConfig, true, false);
-        });
-    }
-
 
     //TODO ANGULARIZE
     //Initiate assembly and jsPlumb functionality-------
@@ -206,7 +137,7 @@ export class PipelineController {
 
         this.JsplumbBridge.bind("connectionDetached", (info, originalEvent) => {
             var el = ($("#" + info.targetEndpoint.elementId));
-            el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
+            //el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
             el.removeClass('a');
             el.addClass('disabled');
             info.targetEndpoint.setType("empty");
@@ -230,9 +161,9 @@ export class PipelineController {
 
         this.JsplumbBridge.bind("connection", (info, originalEvent) => {
             var $target = $(info.target);
-
             if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
-                this.currentPipelineModel = this.createPartialPipeline(info.target, false);
+                this.currentPipelineModel = this.objectProvider.makePipeline(info.target, this.pipelineModel, info.target.id );
+                console.log(this.currentPipelineModel);
                 this.objectProvider.updatePipeline(this.currentPipelineModel)
                     .success(data => {
                         if (data.success) {
@@ -246,13 +177,13 @@ export class PipelineController {
                                         //     return;
                                         // }
                                         var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.showCustomizeDialog($(id), sepa.name, sourceEndpoint, sepa.payload);
+                                        this.EditorDialogManager.showCustomizeDialog($(id), sourceEndpoint, sepa.payload);
                                     }
                                 }
                             }
                         } else {
                             this.JsplumbBridge.detach(info.connection);
-                            this.showMatchingErrorDialog(data);
+                            this.EditorDialogManager.showMatchingErrorDialog(data);
                         }
                     })
             }
@@ -261,35 +192,6 @@ export class PipelineController {
         window.onresize = function (event) {
             this.JsplumbBridge.repaintEverything(true);
         };
-    }
-
-    createPartialPipeline(currentElement, recommendationConfig) {
-        var pipelinePart = this.objectProvider.makePipeline(currentElement, this.pipelineModel);
-        //this.addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
-        return pipelinePart;
-    }
-
-    addElementToPartialPipeline(element, pipelinePart, recommendationConfig) {
-        pipelinePart.addElement(element, this.pipelineModel);
-        // add all children of pipeline element that are not already present in the pipeline
-        if (!recommendationConfig) {
-            var outgoingConnections = this.JsplumbBridge.getConnections({source: element});
-            if (outgoingConnections.length > 0) {
-                for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
-                    if (!pipelinePart.hasElement(ocon.target.id)) {
-                        this.addElementToPartialPipeline(ocon.target, pipelinePart, recommendationConfig);
-                    }
-                }
-            }
-        }
-
-        // add all parents of pipeline element
-        var connections = this.JsplumbBridge.getConnections({target: element});
-        if (connections.length > 0) {
-            for (var i = 0, con; con = connections[i]; i++) {
-                this.addElementToPartialPipeline(con.source, pipelinePart);
-            }
-        }
     }
 
     modifyPipeline(pipelineModifications) {
@@ -305,4 +207,4 @@ export class PipelineController {
     }
 }
 
-PipelineController.$inject = ['$scope', '$element', '$timeout', '$rootScope', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ImageChecker', 'InitTooltips', 'jsplumbConfigService', 'ObjectProvider', '$mdDialog']
+PipelineController.$inject = ['$timeout', '$rootScope', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ImageChecker', 'InitTooltips', 'jsplumbConfigService', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager']

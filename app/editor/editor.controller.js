@@ -1,53 +1,26 @@
-//import jQueryUi from 'npm/jquery-ui';
-
-import {SavePipelineController} from './save-pipeline.controller';
-import HelpDialogController from './dialog/help/help-dialog.controller';
-import TopicSelectionController from './components/topic/topic-selection-modal.controller';
-import {InitTooltips} from "../services/init-tooltips.service";
-
 export class EditorCtrl {
 
     constructor($scope,
                 $rootScope,
-                $state,
-                $timeout,
-                $http,
                 RestApi,
                 $stateParams,
-                ObjectProvider,
-                apiConstants,
-                $q,
-                $mdDialog,
                 $window,
-                $compile,
-                InitTooltips,
                 $mdToast,
-                JsplumbService,
-                jsplumbConfigService,
                 PipelinePositioningService,
-                PipelineEditorService,
-                JsplumbBridge) {
+                JsplumbBridge,
+                EditorDialogManager,
+                AuthStatusService) {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
-        this.$state = $state;
-        this.$timeout = $timeout;
-        this.$http = $http;
         this.RestApi = RestApi;
         this.$stateParams = $stateParams;
-        this.objectProvider = ObjectProvider;
-        this.apiConstants = apiConstants;
-        this.$q = $q;
-        this.$mdDialog = $mdDialog;
         this.$window = $window;
-        this.$compile = $compile;
-        this.InitTooltips = InitTooltips;
         this.$mdToast = $mdToast;
-        this.jsplumbService = JsplumbService;
-        this.jsplumbConfigService = jsplumbConfigService;
         this.pipelinePositioningService = PipelinePositioningService;
-        this.pipelineEditorService = PipelineEditorService;
         this.JsplumbBridge = JsplumbBridge;
+        this.EditorDialogManager = EditorDialogManager;
+        this.AuthStatusService = AuthStatusService;
 
         this.isStreamInAssembly = false;
         this.isSepaInAssembly = false;
@@ -76,27 +49,17 @@ export class EditorCtrl {
 
         this.pipelineModel = [];
 
-        var jsplumbConfig = jsplumbConfigService.getEditorConfig();
-
-        if (this.$rootScope.email != undefined) {
+        if (this.AuthStatusService.email != undefined) {
             this.RestApi
                 .getUserDetails()
-                .success(function (user) {
+                .success(user => {
                     if (!user.hideTutorial || user.hideTutorial == undefined) {
-                        var confirm = $mdDialog.confirm()
-                            .title('Welcome to StreamPipes!')
-                            .textContent('If you are new to StreamPipes, check out our user guide')
-                            .ok('Show tutorial')
-                            .cancel('Cancel');
-
-                        $mdDialog.show(confirm).then(() => {
+                        this.EditorDialogManager.showTutorialDialog().then(() => {
                             user.hideTutorial = true;
-                            this.RestApi.updateUserDetails(user).success(function (data) {
-
+                            this.RestApi.updateUserDetails(user).success(data => {
                                 this.$window.open('https://docs.streampipes.org', '_blank');
                             });
                         }, function () {
-
                         });
                     }
                 })
@@ -182,13 +145,6 @@ export class EditorCtrl {
         return this.currentlyFocusedElement == element;
     }
 
-    showElementInfo(element) {
-        var dialogTemplate = this.getDialogTemplate(HelpDialogController, 'app/editor/components/pipeline-element-options/help-dialog.tmpl.html');
-        dialogTemplate.locals = {
-            pipelineElement: element
-        }
-        $mdDialog.show(dialogTemplate);
-    };
 
     autoLayout() {
         this.pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", 110, false);
@@ -269,46 +225,11 @@ export class EditorCtrl {
         return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
     };
 
-    showSavePipelineDialog(elementData, sepaName, pipelineNew) {
-        this.$rootScope.state.currentElement = elementData;
-        var dialogContent = this.getDialogTemplate(SavePipelineController, 'app/editor/components/submitPipelineModal.tmpl.html');
-        dialogContent.locals = {
-            pipeline: pipelineNew
-        }
-        this.$mdDialog.show(dialogContent);
-    }
-
-    getDialogTemplate(controller, templateUrl) {
-        return {
-            controller: controller,
-            controllerAs: "ctrl",
-            bindToController: true,
-            templateUrl: templateUrl,
-            parent: angular.element(document.body),
-            clickOutsideToClose: true,
-            // scope: this.$scope,
-            // rootScope: this.$rootScope,
-            // preserveScope: true
-        }
-    }
-
     showClearAssemblyConfirmDialog(ev) {
-        var confirm = this.$mdDialog.confirm()
-            .title('Clear assembly area?')
-            .textContent('All pipeline elements in the assembly area will be removed.')
-            .targetEvent(ev)
-            .ok('Clear assembly')
-            .cancel('Cancel');
-        this.$mdDialog.show(confirm).then(() => {
+        this.EditorDialogManager.showClearAssemblyDialog(ev).then(() => {
             this.clearAssembly();
         }, function () {
-
         });
-    };
-
-    openContextMenu($mdOpenMenu, event) {
-        $mdOpenMenu(event.$event);
-        alert("open context menu");
     };
 
     loadCurrentElements(type) {
@@ -377,11 +298,8 @@ export class EditorCtrl {
                     this.allElements["stream"] = tempStreams;
                     this.currentElements = this.allElements["stream"];
                 });
-            }, function (msg) {
-                console.log(msg);
             });
     };
-
 
     loadSepas() {
         this.RestApi.getOwnSepas()
@@ -390,11 +308,6 @@ export class EditorCtrl {
                     sepa.type = 'sepa';
                 });
                 this.allElements["sepa"] = sepas;
-                this.$timeout(() => {
-                    //makeDraggable();
-                    this.$rootScope.state.sepas = $.extend(true, [], this.allElements["sepa"]);
-                })
-
             })
     };
 
@@ -405,10 +318,6 @@ export class EditorCtrl {
                     action.type = 'action';
                 });
                 this.allElements["action"] = actions;
-                this.$timeout(() => {
-                    this.$rootScope.state.actions = $.extend(true, [], this.allElements["action"]);
-                })
-
             });
     };
 
@@ -441,22 +350,6 @@ export class EditorCtrl {
         }
         return string;
     }
-
-    
-
-    getPipelineElementContents(belongsTo) {
-        var pipelineElement = undefined;
-        angular.forEach(this.allElements, category => {
-            angular.forEach(category, function (sepa) {
-                if (sepa.belongsTo == belongsTo) {
-                    pipelineElement = sepa;
-                }
-            });
-        });
-        return pipelineElement;
-    }
-
-
 
     /**
      * clears the Assembly of all elements
@@ -546,84 +439,22 @@ export class EditorCtrl {
         if (this.$rootScope.state.adjustingPipelineState) {
             this.modifyPipelineMode = true;
         }
-        this.showSavePipelineDialog(pipelineNew);
-    }
-
-    createAssemblyElement(json, $parentElement) {
-        var x = $parentElement.position().left;
-        var y = $parentElement.position().top;
-        var coord = {'x': x + 200, 'y': y};
-        var $target;
-        var $createdElement = this.jsplumbService.createNewAssemblyElement(json, coord, false, "#assembly");
-        if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
-            $target = this.jsplumbService.sepaDropped(this.$scope, $createdElement, true);
-        } else {
-            $target = this.jsplumbService.actionDropped(this.$scope, $createdElement, true);
-        }
-
-        var options;
-        if ($parentElement.hasClass("stream")) {
-            options = this.jsplumbConfig.streamEndpointOptions;
-        } else {
-            options = this.jsplumbConfig.sepaEndpointOptions;
-        }
-        var sourceEndPoint;
-        if (this.JsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
-
-            if (!(this.JsplumbBridge.selectEndpoints({source: $parentElement}).get(0).isFull())) {
-                sourceEndPoint = this.JsplumbBridge.selectEndpoints({source: $parentElement}).get(0)
-            } else {
-                sourceEndPoint = this.JsplumbBridge.addEndpoint($parentElement, options);
-            }
-        } else {
-            sourceEndPoint = this.JsplumbBridge.addEndpoint($parentElement, options);
-        }
-
-        var targetEndPoint = this.JsplumbBridge.selectEndpoints({target: $target}).get(0);
-
-        this.JsplumbBridge.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
-        this.JsplumbBridge.repaintEverything();
-    }
-
-    createAndConnect(target) {
-        var json = $("a", $(target)).data("recObject").json;
-        var $parentElement = $(target).parents(".connectable");
-        this.createAssemblyElement(json, $parentElement);
+        this.EditorDialogManager.showSavePipelineDialog(pipelineNew);
     }
 
     clearCurrentElement() {
         this.$rootScope.state.currentElement = null;
     };
 
-
-    showToast(type, title, description) {
-        this.$mdToast.show(
-            this.$mdToast.simple()
-                .textContent(title)
-                .position("top right")
-                .hideDelay(3000)
-        );
-    }
-
 }
 
 EditorCtrl.$inject = ['$scope',
     '$rootScope',
-    '$state',
-    '$timeout',
-    '$http',
     'RestApi',
     '$stateParams',
-    'ObjectProvider',
-    'apiConstants',
-    '$q',
-    '$mdDialog',
     '$window',
-    '$compile',
-    'InitTooltips',
     '$mdToast',
-    'JsplumbService',
-    'jsplumbConfigService',
     'PipelinePositioningService',
-    'PipelineEditorService',
-    'JsplumbBridge'];
+    'JsplumbBridge',
+    'EditorDialogManager',
+    'AuthStatusService'];

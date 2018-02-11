@@ -1,14 +1,16 @@
 export class JsplumbService {
 
-    constructor($http, $rootScope, pipelineElementIconService, ObjectProvider, apiConstants, $compile, jsplumbConfigService, JsplumbBridge) {
+    constructor($http, pipelineElementIconService, ObjectProvider, apiConstants, $compile, jsplumbConfigService, JsplumbBridge, $timeout) {
         this.$http = $http;
-        this.$rootScope = $rootScope;
         this.pipelineElementIconService = pipelineElementIconService;
         this.objectProvider = ObjectProvider;
         this.apiConstants = apiConstants;
         this.$compile = $compile;
         this.jsplumbConfigService = jsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
+        this.$timeout = $timeout;
+
+        this.idCounter = 0;
     }
 
     prepareJsplumb() {
@@ -42,12 +44,63 @@ export class JsplumbService {
         });
     }
 
-    createNewAssemblyElement(json, coordinates, block, target, isPreview) {
+    createElement(pipelineModel, pipelineElement, pipelineElementDomId) {
+        var pipelineElementDom = $("#" + pipelineElementDomId);
+        var pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
+        pipelineModel.push(pipelineElementConfig);
+        this.$timeout(() => {
+            this.createAssemblyElement(pipelineElementConfig.payload.DOM, pipelineElementConfig.payload, pipelineElementDom);
+        });
+    }
+
+    createAssemblyElement($newElementId, json, $parentElement) {
+        var $target;
+        if (json.belongsTo.indexOf("sepa") > 0) { //Sepa Element
+            $target = this.sepaDropped($newElementId, json, true, false);
+            this.connectNodes($parentElement, $target);
+        } else {
+            $target = this.actionDropped($newElementId, json, true, false);
+            this.connectNodes($parentElement, $target);
+        }
+    }
+
+    connectNodes($parentElement, $target) {
+        var options;
+        if ($parentElement.hasClass("stream")) {
+            options = this.jsplumbConfigService.streamEndpointOptions;
+        } else {
+            options = this.jsplumbConfigService.sepaEndpointOptions;
+        }
+        var sourceEndPoint;
+        if (this.JsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
+            if (!(this.JsplumbBridge.selectEndpoints({source: $parentElement}).get(0).isFull())) {
+                sourceEndPoint = this.JsplumbBridge.selectEndpoints({source: $parentElement}).get(0)
+            } else {
+                sourceEndPoint = this.JsplumbBridge.addEndpoint($parentElement, options);
+            }
+        } else {
+            sourceEndPoint = this.JsplumbBridge.addEndpoint($parentElement, options);
+        }
+
+        var targetEndPoint = this.JsplumbBridge.selectEndpoints({target: $target}).get(0);
+
+        this.JsplumbBridge.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
+        this.JsplumbBridge.repaintEverything();
+    }
+
+    createNewPipelineElementConfigWithFixedCoordinates($parentElement, json, isPreview) {
+        var x = $parentElement.position().left;
+        var y = $parentElement.position().top;
+        var coord = {'x': x + 200, 'y': y};
+        return this.createNewPipelineElementConfig(json, coord, isPreview);
+    }
+
+    createNewPipelineElementConfig(json, coordinates, isPreview) {
 
         var displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
-        var connectable = block ? "" : "connectable";
+        var connectable = "connectable";
 
-        return {
+        var pipelineElementConfig = {
             type: json.type, settings: {
                 openCustomize: typeof json.DOM !== "undefined",
                 preview: isPreview,
@@ -59,14 +112,12 @@ export class JsplumbService {
                 }
             }, payload: angular.copy(json)
         };
-    }
 
-    // loadOptionsButtons(scope, $newElement) {
-    //     scope.currentPipelineElement = $newElement.data("JSON");
-    //     scope.currentPipelineElementDom = $newElement[0].id;
-    //     var elementId = scope.currentPipelineElement.type == 'stream' ? scope.currentPipelineElement.elementId : scope.currentPipelineElement.belongsTo;
-    //     $newElement.append(this.$compile('<pipeline-element-options show-customize-stream-dialog-function=showCustomizeStreamDialog show-customize-dialog-function=showCustomizeDialog delete-function=handleDeleteOption create-partial-pipeline-function=createPartialPipeline create-function=createAssemblyElement all-elements=allElements pipeline-element-id=' + elementId + ' internal-id=' + scope.currentPipelineElementDom + '></pipeline-element-options>')(scope));
-    // }
+        pipelineElementConfig.payload.DOM = "jsplumb_" + this.idCounter;
+        this.idCounter++;
+
+        return pipelineElementConfig;
+    }
 
     streamDropped($newElement, json, endpoints, preview) {
         var jsplumbConfig = this.getJsplumbConfig(preview);
@@ -74,6 +125,7 @@ export class JsplumbService {
             this.JsplumbBridge.draggable($newElement, {containment: 'parent'});
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.streamEndpointOptions);
         }
+        return $newElement;
     };
 
     sepaDropped($newElement, json, endpoints, preview) {
@@ -89,6 +141,7 @@ export class JsplumbService {
             }
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.sepaEndpointOptions);
         }
+        return $newElement;
     };
 
     actionDropped($newElement, json, endpoints, preview) {
@@ -97,6 +150,7 @@ export class JsplumbService {
         if (endpoints) {
             this.JsplumbBridge.addEndpoint($newElement, jsplumbConfig.leftTargetPointOptions);
         }
+        return $newElement;
     };
 
     getJsplumbConfig(preview) {
@@ -113,4 +167,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['$http', '$rootScope', 'pipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'jsplumbConfigService', 'JsplumbBridge'];
+JsplumbService.$inject = ['$http', 'pipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'jsplumbConfigService', 'JsplumbBridge', '$timeout'];

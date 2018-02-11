@@ -5,13 +5,11 @@ export let PipelineElementOptionsComponent = {
     bindings: {
         pipelineElementId: "@",
         internalId: "@",
+        pipelineElement: "<",
         allElements: "=",
-        createFunction: "=",
-        createPartialPipelineFunction: "=",
-        showCustomizeDialogFunction: "=",
-        showCustomizeStreamDialogFunction: "=",
         deleteFunction: "=",
-        getDialogTemplate: "="
+        pipelineModel: "=",
+        currentMouseOverElement: "="
     },
     controller: PipelineElementOptionsController,
     controllerAs: 'ctrl'

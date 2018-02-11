@@ -2,7 +2,6 @@ export class TopicSelectionDialogController {
 
     constructor() {
 
-
         angular.forEach(this.topicMappings, topicMapping => {
             if (!topicMapping.selectedMapping) {
                 topicMapping.selectedMapping = "*";
