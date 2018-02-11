@@ -1,7 +1,7 @@
 export class JsplumbBridge {
 
-    constructor() {
-
+    constructor($timeout) {
+        this.$timeout = $timeout;
     }
 
     setZoom(scale) {
@@ -45,7 +45,13 @@ export class JsplumbBridge {
     }
     
     addEndpoint(element, options) {
-        return jsPlumb.addEndpoint(element, options);
+        console.log("adding endpoint");
+        this.$timeout(() => {
+            var test = jsPlumb.addEndpoint(element, options);
+            console.log(jsPlumb.selectEndpoints());
+            console.log(test);
+        });
+        this.repaintEverything();
     }
     
     connect(connection) {
@@ -72,3 +78,5 @@ export class JsplumbBridge {
         jsPlumb.setSuspendDrawing(bool1);
     }
 }
+
+JsplumbBridge.$inject=['$timeout'];

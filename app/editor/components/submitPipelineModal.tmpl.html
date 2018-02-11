@@ -3,7 +3,7 @@
     <div class="md-toolbar-tools">
       <h2>Save Pipeline</h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-click="cancel()">
+      <md-button class="md-icon-button" ng-click="ctrl.cancel()">
         <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
       </md-button>
     </div>
@@ -11,18 +11,18 @@
   
   <md-dialog-content flex="100" class="md-dialog-content">
 	  <div flex="100" layout="column">
-	  		<div id="overwriteCheckbox" class="checkbox" ng-show="modifyPipelineMode">
-				<md-checkbox ng-disabled="false" aria-label="Overwrite" ng-model="overwritePipeline">
+	  		<div id="overwriteCheckbox" class="checkbox" ng-show="ctrl.modifyPipelineMode">
+				<md-checkbox ng-disabled="false" aria-label="Overwrite" ng-model="ctrl.overwritePipeline">
 				Update existing pipeline
 				</md-checkbox>
 			</div>
 			<md-input-container flex> <label>Pipeline Name</label>
-				<input name="{{staticProperty.elementId}}" ng-model="state.currentPipeline.name"/> 
+				<input name="{{staticProperty.elementId}}" ng-model="ctrl.pipeline.name"/>
 			</md-input-container>
 			<md-input-container flex> <label>Description</label>
-				<input name="{{staticProperty.elementId}}" ng-model="state.currentPipeline.description"/> 
+				<input name="{{staticProperty.elementId}}" ng-model="ctrl.pipeline.description"/>
 			</md-input-container>	
-			<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="startPipelineAfterStorage">
+			<md-checkbox ng-disabled="false" aria-label="Start Pipeline" ng-model="ctrl.startPipelineAfterStorage">
 			Start pipeline immediately
 			</md-checkbox>
 <!-- 			<div flex="100" layout="row"> -->
@@ -41,13 +41,13 @@
 	</div>
 </md-dialog-content>
   <div class="md-actions" layout="row">
-    <md-button ng-click="hide()" style="margin-right:20px;" >
+    <md-button ng-click="ctrl.hide()" style="margin-right:20px;" >
       Close
     </md-button>
-    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="savePipelineName(false)" ng-disabled="startPipelineAfterStorage">
+    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.savePipelineName(false)" ng-disabled="ctrl.startPipelineAfterStorage">
       Save
     </md-button>
-    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="savePipelineName(true)">
+    	<md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.savePipelineName(true)">
       Save and go to pipeline view
     </md-button>
   </div>

@@ -3,11 +3,11 @@ import {PossibleElementsController} from '../../dialog/possible-elements/possibl
 
 export class PipelineElementOptionsController {
 
-    constructor($scope, $rootScope, $mdDialog, RestApi, objectProvider, InitTooltips, JsplumbBridge) {
+    constructor($scope, $rootScope, $mdDialog, RestApi, ObjectProvider, InitTooltips, JsplumbBridge) {
         this.$rootScope = $rootScope;
         this.$mdDialog = $mdDialog;
         this.RestApi = RestApi;
-        this.objectProvider = objectProvider;
+        this.objectProvider = ObjectProvider;
         this.InitTooltips = InitTooltips;
         this.JsplumbBridge = JsplumbBridge;
 
@@ -133,24 +133,28 @@ export class PipelineElementOptionsController {
     }
 
     getPipelineElementContents(belongsTo) {
+        console.log("content");
+
         var pipelineElement = undefined;
         angular.forEach(this.allElements, category => {
             angular.forEach(category, sepa => {
                 if (sepa.type != 'stream') {
                     if (sepa.belongsTo == belongsTo) {
-                        pipelineElement = sepa;
+                        this.pipelineElement = sepa;
                     }
                 } else {
                     if (sepa.elementId == belongsTo) {
-                        pipelineElement = sepa;
+                        this.pipelineElement = sepa;
                     }
                 }
             });
         });
+        console.log(this.allElements);
         return pipelineElement;
     }
 
     getDomElement(internalId) {
+        console.log(internalId);
         return $("span[id=" + internalId + "]");
     }
 
@@ -159,7 +163,6 @@ export class PipelineElementOptionsController {
     }
 
     isConfigured() {
-        console.log(this.pipelineElement);
         if (this.pipelineElement.type == 'stream') return true;
         else {
             return $(this.getDomElement(this.internalId)).data("JSON").configured;
@@ -177,4 +180,4 @@ export class PipelineElementOptionsController {
     }
 }
 
-PipelineElementOptionsController.$inject = ['$scope', '$rootScope', '$mdDialog', 'RestApi', 'objectProvider', 'InitTooltips', 'JsplumbBridge'];
+PipelineElementOptionsController.$inject = ['$scope', '$rootScope', '$mdDialog', 'RestApi', 'ObjectProvider', 'InitTooltips', 'JsplumbBridge'];

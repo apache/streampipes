@@ -1,44 +1,44 @@
 <md-dialog aria-label="Customize" flex="70" style="max-height:80%">
-    <md-toolbar ng-if="configVisible">
+    <md-toolbar ng-if="ctrl.configVisible">
         <div class="md-toolbar-tools">
-            <h2>Customize {{sepaName}}</h2>
+            <h2>Customize {{ctrl.sepaName}}</h2>
             <span flex></span>
-            <md-button class="md-icon-button" ng-click="cancel()">
+            <md-button class="md-icon-button" ng-click="ctrl.cancel()">
                 <md-icon md-svg-icon="navigation:ic_close_24px" aria-label="Close dialog"></md-icon>
             </md-button>
         </div>
     </md-toolbar>
 
-    <md-dialog-content flex="100" class="md-dialog-content" ng-if="configVisible">
+    <md-dialog-content flex="100" class="md-dialog-content" ng-if="ctrl.configVisible">
         <div flex="100" layout="column" layout-align="end end">
-            <md-switch ng-model="displayRecommended" aria-label="Switch 1">
+            <md-switch ng-model="ctrl.displayRecommended" aria-label="Switch 1">
                 Show only recommended settings
             </md-switch>
         </div>
         <div flex="100" layout="column">
             <div layout="column" class="customize-item-main-help">
                 <div class="customize-item-title-help" flex="100" layout="row">
-                    <div flex="70" layout="row" layout-align="start center" ng-click="toggleHelpDialog()">
+                    <div flex="70" layout="row" layout-align="start center" ng-click="ctrl.toggleHelpDialog()">
                         <i class="material-icons" style="color: white;">help</i> &nbsp;What's this component doing?
                     </div>
                     <div flex="30" layout="row" layout-align="end center" style="padding-left:10px;">
-                        <md-button class="md-icon-button" ng-if="helpDialogVisible" ng-click="toggleHelpDialog()">
+                        <md-button class="md-icon-button" ng-if="ctrl.helpDialogVisible" ng-click="ctrl.toggleHelpDialog()">
                             <i class="material-icons" style="color: white;">arrow_drop_up</i>
                         </md-button>
-                        <md-button class="md-icon-button" ng-if="!helpDialogVisible" ng-click="toggleHelpDialog()">
+                        <md-button class="md-icon-button" ng-if="!ctrl.helpDialogVisible" ng-click="ctrl.toggleHelpDialog()">
                             <i class="material-icons" style="color: white;">arrow_drop_down</i>
                         </md-button>
                     </div>
                 </div>
-                <div class="customize-item-content" ng-if="helpDialogVisible">
-                    The <i>{{sepaName}}</i> component performs the following operation:<br/>
-                    <i>{{selectedElement.description}}</i>
-                    <div ng-show="elementData.description == ''">(Sorry, no further description available)</div>
+                <div class="customize-item-content" ng-if="ctrl.helpDialogVisible">
+                    The <i>{{ctrl.sepaName}}</i> component performs the following operation:<br/>
+                    <i>{{ctrl.selectedElement.description}}</i>
+                    <div ng-show="ctrl.elementData.description == ''">(Sorry, no further description available)</div>
 
                 </div>
             </div>
         </div>
-        <div ng-repeat="staticProperty in selectedElement.staticProperties">
+        <div ng-repeat="staticProperty in ctrl.selectedElement.staticProperties">
             <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                 <div class="customize-item-title sp-blue-bg" layout="row" flex="100" layout-align="space-between center">
                     <div>
@@ -56,12 +56,12 @@
                     </div>
                 </div>
                 <div class="customize-item-content">
-                    <customize-dialog selected-element="selectedElement"
-                                      static-property="staticProperty" display-recommended="displayRecommended"></customize-dialog>
+                    <customize-dialog selected-element="ctrl.selectedElement"
+                                      static-property="staticProperty" display-recommended="ctrl.displayRecommended"></customize-dialog>
                 </div>
             </div>
         </div>
-        <div ng-repeat="outputStrategy in selectedElement.outputStrategies">
+        <div ng-repeat="outputStrategy in ctrl.selectedElement.outputStrategies">
             <div layout="column" class="customize-item-main sp-blue-border-nopadding">
                 <div ng-if="outputStrategy.type === 'org.streampipes.model.output.ReplaceOutputStrategy'">
 
@@ -91,18 +91,18 @@
                 </div>
             </div>
         </div>
-        <div ng-show="invalid">
+        <div ng-show="ctrl.invalid">
             <h3>Please enter all required parameters.</h3>
-            <div ng-repeat="error in validationErrors track by $index">
+            <div ng-repeat="error in ctrl.validationErrors track by $index">
                 <h4>{{error}}</h4>
             </div>
         </div>
     </md-dialog-content>
-    <div class="md-actions" layout="row" ng-if="configVisible">
-        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="saveProperties()">
+    <div class="md-actions" layout="row" ng-if="ctrl.configVisible">
+        <md-button class="md-accent" style="margin-right:20px;" type="submit" ng-click="ctrl.saveProperties()">
             Save
         </md-button>
-        <md-button ng-click="hide()" style="margin-right:20px;">
+        <md-button ng-click="ctrl.hide()" style="margin-right:20px;">
             Close
         </md-button>
     </div>

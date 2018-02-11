@@ -1,89 +1,103 @@
-SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'RestApi', '$mdToast'];
+export class SavePipelineController {
 
-export default function SavePipelineController($scope, $rootScope, $mdDialog, $state, RestApi, $mdToast) {
+    constructor($scope, $rootScope, $mdDialog, $state, RestApi, $mdToast, ObjectProvider, pipeline) {
+        this.RestApi = RestApi;
+        this.$mdToast = $mdToast;
+        this.$state = $state;
+        this.$mdDialog = $mdDialog;
+        this.pipelineCategories = [];
+        this.pipeline = pipeline;
+        this.ObjectProvider = ObjectProvider;
 
-    $scope.pipelineCategories = [];
+        console.log("save pipeline");
+        console.log(this.pipeline);
 
-    $scope.displayErrors = function (data) {
+        this.getPipelineCategories();
+    }
+
+
+    displayErrors(data) {
         for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            showToast("error", notification.description, notification.title);
+            this.showToast("error", notification.description, notification.title);
         }
     }
 
-    $scope.displaySuccess = function (data) {
+    displaySuccess(data) {
         for (var i = 0, notification; notification = data.notifications[i]; i++) {
-            showToast("success", notification.description, notification.title);
+            this.showToast("success", notification.description, notification.title);
         }
     }
 
-    $scope.getPipelineCategories = function () {
-        RestApi.getPipelineCategories()
-            .success(function (pipelineCategories) {
-                $scope.pipelineCategories = pipelineCategories;
+    getPipelineCategories() {
+        this.RestApi.getPipelineCategories()
+            .success(pipelineCategories => {
+                this.pipelineCategories = pipelineCategories;
             })
-            .error(function (msg) {
+            .error(msg => {
                 console.log(msg);
             });
 
     };
-    $scope.getPipelineCategories();
 
-    $scope.savePipelineName = function (switchTab) {
 
-        if ($rootScope.state.currentPipeline.name == "") {
-            showToast("error", "Please enter a name for your pipeline");
+    savePipelineName(switchTab) {
+
+        if (this.pipeline.name == "") {
+            this.showToast("error", "Please enter a name for your pipeline");
             return false;
         }
         
-        $rootScope.state.currentPipeline.send()
-            .success(function (data) {
+        this.ObjectProvider.storePipeline(this.pipeline)
+            .success(data => {
                 if (data.success) {
-                    $scope.displaySuccess(data);
-                    $scope.hide();
-                    if (switchTab) $state.go("streampipes.pipelines");
-                    if ($scope.startPipelineAfterStorage) $state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
-                    if ($rootScope.state.adjustingPipelineState && $scope.overwrite) {
+                    this.displaySuccess(data);
+                    this.hide();
+                    if (switchTab) this.$state.go("streampipes.pipelines");
+                    if (this.startPipelineAfterStorage) this.$state.go("streampipes.pipelines", {pipeline: data.notifications[1].description});
+                    if (this.state.adjustingPipelineState && $scope.overwrite) {
                         var pipelineId = $rootScope.state.adjustingPipeline._id;
 
-                        RestApi.deleteOwnPipeline(pipelineId)
-                            .success(function (data) {
+                        this.RestApi.deleteOwnPipeline(pipelineId)
+                            .success(data => {
                                 if (data.success) {
                                     $rootScope.state.adjustingPipelineState = false;
                                     $("#overwriteCheckbox").css("display", "none");
                                     refresh("Proa");
                                 } else {
-                                    displayErrors(data);
+                                    this.displayErrors(data);
                                 }
                             })
-                            .error(function (data) {
-                                showToast("error", "Could not delete Pipeline");
+                            .error(data => {
+                                this.showToast("error", "Could not delete Pipeline");
                                 console.log(data);
                             })
 
                     }
-                    $scope.clearAssembly();
+                    this.clearAssembly();
 
                 } else {
-                    $scope.displayErrors(data);
+                    this.displayErrors(data);
                 }
             })
             .error(function (data) {
-                showToast("error", "Could not fulfill request", "Connection Error");
+                this.showToast("error", "Could not fulfill request", "Connection Error");
                 console.log(data);
             });
 
     };
 
-    $scope.hide = function () {
-        $mdDialog.hide();
+    hide() {
+        this.$mdDialog.hide();
     };
 
-    function showToast(type, title, description) {
-        $mdToast.show(
-            $mdToast.simple()
+    showToast(type, title, description) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
                 .textContent(title)
                 .position("top right")
                 .hideDelay(3000)
         );
     }
 }
+
+SavePipelineController.$inject = ['$scope', '$rootScope', '$mdDialog', '$state', 'RestApi', '$mdToast', 'ObjectProvider', 'pipeline'];

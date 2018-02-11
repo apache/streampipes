@@ -1,8 +1,6 @@
 //import jQueryUi from 'npm/jquery-ui';
 
-import CustomizeController from './customize.controller';
-import MatchingErrorController from './matching-error.controller';
-import SavePipelineController from './save-pipeline.controller';
+import {SavePipelineController} from './save-pipeline.controller';
 import HelpDialogController from './dialog/help/help-dialog.controller';
 import TopicSelectionController from './components/topic/topic-selection-modal.controller';
 import {InitTooltips} from "../services/init-tooltips.service";
@@ -16,7 +14,7 @@ export class EditorCtrl {
                 $http,
                 RestApi,
                 $stateParams,
-                objectProvider,
+                ObjectProvider,
                 apiConstants,
                 $q,
                 $mdDialog,
@@ -37,7 +35,7 @@ export class EditorCtrl {
         this.$http = $http;
         this.RestApi = RestApi;
         this.$stateParams = $stateParams;
-        this.objectProvider = objectProvider;
+        this.objectProvider = ObjectProvider;
         this.apiConstants = apiConstants;
         this.$q = $q;
         this.$mdDialog = $mdDialog;
@@ -75,6 +73,8 @@ export class EditorCtrl {
 
         this.currentPipelineElement;
         this.currentPipelineElementDom;
+
+        this.pipelineModel = [];
 
         var jsplumbConfig = jsplumbConfigService.getEditorConfig();
 
@@ -132,8 +132,8 @@ export class EditorCtrl {
         $scope.$on('$viewContentLoaded', event => {
             JsplumbBridge.setContainer("assembly");
 
-            this.initAssembly();
-            this.initPlumb();
+            //this.initAssembly();
+            //this.initPlumb();
         });
 
         // T1
@@ -164,7 +164,9 @@ export class EditorCtrl {
     }
 
     isValidPipeline() {
-        return this.isStreamInAssembly && this.isActionInAssembly;
+        return true;
+        // TODO change later
+        //return this.isStreamInAssembly && this.isActionInAssembly;
     }
 
     toggleEditorStand() {
@@ -197,7 +199,7 @@ export class EditorCtrl {
         if (this.selectMode) {
             $("#assembly").panzoom("option", "disablePan", false);
             $("#assembly").selectable("disable");
-            thisArg.selectMode = false;
+            this.selectMode = false;
         }
         else {
             $("#assembly").panzoom("option", "disablePan", true);
@@ -267,40 +269,26 @@ export class EditorCtrl {
         return !!(iconUrl != null && iconUrl != 'http://localhost:8080/img' && iconUrl !== 'undefined');
     };
 
-    showSavePipelineDialog(elementData, sepaName) {
+    showSavePipelineDialog(elementData, sepaName, pipelineNew) {
         this.$rootScope.state.currentElement = elementData;
         var dialogContent = this.getDialogTemplate(SavePipelineController, 'app/editor/components/submitPipelineModal.tmpl.html');
-        this.$mdDialog.show(dialogContent);
-    }
-
-    showMatchingErrorDialog(elementData) {
-        var dialogContent = this.getDialogTemplate(MatchingErrorController, 'app/editor/components/matchingErrorDialog.tmpl.html');
         dialogContent.locals = {
-            elementData: elementData
+            pipeline: pipelineNew
         }
         this.$mdDialog.show(dialogContent);
     }
-
-    showCustomizeDialog(elementData, sepaName, sourceEndpoint) {
-        this.$rootScope.state.currentElement = elementData;
-        var dialogContent = this.getDialogTemplate(CustomizeController, 'app/editor/components/customizeElementDialog.tmpl.html');
-        dialogContent.locals = {
-            elementData: elementData,
-            sepaName: sepaName,
-            sourceEndpoint: sourceEndpoint
-        }
-        this.$mdDialog.show(dialogContent);
-    };
 
     getDialogTemplate(controller, templateUrl) {
         return {
             controller: controller,
+            controllerAs: "ctrl",
+            bindToController: true,
             templateUrl: templateUrl,
             parent: angular.element(document.body),
             clickOutsideToClose: true,
-            scope: this.$scope,
-            rootScope: this.$rootScope,
-            preserveScope: true
+            // scope: this.$scope,
+            // rootScope: this.$rootScope,
+            // preserveScope: true
         }
     }
 
@@ -454,85 +442,7 @@ export class EditorCtrl {
         return string;
     }
 
-    //TODO ANGULARIZE
-    //Initiate assembly and jsPlumb functionality-------
-    initPlumb() {
-        this.$rootScope.state.plumbReady = true;
-
-        this.jsplumbService.prepareJsplumb();
-
-        this.JsplumbBridge.unbind("connection");
-
-        this.JsplumbBridge.bind("connectionDetached", (info, originalEvent) => {
-            var el = ($("#" + info.targetEndpoint.elementId));
-            el.data("JSON", $.extend(true, {}, getPipelineElementContents(el.data("JSON").belongsTo)));
-            el.removeClass('a');
-            el.addClass('disabled');
-            info.targetEndpoint.setType("empty");
-        });
-
-        this.JsplumbBridge.bind("connectionDrag", connection => {
-            this.JsplumbBridge.selectEndpoints().each(function (endpoint) {
-                if (endpoint.isTarget && endpoint.connections.length == 0) {
-                    endpoint.setType("highlight");
-                }
-            });
-
-        });
-        this.JsplumbBridge.bind("connectionAborted", connection => {
-            this.JsplumbBridge.selectEndpoints().each(endpoint => {
-                if (endpoint.isTarget && endpoint.connections.length == 0) {
-                    endpoint.setType("empty");
-                }
-            });
-        })
-
-        this.JsplumbBridge.bind("connection", (info, originalEvent) => {
-            var $target = $(info.target);
-
-            if (!$target.hasClass('a')) { //class 'a' = do not show customize modal //TODO class a zuweisen
-                this.$rootScope.state.currentPipeline = this.createPartialPipeline(info.target, false);
-                this.$rootScope.state.currentPipeline.update()
-                    .success(data => {
-                        if (data.success) {
-                            info.targetEndpoint.setType("token");
-                            this.modifyPipeline(data.pipelineModifications);
-                            for (var i = 0, sepa; sepa = this.$rootScope.state.currentPipeline.sepas[i]; i++) {
-                                var id = "#" + sepa.DOM;
-                                if ($(id).length > 0) {
-                                    if ($(id).data("JSON").configured != true) {
-                                        if (!this.pipelineEditorService.isFullyConnected(id)) {
-                                            return;
-                                        }
-                                        var sourceEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.showCustomizeDialog($(id), sepa.name, sourceEndpoint);
-                                    }
-                                }
-                            }
-                            for (var i = 0, action; action = this.$rootScope.state.currentPipeline.actions[i]; i++) {
-                                var id = "#" + action.DOM;
-                                if ($(id).length > 0) {
-                                    if ($(id).data("JSON").configured != true) {
-                                        if (!this.pipelineEditorService.isFullyConnected(id)) {
-                                            return;
-                                        }
-                                        var actionEndpoint = this.JsplumbBridge.selectEndpoints({element: info.targetEndpoint.elementId});
-                                        this.showCustomizeDialog($(id), action.name, actionEndpoint);
-                                    }
-                                }
-                            }
-                        } else {
-                            this.JsplumbBridge.detach(info.connection);
-                            this.showMatchingErrorDialog(data);
-                        }
-                    })
-            }
-        });
-
-        window.onresize = function (event) {
-            this.JsplumbBridge.repaintEverything(true);
-        };
-    }
+    
 
     getPipelineElementContents(belongsTo) {
         var pipelineElement = undefined;
@@ -546,84 +456,7 @@ export class EditorCtrl {
         return pipelineElement;
     }
 
-    initAssembly() {
-        $('#assembly').droppable({
-            tolerance: "fit",
-            drop: (element, ui) => {
 
-                if (ui.draggable.hasClass('draggable-icon')) {
-                    if (ui.draggable.data("JSON") == null) {
-                        alert("No JSON - Data for Dropped element");
-                        return false;
-                    }
-                    var $newState = this.jsplumbService.createNewAssemblyElement(ui.draggable.data("JSON"), this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel), false, "#assembly");
-
-                    //Droppable Streams
-                    if (ui.draggable.hasClass('stream')) {
-                        this.checkTopicModel($newState);
-
-                        //Droppable Sepas
-                    } else if (ui.draggable.hasClass('sepa')) {
-                        this.jsplumbService.sepaDropped(this.$scope, $newState, true);
-
-                        //Droppable Actions
-                    } else if (ui.draggable.hasClass('action')) {
-                        this.jsplumbService.actionDropped(this.$scope, $newState, true);
-                    }
-                    this.InitTooltips.initTooltips();
-                }
-                this.JsplumbBridge.repaintEverything(true);
-            }
-
-        }); //End #assembly.droppable()
-        $("#assembly")
-            .selectable({
-                selected: function (event, ui) {
-                },
-                filter: ".connectable.stream,.connectable.sepa:not('.disabled')",
-                delay: 150
-
-            })
-            .on('click', ".recommended-item", function (e) {
-                e.stopPropagation();
-                this.createAndConnect(this);
-            });
-
-
-        $(document).click(function () {
-            $('#staticContextMenu').hide();
-            $('.circleMenu-open').circleMenu('close');
-        });
-
-        if (typeof this.currentModifiedPipeline != 'undefined') {
-            this.$rootScope.state.adjustingPipelineState = true;
-            this.displayPipelineById();
-        }
-
-    };
-
-    checkTopicModel(state) {
-        this.jsplumbService.streamDropped(this.$scope, state, true);
-        var streamDescription = state.data("JSON");
-        if (streamDescription
-                .eventGrounding
-                .transportProtocols[0]
-                .properties.topicDefinition
-                .type == "org.streampipes.model.grounding.WildcardTopicDefinition") {
-            this.showCustomizeStreamDialog(state);
-        } else {
-            console.log("Wrong format");
-            console.log(streamDescription);
-        }
-    }
-
-    showCustomizeStreamDialog(state) {
-        var dialogContent = this.getDialogTemplate(TopicSelectionController, 'app/editor/components/topic/topic-selection-modal.tmpl.html');
-        dialogContent.locals = {
-            state: state
-        }
-        this.$mdDialog.show(dialogContent);
-    }
 
     /**
      * clears the Assembly of all elements
@@ -644,87 +477,60 @@ export class EditorCtrl {
         this.JsplumbBridge.repaintEverything();
     };
 
-    createPartialPipeline(currentElement, recommendationConfig) {
-        var pipelinePart = new this.objectProvider.Pipeline();
-        this.addElementToPartialPipeline(currentElement, pipelinePart, recommendationConfig);
-        return pipelinePart;
-    }
-
-    addElementToPartialPipeline(element, pipelinePart, recommendationConfig) {
-        pipelinePart.addElement(element);
-        // add all children of pipeline element that are not already present in the pipeline
-        if (!recommendationConfig) {
-            var outgoingConnections = this.JsplumbBridge.getConnections({source: element});
-            if (outgoingConnections.length > 0) {
-                for (var j = 0, ocon; ocon = outgoingConnections[j]; j++) {
-                    if (!pipelinePart.hasElement(ocon.target.id)) {
-                        this.addElementToPartialPipeline(ocon.target, pipelinePart, recommendationConfig);
-                    }
-                }
-            }
-        }
-
-        // add all parents of pipeline element
-        var connections = this.JsplumbBridge.getConnections({target: element});
-        if (connections.length > 0) {
-            for (var i = 0, con; con = connections[i]; i++) {
-                this.addElementToPartialPipeline(con.source, pipelinePart);
-            }
-        }
-    }
-
     /**
      * Sends the pipeline to the server
      */
     submit() {
         var error = false;
-        var pipelineNew = new this.objectProvider.Pipeline();
+        var pipelineNew = this.objectProvider.makePipeline(this.pipelineModel);
         var streamPresent = false;
         var sepaPresent = false;
         var actionPresent = false;
 
 
-        $('#assembly').find('.connectable, .connectable-block').each((i, element) => {
-            var $element = $(element);
+        // $('#assembly').find('.connectable, .connectable-block').each((i, element) => {
+        //     var $element = $(element);
+        //
+        //     if (!this.pipelineEditorService.isConnected(element)) {
+        //         error = true;
+        //         this.showToast("error", "All elements must be connected", "Submit Error");
+        //     }
+        //
+        //     if ($element.hasClass('sepa')) {
+        //         sepaPresent = true;
+        //         if ($element.data("options")) {
+        //             pipelineNew.addElement(element);
+        //
+        //         } else if ($element.data("JSON").staticProperties != null) {
+        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+        //             error = true;
+        //         }
+        //     } else if ($element.hasClass('stream')) {
+        //         streamPresent = true;
+        //         pipelineNew.addElement(element);
+        //
+        //     } else if ($element.hasClass('action')) {
+        //         actionPresent = true;
+        //         if ($element.data("JSON").staticProperties == null || $element.data("options")) {
+        //             pipelineNew.addElement(element);
+        //         } else {
+        //             this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
+        //             ;
+        //             error = true;
+        //         }
+        //     }
+        // });
+        // if (!streamPresent) {
+        //     this.showToast("error", "No stream element present in pipeline", "Submit Error");
+        //     error = true;
+        // }
+        //
+        // if (!actionPresent) {
+        //     this.showToast("error", "No action element present in pipeline", "Submit Error");
+        //     error = true;
+        //}
 
-            if (!this.pipelineEditorService.isConnected(element)) {
-                error = true;
-                this.showToast("error", "All elements must be connected", "Submit Error");
-            }
-
-            if ($element.hasClass('sepa')) {
-                sepaPresent = true;
-                if ($element.data("options")) {
-                    pipelineNew.addElement(element);
-
-                } else if ($element.data("JSON").staticProperties != null) {
-                    this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-                    error = true;
-                }
-            } else if ($element.hasClass('stream')) {
-                streamPresent = true;
-                pipelineNew.addElement(element);
-
-            } else if ($element.hasClass('action')) {
-                actionPresent = true;
-                if ($element.data("JSON").staticProperties == null || $element.data("options")) {
-                    pipelineNew.addElement(element);
-                } else {
-                    this.showToast("error", "Please enter parameters for transparent elements (Right click -> Customize)", "Submit Error");
-                    ;
-                    error = true;
-                }
-            }
-        });
-        if (!streamPresent) {
-            this.showToast("error", "No stream element present in pipeline", "Submit Error");
-            error = true;
-        }
-
-        if (!actionPresent) {
-            this.showToast("error", "No action element present in pipeline", "Submit Error");
-            error = true;
-        }
+        var error = false;
         if (!error) {
             this.$rootScope.state.currentPipeline = pipelineNew;
             if (this.$rootScope.state.adjustingPipelineState) {
@@ -732,15 +538,15 @@ export class EditorCtrl {
                 this.$rootScope.state.currentPipeline.description = this.currentPipelineDescription;
             }
 
-            this.openPipelineNameModal();
+            this.openPipelineNameModal(pipelineNew);
         }
     }
 
-    openPipelineNameModal() {
+    openPipelineNameModal(pipelineNew) {
         if (this.$rootScope.state.adjustingPipelineState) {
             this.modifyPipelineMode = true;
         }
-        this.showSavePipelineDialog();
+        this.showSavePipelineDialog(pipelineNew);
     }
 
     createAssemblyElement(json, $parentElement) {
@@ -789,22 +595,6 @@ export class EditorCtrl {
         this.$rootScope.state.currentElement = null;
     };
 
-    handleDeleteOption($element) {
-        this.JsplumbBridge.removeAllEndpoints($element);
-        $element.remove();
-    }
-
-    modifyPipeline(pipelineModifications) {
-        var id;
-        for (var i = 0, modification; modification = pipelineModifications[i]; i++) {
-            id = "#" + modification.domId;
-            if ($(id) !== "undefined") {
-                $(id).data("JSON").staticProperties = modification.staticProperties;
-                $(id).data("JSON").outputStrategies = modification.outputStrategies;
-                $(id).data("JSON").inputStreams = modification.inputStreams;
-            }
-        }
-    }
 
     showToast(type, title, description) {
         this.$mdToast.show(
@@ -824,7 +614,7 @@ EditorCtrl.$inject = ['$scope',
     '$http',
     'RestApi',
     '$stateParams',
-    'objectProvider',
+    'ObjectProvider',
     'apiConstants',
     '$q',
     '$mdDialog',

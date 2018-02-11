@@ -10,7 +10,8 @@ export let PipelineElementOptionsComponent = {
         createPartialPipelineFunction: "=",
         showCustomizeDialogFunction: "=",
         showCustomizeStreamDialogFunction: "=",
-        deleteFunction: "="
+        deleteFunction: "=",
+        getDialogTemplate: "="
     },
     controller: PipelineElementOptionsController,
     controllerAs: 'ctrl'

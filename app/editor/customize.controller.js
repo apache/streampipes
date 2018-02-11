@@ -1,50 +1,59 @@
-CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'elementData', 'sepaName', 'sourceEndpoint'];
+export class CustomizeController {
 
-export default function CustomizeController($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint) {
+    constructor($scope, $rootScope, $mdDialog, elementData, sepaName, sourceEndpoint, sepa) {
+        this.selectedElement = sepa;
+        this.selection = [];
+        this.matchingSelectionLeft = [];
+        this.matchingSelectionRight = [];
+        this.sepaName = sepaName;
+        this.invalid = false;
+        this.helpDialogVisible = false;
+        this.currentStaticProperty;
+        this.validationErrors = [];
+        this.configVisible = false;
+        this.displayRecommended = false;
+        this.sourceEndpoint = sourceEndpoint;
+        this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
 
-    $scope.selectedElement = elementData.data("JSON");
-    $scope.selection = [];
-    $scope.matchingSelectionLeft = [];
-    $scope.matchingSelectionRight = [];
-    $scope.sepaName = sepaName;
-    $scope.invalid = false;
-    $scope.helpDialogVisible = false;
-    $scope.currentStaticProperty;
-    $scope.validationErrors = [];
-    $scope.configVisible = false;
-    $scope.displayRecommended = false;
+        this.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
+            {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
+            {"id": "http://www.w3.org/2001/XMLSchema#integer"},
+            {"id": "http://www.w3.org/2001/XMLSchema#long"},
+            {"id": "http://www.w3.org/2001/XMLSchema#double"}];
 
-    $scope.primitiveClasses = [{"id": "http://www.w3.org/2001/XMLSchema#string"},
-        {"id": "http://www.w3.org/2001/XMLSchema#boolean"},
-        {"id": "http://www.w3.org/2001/XMLSchema#integer"},
-        {"id": "http://www.w3.org/2001/XMLSchema#long"},
-        {"id": "http://www.w3.org/2001/XMLSchema#double"}];
-
-    $scope.toggleHelpDialog = function () {
-        $scope.helpDialogVisible = !$scope.helpDialogVisible;
+        if (this.selectedElement.staticProperties.length > 0 || this.isCustomOutput()) {
+            this.configVisible = true;
+        } else {
+            this.saveProperties();
+        }
     }
 
-    $scope.setCurrentStaticProperty = function (staticProperty) {
-        $scope.currentStaticProperty = staticProperty;
+    toggleHelpDialog() {
+        this.helpDialogVisible = !this.helpDialogVisible;
     }
 
-    $scope.getStaticPropertyInfo = function () {
+    setCurrentStaticProperty(staticProperty) {
+        this.currentStaticProperty = staticProperty;
+    }
+
+    getStaticPropertyInfo() {
         var info = "";
-        if (currentStaticProperty.type == 'MAPPING_PROPERTY')
+        if (this.currentStaticProperty.type == 'MAPPING_PROPERTY')
             info += "This field is a mapping property. It requires you to select one or more specific data elements from a stream.<b>"
         info += "This field requires the following specifc input: <b>";
         return info;
     }
 
-    $scope.hide = function () {
-        $mdDialog.hide();
+    hide() {
+        this.$mdDialog.hide();
     };
 
-    $scope.cancel = function () {
-        $mdDialog.cancel();
+    cancel() {
+        this.$mdDialog.cancel();
     };
 
-    $scope.setSelectValue = function (c, q) {
+    setSelectValue(c, q) {
         console.log(q);
         angular.forEach(q, function (item) {
             item.selected = false;
@@ -56,12 +65,11 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
     /**
      * saves the parameters in the current element's data with key "options"
      */
-    $scope.saveProperties = function () {
+    saveProperties() {
 
-        angular.forEach($scope.selectedElement.staticProperties, function (item) {
+        angular.forEach(this.selectedElement.staticProperties, item => {
                 if (item.properties.staticPropertyType === 'OneOfStaticProperty') {
-                    console.log(item);
-                    angular.forEach(item.properties.options, function (option) {
+                    angular.forEach(item.properties.options, option => {
                             if (item.properties.currentSelection) {
                                 if (option.elementId == item.properties.currentSelection.elementId) {
                                     option.selected = true;
@@ -74,28 +82,29 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         )
         ;
 
-        if ($scope.validate()) {
-            $rootScope.state.currentElement.data("options", true);
-            $rootScope.state.currentElement.data("JSON").staticProperties = $scope.selectedElement.staticProperties;
-            $rootScope.state.currentElement.data("JSON").configured = true;
-            $rootScope.state.currentElement.removeClass("disabled");
-            $rootScope.$broadcast("SepaElementConfigured", elementData);
-            $scope.hide();
-            if (sourceEndpoint) sourceEndpoint.setType("token");
+        if (this.validate()) {
+            // this.$rootScope.state.currentElement.data("options", true);
+            // this.$rootScope.state.currentElement.data("JSON").staticProperties = this.selectedElement.staticProperties;
+            // this.$rootScope.state.currentElement.data("JSON").configured = true;
+            // this.$rootScope.state.currentElement.removeClass("disabled");
+            // this.$rootScope.$broadcast("SepaElementConfigured", this.elementData);
+            this.selectedElement.configured = true;
+            this.hide();
+            if (this.sourceEndpoint) this.sourceEndpoint.setType("token");
         }
-        else $scope.invalid = true;
+        else this.invalid = true;
 
     }
 
-    $scope.validate = function () {
-        $scope.validationErrors = [];
+    validate() {
+        this.validationErrors = [];
         var valid = true;
 
-        angular.forEach($scope.selectedElement.staticProperties, function (staticProperty) {
+        angular.forEach(this.selectedElement.staticProperties, staticProperty => {
             if (staticProperty.properties.staticPropertyType === 'OneOfStaticProperty' ||
                 staticProperty.properties.staticPropertyType === 'AnyStaticProperty') {
                 var anyOccurrence = false;
-                angular.forEach(staticProperty.properties.options, function (option) {
+                angular.forEach(staticProperty.properties.options, option => {
                     if (option.selected) anyOccurrence = true;
                 });
                 if (!anyOccurrence) valid = false;
@@ -106,9 +115,9 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
                     valid = false;
                 }
                 if (staticProperty.properties.requiredDatatype) {
-                    if (!$scope.typeCheck(staticProperty.properties.value, staticProperty.properties.requiredDatatype)) {
+                    if (!this.typeCheck(staticProperty.properties.value, staticProperty.properties.requiredDatatype)) {
                         valid = false;
-                        $scope.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
+                        this.validationErrors.push(staticProperty.properties.label + " must be of type " + staticProperty.properties.requiredDatatype);
                     }
                 }
             } else if (staticProperty.properties.staticPropertyType === 'MappingPropertyUnary') {
@@ -126,7 +135,7 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
             }
         });
 
-        angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
+        angular.forEach(this.selectedElement.outputStrategies, strategy => {
             if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
                 if (!strategy.properties.eventProperties && !strategy.properties.eventProperties.length > 0) {
                     valid = false;
@@ -139,18 +148,18 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         return valid;
     }
 
-    $scope.typeCheck = function (property, datatype) {
-        if (datatype == $scope.primitiveClasses[0].id) return true;
-        if (datatype == $scope.primitiveClasses[1].id) return (property == 'true' || property == 'false');
-        if (datatype == $scope.primitiveClasses[2].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
-        if (datatype == $scope.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
-        if (datatype == $scope.primitiveClasses[4].id) return !isNaN(property);
+    typeCheck(property, datatype) {
+        if (datatype == this.primitiveClasses[0].id) return true;
+        if (datatype == this.primitiveClasses[1].id) return (property == 'true' || property == 'false');
+        if (datatype == this.primitiveClasses[2].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
+        if (datatype == this.primitiveClasses[3].id) return (!isNaN(property) && parseInt(Number(property)) == property && !isNaN(parseInt(property, 10)));
+        if (datatype == this.primitiveClasses[4].id) return !isNaN(property);
         return false;
     }
 
-    var isCustomOutput = function () {
+    isCustomOutput() {
         var custom = false;
-        angular.forEach($scope.selectedElement.outputStrategies, function (strategy) {
+        angular.forEach(this.selectedElement.outputStrategies, strategy => {
             if (strategy.type == 'org.streampipes.model.output.CustomOutputStrategy') {
                 custom = true;
             }
@@ -158,10 +167,6 @@ export default function CustomizeController($scope, $rootScope, $mdDialog, eleme
         return custom;
     }
 
-    console.log($scope.selectedElement);
-    if ($scope.selectedElement.staticProperties.length > 0 || isCustomOutput()) {
-        $scope.configVisible = true;
-    } else {
-        $scope.saveProperties();
-    }
 }
+
+CustomizeController.$inject = ['$scope', '$rootScope', '$mdDialog', 'elementData', 'sepaName', 'sourceEndpoint', 'sepa'];

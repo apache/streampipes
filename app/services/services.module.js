@@ -18,7 +18,7 @@ import { PipelineEditorService } from './pipeline-editor.service'
 import httpInterceptor from './http-interceptor.service'
 import measurementUnits from './measurement-units.service'
 import deploymentService from './deployment.service'
-import objectProvider from './object-provider.service'
+import {ObjectProvider} from './object-provider.service'
 
 import jsplumbConfigService from './jsplumb-config.service'
 import pipelineElementIconService from './pipeline-icon.service'
@@ -31,7 +31,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('InitTooltips', InitTooltips)
 	.service('RestApi', RestApi)
 	.service('AuthStatusService', AuthStatusService)
-	.service('objectProvider', objectProvider)
+	.service('ObjectProvider', ObjectProvider)
 	.service('DomainProperties', DomainProperties)
 	.service('JsplumbBridge', JsplumbBridge)
 	.service('JsplumbService', JsplumbService)

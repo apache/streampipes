@@ -13,9 +13,9 @@ import 'npm/angular-trix';
 import {EditorCtrl} from './editor.controller';
 import myDataBind from './my-data-bind.directive';
 import imageBind  from './image-bind.directive';
-import capitalize from './capitalize.filter';
+//import capitalize from './capitalize.filter';
 import displayRecommendedFilter from './display-recommended.filter';
-import objectProvider from '../services/object-provider.service';
+//import objectProvider from '../services/object-provider.service';
 
 import {AnyComponent} from './components/any/any.component';
 import {CustomOutputComponent} from './components/customoutput/customoutput.component';
@@ -31,6 +31,7 @@ import {PipelineElementOptionsComponent} from './components/pipeline-element-opt
 import {CollectionComponent} from './components/collection/collection.component';
 import {CustomizeDialogComponent} from './components/customize/customize-dialog.component';
 import {TopicSelectionDialogComponent} from './components/topic/topic-selection-dialog.component';
+import {PipelineComponent} from './components/pipeline/pipeline.component';
 
 
 
@@ -38,8 +39,8 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
-    .directive('objectProvider', objectProvider)
-    .filter('capitalize', objectProvider)
+    //.directive('objectProvider', objectProvider)
+    //.filter('capitalize', objectProvider)
     .filter('displayRecommendedFilter', displayRecommendedFilter)
     .component('any', AnyComponent)
     .component('customOutput', CustomOutputComponent)
@@ -54,4 +55,5 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .component('collectionStaticProperty', CollectionComponent)
     .component('customizeDialog', CustomizeDialogComponent)
     .component('topicSelectionDialog', TopicSelectionDialogComponent)
+    .component('pipeline', PipelineComponent)
     .name;

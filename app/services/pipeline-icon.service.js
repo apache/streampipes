@@ -52,6 +52,7 @@ export default function pipelineElementIconService($http, $rootScope, ImageCheck
             }
         });
     }
+    
 
     return pipelineElementIconService;
 }

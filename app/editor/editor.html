@@ -97,7 +97,7 @@
         <div class="assemblyOptions sp-blue-bg">
             <div layout="row" layout-align="start center">
                 <md-button ng-disabled="!ctrl.isValidPipeline()"
-                           class="md-icon-button" ng-click="submit()" type="submit">
+                           class="md-icon-button" ng-click="ctrl.submit()" type="submit">
                     <md-tooltip md-direction="top">
                         Submit Pipeline
                     </md-tooltip>
@@ -145,7 +145,7 @@
         <div id="outerAssemblyArea" class="outerAssembly">
 
             <div id="assembly" class="canvas">
-
+                <pipeline pipeline-model="ctrl.pipelineModel"></pipeline>
             </div>
         </div>
     </div>
