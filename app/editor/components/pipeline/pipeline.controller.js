@@ -38,7 +38,7 @@ export class PipelineController {
     }
 
     getElementCssClasses(currentPipelineElementSettings) {
-        return  currentPipelineElementSettings.openCustomize ? "a " : ""
+        return currentPipelineElementSettings.openCustomize ? "a " : ""
             +currentPipelineElementSettings.connectable +" "
             +currentPipelineElementSettings.displaySettings;
     }
@@ -189,8 +189,8 @@ export class PipelineController {
             }
         });
 
-        window.onresize = function (event) {
-            this.JsplumbBridge.repaintEverything(true);
+        window.onresize = (event) => {
+            this.JsplumbBridge.repaintEverything();
         };
     }
 

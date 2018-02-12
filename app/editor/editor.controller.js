@@ -145,7 +145,6 @@ export class EditorCtrl {
         return this.currentlyFocusedElement == element;
     }
 
-
     autoLayout() {
         this.pipelinePositioningService.layoutGraph("#assembly", "span.connectable-editor", 110, false);
         this.JsplumbBridge.repaintEverything();
