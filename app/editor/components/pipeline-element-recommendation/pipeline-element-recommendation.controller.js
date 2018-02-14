@@ -1,7 +1,12 @@
 export class PipelineElementRecommendationController {
 
-    constructor() {
+    constructor(JsplumbService) {
+        this.JsplumbService = JsplumbService;
+    }
 
+    create(recommendedElement) {
+        this.recommendationsShown = false;
+        this.JsplumbService.createElement(this.pipelineModel, recommendedElement, this.pipelineElementDomId);
     }
 
     getUnskewStyle(recommendedElement, index) {
@@ -69,4 +74,4 @@ export class PipelineElementRecommendationController {
 
 }
 
-PipelineElementRecommendationController.$inject = [];
+PipelineElementRecommendationController.$inject = ['JsplumbService'];

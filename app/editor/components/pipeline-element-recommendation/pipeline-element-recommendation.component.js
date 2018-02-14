@@ -4,7 +4,9 @@ export let PipelineElementRecommendationComponent = {
     templateUrl: 'app/editor/components/pipeline-element-recommendation/pipeline-element-recommendation.tmpl.html',
     bindings: {
         recommendedElements: "<",
-        recommendationsShown: "<"
+        recommendationsShown: "<",
+        pipelineModel: "=",
+        pipelineElementDomId: "<"
     },
     controller: PipelineElementRecommendationController,
     controllerAs: 'ctrl'

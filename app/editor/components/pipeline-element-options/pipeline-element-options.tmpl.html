@@ -1,4 +1,4 @@
-<div ng-show="ctrl.currentMouseOverElement==ctrl.pipelineElement.payload.DOM">
+<div ng-show="ctrl.currentMouseOverElement==ctrl.pipelineElement.payload.DOM" style="z-index:10">
 <span class="customize-button" ng-show="ctrl.pipelineElement.type!='stream'" style="z-index:10">
     <md-button ng-click="ctrl.openCustomizeDialog()" ng-disabled="!ctrl.isRootElement()" class="md-icon-button"
                style="margin:0px;font-size:20px;">
@@ -57,3 +57,5 @@
     </md-button>
 </span>
 </div>
+<pipeline-element-recommendation pipeline-model="ctrl.pipelineModel" pipeline-element-dom-id="ctrl.pipelineElement.payload.DOM" recommended-elements="ctrl.recommendedElements" recommendations-shown="ctrl.recommendationsShown"></pipeline-element-recommendation>
+

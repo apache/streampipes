@@ -1,18 +1,17 @@
 export class PipelineElementOptionsController {
 
-    constructor($rootScope, ObjectProvider, RestApi, InitTooltips, JsplumbBridge, EditorDialogManager, $timeout, JsplumbService) {
+    constructor($rootScope, ObjectProvider, PipelineElementRecommendationService, InitTooltips, JsplumbBridge, EditorDialogManager, JsplumbService) {
         this.ObjectProvider = ObjectProvider;
-        this.RestApi = RestApi;
+        this.PipelineElementRecommendationService = PipelineElementRecommendationService;
         this.InitTooltips = InitTooltips;
         this.JsplumbBridge = JsplumbBridge;
         this.EditorDialogManager = EditorDialogManager;
-        this.$timeout = $timeout;
         this.JsplumbService = JsplumbService;
 
         this.recommendationsAvailable = false;
         this.possibleElements = [];
         this.recommendedElements = [];
-        this.recommendationsShown = true;
+        this.recommendationsShown = false;
 
         $rootScope.$on("SepaElementConfigured", (event, item) => {
             if (item === this.pipelineElement.payload.DOM) {
@@ -25,7 +24,9 @@ export class PipelineElementOptionsController {
         //     this.recommendationsShown = false;
         // });
 
-        this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+        if (this.pipelineElement.type === 'stream') {
+            this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+        }
     }
 
     removeElement() {
@@ -42,73 +43,23 @@ export class PipelineElementOptionsController {
 
     initRecs(elementId, currentPipelineElements) {
         var currentPipeline = this.ObjectProvider.makePipeline($("#" + elementId), currentPipelineElements, elementId);
-        var $element = $("#" + elementId);
-        this.RestApi.recommendPipelineElement(currentPipeline)
-            .success(data => {
-                if (data.success) {
-                    this.populateRecommendedList($element, data.recommendedElements);
-                }
-                this.collectPossibleElements(data.possibleElements);
-            });
-    }
-
-    collectPossibleElements(possibleElements) {
-        angular.forEach(possibleElements, pe => {
-            this.possibleElements.push(this.getPipelineElementContents(pe.elementId));
-        })
-    }
-
-    populateRecommendedList($element, recs) {
-        var elementRecommendations = [];
-        recs.sort(function (a, b) {
-            return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);
+        this.PipelineElementRecommendationService.getRecommendations(this.allElements, currentPipeline).then((result) => {
+            this.possibleElements = result.possibleElements;
+            this.recommendedElements = result.recommendations;
+            this.recommendationsAvailable = true;
+            this.InitTooltips.initTooltips();
+            console.log(this.possibleElements);
+            console.log(this.recommendedElements);
         });
-        var maxRecs = recs.length > 7 ? 7 : recs.length;
-        var el;
-        for (var i = 0; i < maxRecs; i++) {
-            el = recs[i];
-            var element = this.getPipelineElementContents(el.elementId);
-            element.weight = el.weight;
-            elementRecommendations.push(element);
-        }
-        this.recommendationsAvailable = true;
-        this.recommendedElements = elementRecommendations;
-
-        this.InitTooltips.initTooltips();
     }
-
 
     showRecommendations(e) {
         this.recommendationsShown = !this.recommendationsShown;
-        //var $recList = $("ul", $("#" + this.pipelineElement.payload.DOM));
         e.stopPropagation();
-        //$recList.circleMenu('open');
-    }
-
-    setStyle() {
-        this.style = "background:green;";
-    }
-
-    getPipelineElementContents(belongsTo) {
-        var pipelineElement = undefined;
-        angular.forEach(this.allElements, category => {
-            angular.forEach(category, sepa => {
-                if (sepa.type != 'stream') {
-                    if (sepa.belongsTo == belongsTo) {
-                        pipelineElement = sepa;
-                    }
-                } else {
-                    if (sepa.elementId == belongsTo) {
-                        pipelineElement = sepa;
-                    }
-                }
-            });
-        });
-        return pipelineElement;
     }
 
     isRootElement() {
-        return this.JsplumbBridge.getConnections({source: this.pipelineElement.payload.DOM}).length == 0;
+        return this.JsplumbBridge.getConnections({source: this.pipelineElement.payload.DOM}).length === 0;
     }
 
     isConfigured() {
@@ -130,4 +81,4 @@ export class PipelineElementOptionsController {
     }
 }
 
-PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'RestApi', 'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', '$timeout', 'JsplumbService'];
+PipelineElementOptionsController.$inject = ['$rootScope', 'ObjectProvider', 'PipelineElementRecommendationService', 'InitTooltips', 'JsplumbBridge', 'EditorDialogManager', 'JsplumbService'];

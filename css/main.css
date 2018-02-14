@@ -1005,6 +1005,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     border-radius: 50%;
     box-shadow: 0 0 2px #555;
     line-height: 1.6;
+    text-align:center;
+    padding:2px 0;
 
 }
 
@@ -1019,6 +1021,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     border-radius: 50%;
     box-shadow: 0 0 2px #555;
     line-height: 1.6;
+    text-align:center;
+    padding:2px 0;
 
 }
 
@@ -1033,6 +1037,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     border-radius: 50%;
     box-shadow: 0 0 2px #555;
     line-height: 1.6;
+    text-align:center;
+    padding:2px 0;
 
 }
 
@@ -1047,6 +1053,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     border-radius: 50%;
     box-shadow: 0 0 2px #555;
     line-height: 1.6;
+    text-align:center;
+    padding:2px 0;
 
 }
 
@@ -1061,6 +1069,8 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
     border-radius: 50%;
     box-shadow: 0 0 2px #555;
     line-height: 1.6;
+    text-align:center;
+    padding:2px 0;
 }
 
 .element-container {
