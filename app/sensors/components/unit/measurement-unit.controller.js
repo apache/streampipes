@@ -1,9 +1,9 @@
 export class MeasurementUnitController {
 
-    constructor(measurementUnitsService) {
+    constructor(MeasurementUnitsService) {
         this.query = {};
         this.selectedItem = "";
-        this.items = measurementUnitsService.getUnits();
+        this.items = MeasurementUnitsService.getUnits();
 
         if (this.property != undefined && this.property != "") {
             angular.forEach(this.items, function (item) {
@@ -32,4 +32,4 @@ export class MeasurementUnitController {
 
 }
 
-MeasurementUnitController.$inject = ['measurementUnitsService'];
+MeasurementUnitController.$inject = ['MeasurementUnitsService'];
