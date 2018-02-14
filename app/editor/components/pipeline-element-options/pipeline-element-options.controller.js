@@ -11,12 +11,12 @@ export class PipelineElementOptionsController {
 
         this.recommendationsAvailable = false;
         this.possibleElements = [];
-        this.elementRecommendations = [];
+        this.recommendedElements = [];
         this.recommendationsShown = true;
 
         $rootScope.$on("SepaElementConfigured", (event, item) => {
             if (item === this.pipelineElement.payload.DOM) {
-                //this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+                this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
             }
         });
 
@@ -72,7 +72,7 @@ export class PipelineElementOptionsController {
             elementRecommendations.push(element);
         }
         this.recommendationsAvailable = true;
-        this.elementRecommendations = elementRecommendations;
+        this.recommendedElements = elementRecommendations;
 
         this.InitTooltips.initTooltips();
     }
@@ -85,16 +85,7 @@ export class PipelineElementOptionsController {
         //$recList.circleMenu('open');
     }
 
-    showRecButton(e) {
-        $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).show();
-    }
-
-    hideRecButton(e) {
-        $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).hide();
-    }
-
     setStyle() {
-        console.log("style");
         this.style = "background:green;";
     }
 
@@ -114,10 +105,6 @@ export class PipelineElementOptionsController {
             });
         });
         return pipelineElement;
-    }
-
-    getDomElement(internalId) {
-        return $("span[id=" + internalId + "]");
     }
 
     isRootElement() {

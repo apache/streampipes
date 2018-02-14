@@ -27,7 +27,6 @@ body {
     top: -100px;
     border-radius: 50%;
     pointer-events:none;
-    z-index:-10;
     /*margin-left: -13em;*/
     -webkit-transition: all .3s ease;
     -moz-transition: all .3s ease;
@@ -126,27 +125,34 @@ body {
     /*transform: rotate(0deg) skew(18deg);*/
 /*}*/
 
-.cv-wrapper li:nth-child(odd) a {
-    background-color: #a11313;
-    background-color: hsla(0, 88%, 63%, 1);
+.cv-wrapper li:nth-child(odd) a.sepa {
+    background-color: #009688;
 }
 
-.cv-wrapper li:nth-child(even) a {
-    background-color: #a61414;
-    background-color: hsla(0, 88%, 65%, 1);
+.cv-wrapper li:nth-child(even) a.sepa {
+    background-color: #00a496;
 }
 
-/* active style */
-.cv-wrapper li.active a {
-background-color: #b31515;
-background-color: hsla(0, 88%, 70%, 1);
+.cv-wrapper li:nth-child(odd) a.action {
+    background-color: #3F51B5;
 }
+
+.cv-wrapper li:nth-child(even) a.action {
+    background-color: #4f65e6;
+}
+
+/*!* active style *!*/
+/*.cv-wrapper li.active a {*/
+/*background-color: #b31515;*/
+/*background-color: hsla(0, 88%, 70%, 1);*/
+/*}*/
 
 /* hover style */
 .cv-wrapper li a:hover,
 .cv-wrapper li a:active,
 .cv-wrapper li a:focus {
-background-color: green !important;
+background: rgba(255, 255, 255, 0.5) !important;
+    border: 2px solid #919191;
 }
 .cv-wrapper a:focus {
 position: fixed; /* fix the "displacement" bug in webkit browsers when using tab key */
@@ -481,7 +487,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
 }
 
 .jsplumb-endpoint {
-    z-index: 1;
+    z-index: 5;
 }
 
 .popover {

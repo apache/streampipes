@@ -4,13 +4,29 @@ export class PipelineElementRecommendationController {
 
     }
 
-    getUnskewStyle() {
+    getUnskewStyle(recommendedElement, index) {
         var unskew = -(this.getSkew());
         var rotate = -(90 - (this.getSkew() / 2));
 
         return {
-            "transform": "skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1)"
+            "transform": "skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1)",
+            "background-color": this.getBackgroundColor(recommendedElement, index)
         };
+    }
+
+    getBackgroundColor(recommendedElement, index) {
+        var alpha = recommendedElement.weight < 0.2 ? 0.2 : recommendedElement.weight;
+        var rgb = recommendedElement.type === 'sepa' ? this.getSepaColor(index) : this.getActionColor(index);
+
+        return "rgba(" +rgb +"," +alpha +")";
+    }
+
+    getSepaColor(index) {
+        return (index % 2 === 0) ? "0, 150, 136" : "0, 164, 150";
+    }
+
+    getActionColor(index) {
+        return (index % 2 === 0) ? "63, 81, 181" : "79, 101, 230";
     }
 
     getSkewStyle(index) {
@@ -30,7 +46,8 @@ export class PipelineElementRecommendationController {
         var unrotate = -360 + (rotate*-1);
 
         return {
-            "transform": "skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1)"
+            "transform": "skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1)",
+            "z-index": -1
         };
     }
 

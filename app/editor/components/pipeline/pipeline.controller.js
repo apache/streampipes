@@ -32,7 +32,7 @@ export class PipelineController {
     }
 
     getElementCss(currentPipelineElementSettings) {
-        return "position:absolute;"
+        return "position:absolute;width:110px;height:110px;"
         + "left: " +currentPipelineElementSettings.position.x +"px; "
         + "top: " +currentPipelineElementSettings.position.y +"px; "
     }
