@@ -39,7 +39,7 @@ export default angular.module('sp.services', [spConstants])
 	.service('PipelinePositioningService', PipelinePositioningService)
 	.service('PipelineEditorService', PipelineEditorService)
 	.service('DialogBuilder', DialogBuilder)
-    .factory('MeasurementUnitsService', MeasurementUnits)
+    .service('MeasurementUnitsService', MeasurementUnits)
 
 	.factory('httpInterceptor', httpInterceptor)
 	.factory('deploymentService', deploymentService)
