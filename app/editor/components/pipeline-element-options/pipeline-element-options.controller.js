@@ -12,12 +12,18 @@ export class PipelineElementOptionsController {
         this.recommendationsAvailable = false;
         this.possibleElements = [];
         this.elementRecommendations = [];
+        this.recommendationsShown = true;
 
         $rootScope.$on("SepaElementConfigured", (event, item) => {
             if (item === this.pipelineElement.payload.DOM) {
-                this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
+                //this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
             }
         });
+
+        // $(document).click(() => {
+        //     console.log("shown out");
+        //     this.recommendationsShown = false;
+        // });
 
         this.initRecs(this.pipelineElement.payload.DOM, this.pipelineModel);
     }
@@ -53,7 +59,7 @@ export class PipelineElementOptionsController {
     }
 
     populateRecommendedList($element, recs) {
-        this.elementRecommendations = [];
+        var elementRecommendations = [];
         recs.sort(function (a, b) {
             return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);
         });
@@ -63,26 +69,20 @@ export class PipelineElementOptionsController {
             el = recs[i];
             var element = this.getPipelineElementContents(el.elementId);
             element.weight = el.weight;
-            this.elementRecommendations.push(element);
+            elementRecommendations.push(element);
         }
-        this.$timeout(() => {
-            $("ul", $element)
-                .circleMenu({
-                    direction: "right-half",
-                    item_diameter: 50,
-                    circle_radius: 150,
-                    trigger: 'none'
-                });
-            $('ul', $element).circleMenu('init');
-        });
         this.recommendationsAvailable = true;
+        this.elementRecommendations = elementRecommendations;
+
         this.InitTooltips.initTooltips();
     }
 
+
     showRecommendations(e) {
-        var $recList = $("ul", $("#" + this.pipelineElement.payload.DOM));
+        this.recommendationsShown = !this.recommendationsShown;
+        //var $recList = $("ul", $("#" + this.pipelineElement.payload.DOM));
         e.stopPropagation();
-        $recList.circleMenu('open');
+        //$recList.circleMenu('open');
     }
 
     showRecButton(e) {
@@ -91,6 +91,11 @@ export class PipelineElementOptionsController {
 
     hideRecButton(e) {
         $("span:not(.recommended-list,.recommended-item,.element-text-icon,.element-text-icon-small)", this).hide();
+    }
+
+    setStyle() {
+        console.log("style");
+        this.style = "background:green;";
     }
 
     getPipelineElementContents(belongsTo) {

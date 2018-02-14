@@ -89,9 +89,7 @@ export class PipelineController {
 
             })
 
-        $(document).click(function () {
-            $('.circleMenu-open').circleMenu('close');
-        });
+
 
         if (typeof this.currentModifiedPipeline != 'undefined') {
             this.$rootScope.state.adjustingPipelineState = true;

@@ -34,8 +34,9 @@ import {TopicSelectionDialogComponent} from './components/topic/topic-selection-
 import {PipelineComponent} from './components/pipeline/pipeline.component';
 import {EditorDialogManager} from './editor-dialog-manager.service';
 import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
+import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 
-export default angular.module('sp.editor', [spServices, 'angularTrix'])
+export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate'])
     .controller('EditorCtrl', EditorCtrl)
     .directive('myDataBind', myDataBind)
     .directive('imageBind', imageBind)
@@ -57,5 +58,6 @@ export default angular.module('sp.editor', [spServices, 'angularTrix'])
     .component('topicSelectionDialog', TopicSelectionDialogComponent)
     .component('pipeline', PipelineComponent)
     .component('pipelineElement', PipelineElementComponent)
+    .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .name;
