@@ -36,6 +36,7 @@ import {EditorDialogManager} from './services/editor-dialog-manager.service';
 import {PipelineElementComponent} from './components/pipeline-element/pipeline-element.component';
 import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
 import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
+import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
 
 export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimate'])
     .controller('EditorCtrl', EditorCtrl)
@@ -60,6 +61,7 @@ export default angular.module('sp.editor', [spServices, 'angularTrix', 'ngAnimat
     .component('pipeline', PipelineComponent)
     .component('pipelineElement', PipelineElementComponent)
     .component('pipelineElementRecommendation', PipelineElementRecommendationComponent)
+    .component('pipelineAssembly', PipelineAssemblyComponent)
     .service('EditorDialogManager', EditorDialogManager)
     .service('PipelineElementRecommendationService', PipelineElementRecommendationService)
     .name;

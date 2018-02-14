@@ -48,8 +48,6 @@ export class PipelineElementOptionsController {
             this.recommendedElements = result.recommendations;
             this.recommendationsAvailable = true;
             this.InitTooltips.initTooltips();
-            console.log(this.possibleElements);
-            console.log(this.recommendedElements);
         });
     }
 
