@@ -1,10 +1,9 @@
 iconProviderConfig.$inject = ['$mdIconProvider'];
 export default function iconProviderConfig($mdIconProvider, apiConstants) {
-	var getServerUrl = function() {
+	const getServerUrl = () => {
 		return apiConstants.contextPath + apiConstants.api;
 		//return "http://localhost:8080";
-	}
-
+	};
 
 	$mdIconProvider
 		.iconSet('action', 'img/svg/svg-sprite-action.svg', 24)
