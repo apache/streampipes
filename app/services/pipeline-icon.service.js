@@ -5,7 +5,7 @@ export class PipelineElementIconService {
         this.ElementIconText = ElementIconText;
     }
 
-    addImageOrTextIcon = function ($element, json, small, type) {
+    addImageOrTextIcon($element, json, small, type) {
         let iconUrl = "";
         if (type == 'block' && json.streams != null && typeof json.streams !== 'undefined') {
             iconUrl = json.streams[0].iconUrl;
