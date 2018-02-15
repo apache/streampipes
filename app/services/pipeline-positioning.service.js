@@ -3,18 +3,18 @@ import * as dagre from "dagre";
 
 export class PipelinePositioningService {
 
-    constructor($rootScope, JsplumbService, apiConstants, jsplumbConfigService, JsplumbBridge) {
+    constructor($rootScope, JsplumbService, apiConstants, JsplumbConfigService, JsplumbBridge) {
         this.$rootScope = $rootScope;
         this.JsplumbService = JsplumbService;
         this.apiConstants = apiConstants;
-        this.jsplumbConfigService = jsplumbConfigService;
+        this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
     }
 
 
     displayPipeline(scope, pipeline, targetCanvas, isPreview) {
         var tempPos = {x : 0, y: 0};
-        var jsplumbConfig = isPreview ? this.jsplumbConfigService.getPreviewConfig() : this.jsplumbConfigService.getEditorConfig();
+        var jsplumbConfig = isPreview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
 
         for (var i = 0, stream; stream = pipeline.streams[i]; i++) {
             this.JsplumbService
@@ -107,4 +107,4 @@ export class PipelinePositioningService {
 
 }
 
-PipelinePositioningService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'jsplumbConfigService', 'JsplumbBridge'];
+PipelinePositioningService.$inject = ['$rootScope', 'JsplumbService', 'apiConstants', 'JsplumbConfigService', 'JsplumbBridge'];

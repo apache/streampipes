@@ -1,6 +1,6 @@
 export class PipelineController {
 
-    constructor($timeout, $rootScope, JsplumbService, PipelineEditorService, JsplumbBridge, ImageChecker, InitTooltips, jsplumbConfigService, ObjectProvider, DialogBuilder, EditorDialogManager) {
+    constructor($timeout, $rootScope, JsplumbService, PipelineEditorService, JsplumbBridge, ImageChecker, InitTooltips, JsplumbConfigService, ObjectProvider, DialogBuilder, EditorDialogManager) {
         this.JsplumbBridge = JsplumbBridge;
         this.jsplumbService = JsplumbService;
         this.pipelineEditorService = PipelineEditorService;
@@ -8,7 +8,7 @@ export class PipelineController {
         this.InitTooltips = InitTooltips;
         this.$rootScope = $rootScope;
         this.$timeout = $timeout;
-        this.jsplumbConfigService = jsplumbConfigService;
+        this.JsplumbConfigService = JsplumbConfigService;
         this.objectProvider = ObjectProvider;
         this.DialogBuilder = DialogBuilder;
         this.EditorDialogManager = EditorDialogManager;
@@ -205,4 +205,4 @@ export class PipelineController {
     }
 }
 
-PipelineController.$inject = ['$timeout', '$rootScope', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ImageChecker', 'InitTooltips', 'jsplumbConfigService', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager']
+PipelineController.$inject = ['$timeout', '$rootScope', 'JsplumbService', 'PipelineEditorService', 'JsplumbBridge', 'ImageChecker', 'InitTooltips', 'JsplumbConfigService', 'ObjectProvider', 'DialogBuilder', 'EditorDialogManager']

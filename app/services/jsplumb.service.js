@@ -1,12 +1,12 @@
 export class JsplumbService {
 
-    constructor($http, pipelineElementIconService, ObjectProvider, apiConstants, $compile, jsplumbConfigService, JsplumbBridge, $timeout) {
+    constructor($http, pipelineElementIconService, ObjectProvider, apiConstants, $compile, JsplumbConfigService, JsplumbBridge, $timeout) {
         this.$http = $http;
         this.pipelineElementIconService = pipelineElementIconService;
         this.objectProvider = ObjectProvider;
         this.apiConstants = apiConstants;
         this.$compile = $compile;
-        this.jsplumbConfigService = jsplumbConfigService;
+        this.JsplumbConfigService = JsplumbConfigService;
         this.JsplumbBridge = JsplumbBridge;
         this.$timeout = $timeout;
 
@@ -67,9 +67,9 @@ export class JsplumbService {
     connectNodes($parentElement, $target) {
         var options;
         if ($parentElement.hasClass("stream")) {
-            options = this.jsplumbConfigService.streamEndpointOptions;
+            options = this.JsplumbConfigService.streamEndpointOptions;
         } else {
-            options = this.jsplumbConfigService.sepaEndpointOptions;
+            options = this.JsplumbConfigService.sepaEndpointOptions;
         }
         var sourceEndPoint;
         if (this.JsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
@@ -154,7 +154,7 @@ export class JsplumbService {
     };
 
     getJsplumbConfig(preview) {
-        return preview ? this.jsplumbConfigService.getPreviewConfig() : this.jsplumbConfigService.getEditorConfig();
+        return preview ? this.JsplumbConfigService.getPreviewConfig() : this.JsplumbConfigService.getEditorConfig();
     }
 
     getNewTargetPoint(x, y) {
@@ -167,4 +167,4 @@ export class JsplumbService {
     }
 }
 
-JsplumbService.$inject = ['$http', 'pipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'jsplumbConfigService', 'JsplumbBridge', '$timeout'];
+JsplumbService.$inject = ['$http', 'pipelineElementIconService', 'ObjectProvider', 'apiConstants', '$compile', 'JsplumbConfigService', 'JsplumbBridge', '$timeout'];
