@@ -19,13 +19,7 @@
 			</md-button>
 		</div>
 
-		<!--<md-button class="md-accent" ng-click="resetWidgetsToDefault()">Default Widgets</md-button>-->
-
-		<!--<button ng-if="options.storage && options.explicitSave" ng-click="options.saveDashboard()" class="btn btn-success" ng-disabled="!options.unsavedChangeCount">{{ !options.unsavedChangeCount ? "all saved" : "save changes (" + options.unsavedChangeCount + ")" }}</button>-->
-
-		<!--<md-button ng-click="clear();" type="button" class="md-raised md-accent">Clear</md-button>-->
-
-     <md-button ng-click="addSpWidget(layout.id);" type="button" class="md-raised md-accent">Add visualization</md-button>
+     <md-button ng-click="ctrl.addSpWidget(layout.id);" type="button" class="md-raised md-accent">Add visualization</md-button>
 	</div>
 
 	<div ui-sortable="sortableOptions" ng-model="widgets" class="dashboard-widget-area">

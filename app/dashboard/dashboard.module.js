@@ -11,10 +11,11 @@ import 'npm/epoch-charting';
 import 'npm/ngmap'
 
 
-import DashboardCtrl from './dashboard.controller';
-import AddWidgetController from './add-widget.controller';
+import { DashboardCtrl } from './dashboard.controller';
+import { AddWidget } from './add-widget.controller';
+import { WidgetInstances } from './widget-instances.service';
+
 import SocketConnectionDataModel from './socket-connection-data-model.service';
-import WidgetInstances from './widget-instances.service';
 import WidgetTemplates from './templates/widget-templates.service';
 
 import soFilter from './templates/so.filter';
@@ -57,9 +58,9 @@ import HeatmapDataModel from './templates/heatmap/heatmap-data-model.service';
 
 export default angular.module('sp.dashboard', ['ui.dashboard', 'datatorrent.mlhrTable', 'ngMap'])
 	.controller('DashboardCtrl', DashboardCtrl)
-	.factory('AddWidgetController', AddWidgetController)
+	.service('AddWidgetController', AddWidget)
 	.factory('SocketConnectionDataModel', SocketConnectionDataModel)
-	.factory('WidgetInstances', WidgetInstances)
+	.service('WidgetInstances', WidgetInstances)
 	.factory('WidgetTemplates', WidgetTemplates)
 
 	.filter('soNumber', soFilter.soNumber)
